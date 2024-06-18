@@ -12,17 +12,23 @@ type ChipSelectFieldPropsToExtendFromWithoutChildren<Value extends string | numb
 
 export interface ChipSelectFieldProps<Value extends string | number> extends ChipSelectFieldPropsToExtendFromWithoutChildren<Value> {
     children: ReturnType<Required<ChipSelectFieldPropsToExtendFrom<Value>>["children"]>;
+    fullWidth?: boolean;
     componentsProps?: {
         finalFormChipSelect?: Partial<FinalFormChipSelectProps<Value>>;
     };
 }
 
-export function ChipSelectField<Value extends string | number>({ componentsProps = {}, children, ...restProps }: ChipSelectFieldProps<Value>) {
+export function ChipSelectField<Value extends string | number>({
+    componentsProps = {},
+    children,
+    fullWidth,
+    ...restProps
+}: ChipSelectFieldProps<Value>) {
     const { finalFormChipSelect: finalFormChipSelect } = componentsProps;
     return (
-        <Field {...restProps}>
+        <Field fullWidth={fullWidth} {...restProps}>
             {(props) => (
-                <FinalFormChipSelect<Value> {...props} {...finalFormChipSelect}>
+                <FinalFormChipSelect<Value> {...props} {...{ ...finalFormChipSelect, fullWidth }}>
                     {children}
                 </FinalFormChipSelect>
             )}
