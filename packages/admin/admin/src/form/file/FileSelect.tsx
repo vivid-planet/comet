@@ -74,7 +74,6 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
     const numberOfValidFiles = files?.filter((file) => !("error" in file)).length ?? 0;
     const maxAmountOfFilesSelected = typeof maxFiles !== "undefined" && multiple && numberOfValidFiles >= maxFiles;
     const maxNumberOfFilesToBeAdded = maxFiles ? maxFiles - numberOfValidFiles : undefined;
-    const valuesList = !value ? [] : Array.isArray(value) ? value : [value];
     const filesInfoText = getFilesInfoText(maxFiles, maxFileSize);
 
     return (
