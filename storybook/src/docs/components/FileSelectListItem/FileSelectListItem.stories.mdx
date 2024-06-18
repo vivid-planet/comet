@@ -1,0 +1,19 @@
+import { Meta, Canvas, Story } from "@storybook/addon-docs";
+
+<Meta title="Docs/Components/FileSelectListItem" />
+
+# FileSelectListItem
+
+Used to display a list of files, including loading, skeleton, and error states and options to download and delete the file.
+
+## Usage
+
+-   Use the `skeleton` prop if you do not have any data for the file.
+-   Use the `loading` prop if the file's data is being fetched or uploaded, but the filename is already available.
+-   Use the `name` and `size` props to display the file name and size.
+-   Use the `onDownload` and `onDelete` props to handle what happens when clicking the download and delete buttons.
+-   Use the `error` prop as a boolean to set the error state or as a string to display an error message.
+
+<Canvas>
+    <Story id="stories-components-fileselectlistitem--fileselectlistitem" />
+</Canvas>

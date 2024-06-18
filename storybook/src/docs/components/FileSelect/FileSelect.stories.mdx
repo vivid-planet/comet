@@ -1,0 +1,18 @@
+import { Meta, Canvas, Story } from "@storybook/addon-docs";
+
+<Meta title="Docs/Components/FileSelect" />
+
+# FileSelect
+
+Used to combine `FileDropzone` and `FileSelectListItem` to handle the user's selection of files, displaying those files below, and handling the download and remove actions.
+
+## Usage
+
+-   Use props from [react-dropzone](https://www.npmjs.com/package/react-dropzone), such as `onDrop`, to handle what happens when selecting files.
+-   Use the `value` prop to pass in the list of files that should be shown.
+-   Use the `onDownload` and `onRemove` props to handle what happens when clicking the download and remove buttons.
+-   Limit the amount of files and the size of the individual files with the `maxFiles` and `maxFileSize` props.
+
+<Canvas>
+    <Story id="stories-components-fileselect--fileselect" />
+</Canvas>
