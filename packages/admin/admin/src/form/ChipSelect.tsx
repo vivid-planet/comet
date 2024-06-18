@@ -38,6 +38,7 @@ export interface ChipSelectProps<T = string>
     getOptionValue?: (option: T) => string;
     options?: T[];
     selectedOption?: T;
+    onChange: (event: SelectChangeEvent) => void;
 }
 
 const ChipInput = ({ chipProps, ...p }: InputBaseProps & { chipProps?: Omit<ChipProps, "children"> }) => {
@@ -96,21 +97,16 @@ export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
         selectedOption,
         children,
         slotProps,
+        onChange,
         ...restProps
     } = useThemeProps({
         props: inProps,
         name: "CometAdminChipSelect",
     });
 
-    const [value, setValue] = React.useState<T | "">(selectedOption || "");
-
-    const handleChange = (event: SelectChangeEvent) => {
-        setValue(event.target.value as T);
-    };
-
     return (
         <Root {...slotProps?.root} {...restProps}>
-            <Select {...slotProps?.select} value={value} onChange={handleChange} input={<ChipInput chipProps={slotProps?.chip} />}>
+            <Select {...slotProps?.select} value={selectedOption || ""} onChange={onChange} input={<ChipInput chipProps={slotProps?.chip} />}>
                 {children ??
                     options?.map((option) => (
                         <MenuItem key={getOptionValue(option)} value={getOptionValue(option)} autoFocus={false}>
