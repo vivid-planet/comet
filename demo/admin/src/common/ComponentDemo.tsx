@@ -1,5 +1,6 @@
 import {
     CheckboxField,
+    ChipSelectField,
     Field,
     FieldContainer,
     FinalForm,
@@ -192,6 +193,12 @@ export function ComponentDemo(): React.ReactElement {
                                     <CustomSelectItem icon={<Snips />} primary="Option 3" secondary="Secondary text" />
                                 </MenuItem>
                             </SelectField>
+
+                            <ChipSelectField name="chip-select" label="Chip Select" componentsProps={{ finalFormChipSelect: { color: "primary" } }}>
+                                <MenuItem value="Option 1">Option 1</MenuItem>
+                                <MenuItem value="Option 2">Option 2</MenuItem>
+                                <MenuItem value="Option 3">Option 3</MenuItem>
+                            </ChipSelectField>
 
                             <TextAreaField name="textArea" label="Text Area" fullWidth />
 
