@@ -51,9 +51,9 @@ export const getStaticProps: GetStaticProps<PageUniversalProps> = async (context
     const { scope, previewData } = parsePreviewParams(context) || { scope: { domain, language: context.locale }, previewData: undefined };
 
     const client = createGraphQLClient({
-        includeInvisiblePages: context.draftMode,
+        includeInvisiblePages: context.preview,
         includeInvisibleBlocks: previewData?.includeInvisible,
-        previewDamUrls: context.draftMode,
+        previewDamUrls: context.preview,
     });
     const path = context.params?.path ?? "";
     //fetch pageType

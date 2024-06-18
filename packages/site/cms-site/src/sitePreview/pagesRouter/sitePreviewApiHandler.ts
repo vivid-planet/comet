@@ -43,7 +43,6 @@ async function sitePreviewApiHandler(req: NextApiRequest, res: NextApiResponse, 
 
     const data: SitePreviewParams = { scope, previewData };
 
-    res.setDraftMode({ enable: true });
     res.setPreviewData(data);
     res.redirect(params.path ?? "/");
 }
