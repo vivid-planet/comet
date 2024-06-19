@@ -4,7 +4,7 @@ import {
     BooleanFilter,
     createEnumFilter,
     createEnumsFilter,
-    DateFilter,
+    DateTimeFilter,
     ManyToManyFilter,
     ManyToOneFilter,
     NumberFilter,
@@ -80,11 +80,11 @@ export class ProductFilter {
     @Type(() => NumberFilter)
     soldCount?: NumberFilter;
 
-    @Field(() => DateFilter, { nullable: true })
+    @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => DateFilter)
-    availableSince?: DateFilter;
+    @Type(() => DateTimeFilter)
+    availableSince?: DateTimeFilter;
 
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()
@@ -98,17 +98,17 @@ export class ProductFilter {
     @Type(() => ManyToManyFilter)
     tags?: ManyToManyFilter;
 
-    @Field(() => DateFilter, { nullable: true })
+    @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => DateFilter)
-    createdAt?: DateFilter;
+    @Type(() => DateTimeFilter)
+    createdAt?: DateTimeFilter;
 
-    @Field(() => DateFilter, { nullable: true })
+    @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => DateFilter)
-    updatedAt?: DateFilter;
+    @Type(() => DateTimeFilter)
+    updatedAt?: DateTimeFilter;
 
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()
