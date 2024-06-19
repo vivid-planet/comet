@@ -156,11 +156,6 @@ export function PagesPage({
                                 </Button>
                             </ToolbarActions>
                         </Toolbar>
-<<<<<<< HEAD
-                        <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
-                            <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
-                                <Box>
-=======
                         <PageTreeContext.Provider
                             value={{
                                 allCategories,
@@ -171,9 +166,8 @@ export function PagesPage({
                                 query: pagesQuery,
                             }}
                         >
-                            <PageTreeContent fullHeight>
-                                <ActionToolbarBox>
->>>>>>> main
+                            <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
+                                <Box>
                                     <PagesPageActionToolbar
                                         selectedState={selectState}
                                         onSelectAllPressed={() => {
