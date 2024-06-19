@@ -93,6 +93,7 @@ export { FinalFormAsyncSelect, FinalFormAsyncSelectProps } from "./form/FinalFor
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
 export { FinalFormFileSelect, FinalFormFileSelectClassKey, FinalFormFileSelectProps } from "./form/FinalFormFileSelect";
 export { FinalFormInput, FinalFormInputProps } from "./form/FinalFormInput";
+export { FinalFormNumberInput } from "./form/FinalFormNumberInput";
 export { FinalFormRangeInput, FinalFormRangeInputClassKey, FinalFormRangeInputProps } from "./form/FinalFormRangeInput";
 export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
 export { FinalFormSelect, FinalFormSelectProps } from "./form/FinalFormSelect";
