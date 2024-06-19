@@ -159,6 +159,9 @@ export class AppModule {
                     ? [
                           ContentGenerationModule.register({
                               Service: ContentGenerationService,
+                              config: {
+                                  openAiContentGenerationService: config.contentGeneration,
+                              },
                           }),
                       ]
                     : []),

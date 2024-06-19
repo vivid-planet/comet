@@ -1,19 +1,56 @@
 import { AzureKeyCredential, ChatRequestMessage, OpenAIClient } from "@azure/openai";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
 import { FilesService } from "../dam/files/files.service";
+import { AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG } from "./content-generation.constants";
+import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
 
-export type AzureOpenAiContentGenerationConfig = {
+export type AzureOpenAiContentGenerationServiceConfig = AzureOpenAiConfig | ConfigByMethod;
+
+export type AzureOpenAiConfig = {
     deploymentId: string;
     apiKey: string;
     apiUrl: string;
 };
 
+type ConfigByMethod = Partial<Record<ServiceMethods, AzureOpenAiConfig>>;
+
+type ServiceMethods = Extract<keyof AzureOpenAiContentGenerationService, keyof ContentGenerationServiceInterface>;
+
+function isAzureOpenAiContentGenerationConfig(config: AzureOpenAiContentGenerationServiceConfig): config is AzureOpenAiConfig {
+    return "apiKey" in config;
+}
+
 @Injectable()
 export class AzureOpenAiContentGenerationService {
-    constructor(private readonly filesService: FilesService) {}
+    private readonly config: AzureOpenAiContentGenerationServiceConfig;
 
-    async generateAltText(fileId: string, config: AzureOpenAiContentGenerationConfig): Promise<string> {
+    constructor(
+        private readonly filesService: FilesService,
+        @Inject(AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG) injectedConfig?: AzureOpenAiContentGenerationServiceConfig,
+    ) {
+        if (!injectedConfig) {
+            throw new Error("No config provided");
+        }
+
+        this.config = injectedConfig;
+    }
+
+    private getConfigForMethod(name: ServiceMethods): AzureOpenAiConfig {
+        if (isAzureOpenAiContentGenerationConfig(this.config)) {
+            return this.config;
+        }
+
+        const config = this.config[name];
+        if (!config) {
+            throw new Error(`Missing config for method ${name}`);
+        }
+        return config;
+    }
+
+    async generateAltText(fileId: string): Promise<string> {
+        const config = this.getConfigForMethod("generateAltText");
+
         const file = await this.filesService.findOneById(fileId);
 
         if (file === null) {
@@ -44,7 +81,9 @@ export class AzureOpenAiContentGenerationService {
         return result.choices[0].message?.content ?? "";
     }
 
-    async generateImageTitle(fileId: string, config: AzureOpenAiContentGenerationConfig): Promise<string> {
+    async generateImageTitle(fileId: string): Promise<string> {
+        const config = this.getConfigForMethod("generateImageTitle");
+
         const file = await this.filesService.findOneById(fileId);
 
         if (file === null) {

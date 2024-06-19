@@ -62,8 +62,9 @@ export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
 export {
-    AzureOpenAiContentGenerationConfig,
+    AzureOpenAiConfig,
     AzureOpenAiContentGenerationService,
+    AzureOpenAiContentGenerationServiceConfig,
 } from "./content-generation/azure-open-ai-content-generation.service";
 export { ContentGenerationModule } from "./content-generation/content-generation.module";
 export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
