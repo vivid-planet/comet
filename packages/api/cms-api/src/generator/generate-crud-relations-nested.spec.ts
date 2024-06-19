@@ -73,18 +73,18 @@ describe("GenerateCrudRelationsNested", () => {
                 const structure = classes[0].getStructure();
 
                 expect(structure.properties?.length).toBe(2);
-                expect(structure.properties?.[1].type).toBe("TestEntityVariantInput[]");
+                expect(structure.properties?.[1].type).toBe("TestEntityProductNestedTestEntityVariantInput[]");
             }
 
             {
-                const file = lintedOut.find((file) => file.name === "dto/test-entity-variant.nested.input.ts");
+                const file = lintedOut.find((file) => file.name === "dto/test-entity-product-nested-test-entity-variant.input.ts");
                 if (!file) throw new Error("File not found");
                 const source = parseSource(file.content);
 
                 const classes = source.getClasses();
                 expect(classes.length).toBe(1);
 
-                expect(classes[0].getName()).toBe("TestEntityVariantInput");
+                expect(classes[0].getName()).toBe("TestEntityProductNestedTestEntityVariantInput");
 
                 const structure = classes[0].getStructure();
 

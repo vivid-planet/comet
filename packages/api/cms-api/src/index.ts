@@ -68,6 +68,7 @@ export {
 export { ContentGenerationModule } from "./content-generation/content-generation.module";
 export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
+export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";

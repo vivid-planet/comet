@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString, Matches } from "class-validator";
 
 import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
 import { BlockField } from "./decorators/field";
@@ -9,7 +9,7 @@ enum AspectRatio {
 }
 
 class YouTubeVideoBlockData extends BlockData {
-    @BlockField()
+    @BlockField({ nullable: true })
     youtubeIdentifier?: string;
 
     @BlockField({ type: "enum", enum: AspectRatio })
@@ -28,7 +28,11 @@ class YouTubeVideoBlockData extends BlockData {
 class YouTubeVideoBlockInput extends BlockInput {
     @IsOptional()
     @IsString()
-    @BlockField()
+    @BlockField({ nullable: true })
+    // regex from https://stackoverflow.com/a/51870158
+    @Matches(
+        /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/,
+    )
     youtubeIdentifier?: string;
 
     @IsEnum(AspectRatio)

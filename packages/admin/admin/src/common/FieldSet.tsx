@@ -1,4 +1,4 @@
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+import { ChevronRight } from "@comet/admin-icons";
 import { ComponentsOverrides, Theme } from "@mui/material";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionDetails, { AccordionDetailsProps } from "@mui/material/AccordionDetails";
@@ -119,11 +119,7 @@ function FieldSet({
             className={classes.root}
             {...componentsProps?.root}
         >
-            <MuiAccordionSummary
-                classes={{ root: classes.summary }}
-                expandIcon={collapsible && <ArrowForwardIosSharpIcon />}
-                {...componentsProps?.summary}
-            >
+            <MuiAccordionSummary classes={{ root: classes.summary }} expandIcon={collapsible && <ChevronRight />} {...componentsProps?.summary}>
                 <div className={classes.headerColumn}>
                     <div className={classes.title}>{title}</div>
                     <div className={classes.supportText}>{supportText}</div>

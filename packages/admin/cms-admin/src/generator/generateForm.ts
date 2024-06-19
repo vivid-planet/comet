@@ -115,6 +115,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import {
         DateTimeField,
         Field,
+        filterByFragment,
         FinalForm,
         FinalFormInput,
         FinalFormSaveSplitButton,
@@ -139,7 +140,6 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
     import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
-    import { filter } from "graphql-anywhere";
     import isEqual from "lodash.isequal";
     import React from "react";
     import { FormattedMessage } from "react-intl";
@@ -201,7 +201,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     
         const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceEntityName}
             ? {
-                  ...filter<GQL${entityName}FormFragment>(${instanceEntityName}FormFragment, data.${instanceEntityName}),
+                  ...filterByFragment<GQL${entityName}FormFragment>(${instanceEntityName}FormFragment, data.${instanceEntityName}),
                   ${numberFields.map((field) => `${field.name}: String(data.${instanceEntityName}.${field.name}),`).join("\n")}
                   ${Object.keys(rootBlocks)
                       .map((rootBlockKey) => `${rootBlockKey}: rootBlocks.${rootBlockKey}.input2State(data.${instanceEntityName}.${rootBlockKey}),`)

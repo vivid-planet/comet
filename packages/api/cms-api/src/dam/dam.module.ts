@@ -68,12 +68,12 @@ export class DamModule {
             provide: DAM_FILE_VALIDATION_SERVICE,
             useValue: new FileValidationService({
                 maxFileSize: damConfig.maxFileSize,
-                acceptedMimeTypes: [...defaultDamAcceptedMimetypes, ...(damConfig.additionalMimeTypes ?? [])],
+                acceptedMimeTypes: damConfig.overrideAcceptedMimeTypes ?? [...defaultDamAcceptedMimetypes, ...(damConfig.additionalMimeTypes ?? [])],
             }),
         };
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
-        const FilesResolver = createFilesResolver({ File, Scope });
+        const FilesResolver = createFilesResolver({ File, Folder, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
 
