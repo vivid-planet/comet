@@ -1,5 +1,8 @@
 ---
-"@comet/eslint-config": minor
+"@comet/eslint-config": major
 ---
 
-Add `@mui/icons-material` to `no-restricted-imports` rule
+Prevent `@mui/icons-material` icon imports
+
+Icons used in Comet DXP applications should match the Comet CI.
+Use icons from `@comet/admin-icons` instead.
