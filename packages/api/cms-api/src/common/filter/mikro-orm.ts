@@ -1,7 +1,7 @@
 import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
 
 import { BooleanFilter } from "./boolean.filter";
-import { DateFilter } from "./date.filter";
+import { DateTimeFilter } from "./date-time.filter";
 import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
 import { EnumsFilterInterface, isEnumsFilter } from "./enums.filter.factory";
 import { ManyToManyFilter } from "./many-to-many.filter";
@@ -13,7 +13,7 @@ function quoteLike(string: string): string {
     return string.replace(/([%_\\])/g, "\\$1");
 }
 export function filterToMikroOrmQuery(
-    filterProperty: StringFilter | NumberFilter | DateFilter | BooleanFilter | EnumFilterInterface<unknown> | EnumsFilterInterface<unknown>,
+    filterProperty: StringFilter | NumberFilter | DateTimeFilter | BooleanFilter | EnumFilterInterface<unknown> | EnumsFilterInterface<unknown>,
     propertyName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): FilterQuery<any> {
@@ -64,7 +64,7 @@ export function filterToMikroOrmQuery(
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
         }
-    } else if (filterProperty instanceof DateFilter) {
+    } else if (filterProperty instanceof DateTimeFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
         }
@@ -126,8 +126,12 @@ export function filterToMikroOrmQuery(
 export function filtersToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filter: any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    applyFilter?: (acc: ObjectQuery<any>, filterValue: StringFilter | NumberFilter | DateFilter | BooleanFilter | unknown, filterKey: string) => void,
+    applyFilter?: (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        acc: ObjectQuery<any>,
+        filterValue: StringFilter | NumberFilter | DateTimeFilter | BooleanFilter | unknown,
+        filterKey: string,
+    ) => void,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): ObjectQuery<any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
