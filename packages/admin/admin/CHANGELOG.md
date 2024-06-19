@@ -1,5 +1,27 @@
 # @comet/admin
 
+## 7.0.0-beta.2
+
+### Minor Changes
+
+-   2fc764e29: Add `OnChangeField` helper to listen to field changes
+
+    **Example**
+
+    ```tsx
+    <OnChangeField name="product">
+        {(value, previousValue) => {
+            // Will be called when field 'product' changes
+        }}
+    </OnChangeField>
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2de81e40b]
+    -   @comet/admin-theme@7.0.0-beta.2
+    -   @comet/admin-icons@7.0.0-beta.2
+
 ## 7.0.0-beta.1
 
 ### Patch Changes
