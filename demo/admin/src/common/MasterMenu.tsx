@@ -4,6 +4,8 @@ import {
     createRedirectsPage,
     CronJobsPage,
     DamPage,
+    DocumentInterface,
+    DocumentType,
     MasterMenu as CometMasterMenu,
     MasterMenuData,
     PagesPage,
@@ -77,7 +79,20 @@ export const masterMenuData: MasterMenuData = [
                     <PagesPage
                         path={`/pages/pagetree/${match.params.category}`}
                         allCategories={pageTreeCategories}
-                        documentTypes={pageTreeDocumentTypes}
+                        documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+                            if (category === "TopMenu") {
+                                return {
+                                    Page,
+                                    PredefinedPage,
+                                };
+                            }
+
+                            return {
+                                Page,
+                                PredefinedPage,
+                                Link,
+                            };
+                        }}
                         editPageNode={EditPageNode}
                         category={category}
                         renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
