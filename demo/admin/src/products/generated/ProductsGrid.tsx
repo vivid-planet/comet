@@ -3,14 +3,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
+    GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
     ToolbarActions,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -21,7 +21,7 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -81,8 +81,7 @@ const createProductMutation = gql`
 
 function ProductsGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -95,7 +94,7 @@ function ProductsGridToolbar() {
                     <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarActions>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -227,7 +226,7 @@ export function ProductsGrid(): React.ReactElement {
     const rows = data?.products.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick

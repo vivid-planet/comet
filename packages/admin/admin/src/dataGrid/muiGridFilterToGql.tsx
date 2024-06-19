@@ -1,4 +1,6 @@
-import { GridColDef, GridFilterModel } from "@mui/x-data-grid";
+import { GridFilterModel } from "@mui/x-data-grid";
+
+import { GridColDef } from "./GridColDef";
 
 const muiGridOperatorValueToGqlOperator: { [key: string]: string } = {
     contains: "contains",
@@ -73,7 +75,7 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
             };
         });
     const filter: GqlFilter = {};
-    const op: "and" | "or" = filterModel.linkOperator ?? "or";
+    const op: "and" | "or" = filterModel.linkOperator ?? "and";
     filter[op] = filterItems;
 
     let search: undefined | string = undefined;

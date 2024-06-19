@@ -7,7 +7,7 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
 
 type OwnerState = Pick<MainContentProps, "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight"> & {
-    topPosition: number;
+    topOffset: number;
 };
 
 const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
@@ -29,7 +29,7 @@ const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
 
         ${ownerState.fullHeight &&
         css`
-            height: calc(100vh - ${ownerState.topPosition}px);
+            height: calc(100vh - ${ownerState.topOffset}px);
         `}
 
         ${ownerState.disablePaddingTop &&
@@ -62,16 +62,21 @@ export function MainContent(inProps: MainContentProps) {
         props: inProps,
         name: "CometAdminMainContent",
     });
-
     const mainRef = React.useRef<HTMLElement>(null);
-    const topPosition = fullHeight && mainRef.current ? mainRef.current.offsetTop : 0;
+    const [topOffset, setTopOffset] = React.useState(0);
+
+    React.useEffect(() => {
+        if (mainRef.current) {
+            setTopOffset(mainRef.current.offsetTop);
+        }
+    }, []);
 
     const ownerState: OwnerState = {
         fullHeight,
         disablePaddingTop,
         disablePaddingBottom,
         disablePadding,
-        topPosition,
+        topOffset,
     };
 
     return (

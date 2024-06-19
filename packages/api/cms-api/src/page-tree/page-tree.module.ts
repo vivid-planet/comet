@@ -16,7 +16,6 @@ import { PageTreeService } from "./page-tree.service";
 import { PageTreeNodeDocumentEntityInfoService } from "./page-tree-node-document-entity-info.service";
 import { PageTreeNodeDocumentEntityScopeService } from "./page-tree-node-document-entity-scope.service";
 import { PageTreeReadApiService } from "./page-tree-read-api.service";
-import { SitePreviewResolver } from "./site-preview.resolver";
 import type { PageTreeNodeInterface, ScopeInterface } from "./types";
 import { PageExistsConstraint } from "./validators/page-exists.validator";
 
@@ -88,7 +87,6 @@ export class PageTreeModule {
                     inject: [PageTreeService],
                 },
                 documentSubscriber,
-                SitePreviewResolver,
                 PageTreeNodeDocumentEntityInfoService,
                 PageTreeNodeDocumentEntityScopeService,
                 InternalLinkBlockTransformerService,

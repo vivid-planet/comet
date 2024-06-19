@@ -176,8 +176,8 @@ export class FilesService {
         return [files, totalCount];
     }
 
-    async findAllByHash(contentHash: string): Promise<FileInterface[]> {
-        return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getResult();
+    async findAllByHash(contentHash: string, options?: { scope?: DamScopeInterface }): Promise<FileInterface[]> {
+        return withFilesSelect(this.selectQueryBuilder(), { contentHash, scope: options?.scope }).getResult();
     }
 
     async findMultipleByIds(ids: string[]) {
@@ -243,7 +243,8 @@ export class FilesService {
         return this.updateByEntity(file, data);
     }
 
-    async updateByEntity(entity: FileInterface, { folderId, image, ...input }: UpdateFileInput): Promise<FileInterface> {
+    async updateByEntity(entity: FileInterface, { image, ...input }: UpdateFileInput): Promise<FileInterface> {
+        const folderId = input.folderId !== undefined ? input.folderId : entity.folder?.id;
         const folder = folderId ? await this.foldersService.findOneById(folderId) : null;
 
         if (entity.image && image?.cropArea) {
@@ -536,6 +537,28 @@ export class FilesService {
         const filename = parse(file.name).name;
 
         const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files`];
+
+        if (previewDamUrls) {
+            baseUrl.push("preview");
+        } else {
+            const hash = this.createHash({
+                fileId: file.id,
+                filename,
+            });
+
+            baseUrl.push(hash);
+        }
+
+        return [...baseUrl, file.id, filename].join("/");
+    }
+
+    async createFileDownloadUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
+        const filename = parse(file.name).name;
+
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

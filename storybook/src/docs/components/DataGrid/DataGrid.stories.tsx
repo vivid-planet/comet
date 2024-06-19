@@ -1,22 +1,53 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    FileIcon,
+    GridColDef,
     GridFilterButton,
+    Loading,
     muiGridFilterToGql,
     Toolbar,
+    ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
+    useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { MoreVertical } from "@comet/admin-icons";
+import { Button, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
+
+type Launch = {
+    id: string;
+    mission_name: string;
+    launch_date_local: Date;
+};
+
+interface LaunchesPastResultData {
+    data: Launch[];
+    result: { totalCount: number };
+}
+
+interface QueryVariables {
+    offset: number;
+    limit: number;
+    sort?: string;
+    order?: string | null;
+}
+
+interface GQLQuery {
+    __typename?: "Query";
+    launchesPastResult: LaunchesPastResultData;
+}
 
 const exampleRows = [
     { id: 1, lastName: "Snow", firstName: "Jon" },
@@ -202,6 +233,39 @@ storiesOf("stories/components/DataGrid", module)
             </Box>
         );
     })
+    .add("responsiveColumns", () => {
+        const dataGridProps = usePersistentColumnState("ResponsiveColumnsStory");
+        const theme = useTheme();
+
+        const columns: GridColDef[] = [
+            {
+                field: "id",
+                headerName: "ID",
+                width: 50,
+            },
+            {
+                field: "fullName",
+                headerName: "Full name",
+                flex: 1,
+                renderCell: ({ row }) => `${row.firstName} ${row.lastName}`,
+                visible: theme.breakpoints.down("md"),
+            },
+            {
+                field: "firstName",
+                headerName: "First name",
+                flex: 1,
+                visible: theme.breakpoints.up("md"),
+            },
+            {
+                field: "lastName",
+                headerName: "Last name",
+                flex: 1,
+                visible: theme.breakpoints.up("md"),
+            },
+        ];
+
+        return <DataGridPro sx={{ height: 200 }} rows={exampleRows} columns={columns} {...dataGridProps} />;
+    })
     .add("GridFilterButton", () => {
         function DemoToolbar() {
             return (
@@ -283,6 +347,116 @@ storiesOf("stories/components/DataGrid", module)
         return (
             <Box sx={{ height: 400, width: "100%" }}>
                 <DataGrid rows={exampleRows} columns={columns} />
+            </Box>
+        );
+    })
+    .add("useDataGridExcelExport", () => {
+        const dataGridProps = useDataGridRemote();
+
+        const variables = {
+            limit: dataGridProps.pageSize,
+            offset: dataGridProps.page * dataGridProps.pageSize,
+            sort: dataGridProps.sortModel[0]?.field,
+            order: dataGridProps.sortModel[0]?.sort,
+        };
+
+        const columns: GridColDef[] = [
+            {
+                field: "mission_name",
+                headerName: "Mission Name",
+            },
+            {
+                field: "launch_date_local",
+                headerName: "Launch Date",
+                type: "dateTime",
+            },
+        ];
+
+        const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
+        const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+
+        const query = gql`
+            query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
+                launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
+                    data {
+                        id
+                        mission_name
+                        launch_date_local
+                    }
+                    result {
+                        totalCount
+                    }
+                }
+            }
+        `;
+
+        const { data, loading, error } = useQuery<GQLQuery, QueryVariables | undefined>(query, {
+            variables,
+        });
+
+        const exportApi = useDataGridExcelExport<Launch, GQLQuery, QueryVariables>({
+            columns,
+            variables,
+            query,
+            resolveQueryNodes: (data) => data.launchesPastResult.data,
+            totalCount: data?.launchesPastResult.result.totalCount ?? 0,
+            exportOptions: {
+                fileName: "ExampleName",
+            },
+        });
+
+        function DemoToolbar() {
+            return (
+                <Toolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarActions>
+                        <>
+                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
+                                More Actions
+                            </Button>
+                            <Menu
+                                anchorEl={moreMenuRef.current}
+                                open={showMoreMenu}
+                                onClose={() => setShowMoreMenu(false)}
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                }}
+                            >
+                                <MenuItem
+                                    onClick={() => {
+                                        exportApi.exportGrid();
+                                        setShowMoreMenu(false);
+                                    }}
+                                    disabled={exportApi.loading}
+                                    sx={{ display: "flex", gap: "10px" }}
+                                >
+                                    {exportApi.loading ? <Loading fontSize="small" /> : <FileIcon fileType="application/msexcel" />}
+                                    Export
+                                </MenuItem>
+                            </Menu>
+                        </>
+                    </ToolbarActions>
+                </Toolbar>
+            );
+        }
+
+        const rows = data?.launchesPastResult.data ?? [];
+        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
+
+        return (
+            <Box sx={{ height: 400, width: "100%" }}>
+                <DataGrid
+                    {...dataGridProps}
+                    rows={rows}
+                    columns={columns}
+                    rowCount={rowCount}
+                    loading={loading}
+                    error={error}
+                    components={{
+                        Toolbar: DemoToolbar,
+                    }}
+                />
             </Box>
         );
     });

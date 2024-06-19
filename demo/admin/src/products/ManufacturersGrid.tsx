@@ -1,14 +1,14 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
     filterByFragment,
+    GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     Tooltip,
@@ -18,7 +18,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateManufacturerMutation,
     GQLCreateManufacturerMutationVariables,
@@ -33,21 +33,20 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 function ManufacturersGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
+            <ToolbarFillSpace />
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="manufacturers.newManufacturer" defaultMessage="New Manufacturer" />
                 </Button>
             </ToolbarItem>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -78,6 +77,10 @@ export function ManufacturersGrid() {
                     </Tooltip>
                 </div>
             ),
+        },
+        {
+            field: "name",
+            headerName: intl.formatMessage({ id: "manufacturers.name", defaultMessage: "Name" }),
         },
         {
             field: "address.street",
@@ -137,6 +140,7 @@ export function ManufacturersGrid() {
                                     mutation: createManufacturerMutation,
                                     variables: {
                                         input: {
+                                            name: input.name,
                                             address: input.address,
                                             addressAsEmbeddable: input.addressAsEmbeddable,
                                         },
@@ -174,7 +178,7 @@ export function ManufacturersGrid() {
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
 
     return (
-        <MainContent fullHeight disablePadding>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
@@ -192,6 +196,7 @@ export function ManufacturersGrid() {
 
 const manufacturersFragment = gql`
     fragment ManufacturersListManual on Manufacturer {
+        name
         address {
             street
             streetNumber

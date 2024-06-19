@@ -18,7 +18,7 @@ const Root = createComponentSlot("div")<ToolbarItemClassKey>({
         padding: 0 ${theme.spacing(1)};
 
         ${theme.breakpoints.up("sm")} {
-            padding: 0 ${theme.spacing(2)};
+            padding: 0 ${theme.spacing(1)};
         }
     `,
 );

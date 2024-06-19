@@ -1,5 +1,258 @@
 # @comet/admin-date-time
 
+## 7.0.0-beta.1
+
+### Patch Changes
+
+-   @comet/admin@7.0.0-beta.1
+-   @comet/admin-icons@7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   ad73068f4: Change `DatePicker` and `DateRangePicker` values from `Date` to `string`
+
+    This affects the `value` prop and the value returned by the `onChange` event.
+
+    The value of `DatePicker` is a string in the format `YYYY-MM-DD`.
+    The value of `DateRangePicker` is an object with `start` and `end` keys, each as a string in the format `YYYY-MM-DD`.
+
+    The code that handles values from these components may need to be adjusted.
+    This may include how the values are stored in or sent to the database.
+
+    ```diff
+    -   const [date, setDate] = useState<Date | undefined>(new Date("2024-03-10"));
+    +   const [date, setDate] = useState<string | undefined>("2024-03-10");
+        return <DatePicker value={date} onChange={setDate} />;
+    ```
+
+    ```diff
+        const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    -       start: new Date("2024-03-10"),
+    -       end: new Date("2024-03-16"),
+    +       start: "2024-03-10",
+    +       end: "2024-03-16",
+        });
+        return <DateRangePicker value={dateRange} onChange={setDateRange} />;
+    ```
+
+    The reason for this change is that when selecting a date like `2024-04-10` in a timezone ahead of UTC, it would be stored in a `Date` object as e.g. `2024-04-09T22:00:00.000Z`. When only the date is saved to the database, without the time, it would be saved as `2024-04-09`, which differs from the selected date.
+
+-   cb544bc3e: Remove the `clearable` prop and add a `required` prop to `DateRangePicker`, `DateTimePicker`, `TimePicker` and `TimeRangePicker`
+
+    The clear button will automatically be shown for all optional fields.
+
+-   b87c3c292: Rename multiple props and class-keys and remove the `componentsProps` types:
+
+    -   `DatePicker`:
+
+        -   Replace the `componentsProps` prop with `slotProps`
+        -   Remove the `DatePickerComponentsProps` type
+
+    -   `DateRangePicker`:
+
+        -   Replace the `componentsProps` prop with `slotProps`
+        -   Remove the `DateRangePickerComponentsProps` type
+        -   Rename the `calendar` class-key to `dateRange`
+
+    -   `DateTimePicker`:
+
+        -   Replace the `componentsProps` prop with `slotProps`
+        -   Remove the `DateTimePickerComponentsProps` type
+        -   Replace the `formControl` class-key with two separate class-keys: `dateFormControl` and `timeFormControl`
+
+    -   `TimeRangePicker`:
+
+        -   Replace the `componentsProps` prop with `slotProps`
+        -   Remove the `TimeRangePickerComponentsProps` and `TimeRangePickerIndividualPickerProps` types
+        -   Replace the `formControl` class-key with two separate class-keys: `startFormControl` and `endFormControl`
+        -   Replace the `timePicker` class-key with two separate class-keys: `startTimePicker` and `endTimePicker`
+
+-   f8114cd39: Remove `clearable` prop from `DatePicker`
+
+    The clear button will automatically be shown for all optional fields.
+
+-   92eae2ba9: Change the method of overriding the styling of Admin components
+
+    -   Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
+    -   Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
+    -   Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
+    -   The `# @comet/admin-date-time syntax in the theme's `styleOverrides` is no longer supported, see: https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion
+
+    ```diff
+     const theme = createCometTheme({
+         components: {
+             CometAdminMyComponent: {
+                 styleOverrides: {
+    -                root: {
+    -                    "&$hasShadow": {
+    -                        boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+    -                    },
+    -                    "& $header": {
+    -                        backgroundColor: "lime",
+    -                    },
+    -                },
+    +                hasShadow: {
+    +                    boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+    +                },
+    +                header: {
+    +                    backgroundColor: "lime",
+    +                },
+                 },
+             },
+         },
+     });
+    ```
+
+    -   Overriding a component's styles using `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
+
+    ```diff
+    -import { withStyles } from "@mui/styles";
+    -
+    -const StyledMyComponent = withStyles({
+    -    root: {
+    -        backgroundColor: "lime",
+    -    },
+    -    header: {
+    -        backgroundColor: "fuchsia",
+    -    },
+    -})(MyComponent);
+    -
+    -// ...
+    -
+    -<StyledMyComponent title="Hello World" />;
+    +<MyComponent
+    +    title="Hello World"
+    +    sx={{
+    +        backgroundColor: "lime",
+    +    }}
+    +    slotProps={{
+    +        header: {
+    +            sx: {
+    +                backgroundColor: "fuchsia",
+    +            },
+    +        },
+    +    }}
+    +/>
+    ```
+
+    -   The module augmentation for the `DefaultTheme` type from `@mui/styles/defaultTheme` is no longer needed and needs to be removed from the admins theme file, usually located in `admin/src/theme.ts`:
+
+    ```diff
+    -declare module "@mui/styles/defaultTheme" {
+    -    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    -    export interface DefaultTheme extends Theme {}
+    -}
+    ```
+
+    -   Class-keys originating from MUI components have been removed from Comet Admin components, causing certain class-names and `styleOverrides` to no longer be applied.
+        The components `root` class-key is not affected. Other class-keys will retain the class-names and `styleOverrides` from the underlying MUI component.
+        For example, in `ClearInputAdornment` (when used with `position="end"`) the class-name `CometAdminClearInputAdornment-positionEnd` and the `styleOverrides` for `CometAdminClearInputAdornment.positionEnd` will no longer be applied.
+        The component will retain the class-names `MuiInputAdornment-positionEnd`, `MuiInputAdornment-root`, and `CometAdminClearInputAdornment-root`.
+        Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
+
+        This affects the following components:
+
+        -   `AppHeader`
+        -   `AppHeaderMenuButton`
+        -   `ClearInputAdornment`
+        -   `Tooltip`
+        -   `CancelButton`
+        -   `DeleteButton`
+        -   `OkayButton`
+        -   `SaveButton`
+        -   `StackBackButton`
+        -   `DatePicker`
+        -   `DateRangePicker`
+        -   `TimePicker`
+
+    -   For more details, see MUI's migration guide: https://mui.com/material-ui/migration/v5-style-changes/#mui-styles
+
+### Patch Changes
+
+-   b5753e612: Allow partial props in the theme's `defaultProps` instead of requiring all props when setting the `defaultProps` of a component
+-   Updated dependencies [865f253d8]
+-   Updated dependencies [05ce68ec0]
+-   Updated dependencies [51a0861d8]
+-   Updated dependencies [dc8bb6a99]
+-   Updated dependencies [54f775497]
+-   Updated dependencies [73140014f]
+-   Updated dependencies [9a4530b06]
+-   Updated dependencies [dc8bb6a99]
+-   Updated dependencies [e3efdfcc3]
+-   Updated dependencies [02d33e230]
+-   Updated dependencies [6054fdcab]
+-   Updated dependencies [d0869ac82]
+-   Updated dependencies [9a4530b06]
+-   Updated dependencies [47ec528a4]
+-   Updated dependencies [956111ab2]
+-   Updated dependencies [19eaee4ca]
+-   Updated dependencies [758c65656]
+-   Updated dependencies [9a4530b06]
+-   Updated dependencies [04ed68cc9]
+-   Updated dependencies [61b2acfb2]
+-   Updated dependencies [0263a45fa]
+-   Updated dependencies [4ca4830f3]
+-   Updated dependencies [3397ec1b6]
+-   Updated dependencies [20b2bafd8]
+-   Updated dependencies [51a0861d8]
+-   Updated dependencies [9c4b7c974]
+-   Updated dependencies [b5753e612]
+-   Updated dependencies [2a7bc765c]
+-   Updated dependencies [774977311]
+-   Updated dependencies [f8114cd39]
+-   Updated dependencies [b87c3c292]
+-   Updated dependencies [f06f4bea6]
+-   Updated dependencies [2a7bc765c]
+-   Updated dependencies [d2e64d1ec]
+-   Updated dependencies [241249bd4]
+-   Updated dependencies [be4e6392d]
+-   Updated dependencies [a53545438]
+-   Updated dependencies [1a1d83156]
+-   Updated dependencies [a2f278bbd]
+-   Updated dependencies [66330e4e6]
+-   Updated dependencies [b0249e3bc]
+-   Updated dependencies [92eae2ba9]
+    -   @comet/admin@7.0.0-beta.0
+    -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.13.0
+
+### Patch Changes
+
+-   Updated dependencies [5e25348bb]
+-   Updated dependencies [796e83206]
+    -   @comet/admin@6.13.0
+    -   @comet/admin-icons@6.13.0
+
+## 6.12.0
+
+### Patch Changes
+
+-   Updated dependencies [16ffa7be9]
+    -   @comet/admin@6.12.0
+    -   @comet/admin-icons@6.12.0
+
+## 6.11.0
+
+### Patch Changes
+
+-   Updated dependencies [8e3dec523]
+    -   @comet/admin@6.11.0
+    -   @comet/admin-icons@6.11.0
+
+## 6.10.0
+
+### Patch Changes
+
+-   Updated dependencies [a8a098a24]
+-   Updated dependencies [d4a269e1e]
+-   Updated dependencies [52130afba]
+-   Updated dependencies [e938254bf]
+    -   @comet/admin@6.10.0
+    -   @comet/admin-icons@6.10.0
+
 ## 6.9.0
 
 ### Minor Changes

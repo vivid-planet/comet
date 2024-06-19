@@ -45,6 +45,7 @@ export function FinalFormSearchTextField(inProps: FinalFormSearchTextFieldProps)
                     endAdornment
                 )
             }
+            disableContentTranslation={true}
         />
     );
 }

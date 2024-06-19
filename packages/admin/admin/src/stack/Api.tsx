@@ -3,8 +3,8 @@ import * as React from "react";
 import { BreadcrumbItem, SwitchItem } from "./Stack";
 
 export interface IStackApi {
-    addBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode) => void;
-    updateBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode) => void;
+    addBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode, invisible: boolean) => void;
+    updateBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode, invisible: boolean) => void;
     removeBreadcrumb: (id: string) => void;
     goBack: () => void;
     goAllBack: () => void;

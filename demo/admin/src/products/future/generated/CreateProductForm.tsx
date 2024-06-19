@@ -17,7 +17,7 @@ import {
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout } from "@comet/cms-admin";
+import { DamImageBlock } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
@@ -92,7 +92,7 @@ export function CreateProductForm(): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     <MainContent>
                         <TextField
                             required
@@ -124,7 +124,7 @@ export function CreateProductForm(): React.ReactElement {
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
+                        <Field required fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
                                     <MenuItem value="Cap">
@@ -166,7 +166,7 @@ export function CreateProductForm(): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

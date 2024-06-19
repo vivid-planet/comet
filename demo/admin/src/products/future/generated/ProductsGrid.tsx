@@ -3,14 +3,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
     filterByFragment,
+    GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
     ToolbarActions,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -20,7 +20,7 @@ import {
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -49,7 +49,7 @@ const productsFragment = gql`
 `;
 
 const productsQuery = gql`
-    query ProductsGrid($offset: Int, $limit: Int, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
+    query ProductsGrid($offset: Int!, $limit: Int!, $sort: [ProductSort!], $search: String, $filter: ProductFilter) {
         products(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
                 ...ProductsGridFuture
@@ -76,8 +76,7 @@ const createProductMutation = gql`
 
 function ProductsGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -90,7 +89,7 @@ function ProductsGridToolbar() {
                     <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarActions>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 

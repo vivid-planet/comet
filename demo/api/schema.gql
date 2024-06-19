@@ -17,6 +17,7 @@ type CurrentUser {
   name: String!
   email: String!
   permissions: [CurrentUserPermission!]!
+  permissionsForScope(scope: JSONObject!): [String!]!
 }
 
 type UserPermission {
@@ -442,6 +443,7 @@ type AddressAsEmbeddable {
 
 type Manufacturer {
   id: ID!
+  name: String!
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
   updatedAt: DateTime!
@@ -481,7 +483,7 @@ type ProductColor implements DocumentInterface {
 
 type ProductStatistics {
   id: ID!
-  views: Float!
+  views: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -529,9 +531,10 @@ type Product {
   slug: String!
   description: String!
   type: ProductType!
+  additionalTypes: [ProductType!]!
   price: Float
   inStock: Boolean!
-  soldCount: Float
+  soldCount: Int
   availableSince: DateTime
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
@@ -726,7 +729,6 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
-  isAllowedSitePreview(scope: JSONObject!): Boolean!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
@@ -931,11 +933,13 @@ input ProductFilter {
   slug: StringFilter
   description: StringFilter
   type: ProductTypeEnumFilter
+  additionalTypes: ProductTypeEnumsFilter
   price: NumberFilter
   inStock: BooleanFilter
   soldCount: NumberFilter
   availableSince: DateFilter
   category: ManyToOneFilter
+  tags: ManyToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   manufacturer: ManyToOneFilter
@@ -955,6 +959,10 @@ input ProductTypeEnumFilter {
   notEqual: ProductType
 }
 
+input ProductTypeEnumsFilter {
+  contains: [ProductType!]
+}
+
 input NumberFilter {
   equal: Float
   lowerThan: Float
@@ -970,6 +978,10 @@ input ManyToOneFilter {
   notEqual: ID
 }
 
+input ManyToManyFilter {
+  contains: ID
+}
+
 input ProductSort {
   field: ProductSortField!
   direction: SortDirection! = ASC
@@ -981,6 +993,7 @@ enum ProductSortField {
   slug
   description
   type
+  additionalTypes
   price
   inStock
   soldCount
@@ -1014,6 +1027,7 @@ enum ProductCategorySortField {
 
 input ProductTagFilter {
   title: StringFilter
+  products: ManyToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductTagFilter!]
@@ -1052,6 +1066,7 @@ enum ProductVariantSortField {
 }
 
 input ManufacturerFilter {
+  name: StringFilter
   addressAsEmbeddable_street: StringFilter
   addressAsEmbeddable_streetNumber: NumberFilter
   addressAsEmbeddable_zip: NumberFilter
@@ -1071,6 +1086,7 @@ input ManufacturerSort {
 }
 
 enum ManufacturerSortField {
+  name
   addressAsEmbeddable_street
   addressAsEmbeddable_streetNumber
   addressAsEmbeddable_zip
@@ -1332,6 +1348,7 @@ input ProductInput {
   slug: String!
   description: String!
   type: ProductType!
+  additionalTypes: [ProductType!]! = []
   price: Float = null
   inStock: Boolean! = true
   availableSince: DateTime = null
@@ -1367,6 +1384,7 @@ input ProductUpdateInput {
   slug: String
   description: String
   type: ProductType
+  additionalTypes: [ProductType!]
   price: Float
   inStock: Boolean
   availableSince: DateTime
@@ -1420,11 +1438,13 @@ input ProductVariantUpdateInput {
 }
 
 input ManufacturerInput {
+  name: String!
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput!
 }
 
 input ManufacturerUpdateInput {
+  name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
 }

@@ -16,7 +16,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
@@ -79,6 +79,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         : {
               image: rootBlocks.image.defaultValues(),
               inStock: false,
+              additionalTypes: [],
               tags: [],
           };
 
@@ -152,7 +153,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
                     <MainContent>
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
@@ -164,6 +165,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <SelectField name="type" label="Type" required fullWidth>
+                            <MenuItem value="Cap">Cap</MenuItem>
+                            <MenuItem value="Shirt">Shirt</MenuItem>
+                            <MenuItem value="Tie">Tie</MenuItem>
+                        </SelectField>
+                        <SelectField name="additionalTypes" label="Additional Type" required fullWidth multiple>
                             <MenuItem value="Cap">Cap</MenuItem>
                             <MenuItem value="Shirt">Shirt</MenuItem>
                             <MenuItem value="Tie">Tie</MenuItem>
@@ -190,7 +196,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

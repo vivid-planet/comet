@@ -1,6 +1,6 @@
 //TODO add import "server-only"; once this file gets correctly tree-shaked out of the client bundle
 
-import { jwtDecrypt, SignJWT } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
@@ -37,10 +37,12 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
     const previewData = JSON.parse(settingsParam);
     const scope = JSON.parse(scopeParam);
 
-    const { isAllowedSitePreview } = await graphQLFetch<{ isAllowedSitePreview: boolean }, { scope: unknown }>(
+    const { currentUser } = await graphQLFetch<{ currentUser: { permissionsForScope: string[] } }, { scope: Scope }>(
         `
-            query isAllowedSitePreview($scope: JSONObject!) {
-                isAllowedSitePreview(scope: $scope)
+            query CurrentUserPermissionsForScope($scope: JSONObject!) {
+                currentUser {
+                    permissionsForScope(scope: $scope)
+                }
             }
         `,
         { scope },
@@ -50,7 +52,7 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
             },
         },
     );
-    if (!isAllowedSitePreview) {
+    if (!currentUser.permissionsForScope.includes("pageTree")) {
         return new Response("Preview is not allowed", {
             status: 403,
         });
@@ -65,13 +67,21 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
     return redirect(params.get("path") || "/");
 }
 
-export async function previewParams(): Promise<SitePreviewParams | null> {
+/**
+ * Helper for SitePreview
+ * @param options.skipDraftModeCheck Allows skipping the draft mode check, only required when called from middleware.ts (see https://github.com/vercel/next.js/issues/52080)
+ * @return If SitePreview is active the current preview settings
+ */
+export async function previewParams(options: { skipDraftModeCheck: boolean } = { skipDraftModeCheck: false }): Promise<SitePreviewParams | null> {
     const previewScopeSigningKey = getPreviewScopeSigningKey();
 
-    if (!draftMode().isEnabled) return null;
+    if (!options.skipDraftModeCheck) {
+        if (!draftMode().isEnabled) return null;
+    }
+
     const cookie = cookies().get("__comet_preview");
     if (cookie) {
-        const { payload } = await jwtDecrypt<SitePreviewParams>(cookie.value, new TextEncoder().encode(previewScopeSigningKey));
+        const { payload } = await jwtVerify<SitePreviewParams>(cookie.value, new TextEncoder().encode(previewScopeSigningKey));
         return payload;
     }
     return null;
