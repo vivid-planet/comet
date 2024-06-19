@@ -486,9 +486,6 @@ importers:
       graphql:
         specifier: ^15.0.0
         version: 15.8.0
-      graphql-scalars:
-        specifier: ^1.23.0
-        version: 1.23.0(graphql@15.8.0)
       hasha:
         specifier: ^5.0.0
         version: 5.2.2
