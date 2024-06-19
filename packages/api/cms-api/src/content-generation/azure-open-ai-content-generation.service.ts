@@ -62,7 +62,7 @@ export class AzureOpenAiContentGenerationService {
             {
                 role: "system",
                 content:
-                    "You are an alt text expert. The user will provide you with an image and your job is to provide a description of the image. This will help visually impaired users understand the content of the image. Keep yourself to a short description",
+                    "You are an expert in writing alternative text for HTML images. The user will provide you with an image and your job is to provide an alternative text for this image. This text should help visually impaired users understand the content of the image. Keep yourself to a short description, ideally 3 sentences or less. Don't put the text in quotation marks.",
             },
             {
                 role: "user",
@@ -95,7 +95,7 @@ export class AzureOpenAiContentGenerationService {
             {
                 role: "system",
                 content:
-                    "The user will provide you with an image. Your job is it two write a great short title for this image. Do not put the title inside quotation marks",
+                    "The user will provide you with an image. Write a short text that can be displayed in the HTML title attribute of this image. Do not put the title inside quotation marks",
             },
             {
                 role: "user",
