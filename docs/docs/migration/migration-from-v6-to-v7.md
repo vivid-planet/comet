@@ -22,7 +22,9 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 ### Remove unnecessary dependencies
 
-Remove following dependencies **if you don't use them in your project**:
+The following dependencies used to be peer dependencies of Comet.
+They are no longer required.
+You can remove them **if you don't use them in your project**:
 
 -   `@aws-sdk/client-s3`
 -   `@azure/storage-blob`
@@ -321,7 +323,8 @@ Use the generic `update{Entity}` mutation instead.
 
 ### Remove `axios` dependency
 
-Remove `axios` **if you don't use it in your project**.
+`axios` used to be a peer dependency of Comet.
+It's no longer required, so you can remove `axios` **if you don't use it in your project**.
 
 ### Rearrange components in `App.tsx`
 
