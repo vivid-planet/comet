@@ -80,7 +80,7 @@ async function generateSchema(): Promise<void> {
         BuildTemplatesResolver,
         redirectsResolver,
         createDamItemsResolver({ File, Folder }),
-        createFilesResolver({ File }),
+        createFilesResolver({ File, Folder }),
         FileLicensesResolver,
         FileImagesResolver,
         createFoldersResolver({ Folder }),
