@@ -150,10 +150,33 @@ export const styleMap = {
     },
 };
 
-const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles>> = (props, ref) => {
+export const isRichTextEqual = (a?: EditorState, b?: EditorState): boolean => {
+    if (a === b) {
+        return true;
+    } else if (!a || !b) {
+        return false;
+    } else {
+        return JSON.stringify(a.getCurrentContent()) === JSON.stringify(b.getCurrentContent());
+    }
+};
+
+const Rte: React.ForwardRefRenderFunction<any, RteProps & WithStyles<typeof styles>> = (props, ref) => {
     const { value: editorState, onChange, options: passedOptions, disabled, classes } = props;
     const editorRef = React.useRef<DraftJsEditor>(null);
     const editorWrapperRef = React.useRef<HTMLDivElement>(null);
+
+    const [initialState, setInitialState] = React.useState<EditorState>(EditorState.createWithContent(editorState.getCurrentContent()));
+
+    React.useEffect(() => {
+        if (!isRichTextEqual(editorState, initialState)) {
+            setInitialState(EditorState.createWithContent(editorState.getCurrentContent()));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editorState]);
+
+    React.useEffect(() => {
+        onChange(initialState);
+    }, [initialState, onChange]);
 
     // merge default options with passed options
     let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
@@ -208,9 +231,9 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
             modifiedState = mandatoryFilterEditorStateFn(modifiedState, context);
 
             // pass the modified filter to original onChange
-            onChange(modifiedState);
+            setInitialState(modifiedState);
         },
-        [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, onChange],
+        [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, setInitialState],
     );
 
     const blockRenderMap = createBlockRenderMap({ blocktypeMap: options.blocktypeMap });
@@ -225,17 +248,17 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
 
         const relevantSupports = commandToSupportsMap[command];
         if (relevantSupports && options.supports.includes(relevantSupports)) {
-            const newState = RichUtils.handleKeyCommand(editorState, command);
+            const newState = RichUtils.handleKeyCommand(initialState, command);
 
             if (newState) {
-                onChange(newState);
+                setInitialState(newState);
                 return "handled";
             }
         }
 
         // disallow user to add a new block when block limit is already reached
         if (command === "split-block" && options.maxBlocks) {
-            const content = editorState.getCurrentContent();
+            const content = initialState.getCurrentContent();
             const blockSize = content.getBlockMap().count();
 
             const userTriesToAddTooMuchBlocks = blockSize >= options.maxBlocks;
@@ -249,7 +272,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
     function handleReturn(e: React.KeyboardEvent, innerEditorState: EditorState) {
         // inserts a newline "\n" on SHIFT+ENTER-key
         if (e.shiftKey) {
-            onChange(RichUtils.insertSoftNewline(innerEditorState));
+            setInitialState(RichUtils.insertSoftNewline(innerEditorState));
             return "handled";
         }
         return "not-handled";
@@ -259,9 +282,9 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
         if (event.key === "Tab") {
             // nested lists for ol and ul
             event.preventDefault();
-            const newEditorState = RichUtils.onTab(event, editorState, options.listLevelMax);
+            const newEditorState = RichUtils.onTab(event, initialState, options.listLevelMax);
             if (newEditorState !== editorState) {
-                onChange(newEditorState);
+                setInitialState(newEditorState);
             }
         }
 
@@ -281,14 +304,14 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
 
     return (
         <div ref={editorWrapperRef} className={rootClasses.join(" ")}>
-            <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
+            <Controls editorRef={editorRef} editorState={initialState} setEditorState={setInitialState} options={options} disabled={disabled} />
             <div
                 className={classes.editor}
                 style={{ "--comet-admin-rte-min-height": `${props.minHeight === undefined ? 240 : props.minHeight}px` } as React.CSSProperties}
             >
                 <DraftJsEditor
                     ref={editorRef}
-                    editorState={editorState}
+                    editorState={initialState}
                     onChange={decoratedOnChange}
                     handleKeyCommand={handleKeyCommand}
                     handleReturn={handleReturn}
