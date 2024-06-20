@@ -355,7 +355,7 @@ The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
 #### Remove the `@mui/styles` package
 
 The legacy `@mui/styles` package was removed in favor of `@mui/material/styles`.
-You can remove `@mui/styles` too:
+You must remove `@mui/styles` from your project too:
 
 ```diff
 //package.json
