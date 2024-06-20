@@ -17,10 +17,21 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type ChipSelectClassKey = "root" | "inputBase" | "inputRoot" | "chip" | "select";
 
-const Root = createComponentSlot("div")<ChipSelectClassKey>({
+type OwnerState = {
+    fullWidth: boolean;
+};
+
+const Root = createComponentSlot("div")<ChipSelectClassKey, OwnerState>({
     componentName: "ChipSelect",
     slotName: "root",
-})();
+})(
+    ({ ownerState }) => css`
+        ${!ownerState.fullWidth &&
+        css`
+            width: fit-content;
+        `}
+    `,
+);
 
 const ChipInputRoot = createComponentSlot("div")<ChipSelectClassKey>({
     componentName: "ChipSelect",
@@ -129,7 +140,7 @@ export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
         children,
         slotProps,
         onChange,
-        fullWidth,
+        fullWidth = false,
         className,
         ...chipProps
     } = useThemeProps({
@@ -137,8 +148,10 @@ export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
         name: "CometAdminChipSelect",
     });
 
+    const ownerState = { fullWidth };
+
     return (
-        <Root {...slotProps?.root} sx={fullWidth ? { ...slotProps?.root?.sx } : { ...slotProps?.root?.sx, width: "fit-content" }}>
+        <Root {...slotProps?.root} ownerState={ownerState}>
             <Select
                 {...slotProps?.select}
                 value={selectedOption || ""}
