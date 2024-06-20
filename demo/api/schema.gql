@@ -1166,6 +1166,7 @@ type Mutation {
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
   deleteProductCategory(id: ID!): Boolean!
+  setProductCategory(id: ID!, input: SetProductCategoryInput!): ProductCategory!
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   deleteProductTag(id: ID!): Boolean!
@@ -1418,6 +1419,10 @@ input ProductCategoryInput {
 input ProductCategoryUpdateInput {
   title: String
   slug: String
+}
+
+input SetProductCategoryInput {
+  productIds: [ID!]! = []
 }
 
 input ProductTagInput {
