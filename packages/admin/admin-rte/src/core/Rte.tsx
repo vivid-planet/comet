@@ -230,7 +230,6 @@ const Rte: React.ForwardRefRenderFunction<any, RteProps & WithStyles<typeof styl
             // apply mandatory filter to editorState
             modifiedState = mandatoryFilterEditorStateFn(modifiedState, context);
 
-            // pass the modified filter to original onChange
             setInitialState(modifiedState);
         },
         [filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType, setInitialState],
