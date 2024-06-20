@@ -1,5 +1,14 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Chip, ChipProps, ComponentsOverrides, InputBase as MuiInputBase, InputBaseProps, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import {
+    Chip as MuiChip,
+    ChipProps,
+    ComponentsOverrides,
+    InputBase as MuiInputBase,
+    InputBaseProps,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+} from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
@@ -22,6 +31,16 @@ const ChipInputRoot = createComponentSlot("div")<ChipSelectClassKey>({
         flex-direction: column;
         position: relative;
     `,
+);
+
+const Chip = createComponentSlot(MuiChip)<ChipSelectClassKey>({
+    componentName: "ChipSelect",
+    slotName: "chip",
+})(
+    () =>
+        css`
+            justify-content: flex-start;
+        `,
 );
 
 const InputBase = createComponentSlot(MuiInputBase)<ChipSelectClassKey>({
