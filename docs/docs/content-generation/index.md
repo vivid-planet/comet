@@ -25,26 +25,21 @@ export class ContentGenerationService implements ContentGenerationServiceInterfa
 
 #### Azure OpenAI
 
-If you want to use Azure OpenAI for analyzing the images, you can use the `AzureOpenAiContentGenerationService` provided by the library as a helper:
+If you want to use Azure OpenAI for analyzing the images, you can use the `AzureOpenAiContentGenerationService` provided by the library:
 
 ```ts
 @Injectable()
 export class ContentGenerationService implements ContentGenerationServiceInterface {
-    azureOpenAiConfig: AzureOpenAiContentGenerationConfig;
-
     constructor(
-        @Inject(CONFIG) private readonly config: Config,
         private readonly openAiContentGenerationService: AzureOpenAiContentGenerationService,
-    ) {
-        this.azureOpenAiConfig = config.contentGeneration;
-    }
+    ) {}
 
     async generateAltText(fileId: string) {
-        return this.openAiContentGenerationService.generateAltText(fileId, this.azureOpenAiConfig);
+        return this.openAiContentGenerationService.generateAltText(fileId);
     }
 
     async generateImageTitle(fileId: string) {
-        return this.openAiContentGenerationService.generateAltText(fileId, this.azureOpenAiConfig);
+        return this.openAiContentGenerationService.generateAltText(fileId);
     }
 }
 ```
@@ -61,11 +56,29 @@ export class AppModule {
       // ...
 +     ContentGenerationModule.register({
 +        Service: ContentGenerationService,
++        config: { }
 +     }),
    ],
    // ...
 }
 
+```
+
+#### Azure OpenAI
+
+For the `AzureOpenAiContentGenerationService` to work, you must pass a config to the `ContentGenerationModule`:
+
+```diff
+ContentGenerationModule.register({
+   Service: ContentGenerationService,
+   config: {
++       openAiContentGenerationService: {
++           apiKey: "example-key",
++           apiUrl: "example-url",
++           deploymentId: "example-deployment",
++       },
+   },
+});
 ```
 
 ### 3) Admin: Enable the features in your `DamConfigProvider`:
