@@ -1,5 +1,7 @@
 import {
     MainContent,
+    RouterTab,
+    RouterTabs,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
@@ -10,8 +12,12 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarFillSpace,
+    useEditDialog,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
+import { Box } from "@mui/material";
+import { AssignProductsForm } from "@src/products/categories/AssignProductsForm";
+import { ProductsGrid } from "@src/products/ProductsGrid";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -31,9 +37,10 @@ const FormToolbar = () => (
 
 const ProductCategoriesPage: React.FC = () => {
     const intl = useIntl();
+    const [EditDialog] = useEditDialog();
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories" })}>
+        <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories Handmade" })}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
@@ -45,7 +52,44 @@ const ProductCategoriesPage: React.FC = () => {
                     {(selectedId) => (
                         <SaveBoundary>
                             <FormToolbar />
-                            <ProductCategoryForm id={selectedId} />
+                            <MainContent fullHeight>
+                                <RouterTabs>
+                                    <RouterTab
+                                        forceRender={true}
+                                        path=""
+                                        label={intl.formatMessage({ id: "products.editProductCategory.formTab", defaultMessage: "Product category" })}
+                                    >
+                                        <ProductCategoryForm id={selectedId} />
+                                    </RouterTab>
+                                    <RouterTab
+                                        forceRender={true}
+                                        path="/assigned-products"
+                                        label={intl.formatMessage({
+                                            id: "products.editProductCategory.assignedProducts",
+                                            defaultMessage: "Assigned Products",
+                                        })}
+                                    >
+                                        <StackSwitch initialPage="table" title="TEST">
+                                            <StackPage name="table">
+                                                <Box sx={{ height: "100vh" }}>
+                                                    <ProductsGrid filter={{ category: { equal: selectedId } }} />
+                                                    {/* TODO change button behaviour and open edit-dialog, open discussion https://github.com/vivid-planet/comet/pull/2171 */}
+                                                    <EditDialog
+                                                        componentsProps={{
+                                                            dialog: { fullWidth: true, maxWidth: "xl" },
+                                                            dialogContent: {
+                                                                sx: { padding: 0, paddingTop: "0 !important" /* is connected to title-style */ },
+                                                            },
+                                                        }}
+                                                    >
+                                                        <AssignProductsForm productCategoryId={selectedId} />
+                                                    </EditDialog>
+                                                </Box>
+                                            </StackPage>
+                                        </StackSwitch>
+                                    </RouterTab>
+                                </RouterTabs>
+                            </MainContent>
                         </SaveBoundary>
                     )}
                 </StackPage>
