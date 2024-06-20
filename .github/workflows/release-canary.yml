@@ -34,7 +34,7 @@ jobs:
               run: pnpm run copy-schema-files
 
             - name: Publish Canary release
-              if: ${{ github.ref_name == 'main' }}
+              if: ${{ github.ref_name == 'main' && !contains(github.event.head_commit.message, 'Version Packages') }}
               run: |
                   echo --- > .changeset/canary.md
                   echo '"@comet/cli": patch' >> .changeset/canary.md
@@ -47,7 +47,7 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Publish Canary release
-              if: ${{ github.ref_name == 'next' }}
+              if: ${{ github.ref_name == 'next' && !contains(github.event.head_commit.message, 'Version Packages') }}
               run: |
                   echo --- > .changeset/canary.md
                   echo '"@comet/cli": major' >> .changeset/canary.md
