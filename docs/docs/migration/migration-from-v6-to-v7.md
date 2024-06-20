@@ -365,7 +365,7 @@ You must remove `@mui/styles` from your project too:
 
 This has multiple implications:
 
--   COMET Admin components can now be styled using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/)
+-   Comet Admin components can now be styled using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/)
 -   Individual elements (slots) of a component can now be styled using the `slotProps` and `sx` props
 -   The `$` syntax in the theme's `styleOverrides` is no longer supported, see: [MUI Docs](https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion):
 
