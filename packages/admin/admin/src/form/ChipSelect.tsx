@@ -2,7 +2,6 @@ import { ChevronDown } from "@comet/admin-icons";
 import { Chip, ChipProps, ComponentsOverrides, InputBase as MuiInputBase, InputBaseProps, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -66,16 +65,9 @@ const ChipInput = ({
     inputBaseProps?: InputBaseProps;
     inputRootProps?: React.ComponentPropsWithoutRef<"div">;
 }) => {
-    const fallBackLabel = <FormattedMessage id="comet.admin.form.chipselect.placeholder" defaultMessage="Select a value" />;
-
     return (
         <ChipInputRoot {...inputRootProps}>
-            <Chip
-                icon={<ChevronDown />}
-                label={restProps.value?.toString().length ? restProps.value : fallBackLabel}
-                variant="filled"
-                {...chipProps}
-            />
+            <Chip icon={<ChevronDown />} label={restProps.value?.toString().length ? restProps.value : ""} variant="filled" {...chipProps} />
             <InputBase
                 sx={{
                     position: "absolute",
