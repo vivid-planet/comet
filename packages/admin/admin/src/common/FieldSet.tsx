@@ -87,8 +87,6 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
                 <EndAdornment {...slotProps?.endAdornment}>{endAdornment}</EndAdornment>
             </Summary>
             <Children ownerState={ownerState} {...slotProps?.children}>
-                {disablePadding ? "disablePadding" : "not disablePadding"}
-
                 {children}
             </Children>
         </Root>
