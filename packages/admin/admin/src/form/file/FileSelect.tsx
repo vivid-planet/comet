@@ -41,7 +41,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     onDownload?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
     disabled?: boolean;
     accept?: Accept;
-    maxFileSize?: number;
+    maxFileSize?: number | null;
     maxFiles?: number;
     error?: React.ReactNode;
     iconMapping?: {
@@ -96,7 +96,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                     onDrop={onDrop}
                     accept={accept}
                     multiple={multiple}
-                    maxSize={maxFileSize}
+                    maxSize={maxFileSize === null ? undefined : maxFileSize}
                     maxFiles={maxNumberOfFilesToBeAdded}
                     {...slotProps?.dropzone}
                 />
