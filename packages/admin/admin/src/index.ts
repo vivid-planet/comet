@@ -126,6 +126,7 @@ export { MuiThemeProvider } from "./mui/ThemeProvider";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog, RouterConfirmationDialogClassKey, RouterConfirmationDialogProps } from "./router/ConfirmationDialog";
 export { RouterContext } from "./router/Context";
+export { ForcePromptRoute } from "./router/ForcePromptRoute";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
 export { RouterPrompt } from "./router/Prompt";
 export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";

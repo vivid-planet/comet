@@ -1,7 +1,8 @@
 import * as React from "react";
-import { Route, RouteComponentProps, Switch, useHistory, useRouteMatch } from "react-router";
+import { matchPath, RouteComponentProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
+import { ForcePromptRoute } from "../router/ForcePromptRoute";
 import { SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
 import { StackBreadcrumb } from "./Breadcrumb";
 import { IStackPageProps } from "./Page";
@@ -89,6 +90,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
     const history = useHistory();
     const match = useRouteMatch<IRouteParams>();
     const subRoutePrefix = useSubRoutePrefix();
+    const location = useLocation();
 
     let activePage: string | undefined;
 
@@ -171,34 +173,40 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
 
     if (!match) return null;
 
+    let routeMatched = false; //to prevent rendering the initial page when a route is matched (as the initial would also match)
     return (
-        <Switch>
+        <>
             {React.Children.map(props.children, (page: React.ReactElement<IStackPageProps>) => {
                 if (isInitialPage(page.props.name)) return null; // don't render initial Page
                 const path = `${removeTrailingSlash(subRoutePrefix)}/:id/${page.props.name}`;
+                if (matchPath(location.pathname, { path })) {
+                    routeMatched = true;
+                }
                 return (
-                    <Route path={path}>
+                    <ForcePromptRoute path={path}>
                         {(routeProps: RouteComponentProps<IRouteParams>) => {
                             if (!routeProps.match) return null;
                             return renderRoute(page, routeProps);
                         }}
-                    </Route>
+                    </ForcePromptRoute>
                 );
             })}
-            <SubRouteIndexRoute>
-                {(routeProps: RouteComponentProps<IRouteParams>) => {
-                    if (!routeProps.match) return null;
-                    // now render initial page (as last route so it's a fallback)
-                    let initialPage: React.ReactElement<IStackPageProps> | null = null;
-                    React.Children.forEach(props.children, (page: React.ReactElement<IStackPageProps>) => {
-                        if (isInitialPage(page.props.name)) {
-                            initialPage = page;
-                        }
-                    });
-                    return renderRoute(initialPage!, routeProps);
-                }}
-            </SubRouteIndexRoute>
-        </Switch>
+            {!routeMatched && (
+                <SubRouteIndexRoute>
+                    {(routeProps: RouteComponentProps<IRouteParams>) => {
+                        if (!routeProps.match) return null;
+                        // now render initial page (as last route so it's a fallback)
+                        let initialPage: React.ReactElement<IStackPageProps> | null = null;
+                        React.Children.forEach(props.children, (page: React.ReactElement<IStackPageProps>) => {
+                            if (isInitialPage(page.props.name)) {
+                                initialPage = page;
+                            }
+                        });
+                        return renderRoute(initialPage!, routeProps);
+                    }}
+                </SubRouteIndexRoute>
+            )}
+        </>
     );
 };
 const StackSwitchWithRef = React.forwardRef(StackSwitchInner);
