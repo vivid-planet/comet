@@ -41,7 +41,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     onDownload?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
     disabled?: boolean;
     accept?: Accept;
-    maxFileSize?: number | null;
+    maxFileSize?: number;
     maxFiles?: number;
     error?: React.ReactNode;
     iconMapping?: {
