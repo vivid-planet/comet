@@ -8,6 +8,7 @@ import {
     ManyToManyFilter,
     ManyToOneFilter,
     NumberFilter,
+    OneToManyFilter,
     StringFilter,
 } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
@@ -86,6 +87,18 @@ export class ProductFilter {
     @Type(() => DateFilter)
     availableSince?: DateFilter;
 
+    @Field(() => OneToManyFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => OneToManyFilter)
+    colors?: OneToManyFilter;
+
+    @Field(() => OneToManyFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => OneToManyFilter)
+    variants?: OneToManyFilter;
+
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
@@ -97,6 +110,12 @@ export class ProductFilter {
     @IsOptional()
     @Type(() => ManyToManyFilter)
     tags?: ManyToManyFilter;
+
+    @Field(() => OneToManyFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => OneToManyFilter)
+    tagsWithStatus?: OneToManyFilter;
 
     @Field(() => DateFilter, { nullable: true })
     @ValidateNested()
