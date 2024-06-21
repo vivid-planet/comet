@@ -4,7 +4,7 @@ import { Prop } from "../generateForm";
 import { FormFieldConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
 
-type GqlArg = { type: string; name: string; queryOrMutationName: string; isInputArgSubfield: boolean };
+type GqlArg = { type: string; name: string; isInputArgSubfield: boolean };
 
 export function getForwardedGqlArgs({
     fields,
@@ -41,7 +41,7 @@ export function getForwardedGqlArgs({
             props.push({ name: arg.name, optional: false, type: `GQL${arg.type}` }); // generated types contain GQL prefix
             imports.push({ name: `GQL${arg.type}`, importPath: "@src/graphql.generated" });
         }
-        gqlArgs.push({ name: arg.name, type: arg.type, queryOrMutationName: arg.gqlField.name, isInputArgSubfield: arg.isInputArgSubfield });
+        gqlArgs.push({ name: arg.name, type: arg.type, isInputArgSubfield: arg.isInputArgSubfield });
     });
 
     return {
@@ -56,9 +56,9 @@ function getArgsIncludingInputArgSubfields(gqlField: IntrospectionField, gqlIntr
 
     // reducer is not created inline to reuse it to look into "input" arg
     function reducer(
-        acc: { name: string; type: string; gqlField: IntrospectionField; isInputArgSubfield: boolean }[],
+        acc: { name: string; type: string; isInputArgSubfield: boolean }[],
         inputField: IntrospectionInputValue,
-    ): { name: string; type: string; gqlField: IntrospectionField; isInputArgSubfield: boolean }[] {
+    ): { name: string; type: string; isInputArgSubfield: boolean }[] {
         if (inputField.type.kind !== "NON_NULL" || inputField.defaultValue) return acc;
 
         const gqlType = inputField.type.ofType;
@@ -78,16 +78,16 @@ function getArgsIncludingInputArgSubfields(gqlField: IntrospectionField, gqlIntr
                     console.warn(`IntrospectionType for ${gqlType.name} not found or no INPUT_OBJECT`);
                 }
             } else {
-                acc.push({ name: inputField.name, type: gqlType.name, gqlField, isInputArgSubfield: false });
+                acc.push({ name: inputField.name, type: gqlType.name, isInputArgSubfield: false });
             }
         } else if (gqlType.kind === "SCALAR") {
             if (!nativeScalars.includes(gqlType.name)) {
                 console.warn(`Currently not supported special SCALAR of type ${gqlType.name} in arg/field ${inputField.name}`);
             } else {
-                acc.push({ name: inputField.name, type: gqlType.name, gqlField, isInputArgSubfield: false });
+                acc.push({ name: inputField.name, type: gqlType.name, isInputArgSubfield: false });
             }
         } else if (gqlType.kind === "ENUM") {
-            acc.push({ name: inputField.name, type: gqlType.name, gqlField, isInputArgSubfield: false });
+            acc.push({ name: inputField.name, type: gqlType.name, isInputArgSubfield: false });
         } else if (gqlType.kind === "LIST") {
             throw new Error(`Not supported kind ${gqlType.kind}, arg: input.${inputField.name}`);
         }
