@@ -60,7 +60,7 @@ export type FileSelectProps<AdditionalFileValues extends object = Record<string,
     onDownload?: (file: FileSelectFileValue<AdditionalFileValues>) => void;
     disabled?: boolean;
     accept?: Accept;
-    maxFileSize?: number | null;
+    maxFileSize?: number;
     maxFiles?: number;
     error?: React.ReactNode;
     iconMapping?: {
@@ -73,7 +73,7 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
         slotProps,
         disabled,
         accept,
-        maxFileSize = 50 * 1024 * 1024, // 50 MB
+        maxFileSize,
         maxFiles,
         iconMapping = {},
         onDrop,
