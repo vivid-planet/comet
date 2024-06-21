@@ -1,6 +1,6 @@
 import { BlobStorageConfig } from "@comet/cms-api";
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional, IsString, MinLength, ValidateIf } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -95,4 +95,17 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
+
+    @IsString()
+    @IsOptional()
+    @IsUrl()
+    AZURE_AI_TRANSLATOR_ENDPOINT?: string;
+
+    @IsString()
+    @IsOptional()
+    AZURE_AI_TRANSLATOR_KEY?: string;
+
+    @IsString()
+    @IsOptional()
+    AZURE_AI_TRANSLATOR_REGION?: string;
 }
