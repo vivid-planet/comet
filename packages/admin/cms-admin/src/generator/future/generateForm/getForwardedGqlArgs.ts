@@ -8,12 +8,12 @@ type GqlArg = { type: string; name: string; isInputArgSubfield: boolean };
 
 export function getForwardedGqlArgs({
     fields,
-    gqlField,
+    gqlOperation,
     gqlIntrospection,
 }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fields: FormFieldConfig<any>[];
-    gqlField: IntrospectionField;
+    gqlOperation: IntrospectionField;
     gqlIntrospection: IntrospectionQuery;
 }): {
     imports: Imports;
@@ -26,7 +26,7 @@ export function getForwardedGqlArgs({
 
     const skipGqlInputArgFields = fields.map((field) => String(field.name));
 
-    getArgsIncludingInputArgSubfields(gqlField, gqlIntrospection).forEach((arg) => {
+    getArgsIncludingInputArgSubfields(gqlOperation, gqlIntrospection).forEach((arg) => {
         if (arg.isInputArgSubfield && skipGqlInputArgFields.includes(arg.name)) return;
 
         if (arg.type === "ID" || arg.type === "String" || arg.type === "DateTime") {
@@ -51,7 +51,7 @@ export function getForwardedGqlArgs({
     };
 }
 
-function getArgsIncludingInputArgSubfields(gqlField: IntrospectionField, gqlIntrospection: IntrospectionQuery) {
+function getArgsIncludingInputArgSubfields(gqlOperation: IntrospectionField, gqlIntrospection: IntrospectionQuery) {
     const nativeScalars = ["ID", "String", "Boolean", "Int", "Float", "DateTime", "JSONObject"];
 
     // reducer is not created inline to reuse it to look into "input" arg
@@ -94,5 +94,5 @@ function getArgsIncludingInputArgSubfields(gqlField: IntrospectionField, gqlIntr
         return acc;
     }
 
-    return gqlField.args.reduce(reducer, []);
+    return gqlOperation.args.reduce(reducer, []);
 }

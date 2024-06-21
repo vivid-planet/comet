@@ -48,7 +48,7 @@ export function generateForm(
             gqlArgs: forwardedGqlArgs,
         } = getForwardedGqlArgs({
             fields: config.fields,
-            gqlField: createMutationType,
+            gqlOperation: createMutationType,
             gqlIntrospection,
         });
         imports.push(...forwardedGqlArgsImports);
