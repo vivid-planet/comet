@@ -16,6 +16,7 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { PrettyBytes } from "../../helpers/PrettyBytes";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useElementIsOverflowing } from "../../hooks/useElementIsOverflowing";
+import { FileSelectItem } from "./fileSelectItemTypes";
 
 type OwnerState = {
     hasErrorWithDetails: boolean;
@@ -50,11 +51,7 @@ export type FileSelectListItemProps = ThemedComponentBaseProps<{
     errorDetailsText: typeof Typography;
     iconButton: typeof MuiIconButton;
 }> & {
-    name?: string;
-    size?: number;
-    error?: boolean | React.ReactNode;
-    loading?: boolean;
-    skeleton?: boolean;
+    file: FileSelectItem;
     disabled?: boolean;
     onClickDownload?: () => void;
     onClickDelete?: () => void;
@@ -68,11 +65,7 @@ export type FileSelectListItemProps = ThemedComponentBaseProps<{
 
 export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
     const {
-        name,
-        size,
-        error,
-        skeleton,
-        loading,
+        file,
         disabled,
         onClickDownload,
         onClickDelete,
@@ -93,31 +86,31 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
         error: errorIcon = <Error fontSize="inherit" />,
     } = iconMapping;
 
-    const ownerState: OwnerState = {
-        hasErrorWithDetails: typeof error !== "boolean" && typeof error !== "undefined",
-        hasErrorWithoutDetails: error === true,
-        disabled: Boolean(disabled),
-    };
-
-    if (skeleton) {
+    if ("loading" in file && !file.name) {
         return <Skeleton variant="rounded" height={35} animation="wave" width="100%" sx={{ borderRadius: 2 }} {...slotProps?.skeleton} />;
     }
+
+    const ownerState: OwnerState = {
+        hasErrorWithDetails: "error" in file && typeof file.error !== "boolean",
+        hasErrorWithoutDetails: "error" in file && typeof file.error === "boolean",
+        disabled: Boolean(disabled),
+    };
 
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <Content {...slotProps?.content}>
-                <Tooltip title={fileNameIsOverflowing ? name : undefined}>
+                <Tooltip title={fileNameIsOverflowing ? file.name : undefined}>
                     <FileName ref={fileNameRef} variant="caption" ownerState={ownerState} {...slotProps?.fileName}>
-                        {name}
+                        {file.name}
                     </FileName>
                 </Tooltip>
                 <FileListItemInfos ownerState={ownerState} {...slotProps?.fileListItemInfos}>
-                    {loading ? (
+                    {"loading" in file ? (
                         loadingIcon
                     ) : (
                         <>
-                            {typeof size !== "undefined" && (
-                                <FileSize label={<PrettyBytes value={size} />} size="small" disabled={disabled} {...slotProps?.fileSize} />
+                            {"size" in file && typeof file.size !== "undefined" && (
+                                <FileSize label={<PrettyBytes value={file.size} />} size="small" disabled={disabled} {...slotProps?.fileSize} />
                             )}
                             {ownerState.hasErrorWithoutDetails && (
                                 <ErrorIconContainer {...slotProps?.errorIconContainer}>{errorIcon}</ErrorIconContainer>
@@ -136,11 +129,11 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
                     )}
                 </FileListItemInfos>
             </Content>
-            {ownerState.hasErrorWithDetails && (
+            {ownerState.hasErrorWithDetails && "error" in file && (
                 <ErrorDetails {...slotProps?.errorDetails}>
                     {errorIcon}
                     <ErrorDetailsText variant="caption" {...slotProps?.errorDetailsText}>
-                        {error}
+                        {file.error}
                     </ErrorDetailsText>
                 </ErrorDetails>
             )}

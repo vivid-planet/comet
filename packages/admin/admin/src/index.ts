@@ -88,15 +88,8 @@ export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
 export { TextAreaField, TextAreaFieldProps } from "./form/fields/TextAreaField";
 export { TextField, TextFieldProps } from "./form/fields/TextField";
 export { FileDropzone, FileDropzoneClassKey, FileDropzoneProps } from "./form/file/FileDropzone";
-export {
-    FileSelect,
-    FileSelectClassKey,
-    FileSelectErrorFileValue,
-    FileSelectFileValue,
-    FileSelectLoadingFileValue,
-    FileSelectProps,
-    FileSelectSuccessfulFileValue,
-} from "./form/file/FileSelect";
+export { FileSelect, FileSelectClassKey, FileSelectProps } from "./form/file/FileSelect";
+export { ErrorFileSelectItem, FileSelectItem, LoadingFileSelectItem, ValidFileSelectItem } from "./form/file/fileSelectItemTypes";
 export { FileSelectListItem, FileSelectListItemClassKey, FileSelectListItemProps } from "./form/file/FileSelectListItem";
 export { FinalFormAsyncAutocomplete, FinalFormAsyncAutocompleteProps } from "./form/FinalFormAsyncAutocomplete";
 export { FinalFormAsyncSelect, FinalFormAsyncSelectProps } from "./form/FinalFormAsyncSelect";

@@ -1,4 +1,4 @@
-import { FileSelect, FileSelectFileValue } from "@comet/admin";
+import { FileSelect, FileSelectItem } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -10,7 +10,7 @@ storiesOf("stories/components/FileSelect", module)
         </Card>
     ))
     .add("FileSelect", () => {
-        const value: FileSelectFileValue[] = [
+        const value: FileSelectItem[] = [
             {
                 name: "Filename.xyz",
                 size: 4.3 * 1024 * 1024, // 4.3 MB
@@ -41,7 +41,7 @@ storiesOf("stories/components/FileSelect", module)
                 onDownload={(file) => {
                     // Handle download
                 }}
-                value={value}
+                files={value}
                 maxFileSize={10 * 1024 * 1024} // 10 MB
                 maxFiles={5}
             />

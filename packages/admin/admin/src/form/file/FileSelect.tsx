@@ -9,6 +9,7 @@ import { Alert } from "../../alert/Alert";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { FileDropzone } from "./FileDropzone";
+import { FileSelectItem } from "./fileSelectItemTypes";
 import { FileSelectListItem } from "./FileSelectListItem";
 import { getFilesInfoText } from "./getFilesInfoText";
 
@@ -22,26 +23,6 @@ export type FileSelectClassKey =
     | "errorMessage"
     | "filesInfoText";
 
-export type FileSelectSuccessfulFileValue<AdditionalFileValues extends object = Record<string, unknown>> = {
-    name: string;
-    size: number;
-} & AdditionalFileValues;
-
-export type FileSelectErrorFileValue = {
-    name?: string;
-    error: boolean | React.ReactNode;
-};
-
-export type FileSelectLoadingFileValue = {
-    name?: string;
-    loading: boolean;
-};
-
-export type FileSelectFileValue<AdditionalFileValues extends object = Record<string, unknown>> =
-    | FileSelectSuccessfulFileValue<AdditionalFileValues>
-    | FileSelectErrorFileValue
-    | FileSelectLoadingFileValue;
-
 type ThemeProps = ThemedComponentBaseProps<{
     root: "div";
     maxFilesReachedInfo: typeof Alert;
@@ -53,11 +34,11 @@ type ThemeProps = ThemedComponentBaseProps<{
     filesInfoText: typeof FormHelperText;
 }>;
 
-export type FileSelectProps<AdditionalFileValues extends object = Record<string, unknown>> = {
-    value: FileSelectFileValue<AdditionalFileValues>[];
+export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>> = {
+    files: FileSelectItem<AdditionalValidFileValues>[];
     onDrop: DropzoneOptions["onDrop"];
-    onRemove: (file: FileSelectFileValue<AdditionalFileValues>) => void;
-    onDownload?: (file: FileSelectFileValue<AdditionalFileValues>) => void;
+    onRemove: (file: FileSelectItem<AdditionalValidFileValues>) => void;
+    onDownload?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
     disabled?: boolean;
     accept?: Accept;
     maxFileSize?: number;
@@ -68,7 +49,7 @@ export type FileSelectProps<AdditionalFileValues extends object = Record<string,
     };
 } & ThemeProps;
 
-export const FileSelect = <AdditionalFileValues extends object = Record<string, unknown>>(inProps: FileSelectProps<AdditionalFileValues>) => {
+export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>(inProps: FileSelectProps<AdditionalValidFileValues>) => {
     const {
         slotProps,
         disabled,
@@ -79,7 +60,7 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
         onDrop,
         onRemove,
         onDownload,
-        value,
+        files,
         error,
         ...restProps
     } = useThemeProps({
@@ -90,7 +71,7 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
     const { error: errorIcon = <ErrorIcon color="error" /> } = iconMapping;
 
     const multiple = typeof maxFiles === "undefined" || maxFiles > 1;
-    const numberOfValidFiles = value?.filter((file) => !("error" in file)).length ?? 0;
+    const numberOfValidFiles = files?.filter((file) => !("error" in file)).length ?? 0;
     const maxAmountOfFilesSelected = typeof maxFiles !== "undefined" && multiple && numberOfValidFiles >= maxFiles;
     const maxNumberOfFilesToBeAdded = maxFiles ? maxFiles - numberOfValidFiles : undefined;
     const filesInfoText = getFilesInfoText(maxFiles, maxFileSize);
@@ -120,17 +101,13 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
                     {...slotProps?.dropzone}
                 />
             )}
-            {value.length > 0 && (
+            {files.length > 0 && (
                 <FileList {...slotProps?.fileList}>
-                    {value.map((file, index) => {
+                    {files.map((file, index) => {
                         return (
                             <FileListItem
                                 key={index}
-                                name={file.name}
-                                size={"size" in file ? file.size : undefined}
-                                loading={"loading" in file && Boolean(file.name)}
-                                skeleton={"loading" in file && !file.name}
-                                error={"error" in file && file.error}
+                                file={file}
                                 onClickDownload={
                                     "error" in file || !onDownload
                                         ? undefined

@@ -12,13 +12,19 @@ storiesOf("stories/components/FileSelectListItem", module)
     .add("FileSelectListItem", () => {
         return (
             <>
-                {/* Data (e.g. the name) for this file has not been loaded yet */}
-                <FileSelectListItem skeleton />
+                {/* Data for this file has not been loaded yet */}
+                <FileSelectListItem
+                    file={{
+                        loading: true,
+                    }}
+                />
 
                 {/* All data is available and the file can be downloaded and deleted */}
                 <FileSelectListItem
-                    name="Filename.xyz"
-                    size={4.3 * 1024 * 1024} // 4.3 MB
+                    file={{
+                        name: "Filename.xyz",
+                        size: 4.3 * 1024 * 1024, // 4.3 MB
+                    }}
                     onClickDownload={() => {
                         // Handle download
                     }}
@@ -28,19 +34,31 @@ storiesOf("stories/components/FileSelectListItem", module)
                 />
 
                 {/* The file name is available but the remaining data is still loading or the file is currently being uploaded */}
-                <FileSelectListItem name="File that is uploading.jpg" loading />
+                <FileSelectListItem
+                    file={{
+                        name: "File that is uploading.jpg",
+                        loading: true,
+                    }}
+                />
 
                 {/* Something went wrong, it's not clear what */}
-                <FileSelectListItem name="Unknown error.jpg" error />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.xyz",
+                        error: true,
+                    }}
+                />
 
                 {/* A specific error ocurred, so the user can see an error message */}
                 <FileSelectListItem
-                    name="Upload failed.png"
-                    size={200 * 1024 * 1024} // 200 MB
+                    file={{
+                        name: "Filename.xyz",
+                        size: 200 * 1024 * 1024, // 200 MB
+                        error: "File too large",
+                    }}
                     onClickDelete={() => {
                         // Handle delete
                     }}
-                    error="File size too large"
                 />
             </>
         );

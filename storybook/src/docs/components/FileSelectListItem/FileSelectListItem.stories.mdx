@@ -8,11 +8,12 @@ Used to display a list of files, including loading, skeleton, and error states a
 
 ## Usage
 
--   Use the `skeleton` prop if you do not have any data for the file.
--   Use the `loading` prop if the file's data is being fetched or uploaded, but the filename is already available.
--   Use the `name` and `size` props to display the file name and size.
+-   Pass a `file` prop to display the file.
+    -   The file will be rendered normally if `name` and optionally `size` are provided.
+    -   If the `loading` value is `true` and `name` is provided, the file will be rendered in a loading state.
+    -   If the `loading` value is `true` and no `name` is provided, the file will be rendered as a skeleton.
+    -   The file will be rendered in an error state if the `error` value is `true` or a string with an error message is provided.
 -   Use the `onDownload` and `onDelete` props to handle what happens when clicking the download and delete buttons.
--   Use the `error` prop as a boolean to set the error state or as a string to display an error message.
 
 <Canvas>
     <Story id="stories-components-fileselectlistitem--fileselectlistitem" />
