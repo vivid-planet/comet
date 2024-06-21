@@ -187,7 +187,6 @@ const Dropzone = createComponentSlot("div")<FileDropzoneClassKey, OwnerState>({
             }
         `}
 
-
         ${ownerState.disabled &&
         css`
             cursor: default;

@@ -61,6 +61,7 @@ const SingleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
                     }}
                     onDownload={dummyFileDownload}
                     maxFiles={1}
+                    maxFileSize={1024 * 1024 * 5} // 5 MB
                     value={file ? [file] : []}
                     error={tooManyFilesSelected ? "Selection was canceled. You can only select one file." : undefined}
                 />
@@ -108,7 +109,7 @@ const MultipleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
                     onDownload={dummyFileDownload}
                     value={files}
                     maxFiles={maxNumberOfFiles}
-                    maxFileSize={50 * 1024 * 1024} // 50 MB
+                    maxFileSize={1024 * 1024 * 5} // 5 MB
                     error={
                         tooManyFilesSelected
                             ? `Selection was canceled. You can only select a maximum of ${maxNumberOfFiles} files, please reduce your selection.`

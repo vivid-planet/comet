@@ -7,10 +7,10 @@ import { FormattedMessage } from "react-intl";
 
 import { Alert } from "../../alert/Alert";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { PrettyBytes } from "../../helpers/PrettyBytes";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { FileDropzone } from "./FileDropzone";
 import { FileSelectListItem } from "./FileSelectListItem";
+import { getFilesInfoText } from "./getFilesInfoText";
 
 export type FileSelectClassKey =
     | "root"
@@ -60,7 +60,7 @@ export type FileSelectProps<AdditionalFileValues extends object = Record<string,
     onDownload?: (file: FileSelectFileValue<AdditionalFileValues>) => void;
     disabled?: boolean;
     accept?: Accept;
-    maxFileSize?: number;
+    maxFileSize?: number | null;
     maxFiles?: number;
     error?: React.ReactNode;
     iconMapping?: {
@@ -89,10 +89,11 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
 
     const { error: errorIcon = <ErrorIcon color="error" /> } = iconMapping;
 
-    const multiple = typeof maxFiles === "number" && maxFiles > 1;
+    const multiple = typeof maxFiles === "undefined" || maxFiles > 1;
     const numberOfValidFiles = value?.filter((file) => !("error" in file)).length ?? 0;
-    const maxAmountOfFilesSelected = multiple && numberOfValidFiles >= maxFiles;
+    const maxAmountOfFilesSelected = typeof maxFiles !== "undefined" && multiple && numberOfValidFiles >= maxFiles;
     const maxNumberOfFilesToBeAdded = maxFiles ? maxFiles - numberOfValidFiles : undefined;
+    const filesInfoText = getFilesInfoText(maxFiles, maxFileSize);
 
     return (
         <Root {...slotProps?.root} {...restProps}>
@@ -114,7 +115,7 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
                     onDrop={onDrop}
                     accept={accept}
                     multiple={multiple}
-                    maxSize={maxFileSize}
+                    maxSize={maxFileSize === null ? undefined : maxFileSize}
                     maxFiles={maxNumberOfFilesToBeAdded}
                     {...slotProps?.dropzone}
                 />
@@ -152,36 +153,7 @@ export const FileSelect = <AdditionalFileValues extends object = Record<string, 
                     </ErrorMessage>
                 </Error>
             )}
-            <FilesInfoText {...slotProps?.filesInfoText}>
-                {typeof maxFiles === "number" ? (
-                    maxFiles === 1 ? (
-                        <FormattedMessage
-                            id="comet.fileSelect.singleFileMaximumSize"
-                            defaultMessage="Maximum 1 file, {maxFileSize}"
-                            values={{
-                                maxFileSize: <PrettyBytes value={maxFileSize} />,
-                            }}
-                        />
-                    ) : (
-                        <FormattedMessage
-                            id="comet.fileSelect.maximumFileNumberAndSize"
-                            defaultMessage="Maximum {maxFiles, plural, one {# file} other {# files}}, {maxFileSize} per file."
-                            values={{
-                                maxFileSize: <PrettyBytes value={maxFileSize} />,
-                                maxFiles,
-                            }}
-                        />
-                    )
-                ) : (
-                    <FormattedMessage
-                        id="comet.fileSelect.maximumSizePerFile"
-                        defaultMessage="Maximum {maxFileSize} per file."
-                        values={{
-                            maxFileSize: <PrettyBytes value={maxFileSize} />,
-                        }}
-                    />
-                )}
-            </FilesInfoText>
+            {Boolean(filesInfoText) && <FilesInfoText {...slotProps?.filesInfoText}>{filesInfoText}</FilesInfoText>}
         </Root>
     );
 };
