@@ -275,10 +275,6 @@ const FileSize = createComponentSlot(Chip)<FileSelectListItemClassKey>({
         &:not(:last-child) {
             margin-right: ${theme.spacing(1)};
         }
-
-        .MuiChip-label {
-            padding-right: 0; // TODO: Should this be fixed in the theme?
-        }
     `,
 );
 
