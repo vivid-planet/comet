@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     DataGridToolbar,
@@ -17,7 +17,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridRowOrderChangeParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -30,6 +30,8 @@ import {
     GQLProductCategoriesListQuery,
     GQLProductCategoriesListQueryVariables,
     GQLProductsCategoriesListFragment,
+    GQLUpdateProductCategoryMutation,
+    GQLUpdateProductCategoryMutationVariables,
 } from "./ProductCategoriesTable.generated";
 
 function ProductCategoriesTableToolbar() {
@@ -51,11 +53,13 @@ function ProductCategoriesTableToolbar() {
     );
 }
 
+// this should move into component-function (like generated), sortable should depend on enableDragAndDrop
 const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
     {
         field: "title",
         headerName: "Title",
         width: 150,
+        sortable: false,
     },
     {
         field: "action",
@@ -98,14 +102,23 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
 ];
 
 function ProductCategoriesTable() {
+    const enableDragAndDrop = true;
+    const client = useApolloClient();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
     const sortModel = dataGridProps.sortModel;
+
+    const handleRowOrderChange = async (params: GridRowOrderChangeParams) => {
+        await client.mutate<GQLUpdateProductCategoryMutation, GQLUpdateProductCategoryMutationVariables>({
+            mutation: updateProductCategoryPositionMutation,
+            variables: { id: params.row.id, position: params.targetIndex + 1 },
+        });
+    };
 
     const { data, loading, error } = useQuery<GQLProductCategoriesListQuery, GQLProductCategoriesListQueryVariables>(productCategoriesQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
             ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
-            sort: muiGridSortToGql(sortModel),
+            sort: enableDragAndDrop ? [{ field: "position", direction: "ASC" }] : muiGridSortToGql(sortModel),
         },
     });
     const rows = data?.productCategories.nodes ?? [];
@@ -123,6 +136,12 @@ function ProductCategoriesTable() {
             components={{
                 Toolbar: ProductCategoriesTableToolbar,
             }}
+            rowReordering={
+                enableDragAndDrop &&
+                (dataGridProps.filterModel?.items.length ?? 0) === 0 && // probably check muiGridFilterToGql because empty filter can exist
+                (dataGridProps.filterModel?.quickFilterValues?.length ?? 0) === 0
+            }
+            onRowOrderChange={handleRowOrderChange}
         />
     );
 }
@@ -163,6 +182,12 @@ const createProductMutation = gql`
         createProductCategory(input: $input) {
             id
         }
+    }
+`;
+
+const updateProductCategoryPositionMutation = gql`
+    mutation UpdateProductCategory($id: ID!, $position: Int!) {
+        updateProductCategoryPosition(id: $id, position: $position)
     }
 `;
 
