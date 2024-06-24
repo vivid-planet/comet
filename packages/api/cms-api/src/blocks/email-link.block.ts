@@ -1,7 +1,5 @@
+import { BlockData, BlockField, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
 import { IsEmail, IsOptional } from "class-validator";
-
-import { BlockData, BlockInput, createBlock, inputToData } from "./block";
-import { BlockField } from "./decorators/field";
 
 class EmailLinkBlockData extends BlockData {
     @BlockField({ nullable: true })

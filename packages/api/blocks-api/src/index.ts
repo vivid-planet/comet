@@ -39,7 +39,6 @@ export { AnnotationBlockMeta, BlockField, getFieldKeys } from "./blocks/decorato
 export { RootBlock } from "./blocks/decorators/root-block";
 export { RootBlockEntity } from "./blocks/decorators/root-block-entity";
 export { TransformDependencies } from "./blocks/dependencies";
-export { EmailLinkBlock } from "./blocks/email-link.block";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
 export {
@@ -64,7 +63,6 @@ export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates 
 export { composeBlocks } from "./blocks/helpers/composeBlocks";
 export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDataFactoryDecorator";
 export { strictBlockInputFactoryDecorator } from "./blocks/helpers/strictBlockInputFactoryDecorator";
-export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
 export { transformToSaveIndex } from "./blocks/transformToSaveIndex/transformToSaveIndex";
 export { YouTubeVideoBlock } from "./blocks/youtube-video.block";
