@@ -61,11 +61,12 @@ export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsNullable } from "./common/validators/is-nullable";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
+export { AzureOpenAiContentGenerationModule } from "./content-generation/azure-open-ai/azure-open-ai-content-generation.module";
 export {
     AzureOpenAiConfig,
     AzureOpenAiContentGenerationService,
     AzureOpenAiContentGenerationServiceConfig,
-} from "./content-generation/azure-open-ai-content-generation.service";
+} from "./content-generation/azure-open-ai/azure-open-ai-content-generation.service";
 export { ContentGenerationModule } from "./content-generation/content-generation.module";
 export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";

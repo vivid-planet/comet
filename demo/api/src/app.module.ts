@@ -1,5 +1,6 @@
 import {
     AccessLogModule,
+    AzureOpenAiContentGenerationModule,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
@@ -159,9 +160,11 @@ export class AppModule {
                     ? [
                           ContentGenerationModule.register({
                               Service: ContentGenerationService,
-                              config: {
-                                  openAiContentGeneration: config.contentGeneration,
-                              },
+                              imports: [
+                                  AzureOpenAiContentGenerationModule.register({
+                                      config: config.contentGeneration,
+                                  }),
+                              ],
                           }),
                       ]
                     : []),

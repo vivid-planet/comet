@@ -1,9 +1,9 @@
 import { AzureKeyCredential, ChatRequestMessage, OpenAIClient } from "@azure/openai";
 import { Inject, Injectable } from "@nestjs/common";
 
-import { FilesService } from "../dam/files/files.service";
-import { AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG } from "./content-generation.constants";
-import { ContentGenerationServiceInterface } from "./content-generation-service.interface";
+import { FilesService } from "../../dam/files/files.service";
+import { ContentGenerationServiceInterface } from "../content-generation-service.interface";
+import { AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG } from "./azure-open-ai.constants";
 
 export type AzureOpenAiContentGenerationServiceConfig = AzureOpenAiConfig | ConfigByMethod;
 
