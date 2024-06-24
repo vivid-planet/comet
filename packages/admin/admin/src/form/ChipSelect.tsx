@@ -85,16 +85,13 @@ export interface ChipSelectProps<T = string>
     fullWidth?: boolean;
 }
 
-const ChipInput = ({
-    chipProps,
-    inputBaseProps,
-    inputRootProps,
-    ...restProps
-}: InputBaseProps & {
+type ChipInputProps = InputBaseProps & {
     chipProps?: Omit<ChipProps, "children">;
     inputBaseProps?: InputBaseProps;
     inputRootProps?: React.ComponentPropsWithoutRef<"div">;
-}) => {
+};
+
+const ChipInput = ({ chipProps, inputBaseProps, inputRootProps, ...restProps }: ChipInputProps) => {
     return (
         <ChipInputRoot {...inputRootProps}>
             <Chip icon={<ChevronDown />} label={restProps.value?.toString().length ? restProps.value : ""} variant="filled" {...chipProps} />
