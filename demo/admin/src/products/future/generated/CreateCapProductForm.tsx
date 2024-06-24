@@ -15,35 +15,39 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
+import { FormControlLabel } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { createProductMutation, productCategoriesQuery } from "./CreateProductForm.gql";
+import { createProductMutation, productCategoriesQuery } from "./CreateCapProductForm.gql";
 import {
+    GQLCreateCapProductFormDetailsFragment,
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
     GQLProductCategoriesSelectQuery,
     GQLProductCategoriesSelectQueryVariables,
     GQLProductCategorySelectFragment,
-    GQLProductFormDetailsFragment,
-} from "./CreateProductForm.gql.generated";
+} from "./CreateCapProductForm.gql.generated";
 
 const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = GQLProductFormDetailsFragment & {
+type FormValues = GQLCreateCapProductFormDetailsFragment & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-export function CreateProductForm(): React.ReactElement {
+interface FormProps {
+    type: GQLProductType;
+}
+
+export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
     const client = useApolloClient();
 
     const formApiRef = useFormApiRef<FormValues>();
@@ -63,7 +67,7 @@ export function CreateProductForm(): React.ReactElement {
 
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
-            variables: { input: output },
+            variables: { input: { ...output, type } },
         });
         if (!event.navigatingBack) {
             const id = mutationResponse?.createProduct.id;
@@ -104,41 +108,12 @@ export function CreateProductForm(): React.ReactElement {
 
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
-                        <Field
-                            readOnly
-                            disabled
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <Lock />
-                                </InputAdornment>
-                            }
-                            fullWidth
-                            name="createdAt"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
-                        />
-
                         <TextAreaField
                             required
                             fullWidth
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <Field required fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
-                            {(props) => (
-                                <FinalFormSelect {...props}>
-                                    <MenuItem value="Cap">
-                                        <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
-                                    </MenuItem>
-                                    <MenuItem value="Shirt">
-                                        <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
-                                    </MenuItem>
-                                    <MenuItem value="Tie">
-                                        <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
-                                    </MenuItem>
-                                </FinalFormSelect>
-                            )}
-                        </Field>
                         <Field
                             fullWidth
                             name="category"
