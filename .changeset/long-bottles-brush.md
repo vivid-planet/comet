@@ -2,22 +2,17 @@
 "@comet/cms-api": major
 ---
 
-Rename DateFilter to DateTimeFilter
+Rename `DateFilter` to `DateTimeFilter`
 
 This leaves room for a future DateFilter that only filters by date, not time.
 
-## Upgrading
+**Upgrading**
 
-1. Replace
+1. Change import
 
-```ts
-import { DateFilter } from "@comet/cms-api";
+```diff
+- import { DateFilter } from "@comet/cms-api";
++ import { DateTimeFilter } from "@comet/cms-api";
 ```
 
-with
-
-```ts
-import { DateTimeFilter } from "@comet/cms-api";
-```
-
-2. Re-run api generator.
+2. Re-run API Generator.
