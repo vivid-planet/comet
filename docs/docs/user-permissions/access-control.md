@@ -45,18 +45,18 @@ To evaluate the scope there a two technically very distinctive ways depending on
 
 ### Operations that create entities or query lists
 
-If an operation does not handle existing entities the scope has to be passed as an argument. COMET DXP expects the argument to be named `scope` to be able to validate it. Do not forget to apply the `scope` argument in your operation.
+If an operation does not handle existing entities the scope has to be passed as an argument. COMET DXP expects the argument to be named `scope` in order to be able to validate it. Do not forget to provide the `scope` argument in your operation.
 
 ### Operations that handle specific entities
 
 **@AffectedEntity**
 
-COMET DXP needs information on which entities are being handled in the operation ("affected entity"). Therefore, every operation of this kind needs to be marked with this decorator.
+COMET DXP needs information on which entities are being handled in the operation (= which entities are affected). Therefore, every operation of this kind needs to be marked with this decorator.
 
 Use this decorator at the **operation level** to specify which entity (and thus scope) is affected by the operation.
 
 :::info
-By default COMET DXP tries to load the affected entity by id with the value of the submitted id-argument. However, the name of the argument can be altered by the `idArg` setting.
+By default COMET DXP tries to load the affected entity by id with the value of the submitted id-argument. However, the name of the argument can be altered by using the `idArg` setting.
 :::
 
 ```ts
