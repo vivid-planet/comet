@@ -9,7 +9,7 @@ import { GenerateImageTitleResolver } from "./generate-image-title.resolver";
 export interface ContentGenerationModuleOptions {
     Service: Type<ContentGenerationServiceInterface>;
     config: {
-        openAiContentGenerationService?: AzureOpenAiContentGenerationServiceConfig;
+        openAiContentGeneration?: AzureOpenAiContentGenerationServiceConfig;
     };
     imports?: ModuleMetadata["imports"];
 }
@@ -36,7 +36,7 @@ export class ContentGenerationModule {
                 },
                 {
                     provide: AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG,
-                    useValue: config.openAiContentGenerationService,
+                    useValue: config.openAiContentGeneration,
                 },
                 AzureOpenAiContentGenerationService,
                 ...providers,
