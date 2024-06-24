@@ -1,5 +1,16 @@
 # @comet/cms-api
 
+## 7.0.0-beta.2
+
+### Minor Changes
+
+-   2f0675b83: API Generator: Add support for filtering many-to-many-relations by id
+
+### Patch Changes
+
+-   Updated dependencies [87ef5fa36]
+    -   @comet/blocks-api@7.0.0-beta.2
+
 ## 7.0.0-beta.1
 
 ### Major Changes

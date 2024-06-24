@@ -1,5 +1,13 @@
 # @comet/blocks-api
 
+## 7.0.0-beta.2
+
+### Minor Changes
+
+-   87ef5fa36: YouTubeVideoBlock: Add validation for identifier
+
+    Must be either a valid YouTube URL or video identifier.
+
 ## 7.0.0-beta.1
 
 ## 7.0.0-beta.0

@@ -1,5 +1,90 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.2
+
+### Major Changes
+
+-   3574617ea: Remove `EditPageLayout`
+
+    You can completely remove `EditPageLayout` from your application.
+    Instead, use `MainContent` to wrap all your page content except the `Toolbar`.
+    If needed, wrap `MainContent` and `Toolbar` in a fragment.
+
+    Example:
+
+    ```diff
+    - <EditPageLayout>
+    + <>
+          <Toolbar>
+              // ...
+          </Toolbar>
+    -     <div>
+    +     <MainContent>
+              // ...
+    -     </div>
+    +     </MainContent>
+    - </EditPageLayout>
+    + </>
+    ```
+
+### Minor Changes
+
+-   acfcef9e4: The `documentTypes` prop of `PagesPage` now also accepts a function mapping categories to document types
+
+    Previously, only the supported documentTypes of the current category could be passed to the `PagesPage`.
+    That made it impossible to verify if a document can be moved to another category.
+    If a document was moved to a category that didn't support its type, the PageTree crashed.
+
+    If a mapping function is passed to `documentTypes`, documents can only be moved to categories that support their type.
+
+    ```diff
+    <PagesPage
+    -   documentTypes={pageTreeDocumentTypes}
+    +   documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+    +       if (category === "TopMenu") {
+    +           return {
+    +               Page,
+    +               PredefinedPage,
+    +           };
+    +       }
+    +
+    +       return {
+    +           Page,
+    +           PredefinedPage,
+    +           Link,
+    +       };
+    +   }}
+        // ...
+    />
+    ```
+
+-   61a43d270: Add a menu item to `PixelImageBlock`, `SvgImageBlock` and `DamVideoBlock` that opens the chosen file in the DAM
+
+    Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+    ```diff
+    // App.tsx
+
+    <DependenciesConfigProvider
+        entityDependencyMap={{
+    +       DamFile: createDamFileDependency(),
+            // ...
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   e106a02b2: Make the `ContentScopeIndicator` show the scope label instead of the scope value
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [2de81e40b]
+    -   @comet/admin@7.0.0-beta.2
+    -   @comet/admin-theme@7.0.0-beta.2
+    -   @comet/admin-date-time@7.0.0-beta.2
+    -   @comet/admin-icons@7.0.0-beta.2
+    -   @comet/admin-rte@7.0.0-beta.2
+    -   @comet/blocks-admin@7.0.0-beta.2
+
 ## 7.0.0-beta.1
 
 ### Major Changes

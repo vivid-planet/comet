@@ -92,6 +92,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
                 prop.reference === "m:1" ||
+                prop.reference === "1:m" ||
                 prop.reference === "m:n" ||
                 prop.type === "EnumArrayType") &&
             !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
@@ -183,7 +184,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateTimeFilter, ManyToOneFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -245,6 +246,13 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @IsOptional()
                     @Type(() => ManyToOneFilter)
                     ${prop.name}?: ManyToOneFilter;
+                    `;
+                } else if (prop.reference === "1:m") {
+                    return `@Field(() => OneToManyFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => OneToManyFilter)
+                    ${prop.name}?: OneToManyFilter;
                     `;
                 } else if (prop.reference === "m:n") {
                     return `@Field(() => ManyToManyFilter, { nullable: true })
