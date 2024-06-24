@@ -9,6 +9,7 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    StackLink,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,

@@ -48,7 +48,7 @@ export function generateForm(
             gqlArgs: forwardedGqlArgs,
         } = getForwardedGqlArgs({
             fields: config.fields,
-            gqlField: createMutationType,
+            gqlOperation: createMutationType,
             gqlIntrospection,
         });
         imports.push(...forwardedGqlArgsImports);
@@ -131,9 +131,9 @@ export function generateForm(
     if (addMode && createMutationType) {
         gqlDocuments[`create${gqlType}Mutation`] = `
             mutation Create${gqlType}(${
-            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === createMutationType.name).length
+            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
                 ? `${gqlArgs
-                      .filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === createMutationType.name)
+                      .filter((gqlArg) => !gqlArg.isInputArgSubfield)
                       .map((gqlArg) => {
                           return `$${gqlArg.name}: ${gqlArg.type}!`;
                       })
@@ -141,9 +141,9 @@ export function generateForm(
                 : ``
         }$input: ${gqlType}Input!) {
                 ${createMutationType.name}(${
-            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === createMutationType.name).length
+            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
                 ? `${gqlArgs
-                      .filter((gqlArg) => !gqlArg.isInputArgSubfield && gqlArg.queryOrMutationName === createMutationType.name)
+                      .filter((gqlArg) => !gqlArg.isInputArgSubfield)
                       .map((gqlArg) => {
                           return `${gqlArg.name}: $${gqlArg.name}`;
                       })
@@ -211,7 +211,7 @@ export function generateForm(
     import { ArrowLeft, Lock } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";
@@ -389,12 +389,12 @@ export function generateForm(
                 subscription={{}}
             >
                 {() => (
-                    <EditPageLayout>
+                    <>
                         ${editMode ? `{saveConflict.dialogs}` : ``}
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>
-                    </EditPageLayout>
+                    </>
                 )}
             </FinalForm>
         );

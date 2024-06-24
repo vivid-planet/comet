@@ -1,5 +1,16 @@
 # @comet/cms-api
 
+## 7.0.0-beta.2
+
+### Minor Changes
+
+-   2f0675b83: API Generator: Add support for filtering many-to-many-relations by id
+
+### Patch Changes
+
+-   Updated dependencies [87ef5fa36]
+    -   @comet/blocks-api@7.0.0-beta.2
+
 ## 7.0.0-beta.1
 
 ### Major Changes
@@ -33,44 +44,10 @@
 ### Minor Changes
 
 -   f38ecc186: API Generator: Add support for enum array filter and sort
--   dcf3f70f4: Add `overrideAcceptedMimeTypes` configuration to DAM
-
-    If set, only the mimetypes specified in `overrideAcceptedMimeTypes` will be accepted.
-
-    You must configure `overrideAcceptedMimeTypes` in the API and the admin interface:
-
-    API:
-
-    ```diff
-    // app.module.ts
-
-    DamModule.register({
-        damConfig: {
-            // ...
-    +       overrideAcceptedMimeTypes: ["image/png"],
-            // ...
-        },
-        // ...
-    }),
-    ```
-
-    Admin:
-
-    ```diff
-    // App.tsx
-
-    <DamConfigProvider
-        value={{
-            // ...
-    +       overrideAcceptedMimeTypes: ["image/png"],
-        }}
-    >
-    ```
 
 ### Patch Changes
 
 -   10424c744: Fix `SvgImageBlock` in site by always loading `fileUrl`
-    -   @comet/blocks-api@7.0.0-beta.1
 
 ## 7.0.0-beta.0
 
@@ -274,6 +251,59 @@
 -   Updated dependencies [e15927594]
 -   Updated dependencies [ebf597120]
     -   @comet/blocks-api@7.0.0-beta.0
+
+## 6.13.0
+
+### Minor Changes
+
+-   2a5e00bfb: API Generator: Add `list` option to `@CrudGenerator()` to allow disabling the list query
+
+    Related DTO classes will still be generated as they might be useful for application code.
+
+-   dcf3f70f4: Add `overrideAcceptedMimeTypes` configuration to DAM
+
+    If set, only the mimetypes specified in `overrideAcceptedMimeTypes` will be accepted.
+
+    You must configure `overrideAcceptedMimeTypes` in the API and the admin interface:
+
+    API:
+
+    ```diff
+    // app.module.ts
+
+    DamModule.register({
+        damConfig: {
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+            // ...
+        },
+        // ...
+    }),
+    ```
+
+    Admin:
+
+    ```diff
+    // App.tsx
+
+    <DamConfigProvider
+        value={{
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+        }}
+    >
+    ```
+
+-   07a7291fe: Adjust `searchToMikroOrmQuery` function to reduce the amount of irrelevant results
+
+    This is done by using a combination of AND- and OR-queries. For example, a search of `red shirt` won't give all products containing `red` OR `shirt` but rather returns all products that have the words `red` AND `shirt` in some column. The words don't have to be in the same column.
+
+### Patch Changes
+
+-   5bbb2ee76: API Generator: Don't add `skipScopeCheck` when the entity has a `@ScopedEntity()` decorator
+-   ebdd108f0: API Generator: Fix imports in generated code for more than one level deep relations
+-   b925f940f: API Generator: Support relation with primary key type `int` (in addition to `integer`)
+    -   @comet/blocks-api@6.13.0
 
 ## 6.12.0
 

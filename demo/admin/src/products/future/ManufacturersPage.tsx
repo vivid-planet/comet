@@ -13,6 +13,7 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { ManufacturersGrid } from "@src/products/future/generated/ManufacturersGrid";
 import * as React from "react";
@@ -24,7 +25,8 @@ export function ManufacturersPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "manufacturers.manufacturers", defaultMessage: "Manufacturers" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <MainContent fullHeight disablePadding>
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
+                    <MainContent fullHeight>
                         <ManufacturersGrid
                             addButton={
                                 <Button

@@ -131,6 +131,7 @@ export function generateGrid(
     const hasCreateMutation = !!createMutationType;
 
     const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
+    const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
 
@@ -171,8 +172,7 @@ export function generateGrid(
 
     const toolbar = config.toolbar ?? true;
 
-    const forwardAddButton = !config.readOnly && toolbar;
-    if (forwardAddButton) {
+    if (allowAdding && toolbar) {
         props.push({ name: "addButton", type: "React.ReactNode", optional: true });
     }
 
@@ -435,7 +435,7 @@ export function generateGrid(
 
     ${
         toolbar
-            ? `function ${gqlTypePlural}GridToolbar(${forwardAddButton ? `{ addButton }: { addButton?: React.ReactNode }` : ``}) {
+            ? `function ${gqlTypePlural}GridToolbar(${allowAdding ? `{ addButton }: { addButton?: React.ReactNode }` : ``}) {
         return (
             <DataGridToolbar>
                 ${
@@ -453,7 +453,7 @@ export function generateGrid(
                         : ""
                 }
                 <ToolbarFillSpace />
-                {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
+                ${allowAdding ? `{addButton && <ToolbarActions>{addButton}</ToolbarActions>}` : ""}
             </DataGridToolbar>
         );
     }`
@@ -624,7 +624,7 @@ export function generateGrid(
 Toolbar: ${gqlTypePlural}GridToolbar,
 }}
 ${
-    forwardAddButton
+    allowAdding
         ? `componentsProps={{
     toolbar: { addButton: addButton },
 }}`

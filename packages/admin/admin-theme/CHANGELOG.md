@@ -1,5 +1,12 @@
 # @comet/admin-theme
 
+## 7.0.0-beta.2
+
+### Patch Changes
+
+-   2de81e40b: Fix top position of end-adornment in MuiAutocomplete
+    -   @comet/admin-icons@7.0.0-beta.2
+
 ## 7.0.0-beta.1
 
 ### Patch Changes
@@ -186,6 +193,12 @@
 ### Patch Changes
 
 -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.13.0
+
+### Patch Changes
+
+-   @comet/admin-icons@6.13.0
 
 ## 6.12.0
 

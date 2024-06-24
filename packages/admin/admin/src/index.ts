@@ -78,7 +78,9 @@ export { FinalFormAutocomplete, FinalFormAutocompleteProps } from "./form/Autoco
 export { FinalFormCheckbox, FinalFormCheckboxProps } from "./form/Checkbox";
 export { Field, FieldProps } from "./form/Field";
 export { FieldContainer, FieldContainerClassKey, FieldContainerProps } from "./form/FieldContainer";
+export { AsyncAutocompleteField, AsyncAutocompleteFieldProps } from "./form/fields/AsyncAutocompleteField";
 export { AsyncSelectField, AsyncSelectFieldProps } from "./form/fields/AsyncSelectField";
+export { AutocompleteField, AutocompleteFieldProps } from "./form/fields/AutocompleteField";
 export { CheckboxField, CheckboxFieldProps } from "./form/fields/CheckboxField";
 export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
 export { SelectField, SelectFieldProps } from "./form/fields/SelectField";
@@ -94,6 +96,7 @@ export { FinalFormRangeInput, FinalFormRangeInputClassKey, FinalFormRangeInputPr
 export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
 export { FinalFormSelect, FinalFormSelectProps } from "./form/FinalFormSelect";
 export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormSection";
+export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
@@ -218,5 +221,6 @@ export { IWithTableQueryProps, withTableQueryContext } from "./table/withTableQu
 export { RouterTab, RouterTabs, RouterTabsClassKey } from "./tabs/RouterTabs";
 export { Tab, Tabs, TabsClassKey, TabsProps } from "./tabs/Tabs";
 export { TabScrollButton, TabScrollButtonClassKey, TabScrollButtonProps } from "./tabs/TabScrollButton";
+export { BaseTranslationDialog } from "./translator/BaseTranslationDialog";
 export { ContentTranslationServiceProvider } from "./translator/ContentTranslationServiceProvider";
 export { useContentTranslationService } from "./translator/useContentTranslationService";

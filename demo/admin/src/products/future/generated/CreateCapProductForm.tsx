@@ -16,7 +16,7 @@ import {
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout } from "@comet/cms-admin";
+import { DamImageBlock } from "@comet/cms-admin";
 import { FormControlLabel } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
@@ -96,7 +96,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     <MainContent>
                         <TextField
                             required
@@ -141,7 +141,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );
