@@ -206,6 +206,7 @@ export const masterMenuData: MasterMenuData = [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.futureGenerator" defaultMessage="Future Generator" />,
+                icon: <Snips />,
                 items: [
                     {
                         type: "route",
@@ -244,6 +245,7 @@ export const masterMenuData: MasterMenuData = [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.oldGenerator" defaultMessage="Old Generator" />,
+                icon: <Snips />,
                 items: [
                     {
                         type: "route",
@@ -274,6 +276,7 @@ export const masterMenuData: MasterMenuData = [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.handmade" defaultMessage="Handmade" />,
+                icon: <Snips />,
                 items: [
                     {
                         type: "route",
