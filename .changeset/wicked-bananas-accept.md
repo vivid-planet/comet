@@ -2,4 +2,4 @@
 "@comet/admin-icons": minor
 ---
 
-Add `youtube` and `vimeo` icon
+Add `YouTube` and `Vimeo` icons
