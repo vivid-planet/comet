@@ -19,7 +19,7 @@ import {
     useTableQuery,
     useTableQueryFilter,
 } from "@comet/admin";
-import { Edit as EditIcon } from "@mui/icons-material";
+import { Edit } from "@comet/admin-icons";
 import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -107,7 +107,7 @@ function ExampleTable(props: { persistedStateId: string }) {
                                             }}
                                             size="large"
                                         >
-                                            <EditIcon />
+                                            <Edit />
                                         </IconButton>
                                     </Grid>
                                 ),

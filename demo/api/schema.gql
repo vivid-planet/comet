@@ -449,8 +449,18 @@ type Manufacturer {
   updatedAt: DateTime!
 }
 
+type ManufacturerCountry {
+  id: String!
+  used: Float!
+}
+
 type PaginatedManufacturers {
   nodes: [Manufacturer!]!
+  totalCount: Int!
+}
+
+type PaginatedManufacturerCountries {
+  nodes: [ManufacturerCountry!]!
   totalCount: Int!
 }
 
@@ -760,6 +770,8 @@ type Query {
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
+  manufacturerCountry(id: ID!): ManufacturerCountry!
+  manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
 }
 
 input UserFilter {
@@ -882,6 +894,7 @@ input NewsFilter {
   status: NewsStatusEnumFilter
   date: DateFilter
   category: NewsCategoryEnumFilter
+  comments: OneToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [NewsFilter!]
@@ -898,6 +911,10 @@ input NewsCategoryEnumFilter {
   isAnyOf: [NewsCategory!]
   equal: NewsCategory
   notEqual: NewsCategory
+}
+
+input OneToManyFilter {
+  contains: ID
 }
 
 input NewsSort {
@@ -926,7 +943,11 @@ input ProductFilter {
   inStock: BooleanFilter
   soldCount: NumberFilter
   availableSince: DateFilter
+  colors: OneToManyFilter
+  variants: OneToManyFilter
   category: ManyToOneFilter
+  tags: ManyToManyFilter
+  tagsWithStatus: OneToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   manufacturer: ManyToOneFilter
@@ -965,6 +986,10 @@ input ManyToOneFilter {
   notEqual: ID
 }
 
+input ManyToManyFilter {
+  contains: ID
+}
+
 input ProductSort {
   field: ProductSortField!
   direction: SortDirection! = ASC
@@ -990,6 +1015,7 @@ enum ProductSortField {
 input ProductCategoryFilter {
   title: StringFilter
   slug: StringFilter
+  products: OneToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductCategoryFilter!]
@@ -1010,6 +1036,8 @@ enum ProductCategorySortField {
 
 input ProductTagFilter {
   title: StringFilter
+  products: ManyToManyFilter
+  productsWithStatus: OneToManyFilter
   createdAt: DateFilter
   updatedAt: DateFilter
   and: [ProductTagFilter!]
@@ -1078,6 +1106,13 @@ enum ManufacturerSortField {
   addressAsEmbeddable_alternativeAddress_zip
   addressAsEmbeddable_alternativeAddress_country
   updatedAt
+}
+
+input ManufacturerCountryFilter {
+  id: StringFilter
+  used: NumberFilter
+  and: [ManufacturerCountryFilter!]
+  or: [ManufacturerCountryFilter!]
 }
 
 type Mutation {
