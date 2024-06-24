@@ -6,7 +6,7 @@ Add `ChipSelect` component
 
 This adds the ChipSelect component, as well as a wrapper for FinalForm (`FinalFormChipSelect`) and an abstraction for the usage of the previously mentioned component (`ChipSelectField`).
 
-**Example - Basic:**
+**Basic example**
 
 ```tsx
 import { ChipSelect } from '@comet/admin';
@@ -30,35 +30,24 @@ const MyComponent = () => {
 
 ```
 
-**Example - Final Form:**
+**Usage in Final Form**
 ```tsx
 import { ChipSelectField, FinalForm } from '@comet/admin';
 import { MenuItem, ListItemText, ListItemIcon } from '@mui/material';
 import { Offline, Online } from "@comet/admin-icons";
 
-const MyComponent = () => {
+const MyComponent = ({ onSubmit }) => {
   return (
       <FinalForm
           mode="add"
-          onSubmit={() => {
-              // ...
-          }}
+          onSubmit={onSubmit}
       >
           <ChipSelectField name="chip-select" label="Chip Select">
               <MenuItem value="Option 1">
-                  <ListItemIcon>
-                      <Online />
-                  </ListItemIcon>
                   <ListItemText primary="Option 1" />
               </MenuItem>
               <MenuItem value="Option 2">
-                  <ListItemIcon>
-                      <Offline />
-                  </ListItemIcon>
                   <ListItemText primary="Option 2" />
-              </MenuItem>
-              <MenuItem value="Option 3">
-                  <ListItemText primary="Option 3" />
               </MenuItem>
           </ChipSelectField>
       </FinalForm>
