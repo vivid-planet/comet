@@ -24,12 +24,12 @@ UserPermissionsModule.forRootAsync({
 The module needs all scopes available in the system. If this information can only be gathered in runtime, a callback can be used (please make sure to cache the return value as it will be requested at least once per request): `availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);`
 
 :::note
-If you handle a huge amount (thousands) of content scopes you might want **not** to define this scope part in `getContentScopesForUser`. Instead, you can check the scopes manually by overriding `isAllowed``. A side-effect of this is that these scopes are not available in the admin panel.
+If you handle a huge amount (thousands) of content scopes you might want **not** to define this scope part in `getContentScopesForUser`. Instead, you can check the scopes manually by overriding `isAllowed`. A a side-effect, these scopes will not be available in the admin panel.
 :::
 
 **User Service**
 
-The User Permissions system does not provide users by itself, so you need to provide UserService which implements `UserPermissionsUserServiceInterface`:
+The User Permissions system does not provide users by itself, so you need to provide a UserService which implements the `UserPermissionsUserServiceInterface`:
 
 ```ts
 class UserService implements UserPermissionsUserServiceInterface {
