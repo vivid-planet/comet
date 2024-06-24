@@ -23,18 +23,10 @@ function isAzureOpenAiContentGenerationConfig(config: AzureOpenAiContentGenerati
 
 @Injectable()
 export class AzureOpenAiContentGenerationService {
-    private readonly config: AzureOpenAiContentGenerationServiceConfig;
-
     constructor(
         private readonly filesService: FilesService,
-        @Inject(AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG) injectedConfig?: AzureOpenAiContentGenerationServiceConfig,
-    ) {
-        if (!injectedConfig) {
-            throw new Error("No config provided");
-        }
-
-        this.config = injectedConfig;
-    }
+        @Inject(AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG) private readonly config: AzureOpenAiContentGenerationServiceConfig,
+    ) {}
 
     private getConfigForMethod(name: ServiceMethods): AzureOpenAiConfig {
         if (isAzureOpenAiContentGenerationConfig(this.config)) {

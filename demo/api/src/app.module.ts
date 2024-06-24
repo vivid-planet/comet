@@ -160,11 +160,7 @@ export class AppModule {
                     ? [
                           ContentGenerationModule.register({
                               Service: ContentGenerationService,
-                              imports: [
-                                  AzureOpenAiContentGenerationModule.register({
-                                      config: config.contentGeneration,
-                                  }),
-                              ],
+                              imports: [AzureOpenAiContentGenerationModule.register(config.contentGeneration)],
                           }),
                       ]
                     : []),

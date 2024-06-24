@@ -3,14 +3,10 @@ import { DynamicModule, Global, Module } from "@nestjs/common";
 import { AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG } from "./azure-open-ai.constants";
 import { AzureOpenAiContentGenerationService, AzureOpenAiContentGenerationServiceConfig } from "./azure-open-ai-content-generation.service";
 
-export interface AzureOpenAiContentGenerationModuleOptions {
-    config: AzureOpenAiContentGenerationServiceConfig;
-}
-
 @Global()
 @Module({})
 export class AzureOpenAiContentGenerationModule {
-    static register({ config }: AzureOpenAiContentGenerationModuleOptions): DynamicModule {
+    static register(config: AzureOpenAiContentGenerationServiceConfig): DynamicModule {
         return {
             module: AzureOpenAiContentGenerationModule,
             providers: [
