@@ -70,7 +70,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
 
     const { error: errorIcon = <ErrorIcon color="error" /> } = iconMapping;
 
-    const multiple = typeof maxFiles === "number" && maxFiles > 1;
+    const multiple = typeof maxFiles === "undefined" || maxFiles > 1;
     const numberOfValidFiles = files?.filter((file) => !("error" in file)).length ?? 0;
     const maxAmountOfFilesSelected = typeof maxFiles !== "undefined" && multiple && numberOfValidFiles >= maxFiles;
     const maxNumberOfFilesToBeAdded = maxFiles ? maxFiles - numberOfValidFiles : undefined;
