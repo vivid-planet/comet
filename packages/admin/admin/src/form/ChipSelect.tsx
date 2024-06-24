@@ -71,6 +71,26 @@ const InputBase = createComponentSlot(MuiInputBase)<ChipSelectClassKey>({
     `,
 );
 
+const LabelInputBase = createComponentSlot(MuiInputBase)<ChipSelectClassKey>({
+    componentName: "ChipSelect",
+    slotName: "inputBase",
+})(
+    () => css`
+        all: unset;
+        padding-right: 0 !important;
+
+        > div {
+            padding-right: 0 !important;
+        }
+
+        .MuiInputBase-input {
+            padding: 0;
+            height: 100% !important;
+            min-height: unset !important;
+        }
+    `,
+);
+
 export interface ChipSelectProps<T = string>
     extends ThemedComponentBaseProps<{
             root: "div";
@@ -95,14 +115,17 @@ type ChipInputProps = InputBaseProps & {
     inputRootProps?: React.ComponentPropsWithoutRef<"div">;
 };
 
-const ChipInput = ({ chipProps, inputBaseProps, inputRootProps, ...restProps }: ChipInputProps) => {
-    return (
-        <ChipInputRoot {...inputRootProps}>
-            <Chip icon={<ChevronDown />} label={restProps.value?.toString().length ? restProps.value : ""} variant="filled" {...chipProps} />
-            <InputBase {...inputBaseProps} {...restProps} />
-        </ChipInputRoot>
-    );
-};
+const ChipInput = ({ chipProps, inputBaseProps, inputRootProps, ...restProps }: ChipInputProps) => (
+    <ChipInputRoot {...inputRootProps}>
+        <Chip
+            icon={<ChevronDown />}
+            label={<LabelInputBase {...inputBaseProps} {...restProps} />} // use second InputBase to show the label
+            variant="filled"
+            {...chipProps}
+        />
+        <InputBase {...inputBaseProps} {...restProps} />
+    </ChipInputRoot>
+);
 
 export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
     const {
@@ -147,6 +170,7 @@ export function ChipSelect<T = string>(inProps: ChipSelectProps<T>) {
                 value={selectedOption || ""}
                 onChange={onChange}
                 input={<ChipInput chipProps={chipProps} inputBaseProps={slotProps?.inputBase} inputRootProps={slotProps?.inputRoot} />}
+                inputProps={{ IconComponent: () => null }} // hide icon of InputBase
             >
                 {children ??
                     options?.map((option) => (
