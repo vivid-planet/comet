@@ -39,7 +39,7 @@
         "@comet/eslint-plugin": "workspace:*",
         "@formatjs/cli": "^6.0.0",
         "@types/node": "^18.0.0",
-        "dotenv-cli": "^5.1.0",
+        "dotenv-cli": "^7.0.0",
         "husky": "^7.0.4",
         "lint-staged": "^12.3.7",
         "prettier": "^2.0.0",
