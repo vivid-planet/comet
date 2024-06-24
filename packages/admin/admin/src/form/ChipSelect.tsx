@@ -59,6 +59,10 @@ const InputBase = createComponentSlot(MuiInputBase)<ChipSelectClassKey>({
     slotName: "inputBase",
 })(
     () => css`
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+
         .MuiInputBase-input {
             padding: 0;
             height: 100% !important;
@@ -95,18 +99,7 @@ const ChipInput = ({ chipProps, inputBaseProps, inputRootProps, ...restProps }: 
     return (
         <ChipInputRoot {...inputRootProps}>
             <Chip icon={<ChevronDown />} label={restProps.value?.toString().length ? restProps.value : ""} variant="filled" {...chipProps} />
-            <InputBase
-                sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    opacity: 0,
-                }}
-                {...inputBaseProps}
-                {...restProps}
-            />
+            <InputBase {...inputBaseProps} {...restProps} />
         </ChipInputRoot>
     );
 };
