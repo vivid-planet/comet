@@ -64,4 +64,4 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module).add("FileSelect", () => <Story />);
+storiesOf("@comet/admin/form", module).add("FinalFormFileSelect", () => <Story />);
