@@ -173,15 +173,6 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type SitePreviewHash {
-  timestamp: Float!
-  hash: String!
-}
-
-type CurrentUserPermission {
-  permission: String!
-}
-
 type User {
   id: String!
   name: String!
