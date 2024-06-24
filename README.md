@@ -29,6 +29,9 @@ The following tools need to be installed on your local machine.
 Run the `install.sh` script to install dependencies and setup needed symlinks.
 
 ```bash
+# Optionally set domain to use instead of localhost (add to e.g. ~/.bashrc)
+export DEV_DOMAIN=myname.dev.vivid-planet.cloud # Vivid Planet network
+
 sh install.sh
 ```
 
