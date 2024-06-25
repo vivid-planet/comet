@@ -3,7 +3,7 @@ import { Type } from "@nestjs/common";
 import { Field, InputType } from "@nestjs/graphql";
 import { Transform } from "class-transformer";
 import { IsEnum, IsOptional, ValidateNested, ValidationArguments } from "class-validator";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
 import { IsValidRedirectSource } from "../validators/isValidRedirectSource";

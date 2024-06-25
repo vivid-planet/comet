@@ -379,7 +379,7 @@ export async function generateCrudInput(
 import { Transform, Type } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 ${generateImportsCode(imports)}
 
