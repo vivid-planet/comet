@@ -5,7 +5,7 @@ import * as React from "react";
 
 import { editDialogDecorator } from "../editDialog.decorator";
 
-storiesOf("stories/components/EditDialog/Edit Dialog", module)
+storiesOf("stories/components/EditDialog/Edit Dialog docs only", module)
     .addDecorator(editDialogDecorator())
     .add("Edit Dialog", () => {
         const editDialogApi = React.useRef<IEditDialogApi>(null);
