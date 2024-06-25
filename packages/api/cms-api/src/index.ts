@@ -41,7 +41,7 @@ export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
 export { BooleanFilter } from "./common/filter/boolean.filter";
-export { DateFilter } from "./common/filter/date.filter";
+export { DateTimeFilter } from "./common/filter/date-time.filter";
 export { createEnumFilter } from "./common/filter/enum.filter.factory";
 export { createEnumsFilter } from "./common/filter/enums.filter.factory";
 export { ManyToManyFilter } from "./common/filter/many-to-many.filter";

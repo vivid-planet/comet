@@ -826,8 +826,8 @@ input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
   active: BooleanFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [RedirectFilter!]
   or: [RedirectFilter!]
 }
@@ -836,7 +836,7 @@ input BooleanFilter {
   equal: Boolean
 }
 
-input DateFilter {
+input DateTimeFilter {
   equal: DateTime
   lowerThan: DateTime
   greaterThan: DateTime
@@ -892,11 +892,11 @@ input NewsFilter {
   slug: StringFilter
   title: StringFilter
   status: NewsStatusEnumFilter
-  date: DateFilter
+  date: DateTimeFilter
   category: NewsCategoryEnumFilter
   comments: OneToManyFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
 }
@@ -942,14 +942,14 @@ input ProductFilter {
   price: NumberFilter
   inStock: BooleanFilter
   soldCount: NumberFilter
-  availableSince: DateFilter
+  availableSince: DateTimeFilter
   colors: OneToManyFilter
   variants: OneToManyFilter
   category: ManyToOneFilter
   tags: ManyToManyFilter
   tagsWithStatus: OneToManyFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   manufacturer: ManyToOneFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
@@ -1016,8 +1016,8 @@ input ProductCategoryFilter {
   title: StringFilter
   slug: StringFilter
   products: OneToManyFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [ProductCategoryFilter!]
   or: [ProductCategoryFilter!]
 }
@@ -1038,8 +1038,8 @@ input ProductTagFilter {
   title: StringFilter
   products: ManyToManyFilter
   productsWithStatus: OneToManyFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [ProductTagFilter!]
   or: [ProductTagFilter!]
 }
@@ -1057,8 +1057,8 @@ enum ProductTagSortField {
 
 input ProductVariantFilter {
   name: StringFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [ProductVariantFilter!]
   or: [ProductVariantFilter!]
 }
@@ -1085,7 +1085,7 @@ input ManufacturerFilter {
   addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
   addressAsEmbeddable_alternativeAddress_zip: NumberFilter
   addressAsEmbeddable_alternativeAddress_country: StringFilter
-  updatedAt: DateFilter
+  updatedAt: DateTimeFilter
   and: [ManufacturerFilter!]
   or: [ManufacturerFilter!]
 }
