@@ -173,13 +173,14 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type SitePreviewHash {
-  timestamp: Float!
-  hash: String!
-}
-
-type CurrentUserPermission {
-  permission: String!
+type PublicUpload {
+  id: ID!
+  name: String!
+  size: Int!
+  mimetype: String!
+  contentHash: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type User {
@@ -374,6 +375,7 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  publicUploadForTypesGenerationDoNotUse: PublicUpload!
 }
 
 input RedirectScopeInput {

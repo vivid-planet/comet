@@ -4,7 +4,6 @@ import {
     Field,
     filterByFragment,
     FinalForm,
-    FinalFormFileUpload,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
@@ -17,7 +16,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, FinalFormFileUpload, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { Card, CardContent, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
@@ -59,9 +58,7 @@ const rootBlocks = {
 
 type FormValues = Omit<GQLProductFormManualFragment, "image" | "factsheet"> & {
     image: BlockState<typeof rootBlocks.image>;
-
-    // TODO: Is there a better solution for single files?
-    factsheet: GQLProductFormManualFragment["factsheet"][];
+    factsheet: [GQLProductFormManualFragment["factsheet"]] | []; // TODO: Remove array once `FinalFormFileUpload` has the correct types for single files.
 };
 
 export function ProductForm({ id }: FormProps): React.ReactElement {

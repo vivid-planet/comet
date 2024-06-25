@@ -1,30 +1,23 @@
 import { gql } from "@apollo/client";
+import { ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
 import { saveAs } from "file-saver";
 import React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { FileSelect, FileSelectProps } from "./FileSelect";
-import { ErrorFileSelectItem, LoadingFileSelectItem } from "./fileSelectItemTypes";
+import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
-    fragment FinalFormFileUploadFragment on PublicUpload {
+    fragment FinalFormFileUpload on PublicUpload {
         id
         name
         size
     }
 `;
 
-// TODO: Can this type be generated from `finalFormFileUploadFragment` somehow?
-export type FinalFormFileUploadFileData = {
-    id: string;
-    name: string;
-    size: number;
-};
-
 export interface FinalFormFileUploadProps
-    extends FieldRenderProps<FinalFormFileUploadFileData[], HTMLInputElement>,
-        Partial<FileSelectProps<FinalFormFileUploadFileData>> {}
+    extends FieldRenderProps<GQLFinalFormFileUploadFragment[], HTMLInputElement>,
+        Partial<FileSelectProps<GQLFinalFormFileUploadFragment>> {}
 
 type SuccessfulApiResponse = {
     id: string;
@@ -50,6 +43,8 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
     const [downloadingFileIds, setDownloadingFileIds] = React.useState<string[]>([]);
     const [failedToDownloadFileIds, setFailedToDownloadFileIds] = React.useState<string[]>([]);
 
+    const apiUrl = "http://localhost:4000"; // TODO: Where do we get the url from? Env? Hook?
+
     const singleFile = maxFiles === 1;
     const inputValue = React.useMemo(() => (input.value ? input.value : []), [input.value]);
 
@@ -66,7 +61,7 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
     });
 
     return (
-        <FileSelect<FinalFormFileUploadFileData>
+        <FileSelect<GQLFinalFormFileUploadFragment>
             onDrop={async (acceptedFiles, rejectedFiles) => {
                 setFailedUploads([]);
 
@@ -99,9 +94,7 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
                 const fetches = acceptedFiles.map((file) => {
                     const formData = new FormData();
                     formData.append("file", file);
-
-                    // TODO: Where do we get the url from?
-                    return fetch("http://localhost:4000/public-upload/files/upload", {
+                    return fetch(`${apiUrl}/public-upload/files/upload`, {
                         method: "POST",
                         body: formData,
                     });
@@ -147,8 +140,7 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
             }}
             onDownload={async (file) => {
                 setDownloadingFileIds([...downloadingFileIds, file.id]);
-                // TODO: Where do we get the url from?
-                fetch(`http://localhost:4000/public-upload/files/download/${file.id}`).then(async (response) => {
+                fetch(`${apiUrl}/public-upload/files/download/${file.id}`).then(async (response) => {
                     if (!response.ok) {
                         setDownloadingFileIds(downloadingFileIds.filter((id) => id !== file.id));
                         setFailedToDownloadFileIds([...failedToDownloadFileIds, file.id]);

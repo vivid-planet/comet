@@ -1,9 +1,9 @@
 import { gql } from "@apollo/client";
 
 // TODO: import from "@comet/admin" once the types are generated correctly in `ProductForm.gql.generated.ts`
-// import { finalFormFileUploadFragment } from "@comet/admin";
+// import { finalFormFileUploadFragment } from "@comet/cms-admin";
 const finalFormFileUploadFragment = gql`
-    fragment FinalFormFileUploadFragment on PublicUpload {
+    fragment FinalFormFileUpload on PublicUpload {
         id
         name
         size
@@ -20,10 +20,10 @@ export const productFormFragment = gql`
         inStock
         image
         factsheet {
-            ...FinalFormFileUploadFragment
+            ...FinalFormFileUpload
         }
         datasheets {
-            ...FinalFormFileUploadFragment
+            ...FinalFormFileUpload
         }
         category {
             id
