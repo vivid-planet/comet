@@ -1286,14 +1286,14 @@
             {
                 "name": "phone",
                 "kind": "String",
-                "nullable": false
+                "nullable": true
             }
         ],
         "inputFields": [
             {
                 "name": "phone",
                 "kind": "String",
-                "nullable": false
+                "nullable": true
             }
         ]
     },
