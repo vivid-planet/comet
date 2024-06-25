@@ -18,7 +18,7 @@ import {
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { MenuItem } from "@mui/material";
+import { Card, CardContent, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
@@ -57,10 +57,11 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image" | "factsheet" | "datasheets"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "image" | "factsheet"> & {
     image: BlockState<typeof rootBlocks.image>;
-    factsheet: string[];
-    datasheets: string[];
+
+    // TODO: Is there a better solution for single files?
+    factsheet: GQLProductFormManualFragment["factsheet"][];
 };
 
 export function ProductForm({ id }: FormProps): React.ReactElement {
@@ -78,11 +79,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         ? {
               ...filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product),
               image: rootBlocks.image.input2State(data.product.image),
-
-              // TODO: Is there a better solution?
-              // - Should `FinalFormFileUpload` be able to handle the `PublicUploads` entity as a value, instead of, or in addition to the `id`?
-              factsheet: data.product.factsheet?.id ? [data.product.factsheet.id] : [],
-              datasheets: data.product.datasheets.length ? data.product.datasheets.map(({ id }) => id) : [],
+              // TODO: Is there a better solution for single files?
+              factsheet: data.product.factsheet ? [data.product.factsheet] : [],
           }
         : {
               image: rootBlocks.image.defaultValues(),
@@ -114,7 +112,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
-            factsheet: formValues.factsheet?.length ? formValues.factsheet[0] : null,
+            // @ts-expect-error TODO: Is there a better solution for single files?
+            factsheet: formValues.factsheet?.length ? formValues.factsheet[0].id : null,
+            datasheets: formValues.datasheets?.map(({ id }) => id),
         };
 
         if (mode === "edit") {
@@ -208,21 +208,33 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
 
-                        {/* TODO: TODO: Consider if we should include both, multi- and single-upload fields in this demo form */}
-                        <Field
-                            label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
-                            name="datasheets"
-                            component={FinalFormFileUpload}
-                            maxFiles={5}
-                            fullWidth
-                        />
-                        <Field
-                            label={<FormattedMessage id="product.factsheet" defaultMessage="Factsheet" />}
-                            name="factsheet"
-                            component={FinalFormFileUpload}
-                            maxFiles={1}
-                            fullWidth
-                        />
+                        {/* TODO: Consider if we should include both, multi- and single-upload fields in this demo form */}
+                        {/* - Should there be separate `FinalFormSingleSelect` and `FinalFormMultiSelect` components? */}
+                        {/* TODO: Remove `Card` and `CardContent` once styling-followup is complete (COM-875)  */}
+                        <Card sx={{ mb: 4 }}>
+                            <CardContent>
+                                <Field
+                                    label={<FormattedMessage id="product.factsheet" defaultMessage="Factsheet" />}
+                                    name="factsheet"
+                                    component={FinalFormFileUpload}
+                                    maxFiles={1}
+                                    maxFileSize={1024 * 1024 * 4} // 4 MB
+                                    fullWidth
+                                />
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardContent>
+                                <Field
+                                    label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                                    name="datasheets"
+                                    component={FinalFormFileUpload}
+                                    maxFiles={5}
+                                    maxFileSize={1024 * 1024 * 4} // 4 MB
+                                    fullWidth
+                                />
+                            </CardContent>
+                        </Card>
                     </MainContent>
                 </>
             )}

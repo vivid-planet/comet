@@ -1,12 +1,30 @@
+import { gql } from "@apollo/client";
 import { saveAs } from "file-saver";
 import React from "react";
 import { FieldRenderProps } from "react-final-form";
-import { useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { FileSelect, FileSelectProps } from "./FileSelect";
-import { FileSelectItem } from "./fileSelectItemTypes";
+import { ErrorFileSelectItem, LoadingFileSelectItem } from "./fileSelectItemTypes";
 
-export interface FinalFormFileUploadProps extends FieldRenderProps<string[], HTMLInputElement>, Partial<FileSelectProps<AdditionalFileData>> {}
+export const finalFormFileUploadFragment = gql`
+    fragment FinalFormFileUploadFragment on PublicUpload {
+        id
+        name
+        size
+    }
+`;
+
+// TODO: Can this type be generated from `finalFormFileUploadFragment` somehow?
+export type FinalFormFileUploadFileData = {
+    id: string;
+    name: string;
+    size: number;
+};
+
+export interface FinalFormFileUploadProps
+    extends FieldRenderProps<FinalFormFileUploadFileData[], HTMLInputElement>,
+        Partial<FileSelectProps<FinalFormFileUploadFileData>> {}
 
 type SuccessfulApiResponse = {
     id: string;
@@ -25,105 +43,53 @@ type FailedApiResponse = {
 
 type ApiResponse = SuccessfulApiResponse | FailedApiResponse;
 
-type AdditionalFileData = {
-    id: string;
-};
-
 export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalFormFileUploadProps) => {
-    const intl = useIntl();
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const [loadedFiles, setLoadedFiles] = React.useState<Record<string, FileSelectItem<AdditionalFileData>>>({});
-    const [uploadingFiles, setUploadingFiles] = React.useState<File[]>([]);
-    const [failedUploads, setFailedUploads] = React.useState<File[]>([]);
+    const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
+    const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
+    const [downloadingFileIds, setDownloadingFileIds] = React.useState<string[]>([]);
 
+    const singleFile = maxFiles === 1;
     const inputValue = React.useMemo(() => (input.value ? input.value : []), [input.value]);
 
-    const getErrorMessage = React.useCallback(
-        (response: FailedApiResponse) => {
-            if (response.statusCode === 404) {
-                return intl.formatMessage({ id: "fileUpload.error.fileNotFound", defaultMessage: "File could not be found" });
-            }
-
-            return intl.formatMessage({ id: "fileUpload.error.unknown", defaultMessage: "File could not be loaded" });
-        },
-        [intl],
-    );
-
-    const fetchFile = React.useCallback(
-        async (fileId: string) => {
-            // TODO: Where do we get the url from?
-            fetch(`http://localhost:4000/public-upload/files/${fileId}`)
-                .then((response) => response.json())
-                .then((resopnse: ApiResponse) => {
-                    const fileData =
-                        "id" in resopnse
-                            ? {
-                                  id: resopnse.id,
-                                  name: resopnse.name,
-                                  size: resopnse.size,
-                              }
-                            : { id: fileId, error: getErrorMessage(resopnse) };
-
-                    setLoadedFiles((prevLoadedFiles) => ({
-                        ...prevLoadedFiles,
-                        [fileId]: fileData,
-                    }));
-                })
-                .catch(() => {
-                    setLoadedFiles((prevLoadedFiles) => ({
-                        ...prevLoadedFiles,
-                        [fileId]: { id: fileId, error: true },
-                    }));
-                });
-        },
-        [getErrorMessage],
-    );
-
-    React.useEffect(() => {
-        inputValue?.forEach((id) => {
-            fetchFile(id);
-        });
-    }, [inputValue, fetchFile]);
-
-    const files: FileSelectItem<AdditionalFileData>[] = inputValue.map((id) => {
-        if (id in loadedFiles) {
-            return loadedFiles[id];
+    const files = [...inputValue, ...failedUploads, ...uploadingFiles].map((file) => {
+        if ("id" in file && downloadingFileIds.includes(file.id)) {
+            return { ...file, isDownloading: true };
         }
 
-        return {
-            id,
-            loading: true,
-        };
-    });
-
-    const failedFileValues: FileSelectItem<AdditionalFileData>[] = failedUploads.map((file) => {
-        return {
-            name: file.name,
-            error: true,
-        };
-    });
-
-    const uploadingFileValues: FileSelectItem<AdditionalFileData>[] = uploadingFiles.map((file) => {
-        return {
-            name: file.name,
-            loading: true,
-        };
+        return file;
     });
 
     return (
-        <FileSelect<AdditionalFileData>
+        <FileSelect<FinalFormFileUploadFileData>
             onDrop={async (acceptedFiles, rejectedFiles) => {
-                const tooManyFilesWereDropped = rejectedFiles.some((rejection) => rejection.errors.some((error) => error.code === "too-many-files"));
+                setFailedUploads([]);
 
+                const tooManyFilesWereDropped = rejectedFiles.some((rejection) => rejection.errors.some((error) => error.code === "too-many-files"));
                 setTooManyFilesSelected(tooManyFilesWereDropped);
 
-                if (tooManyFilesWereDropped) {
+                rejectedFiles.map((rejection) => {
+                    const failedFile: ErrorFileSelectItem = {
+                        name: rejection.file.name,
+                        error: true,
+                    };
+
+                    if (rejection.errors.some((error) => error.code === "file-too-large")) {
+                        failedFile.error = <FormattedMessage id="comet.finalFormFileUpload.fileTooLarge" defaultMessage="File is too large." />;
+                    }
+
+                    setFailedUploads((existing) => [...existing, failedFile]);
+                });
+
+                if (singleFile) {
+                    input.onChange(undefined);
+                }
+
+                if (tooManyFilesWereDropped || !acceptedFiles.length) {
                     return;
                 }
 
-                if (acceptedFiles.length) {
-                    setUploadingFiles(acceptedFiles);
-                }
+                setUploadingFiles(acceptedFiles.map((file) => ({ name: file.name, loading: true })));
 
                 const fetches = acceptedFiles.map((file) => {
                     const formData = new FormData();
@@ -146,48 +112,54 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
                 const failedUploads = acceptedFiles.filter((file) => !successfulUploadResponses.some((item) => item.name === file.name));
 
                 failedUploads.forEach((file) => {
-                    setFailedUploads((prevFailedUploads) => [...prevFailedUploads, file]);
+                    setFailedUploads((prevFailedUploads) => [
+                        ...prevFailedUploads,
+                        {
+                            name: file.name,
+                            error: <FormattedMessage id="comet.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />,
+                        },
+                    ]);
                 });
 
-                input.onChange([...inputValue, ...successfulUploadResponses.map((item) => item.id)]);
+                const successfullyUploadedFiles = [...successfulUploadResponses.map(({ id, name, size }) => ({ id, name, size }))];
+
+                if (singleFile) {
+                    input.onChange(successfullyUploadedFiles);
+                } else {
+                    input.onChange([...inputValue, ...successfullyUploadedFiles]);
+                }
             }}
             onRemove={(fileToRemove) => {
-                if ("id" in fileToRemove) {
-                    input.onChange(inputValue.filter((id) => id !== fileToRemove.id));
-
-                    setLoadedFiles((existingFiles) => {
-                        const newFiles: Record<string, FileSelectItem<AdditionalFileData>> = {};
-
-                        for (const key in existingFiles) {
-                            if (key !== fileToRemove.id) {
-                                newFiles[key] = existingFiles[key];
-                            }
-                        }
-
-                        return newFiles;
-                    });
+                if (singleFile) {
+                    input.onChange(undefined);
+                } else if ("id" in fileToRemove) {
+                    input.onChange(inputValue.filter(({ id }) => id !== fileToRemove.id));
                 }
 
                 if ("error" in fileToRemove) {
                     setFailedUploads((existingFiles) => existingFiles.filter((failedFile) => failedFile.name !== fileToRemove.name));
                 }
-
-                if ("loading" in fileToRemove) {
-                    setUploadingFiles((existingFiles) => existingFiles.filter((uploadingFile) => uploadingFile.name !== fileToRemove.name));
-                }
             }}
             onDownload={async (file) => {
+                setDownloadingFileIds([...downloadingFileIds, file.id]);
                 // TODO: Where do we get the url from?
                 fetch(`http://localhost:4000/public-upload/files/download/${file.id}`)
                     .then((response) => response.blob())
                     .then((blob) => {
                         saveAs(blob, file.name);
+                        setDownloadingFileIds(downloadingFileIds.filter((id) => id !== file.id));
                     });
             }}
-            files={[...files, ...failedFileValues, ...uploadingFileValues]}
+            files={files}
             maxFiles={maxFiles}
             error={
-                tooManyFilesSelected ? "Upload was canceled. You can only upload a maximum of 4 files, please reduce your selection." : undefined // TODO: Translate
+                tooManyFilesSelected ? (
+                    <FormattedMessage
+                        id="comet.finalFormFileUpload.maximumFilesAmount"
+                        defaultMessage="Upload was canceled. You can only upload a maximum of {maxFiles} {maxFiles, plural, one {file} other {files}}, please reduce your selection."
+                        values={{ maxFiles }}
+                    />
+                ) : undefined
             }
             {...restProps}
         />

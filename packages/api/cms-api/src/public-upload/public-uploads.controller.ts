@@ -29,14 +29,6 @@ export class PublicUploadsController {
         return publicUploadsFile;
     }
 
-    // TODO: Should we add a graphql endpoint for this?
-    @Get(":id")
-    @DisableCometGuards()
-    async getFileById(@Param("id") id: string): Promise<PublicUpload> {
-        return this.publicUploadsService.getFileById(id);
-    }
-
-    // TODO: Should (can) we add a graphql endpoint for this?
     @Get("download/:id")
     @DisableCometGuards()
     async downloadFileById(@Param("id") id: string, @Res() res: NodeJS.WritableStream): Promise<void> {
