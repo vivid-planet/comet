@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix infinite upload loop in `useAsyncOptions`
+Fix infinite update loop in `useAsyncOptions`
