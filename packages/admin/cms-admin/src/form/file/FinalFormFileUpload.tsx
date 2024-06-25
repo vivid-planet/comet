@@ -15,10 +15,6 @@ export const finalFormFileUploadFragment = gql`
     }
 `;
 
-export interface FinalFormFileUploadProps
-    extends FieldRenderProps<GQLFinalFormFileUploadFragment[], HTMLInputElement>,
-        Partial<FileSelectProps<GQLFinalFormFileUploadFragment>> {}
-
 type SuccessfulApiResponse = {
     id: string;
     createdAt: string;
@@ -36,7 +32,12 @@ type FailedApiResponse = {
 
 type ApiResponse = SuccessfulApiResponse | FailedApiResponse;
 
-export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalFormFileUploadProps) => {
+export type FinalFormFileUploadProps<MaxFiles> = (MaxFiles extends 1
+    ? { maxFiles?: MaxFiles } & FieldRenderProps<GQLFinalFormFileUploadFragment, HTMLInputElement>
+    : { maxFiles?: MaxFiles } & FieldRenderProps<GQLFinalFormFileUploadFragment[], HTMLInputElement>) &
+    Partial<FileSelectProps<GQLFinalFormFileUploadFragment>>;
+
+export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input, maxFiles, ...restProps }: FinalFormFileUploadProps<MaxFiles>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
     const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
@@ -46,7 +47,7 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
     const apiUrl = "http://localhost:4000"; // TODO: Where do we get the url from? Env? Hook?
 
     const singleFile = maxFiles === 1;
-    const inputValue = React.useMemo(() => (input.value ? input.value : []), [input.value]);
+    const inputValue = React.useMemo(() => (Array.isArray(input.value) ? input.value : input.value ? [input.value] : []), [input.value]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles].map((file) => {
         if ("id" in file && downloadingFileIds.includes(file.id)) {
@@ -122,12 +123,16 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
                 const successfullyUploadedFiles = [...successfulUploadResponses.map(({ id, name, size }) => ({ id, name, size }))];
 
                 if (singleFile) {
-                    input.onChange(successfullyUploadedFiles);
+                    if (successfullyUploadedFiles.length) {
+                        input.onChange(successfullyUploadedFiles[0]);
+                    }
                 } else {
                     input.onChange([...inputValue, ...successfullyUploadedFiles]);
                 }
             }}
             onRemove={(fileToRemove) => {
+                setTooManyFilesSelected(false);
+
                 if (singleFile) {
                     input.onChange(undefined);
                 } else if ("id" in fileToRemove) {

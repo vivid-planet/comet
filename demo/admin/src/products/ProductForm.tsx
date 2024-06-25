@@ -56,9 +56,8 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image" | "factsheet"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
-    factsheet: [GQLProductFormManualFragment["factsheet"]] | []; // TODO: Remove array once `FinalFormFileUpload` has the correct types for single files.
 };
 
 export function ProductForm({ id }: FormProps): React.ReactElement {
@@ -76,8 +75,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         ? {
               ...filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product),
               image: rootBlocks.image.input2State(data.product.image),
-              // TODO: Is there a better solution for single files?
-              factsheet: data.product.factsheet ? [data.product.factsheet] : [],
           }
         : {
               image: rootBlocks.image.defaultValues(),
@@ -109,8 +106,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
-            // @ts-expect-error TODO: Is there a better solution for single files?
-            factsheet: formValues.factsheet?.length ? formValues.factsheet[0].id : null,
+            factsheet: formValues.factsheet ? formValues.factsheet.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
         };
 
@@ -205,8 +201,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
 
-                        {/* TODO: Consider if we should include both, multi- and single-upload fields in this demo form */}
-                        {/* - Should there be separate `FinalFormSingleSelect` and `FinalFormMultiSelect` components? */}
                         {/* TODO: Remove `Card` and `CardContent` once styling-followup is complete (COM-875)  */}
                         <Card sx={{ mb: 4 }}>
                             <CardContent>
