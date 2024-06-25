@@ -1,16 +1,28 @@
-import { EntityManager } from "@mikro-orm/postgresql";
-import { Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { Controller, forwardRef, Get, Inject, Param, Post, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Response } from "express";
 import rimraf from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
+import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../dam/files/files.utils";
 import { PublicUploadFileUploadInterface } from "./dto/public-upload-file-upload.interface";
 import { PublicUpload } from "./entities/public-upload.entity";
+import { PublicUploadConfig } from "./public-upload.config";
+import { PUBLIC_UPLOAD_CONFIG } from "./public-upload.constants";
 import { PublicUploadFileInterceptor } from "./public-upload-file.interceptor";
 import { PublicUploadsService } from "./public-uploads.service";
 
 @Controller("public-upload/files")
 export class PublicUploadsController {
-    constructor(private readonly publicUploadsService: PublicUploadsService, private readonly entityManager: EntityManager) {}
+    constructor(
+        @InjectRepository(PublicUpload) private readonly publicUploadsRepository: EntityRepository<PublicUpload>,
+        @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
+        @Inject(PUBLIC_UPLOAD_CONFIG) private readonly config: PublicUploadConfig,
+        private readonly publicUploadsService: PublicUploadsService,
+        private readonly entityManager: EntityManager,
+    ) {}
 
     @Post("upload")
     @UseInterceptors(PublicUploadFileInterceptor("file"))
@@ -31,8 +43,23 @@ export class PublicUploadsController {
 
     @Get("download/:id")
     @DisableCometGuards()
-    async downloadFileById(@Param("id") id: string, @Res() res: NodeJS.WritableStream): Promise<void> {
-        const stream = await this.publicUploadsService.getFileStreamById(id);
+    async downloadFileById(@Param("id") id: string, @Res() res: Response): Promise<void> {
+        const file = await this.publicUploadsRepository.findOne(id);
+
+        if (!file) {
+            res.status(404).send("File not found");
+            return;
+        }
+
+        const filePath = createHashedPath(file.contentHash);
+        const fileExists = await this.blobStorageBackendService.fileExists(this.config.directory, filePath);
+
+        if (!fileExists) {
+            res.status(404).send("File not found");
+            return;
+        }
+
+        const stream = await this.blobStorageBackendService.getFile(this.config.directory, filePath);
         stream.pipe(res);
     }
 }

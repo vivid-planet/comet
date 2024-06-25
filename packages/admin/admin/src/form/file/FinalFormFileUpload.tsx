@@ -48,6 +48,7 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
     const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
     const [downloadingFileIds, setDownloadingFileIds] = React.useState<string[]>([]);
+    const [failedToDownloadFileIds, setFailedToDownloadFileIds] = React.useState<string[]>([]);
 
     const singleFile = maxFiles === 1;
     const inputValue = React.useMemo(() => (input.value ? input.value : []), [input.value]);
@@ -55,6 +56,10 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
     const files = [...inputValue, ...failedUploads, ...uploadingFiles].map((file) => {
         if ("id" in file && downloadingFileIds.includes(file.id)) {
             return { ...file, isDownloading: true };
+        }
+
+        if ("id" in file && failedToDownloadFileIds.includes(file.id)) {
+            return { ...file, error: <FormattedMessage id="comet.finalFormFileUpload.downloadFailed" defaultMessage="Download failed." /> };
         }
 
         return file;
@@ -143,12 +148,18 @@ export const FinalFormFileUpload = ({ input, maxFiles, ...restProps }: FinalForm
             onDownload={async (file) => {
                 setDownloadingFileIds([...downloadingFileIds, file.id]);
                 // TODO: Where do we get the url from?
-                fetch(`http://localhost:4000/public-upload/files/download/${file.id}`)
-                    .then((response) => response.blob())
-                    .then((blob) => {
+                fetch(`http://localhost:4000/public-upload/files/download/${file.id}`).then(async (response) => {
+                    if (!response.ok) {
+                        setDownloadingFileIds(downloadingFileIds.filter((id) => id !== file.id));
+                        setFailedToDownloadFileIds([...failedToDownloadFileIds, file.id]);
+                        return;
+                    }
+
+                    response.blob().then((blob) => {
                         saveAs(blob, file.name);
                         setDownloadingFileIds(downloadingFileIds.filter((id) => id !== file.id));
                     });
+                });
             }}
             files={files}
             maxFiles={maxFiles}
