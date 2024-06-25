@@ -20,7 +20,7 @@ export const IsPhoneNumber = () => {
 
 @ValidatorConstraint({ name: "IsPhoneNumber" })
 @Injectable()
-export class IsPhoneNumberConstraint implements ValidatorConstraintInterface {
+class IsPhoneNumberConstraint implements ValidatorConstraintInterface {
     validate(value: unknown): boolean {
         if (!isString(value)) {
             return false;
