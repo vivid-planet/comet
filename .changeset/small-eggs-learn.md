@@ -13,3 +13,4 @@ API Generator: Replace graphql-type-json with graphql-scalars for JSON columns
    ```diff
    - import { GraphQLJSONObject } from "graphql-type-json";
    + import { GraphQLJSONObject } from "graphql-scalars";
+   ```
