@@ -10,6 +10,8 @@ storiesOf("stories/components/FileSelectListItem", module)
         </Card>
     ))
     .add("FileSelectListItem", () => {
+        const [fileIsDownloading, setFileIsDownloading] = React.useState(false);
+
         return (
             <>
                 {/* Data for this file has not been loaded yet */}
@@ -24,9 +26,14 @@ storiesOf("stories/components/FileSelectListItem", module)
                     file={{
                         name: "Filename.xyz",
                         size: 4.3 * 1024 * 1024, // 4.3 MB
+                        isDownloading: fileIsDownloading,
                     }}
                     onClickDownload={() => {
+                        setFileIsDownloading(true);
                         // Handle download
+                        setTimeout(() => {
+                            setFileIsDownloading(false);
+                        }, 2000);
                     }}
                     onClickDelete={() => {
                         // Handle delete
