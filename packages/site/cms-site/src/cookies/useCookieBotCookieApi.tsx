@@ -1,0 +1,43 @@
+import React from "react";
+
+import { CookieApiHook } from "./CookieApiHook";
+
+type WindowWithCookiebot = Window & {
+    Cookiebot: {
+        consent: Record<string, boolean>;
+        renew: () => void;
+        [key: string]: unknown;
+    };
+};
+
+export const isWindowWithCookiebot = (window: Window): window is WindowWithCookiebot => {
+    return "Cookiebot" in window;
+};
+
+export const useCookieBotCookieApi: CookieApiHook = () => {
+    const [consentedCookies, setConsentedCookies] = React.useState<string[]>([]);
+
+    React.useEffect(() => {
+        const onCookiesUpdated = () => {
+            if (isWindowWithCookiebot(window)) {
+                const consentedList = window.Cookiebot.consent;
+                setConsentedCookies(Object.keys(consentedList).filter((key) => consentedList[key]));
+            }
+        };
+
+        window.addEventListener("CookiebotOnConsentReady", onCookiesUpdated);
+
+        return () => {
+            window.removeEventListener("CookiebotOnConsentReady", onCookiesUpdated);
+        };
+    }, []);
+
+    return {
+        consentedCookies,
+        openCookieSettings: () => {
+            if (isWindowWithCookiebot(window)) {
+                window.Cookiebot.renew();
+            }
+        },
+    };
+};

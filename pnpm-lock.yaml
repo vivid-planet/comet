@@ -2535,6 +2535,9 @@ importers:
       use-debounce:
         specifier: ^6.0.0
         version: 6.0.1(react@17.0.2)
+      usehooks-ts:
+        specifier: ^3.1.0
+        version: 3.1.0(react@17.0.2)
     devDependencies:
       '@comet/cli':
         specifier: workspace:^6.13.0
@@ -31486,6 +31489,16 @@ packages:
   /use@3.1.1:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /usehooks-ts@3.1.0(react@17.0.2):
+    resolution: {integrity: sha512-bBIa7yUyPhE1BCc0GmR96VU/15l/9gP1Ch5mYdLcFBaFGQsdmXkvjV0TtOqW1yUd6VjIwDunm+flSciCQXujiw==}
+    engines: {node: '>=16.15.0'}
+    peerDependencies:
+      react: ^16.8.0  || ^17 || ^18
+    dependencies:
+      lodash.debounce: 4.0.8
+      react: 17.0.2
     dev: false
 
   /util-deprecate@1.0.2:
