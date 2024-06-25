@@ -1,3 +1,4 @@
+import { Loading } from "@comet/admin";
 import { css } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
@@ -53,17 +54,19 @@ const IFrameViewer = React.forwardRef<HTMLIFrameElement, Props>(({ device, initi
     const deviceConfig = resolveDeviceConfig(device);
 
     const { observe: containerRef, width, height } = useDimensions<HTMLDivElement | null>();
+    const [isLoading, setIsLoading] = React.useState(true);
 
     const scaleFactor = deviceConfig ? calcScaleFactor(width, height, deviceConfig) : 1;
 
     return (
         <Root ref={containerRef}>
+            {isLoading && <Loading behavior="fillParentAbsolute" sx={{ zIndex: 1 }} />}
             <OuterFrame
                 // Inline style to prevent device frame disappearing while scaling
                 style={{ transform: `scale(${scaleFactor})` }}
                 deviceConfig={deviceConfig}
             >
-                <IFrame ref={iFrameRef} src={initialPageUrl} deviceConfig={deviceConfig} />
+                <IFrame ref={iFrameRef} src={initialPageUrl} deviceConfig={deviceConfig} onLoad={() => setIsLoading(false)} />
                 {deviceConfig && <DeviceFrameWrapper>{deviceConfig.deviceFrame}</DeviceFrameWrapper>}
             </OuterFrame>
         </Root>
@@ -91,6 +94,9 @@ function calcScaleFactor(width: number, height: number, deviceConfig: DeviceConf
 
 const Root = styled("div")`
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex: 1;
     background-color: ${({ theme }) => theme.palette.grey[100]};
 `;

@@ -1,5 +1,5 @@
 import { FieldSet } from "@comet/admin";
-import { Info } from "@mui/icons-material";
+import { Info } from "@comet/admin-icons";
 import { Chip, IconButton, Typography } from "@mui/material";
 import * as React from "react";
 

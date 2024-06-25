@@ -27,11 +27,12 @@ export const getMuiChip: GetMuiComponentTheme<"MuiChip"> = (component, { palette
             fontSize: 12,
             lineHeight: "16px",
             paddingLeft: 0,
-            paddingRight: "6px",
+            paddingRight: 0,
         },
         deleteIconMedium: {
             margin: 0,
             fontSize: 16,
+            paddingLeft: 6,
         },
         sizeSmall: {
             height: 20,
@@ -46,11 +47,12 @@ export const getMuiChip: GetMuiComponentTheme<"MuiChip"> = (component, { palette
             fontSize: 10,
             lineHeight: "10px",
             paddingLeft: 0,
-            paddingRight: "5px",
+            paddingRight: 0,
         },
         deleteIconSmall: {
             margin: 0,
             fontSize: 12,
+            paddingLeft: 5,
         },
         deleteIconColorPrimary: {
             color: palette.primary.contrastText,

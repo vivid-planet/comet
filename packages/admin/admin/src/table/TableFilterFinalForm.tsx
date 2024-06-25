@@ -1,4 +1,4 @@
-import CancelIcon from "@mui/icons-material/Cancel";
+import { Clear } from "@comet/admin-icons";
 import { Button, Grid, Typography } from "@mui/material";
 import { AnyObject } from "final-form";
 import * as React from "react";
@@ -53,7 +53,7 @@ export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Compon
                                     <Grid item>
                                         <Button
                                             variant="text"
-                                            startIcon={<CancelIcon />}
+                                            startIcon={<Clear />}
                                             onClick={() => {
                                                 formRenderProps.form.reset();
                                             }}

@@ -11,7 +11,16 @@ class TestEntityCategoryWithIntegerId extends BaseEntity<TestEntityCategoryWithI
     @PrimaryKey({ columnType: "int", type: "integer" })
     id: number;
 
-    @OneToMany(() => TestEntityProduct, (products) => products.category)
+    @OneToMany(() => TestEntityProduct, (products) => products.categoryWithInteger)
+    products = new Collection<TestEntityProduct>(this);
+}
+
+@Entity()
+class TestEntityCategoryWithIntId extends BaseEntity<TestEntityCategoryWithIntId, "id"> {
+    @PrimaryKey({ columnType: "int", type: "int" })
+    id: number;
+
+    @OneToMany(() => TestEntityProduct, (products) => products.categoryWithInt)
     products = new Collection<TestEntityProduct>(this);
 }
 
@@ -21,17 +30,20 @@ class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
     id: string = uuid();
 
     @ManyToOne(() => TestEntityCategoryWithIntegerId, { nullable: true, ref: true })
-    category?: Ref<TestEntityCategoryWithIntegerId>;
+    categoryWithInteger?: Ref<TestEntityCategoryWithIntegerId>;
+
+    @ManyToOne(() => TestEntityCategoryWithIntId, { nullable: true, ref: true })
+    categoryWithInt?: Ref<TestEntityCategoryWithIntId>;
 }
 
-describe("GenerateCrudRelationsIdString", () => {
+describe("GenerateCrudRelationsIdNumber", () => {
     describe("resolver class", () => {
-        it("input type to category relation should be number with integer validator", async () => {
+        it("input type to category relation with primary key type integer should be number with integer validator", async () => {
             LazyMetadataStorage.load();
             const orm = await MikroORM.init({
                 type: "postgresql",
                 dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityCategoryWithIntegerId],
+                entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
             });
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
@@ -45,11 +57,42 @@ describe("GenerateCrudRelationsIdString", () => {
 
             const cls = classes[0];
             const structure = cls.getStructure();
-            expect(structure.properties?.length).toBe(1);
-            expect(structure.properties?.[0].name).toBe("category");
+            expect(structure.properties?.length).toBe(2);
+            expect(structure.properties?.[0].name).toBe("categoryWithInteger");
             expect(structure.properties?.[0].type).toBe("number");
             expect(structure.properties?.[0].decorators?.length).toBe(4);
             const decorators = structure.properties?.[0].decorators?.map((dec) => dec.name);
+            expect(decorators).toContain("Transform");
+            expect(decorators).toContain("IsInt");
+            expect(decorators).not.toContain("IsUUID");
+            expect(decorators).not.toContain("IsString");
+            orm.close();
+        });
+
+        it("input type to category relation with primary key type int should be number with integer validator", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
+            });
+
+            const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
+            const lintedOut = await lintGeneratedFiles(out);
+            const file = lintedOut.find((file) => file.name === "dto/test-entity-product.input.ts");
+            if (!file) throw new Error("File not found");
+
+            const source = parseSource(file.content);
+            const classes = source.getClasses();
+            expect(classes.length).toBe(2);
+
+            const cls = classes[0];
+            const structure = cls.getStructure();
+            expect(structure.properties?.length).toBe(2);
+            expect(structure.properties?.[1].name).toBe("categoryWithInt");
+            expect(structure.properties?.[1].type).toBe("number");
+            expect(structure.properties?.[1].decorators?.length).toBe(4);
+            const decorators = structure.properties?.[1].decorators?.map((dec) => dec.name);
             expect(decorators).toContain("Transform");
             expect(decorators).toContain("IsInt");
             expect(decorators).not.toContain("IsUUID");

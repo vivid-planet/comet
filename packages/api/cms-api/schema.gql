@@ -173,15 +173,6 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type SitePreviewHash {
-  timestamp: Float!
-  hash: String!
-}
-
-type CurrentUserPermission {
-  permission: String!
-}
-
 type User {
   id: String!
   name: String!
@@ -389,8 +380,8 @@ input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
   active: BooleanFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [RedirectFilter!]
   or: [RedirectFilter!]
 }
@@ -407,7 +398,7 @@ input BooleanFilter {
   equal: Boolean
 }
 
-input DateFilter {
+input DateTimeFilter {
   equal: DateTime
   lowerThan: DateTime
   greaterThan: DateTime

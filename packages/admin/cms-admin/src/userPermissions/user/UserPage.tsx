@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
+import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { UserBasicData } from "./basicData/UserBasicData";
 import { ContentScopeGrid } from "./permissions/ContentScopeGrid";
 import { PermissionGrid } from "./permissions/PermissionGrid";
@@ -36,7 +37,7 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
 
     return (
         <>
-            <Toolbar>
+            <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
                 <ToolbarBackButton />
                 <ToolbarTitleItem>
                     <TitleText>{data.user.name}</TitleText>

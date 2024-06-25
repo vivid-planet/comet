@@ -3,7 +3,7 @@ import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
 import { BooleanFilter } from "../../common/filter/boolean.filter";
-import { DateFilter } from "../../common/filter/date.filter";
+import { DateTimeFilter } from "../../common/filter/date-time.filter";
 import { StringFilter } from "../../common/filter/string.filter";
 
 @InputType()
@@ -23,15 +23,15 @@ export class RedirectFilter {
     @Type(() => BooleanFilter)
     active?: BooleanFilter;
 
-    @Field(() => DateFilter, { nullable: true })
+    @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
-    @Type(() => DateFilter)
-    createdAt?: DateFilter;
+    @Type(() => DateTimeFilter)
+    createdAt?: DateTimeFilter;
 
-    @Field(() => DateFilter, { nullable: true })
+    @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
-    @Type(() => DateFilter)
-    updatedAt?: DateFilter;
+    @Type(() => DateTimeFilter)
+    updatedAt?: DateTimeFilter;
 
     @Field(() => [RedirectFilter], { nullable: true })
     @Type(() => RedirectFilter)

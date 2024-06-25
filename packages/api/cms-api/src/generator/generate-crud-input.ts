@@ -33,7 +33,7 @@ function findReferenceTargetType(
         return "uuid";
     } else if (referencedColumnProp.type == "string") {
         return "string";
-    } else if (referencedColumnProp.type == "integer") {
+    } else if (referencedColumnProp.type == "integer" || referencedColumnProp.type == "int") {
         return "integer";
     } else {
         return null;
@@ -270,7 +270,7 @@ export async function generateCrudInput(
                 generatedFiles.push(...nestedInputFiles);
                 imports.push({
                     name: inputNameClassName,
-                    importPath: nestedInputFiles[0].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
+                    importPath: nestedInputFiles[nestedInputFiles.length - 1].name.replace(/^dto/, ".").replace(/\.ts$/, ""),
                 });
             }
             decorators.push(`@Field(() => ${inputNameClassName}${prop.nullable ? ", { nullable: true }" : ""})`);
@@ -379,7 +379,7 @@ export async function generateCrudInput(
 import { Transform, Type } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 ${generateImportsCode(imports)}
 

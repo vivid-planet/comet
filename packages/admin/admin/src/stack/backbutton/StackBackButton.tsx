@@ -1,4 +1,4 @@
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowLeft } from "@comet/admin-icons";
 import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
@@ -17,7 +17,7 @@ const Root = createComponentSlot(Button)<StackBackButtonClassKey>({
 })();
 
 export function StackBackButton(inProps: StackBackButtonProps) {
-    const { startIcon = <ArrowBack />, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBackButton" });
+    const { startIcon = <ArrowLeft />, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBackButton" });
 
     return (
         <StackApiContext.Consumer>

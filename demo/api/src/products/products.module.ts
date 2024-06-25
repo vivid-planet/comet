@@ -1,7 +1,10 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
+import { ManufacturerCountry } from "@src/products/entities/manufacturer-country.entity";
 import { ManufacturerResolver } from "@src/products/generated/manufacturer.resolver";
+import { ManufacturerCountriesService } from "@src/products/generated/manufacturer-countries.service";
+import { ManufacturerCountryResolver } from "@src/products/generated/manufacturer-country.resolver";
 import { ManufacturersService } from "@src/products/generated/manufacturers.service";
 
 import { Product } from "./entities/product.entity";
@@ -32,6 +35,7 @@ import { ProductsService } from "./generated/products.service";
             ProductStatistics,
             ProductColor,
             Manufacturer,
+            ManufacturerCountry,
         ]),
     ],
     providers: [
@@ -45,6 +49,8 @@ import { ProductsService } from "./generated/products.service";
         ProductVariantResolver,
         ManufacturerResolver,
         ManufacturersService,
+        ManufacturerCountryResolver,
+        ManufacturerCountriesService,
         ProductToTagResolver,
     ],
     exports: [],

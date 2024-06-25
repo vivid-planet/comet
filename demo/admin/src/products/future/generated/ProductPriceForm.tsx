@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { useApolloClient, useQuery } from "@apollo/client";
 import { Field, filterByFragment, FinalForm, FinalFormInput, Loading, MainContent, useFormApiRef } from "@comet/admin";
-import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -85,7 +85,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
                     <MainContent>
                         <Field
@@ -97,7 +97,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
                             helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123,45" />}
                         />
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

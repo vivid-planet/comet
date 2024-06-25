@@ -1,6 +1,6 @@
 import { Inject, Type } from "@nestjs/common";
 import { Args, Context, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { IncomingMessage } from "http";
 
 import { SkipBuild } from "../../builds/skip-build.decorator";

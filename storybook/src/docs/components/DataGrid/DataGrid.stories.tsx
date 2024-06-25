@@ -15,7 +15,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { MoreVert } from "@mui/icons-material";
+import { MoreVertical } from "@comet/admin-icons";
 import { Button, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
@@ -411,7 +411,7 @@ storiesOf("stories/components/DataGrid", module)
                     <ToolbarFillSpace />
                     <ToolbarActions>
                         <>
-                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVert />} color="info">
+                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
                                 More Actions
                             </Button>
                             <Menu

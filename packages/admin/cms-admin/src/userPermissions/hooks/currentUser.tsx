@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
 import { Typography } from "@mui/material";
-import isEqual from "lodash.isequal";
 import React from "react";
 
 import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
@@ -52,7 +51,9 @@ export const CurrentUserProvider: React.FC<{
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
                 if (user.email === undefined) return false;
                 return user.permissions.some(
-                    (p) => p.permission === permission && (!contentScope || p.contentScopes.some((cs) => isEqual(cs, contentScope))),
+                    (p) =>
+                        p.permission === permission &&
+                        (!contentScope || p.contentScopes.some((cs) => Object.entries(contentScope).every(([scope, value]) => cs[scope] === value))),
                 );
             }),
     };

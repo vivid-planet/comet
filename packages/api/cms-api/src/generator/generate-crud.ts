@@ -92,6 +92,8 @@ export function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
                 prop.reference === "m:1" ||
+                prop.reference === "1:m" ||
+                prop.reference === "m:n" ||
                 prop.type === "EnumArrayType") &&
             !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
     );
@@ -118,6 +120,10 @@ export function buildOptions(metadata: EntityMetadata<any>) {
 
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+
+    const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
+    const skipScopeCheck = !scopeProp && !scopedEntity;
+
     const argsClassName = `${classNameSingular != classNamePlural ? classNamePlural : `${classNamePlural}List`}Args`;
     const argsFileName = `${fileNameSingular != fileNamePlural ? fileNamePlural : `${fileNameSingular}-list`}.args`;
 
@@ -137,6 +143,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         statusActiveItems,
         hasStatusFilter,
         scopeProp,
+        skipScopeCheck,
         argsClassName,
         argsFileName,
         blockProps,
@@ -177,7 +184,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, ManyToOneFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -227,11 +234,11 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: BooleanFilter;
                     `;
                 } else if (prop.type === "DateType" || prop.type === "Date") {
-                    return `@Field(() => DateFilter, { nullable: true })
+                    return `@Field(() => DateTimeFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
-                    @Type(() => DateFilter)
-                    ${prop.name}?: DateFilter;
+                    @Type(() => DateTimeFilter)
+                    ${prop.name}?: DateTimeFilter;
                     `;
                 } else if (prop.reference === "m:1") {
                     return `@Field(() => ManyToOneFilter, { nullable: true })
@@ -239,6 +246,20 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @IsOptional()
                     @Type(() => ManyToOneFilter)
                     ${prop.name}?: ManyToOneFilter;
+                    `;
+                } else if (prop.reference === "1:m") {
+                    return `@Field(() => OneToManyFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => OneToManyFilter)
+                    ${prop.name}?: OneToManyFilter;
+                    `;
+                } else if (prop.reference === "m:n") {
+                    return `@Field(() => ManyToManyFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => ManyToManyFilter)
+                    ${prop.name}?: ManyToManyFilter;
                     `;
                 } else {
                     //unsupported type TODO support more
@@ -499,11 +520,11 @@ function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: s
 function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
-): { code: string; injectRepositories: string[] } {
+): { code: string; injectRepositories: EntityMetadata<any>[] } {
     const { instanceNameSingular } = buildNameVariants(metadata);
     const { blockProps, scopeProp, dedicatedResolverArgProps } = buildOptions(metadata);
 
-    const injectRepositories: string[] = [];
+    const injectRepositories: EntityMetadata<any>[] = [];
 
     const props = metadata.props.filter((prop) => !options.excludeFields || !options.excludeFields.includes(prop.name));
 
@@ -519,7 +540,9 @@ function generateInputHandling(
             return !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name);
         })
         .map((prop) => {
-            injectRepositories.push(prop.type);
+            const targetMeta = prop.targetMeta;
+            if (!targetMeta) throw new Error("targetMeta is not set for relation");
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -534,7 +557,7 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(prop.type);
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -549,7 +572,7 @@ function generateInputHandling(
         .map((prop) => {
             const targetMeta = prop.targetMeta;
             if (!targetMeta) throw new Error("targetMeta is not set for relation");
-            injectRepositories.push(prop.type);
+            injectRepositories.push(targetMeta);
             return {
                 name: prop.name,
                 singularName: singular(prop.name),
@@ -702,7 +725,7 @@ ${
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { scopeProp } = buildOptions(metadata);
+    const { skipScopeCheck } = buildOptions(metadata);
 
     const imports: Imports = [];
 
@@ -718,7 +741,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         ${code}
     }
@@ -822,6 +845,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         buildNameVariants(metadata);
     const {
         scopeProp,
+        skipScopeCheck,
         argsClassName,
         argsFileName,
         hasSlugProp,
@@ -843,7 +867,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const outputRelationOneToOneProps = relationOneToOneProps.filter((prop) => hasFieldFeature(metadata.class, prop.name, "resolveField"));
 
     const imports: Imports = [];
-    const injectRepositories = new Array<string>();
+    const injectRepositories = new Array<EntityMetadata<any>>();
 
     const { code: createInputHandlingCode, injectRepositories: createInputHandlingInjectRepositories } = generateInputHandling(
         { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
@@ -857,7 +881,12 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     );
     injectRepositories.push(...updateInputHandlingInjectRepositories);
 
-    injectRepositories.push(...dedicatedResolverArgProps.map((prop) => prop.type));
+    injectRepositories.push(
+        ...dedicatedResolverArgProps.map((prop) => {
+            if (!prop.targetMeta) throw new Error("targetMeta is not set for relation");
+            return prop.targetMeta;
+        }),
+    );
 
     const {
         imports: relationsFieldResolverImports,
@@ -873,6 +902,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, generatorOptions.targetDirectory));
     }
+    imports.push(...injectRepositories.map((meta) => generateEntityImport(meta, generatorOptions.targetDirectory)));
 
     if (statusProp) {
         const enumName = findEnumName(statusProp.name, metadata);
@@ -905,13 +935,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${!scopeProp ? `, { skipScopeCheck: true }` : ""})
+    @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
-            ${[...new Set<string>(injectRepositories)]
+            ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
                 .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
                 .join(", ")}
         ) {}

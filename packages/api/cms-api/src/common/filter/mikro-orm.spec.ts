@@ -1,38 +1,96 @@
 import { BooleanFilter } from "./boolean.filter";
-import { DateFilter } from "./date.filter";
-import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery } from "./mikro-orm";
+import { DateTimeFilter } from "./date-time.filter";
+import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery, splitSearchString } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
+
+describe("splitSearchString", () => {
+    it("should split a simple space-separated string", () => {
+        const input = "This is a test";
+        const expected = ["%This%", "%is%", "%a%", "%test%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle quoted strings as single tokens", () => {
+        const input = 'This is a "quoted string"';
+        const expected = ["%This%", "%is%", "%a%", "%quoted string%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle escaped quotes within quoted strings", () => {
+        const input = 'This is a "quoted \\"string\\""';
+        const expected = ["%This%", "%is%", "%a%", '%quoted "string"%'];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle single quotes", () => {
+        const input = "This is a 'quoted string'";
+        const expected = ["%This%", "%is%", "%a%", "%quoted string%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle escaped quotes within single quoted strings", () => {
+        const input = "This is a 'quoted \\'string\\''";
+        const expected = ["%This%", "%is%", "%a%", "%quoted 'string'%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle mixed quotes", () => {
+        const input = "This \"is a\" 'test'";
+        const expected = ["%This%", "%is a%", "%test%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle empty strings", () => {
+        const input = "";
+        const expected: string[] = [];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle strings with special characters", () => {
+        const input = "This is a test with % and _ characters";
+        const expected = ["%This%", "%is%", "%a%", "%test%", "%with%", "%\\%%", "%and%", "%\\_%", "%characters%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+
+    it("should handle strings with only special characters", () => {
+        const input = "% _";
+        const expected = ["%\\%%", "%\\_%"];
+        expect(splitSearchString(input)).toEqual(expected);
+    });
+});
 
 describe("searchToMikroOrmQuery", () => {
     it("should work", async () => {
         expect(searchToMikroOrmQuery("foo", ["title", "description"])).toStrictEqual({
-            $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }],
+            $and: [{ $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }] }],
         });
     });
     it("should escape %", async () => {
         expect(searchToMikroOrmQuery("fo%o", ["title", "description"])).toStrictEqual({
-            $or: [{ title: { $ilike: "%fo\\%o%" } }, { description: { $ilike: "%fo\\%o%" } }],
+            $and: [{ $or: [{ title: { $ilike: "%fo\\%o%" } }, { description: { $ilike: "%fo\\%o%" } }] }],
         });
     });
     it("should escape _", async () => {
         expect(searchToMikroOrmQuery("fo_o", ["title", "description"])).toStrictEqual({
-            $or: [{ title: { $ilike: "%fo\\_o%" } }, { description: { $ilike: "%fo\\_o%" } }],
+            $and: [{ $or: [{ title: { $ilike: "%fo\\_o%" } }, { description: { $ilike: "%fo\\_o%" } }] }],
         });
     });
     it("should split by spaces", async () => {
         expect(searchToMikroOrmQuery("foo bar", ["title", "description"])).toStrictEqual({
-            $or: [
-                { title: { $ilike: "%foo%" } },
-                { title: { $ilike: "%bar%" } },
-                { description: { $ilike: "%foo%" } },
-                { description: { $ilike: "%bar%" } },
+            $and: [
+                {
+                    $or: [{ title: { $ilike: "%foo%" } }, { description: { $ilike: "%foo%" } }],
+                },
+                {
+                    $or: [{ title: { $ilike: "%bar%" } }, { description: { $ilike: "%bar%" } }],
+                },
             ],
         });
     });
     it("should ignore leading and trailing spaces", async () => {
         expect(searchToMikroOrmQuery(" a ", ["title"])).toStrictEqual({
-            $or: [{ title: { $ilike: "%a%" } }],
+            $and: [{ $or: [{ title: { $ilike: "%a%" } }] }],
         });
     });
 });
@@ -233,7 +291,7 @@ describe("filtersToMikroOrmQuery", () => {
                 } else if (
                     filterValue instanceof StringFilter ||
                     filterValue instanceof NumberFilter ||
-                    filterValue instanceof DateFilter ||
+                    filterValue instanceof DateTimeFilter ||
                     filterValue instanceof BooleanFilter
                 ) {
                     acc[filterKey] = filterToMikroOrmQuery(filterValue, filterKey);

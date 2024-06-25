@@ -137,7 +137,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import { DateField } from "@comet/admin-date-time";
     import { ArrowLeft } from "@comet/admin-icons";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
+    import { ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
     import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";
@@ -277,9 +277,9 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                 initialValues={initialValues}
             >
                 {({ values }) => (
-                    <EditPageLayout>
+                    <>
                         {saveConflict.dialogs}
-                        <Toolbar>
+                        <Toolbar scopeIndicator={<ContentScopeIndicator ${!hasScope ? "global" : ""} />}>
                             <ToolbarItem>
                                 <IconButton onClick={stackApi?.goBack}>
                                     <ArrowLeft />
@@ -298,7 +298,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                         <MainContent>
                             ${formFields.map((field) => generateField(generatorConfig, field, schema)).join("\n")}
                         </MainContent>
-                    </EditPageLayout>
+                    </>
                 )}
             </FinalForm>
         );

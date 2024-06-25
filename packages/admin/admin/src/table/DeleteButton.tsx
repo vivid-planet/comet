@@ -1,5 +1,5 @@
 import { PureQueryOptions } from "@apollo/client";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Delete } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -25,7 +25,7 @@ const DeleteMessage = () => <FormattedMessage {...messages.delete} />;
  */
 export class TableDeleteButton extends React.Component<IProps> {
     public render() {
-        const { selectedId, mutation, refetchQueries, icon = <DeleteIcon />, text = <DeleteMessage />, color } = this.props;
+        const { selectedId, mutation, refetchQueries, icon = <Delete />, text = <DeleteMessage />, color } = this.props;
         const disabled = !selectedId;
 
         return (

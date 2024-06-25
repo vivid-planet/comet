@@ -11,7 +11,19 @@ import {
     TextAreaField,
     TextField,
 } from "@comet/admin";
-import { Add, FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest, Snips } from "@comet/admin-icons";
+import {
+    Add,
+    FocusPointCenter,
+    FocusPointEast,
+    FocusPointNorth,
+    FocusPointNortheast,
+    FocusPointNorthwest,
+    FocusPointSouth,
+    FocusPointSoutheast,
+    FocusPointSouthwest,
+    FocusPointWest,
+    Snips,
+} from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentNestedButton,
@@ -30,7 +42,6 @@ import {
     resolveNewState,
 } from "@comet/blocks-admin";
 import { DamImageBlock, FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
-import { FormatAlignCenter, VerticalAlignBottom, VerticalAlignCenter } from "@mui/icons-material";
 import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
 
@@ -244,13 +255,13 @@ export function ComponentDemo(): React.ReactElement {
                                 component={FinalFormToggleButtonGroup}
                                 options={[
                                     { value: "topLeft", icon: <FocusPointNorthwest /> },
-                                    { value: "topMiddle", icon: <VerticalAlignCenter /> },
+                                    { value: "topMiddle", icon: <FocusPointNorth /> },
                                     { value: "topRight", icon: <FocusPointNortheast /> },
-                                    { value: "middleLeft", icon: <VerticalAlignBottom /> },
+                                    { value: "middleLeft", icon: <FocusPointWest /> },
                                     { value: "center", icon: <FocusPointCenter /> },
-                                    { value: "middleRight", icon: <VerticalAlignBottom /> },
+                                    { value: "middleRight", icon: <FocusPointEast /> },
                                     { value: "bottomLeft", icon: <FocusPointSouthwest /> },
-                                    { value: "bottomMiddle", icon: <FormatAlignCenter /> },
+                                    { value: "bottomMiddle", icon: <FocusPointSouth /> },
                                     { value: "bottomRight", icon: <FocusPointSoutheast /> },
                                 ]}
                                 optionsPerRow={3}

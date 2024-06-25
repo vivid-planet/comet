@@ -1,4 +1,4 @@
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+import { ChevronRight } from "@comet/admin-icons";
 import { ComponentsOverrides, Theme } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
@@ -78,7 +78,7 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
             {...slotProps?.root}
             {...restProps}
         >
-            <Summary expandIcon={collapsible && <ArrowForwardIosSharpIcon />} {...slotProps?.summary}>
+            <Summary expandIcon={collapsible && <ChevronRight />} {...slotProps?.summary}>
                 <HeaderColumn {...slotProps?.headerColumn}>
                     <Title {...slotProps?.title}>{title}</Title>
                     <SupportText {...slotProps?.supportText}>{supportText}</SupportText>
@@ -87,7 +87,6 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
                 <EndAdornment {...slotProps?.endAdornment}>{endAdornment}</EndAdornment>
             </Summary>
             <Children ownerState={ownerState} {...slotProps?.children}>
-                {disablePadding ? "disablePadding" : "not disablePadding"}
                 {children}
             </Children>
         </Root>

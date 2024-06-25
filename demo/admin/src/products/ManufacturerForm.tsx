@@ -12,7 +12,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -190,7 +190,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
                     <MainContent>
                         <TextField required fullWidth name="name" label={<FormattedMessage id="manufacturer.name" defaultMessage="Name" />} />
@@ -341,7 +341,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                             />
                         </FieldSet>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

@@ -1,4 +1,5 @@
-import { MainContent, Stack, StackPage, StackSwitch } from "@comet/admin";
+import { MainContent, Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import { ManufacturersGrid } from "@src/products/future/generated/ManufacturersGrid";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -9,7 +10,8 @@ export function ManufacturersPage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "manufacturers.manufacturers", defaultMessage: "Manufacturers" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <MainContent fullHeight disablePadding>
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
+                    <MainContent fullHeight>
                         <ManufacturersGrid />
                     </MainContent>
                 </StackPage>

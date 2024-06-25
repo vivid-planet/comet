@@ -1,5 +1,4 @@
-import { CometColor } from "@comet/admin-icons";
-import { Public, VpnLock } from "@mui/icons-material";
+import { CometColor, Domain, DomainLocked } from "@comet/admin-icons";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -143,10 +142,10 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                                             defaultMessage: "Site is not yet publicly available",
                                         })}
                                     >
-                                        <VpnLock />
+                                        <DomainLocked />
                                     </Tooltip>
                                 ) : (
-                                    <Public />
+                                    <Domain />
                                 )}
                                 <SiteLink variant="body1" href={siteLink} target="_blank">
                                     {siteLink}

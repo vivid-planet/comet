@@ -14,9 +14,10 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
     const loading = open && options.length === 0;
     React.useEffect(() => {
         let active = true;
-        if (!loading) {
+        if (!open) {
             return undefined;
         }
+        setOptions([]);
         (async () => {
             const response = await loadOptions();
             if (active) {
@@ -26,7 +27,7 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
         return () => {
             active = false;
         };
-    }, [loadOptions, loading]);
+    }, [loadOptions, open]);
     return {
         isAsync: true,
         open,

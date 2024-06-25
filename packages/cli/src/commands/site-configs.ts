@@ -10,6 +10,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .description("Inject site-configs into a file")
     .requiredOption("-i, --in-file <file>", "The filename of a template file to inject.")
     .requiredOption("-o, --out-file <file>", "Write the injected template to a file.")
+    .option("-d --dotenv", "dotenv compatibility") // https://github.com/motdotla/dotenv/issues/521#issuecomment-999016064
     .option("-f, --site-config-file <file>", "Path to ts-file which provides a default export with (env: string) => SiteConfig[]")
     .action(async (options) => {
         const configFile = options.siteConfigFile ?? `${process.cwd()}/site-configs.ts`;
@@ -29,7 +30,6 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                     (({ public: publicVars, ...rest }) => ({
                         ...rest,
                         url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
-                        previewUrl: getUrlFromDomain(siteConfig.domains.preview),
                     }))(siteConfig),
                 ),
             public: (siteConfigs: BaseSiteConfig[]): ExtractPublicSiteConfig<BaseSiteConfig>[] =>
@@ -40,7 +40,6 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                     preloginEnabled: siteConfig.preloginEnabled || false,
                     public: siteConfig.public,
                     url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
-                    previewUrl: getUrlFromDomain(siteConfig.domains.preview),
                 })),
         };
         str = str.replace(/"({{ site:\/\/configs\/.*\/.* }})"/g, "'$1'"); // convert to single quotes
@@ -51,7 +50,9 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                 console.error(`inject-site-configs: ERROR: type must be ${Object.keys(replacerFunctions).join("|")} (got ${type})`);
                 return substr;
             }
-            return JSON.stringify(replacerFunctions[type](siteConfigs)).replace(/\$/g, "\\$");
+            const ret = JSON.stringify(replacerFunctions[type](siteConfigs)).replace(/\\/g, "\\\\");
+            if (options.dotenv) return ret.replace(/\$/g, "\\$");
+            return ret;
         });
 
         str = str.replace(/"({{ site:\/\/domains\/.*\/.* }})"/g, "$1"); // remove quotes in array

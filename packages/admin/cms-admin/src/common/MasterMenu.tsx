@@ -42,10 +42,18 @@ type MasterMenuItemAnchor = MasterMenuItemBase &
 type MasterMenuItemGroup = MasterMenuItemBase &
     MenuItemGroupProps & {
         type: "group";
-        items: Array<MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible>;
+        items: Array<
+            (MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible) & {
+                icon: React.ReactNode;
+            }
+        >;
     };
 
-export type MasterMenuItem = MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup;
+export type MasterMenuItem =
+    | ((MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible) & {
+          icon: React.ReactNode;
+      })
+    | MasterMenuItemGroup;
 
 export type MasterMenuData = MasterMenuItem[];
 
@@ -80,9 +88,10 @@ export interface MasterMenuProps {
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const isAllowed = useUserPermissionCheck();
-    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
+    const checkPermission = (item: MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup): boolean =>
+        !item.requiredPermission || isAllowed(item.requiredPermission);
 
-    const mapFn = (item: MasterMenuItem): MenuItem => {
+    const mapFn = (item: MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible | MasterMenuItemGroup): MenuItem => {
         if (item.type === "externalLink") {
             const { requiredPermission, type, ...menuElement } = item;
             return { type, menuElement };

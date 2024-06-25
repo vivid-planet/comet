@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    DataGridToolbar,
     filterByFragment,
     GridCellContent,
     GridColDef,
@@ -11,8 +12,6 @@ import {
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -32,8 +31,8 @@ import {
     GQLCreateProductMutationVariables,
     GQLDeleteProductMutation,
     GQLDeleteProductMutationVariables,
-    GQLProductGridCategoriesQuery,
-    GQLProductGridCategoriesQueryVariables,
+    GQLProductGridRelationsQuery,
+    GQLProductGridRelationsQueryVariables,
     GQLProductsListManualFragment,
     GQLProductsListQuery,
     GQLProductsListQueryVariables,
@@ -44,15 +43,14 @@ import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
 function ProductsGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
+            <ToolbarFillSpace />
             <ToolbarItem>
                 <GridColumnsButton />
             </ToolbarItem>
@@ -61,7 +59,7 @@ function ProductsGridToolbar() {
                     <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarItem>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -69,7 +67,7 @@ export function ProductsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
-    const { data: categoriesData } = useQuery<GQLProductGridCategoriesQuery, GQLProductGridCategoriesQueryVariables>(productCategoriesQuery);
+    const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
     const intl = useIntl();
     const theme = useTheme();
 
@@ -142,7 +140,7 @@ export function ProductsGrid() {
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
-            valueOptions: categoriesData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
+            valueOptions: relationsData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
             field: "tags",
@@ -150,6 +148,16 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 150,
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
+            filterOperators: [
+                {
+                    value: "contains",
+                    getApplyFilterFn: (filterItem) => {
+                        throw new Error("not implemented, we filter server side");
+                    },
+                    InputComponent: GridFilterInputSingleSelect,
+                },
+            ],
+            valueOptions: relationsData?.productTags.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
             field: "inStock",
@@ -260,7 +268,7 @@ export function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <MainContent fullHeight disablePadding>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
@@ -325,9 +333,15 @@ const productsQuery = gql`
     ${productsFragment}
 `;
 
-const productCategoriesQuery = gql`
-    query ProductGridCategories {
+const productRelationsQuery = gql`
+    query ProductGridRelations {
         productCategories {
+            nodes {
+                id
+                title
+            }
+        }
+        productTags {
             nodes {
                 id
                 title

@@ -204,15 +204,14 @@ export async function writeCrudGrid(
     const out = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
+        DataGridToolbar,
         GridColDef,
         GridFilterButton,
         MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
-        Toolbar,
         ToolbarActions,
-        ToolbarAutomaticTitleItem,
         ToolbarFillSpace,
         ToolbarItem,
         useBufferedRowCount,
@@ -286,8 +285,7 @@ export async function writeCrudGrid(
 
     function ${classNamePlural}GridToolbar() {
         return (
-            <Toolbar>
-                <ToolbarAutomaticTitleItem />
+            <DataGridToolbar>
                 ${
                     hasSearch
                         ? `<ToolbarItem>
@@ -312,7 +310,7 @@ export async function writeCrudGrid(
                 </ToolbarActions>`
                         : ""
                 }
-            </Toolbar>
+            </DataGridToolbar>
         );
     }
     
@@ -423,7 +421,7 @@ export async function writeCrudGrid(
         const rows = data?.${gridQuery}.nodes ?? [];
     
         return (
-            <MainContent fullHeight disablePadding>
+            <MainContent fullHeight>
                 <DataGridPro
                     {...dataGridProps}
                     disableSelectionOnClick
