@@ -18,7 +18,7 @@ After activating the module, COMET DXP checks every operation for the required p
 Additionally, the scope of the data in operation will be checked against the scope of the users. To achieve this, the system has to know the scope of the data that is being handled right now.
 
 :::note
-You might also want to check the permissions on field resolvers. Therefore you have to add `guards` to `fieldResolverEnhancers` in the configuration of the GraphQL-module. Please be aware that field resolvers are only checked for permissions but not for scopes.
+You might also want to check the permissions on field resolvers. To do that, you have to add `guards` to `fieldResolverEnhancers` in the configuration of the GraphQL-module. Please be aware that field resolvers are only checked for permissions but not for scopes.
 :::
 
 ## Permission check
@@ -45,7 +45,7 @@ To evaluate the scope there a two technically very distinctive ways depending on
 
 ### Operations that create entities or query lists
 
-If an operation does not handle existing entities the scope has to be passed as an argument. COMET DXP expects the argument to be named `scope` in order to be able to validate it. Do not forget to provide the `scope` argument in your operation.
+If an operation does not handle existing entities, the scope has to be passed as an argument. COMET DXP expects the argument to be named `scope` in order to be able to validate it. So do not forget to provide the `scope` argument in your operation.
 
 ### Operations that handle specific entities
 
@@ -108,7 +108,7 @@ Use this option only when you are sure that checking the scope is not necessary 
 :::
 
 :::note
-Try to avoid using the `getCurrentUser` decorator. Instead, you should explicitly send all the data needed in an operation. In the following example, this requires adding `userId` as a scope part as well as passing the data throughout the client. Nevertheless, this leads to a cleaner API design.
+Try to avoid using the `@GetCurrentUser` decorator. Instead, you should explicitly send all the data needed in an operation. In the following example, this requires adding `userId` as a scope part as well as passing the data throughout the client. Nevertheless, this leads to a cleaner API design.
 
 ```diff
 - @RequiredPermission("products", {skipScopeCheck: true})
@@ -128,7 +128,7 @@ Try to avoid using the `getCurrentUser` decorator. Instead, you should explicitl
 
 :::caution
 
-Using the decorator at class level causes later added handlers to be automatically public. Prefer using the decorator for single handlers only.
+Using the decorator at class level causes later added operations to be automatically public. Prefer using the decorator for single operations only.
 
 :::
 
