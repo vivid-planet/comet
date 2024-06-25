@@ -50,7 +50,12 @@ function MasterLayoutComponent({
                     <Menu />
                     <div
                         className={classes.contentWrapper}
-                        style={{ "--comet-admin-master-layout-content-top-spacing": `${headerHeight}px` } as React.CSSProperties}
+                        style={
+                            {
+                                "--comet-admin-master-layout-content-top-spacing": `${headerHeight}px`,
+                                width: `calc(100% - ${open ? 300 : 0}px)`,
+                            } as React.CSSProperties
+                        }
                     >
                         {children}
                     </div>
