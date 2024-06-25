@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { isEmail, isString, isURL, registerDecorator, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
 
-const PHONE_NUMBER_REGEX = /^\+?[0-9\s]+$/;
+import { isPhoneNumber } from "./is-phone-number.validator";
 
 export const IsLinkTarget = () => {
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -29,7 +29,7 @@ export class IsLinkTargetConstraint implements ValidatorConstraintInterface {
         } else if (value.startsWith("mailto:")) {
             return isEmail(value.slice(7));
         } else if (value.startsWith("tel:")) {
-            return PHONE_NUMBER_REGEX.test(value.slice(4));
+            return isPhoneNumber(value.slice(4));
         } else {
             return isURL(value, { require_protocol: true, require_valid_protocol: false });
         }
