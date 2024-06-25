@@ -116,6 +116,18 @@ export class ProductFilter {
     @Type(() => ManyToOneFilter)
     manufacturer?: ManyToOneFilter;
 
+    @Field(() => ManyToOneFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ManyToOneFilter)
+    factsheet?: ManyToOneFilter;
+
+    @Field(() => ManyToManyFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => ManyToManyFilter)
+    datasheets?: ManyToManyFilter;
+
     @Field(() => [ProductFilter], { nullable: true })
     @Type(() => ProductFilter)
     @ValidateNested({ each: true })

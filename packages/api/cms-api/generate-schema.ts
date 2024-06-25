@@ -1,6 +1,6 @@
 import { createOneOfBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
-import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
+import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
 
@@ -16,6 +16,7 @@ import {
     InternalLinkBlock,
     PageTreeNodeBase,
     PageTreeNodeCategory,
+    PublicUpload,
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
@@ -75,12 +76,21 @@ async function generateSchema(): Promise<void> {
     const File = createFileEntity({ Folder });
     const FileDependentsResolver = DependentsResolverFactory.create(File);
 
+    // Required to force the generation of the PublicUpload type in the schema
+    @Resolver(() => PublicUpload)
+    class MockPublicUploadResolver {
+        @Query(() => PublicUpload)
+        publicUploadForTypesGenerationDoNotUse(): void {
+            // Noop
+        }
+    }
+
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
         BuildTemplatesResolver,
         redirectsResolver,
         createDamItemsResolver({ File, Folder }),
-        createFilesResolver({ File }),
+        createFilesResolver({ File, Folder }),
         FileLicensesResolver,
         FileImagesResolver,
         createFoldersResolver({ Folder }),
@@ -94,6 +104,7 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        MockPublicUploadResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

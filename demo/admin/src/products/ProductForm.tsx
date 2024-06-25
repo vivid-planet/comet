@@ -16,8 +16,8 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { MenuItem } from "@mui/material";
+import { DamImageBlock, FinalFormFileUpload, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { Card, CardContent, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
@@ -96,6 +96,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
     const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+
         const output = {
             ...formValues,
             image: rootBlocks.image.state2Output(formValues.image),
@@ -105,7 +106,10 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
+            factsheet: formValues.factsheet ? formValues.factsheet.id : null,
+            datasheets: formValues.datasheets?.map(({ id }) => id),
         };
+
         if (mode === "edit") {
             if (!id) throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
@@ -158,6 +162,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                     <MainContent>
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+
                         <TextAreaField
                             required
                             fullWidth
@@ -195,6 +200,32 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
+
+                        {/* TODO: Remove `Card` and `CardContent` once styling-followup is complete (COM-875)  */}
+                        <Card sx={{ mb: 4 }}>
+                            <CardContent>
+                                <Field
+                                    label={<FormattedMessage id="product.factsheet" defaultMessage="Factsheet" />}
+                                    name="factsheet"
+                                    component={FinalFormFileUpload}
+                                    maxFiles={1}
+                                    maxFileSize={1024 * 1024 * 4} // 4 MB
+                                    fullWidth
+                                />
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardContent>
+                                <Field
+                                    label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                                    name="datasheets"
+                                    component={FinalFormFileUpload}
+                                    maxFiles={5}
+                                    maxFileSize={1024 * 1024 * 4} // 4 MB
+                                    fullWidth
+                                />
+                            </CardContent>
+                        </Card>
                     </MainContent>
                 </>
             )}
