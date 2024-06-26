@@ -64,6 +64,14 @@ export { IsNullable } from "./common/validators/is-nullable";
 export { IsPhoneNumber, isPhoneNumber } from "./common/validators/is-phone-number";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
+export { AzureOpenAiContentGenerationModule } from "./content-generation/azure-open-ai/azure-open-ai-content-generation.module";
+export {
+    AzureOpenAiConfig,
+    AzureOpenAiContentGenerationService,
+    AzureOpenAiContentGenerationServiceConfig,
+} from "./content-generation/azure-open-ai/azure-open-ai-content-generation.service";
+export { ContentGenerationModule } from "./content-generation/content-generation.module";
+export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";

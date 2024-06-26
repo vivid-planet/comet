@@ -31,6 +31,7 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
+        "@azure/openai": "1.0.0-beta.11",
         "@comet/blocks-api": "workspace:^6.13.0",
         "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^3.0.0",

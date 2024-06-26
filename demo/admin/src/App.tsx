@@ -80,6 +80,10 @@ class App extends React.Component {
                                         label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
                                     },
                                 },
+                                contentGeneration: {
+                                    generateAltText: true,
+                                    generateImageTitle: true,
+                                },
                             }}
                         >
                             <DependenciesConfigProvider

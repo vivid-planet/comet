@@ -11,6 +11,20 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
     if (errors.length > 0) {
         throw new Error(errors.toString());
     }
+
+    let contentGeneration = undefined;
+    if (
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY &&
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL &&
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID
+    ) {
+        contentGeneration = {
+            apiKey: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY,
+            apiUrl: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL,
+            deploymentId: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID,
+        };
+    }
+
     return {
         ...cometConfig,
         debug: processEnv.NODE_ENV !== "production",
@@ -25,6 +39,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             url: envVars.IMGPROXY_URL,
             key: envVars.IMGPROXY_KEY,
         },
+        contentGeneration,
         dam: {
             ...cometConfig.dam,
             secret: envVars.DAM_SECRET,
