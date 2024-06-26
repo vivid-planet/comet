@@ -31,6 +31,11 @@ interface GqlStringFilter {
     equal?: string | null;
     notEqual?: string | null;
 }
+interface GqlObjectFilter {
+    //for onetomany
+    contains?: object | null;
+    notContains?: object | null;
+}
 interface GqlNumberFilter {
     equal?: number | null;
     lowerThan?: number | null;
@@ -40,19 +45,22 @@ interface GqlNumberFilter {
     notEqual?: number | null;
 }
 type GqlFilter = {
-    [key: string]: GqlStringFilter | GqlNumberFilter; //TODO add Boolean, Date, DateTime(?), SingleSelect(??)
+    [key: string]: GqlStringFilter | GqlNumberFilter | GqlObjectFilter; //TODO add Boolean, Date, DateTime(?), SingleSelect(??)
 } & {
-    and?: GqlFilter[] | null;
+    and?: GqlFilter[] | null; //TODO make more flexible?
     or?: GqlFilter[] | null;
 };
 
 function convertValueByType(value: string, type?: string) {
+    //change val typing?
     if (type === "number") {
         return parseFloat(value);
     } else if (type === "boolean") {
         if (value === "true") return true;
         if (value === "false") return false;
         return undefined;
+    } else if (type === "object") {
+        // TODO value is object
     } else {
         return value;
     }
@@ -60,23 +68,73 @@ function convertValueByType(value: string, type?: string) {
 
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
+
     const filterItems = filterModel.items
-        .filter((value) => value.value !== undefined)
-        .map((value) => {
-            if (!value.operatorValue) throw new Error("operaturValue not set");
-            const gqlOperator = muiGridOperatorValueToGqlOperator[value.operatorValue];
-            if (!gqlOperator) throw new Error(`unknown operator ${value.operatorValue}`);
-            const column = columns.find((i) => i.field == value.columnField);
-            const convertedValue = convertValueByType(value.value, column?.type);
-            return {
-                [value.columnField]: {
-                    [gqlOperator]: convertedValue,
-                } as GqlStringFilter | GqlNumberFilter,
-            };
+        .filter((filterItem) => filterItem.value !== undefined)
+        .map((filterItem) => {
+            if (!filterItem.operatorValue) throw new Error("operatorValue not set");
+
+            const gqlOperator: string[] = [];
+            const convertedValues: string[] | number[] | boolean[] | undefined = [];
+            gqlOperator.push(muiGridOperatorValueToGqlOperator[filterItem.operatorValue]);
+            const column = columns.find((i) => i.field == filterItem.columnField);
+
+            //if no gqlOperator, use filterItem.operatorValue and filterItem.value (objects) as given?
+
+            if (gqlOperator.length === 0) {
+                column?.filterOperators?.forEach((operator) => {
+                    if (operator.label === filterItem.operatorValue && !!operator.convertMUIFilterToGQLFilter) {
+                        const convertedOperators = operator.convertMUIFilterToGQLFilter();
+
+                        let index = 0;
+                        for (const op of convertedOperators) {
+                            gqlOperator.push(op);
+
+                            const conv = convertValueByType(filterItem.value[index], column?.type); //return is possibly an object
+                            if (!conv) {
+                                throw new Error(`no value given for ${filterItem.value[index]}`);
+                            }
+
+                            convertedValues.push(conv);
+                            index += 1;
+                        }
+                    }
+                });
+            }
+
+            if (gqlOperator.length === 0) throw new Error(`unknown operator ${filterItem.operatorValue}`);
+
+            const ret = [];
+
+            if (gqlOperator.length === convertedValues.length) {
+                for (let i = 0; i < gqlOperator.length; i++) {
+                    ret.push({ [filterItem.columnField]: { [op]: convertedValues[i] } as GqlStringFilter | GqlNumberFilter | GqlObjectFilter });
+                }
+            }
         });
+
+    //NIKO between:
+    //gut für onetomany über contains
+    // für between muss AND verknüpft werden. Was als äußeren Operator? aus der convListe
+    // gqlopbejctfilter:
+
     const filter: GqlFilter = {};
     const op: "and" | "or" = filterModel.linkOperator ?? "and";
     filter[op] = filterItems;
+
+    // const filter = {and: {
+    //      {
+    //          and: {
+    //              sgdsg,
+    //                sfsg,
+    //                sfs
+    //          }
+    //      },
+    //
+    //      {
+    //          elem
+    //      },
+    //  }}
 
     let search: undefined | string = undefined;
 
@@ -86,3 +144,46 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
 
     return { filter, search };
 }
+
+//    column?.filterOperators && column.filterOperators.forEach((operator) => {
+//         if(operator.label === value.operatorValue && !!operator.convertFilterToGQLFilter){
+//            const filters = operator.convertFilterToGQLFilter();
+//         }
+//
+//     };
+//     gqlOperator = column.filterOperators[`${value.operatorValue}`].convertFilterToGQLFilter(); //converts to needed filter.
+// }
+
+// return {
+//     [value.columnField]: {
+//         operators,
+//     },
+// };
+
+// {
+//     [value.columnField]: {
+//     [gqlOperator]: convertedValue,
+// } as GqlStringFilter | GqlNumberFilter,
+// };
+
+// const ret = [];
+//
+// //Return without making it an array...?
+// for (const op of gqlOperator) {
+//     ret.push({
+//         [value.columnField]: {
+//             [op]: convertedValue,
+//         } as GqlStringFilter | GqlNumberFilter,
+//     });
+// }
+//
+// return ret;
+
+// const operators = gqlOperator.map((op) => {
+//     return { [value.columnField]: { [op]: convertedValue } as GqlStringFilter | GqlNumberFilter };
+// });
+
+//How to return without array?
+// return gqlOperator.map((op) => {
+//     return { [value.columnField]: { [op]: convertedValue } as GqlStringFilter | GqlNumberFilter };
+// });

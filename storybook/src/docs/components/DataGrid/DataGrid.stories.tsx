@@ -18,13 +18,14 @@ import {
 import { MoreVert } from "@mui/icons-material";
 import { Button, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, getGridDateOperators } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
+import { dateBetweenOperator } from "./DateBetweenOperator";
 
 type Launch = {
     id: string;
@@ -451,6 +452,88 @@ storiesOf("stories/components/DataGrid", module)
                     rows={rows}
                     columns={columns}
                     rowCount={rowCount}
+                    loading={loading}
+                    error={error}
+                    components={{
+                        Toolbar: DemoToolbar,
+                    }}
+                />
+            </Box>
+        );
+    })
+    //TODO
+    .add("DataGridCustomFilter", () => {
+        const dateFilterOperators = getGridDateOperators();
+        // dateFilterOperators.push(dateBetweenWithoutYearOperator);
+        dateFilterOperators.push(dateBetweenOperator);
+
+        const columns: GridColDef[] = [
+            {
+                field: "mission_name",
+                headerName: "Mission Name",
+                flex: 1,
+            },
+            {
+                field: "launch_date_local",
+                headerName: "Launch Date",
+                type: "dateTime",
+                flex: 1,
+                filterOperators: dateFilterOperators,
+            },
+        ];
+
+        const dataGridProps = {
+            ...useDataGridRemote(), //TODO allow hiding columns via columnVisibilityModel
+            ...usePersistentColumnState("DataGridCustomFilterStory"),
+        };
+
+        const { data, loading, error } = useQuery(
+            gql`
+                query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
+                    launchesPastResult(limit: $limit, offset: $offset, sort: $sort, order: $order) {
+                        data {
+                            id
+                            mission_name
+                            launch_date_local
+                        }
+                        result {
+                            totalCount
+                        }
+                    }
+                }
+            `,
+            {
+                variables: {
+                    limit: dataGridProps.pageSize,
+                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    sort: dataGridProps.sortModel[0]?.field,
+                    order: dataGridProps.sortModel[0]?.sort,
+                },
+            },
+        );
+
+        const rows = data?.launchesPastResult.data ?? [];
+        const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
+
+        //TODO Remove hidden columns in column visibility panel. Is it possible?
+        function DemoToolbar() {
+            return (
+                <Toolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarItem>
+                        <GridFilterButton />
+                    </ToolbarItem>
+                </Toolbar>
+            );
+        }
+
+        return (
+            <Box sx={{ height: 400, width: "100%" }}>
+                <DataGrid
+                    {...dataGridProps}
+                    rows={rows}
+                    rowCount={rowCount}
+                    columns={columns}
                     loading={loading}
                     error={error}
                     components={{
