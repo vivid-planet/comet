@@ -915,6 +915,9 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:^7.0.0-beta.2
         version: link:../admin-icons
+      '@comet/admin-theme':
+        specifier: workspace:^7.0.0-beta.2
+        version: link:../admin-theme
       '@mui/lab':
         specifier: ^5.0.0-alpha.76
         version: 5.0.0-alpha.117(@emotion/react@11.9.3)(@emotion/styled@11.10.5)(@mui/material@5.11.6)(@types/react@17.0.53)(react-dom@17.0.2)(react@17.0.2)
@@ -970,9 +973,6 @@ importers:
       '@comet/admin-babel-preset':
         specifier: workspace:^7.0.0-beta.2
         version: link:../admin-babel-preset
-      '@comet/admin-theme':
-        specifier: workspace:^7.0.0-beta.2
-        version: link:../admin-theme
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.2
         version: link:../../eslint-config
