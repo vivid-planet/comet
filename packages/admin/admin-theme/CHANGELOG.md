@@ -1,5 +1,13 @@
 # @comet/admin-theme
 
+## 6.14.0
+
+### Patch Changes
+
+-   2de81e40b: Fix top position of end-adornment in MuiAutocomplete
+-   Updated dependencies [efccc42a3]
+    -   @comet/admin-icons@6.14.0
+
 ## 6.13.0
 
 ### Patch Changes
