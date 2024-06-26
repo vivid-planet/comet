@@ -1,5 +1,11 @@
 # @comet/cms-site
 
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+
 ## 6.13.0
 
 ### Minor Changes

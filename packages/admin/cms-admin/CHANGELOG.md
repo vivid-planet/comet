@@ -1,5 +1,75 @@
 # @comet/cms-admin
 
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   9055ff71a: Remove label from `DamVideoBlock` file field
+
+    This was done to streamline it with the `DamImageBlock`.
+
+-   dddb03d1b: Add capability to generate alt texts and titles for images in DAM
+
+    You can find instructions for adding this feature to your project [in the docs](https://docs.comet-dxp.com/docs/content-generation/).
+
+-   acfcef9e4: The `documentTypes` prop of `PagesPage` now also accepts a function mapping categories to document types
+
+    Previously, only the supported documentTypes of the current category could be passed to the `PagesPage`.
+    That made it impossible to verify if a document can be moved to another category.
+    If a document was moved to a category that didn't support its type, the PageTree crashed.
+
+    If a mapping function is passed to `documentTypes`, documents can only be moved to categories that support their type.
+
+    ```diff
+    <PagesPage
+    -   documentTypes={pageTreeDocumentTypes}
+    +   documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+    +       if (category === "TopMenu") {
+    +           return {
+    +               Page,
+    +               PredefinedPage,
+    +           };
+    +       }
+    +
+    +       return {
+    +           Page,
+    +           PredefinedPage,
+    +           Link,
+    +       };
+    +   }}
+        // ...
+    />
+    ```
+
+-   61a43d270: Add a menu item to `PixelImageBlock`, `SvgImageBlock` and `DamVideoBlock` that opens the chosen file in the DAM
+
+    Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+    ```diff
+    // App.tsx
+
+    <DependenciesConfigProvider
+        entityDependencyMap={{
+    +       DamFile: createDamFileDependency(),
+            // ...
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [2de81e40b]
+-   Updated dependencies [efccc42a3]
+-   Updated dependencies [012a768ee]
+    -   @comet/admin@6.14.0
+    -   @comet/admin-theme@6.14.0
+    -   @comet/admin-icons@6.14.0
+    -   @comet/admin-date-time@6.14.0
+    -   @comet/admin-rte@6.14.0
+    -   @comet/blocks-admin@6.14.0
+
 ## 6.13.0
 
 ### Minor Changes
