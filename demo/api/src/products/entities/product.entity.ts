@@ -15,8 +15,9 @@ import {
     Ref,
     types,
 } from "@mikro-orm/core";
-import { Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsNumber } from "class-validator";
+import { GraphQLPositiveFloat, GraphQLPositiveInt, GraphQLUUID } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
@@ -29,11 +30,11 @@ import { ProductVariant } from "./product-variant.entity";
 @ObjectType()
 @InputType("ProductDiscountsInput")
 export class ProductDiscounts {
-    @Field()
+    @Field(() => GraphQLPositiveInt)
     @IsNumber()
     quantity: number;
 
-    @Field()
+    @Field(() => GraphQLPositiveFloat)
     @IsNumber()
     price: number;
 }
@@ -41,15 +42,15 @@ export class ProductDiscounts {
 @ObjectType()
 @InputType("ProductDimensionsInput")
 export class ProductDimensions {
-    @Field()
+    @Field(() => GraphQLPositiveInt)
     @IsNumber()
     width: number;
 
-    @Field()
+    @Field(() => GraphQLPositiveInt)
     @IsNumber()
     height: number;
 
-    @Field()
+    @Field(() => GraphQLPositiveInt)
     @IsNumber()
     depth: number;
 }
@@ -62,7 +63,7 @@ export class Product extends BaseEntity<Product, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
-    @Field(() => ID)
+    @Field(() => GraphQLUUID)
     id: string = uuid();
 
     @Property()
@@ -92,7 +93,7 @@ export class Product extends BaseEntity<Product, "id"> {
     type: ProductType;
 
     @Property({ type: types.decimal, nullable: true })
-    @Field({ nullable: true })
+    @Field(() => GraphQLPositiveFloat, { nullable: true })
     price?: number;
 
     // eslint-disable-next-line @typescript-eslint/no-inferrable-types
@@ -101,7 +102,7 @@ export class Product extends BaseEntity<Product, "id"> {
     inStock: boolean = true;
 
     @Property({ type: types.decimal, nullable: true })
-    @Field(() => Int, { nullable: true })
+    @Field(() => GraphQLPositiveInt, { nullable: true })
     @CrudField({
         input: false,
     })

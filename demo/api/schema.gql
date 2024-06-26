@@ -448,26 +448,32 @@ type ProductVariant {
 }
 
 type ProductDiscounts {
-  quantity: Float!
-  price: Float!
+  quantity: PositiveInt!
+  price: PositiveFloat!
 }
 
+"""Integers that will have a value greater than 0."""
+scalar PositiveInt
+
+"""Floats that will have a value greater than 0."""
+scalar PositiveFloat
+
 type ProductDimensions {
-  width: Float!
-  height: Float!
-  depth: Float!
+  width: PositiveInt!
+  height: PositiveInt!
+  depth: PositiveInt!
 }
 
 type Product {
-  id: ID!
+  id: UUID!
   title: String!
   visible: Boolean!
   slug: String!
   description: String!
   type: ProductType!
-  price: Float
+  price: PositiveFloat
   inStock: Boolean!
-  soldCount: Int
+  soldCount: PositiveInt
   image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
@@ -480,6 +486,11 @@ type Product {
   tagsWithStatus: [ProductToTag!]!
   tags: [ProductTag!]!
 }
+
+"""
+A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
+"""
+scalar UUID
 
 enum ProductType {
   Cap
@@ -585,14 +596,14 @@ input NewsContentScopeInput {
 }
 
 input ProductDiscountsInput {
-  quantity: Float!
-  price: Float!
+  quantity: PositiveInt!
+  price: PositiveFloat!
 }
 
 input ProductDimensionsInput {
-  width: Float!
-  height: Float!
-  depth: Float!
+  width: PositiveInt!
+  height: PositiveInt!
+  depth: PositiveInt!
 }
 
 input RedirectScopeInput {
