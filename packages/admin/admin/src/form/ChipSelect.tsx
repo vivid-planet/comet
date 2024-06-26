@@ -110,7 +110,7 @@ export interface ChipSelectProps<T = string>
 }
 
 type ChipInputProps = InputBaseProps & {
-    chipProps?: Omit<ChipProps, "children">;
+    chipProps?: ChipProps;
     inputBaseProps?: InputBaseProps;
     inputRootProps?: React.ComponentPropsWithoutRef<"div">;
 };
