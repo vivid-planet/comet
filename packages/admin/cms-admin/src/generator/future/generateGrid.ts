@@ -131,6 +131,7 @@ export function generateGrid(
     const hasCreateMutation = !!createMutationType;
 
     const allowCopyPaste = (typeof config.copyPaste === "undefined" || config.copyPaste === true) && !config.readOnly && hasCreateMutation;
+    const allowAdding = (typeof config.add === "undefined" || config.add === true) && !config.readOnly;
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
 
@@ -165,7 +166,7 @@ export function generateGrid(
 
     const toolbar = config.toolbar ?? true;
 
-    const forwardAddButton = !config.readOnly && toolbar;
+    const forwardAddButton = allowAdding && toolbar && config.buttonProps;
     if (forwardAddButton) {
         props.push({ name: "addButton", type: "React.ReactNode", optional: true });
     }
@@ -308,7 +309,8 @@ export function generateGrid(
 
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
-    if (allowEditing) {
+    const forwardEditButton = allowEditing && config.buttonProps;
+    if (forwardEditButton) {
         props.push({
             name: "editButton",
             type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => React.ReactNode`,
@@ -447,7 +449,17 @@ export function generateGrid(
                         : ""
                 }
                 <ToolbarFillSpace />
-                {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
+                ${
+                    allowAdding
+                        ? forwardAddButton
+                            ? `{addButton && <ToolbarActions>{addButton}</ToolbarActions>}`
+                            : `<ToolbarActions>
+                           <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                               <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
+                           </Button>
+                       </ToolbarActions>`
+                        : ""
+                }
             </Toolbar>
         );
     }`
@@ -510,7 +522,16 @@ export function generateGrid(
                         renderCell: (params) => {
                             return (
                                 <>
-                                ${allowEditing ? `{editButton && editButton(params)}` : ""}${
+                                ${
+                                    allowEditing
+                                        ? forwardEditButton
+                                            ? `{editButton && editButton(params)}`
+                                            : `
+                                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                            <Edit color="primary" />
+                                        </IconButton>`
+                                        : ""
+                                }${
                               allowCopyPaste || allowDeleting
                                   ? `
                                         <CrudContextMenu

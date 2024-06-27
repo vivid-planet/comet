@@ -8,6 +8,7 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    StackLink,
     Toolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
@@ -17,9 +18,11 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Button, IconButton } from "@mui/material";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import {
     GQLCreateManufacturerMutation,
@@ -80,7 +83,7 @@ const createManufacturerMutation = gql`
     }
 `;
 
-function ManufacturersGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
+function ManufacturersGridToolbar() {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
@@ -91,18 +94,16 @@ function ManufacturersGridToolbar({ addButton }: { addButton?: React.ReactNode }
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
+            <ToolbarActions>
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                    <FormattedMessage id="manufacturer.newManufacturer" defaultMessage="New Manufacturer" />
+                </Button>
+            </ToolbarActions>
         </Toolbar>
     );
 }
 
-type Props = {
-    addButton?: React.ReactNode;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    editButton?: (params: GridRenderCellParams<any, GQLManufacturersGridFutureFragment, any>) => React.ReactNode;
-};
-
-export function ManufacturersGrid({ addButton, editButton }: Props): React.ReactElement {
+export function ManufacturersGrid(): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
@@ -198,7 +199,9 @@ export function ManufacturersGrid({ addButton, editButton }: Props): React.React
             renderCell: (params) => {
                 return (
                     <>
-                        {editButton && editButton(params)}
+                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit color="primary" />
+                        </IconButton>
                         <CrudContextMenu
                             copyData={() => {
                                 // Don't copy id, because we want to create a new entity with this data
@@ -250,9 +253,6 @@ export function ManufacturersGrid({ addButton, editButton }: Props): React.React
             loading={loading}
             components={{
                 Toolbar: ManufacturersGridToolbar,
-            }}
-            componentsProps={{
-                toolbar: { addButton: addButton },
             }}
         />
     );

@@ -8,6 +8,7 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    StackLink,
     Toolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
@@ -17,10 +18,12 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { Button, IconButton } from "@mui/material";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import {
     GQLCreateProductVariantMutation,
@@ -73,7 +76,7 @@ const createProductVariantMutation = gql`
     }
 `;
 
-function ProductVariantsGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
+function ProductVariantsGridToolbar() {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
@@ -84,19 +87,20 @@ function ProductVariantsGridToolbar({ addButton }: { addButton?: React.ReactNode
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
+            <ToolbarActions>
+                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
+                    <FormattedMessage id="productVariant.newProductVariant" defaultMessage="New Product Variant" />
+                </Button>
+            </ToolbarActions>
         </Toolbar>
     );
 }
 
 type Props = {
     product: string;
-    addButton?: React.ReactNode;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    editButton?: (params: GridRenderCellParams<any, GQLProductVariantsGridFutureFragment, any>) => React.ReactNode;
 };
 
-export function ProductVariantsGrid({ product, addButton, editButton }: Props): React.ReactElement {
+export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
@@ -121,7 +125,9 @@ export function ProductVariantsGrid({ product, addButton, editButton }: Props): 
             renderCell: (params) => {
                 return (
                     <>
-                        {editButton && editButton(params)}
+                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit color="primary" />
+                        </IconButton>
                         <CrudContextMenu
                             copyData={() => {
                                 // Don't copy id, because we want to create a new entity with this data
@@ -177,9 +183,6 @@ export function ProductVariantsGrid({ product, addButton, editButton }: Props): 
             loading={loading}
             components={{
                 Toolbar: ProductVariantsGridToolbar,
-            }}
-            componentsProps={{
-                toolbar: { addButton: addButton },
             }}
         />
     );

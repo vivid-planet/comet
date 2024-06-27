@@ -1,8 +1,6 @@
-import { Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { Stack, StackPage, StackSwitch } from "@comet/admin";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 
 import { ProductForm } from "./generated/ProductForm";
 import { ProductsGrid } from "./generated/ProductsGrid";
@@ -13,19 +11,7 @@ export function ProductsWithLowPricePage(): React.ReactElement {
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <ProductsGrid
-                        filter={{ price: { lowerThan: 10 } }}
-                        addButton={
-                            <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                                <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
-                            </Button>
-                        }
-                        editButton={(params) => (
-                            <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                <Edit color="primary" />
-                            </IconButton>
-                        )}
-                    />
+                    <ProductsGrid filter={{ price: { lowerThan: 10 } }} />
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedId) => <ProductForm id={selectedId} />}
