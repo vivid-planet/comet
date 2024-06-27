@@ -17,6 +17,7 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { useCmsBlockContext } from "./blocks/useCmsBlockContext";
+export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { BuildEntry } from "./builds/BuildEntry";
 export { PublisherPage } from "./builds/PublisherPage";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";

@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Field, FieldContainer, FinalFormSwitch } from "@comet/admin";
+import { Field, FieldContainer } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab, Video } from "@comet/admin-icons";
 import {
     AdminComponentButton,
@@ -9,6 +9,7 @@ import {
     BlockInterface,
     BlocksFinalForm,
     createBlockSkeleton,
+    createCompositeBlock,
     useAdminComponentPaper,
 } from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
@@ -18,24 +19,24 @@ import { FormattedMessage } from "react-intl";
 
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
+import { DamImageBlock } from "../dam/blocks/DamImageBlock";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { VideoOptionsFields } from "./VideoOptionsFields";
 
-type State = DamVideoBlockData;
+type State = Omit<DamVideoBlockData, "previewImage">;
 
-export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlockInput> = {
+const DamVideoBaseBlock: BlockInterface<Omit<DamVideoBlockData, "previewImage">, State, Omit<DamVideoBlockInput, "previewImage">> = {
     ...createBlockSkeleton(),
 
     name: "DamVideo",
 
     displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
 
-    defaultValues: () => ({
-        showControls: true,
-    }),
+    defaultValues: () => ({ showControls: true }),
 
     category: BlockCategory.Media,
 
@@ -128,21 +129,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
-                <BlocksFinalForm
-                    onSubmit={(values) => {
-                        updateState((prevState) => {
-                            // case: autoplay = false and showControls = false is not allowed
-                            if (!values.autoplay && prevState.autoplay) {
-                                return { ...prevState, ...values, showControls: true };
-                            }
-                            if (!values.showControls && prevState.showControls) {
-                                return { ...prevState, ...values, autoplay: true };
-                            }
-                            return { ...prevState, ...values };
-                        });
-                    }}
-                    initialValues={state}
-                >
+                <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                     {state.damFile ? (
                         <FieldContainer fullWidth>
                             <AdminComponentPaper disablePadding>
@@ -203,24 +190,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                     ) : (
                         <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4"]} />
                     )}
-                    <Field
-                        type="checkbox"
-                        name="autoplay"
-                        label={<FormattedMessage id="comet.blocks.video.autoplay" defaultMessage="Autoplay" />}
-                        component={FinalFormSwitch}
-                    />
-                    <Field
-                        type="checkbox"
-                        name="loop"
-                        label={<FormattedMessage id="comet.blocks.video.loop" defaultMessage="Loop" />}
-                        component={FinalFormSwitch}
-                    />
-                    <Field
-                        type="checkbox"
-                        name="showControls"
-                        label={<FormattedMessage id="comet.blocks.video.showControls" defaultMessage="Show controls" />}
-                        component={FinalFormSwitch}
-                    />
+                    <VideoOptionsFields />
                 </BlocksFinalForm>
             </Box>
         );
@@ -228,3 +198,25 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     previewContent: (state) => (state.damFile ? [{ type: "text", content: state.damFile.name }] : []),
 };
+
+// TODO: how can i add the previewImage block to block above without wrapping it in a composite block?
+export const DamVideoBlock = createCompositeBlock(
+    {
+        name: "DamVideo",
+        displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
+        blocks: {
+            video: {
+                block: DamVideoBaseBlock,
+            },
+            previewImage: {
+                block: DamImageBlock,
+                title: <FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />,
+            },
+        },
+    },
+    (block) => {
+        block.category = BlockCategory.Media;
+        block.previewContent = (state) => (state.video.damFile ? [{ type: "text", content: state.video.damFile.name }] : []);
+        return block;
+    },
+);

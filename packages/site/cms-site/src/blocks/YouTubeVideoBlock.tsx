@@ -26,13 +26,14 @@ const VideoContainer = styled.div<VideoContainerProps>`
     }
 `;
 
-const getHeightInPercentForAspectRatio = (aspectRatio: YouTubeVideoBlockData["aspectRatio"]) => {
+const getHeightInPercentForAspectRatio = (aspectRatio: string) => {
     switch (aspectRatio) {
-        case "16X9":
+        case "16x9":
             return 56.25;
-        case "4X3":
+        case "4x3":
             return 75;
     }
+    return 56.25;
 };
 
 const EXPECTED_YT_ID_LENGTH = 11;
@@ -47,8 +48,12 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
     return youtubeId ?? undefined;
 };
 
+// TODO: add preview image and aspectRatio
 export const YouTubeVideoBlock = withPreview(
-    ({ data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio } }: PropsWithData<YouTubeVideoBlockData>) => {
+    ({
+        data: { youtubeIdentifier, autoplay, loop, showControls },
+        aspectRatio = "16x9",
+    }: PropsWithData<YouTubeVideoBlockData> & { aspectRatio?: string }) => {
         if (!youtubeIdentifier) return <PreviewSkeleton type="media" hasContent={false} />;
         const identifier = parseYoutubeIdentifier(youtubeIdentifier);
 

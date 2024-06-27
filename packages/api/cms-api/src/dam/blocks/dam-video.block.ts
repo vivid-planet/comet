@@ -1,31 +1,21 @@
 import {
     AnnotationBlockMeta,
-    BlockData,
     BlockDataInterface,
     BlockField,
     BlockIndexData,
-    BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
     inputToData,
 } from "@comet/blocks-api";
-import { IsBoolean, IsOptional, IsUUID } from "class-validator";
+import { IsOptional, IsUUID } from "class-validator";
 
+import { VideoBaseBlockData, VideoBaseBlockInput } from "../../blocks/video-base.block";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 
-class DamVideoBlockData extends BlockData {
+class DamVideoBlockData extends VideoBaseBlockData {
     damFileId?: string;
-
-    @BlockField({ nullable: true })
-    autoplay?: boolean;
-
-    @BlockField({ nullable: true })
-    loop?: boolean;
-
-    @BlockField({ nullable: true })
-    showControls?: boolean;
 
     async transformToPlain() {
         return DamVideoBlockTransformerService;
@@ -47,26 +37,11 @@ class DamVideoBlockData extends BlockData {
     }
 }
 
-class DamVideoBlockInput extends BlockInput {
+class DamVideoBlockInput extends VideoBaseBlockInput {
     @BlockField({ nullable: true })
     @IsUUID()
     @IsOptional()
     damFileId?: string;
-
-    @IsBoolean()
-    @IsOptional()
-    @BlockField({ nullable: true })
-    autoplay?: boolean;
-
-    @IsBoolean()
-    @IsOptional()
-    @BlockField({ nullable: true })
-    loop?: boolean;
-
-    @IsBoolean()
-    @IsOptional()
-    @BlockField({ nullable: true })
-    showControls?: boolean;
 
     transformToBlockData(): BlockDataInterface {
         return inputToData(DamVideoBlockData, this);
