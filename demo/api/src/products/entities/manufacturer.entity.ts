@@ -32,9 +32,9 @@ export class AlternativeAddress {
 @ObjectType()
 @InputType("AddressInput")
 export class Address extends AlternativeAddress {
+    @IsNullable()
     @Property({ type: "json", nullable: true })
     @Field(() => AlternativeAddress, { nullable: true })
-    @IsObject()
     alternativeAddress?: AlternativeAddress = undefined;
 }
 
