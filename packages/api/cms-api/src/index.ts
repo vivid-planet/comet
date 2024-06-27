@@ -23,6 +23,13 @@ export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
+<<<<<<< HEAD
+=======
+export { DamVideoBlock } from "./blocks/dam-video.block";
+export { EmailLinkBlock } from "./blocks/email-link.block";
+export { PhoneLinkBlock } from "./blocks/phone-link.block";
+export { PixelImageBlock } from "./blocks/PixelImageBlock";
+>>>>>>> main
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
@@ -58,8 +65,17 @@ export { PaginatedResponseFactory } from "./common/pagination/paginated-response
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsNullable } from "./common/validators/is-nullable";
+export { IsPhoneNumber, isPhoneNumber } from "./common/validators/is-phone-number";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
+export { AzureOpenAiContentGenerationModule } from "./content-generation/azure-open-ai/azure-open-ai-content-generation.module";
+export {
+    AzureOpenAiConfig,
+    AzureOpenAiContentGenerationService,
+    AzureOpenAiContentGenerationServiceConfig,
+} from "./content-generation/azure-open-ai/azure-open-ai-content-generation.service";
+export { ContentGenerationModule } from "./content-generation/content-generation.module";
+export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";

@@ -1,5 +1,6 @@
 # @comet/cms-site
 
+<<<<<<< HEAD
 ## 7.0.0-beta.2
 
 ## 7.0.0-beta.1
@@ -137,6 +138,21 @@
     Requires following changes to admin
 
     -   The `SitesConfig` must provide a `sitePreviewApiUrl`
+=======
+## 6.14.1
+
+### Patch Changes
+
+-   84a25adeb: Remove `<a>` tag from `DamFileDownloadLinkBlock`
+
+    The block incorrectly added the tag which prevents styling it in the application. The tag has been removed to achieve the same behavior as in the other link blocks, e.g. `ExternalLinkBlock`.
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+>>>>>>> main
 
 ## 6.13.0
 

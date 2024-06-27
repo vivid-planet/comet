@@ -1,6 +1,16 @@
 # @comet/admin
 
+<<<<<<< HEAD
 ## 7.0.0-beta.2
+=======
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.14.1
+
+## 6.14.0
+>>>>>>> main
 
 ### Minor Changes
 
@@ -18,6 +28,7 @@
 
 ### Patch Changes
 
+<<<<<<< HEAD
 -   Updated dependencies [2de81e40b]
     -   @comet/admin-theme@7.0.0-beta.2
     -   @comet/admin-icons@7.0.0-beta.2
@@ -361,6 +372,11 @@
 -   Updated dependencies [33ba50719]
     -   @comet/admin-theme@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+=======
+-   012a768ee: Fix infinite update loop in `useAsyncOptionsProps`
+-   Updated dependencies [efccc42a3]
+    -   @comet/admin-icons@6.14.0
+>>>>>>> main
 
 ## 6.13.0
 

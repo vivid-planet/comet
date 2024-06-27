@@ -1,6 +1,10 @@
 {
     "name": "@comet/cms-api",
+<<<<<<< HEAD
     "version": "7.0.0-beta.2",
+=======
+    "version": "6.14.1",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -31,9 +35,14 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
+<<<<<<< HEAD
         "@aws-sdk/client-s3": "^3.591.0",
         "@azure/storage-blob": "^12.23.0",
         "@comet/blocks-api": "workspace:^7.0.0-beta.2",
+=======
+        "@azure/openai": "1.0.0-beta.11",
+        "@comet/blocks-api": "workspace:^6.14.1",
+>>>>>>> main
         "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^3.0.0",
         "@hapi/accept": "^5.0.2",
@@ -81,7 +90,12 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "^3.47.0",
+<<<<<<< HEAD
         "@comet/eslint-config": "workspace:^7.0.0-beta.2",
+=======
+        "@azure/storage-blob": "^12.0.0",
+        "@comet/eslint-config": "workspace:^6.14.1",
+>>>>>>> main
         "@golevelup/ts-jest": "^0.4.0",
         "@kubernetes/client-node": "^0.18.1",
         "@mikro-orm/core": "^5.7.1",

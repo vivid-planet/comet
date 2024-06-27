@@ -7,7 +7,7 @@ import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
@@ -552,10 +552,23 @@ export class FilesService {
         return [...baseUrl, file.id, filename].join("/");
     }
 
+<<<<<<< HEAD
     async createFileDownloadUrl(
         file: FileInterface,
         { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
     ): Promise<string> {
+=======
+    async getFileAsBase64String(file: FileInterface) {
+        const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
+
+        const buffer = await new Response(fileStream).buffer();
+        const base64String = buffer.toString("base64");
+
+        return `data:${file.mimetype};base64,${base64String}`;
+    }
+
+    async createFileDownloadUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
+>>>>>>> main
         const filename = parse(file.name).name;
 
         const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];

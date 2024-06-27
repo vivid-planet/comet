@@ -1,5 +1,6 @@
 # @comet/cms-admin
 
+<<<<<<< HEAD
 ## 7.0.0-beta.2
 
 ### Major Changes
@@ -29,6 +30,32 @@
 
 ### Minor Changes
 
+=======
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin@6.14.1
+-   @comet/admin-date-time@6.14.1
+-   @comet/admin-icons@6.14.1
+-   @comet/admin-rte@6.14.1
+-   @comet/admin-theme@6.14.1
+-   @comet/blocks-admin@6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   9055ff71a: Remove label from `DamVideoBlock` file field
+
+    This was done to streamline it with the `DamImageBlock`.
+
+-   dddb03d1b: Add capability to generate alt texts and titles for images in DAM
+
+    You can find instructions for adding this feature to your project [in the docs](https://docs.comet-dxp.com/docs/content-generation/).
+
+>>>>>>> main
 -   acfcef9e4: The `documentTypes` prop of `PagesPage` now also accepts a function mapping categories to document types
 
     Previously, only the supported documentTypes of the current category could be passed to the `PagesPage`.
@@ -75,6 +102,7 @@
 
 ### Patch Changes
 
+<<<<<<< HEAD
 -   e106a02b2: Make the `ContentScopeIndicator` show the scope label instead of the scope value
 -   Updated dependencies [2fc764e29]
 -   Updated dependencies [2de81e40b]
@@ -537,6 +565,18 @@
     -   @comet/admin-rte@7.0.0-beta.0
     -   @comet/blocks-admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+=======
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [2de81e40b]
+-   Updated dependencies [efccc42a3]
+-   Updated dependencies [012a768ee]
+    -   @comet/admin@6.14.0
+    -   @comet/admin-theme@6.14.0
+    -   @comet/admin-icons@6.14.0
+    -   @comet/admin-date-time@6.14.0
+    -   @comet/admin-rte@6.14.0
+    -   @comet/blocks-admin@6.14.0
+>>>>>>> main
 
 ## 6.13.0
 
