@@ -183,6 +183,26 @@ export const createRichTextBlock = (
         },
 
         AdminComponent: ({ state, updateState }) => {
+            const [initialState, setInitialState] = React.useState(EditorState.createWithContent(state.editorState.getCurrentContent()));
+
+            React.useEffect(() => {
+                if (!isRichTextEqual(state, { editorState: initialState })) {
+                    setInitialState(EditorState.createWithContent(state.editorState.getCurrentContent()));
+                }
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+            }, [state.editorState]);
+
+            React.useEffect(() => {
+                if (!isRichTextEqual(state, { editorState: initialState })) {
+                    updateState((prevState) => {
+                        return {
+                            ...prevState,
+                            editorState: initialState,
+                        };
+                    });
+                }
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+            }, [initialState]);
             return (
                 <SelectPreviewComponent>
                     <Rte
@@ -196,7 +216,7 @@ export const createRichTextBlock = (
 
                                     if (nextEditorState) {
                                         // Paste is from one Draft.js instance to another -> update directly
-                                        updateState({ editorState: nextEditorState });
+                                        setInitialState(nextEditorState);
                                         return "handled";
                                     }
 
@@ -205,8 +225,8 @@ export const createRichTextBlock = (
                                         const { contentBlocks } = convertFromHTML(html);
 
                                         let nextContent = Modifier.replaceWithFragment(
-                                            state.editorState.getCurrentContent(),
-                                            state.editorState.getSelection(),
+                                            initialState.getCurrentContent(),
+                                            initialState.getSelection(),
                                             BlockMapBuilder.createFromArray(contentBlocks),
                                         );
 
@@ -228,7 +248,7 @@ export const createRichTextBlock = (
 
                                         const newEditorState = EditorState.push(state.editorState, nextContent, "insert-fragment");
 
-                                        updateState({ editorState: newEditorState });
+                                        setInitialState(newEditorState);
                                         return "handled";
                                     }
 
@@ -236,13 +256,8 @@ export const createRichTextBlock = (
                                 },
                             },
                         }}
-                        value={state.editorState}
-                        onChange={(c: EditorState) => {
-                            updateState((prevState) => ({
-                                ...prevState,
-                                editorState: c,
-                            }));
-                        }}
+                        value={initialState}
+                        onChange={setInitialState}
                     />
                 </SelectPreviewComponent>
             );
