@@ -19,7 +19,7 @@ import {
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
@@ -145,7 +145,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
                     <MainContent>
                         <TextField
@@ -220,7 +220,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

@@ -38,7 +38,7 @@ interface Props {
     category: string;
     path: string;
     allCategories: AllCategories;
-    documentTypes: Record<DocumentType, DocumentInterface>;
+    documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: React.ComponentType<EditPageNodeProps>;
     renderContentScopeIndicator: (scope: ContentScopeInterface) => React.ReactNode;
 }
@@ -49,7 +49,7 @@ export function PagesPage({
     category,
     path,
     allCategories,
-    documentTypes,
+    documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
 }: Props): React.ReactElement {
@@ -60,6 +60,7 @@ export function PagesPage({
 
     const siteConfig = useSiteConfig({ scope });
     const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
+    const documentTypes = typeof passedDocumentTypes === "function" ? passedDocumentTypes(category) : passedDocumentTypes;
 
     React.useEffect(() => {
         setRedirectPathAfterChange(path);
@@ -155,7 +156,16 @@ export function PagesPage({
                                 </Button>
                             </ToolbarActions>
                         </Toolbar>
-                        <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
+                        <PageTreeContext.Provider
+                            value={{
+                                allCategories,
+                                currentCategory: category,
+                                documentTypes,
+                                getDocumentTypesByCategory: typeof passedDocumentTypes === "function" ? passedDocumentTypes : undefined,
+                                tree,
+                                query: pagesQuery,
+                            }}
+                        >
                             <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
                                 <Box>
                                     <PagesPageActionToolbar

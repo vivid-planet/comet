@@ -15,6 +15,7 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
 import * as React from "react";
@@ -24,13 +25,25 @@ import { ProductForm } from "./generated/ProductForm";
 import { ProductPriceForm } from "./generated/ProductPriceForm";
 import { ProductsGrid } from "./generated/ProductsGrid";
 
+const FormToolbar = () => (
+    <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
+        <ToolbarBackButton />
+        <ToolbarAutomaticTitleItem />
+        <ToolbarFillSpace />
+        <ToolbarActions>
+            <SaveBoundarySaveButton />
+        </ToolbarActions>
+    </StackToolbar>
+);
+
 export function ProductsPage(): React.ReactElement {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>
             <StackSwitch>
                 <StackPage name="grid">
-                    <MainContent fullHeight disablePadding>
+                    <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
+                    <MainContent fullHeight>
                         <ProductsGrid
                             addButton={
                                 <Button
@@ -55,14 +68,7 @@ export function ProductsPage(): React.ReactElement {
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
-                            <StackToolbar>
-                                <ToolbarBackButton />
-                                <ToolbarAutomaticTitleItem />
-                                <ToolbarFillSpace />
-                                <ToolbarActions>
-                                    <SaveBoundarySaveButton />
-                                </ToolbarActions>
-                            </StackToolbar>
+                            <FormToolbar />
                             <RouterTabs>
                                 <RouterTab
                                     forceRender={true}
@@ -90,13 +96,19 @@ export function ProductsPage(): React.ReactElement {
                     })}
                 >
                     {(selectedId) => (
-                        <MainContent fullHeight disablePadding>
-                            <ProductVariantsGrid product={selectedId} />
-                        </MainContent>
+                        <>
+                            <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
+                            <MainContent fullHeight>
+                                <ProductVariantsGrid product={selectedId} />
+                            </MainContent>
+                        </>
                     )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
-                    <ProductForm />
+                    <SaveBoundary>
+                        <FormToolbar />
+                        <ProductForm />
+                    </SaveBoundary>
                 </StackPage>
             </StackSwitch>
         </Stack>

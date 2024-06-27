@@ -3,14 +3,13 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
     filterByFragment,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
-    Toolbar,
     ToolbarActions,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -74,8 +73,7 @@ const createProductMutation = gql`
 
 function ProductsGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -84,7 +82,7 @@ function ProductsGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
             </ToolbarItem>
             <ToolbarFillSpace />
             {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
