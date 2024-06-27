@@ -18,7 +18,7 @@ export const DamFileDownloadLinkBlock = withPreview(
         const childProps = {
             href: file.fileUrl,
             title,
-            ...(openFileType !== "Download" && { target: "_blank" }),
+            ...(openFileType === "NewTab" && { target: "_blank" }),
         };
 
         return React.cloneElement(children, childProps);
