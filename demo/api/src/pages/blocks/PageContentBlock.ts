@@ -1,5 +1,5 @@
-import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock, YouTubeVideoBlock } from "@comet/blocks-api";
-import { AnchorBlock, DamImageBlock, DamVideoBlock } from "@comet/cms-api";
+import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock } from "@comet/blocks-api";
+import { AnchorBlock, DamImageBlock } from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
@@ -21,8 +21,6 @@ const supportedBlocks = {
     headline: HeadlineBlock,
     image: DamImageBlock,
     textImage: TextImageBlock,
-    damVideo: DamVideoBlock,
-    youTubeVideo: YouTubeVideoBlock,
     video: VideoBlock,
     linkList: LinkListBlock,
     fullWidthImage: FullWidthImageBlock,

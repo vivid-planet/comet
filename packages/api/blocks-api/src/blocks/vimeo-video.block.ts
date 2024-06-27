@@ -4,9 +4,9 @@ import { VideoAspectRatio } from "../constants/enums";
 import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
 import { BlockField } from "./decorators/field";
 
-class YouTubeVideoBlockData extends BlockData {
+class VimeoVideoBlockData extends BlockData {
     @BlockField({ nullable: true })
-    youtubeIdentifier?: string;
+    vimeoIdentifier?: string;
 
     @BlockField({ type: "enum", enum: VideoAspectRatio })
     aspectRatio: VideoAspectRatio;
@@ -21,15 +21,12 @@ class YouTubeVideoBlockData extends BlockData {
     loop?: boolean;
 }
 
-class YouTubeVideoBlockInput extends BlockInput {
+class VimeoVideoBlockInput extends BlockInput {
     @IsOptional()
     @IsString()
+    @Matches(/^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$|^([0-9]{6,11})$/)
     @BlockField({ nullable: true })
-    // regex from https://stackoverflow.com/a/51870158
-    @Matches(
-        /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/,
-    )
-    youtubeIdentifier?: string;
+    vimeoIdentifier?: string;
 
     @IsEnum(VideoAspectRatio)
     @BlockField({ type: "enum", enum: VideoAspectRatio })
@@ -51,8 +48,8 @@ class YouTubeVideoBlockInput extends BlockInput {
     loop?: boolean;
 
     transformToBlockData(): BlockDataInterface {
-        return inputToData(YouTubeVideoBlockData, this);
+        return inputToData(VimeoVideoBlockData, this);
     }
 }
 
-export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideoBlockInput, "YouTubeVideo");
+export const VimeoVideoBlock = createBlock(VimeoVideoBlockData, VimeoVideoBlockInput, "VimeoVideo");

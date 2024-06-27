@@ -1,84 +1,72 @@
 import { Field, FieldContainer, FinalFormInput, FinalFormRadio, FinalFormSwitch } from "@comet/admin";
 import { Box, FormControlLabel } from "@mui/material";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
-import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
+import { VimeoVideoBlockData, VimeoVideoBlockInput } from "../blocks.generated";
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
 import { useAdminComponentPaper } from "./common/AdminComponentPaper";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { BlockCategory, BlockInterface } from "./types";
 
-type State = YouTubeVideoBlockData;
+const isValidVimeoIdentifier = (value: string) => {
+    const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;
+    const idRegEx = /^([0-9]{6,11})$/;
 
-const EXPECTED_YT_ID_LENGTH = 11;
+    const urlMatch = urlRegEx.test(value);
+    const idMatch = idRegEx.test(value);
 
-const isValidYouTubeIdentifier = (value: string) => {
-    // regex from https://stackoverflow.com/a/51870158
-    const regExp =
-        /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/;
-    const match = value.match(regExp);
-    return value.length === EXPECTED_YT_ID_LENGTH || (!!match && match[8].length == EXPECTED_YT_ID_LENGTH);
+    return urlMatch || idMatch;
 };
 
 const validateIdentifier = (value?: string) => {
     if (!value) return undefined;
 
-    return value && isValidYouTubeIdentifier(value) ? undefined : (
-        <FormattedMessage id="comet.blocks.youTubeVideo.validation" defaultMessage="Should be a valid YouTube URL or identifier" />
+    return value && isValidVimeoIdentifier(value) ? undefined : (
+        <FormattedMessage id="comet.blocks.vimeoVideo.validation" defaultMessage="Should be a valid Vimeo URL or identifier" />
     );
 };
 
-export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, YouTubeVideoBlockInput> = {
+export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, VimeoVideoBlockData, VimeoVideoBlockInput> = {
     ...createBlockSkeleton(),
 
-    name: "YouTubeVideo",
+    name: "VimeoVideo",
 
-    displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
+    displayName: <FormattedMessage id="blocks.vimeoVideo" defaultMessage="Video (Vimeo)" />,
 
-    defaultValues: () => ({ youtubeIdentifier: "", autoplay: false, showControls: true, loop: false, aspectRatio: "16X9" }),
+    defaultValues: () => ({ vimeoIdentifier: "", autoplay: false, showControls: true, loop: false, aspectRatio: "16X9" }),
 
     category: BlockCategory.Media,
+
+    // !vimeoIdentifier to allow saving empty string
+    isValid: ({ vimeoIdentifier }) => !vimeoIdentifier || isValidVimeoIdentifier(vimeoIdentifier),
 
     createPreviewState: (state, previewCtx) => {
         return { ...state, autoplay: false, adminMeta: { route: previewCtx.parentUrl } };
     },
-
     definesOwnPadding: true,
-
-    // !youtubeIdentifier to allow saving empty string
-    isValid: ({ youtubeIdentifier }) => !youtubeIdentifier || isValidYouTubeIdentifier(youtubeIdentifier),
-
     AdminComponent: ({ state, updateState }) => {
-        const intl = useIntl();
         const isInPaper = useAdminComponentPaper();
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <SelectPreviewComponent>
-                    <BlocksFinalForm
-                        onSubmit={(newState) => {
-                            updateState(newState);
-                        }}
-                        initialValues={state}
-                    >
+                    <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                         <Field
-                            label={intl.formatMessage({
-                                id: "comet.blocks.youTubeVideo.youtubeIdentifier",
-                                defaultMessage: "YouTube URL or YouTube Video ID",
-                            })}
+                            name="vimeoIdentifier"
+                            label={<FormattedMessage id="blocks.vimeoVideo.vimeoIdentifier" defaultMessage="Vimeo URL or Vimeo Video ID" />}
                             validate={validateIdentifier}
-                            name="youtubeIdentifier"
+                            type="text"
                             component={FinalFormInput}
                             fullWidth
                             disableContentTranslation
                         />
-                        <FieldContainer label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.aspectRatio", defaultMessage: "Aspect Ratio" })}>
+                        <FieldContainer label={<FormattedMessage id="comet.blocks.vimeoVideo.aspectRatio" defaultMessage="Aspect Ratio" />}>
                             <Field name="aspectRatio" type="radio" value="16X9">
                                 {(props) => (
                                     <FormControlLabel
-                                        label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.aspectRatio.16X9", defaultMessage: "16:9" })}
+                                        label={<FormattedMessage id="comet.blocks.vimeoVideo.aspectRatio.16X9" defaultMessage="16:9" />}
                                         control={<FinalFormRadio {...props} />}
                                     />
                                 )}
@@ -86,26 +74,26 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                             <Field name="aspectRatio" type="radio" value="4X3">
                                 {(props) => (
                                     <FormControlLabel
-                                        label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.aspectRatio.4X3", defaultMessage: "4:3" })}
+                                        label={<FormattedMessage id="comet.blocks.vimeoVideo.aspectRatio.4X3" defaultMessage="4:3" />}
                                         control={<FinalFormRadio {...props} />}
                                     />
                                 )}
                             </Field>
                         </FieldContainer>
                         <Field
-                            label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.autoplay", defaultMessage: "Autoplay" })}
+                            label={<FormattedMessage id="blocks.vimeoVideo.autoplay" defaultMessage="Autoplay" />}
                             name="autoplay"
                             type="checkbox"
                             component={FinalFormSwitch}
                         />
                         <Field
-                            label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.showControls", defaultMessage: "Show controls" })}
+                            label={<FormattedMessage id="blocks.vimeoVideo.showControls" defaultMessage="Show controls" />}
                             name="showControls"
                             type="checkbox"
                             component={FinalFormSwitch}
                         />
                         <Field
-                            label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.loop", defaultMessage: "Loop" })}
+                            label={<FormattedMessage id="blocks.vimeoVideo.loop" defaultMessage="Loop" />}
                             name="loop"
                             type="checkbox"
                             component={FinalFormSwitch}
@@ -115,6 +103,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
             </Box>
         );
     },
-
-    previewContent: (state) => [{ type: "text", content: state.youtubeIdentifier }],
+    previewContent: (state) => {
+        return state.vimeoIdentifier ? [{ type: "text", content: state.vimeoIdentifier }] : [];
+    },
 };

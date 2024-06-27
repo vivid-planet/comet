@@ -1,5 +1,6 @@
-import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks, YouTubeVideoBlock } from "@comet/cms-site";
+import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
+import { VideoBlock } from "@src/blocks/VideoBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import * as React from "react";
 
@@ -21,8 +22,10 @@ const supportedBlocks: SupportedBlocks = {
     headline: (props) => <HeadlineBlock data={props} />,
     image: (props) => <DamImageBlock data={props} />,
     textImage: (props) => <TextImageBlock data={props} />,
+    video: (props) => <VideoBlock data={props} />,
     damVideo: (props) => <DamVideoBlock data={props} />,
     youTubeVideo: (props) => <YouTubeVideoBlock data={props} />,
+    vimeoVideo: (props) => <VimeoVideoBlock data={props} />,
     linkList: (props) => <LinkListBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,
