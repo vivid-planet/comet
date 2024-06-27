@@ -4,10 +4,6 @@ import {
     DataGridToolbar,
     filterByFragment,
     GridColDef,
-    GridFilterButton,
-    muiGridFilterToGql,
-    muiGridPagingToGql,
-    muiGridSortToGql,
     StackLink,
     ToolbarFillSpace,
     ToolbarItem,
@@ -17,7 +13,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridRowOrderChangeParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridRowOrderChangeParams } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -37,13 +33,8 @@ import {
 function ProductCategoriesTableToolbar() {
     return (
         <DataGridToolbar>
-            <ToolbarItem>
-                <GridToolbarQuickFilter />
-            </ToolbarItem>
+            {/* quickfilter and filter removed because of dnd */}
             <ToolbarFillSpace />
-            <ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                     <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
@@ -53,13 +44,13 @@ function ProductCategoriesTableToolbar() {
     );
 }
 
-// this should move into component-function (like generated), sortable should depend on enableDragAndDrop
 const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
     {
         field: "title",
         headerName: "Title",
         width: 150,
-        sortable: false,
+        sortable: false, // disabled because of dnd-sorting
+        filterable: false, // disabled because of dnd-sorting
     },
     {
         field: "action",
@@ -102,16 +93,13 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
 ];
 
 function ProductCategoriesTable() {
-    const enableDragAndDrop = true;
+    // dnd-sorting disables sorting, paging and filtering
     const client = useApolloClient();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
-    const sortModel = dataGridProps.sortModel;
 
     const { data, loading, error } = useQuery<GQLProductCategoriesListQuery, GQLProductCategoriesListQueryVariables>(productCategoriesQuery, {
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
-            sort: enableDragAndDrop ? [{ field: "position", direction: "ASC" }] : muiGridSortToGql(sortModel),
+            sort: [{ field: "position", direction: "ASC" }], // fixed to position because of dnd
         },
     });
     const rows = data?.productCategories.nodes ?? [];
@@ -122,7 +110,7 @@ function ProductCategoriesTable() {
             mutation: updateProductCategoryPositionMutation,
             variables: {
                 id: params.row.id,
-                position: dataGridProps.page ? dataGridProps.page * dataGridProps.pageSize + params.targetIndex : params.targetIndex + 1,
+                position: params.targetIndex + 1,
             },
         });
     };
@@ -130,7 +118,6 @@ function ProductCategoriesTable() {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
@@ -139,12 +126,10 @@ function ProductCategoriesTable() {
             components={{
                 Toolbar: ProductCategoriesTableToolbar,
             }}
-            rowReordering={
-                enableDragAndDrop &&
-                (dataGridProps.filterModel?.items.length ?? 0) === 0 && // probably check muiGridFilterToGql because empty filter can exist
-                (dataGridProps.filterModel?.quickFilterValues?.length ?? 0) === 0
-            }
+            rowReordering
             onRowOrderChange={handleRowOrderChange}
+            pagination={false}
+            disableColumnFilter
         />
     );
 }
