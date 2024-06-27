@@ -447,7 +447,13 @@ type Manufacturer {
   address: Address
   addressAsEmbeddable: AddressAsEmbeddable!
   updatedAt: DateTime!
+  foundationDate: LocalDate!
 }
+
+"""
+A local date string (i.e., with no associated timezone) in `YYYY-MM-DD` format, e.g. `2020-01-01`.
+"""
+scalar LocalDate
 
 type ManufacturerCountry {
   id: String!
@@ -1086,6 +1092,7 @@ input ManufacturerFilter {
   addressAsEmbeddable_alternativeAddress_zip: NumberFilter
   addressAsEmbeddable_alternativeAddress_country: StringFilter
   updatedAt: DateTimeFilter
+  foundationDate: StringFilter
   and: [ManufacturerFilter!]
   or: [ManufacturerFilter!]
 }
@@ -1106,6 +1113,7 @@ enum ManufacturerSortField {
   addressAsEmbeddable_alternativeAddress_zip
   addressAsEmbeddable_alternativeAddress_country
   updatedAt
+  foundationDate
 }
 
 input ManufacturerCountryFilter {
@@ -1451,10 +1459,12 @@ input ManufacturerInput {
   name: String!
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput!
+  foundationDate: LocalDate!
 }
 
 input ManufacturerUpdateInput {
   name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
+  foundationDate: LocalDate
 }

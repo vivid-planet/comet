@@ -17,6 +17,7 @@ export enum ManufacturerSortField {
     addressAsEmbeddable_alternativeAddress_zip = "addressAsEmbeddable_alternativeAddress_zip",
     addressAsEmbeddable_alternativeAddress_country = "addressAsEmbeddable_alternativeAddress_country",
     updatedAt = "updatedAt",
+    foundationDate = "foundationDate",
 }
 /* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(ManufacturerSortField, {

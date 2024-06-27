@@ -20,6 +20,7 @@ export class ManufacturersService {
                     "addressAsEmbeddable_country",
                     "addressAsEmbeddable_alternativeAddress_street",
                     "addressAsEmbeddable_alternativeAddress_country",
+                    "foundationDate",
                 ]),
             );
         }

@@ -26,7 +26,7 @@ const config: CodegenConfig = {
                 },
                 enumsAsTypes: true,
                 namingConvention: "keep",
-                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string" }),
+                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { DateTime: "string", Date: "string" }),
                 typesPrefix: "GQL",
             },
         },
@@ -44,7 +44,7 @@ const config: CodegenConfig = {
                 },
                 enumsAsTypes: true,
                 namingConvention: "keep",
-                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), {}),
+                scalars: rootBlocks.reduce((scalars, rootBlock) => ({ ...scalars, [rootBlock]: rootBlock }), { Date: "string" }),
                 typesPrefix: "GQL",
             },
             plugins: [

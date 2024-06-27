@@ -2,6 +2,7 @@ import { CrudGenerator, IsNullable } from "@comet/cms-api";
 import { BaseEntity, Embeddable, Embedded, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { IsNumber, IsObject, IsString } from "class-validator";
+import { GraphQLLocalDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 @ObjectType()
@@ -99,4 +100,9 @@ export class Manufacturer extends BaseEntity<Manufacturer, "id"> {
     @Property({ onUpdate: () => new Date() })
     @Field()
     updatedAt: Date = new Date();
+
+    //@Property({ type: DateType }) MikroORM v6
+    @Property({ columnType: "date", type: "string" })
+    @Field(() => GraphQLLocalDate)
+    foundationDate: string;
 }

@@ -43,6 +43,8 @@ export class ManufacturerResolver {
         }
 
         const [entities, totalCount] = await this.repository.findAndCount(where, options);
+        console.log(process.env.TZ);
+        console.log(entities);
         return new PaginatedManufacturers(entities, totalCount);
     }
 

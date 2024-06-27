@@ -3,7 +3,8 @@
 import { IsNullable, PartialType } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import { IsDate, IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import { GraphQLLocalDate } from "graphql-scalars";
 
 import { Address, AddressAsEmbeddable } from "../../entities/manufacturer.entity";
 
@@ -25,6 +26,10 @@ export class ManufacturerInput {
     @Type(() => AddressAsEmbeddable)
     @Field(() => AddressAsEmbeddable)
     addressAsEmbeddable: AddressAsEmbeddable;
+
+    @Field(() => GraphQLLocalDate)
+    @IsDate()
+    foundationDate: string;
 }
 
 @InputType()

@@ -221,6 +221,7 @@ const manufacturersFragment = gql`
                 country
             }
         }
+        foundationDate
     }
 `;
 

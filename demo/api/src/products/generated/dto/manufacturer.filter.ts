@@ -67,6 +67,12 @@ export class ManufacturerFilter {
     @Type(() => DateTimeFilter)
     updatedAt?: DateTimeFilter;
 
+    @Field(() => StringFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => StringFilter)
+    foundationDate?: StringFilter;
+
     @Field(() => [ManufacturerFilter], { nullable: true })
     @Type(() => ManufacturerFilter)
     @ValidateNested({ each: true })

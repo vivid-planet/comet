@@ -26,6 +26,7 @@ export class ProductsService {
                     "manufacturer.addressAsEmbeddable_country",
                     "manufacturer.addressAsEmbeddable_alternativeAddress_street",
                     "manufacturer.addressAsEmbeddable_alternativeAddress_country",
+                    "manufacturer.foundationDate",
                 ]),
             );
         }
