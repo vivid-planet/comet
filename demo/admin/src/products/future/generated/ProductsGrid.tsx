@@ -8,7 +8,6 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
-    StackLink,
     Toolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
@@ -18,13 +17,11 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 
 import {
     GQLCreateProductMutation,
@@ -75,7 +72,7 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar() {
+function ProductsGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
     return (
         <Toolbar>
             <ToolbarAutomaticTitleItem />
@@ -86,20 +83,19 @@ function ProductsGridToolbar() {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            <ToolbarActions>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
-                </Button>
-            </ToolbarActions>
+            {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
         </Toolbar>
     );
 }
 
 type Props = {
     filter?: GQLProductFilter;
+    addButton?: React.ReactNode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    editButton?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
 };
 
-export function ProductsGrid({ filter }: Props): React.ReactElement {
+export function ProductsGrid({ filter, addButton, editButton }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -158,9 +154,7 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
-                        </IconButton>
+                        {editButton && editButton(params)}
                         <CrudContextMenu
                             copyData={() => {
                                 // Don't copy id, because we want to create a new entity with this data
@@ -215,6 +209,9 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
             loading={loading}
             components={{
                 Toolbar: ProductsGridToolbar,
+            }}
+            componentsProps={{
+                toolbar: { addButton: addButton },
             }}
         />
     );

@@ -5,6 +5,7 @@ import {
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackLink,
     StackPage,
     StackSwitch,
     StackToolbar,
@@ -13,9 +14,11 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Button, IconButton } from "@mui/material";
 import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductForm } from "./generated/ProductForm";
 import { ProductPriceForm } from "./generated/ProductPriceForm";
@@ -28,7 +31,25 @@ export function ProductsPage(): React.ReactElement {
             <StackSwitch>
                 <StackPage name="grid">
                     <MainContent fullHeight disablePadding>
-                        <ProductsGrid />
+                        <ProductsGrid
+                            addButton={
+                                <Button
+                                    startIcon={<AddIcon />}
+                                    component={StackLink}
+                                    pageName="add"
+                                    payload="add"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
+                                </Button>
+                            }
+                            editButton={(params) => (
+                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                    <Edit color="primary" />
+                                </IconButton>
+                            )}
+                        />
                     </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
