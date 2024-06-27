@@ -107,13 +107,6 @@ function ProductCategoriesTable() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
     const sortModel = dataGridProps.sortModel;
 
-    const handleRowOrderChange = async (params: GridRowOrderChangeParams) => {
-        await client.mutate<GQLUpdateProductCategoryMutation, GQLUpdateProductCategoryMutationVariables>({
-            mutation: updateProductCategoryPositionMutation,
-            variables: { id: params.row.id, position: params.targetIndex + 1 },
-        });
-    };
-
     const { data, loading, error } = useQuery<GQLProductCategoriesListQuery, GQLProductCategoriesListQueryVariables>(productCategoriesQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
@@ -123,6 +116,16 @@ function ProductCategoriesTable() {
     });
     const rows = data?.productCategories.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
+
+    const handleRowOrderChange = async (params: GridRowOrderChangeParams) => {
+        await client.mutate<GQLUpdateProductCategoryMutation, GQLUpdateProductCategoryMutationVariables>({
+            mutation: updateProductCategoryPositionMutation,
+            variables: {
+                id: params.row.id,
+                position: dataGridProps.page ? dataGridProps.page * dataGridProps.pageSize + params.targetIndex : params.targetIndex + 1,
+            },
+        });
+    };
 
     return (
         <DataGridPro
