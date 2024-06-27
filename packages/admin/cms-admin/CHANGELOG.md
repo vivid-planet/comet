@@ -1,5 +1,16 @@
 # @comet/cms-admin
 
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin@6.14.1
+-   @comet/admin-date-time@6.14.1
+-   @comet/admin-icons@6.14.1
+-   @comet/admin-rte@6.14.1
+-   @comet/admin-theme@6.14.1
+-   @comet/blocks-admin@6.14.1
+
 ## 6.14.0
 
 ### Minor Changes
