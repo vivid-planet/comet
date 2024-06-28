@@ -34,26 +34,24 @@ export class ProductCategoryResolver {
             throw new CometValidationException(`"position" cannot be greater than ${count}`);
         }
 
-        await this.entityManager.transactional(async (em) => {
-            if (oldPosition < newPosition) {
-                // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
-                await this.repository.nativeUpdate(
-                    { position: { $gt: oldPosition, $lte: newPosition } }, // add filter for grouping if necessary
-                    { position: em.raw("position - 1") },
-                );
-            } else if (oldPosition > newPosition) {
-                // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
-                await this.repository.nativeUpdate(
-                    { position: { $gte: newPosition, $lt: oldPosition } }, // add filter for grouping if necessary
-                    { position: em.raw("position + 1") },
-                );
-            }
+        if (oldPosition < newPosition) {
+            // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
+            await this.repository.nativeUpdate(
+                { position: { $gt: oldPosition, $lte: newPosition } }, // add filter for grouping if necessary
+                { position: this.entityManager.raw("position - 1") },
+            );
+        } else if (oldPosition > newPosition) {
+            // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
+            await this.repository.nativeUpdate(
+                { position: { $gte: newPosition, $lt: oldPosition } }, // add filter for grouping if necessary
+                { position: this.entityManager.raw("position + 1") },
+            );
+        }
 
-            productCategory.assign({
-                position: newPosition,
-            });
-            await this.entityManager.flush();
+        productCategory.assign({
+            position: newPosition,
         });
+        await this.entityManager.flush();
 
         return true;
     }
