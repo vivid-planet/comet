@@ -6,7 +6,7 @@ import slugify from "slugify";
 import { FileUploadInput } from "./dto/file-upload.input";
 
 export function slugifyFilename(filename: string, extension: string): string {
-    return `${slugify(filename, { locale: "de", lower: true, strict: true })}${extension}`;
+    return `${slugify(filename)}${extension}`;
 }
 
 export const createHashedPath = (contentHash: string): string => [contentHash.substr(0, 2), contentHash.substr(2, 2), contentHash].join(sep);
