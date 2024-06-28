@@ -1,12 +1,11 @@
 # @comet/admin-icons
 
-<<<<<<< HEAD
 ## 7.0.0-beta.2
 
 ## 7.0.0-beta.1
 
 ## 7.0.0-beta.0
-=======
+
 ## 6.14.1
 
 ## 6.14.0
@@ -14,7 +13,6 @@
 ### Minor Changes
 
 -   efccc42a3: Add `YouTube` and `Vimeo` icons
->>>>>>> main
 
 ## 6.13.0
 

@@ -77,30 +77,18 @@ class App extends React.Component {
                                     label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
                                 },
                             },
+                            contentGeneration: {
+                                generateAltText: true,
+                                generateImageTitle: true,
+                            },
                         }}
                     >
-<<<<<<< HEAD
                         <DependenciesConfigProvider
                             entityDependencyMap={{
                                 Page,
                                 Link,
                                 News: NewsDependency,
                                 DamFile: createDamFileDependency(),
-=======
-                        <DamConfigProvider
-                            value={{
-                                scopeParts: ["domain"],
-                                additionalToolbarItems: <ImportFromUnsplash />,
-                                importSources: {
-                                    unsplash: {
-                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
-                                    },
-                                },
-                                contentGeneration: {
-                                    generateAltText: true,
-                                    generateImageTitle: true,
-                                },
->>>>>>> main
                             }}
                         >
                             <IntlProvider locale="en" messages={getMessages()}>

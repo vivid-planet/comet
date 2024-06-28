@@ -1,24 +1,13 @@
 # @comet/blocks-api
 
-<<<<<<< HEAD
 ## 7.0.0-beta.2
 
 ### Minor Changes
 
-=======
-## 6.14.1
-
-## 6.14.0
-
-### Minor Changes
-
--   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
->>>>>>> main
 -   87ef5fa36: YouTubeVideoBlock: Add validation for identifier
 
     Must be either a valid YouTube URL or video identifier.
 
-<<<<<<< HEAD
 ## 7.0.0-beta.1
 
 ## 7.0.0-beta.0
@@ -88,8 +77,17 @@
     -   Admin: `axios`
     -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
 
-=======
->>>>>>> main
+## 6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   87ef5fa36: YouTubeVideoBlock: Add validation for identifier
+
+    Must be either a valid YouTube URL or video identifier.
+
 ## 6.13.0
 
 ## 6.12.0

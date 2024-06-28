@@ -552,12 +552,6 @@ export class FilesService {
         return [...baseUrl, file.id, filename].join("/");
     }
 
-<<<<<<< HEAD
-    async createFileDownloadUrl(
-        file: FileInterface,
-        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
-    ): Promise<string> {
-=======
     async getFileAsBase64String(file: FileInterface) {
         const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
 
@@ -567,8 +561,10 @@ export class FilesService {
         return `data:${file.mimetype};base64,${base64String}`;
     }
 
-    async createFileDownloadUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
->>>>>>> main
+    async createFileDownloadUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
         const filename = parse(file.name).name;
 
         const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];

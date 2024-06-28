@@ -1,6 +1,5 @@
 # @comet/eslint-config
 
-<<<<<<< HEAD
 ## 7.0.0-beta.2
 
 ### Patch Changes
@@ -81,7 +80,7 @@
 ### Patch Changes
 
 -   @comet/eslint-plugin@7.0.0-beta.0
-=======
+
 ## 6.14.1
 
 ### Patch Changes
@@ -93,7 +92,6 @@
 ### Patch Changes
 
 -   @comet/eslint-plugin@6.14.0
->>>>>>> main
 
 ## 6.13.0
 

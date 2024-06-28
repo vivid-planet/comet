@@ -23,13 +23,8 @@ export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
-<<<<<<< HEAD
-=======
-export { DamVideoBlock } from "./blocks/dam-video.block";
 export { EmailLinkBlock } from "./blocks/email-link.block";
 export { PhoneLinkBlock } from "./blocks/phone-link.block";
-export { PixelImageBlock } from "./blocks/PixelImageBlock";
->>>>>>> main
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";

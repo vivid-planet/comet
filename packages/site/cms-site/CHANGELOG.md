@@ -1,6 +1,5 @@
 # @comet/cms-site
 
-<<<<<<< HEAD
 ## 7.0.0-beta.2
 
 ## 7.0.0-beta.1
@@ -138,7 +137,7 @@
     Requires following changes to admin
 
     -   The `SitesConfig` must provide a `sitePreviewApiUrl`
-=======
+
 ## 6.14.1
 
 ### Patch Changes
@@ -152,7 +151,6 @@
 ### Minor Changes
 
 -   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
->>>>>>> main
 
 ## 6.13.0
 
