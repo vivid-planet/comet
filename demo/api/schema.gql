@@ -988,6 +988,7 @@ input ManyToOneFilter {
 
 input ManyToManyFilter {
   contains: ID
+  search: ID
 }
 
 input ProductSort {

@@ -1,5 +1,6 @@
-import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
+import { EntityMetadata, EntityRepository, FilterQuery, ObjectQuery } from "@mikro-orm/core";
 
+import { getCrudSearchFieldsFromMetadata } from "../../generator/utils/search-fields-from-metadata";
 import { BooleanFilter } from "./boolean.filter";
 import { DateTimeFilter } from "./date-time.filter";
 import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
@@ -16,6 +17,7 @@ function quoteLike(string: string): string {
 export function filterToMikroOrmQuery(
     filterProperty: StringFilter | NumberFilter | DateTimeFilter | BooleanFilter | EnumFilterInterface<unknown> | EnumsFilterInterface<unknown>,
     propertyName: string,
+    metadata?: EntityMetadata,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): FilterQuery<any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -103,12 +105,42 @@ export function filterToMikroOrmQuery(
             ret.id = {
                 $eq: filterProperty.contains,
             };
+        } else if (filterProperty.search !== undefined) {
+            if (!metadata) {
+                throw new Error("Metadata required for search filter");
+            }
+            const prop = metadata.props.find((prop) => prop.name === propertyName);
+            if (!prop) {
+                throw new Error("Property not found");
+            }
+            if (prop.reference != "1:m") {
+                throw new Error("Property is not a 1:m relation");
+            }
+            if (!prop.targetMeta) {
+                throw new Error("targetMeta is not defined");
+            }
+            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
         }
     } else if (filterProperty instanceof ManyToManyFilter) {
         if (filterProperty.contains !== undefined) {
             ret.id = {
                 $eq: filterProperty.contains,
             };
+        } else if (filterProperty.search !== undefined) {
+            if (!metadata) {
+                throw new Error("Metadata required for search filter");
+            }
+            const prop = metadata.props.find((prop) => prop.name === propertyName);
+            if (!prop) {
+                throw new Error("Property not found");
+            }
+            if (prop.reference != "m:n") {
+                throw new Error("Property is not a m:n relation");
+            }
+            if (!prop.targetMeta) {
+                throw new Error("targetMeta is not defined");
+            }
+            ret.$and = searchToMikroOrmQuery(filterProperty.search, prop.targetMeta).$and;
         }
     } else if (isEnumFilter(filterProperty)) {
         if (filterProperty.equal !== undefined) {
@@ -133,12 +165,18 @@ export function filterToMikroOrmQuery(
 export function filtersToMikroOrmQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filter: any,
-    applyFilter?: (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        acc: ObjectQuery<any>,
-        filterValue: StringFilter | NumberFilter | DateTimeFilter | BooleanFilter | unknown,
-        filterKey: string,
-    ) => void,
+    {
+        applyFilter,
+        metadata,
+    }: {
+        applyFilter?: (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            acc: ObjectQuery<any>,
+            filterValue: StringFilter | NumberFilter | DateTimeFilter | BooleanFilter | unknown,
+            filterKey: string,
+        ) => void;
+        metadata?: EntityMetadata;
+    } = {},
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): ObjectQuery<any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -158,7 +196,7 @@ export function filtersToMikroOrmQuery(
                     if (applyFilter) {
                         applyFilter(acc, filterProperty, filterPropertyName);
                     } else {
-                        const query = filterToMikroOrmQuery(filterProperty, filterPropertyName);
+                        const query = filterToMikroOrmQuery(filterProperty, filterPropertyName, metadata);
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         if (Object.keys(query as any).length > 0) {
                             acc[filterPropertyName] = query;
@@ -189,7 +227,8 @@ export const splitSearchString = (search: string) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function searchToMikroOrmQuery(search: string, fields: string[]): ObjectQuery<any> {
+export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[] | EntityMetadata): ObjectQuery<any> {
+    const fields = Array.isArray(fieldsOrMetadata) ? fieldsOrMetadata : getCrudSearchFieldsFromMetadata(fieldsOrMetadata);
     const quotedSearchParts = splitSearchString(search);
 
     const ands = [];
@@ -211,4 +250,24 @@ export function searchToMikroOrmQuery(search: string, fields: string[]): ObjectQ
     return {
         $and: ands,
     };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function mikroOrmQuery({ search, filter }: { search?: string; filter?: any }, repository: EntityRepository<any>): ObjectQuery<any> {
+    const andFilters = [];
+
+    const metadata = repository.getEntityManager().getMetadata().get(repository.getEntityName());
+    if (search) {
+        const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
+        if (crudSearchPropNames.length == 0) {
+            throw new Error("Entity has no searchable fields");
+        }
+        andFilters.push(searchToMikroOrmQuery(search, crudSearchPropNames));
+    }
+
+    if (filter) {
+        andFilters.push(filtersToMikroOrmQuery(filter, { metadata }));
+    }
+
+    return andFilters.length > 0 ? { $and: andFilters } : {};
 }

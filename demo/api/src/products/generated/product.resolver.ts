@@ -5,6 +5,7 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
+    mikroOrmQuery,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -25,14 +26,12 @@ import { ProductVariant } from "../entities/product-variant.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { ProductsArgs } from "./dto/products.args";
-import { ProductsService } from "./products.service";
 
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
     constructor(
         private readonly entityManager: EntityManager,
-        private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
         @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
@@ -62,7 +61,7 @@ export class ProductResolver {
         @Args() { status, search, filter, sort, offset, limit }: ProductsArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProducts> {
-        const where = this.productsService.getFindCondition({ search, filter });
+        const where = mikroOrmQuery({ search, filter }, this.repository);
         where.status = { $in: status };
 
         const fields = extractGraphqlFields(info, { root: "nodes" });

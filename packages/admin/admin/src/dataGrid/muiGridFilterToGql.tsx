@@ -64,8 +64,7 @@ export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilt
         .filter((value) => value.value !== undefined)
         .map((value) => {
             if (!value.operatorValue) throw new Error("operaturValue not set");
-            const gqlOperator = muiGridOperatorValueToGqlOperator[value.operatorValue];
-            if (!gqlOperator) throw new Error(`unknown operator ${value.operatorValue}`);
+            const gqlOperator = muiGridOperatorValueToGqlOperator[value.operatorValue] || value.operatorValue;
             const column = columns.find((i) => i.field == value.columnField);
             const convertedValue = convertValueByType(value.value, column?.type);
             return {

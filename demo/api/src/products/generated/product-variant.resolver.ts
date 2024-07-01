@@ -5,6 +5,7 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
+    mikroOrmQuery,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -19,14 +20,12 @@ import { ProductVariant } from "../entities/product-variant.entity";
 import { PaginatedProductVariants } from "./dto/paginated-product-variants";
 import { ProductVariantInput, ProductVariantUpdateInput } from "./dto/product-variant.input";
 import { ProductVariantsArgs } from "./dto/product-variants.args";
-import { ProductVariantsService } from "./product-variants.service";
 
 @Resolver(() => ProductVariant)
 @RequiredPermission("products", { skipScopeCheck: true })
 export class ProductVariantResolver {
     constructor(
         private readonly entityManager: EntityManager,
-        private readonly productVariantsService: ProductVariantsService,
         @InjectRepository(ProductVariant) private readonly repository: EntityRepository<ProductVariant>,
         @InjectRepository(Product) private readonly productRepository: EntityRepository<Product>,
         private readonly blocksTransformer: BlocksTransformerService,
@@ -45,7 +44,7 @@ export class ProductVariantResolver {
         @Args() { product, search, filter, sort, offset, limit }: ProductVariantsArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProductVariants> {
-        const where = this.productVariantsService.getFindCondition({ search, filter });
+        const where = mikroOrmQuery({ search, filter }, this.repository);
 
         where.product = product;
 

@@ -8,6 +8,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
+import { getCrudSearchFieldsFromMetadata } from "./utils/search-fields-from-metadata";
 import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
@@ -28,27 +29,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         return false;
     });
 
-    const crudSearchPropNames = metadata.props
-        .filter((prop) => prop.name != "status")
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
-        .reduce((acc, prop) => {
-            if (prop.type === "string" || prop.type === "text") {
-                acc.push(prop.name);
-            } else if (prop.reference == "m:1") {
-                if (!prop.targetMeta) {
-                    throw new Error(`reference ${prop.name} has no targetMeta`);
-                }
-                prop.targetMeta.props
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    .filter((innerProp) => hasFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"))
-                    .forEach((innerProp) => {
-                        if (innerProp.type === "string" || innerProp.type === "text") {
-                            acc.push(`${prop.name}.${innerProp.name}`);
-                        }
-                    });
-            }
-            return acc;
-        }, [] as string[]);
+    const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
     const hasSearchArg = crudSearchPropNames.length > 0;
 
     let statusProp = metadata.props.find((prop) => prop.name == "status");
@@ -454,57 +435,6 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     }
     `;
     return argsOut;
-}
-
-function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
-    const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
-    const { hasSearchArg, hasFilterArg, crudSearchPropNames } = buildOptions(metadata);
-
-    const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
-    import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
-    import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository } from "@mikro-orm/postgresql";
-    import { Injectable } from "@nestjs/common";
-
-    ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
-    import { ${classNameSingular}Filter } from "./dto/${fileNameSingular}.filter";
-
-    @Injectable()
-    export class ${classNamePlural}Service {    
-        ${
-            hasSearchArg || hasFilterArg
-                ? `
-        getFindCondition(options: { ${hasSearchArg ? "search?: string, " : ""}${
-                      hasFilterArg ? `filter?: ${classNameSingular}Filter, ` : ""
-                  } }): ObjectQuery<${metadata.className}> {
-            const andFilters = [];
-            ${
-                hasSearchArg
-                    ? `
-            if (options.search) {
-                andFilters.push(searchToMikroOrmQuery(options.search, [${crudSearchPropNames.map((propName) => `"${propName}", `).join("")}]));
-            }
-            `
-                    : ""
-            }
-            ${
-                hasFilterArg
-                    ? `
-            if (options.filter) {
-                andFilters.push(filtersToMikroOrmQuery(options.filter));
-            }
-            `
-                    : ""
-            }
-
-            return andFilters.length > 0 ? { $and: andFilters } : {};
-        }
-        `
-                : ""
-        }
-    }
-    `;
-    return serviceOut;
 }
 
 function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: string): Imports[0] {
@@ -954,6 +884,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "validateNotModified", importPath: "@comet/cms-api" });
     imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
     imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
+    imports.push({ name: "mikroOrmQuery", importPath: "@comet/cms-api" });
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
@@ -961,7 +892,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { GraphQLResolveInfo } from "graphql";
 
-    import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
     import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
     import { ${argsClassName} } from "./dto/${argsFileName}";
@@ -972,7 +902,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,
-            private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
             ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
                 .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
@@ -1032,7 +961,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
-                    ? ` = this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
+                    ? ` = mikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.repository);`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
             ${hasStatusFilter ? `where.status = { $in: status };` : ""}
@@ -1192,11 +1121,6 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
             name: `dto/${argsFileName}.ts`,
             content: generateArgsDto({ generatorOptions, metadata }),
             type: "args",
-        });
-        generatedFiles.push({
-            name: `${fileNamePlural}.service.ts`,
-            content: generateService({ generatorOptions, metadata }),
-            type: "service",
         });
         generatedFiles.push({
             name: `${fileNameSingular}.resolver.ts`,

@@ -5,6 +5,7 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
+    mikroOrmQuery,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -20,14 +21,12 @@ import { NewsComment } from "../entities/news-comment.entity";
 import { NewsInput, NewsUpdateInput } from "./dto/news.input";
 import { NewsListArgs } from "./dto/news-list.args";
 import { PaginatedNews } from "./dto/paginated-news";
-import { NewsService } from "./news.service";
 
 @Resolver(() => News)
 @RequiredPermission(["news"])
 export class NewsResolver {
     constructor(
         private readonly entityManager: EntityManager,
-        private readonly newsService: NewsService,
         @InjectRepository(News) private readonly repository: EntityRepository<News>,
         private readonly blocksTransformer: BlocksTransformerService,
     ) {}
@@ -51,7 +50,7 @@ export class NewsResolver {
         @Args() { scope, status, search, filter, sort, offset, limit }: NewsListArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedNews> {
-        const where = this.newsService.getFindCondition({ search, filter });
+        const where = mikroOrmQuery({ search, filter }, this.repository);
         where.status = { $in: status };
         where.scope = scope;
 
