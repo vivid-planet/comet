@@ -69,24 +69,20 @@ const ProductCategoriesPage: React.FC = () => {
                                             defaultMessage: "Assigned Products",
                                         })}
                                     >
-                                        <StackSwitch initialPage="table" title="TEST">
-                                            <StackPage name="table">
-                                                <Box sx={{ height: "100vh" }}>
-                                                    <ProductsGrid filter={{ category: { equal: selectedId } }} />
-                                                    {/* TODO change button behaviour and open edit-dialog, open discussion https://github.com/vivid-planet/comet/pull/2171 */}
-                                                    <EditDialog
-                                                        componentsProps={{
-                                                            dialog: { fullWidth: true, maxWidth: "xl" },
-                                                            dialogContent: {
-                                                                sx: { padding: 0, paddingTop: "0 !important" /* is connected to title-style */ },
-                                                            },
-                                                        }}
-                                                    >
-                                                        <AssignProductsForm productCategoryId={selectedId} />
-                                                    </EditDialog>
-                                                </Box>
-                                            </StackPage>
-                                        </StackSwitch>
+                                        <Box sx={{ height: "100vh" }}>
+                                            <ProductsGrid filter={{ category: { equal: selectedId } }} />
+                                            {/* TODO change button behaviour and open edit-dialog, open discussion https://github.com/vivid-planet/comet/pull/2171 */}
+                                            <EditDialog
+                                                componentsProps={{
+                                                    dialog: { fullWidth: true, maxWidth: "xl" },
+                                                    dialogContent: {
+                                                        sx: { padding: 0, paddingTop: "0 !important" /* is connected to title-style */ },
+                                                    },
+                                                }}
+                                            >
+                                                <AssignProductsForm productCategoryId={selectedId} />
+                                            </EditDialog>
+                                        </Box>
                                     </RouterTab>
                                 </RouterTabs>
                             </MainContent>
