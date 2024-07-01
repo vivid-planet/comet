@@ -1,22 +1,11 @@
-import { IsBoolean, IsEnum, IsOptional, IsString, Matches } from "class-validator";
+import { IsBoolean, IsOptional, IsString, Matches } from "class-validator";
 
 import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
 import { BlockField } from "./decorators/field";
 
-/* eslint-disable @typescript-eslint/naming-convention */
-// TODO: Replace with PascalCase
-enum AspectRatio {
-    "16X9" = "16X9",
-    "4X3" = "4X3",
-}
-/* eslint-enable @typescript-eslint/naming-convention */
-
 class YouTubeVideoBlockData extends BlockData {
     @BlockField({ nullable: true })
     youtubeIdentifier?: string;
-
-    @BlockField({ type: "enum", enum: AspectRatio })
-    aspectRatio: AspectRatio;
 
     @BlockField({ nullable: true })
     autoplay?: boolean;
@@ -37,10 +26,6 @@ class YouTubeVideoBlockInput extends BlockInput {
         /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/,
     )
     youtubeIdentifier?: string;
-
-    @IsEnum(AspectRatio)
-    @BlockField({ type: "enum", enum: AspectRatio })
-    aspectRatio: AspectRatio;
 
     @IsBoolean()
     @IsOptional()
