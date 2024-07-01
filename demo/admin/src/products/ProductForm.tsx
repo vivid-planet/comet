@@ -213,7 +213,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     return data.manufacturerCountries.nodes;
                                 }}
                                 getOptionLabel={(option: GQLManufacturerCountriesQuery["manufacturerCountries"]["nodes"][0]) => option.id}
-                                label="Manufacturer Country"
+                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
                                 fullWidth
                             />
 
@@ -243,7 +243,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     return data.manufacturers.nodes;
                                 }}
                                 getOptionLabel={(option: GQLManufacturersQuery["manufacturers"]["nodes"][0]) => option.name}
-                                label="Manufacturer"
+                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                                 fullWidth
                                 disabled={!values?.manufacturerFilter}
                             />
@@ -256,20 +256,38 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 }}
                             </OnChangeField>
                         </>
-                        <SelectField name="type" label="Type" required fullWidth>
-                            <MenuItem value="Cap">Cap</MenuItem>
-                            <MenuItem value="Shirt">Shirt</MenuItem>
-                            <MenuItem value="Tie">Tie</MenuItem>
+                        <SelectField name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />} required fullWidth>
+                            <MenuItem value="Cap">
+                                <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                            </MenuItem>
+                            <MenuItem value="Shirt">
+                                <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
+                            </MenuItem>
+                            <MenuItem value="Tie">
+                                <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
+                            </MenuItem>
                         </SelectField>
-                        <SelectField name="additionalTypes" label="Additional Type" required fullWidth multiple>
-                            <MenuItem value="Cap">Cap</MenuItem>
-                            <MenuItem value="Shirt">Shirt</MenuItem>
-                            <MenuItem value="Tie">Tie</MenuItem>
+                        <SelectField
+                            name="additionalTypes"
+                            label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
+                            required
+                            fullWidth
+                            multiple
+                        >
+                            <MenuItem value="Cap">
+                                <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                            </MenuItem>
+                            <MenuItem value="Shirt">
+                                <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
+                            </MenuItem>
+                            <MenuItem value="Tie">
+                                <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
+                            </MenuItem>
                         </SelectField>
                         <Field
                             fullWidth
                             name="category"
-                            label="Category"
+                            label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                             component={FinalFormSelect}
                             {...categorySelectAsyncProps}
                             getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
@@ -277,7 +295,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field
                             fullWidth
                             name="tags"
-                            label="Tags"
+                            label={<FormattedMessage id="product.tags" defaultMessage="Tags" />}
                             component={FinalFormSelect}
                             multiple
                             {...tagsSelectAsyncProps}
