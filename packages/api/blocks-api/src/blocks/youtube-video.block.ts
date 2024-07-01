@@ -4,7 +4,7 @@ import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } f
 import { BlockField } from "./decorators/field";
 
 /* eslint-disable @typescript-eslint/naming-convention */
-// TODO: Replace with PascalCase
+// TODO: Replace with camelCase
 enum AspectRatio {
     "16X9" = "16X9",
     "4X3" = "4X3",

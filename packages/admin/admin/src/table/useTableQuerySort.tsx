@@ -1,5 +1,7 @@
 import { usePersistedState } from "./usePersistedState";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
@@ -7,6 +9,7 @@ export enum SortDirection {
     ASC = "ASC",
     DESC = "DESC",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */

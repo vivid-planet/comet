@@ -294,8 +294,6 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
     import { Type } from "class-transformer";
     import { IsEnum } from "class-validator";
 
-    /* eslint-disable @typescript-eslint/naming-convention */
-    // TODO: Replace with PascalCase
     export enum ${classNameSingular}SortField {
         ${crudSortProps
             .map((prop) => {
@@ -303,7 +301,6 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
             })
             .join("\n")}
     }
-    /* eslint-enable @typescript-eslint/naming-convention */
     registerEnumType(${classNameSingular}SortField, {
         name: "${classNameSingular}SortField",
     });

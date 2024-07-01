@@ -101,6 +101,8 @@ export interface IRow {
     id: string | number;
 }
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
@@ -108,6 +110,7 @@ export enum VisibleType {
     Browser = "browser",
     Export = "export",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */

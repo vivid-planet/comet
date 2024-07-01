@@ -12,6 +12,8 @@ import {
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum HeadlineLevel {
     HeaderOne = "header-one",
     HeaderTwo = "header-two",
@@ -20,6 +22,7 @@ export enum HeadlineLevel {
     HeaderFive = "header-five",
     HeaderSix = "header-six",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 class HeadlineBlockData extends BlockData {
     @BlockField({ nullable: true })

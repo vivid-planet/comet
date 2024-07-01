@@ -179,6 +179,7 @@ export type BlockDataFactory<T extends BlockDataInterface = BlockDataInterface> 
 
 export type BlockInputFactory<T extends BlockInputInterface = BlockInputInterface> = (obj: ReturnType<T["toPlain"]>) => T;
 
+/* eslint-disable @typescript-eslint/naming-convention */
 export enum BlockMetaFieldKind {
     String = "String",
     Number = "Number",
@@ -190,6 +191,7 @@ export enum BlockMetaFieldKind {
     NestedObject = "NestedObject",
     NestedObjectList = "NestedObjectList",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 export type BlockMetaLiteralFieldKind = BlockMetaFieldKind.String | BlockMetaFieldKind.Number | BlockMetaFieldKind.Boolean | BlockMetaFieldKind.Json;
 

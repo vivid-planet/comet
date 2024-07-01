@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 import { ContentScope } from "../interfaces/content-scope.interface";
 
 /* eslint-disable @typescript-eslint/naming-convention */
-// TODO: Replace with PascalCase
+// TODO: Replace with camelCase
 export enum UserPermissionSource {
     MANUAL = "MANUAL",
     BY_RULE = "BY_RULE",

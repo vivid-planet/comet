@@ -15,10 +15,13 @@ import { IsUndefinable } from "../../common/validators/is-undefinable";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { DamFileDownloadLinkBlockTransformerService } from "./dam-file-download-link-block-transformer.service";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum OpenFileTypeMethod {
     NewTab = "NewTab",
     Download = "Download",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 export class DamFileDownloadLinkBlockData extends BlockData {
     fileId?: string;

@@ -141,6 +141,8 @@ export type BlockState<B extends BlockMethods> = ExtractGenericTypesFromBlockInt
 export type BlockInputApi<B extends BlockMethods> = ExtractGenericTypesFromBlockInterface<B, 0>; // InputApi is the 1. generic
 export type BlockOutputApi<B extends BlockMethods> = ExtractGenericTypesFromBlockInterface<B, 2>; // OutputApi is the 3. generic
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum BlockCategory {
     TextAndContent = "TextAndContent",
     Media = "Media",
@@ -151,6 +153,7 @@ export enum BlockCategory {
     Form = "Form",
     Other = "Other",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 export type CustomBlockCategory = { id: string; label: string | React.ReactElement<MessageDescriptor>; insertBefore?: BlockCategory };
 

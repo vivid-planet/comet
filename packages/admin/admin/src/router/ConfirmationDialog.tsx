@@ -84,11 +84,14 @@ const DiscardButton = createComponentSlot(Button)<RouterConfirmationDialogClassK
     `,
 );
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum PromptAction {
     Cancel = "Cancel",
     Discard = "Discard",
     Save = "Save",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 export interface RouterConfirmationDialogProps
     extends ThemedComponentBaseProps<{

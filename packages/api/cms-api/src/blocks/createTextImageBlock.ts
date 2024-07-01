@@ -18,10 +18,13 @@ import { IsEnum, IsString } from "class-validator";
 import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 import { IsAllowedImageAspectRatio } from "../dam/images/validators/is-allowed-aspect-ratio.validator";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum ImagePosition {
     Left = "left",
     Right = "right",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 interface CreateTextImageBlockOptions<TextBlock extends Block, ImageBlock extends Block> {
     text: TextBlock;

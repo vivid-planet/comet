@@ -10,10 +10,13 @@ export type PageTreeNodeInterface = PageTreeNodeBase & { scope?: ScopeInterface 
 export type PageTreeNodeCreateInputInterface = PageTreeNodeBaseCreateInput;
 export type PageTreeNodeUpdateInputInterface = PageTreeNodeBaseUpdateInput;
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum PageTreeNodeVisibility {
     Published = "Published",
     Unpublished = "Unpublished",
     Archived = "Archived",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 registerEnumType(PageTreeNodeVisibility, { name: "PageTreeNodeVisibility" });
