@@ -23,7 +23,7 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
     @Field()
     slug: string;
 
-    @Property()
+    @Property({ columnType: "integer" })
     @Field(() => Int)
     position: number;
 
