@@ -35,10 +35,11 @@ const signOutMutation = gql`
 interface UserHeaderItemProps {
     aboutModalLogo?: React.ReactElement;
     buttonChildren?: AppHeaderDropdownProps["buttonChildren"];
+    children?: React.ReactNode;
 }
 
 export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
-    const { aboutModalLogo, buttonChildren } = props;
+    const { aboutModalLogo, buttonChildren, children } = props;
 
     const user = useCurrentUser();
     const [showAboutModal, setShowAboutModal] = React.useState(false);
@@ -57,6 +58,7 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
                 >
                     <FormattedMessage id="comet.about" defaultMessage="About" />
                 </Button>
+                {children}
                 <Separator />
                 {isSigningOut ? (
                     <Loading />
