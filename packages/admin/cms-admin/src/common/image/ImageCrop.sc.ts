@@ -70,6 +70,15 @@ export const FocalPointHandle = styled("button")<FocalPointHandleProps>`
     border: none;
     cursor: pointer;
 
+    &:hover {
+        &::after {
+            width: 16px;
+            height: 16px;
+            margin: 3px;
+            border: 2px solid ${({ theme }) => theme.palette.common.white};
+        }
+    }
+
     &::after {
         content: " ";
         display: block;
@@ -78,12 +87,16 @@ export const FocalPointHandle = styled("button")<FocalPointHandleProps>`
         border-radius: 50%;
         background-color: ${({ theme }) => theme.palette.primary.main};
         margin: 9px;
+        /* transform: translate(-50%, -50%); */
+        /* left: 50%; */
+        /* top: 50%; */
+        transition: all 0.5s ease;
 
         ${({ selected, theme }) =>
             selected &&
             css`
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
                 margin: 3px;
                 background-color: ${theme.palette.success.main};
                 border: 2px solid ${theme.palette.common.white};
