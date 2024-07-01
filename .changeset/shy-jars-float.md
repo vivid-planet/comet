@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-Fix api-generator missing return-type function for Int fields in input-type
+API Generator:  Add missing return type function for integer fields in input type
