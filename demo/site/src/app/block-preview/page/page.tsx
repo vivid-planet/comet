@@ -1,5 +1,6 @@
 "use client";
 import { BlockPreviewProvider, IFrameBridgeProvider, useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
+import { IntlProvider } from "@src/app/[lang]/IntlProvider";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
@@ -34,11 +35,13 @@ const PreviewPage: React.FunctionComponent = () => {
 };
 const IFrameBridgePreviewPage = (): JSX.Element => {
     return (
-        <IFrameBridgeProvider>
-            <BlockPreviewProvider>
-                <PreviewPage />
-            </BlockPreviewProvider>
-        </IFrameBridgeProvider>
+        <IntlProvider locale="en" messages={{}}>
+            <IFrameBridgeProvider>
+                <BlockPreviewProvider>
+                    <PreviewPage />
+                </BlockPreviewProvider>
+            </IFrameBridgeProvider>
+        </IntlProvider>
     );
 };
 

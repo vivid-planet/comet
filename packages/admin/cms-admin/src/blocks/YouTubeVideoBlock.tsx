@@ -1,10 +1,12 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import {
+    AdminComponentSection,
     BlockCategory,
     BlockInterface,
     BlocksFinalForm,
+    BlockState,
     createBlockSkeleton,
-    createCompositeBlock,
+    resolveNewState,
     SelectPreviewComponent,
     useAdminComponentPaper,
 } from "@comet/blocks-admin";
@@ -16,7 +18,7 @@ import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generat
 import { DamImageBlock } from "../dam/blocks/DamImageBlock";
 import { VideoOptionsFields } from "./VideoOptionsFields";
 
-type State = Omit<YouTubeVideoBlockData, "previewImage">;
+type State = Omit<YouTubeVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof DamImageBlock> };
 
 const EXPECTED_YT_ID_LENGTH = 11;
 
@@ -36,19 +38,32 @@ const validateIdentifier = (value?: string) => {
     );
 };
 
-const BaseYouTubeVideoBlock: BlockInterface<Omit<YouTubeVideoBlockData, "previewImage">, State, Omit<YouTubeVideoBlockInput, "previewImage">> = {
+export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, YouTubeVideoBlockInput> = {
     ...createBlockSkeleton(),
 
     name: "YouTubeVideo",
 
     displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
 
-    defaultValues: () => ({ youtubeIdentifier: "", showControls: true }),
+    defaultValues: () => ({ showControls: true, previewImage: DamImageBlock.defaultValues() }),
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx) => {
-        return { ...state, autoplay: false, adminMeta: { route: previewCtx.parentUrl } };
+    input2State: (input) => ({ ...input, previewImage: DamImageBlock.input2State(input.previewImage) }),
+
+    state2Output: (state) => ({ ...state, previewImage: DamImageBlock.state2Output(state.previewImage) }),
+
+    // @ts-expect-error attachedBlocks missing in generated type for OneOfBlockInput
+    output2State: async (output, context) => ({ ...output, previewImage: await DamImageBlock.output2State(output.previewImage, context) }),
+
+    // @ts-expect-error type mismatch between generated types and OneOfBlockPreviewState
+    createPreviewState: (state, previewContext) => {
+        return {
+            ...state,
+            autoplay: false,
+            previewImage: DamImageBlock.createPreviewState(state.previewImage, previewContext),
+            adminMeta: { route: previewContext.parentUrl },
+        };
     },
 
     definesOwnPadding: true,
@@ -76,6 +91,14 @@ const BaseYouTubeVideoBlock: BlockInterface<Omit<YouTubeVideoBlockData, "preview
                         />
                         <VideoOptionsFields />
                     </BlocksFinalForm>
+                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                        <DamImageBlock.AdminComponent
+                            state={state.previewImage}
+                            updateState={(setStateAction) => {
+                                updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
+                            }}
+                        />
+                    </AdminComponentSection>
                 </SelectPreviewComponent>
             </Box>
         );
@@ -83,25 +106,3 @@ const BaseYouTubeVideoBlock: BlockInterface<Omit<YouTubeVideoBlockData, "preview
 
     previewContent: (state) => [{ type: "text", content: state.youtubeIdentifier }],
 };
-
-// TODO: how can i add the previewImage block to block above without wrapping it in a composite block?
-export const YouTubeVideoBlock = createCompositeBlock(
-    {
-        name: "YouTubeVideo",
-        displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
-        blocks: {
-            video: {
-                block: BaseYouTubeVideoBlock,
-            },
-            previewImage: {
-                block: DamImageBlock,
-                title: <FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />,
-            },
-        },
-    },
-    (block) => {
-        block.category = BlockCategory.Media;
-        block.previewContent = (state) => [{ type: "text", content: state.video.youtubeIdentifier }];
-        return block;
-    },
-);

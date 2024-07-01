@@ -4,12 +4,14 @@ import { Delete, MoreVertical, OpenNewTab, Video } from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentPaper,
+    AdminComponentSection,
     BlockCategory,
     BlockDependency,
     BlockInterface,
     BlocksFinalForm,
+    BlockState,
     createBlockSkeleton,
-    createCompositeBlock,
+    resolveNewState,
     useAdminComponentPaper,
 } from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
@@ -27,32 +29,36 @@ import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
 import { VideoOptionsFields } from "./VideoOptionsFields";
 
-type State = Omit<DamVideoBlockData, "previewImage">;
+type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof DamImageBlock> };
 
-const DamVideoBaseBlock: BlockInterface<Omit<DamVideoBlockData, "previewImage">, State, Omit<DamVideoBlockInput, "previewImage">> = {
+export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlockInput> = {
     ...createBlockSkeleton(),
 
     name: "DamVideo",
 
     displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
 
-    defaultValues: () => ({ showControls: true }),
+    defaultValues: () => ({ showControls: true, previewImage: DamImageBlock.defaultValues() }),
 
     category: BlockCategory.Media,
 
+    input2State: (input) => ({ previewImage: DamImageBlock.input2State(input.previewImage) }),
+
     state2Output: (state) => ({
         damFileId: state.damFile?.id,
+        previewImage: DamImageBlock.state2Output(state.previewImage),
         autoplay: state.autoplay,
         loop: state.loop,
         showControls: state.showControls,
     }),
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<State> => {
+    output2State: async (output, context: CmsBlockContext) => {
         if (!output.damFileId) {
-            return {};
+            // @ts-expect-error attachedBlocks missing in generated type for OneOfBlockInput
+            return { previewImage: await DamImageBlock.output2State(output.previewImage, context) };
         }
 
-        const { data } = await apolloClient.query<GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables>({
+        const { data } = await context.apolloClient.query<GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables>({
             query: gql`
                 query VideoBlockDamFile($id: ID!) {
                     damFile(id: $id) {
@@ -75,13 +81,22 @@ const DamVideoBaseBlock: BlockInterface<Omit<DamVideoBlockData, "previewImage">,
         // TODO fix typing: generated GraphQL files use null, we use undefined, e.g. title: string | null vs title?: string
         const damFile = data.damFile as unknown as DamVideoBlockData["damFile"];
 
-        return { damFile, autoplay: output.autoplay, loop: output.loop, showControls: output.showControls };
+        return {
+            damFile,
+            autoplay: output.autoplay,
+            loop: output.loop,
+            showControls: output.showControls,
+            // @ts-expect-error attachedBlocks missing in generated type for OneOfBlockInput
+            previewImage: await DamImageBlock.output2State(output.previewImage, context),
+        };
     },
 
     createPreviewState: (state, previewContext) => ({
         ...state,
         autoplay: false,
         loop: false,
+        // @ts-expect-error type mismatch between generated types and OneOfBlockPreviewState
+        previewImage: DamImageBlock.createPreviewState(state.previewImage, previewContext),
         adminMeta: { route: previewContext.parentUrl },
     }),
 
@@ -162,7 +177,7 @@ const DamVideoBaseBlock: BlockInterface<Omit<DamVideoBlockData, "previewImage">,
                                     </Grid>
                                 </Box>
                                 <Divider />
-                                <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
+                                <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, damFile: undefined })}>
                                     <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
                                 </AdminComponentButton>
                                 {showMenu && (
@@ -191,6 +206,14 @@ const DamVideoBaseBlock: BlockInterface<Omit<DamVideoBlockData, "previewImage">,
                         <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4"]} />
                     )}
                     <VideoOptionsFields />
+                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                        <DamImageBlock.AdminComponent
+                            state={state.previewImage}
+                            updateState={(setStateAction) => {
+                                updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
+                            }}
+                        />
+                    </AdminComponentSection>
                 </BlocksFinalForm>
             </Box>
         );
@@ -198,25 +221,3 @@ const DamVideoBaseBlock: BlockInterface<Omit<DamVideoBlockData, "previewImage">,
 
     previewContent: (state) => (state.damFile ? [{ type: "text", content: state.damFile.name }] : []),
 };
-
-// TODO: how can i add the previewImage block to block above without wrapping it in a composite block?
-export const DamVideoBlock = createCompositeBlock(
-    {
-        name: "DamVideo",
-        displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
-        blocks: {
-            video: {
-                block: DamVideoBaseBlock,
-            },
-            previewImage: {
-                block: DamImageBlock,
-                title: <FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />,
-            },
-        },
-    },
-    (block) => {
-        block.category = BlockCategory.Media;
-        block.previewContent = (state) => (state.video.damFile ? [{ type: "text", content: state.video.damFile.name }] : []);
-        return block;
-    },
-);
