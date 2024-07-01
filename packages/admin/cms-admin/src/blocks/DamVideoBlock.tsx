@@ -1,14 +1,17 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Field, FieldContainer, FinalFormSwitch } from "@comet/admin";
+import { Field, FieldContainer } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab, Video } from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentPaper,
+    AdminComponentSection,
     BlockCategory,
     BlockDependency,
     BlockInterface,
     BlocksFinalForm,
+    BlockState,
     createBlockSkeleton,
+    resolveNewState,
     useAdminComponentPaper,
 } from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
@@ -18,13 +21,15 @@ import { FormattedMessage } from "react-intl";
 
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
+import { DamImageBlock } from "../dam/blocks/DamImageBlock";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { VideoOptionsFields } from "./VideoOptionsFields";
 
-type State = DamVideoBlockData;
+type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof DamImageBlock> };
 
 export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlockInput> = {
     ...createBlockSkeleton(),
@@ -33,25 +38,27 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
 
-    defaultValues: () => ({
-        showControls: true,
-    }),
+    defaultValues: () => ({ showControls: true, previewImage: DamImageBlock.defaultValues() }),
 
     category: BlockCategory.Media,
 
+    input2State: (input) => ({ previewImage: DamImageBlock.input2State(input.previewImage) }),
+
     state2Output: (state) => ({
         damFileId: state.damFile?.id,
+        previewImage: DamImageBlock.state2Output(state.previewImage),
         autoplay: state.autoplay,
         loop: state.loop,
         showControls: state.showControls,
     }),
 
-    output2State: async (output, { apolloClient }: CmsBlockContext): Promise<State> => {
+    output2State: async (output, context: CmsBlockContext) => {
         if (!output.damFileId) {
-            return {};
+            // @ts-expect-error attachedBlocks missing in generated type for OneOfBlockInput
+            return { previewImage: await DamImageBlock.output2State(output.previewImage, context) };
         }
 
-        const { data } = await apolloClient.query<GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables>({
+        const { data } = await context.apolloClient.query<GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables>({
             query: gql`
                 query VideoBlockDamFile($id: ID!) {
                     damFile(id: $id) {
@@ -74,13 +81,22 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         // TODO fix typing: generated GraphQL files use null, we use undefined, e.g. title: string | null vs title?: string
         const damFile = data.damFile as unknown as DamVideoBlockData["damFile"];
 
-        return { damFile, autoplay: output.autoplay, loop: output.loop, showControls: output.showControls };
+        return {
+            damFile,
+            autoplay: output.autoplay,
+            loop: output.loop,
+            showControls: output.showControls,
+            // @ts-expect-error attachedBlocks missing in generated type for OneOfBlockInput
+            previewImage: await DamImageBlock.output2State(output.previewImage, context),
+        };
     },
 
     createPreviewState: (state, previewContext) => ({
         ...state,
         autoplay: false,
         loop: false,
+        // @ts-expect-error type mismatch between generated types and OneOfBlockPreviewState
+        previewImage: DamImageBlock.createPreviewState(state.previewImage, previewContext),
         adminMeta: { route: previewContext.parentUrl },
     }),
 
@@ -128,21 +144,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
-                <BlocksFinalForm
-                    onSubmit={(values) => {
-                        updateState((prevState) => {
-                            // case: autoplay = false and showControls = false is not allowed
-                            if (!values.autoplay && prevState.autoplay) {
-                                return { ...prevState, ...values, showControls: true };
-                            }
-                            if (!values.showControls && prevState.showControls) {
-                                return { ...prevState, ...values, autoplay: true };
-                            }
-                            return { ...prevState, ...values };
-                        });
-                    }}
-                    initialValues={state}
-                >
+                <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                     {state.damFile ? (
                         <FieldContainer fullWidth>
                             <AdminComponentPaper disablePadding>
@@ -175,7 +177,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                                     </Grid>
                                 </Box>
                                 <Divider />
-                                <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined })}>
+                                <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ ...state, damFile: undefined })}>
                                     <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
                                 </AdminComponentButton>
                                 {showMenu && (
@@ -203,24 +205,15 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                     ) : (
                         <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4"]} />
                     )}
-                    <Field
-                        type="checkbox"
-                        name="autoplay"
-                        label={<FormattedMessage id="comet.blocks.video.autoplay" defaultMessage="Autoplay" />}
-                        component={FinalFormSwitch}
-                    />
-                    <Field
-                        type="checkbox"
-                        name="loop"
-                        label={<FormattedMessage id="comet.blocks.video.loop" defaultMessage="Loop" />}
-                        component={FinalFormSwitch}
-                    />
-                    <Field
-                        type="checkbox"
-                        name="showControls"
-                        label={<FormattedMessage id="comet.blocks.video.showControls" defaultMessage="Show controls" />}
-                        component={FinalFormSwitch}
-                    />
+                    <VideoOptionsFields />
+                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                        <DamImageBlock.AdminComponent
+                            state={state.previewImage}
+                            updateState={(setStateAction) => {
+                                updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
+                            }}
+                        />
+                    </AdminComponentSection>
                 </BlocksFinalForm>
             </Box>
         );
