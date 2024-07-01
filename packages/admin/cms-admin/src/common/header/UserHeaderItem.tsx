@@ -1,10 +1,12 @@
-import { AppHeaderDropdown, Loading } from "@comet/admin";
+import { gql, useMutation } from "@apollo/client";
+import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
 import { Account, Info, Logout } from "@comet/admin-icons";
 import { Box, Button as MUIButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
 import { AboutModal } from "./about/AboutModal";
 import { GQLSignOutMutation } from "./UserHeaderItem.generated";
 
@@ -24,10 +26,6 @@ const Separator = styled(Box)`
     margin-bottom: 20px;
 `;
 
-import { gql, useMutation } from "@apollo/client";
-
-import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
-
 const signOutMutation = gql`
     mutation SignOut {
         currentUserSignOut
@@ -36,17 +34,18 @@ const signOutMutation = gql`
 
 interface UserHeaderItemProps {
     aboutModalLogo?: React.ReactElement;
+    buttonChildren?: AppHeaderDropdownProps["buttonChildren"];
 }
 
 export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
-    const { aboutModalLogo } = props;
+    const { aboutModalLogo, buttonChildren } = props;
 
     const user = useCurrentUser();
     const [showAboutModal, setShowAboutModal] = React.useState(false);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     return (
-        <AppHeaderDropdown buttonChildren={user.name} startIcon={<Account />}>
+        <AppHeaderDropdown buttonChildren={buttonChildren ?? user.name} startIcon={<Account />}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
