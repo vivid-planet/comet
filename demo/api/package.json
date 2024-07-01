@@ -4,7 +4,8 @@
     "private": true,
     "scripts": {
         "api-generator": "rimraf 'src/*/generated' && comet-api-generator generate",
-        "build": "rimraf dist && nest build",
+        "prebuild": "rimraf dist",
+        "build": "nest build",
         "console": "dotenv -c -- ts-node --transpile-only -r tsconfig-paths/register src/console.ts",
         "console:prod": "node dist/console.js",
         "db:migrate": "$npm_execpath console migrate --",
@@ -18,9 +19,9 @@
         "mikro-orm": "mikro-orm",
         "mikro-orm:drop": "mikro-orm schema:drop -r",
         "mikro-orm:migration:generate": "mikro-orm migration:create",
-        "start": "rimraf dist && dotenv -c -- nest start",
-        "start:debug": "rimraf dist && dotenv -c -- nest start --debug --watch --preserveWatchOutput",
-        "start:dev": "rimraf dist && dotenv -c -- nest start --watch --preserveWatchOutput",
+        "start": "$npm_execpath prebuild && dotenv -c -- nest start",
+        "start:debug": "$npm_execpath prebuild && dotenv -c -- nest start --debug --watch --preserveWatchOutput",
+        "start:dev": "$npm_execpath prebuild && $npm_execpath db:migrate && $npm_execpath console createBlockIndexViews && dotenv -c -- nest start --watch --preserveWatchOutput",
         "start:prod": "node dist/main"
     },
     "dependencies": {
