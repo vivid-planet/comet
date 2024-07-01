@@ -23,7 +23,6 @@ import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
 import { ProductVariantsService } from "./generated/product-variants.service";
 import { ProductsService } from "./generated/products.service";
-import { ProductCategoryResolver as ManualProductCategoryResolver } from "./product-category.resolver";
 
 @Module({
     imports: [
@@ -43,7 +42,6 @@ import { ProductCategoryResolver as ManualProductCategoryResolver } from "./prod
         ProductResolver,
         ProductsService,
         ProductCategoryResolver,
-        ManualProductCategoryResolver,
         ProductCategoriesService,
         ProductTagResolver,
         ProductTagsService,

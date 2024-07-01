@@ -4,16 +4,17 @@ import { Box, CircularProgress } from "@mui/material";
 import {
     GQLGetProductIdsForProductCategoryQuery,
     GQLGetProductIdsForProductCategoryQueryVariables,
+    GQLSetProductCategoryMutation,
+    GQLSetProductCategoryMutationVariables,
 } from "@src/products/categories/AssignProductsForm.generated";
-import { GQLSetProductCategoryMutation, GQLSetProductCategoryMutationVariables } from "@src/products/categories/ProductCategoriesPage.generated";
 import { ProductsSelectGrid } from "@src/products/categories/ProductsSelectGrid";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
 const setProductCategoryMutation = gql`
-    mutation SetProductCategory($id: ID!, $input: SetProductCategoryInput!) {
-        setProductCategory(id: $id, input: $input) {
+    mutation SetProductCategory($id: ID!, $input: [ID!]!) {
+        updateProductCategory(id: $id, input: { products: $input }) {
             id
         }
     }
@@ -36,7 +37,7 @@ interface FormProps {
 export function AssignProductsForm({ productCategoryId }: FormProps): React.ReactElement {
     const client = useApolloClient();
 
-    const { data, error, loading, refetch } = useQuery<GQLGetProductIdsForProductCategoryQuery, GQLGetProductIdsForProductCategoryQueryVariables>(
+    const { data, error, loading } = useQuery<GQLGetProductIdsForProductCategoryQuery, GQLGetProductIdsForProductCategoryQueryVariables>(
         getProductIdsForProductCategory,
         {
             variables: { id: productCategoryId },
@@ -54,7 +55,7 @@ export function AssignProductsForm({ productCategoryId }: FormProps): React.Reac
             onSubmit={async (values, form, event) => {
                 await client.mutate<GQLSetProductCategoryMutation, GQLSetProductCategoryMutationVariables>({
                     mutation: setProductCategoryMutation,
-                    variables: { id: productCategoryId, input: values },
+                    variables: { id: productCategoryId, input: values.productIds },
                 });
             }}
             initialValues={initialValues}
