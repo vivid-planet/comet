@@ -156,11 +156,6 @@ export class UserPermissionsService {
         return null;
     }
 
-    private camelCaseToHumanReadable(s: string) {
-        const words = s.match(/[A-Za-z][a-z]*/g) || [];
-        return words.map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(" ");
-    }
-
     async createCurrentUser(user: User): Promise<CurrentUser> {
         const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user);
