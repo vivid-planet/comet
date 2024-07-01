@@ -252,52 +252,61 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                                     />
                                 )}
                             </Field>
-                            {values?.useAlternativeAddress && (
-                                <>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        name="address.alternativeAddress.street"
-                                        label={
-                                            <FormattedMessage
-                                                id="manufacturer.address.alternativeAddress.street"
-                                                defaultMessage="Alt-Address Street"
+                            <Field name="useAlternativeAddress" subscription={{ value: true }}>
+                                {({ input: { value } }) =>
+                                    value ? (
+                                        <>
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                name="address.alternativeAddress.street"
+                                                label={
+                                                    <FormattedMessage
+                                                        id="manufacturer.address.alternativeAddress.street"
+                                                        defaultMessage="Alt-Address Street"
+                                                    />
+                                                }
                                             />
-                                        }
-                                    />
-                                    <Field
-                                        fullWidth
-                                        name="address.alternativeAddress.streetNumber"
-                                        component={FinalFormInput}
-                                        type="number"
-                                        label={
-                                            <FormattedMessage
-                                                id="manufacturer.address.alternativeAddress.streetNumber"
-                                                defaultMessage="Alt-Address Street Number"
+                                            <Field
+                                                fullWidth
+                                                name="address.alternativeAddress.streetNumber"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={
+                                                    <FormattedMessage
+                                                        id="manufacturer.address.alternativeAddress.streetNumber"
+                                                        defaultMessage="Alt-Address Street Number"
+                                                    />
+                                                }
                                             />
-                                        }
-                                    />
-                                    <Field
-                                        required
-                                        fullWidth
-                                        name="address.alternativeAddress.zip"
-                                        component={FinalFormInput}
-                                        type="number"
-                                        label={<FormattedMessage id="manufacturer.address.alternativeAddress.zip" defaultMessage="Alt-Address Zip" />}
-                                    />
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        name="address.alternativeAddress.country"
-                                        label={
-                                            <FormattedMessage
-                                                id="manufacturer.address.alternativeAddress.country"
-                                                defaultMessage="Alt-Address Country"
+                                            <Field
+                                                required
+                                                fullWidth
+                                                name="address.alternativeAddress.zip"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={
+                                                    <FormattedMessage
+                                                        id="manufacturer.address.alternativeAddress.zip"
+                                                        defaultMessage="Alt-Address Zip"
+                                                    />
+                                                }
                                             />
-                                        }
-                                    />
-                                </>
-                            )}
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                name="address.alternativeAddress.country"
+                                                label={
+                                                    <FormattedMessage
+                                                        id="manufacturer.address.alternativeAddress.country"
+                                                        defaultMessage="Alt-Address Country"
+                                                    />
+                                                }
+                                            />
+                                        </>
+                                    ) : null
+                                }
+                            </Field>
                         </FieldSet>
                         <FieldSet
                             collapsible={false}
