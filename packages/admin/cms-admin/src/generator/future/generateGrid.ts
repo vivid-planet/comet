@@ -334,6 +334,7 @@ export function generateGrid(
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
+    ${config.actionsComponent ? `import { ${config.actionsComponent.name} } from "${config.actionsComponent.import}";` : ""}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
@@ -484,87 +485,88 @@ export function generateGrid(
                 .join(",\n")},
                 ${
                     showActionsColumn
-                        ? `{
-                        field: "actions",
-                        headerName: "",
-                        sortable: false,
-                        filterable: false,
-                        type: "actions",
-                        align: "right",
-                        renderCell: (params) => {
-                            return (
-                                <>
-                                ${
-                                    allowEditing
-                                        ? `
-                                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                            <Edit color="primary" />
-                                        </IconButton>`
-                                        : ""
-                                }${
-                              allowCopyPaste || allowDeleting
-                                  ? `
-                                        <CrudContextMenu
-                                            ${
-                                                allowCopyPaste
-                                                    ? `
-                                            copyData={() => {
-                                                // Don't copy id, because we want to create a new entity with this data
-                                                ${
-                                                    createMutationInputFields.filter((field) => rootBlocks[field.name]).length
-                                                        ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
-                                                        return {
-                                                            ...filteredData,
-                                                            ${createMutationInputFields
-                                                                .filter((field) => rootBlocks[field.name])
-                                                                .map((field) => {
-                                                                    if (rootBlocks[field.name]) {
-                                                                        const blockName = rootBlocks[field.name].name;
-                                                                        return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
-                                                                    }
-                                                                })
-                                                                .join(",\n")}
-                                                        };`
-                                                        : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
-                                                        return filteredData;`
-                                                }
-                                            }}
-                                            onPaste={async ({ input }) => {
-                                                await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
-                                                    mutation: create${gqlType}Mutation,
-                                                    variables: { ${[
-                                                        ...gqlArgs
-                                                            .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
-                                                            .map((arg) => arg.name),
-                                                        ...(hasScope ? [`scope`] : []),
-                                                        ...["input"],
-                                                    ].join(", ")} },
-                                                });
-                                            }}
+                        ? tsCodeRecordToString({
+                              field: '"actions"',
+                              headerName: '""',
+                              sortable: "false",
+                              filterable: "false",
+                              type: '"actions"',
+                              align: '"right"',
+                              width: config.actionsWidth,
+                              renderCell: `(params) => {
+                                    return (
+                                        <>
+                                        ${config.actionsComponent?.name ? `<${config.actionsComponent.name} params={params} />` : ""}${
+                                  allowEditing
+                                      ? `
+                                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                                    <Edit color="primary" />
+                                                </IconButton>`
+                                      : ""
+                              }${
+                                  allowCopyPaste || allowDeleting
+                                      ? `
+                                                <CrudContextMenu
+                                                    ${
+                                                        allowCopyPaste
+                                                            ? `
+                                                    copyData={() => {
+                                                        // Don't copy id, because we want to create a new entity with this data
+                                                        ${
+                                                            createMutationInputFields.filter((field) => rootBlocks[field.name]).length
+                                                                ? `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
+                                                                return {
+                                                                    ...filteredData,
+                                                                    ${createMutationInputFields
+                                                                        .filter((field) => rootBlocks[field.name])
+                                                                        .map((field) => {
+                                                                            if (rootBlocks[field.name]) {
+                                                                                const blockName = rootBlocks[field.name].name;
+                                                                                return `${field.name}: ${blockName}.state2Output(${blockName}.input2State(filteredData.${field.name}))`;
+                                                                            }
+                                                                        })
+                                                                        .join(",\n")}
+                                                                };`
+                                                                : `const { id, ...filteredData } = filterByFragment(${instanceGqlTypePlural}Fragment, params.row);
+                                                                return filteredData;`
+                                                        }
+                                                    }}
+                                                    onPaste={async ({ input }) => {
+                                                        await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
+                                                            mutation: create${gqlType}Mutation,
+                                                            variables: { ${[
+                                                                ...gqlArgs
+                                                                    .filter((gqlArg) => gqlArg.queryOrMutationName === createMutationType.name)
+                                                                    .map((arg) => arg.name),
+                                                                ...(hasScope ? [`scope`] : []),
+                                                                ...["input"],
+                                                            ].join(", ")} },
+                                                        });
+                                                    }}
+                                                    `
+                                                            : ""
+                                                    }
+                                                    ${
+                                                        allowDeleting
+                                                            ? `
+                                                    onDelete={async () => {
+                                                        await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
+                                                            mutation: delete${gqlType}Mutation,
+                                                            variables: { id: params.row.id },
+                                                        });
+                                                    }}
+                                                    `
+                                                            : ""
+                                                    }
+                                                    refetchQueries={[${instanceGqlTypePlural}Query]}
+                                                />
                                             `
-                                                    : ""
-                                            }
-                                            ${
-                                                allowDeleting
-                                                    ? `
-                                            onDelete={async () => {
-                                                await client.mutate<GQLDelete${gqlType}Mutation, GQLDelete${gqlType}MutationVariables>({
-                                                    mutation: delete${gqlType}Mutation,
-                                                    variables: { id: params.row.id },
-                                                });
-                                            }}
-                                            `
-                                                    : ""
-                                            }
-                                            refetchQueries={[${instanceGqlTypePlural}Query]}
-                                        />
-                                    `
-                                  : ""
-                          }
-                                </>
-                            );
-                        },
-                    },`
+                                      : ""
+                              }
+                                        </>
+                                    );
+                                }`,
+                          })
                         : ""
                 }
         ];

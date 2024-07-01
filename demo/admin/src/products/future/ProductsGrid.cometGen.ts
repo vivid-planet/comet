@@ -15,4 +15,6 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { type: "date", name: "availableSince", width: 140 },
         { type: "dateTime", name: "createdAt", width: 170 },
     ],
+    actionsWidth: 116,
+    actionsComponent: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
 };
