@@ -36,9 +36,8 @@ export interface FeedbackButtonProps
             root: typeof LoadingButton;
             tooltip: typeof CometTooltip;
         }>,
-        LoadingButtonProps {
-    loading?: boolean;
-    hasErrors?: boolean;
+        Omit<LoadingButtonProps, "loading"> {
+    onClick: () => Promise<void>;
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
     tooltipSuccessMessage?: React.ReactNode;
@@ -49,8 +48,7 @@ type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "error";
 
 export function FeedbackButton(inProps: FeedbackButtonProps) {
     const {
-        loading,
-        hasErrors,
+        onClick,
         children,
         variant = "contained",
         color = "primary",
@@ -61,7 +59,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         tooltipSuccessMessage = <FormattedMessage id="comet.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
         tooltipErrorMessage = <FormattedMessage id="comet.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
         slotProps,
-
         ...restProps
     } = useThemeProps({
         props: inProps,
@@ -71,51 +68,33 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
     const [displayState, setDisplayState] = React.useState<FeedbackButtonDisplayState>("idle");
 
     const ownerState: OwnerState = {
-        displayState: displayState,
+        displayState,
     };
 
     const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState) => {
-        if (displayState === "success") {
-            return "success";
-        } else if (displayState === "error") {
-            return "error";
-        } else {
-            return "neutral";
+        switch (displayState) {
+            case "error":
+                return "error";
+            case "success":
+                return "success";
+            default:
+                return "neutral";
         }
     };
 
-    React.useEffect(() => {
-        let timeoutId: number | undefined;
-        let timeoutDuration: number | undefined;
-        let newDisplayState: FeedbackButtonDisplayState;
-
-        if (displayState === "idle" && loading) {
+    const handleOnClick = async () => {
+        try {
             setDisplayState("loading");
-        } else if (displayState === "loading" && hasErrors) {
-            timeoutDuration = 0;
-            newDisplayState = "error";
-        } else if (displayState === "loading" && !loading && !hasErrors) {
-            timeoutDuration = 500;
-            newDisplayState = "success";
-        } else if (displayState === "error") {
-            timeoutDuration = 5000;
-            newDisplayState = "idle";
-        } else if (displayState === "success") {
-            timeoutDuration = 2000;
-            newDisplayState = "idle";
+            await onClick();
+            setDisplayState("success");
+        } catch (_) {
+            setDisplayState("error");
+        } finally {
+            setTimeout(() => {
+                setDisplayState("idle");
+            }, 3000);
         }
-
-        if (timeoutDuration !== undefined) {
-            timeoutId = window.setTimeout(() => {
-                setDisplayState(newDisplayState);
-            }, timeoutDuration);
-        }
-        return () => {
-            if (timeoutId !== undefined) {
-                window.clearTimeout(timeoutId);
-            }
-        };
-    }, [displayState, loading, hasErrors]);
+    };
 
     const tooltip = (
         <Tooltip
@@ -125,14 +104,15 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             variant={resolveTooltipForDisplayState(displayState)}
             {...slotProps?.tooltip}
         >
-            <span>{startIcon ? startIcon : endIcon}</span>
+            <span>{startIcon || endIcon}</span>
         </Tooltip>
     );
 
     return (
         <Root
+            onClick={handleOnClick}
             ownerState={ownerState}
-            loading={loading}
+            loading={displayState === "loading"}
             variant={variant}
             color={color}
             disabled={disabled || displayState === "loading"}
