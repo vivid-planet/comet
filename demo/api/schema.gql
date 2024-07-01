@@ -2,28 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type CurrentUserPermission {
-  permission: String!
-  contentScopes: [JSONObject!]!
-}
-
-"""
-The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-type CurrentUser {
-  id: String!
-  name: String!
-  email: String!
-  language: String!
-  permissions: [CurrentUserPermission!]!
-}
-
 type UserPermission {
   id: ID!
   source: UserPermissionSource!
   permission: String!
+  configuration: JSONObject
   validFrom: DateTime
   validTo: DateTime
   reason: String
@@ -39,9 +22,28 @@ enum UserPermissionSource {
 }
 
 """
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type CurrentUserPermission {
+  permission: String!
+  configuration: JSONObject
+  contentScopes: [JSONObject!]!
+}
+
+type CurrentUser {
+  id: String!
+  name: String!
+  email: String!
+  language: String!
+  permissions: [CurrentUserPermission!]!
+}
 
 type Dependency {
   rootId: String!
@@ -187,6 +189,11 @@ type User {
 type PaginatedUserList {
   nodes: [User!]!
   totalCount: Int!
+}
+
+type Permission {
+  permission: String!
+  configuration: JSONObject
 }
 
 type Link implements DocumentInterface {
@@ -605,7 +612,7 @@ type Query {
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
-  userPermissionsAvailablePermissions: [String!]!
+  userPermissionsAvailablePermissions: [Permission!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
   buildTemplates: [BuildTemplate!]!
@@ -937,8 +944,6 @@ type Mutation {
   updateDamFolder(id: ID!, input: UpdateDamFolderInput!): DamFolder!
   moveDamFolders(folderIds: [ID!]!, targetFolderId: ID, scope: DamScopeInput!): [DamFolder!]!
   deleteDamFolder(id: ID!): Boolean!
-  generateImageTitle(fileId: String!): String!
-  generateAltText(fileId: String!): String!
   createNews(scope: NewsContentScopeInput!, input: NewsInput!): News!
   updateNews(id: ID!, input: NewsUpdateInput!, lastUpdatedAt: DateTime): News!
   deleteNews(id: ID!): Boolean!
@@ -964,6 +969,7 @@ type Mutation {
 
 input UserPermissionInput {
   permission: String!
+  configuration: JSONObject
   validFrom: DateTime
   validTo: DateTime
   reason: String

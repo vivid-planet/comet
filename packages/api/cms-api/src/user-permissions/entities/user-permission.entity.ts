@@ -4,6 +4,7 @@ import { GraphQLJSONObject } from "graphql-type-json";
 import { v4 } from "uuid";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
+import { PermissionConfiguration } from "../user-permissions.types";
 
 export enum UserPermissionSource {
     MANUAL = "MANUAL",
@@ -29,6 +30,10 @@ export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Field()
     @Property({ columnType: "text" })
     permission: string;
+
+    @Field(() => GraphQLJSONObject, { nullable: true })
+    @Property({ type: "json", nullable: true })
+    configuration?: PermissionConfiguration;
 
     @Field(() => Date, { nullable: true })
     @Property({ columnType: "date", nullable: true })

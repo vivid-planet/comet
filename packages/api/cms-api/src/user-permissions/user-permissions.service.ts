@@ -7,9 +7,10 @@ import { JwtPayload } from "jsonwebtoken";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
-import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
+import { RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
+import { Permission } from "./dto/permission";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
@@ -17,6 +18,7 @@ import { User } from "./interfaces/user";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import {
     AccessControlServiceInterface,
+    PermissionConfiguration,
     UserPermissions,
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
@@ -33,6 +35,21 @@ export class UserPermissionsService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
+    public static parsePermission(permission: string | Permission): Permission {
+        if (typeof permission !== "string") return permission;
+
+        if (permission.indexOf(".") > 0) {
+            return {
+                permission: permission.split(".")[0],
+                configuration: { [permission.split(".")[1]]: true },
+            };
+        } else {
+            return {
+                permission,
+            };
+        }
+    }
+
     async getAvailableContentScopes(): Promise<ContentScope[]> {
         if (this.options.availableContentScopes) {
             if (typeof this.options.availableContentScopes === "function") {
@@ -43,20 +60,25 @@ export class UserPermissionsService {
         return [];
     }
 
-    async getAvailablePermissions(): Promise<string[]> {
+    async getAvailablePermissions(): Promise<Permission[]> {
         return [
-            ...new Set(
-                [
-                    ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                    ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
-                ]
-                    .flatMap((p) => p.meta.requiredPermission)
-                    .filter((p) => p !== DisablePermissionCheck)
-                    .sort(),
-            ),
-        ];
+            ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+            ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+            ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+            ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+        ]
+            .flatMap((p) => p.meta.requiredPermission)
+            .reduce<Permission[]>((permissions, permission) => {
+                const existing = permissions.find((p) => p.permission == permission.permission);
+                if (existing) {
+                    if (permission.configuration) {
+                        existing.configuration = Object.assign(existing.configuration || {}, permission.configuration);
+                    }
+                } else {
+                    permissions.push(permission);
+                }
+                return permissions;
+            }, []);
     }
 
     async createUserFromIdToken(idToken: JwtPayload): Promise<User> {
@@ -93,7 +115,7 @@ export class UserPermissionsService {
         const availablePermissions = await this.getAvailablePermissions();
         const permissions = (
             await this.permissionRepository.find({
-                $and: [{ userId: user.id }, { permission: { $in: availablePermissions } }],
+                $and: [{ userId: user.id }, { permission: { $in: availablePermissions.map((p) => p.permission) } }],
             })
         ).map((p) => {
             p.source = UserPermissionSource.MANUAL;
@@ -105,21 +127,55 @@ export class UserPermissionsService {
                 if (permissionsByRule === UserPermissions.allPermissions) {
                     permissionsByRule = availablePermissions.map((permission) => ({ permission }));
                 }
-                for (const p of permissionsByRule) {
-                    const permission = new UserPermission();
-                    permission.id = getUuid(JSON.stringify(p));
-                    permission.source = UserPermissionSource.BY_RULE;
-                    permission.userId = user.id;
-                    permission.overrideContentScopes = !!p.contentScopes;
-                    permission.assign(p);
-                    permissions.push(permission);
+                for (const permission of permissionsByRule) {
+                    let permissionName;
+                    let permissionConfiguration;
+                    if (Array.isArray(permission.permission)) {
+                        permissionName = permission.permission.reduce<string>((prev, curr) => {
+                            if (typeof curr !== "string") throw new Error(`If passing an array of permissions, only strings are allowed.`);
+                            const permission = curr.split(".")[0];
+                            if (!permission) throw new Error(`If passing an array of permissions, they must be separated by a dot: e.g. "news.read"`);
+                            if (prev && prev !== permission)
+                                throw new Error(
+                                    `If passing an array of permissions, they all must have the same permission. Currently: ${prev} !== ${curr}`,
+                                );
+                            return permission;
+                        }, "");
+                        permissionConfiguration = permission.permission.reduce<PermissionConfiguration>((prev, curr) => {
+                            return {
+                                ...prev,
+                                [curr.split(".")[1]]: true,
+                            };
+                        }, permissionConfiguration ?? {});
+                    } else {
+                        const parsedPermission = UserPermissionsService.parsePermission(permission.permission);
+                        permissionName = parsedPermission.permission;
+                        permissionConfiguration = parsedPermission.configuration;
+                    }
+
+                    const userPermission = new UserPermission();
+                    userPermission.assign({
+                        ...permission,
+                        permission: permissionName,
+                        configuration: permissionConfiguration,
+                        id: getUuid(
+                            JSON.stringify({
+                                permissionName,
+                                permissionConfiguration,
+                                permissionContentScopes: permission.contentScopes,
+                            }),
+                        ),
+                        source: UserPermissionSource.BY_RULE,
+                        userId: user.id,
+                        overrideContentScopes: !!permission.contentScopes,
+                    });
+                    permissions.push(userPermission);
                 }
             }
         }
-
         return permissions
-            .filter((value) => availablePermissions.some((p) => p === value.permission)) // Filter out permissions that are not defined in availablePermissions (e.g. outdated database entries)
-            .sort((a, b) => availablePermissions.indexOf(a.permission) - availablePermissions.indexOf(b.permission));
+            .filter((value) => availablePermissions.some((p) => p.permission === value.permission)) // Filter out permissions that are not defined in availablePermissions (e.g. outdated database entries)
+            .sort((a, b) => a.permission.localeCompare(b.permission));
     }
 
     async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {
@@ -152,27 +208,14 @@ export class UserPermissionsService {
     }
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
-        const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user);
         const permissions = (await this.getPermissions(user))
             .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
-            .reduce((acc: CurrentUser["permissions"], userPermission) => {
-                const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
-                const existingPermission = acc.find((p) => p.permission === userPermission.permission);
-                if (existingPermission) {
-                    existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
-                } else {
-                    acc.push({
-                        permission: userPermission.permission,
-                        contentScopes,
-                    });
-                }
-                return acc;
-            }, [])
-            .map((p) => {
-                p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
-                return p;
-            });
+            .map((p) => ({
+                permission: p.permission,
+                configuration: p.configuration,
+                contentScopes: p.overrideContentScopes ? p.contentScopes : userContentScopes,
+            }));
 
         return {
             ...user,

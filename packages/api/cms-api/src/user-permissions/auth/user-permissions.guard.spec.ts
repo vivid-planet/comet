@@ -79,8 +79,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user with exact permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: true },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(
@@ -95,8 +95,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user with at least one permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: true },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(
@@ -114,8 +114,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user with a wrong permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: true },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(
@@ -130,8 +130,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user with only a partial permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: true },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(
@@ -146,8 +146,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user with empty permission", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: true },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(
@@ -162,8 +162,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user without permissions", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: true },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(
@@ -178,8 +178,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user with at least one of the required permissions", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1", "p2"], // One of the permissions is required
-                options: { skipScopeCheck: true },
+                requiredPermission: [{ permission: "p1" }, { permission: "p2" }], // One of the permissions is required
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(
@@ -194,8 +194,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user without one the the required permissions", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1", "p2"], // One of the permissions is required
-                options: { skipScopeCheck: true },
+                requiredPermission: [{ permission: "p1" }, { permission: "p2" }], // One of the permissions is required
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(
@@ -210,8 +210,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user with scope", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
         });
         expect(
@@ -227,8 +227,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user with scope when submitted scope is partial", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
         });
         expect(
@@ -244,8 +244,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user with scope when submitted scope is empty", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
         });
         expect(
@@ -261,8 +261,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user with wrong scope", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
         });
         expect(
@@ -278,8 +278,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user with a partial scope", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
         });
         expect(
@@ -295,8 +295,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user by affected entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
         });
@@ -317,8 +317,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user with wrong scope by affected entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
         });
@@ -339,8 +339,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user by multiple affected entities", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
         });
@@ -361,8 +361,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user without all requried scopes by multiple affected entities", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
         });
@@ -383,8 +383,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user by scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
             scopedEntity: (_entity) => ({ a: "a" }),
@@ -403,8 +403,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user with wrong scope by scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
             scopedEntity: (_entity) => ({ a: "a" }),
@@ -423,8 +423,8 @@ describe("UserPermissionsGuard", () => {
     it("allows user by multiple scopes from one scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
             scopedEntity: (_entity) => [{ a: "a" }, { a: "b" }], // One of the scopes is required
@@ -443,8 +443,8 @@ describe("UserPermissionsGuard", () => {
     it("denies user with wrong scope by multiple scopes from one scoped entity", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
             affectedEntities: [{ entity: TestEntity, options: { idArg: "id" } }],
             scopedEntity: (_entity) => [{ a: "a" }, { a: "b" }], // One of the scopes is required
@@ -475,7 +475,7 @@ describe("UserPermissionsGuard", () => {
         mockAnnotations({
             requiredPermission: {
                 requiredPermission: [],
-                options: { skipScopeCheck: true },
+                options: { skipScopeCheck: true, disablePermissionCheck: false },
             },
         });
         expect(async () =>
@@ -490,8 +490,8 @@ describe("UserPermissionsGuard", () => {
     it("fails when Content Scope cannot be acquired", async () => {
         mockAnnotations({
             requiredPermission: {
-                requiredPermission: ["p1"],
-                options: { skipScopeCheck: false },
+                requiredPermission: [{ permission: "p1" }],
+                options: { skipScopeCheck: false, disablePermissionCheck: false },
             },
         });
         expect(async () =>

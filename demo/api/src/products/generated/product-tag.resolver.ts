@@ -16,7 +16,7 @@ import { ProductTagsArgs } from "./dto/product-tags.args";
 import { ProductTagsService } from "./product-tags.service";
 
 @Resolver(() => ProductTag)
-@RequiredPermission(["products"], { skipScopeCheck: true })
+@RequiredPermission(["products.read"], { skipScopeCheck: true })
 export class ProductTagResolver {
     constructor(
         private readonly entityManager: EntityManager,
@@ -65,6 +65,7 @@ export class ProductTagResolver {
     }
 
     @Mutation(() => ProductTag)
+    @RequiredPermission(["products.create"], { skipScopeCheck: true })
     async createProductTag(@Args("input", { type: () => ProductTagInput }) input: ProductTagInput): Promise<ProductTag> {
         const { productsWithStatus: productsWithStatusInput, products: productsInput, ...assignInput } = input;
         const productTag = this.repository.create({
@@ -99,6 +100,7 @@ export class ProductTagResolver {
 
     @Mutation(() => ProductTag)
     @AffectedEntity(ProductTag)
+    @RequiredPermission(["products.update"], { skipScopeCheck: true })
     async updateProductTag(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => ProductTagUpdateInput }) input: ProductTagUpdateInput,
@@ -142,6 +144,7 @@ export class ProductTagResolver {
 
     @Mutation(() => Boolean)
     @AffectedEntity(ProductTag)
+    @RequiredPermission(["products.delete"], { skipScopeCheck: true })
     async deleteProductTag(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productTag = await this.repository.findOneOrFail(id);
         this.entityManager.remove(productTag);

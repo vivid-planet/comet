@@ -5,6 +5,7 @@ import { IsString } from "class-validator";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
+import { Permission } from "./dto/permission";
 import { UserPermissionInput, UserPermissionOverrideContentScopesInput } from "./dto/user-permission.input";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { UserPermissionsService } from "./user-permissions.service";
@@ -51,8 +52,8 @@ export class UserPermissionResolver {
         return permission;
     }
 
-    @Query(() => [String])
-    async userPermissionsAvailablePermissions(): Promise<string[]> {
+    @Query(() => [Permission])
+    async userPermissionsAvailablePermissions(): Promise<Permission[]> {
         return this.service.getAvailablePermissions();
     }
 
