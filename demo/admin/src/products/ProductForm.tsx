@@ -181,117 +181,115 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             initialValuesEqual={isEqual} //required to compare block data correctly
             subscription={{ values: true }} // values required because disable and loadOptions of manufacturer-select depends on values
         >
-            {({ values, form }) => {
-                return (
-                    <>
-                        {saveConflict.dialogs}
-                        <MainContent>
-                            <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
-                            <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
-                            <TextAreaField
-                                required
+            {({ values, form }) => (
+                <>
+                    {saveConflict.dialogs}
+                    <MainContent>
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+                        <TextAreaField
+                            required
+                            fullWidth
+                            name="description"
+                            label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                        />
+                        <>
+                            <AsyncSelectField
+                                name="manufacturerFilter"
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
+                                        query: gql`
+                                            query ManufacturerCountries {
+                                                manufacturerCountries {
+                                                    nodes {
+                                                        id
+                                                        used
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                    });
+
+                                    return data.manufacturerCountries.nodes;
+                                }}
+                                getOptionLabel={(option: GQLManufacturerCountriesQuery["manufacturerCountries"]["nodes"][0]) => option.id}
+                                label="Manufacturer Country"
                                 fullWidth
-                                name="description"
-                                label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                             />
-                            <>
-                                <AsyncSelectField
-                                    name="manufacturerFilter"
-                                    loadOptions={async () => {
-                                        const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
-                                            query: gql`
-                                                query ManufacturerCountries {
-                                                    manufacturerCountries {
-                                                        nodes {
-                                                            id
-                                                            used
-                                                        }
+
+                            <AsyncSelectField
+                                name="manufacturer"
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturersQuery, GQLManufacturersQueryVariables>({
+                                        query: gql`
+                                            query Manufacturers($filter: ManufacturerFilter) {
+                                                manufacturers(filter: $filter) {
+                                                    nodes {
+                                                        id
+                                                        name
                                                     }
                                                 }
-                                            `,
-                                        });
-
-                                        return data.manufacturerCountries.nodes;
-                                    }}
-                                    getOptionLabel={(option: GQLManufacturerCountriesQuery["manufacturerCountries"]["nodes"][0]) => option.id}
-                                    label="Manufacturer Country"
-                                    fullWidth
-                                />
-
-                                <AsyncSelectField
-                                    name="manufacturer"
-                                    loadOptions={async () => {
-                                        const { data } = await client.query<GQLManufacturersQuery, GQLManufacturersQueryVariables>({
-                                            query: gql`
-                                                query Manufacturers($filter: ManufacturerFilter) {
-                                                    manufacturers(filter: $filter) {
-                                                        nodes {
-                                                            id
-                                                            name
-                                                        }
-                                                    }
-                                                }
-                                            `,
-                                            variables: {
-                                                filter: {
-                                                    addressAsEmbeddable_country: {
-                                                        equal: values.manufacturerFilter?.id,
-                                                    },
+                                            }
+                                        `,
+                                        variables: {
+                                            filter: {
+                                                addressAsEmbeddable_country: {
+                                                    equal: values.manufacturerFilter?.id,
                                                 },
                                             },
-                                        });
+                                        },
+                                    });
 
-                                        return data.manufacturers.nodes;
-                                    }}
-                                    getOptionLabel={(option: GQLManufacturersQuery["manufacturers"]["nodes"][0]) => option.name}
-                                    label="Manufacturer"
-                                    fullWidth
-                                    disabled={!values?.manufacturerFilter}
-                                />
+                                    return data.manufacturers.nodes;
+                                }}
+                                getOptionLabel={(option: GQLManufacturersQuery["manufacturers"]["nodes"][0]) => option.name}
+                                label="Manufacturer"
+                                fullWidth
+                                disabled={!values?.manufacturerFilter}
+                            />
 
-                                <OnChangeField name="manufacturerFilter">
-                                    {(value, previousValue) => {
-                                        if (!isEqual(value, previousValue)) {
-                                            form.change("manufacturer", undefined);
-                                        }
-                                    }}
-                                </OnChangeField>
-                            </>
-                            <SelectField name="type" label="Type" required fullWidth>
-                                <MenuItem value="Cap">Cap</MenuItem>
-                                <MenuItem value="Shirt">Shirt</MenuItem>
-                                <MenuItem value="Tie">Tie</MenuItem>
-                            </SelectField>
-                            <SelectField name="additionalTypes" label="Additional Type" required fullWidth multiple>
-                                <MenuItem value="Cap">Cap</MenuItem>
-                                <MenuItem value="Shirt">Shirt</MenuItem>
-                                <MenuItem value="Tie">Tie</MenuItem>
-                            </SelectField>
-                            <Field
-                                fullWidth
-                                name="category"
-                                label="Category"
-                                component={FinalFormSelect}
-                                {...categorySelectAsyncProps}
-                                getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
-                            />
-                            <Field
-                                fullWidth
-                                name="tags"
-                                label="Tags"
-                                component={FinalFormSelect}
-                                multiple
-                                {...tagsSelectAsyncProps}
-                                getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
-                            />
-                            <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
-                            <Field name="image" isEqual={isEqual}>
-                                {createFinalFormBlock(rootBlocks.image)}
-                            </Field>
-                        </MainContent>
-                    </>
-                );
-            }}
+                            <OnChangeField name="manufacturerFilter">
+                                {(value, previousValue) => {
+                                    if (!isEqual(value, previousValue)) {
+                                        form.change("manufacturer", undefined);
+                                    }
+                                }}
+                            </OnChangeField>
+                        </>
+                        <SelectField name="type" label="Type" required fullWidth>
+                            <MenuItem value="Cap">Cap</MenuItem>
+                            <MenuItem value="Shirt">Shirt</MenuItem>
+                            <MenuItem value="Tie">Tie</MenuItem>
+                        </SelectField>
+                        <SelectField name="additionalTypes" label="Additional Type" required fullWidth multiple>
+                            <MenuItem value="Cap">Cap</MenuItem>
+                            <MenuItem value="Shirt">Shirt</MenuItem>
+                            <MenuItem value="Tie">Tie</MenuItem>
+                        </SelectField>
+                        <Field
+                            fullWidth
+                            name="category"
+                            label="Category"
+                            component={FinalFormSelect}
+                            {...categorySelectAsyncProps}
+                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
+                        />
+                        <Field
+                            fullWidth
+                            name="tags"
+                            label="Tags"
+                            component={FinalFormSelect}
+                            multiple
+                            {...tagsSelectAsyncProps}
+                            getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
+                        />
+                        <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
+                        <Field name="image" isEqual={isEqual}>
+                            {createFinalFormBlock(rootBlocks.image)}
+                        </Field>
+                    </MainContent>
+                </>
+            )}
         </FinalForm>
     );
 }
