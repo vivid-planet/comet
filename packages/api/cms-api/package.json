@@ -32,6 +32,7 @@
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.591.0",
+        "@azure/openai": "1.0.0-beta.11",
         "@azure/storage-blob": "^12.23.0",
         "@comet/blocks-api": "workspace:^7.0.0-beta.2",
         "@fast-csv/parse": "^4.3.6",

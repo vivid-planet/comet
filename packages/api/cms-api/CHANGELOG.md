@@ -252,6 +252,30 @@
 -   Updated dependencies [ebf597120]
     -   @comet/blocks-api@7.0.0-beta.0
 
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/blocks-api@6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   dddb03d1b: Add capability to generate alt texts and titles for images in DAM
+
+    You can find instructions for adding this feature to your project [in the docs](https://docs.comet-dxp.com/docs/content-generation/).
+
+-   73dfb61c9: Add `IsPhoneNumber` and `isPhoneNumber` validators to validate phone numbers
+
+### Patch Changes
+
+-   b7dbd7a18: Export `DisablePermissionCheck` constant to enable usage in application code
+-   Updated dependencies [73dfb61c9]
+-   Updated dependencies [87ef5fa36]
+    -   @comet/blocks-api@6.14.0
+
 ## 6.13.0
 
 ### Minor Changes

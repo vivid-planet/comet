@@ -114,8 +114,8 @@ importers:
         specifier: ^2.0.0
         version: 2.29.3
       dnd-core:
-        specifier: ^10.0.2
-        version: 10.0.2
+        specifier: ^16.0.0
+        version: 16.0.1
       draft-js:
         specifier: ^0.11.0
         version: 0.11.7(react-dom@17.0.2)(react@17.0.2)
@@ -167,6 +167,9 @@ importers:
       query-string:
         specifier: ^7.1.1
         version: 7.1.3
+      rdndmb-html5-to-touch:
+        specifier: ^8.0.3
+        version: 8.0.3(dnd-core@16.0.1)
       react:
         specifier: ^17.0.2
         version: 17.0.2
@@ -179,9 +182,9 @@ importers:
       react-dnd:
         specifier: ^16.0.0
         version: 16.0.1(@types/node@18.15.3)(@types/react@17.0.53)(react@17.0.2)
-      react-dnd-html5-backend:
-        specifier: ^16.0.0
-        version: 16.0.1
+      react-dnd-multi-backend:
+        specifier: ^8.0.3
+        version: 8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react@17.0.2)
       react-dom:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
@@ -2091,6 +2094,9 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.591.0
         version: 3.591.0
+      '@azure/openai':
+        specifier: 1.0.0-beta.11
+        version: 1.0.0-beta.11
       '@azure/storage-blob':
         specifier: ^12.23.0
         version: 12.23.0
@@ -3855,6 +3861,20 @@ packages:
       tslib: 2.6.3
     dev: false
 
+  /@azure-rest/core-client@1.4.0:
+    resolution: {integrity: sha512-ozTDPBVUDR5eOnMIwhggbnVmOrka4fXCs8n8mvUo4WLLc38kki6bAOByDoVZZPz/pZy2jMt2kwfpvy/UjALj6w==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-auth': 1.7.2
+      '@azure/core-rest-pipeline': 1.16.0
+      '@azure/core-tracing': 1.1.2
+      '@azure/core-util': 1.9.0
+      tslib: 2.6.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@azure/abort-controller@1.1.0:
     resolution: {integrity: sha512-TrRLIoSQVzfAJX9H1JeFjzAoDGcoK1IYX1UImfceTZpsyYfWr09Ss1aHW1y5TrrR3iq6RZLBwJ3E24uwPhwahw==}
     engines: {node: '>=12.0.0'}
@@ -3937,6 +3957,13 @@ packages:
       - supports-color
     dev: false
 
+  /@azure/core-sse@2.1.2:
+    resolution: {integrity: sha512-yf+pFIu8yCzXu9RbH2+8kp9vITIKJLHgkLgFNA6hxiDHK3fxeP596cHUj4c8Cm8JlooaUnYdHmF84KCZt3jbmw==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      tslib: 2.6.3
+    dev: false
+
   /@azure/core-tracing@1.1.2:
     resolution: {integrity: sha512-dawW9ifvWAWmUm9/h+/UQ2jrdvjCJ7VJEuCJ6XVNudzcOwm53BFZH4Q845vjfgoUAM8ZxokvVNxNxAITc502YA==}
     engines: {node: '>=18.0.0'}
@@ -3965,6 +3992,21 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       tslib: 2.6.3
+    dev: false
+
+  /@azure/openai@1.0.0-beta.11:
+    resolution: {integrity: sha512-OXS27xkG1abiGf5VZUKnkJKr1VCo8+6EUrTGW5aSVjc5COqX8jAUqVAOZsQVCHBdtWYSBULlZkc0ncKMTRQAiQ==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@azure-rest/core-client': 1.4.0
+      '@azure/core-auth': 1.7.2
+      '@azure/core-rest-pipeline': 1.16.0
+      '@azure/core-sse': 2.1.2
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.1.2
+      tslib: 2.6.3
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /@azure/storage-blob@12.23.0:
@@ -12022,16 +12064,8 @@ packages:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
     dev: false
 
-  /@react-dnd/asap@4.0.1:
-    resolution: {integrity: sha512-kLy0PJDDwvwwTXxqTFNAAllPHD73AycE9ypWeln/IguoGBEbvFcPDbCV03G52bEcC5E+YgupBE0VzHGdC8SIXg==}
-    dev: false
-
   /@react-dnd/asap@5.0.2:
     resolution: {integrity: sha512-WLyfoHvxhs0V9U+GTsGilGgf2QsPl6ZZ44fnv0/b8T3nQyvzxidxsg/ZltbWssbsRDlYW8UKSQMTGotuTotZ6A==}
-
-  /@react-dnd/invariant@2.0.0:
-    resolution: {integrity: sha512-xL4RCQBCBDJ+GRwKTFhGUW8GXa4yoDfJrPbLblc3U09ciS+9ZJXJ3Qrcs/x2IODOdIE5kQxvMmE2UKyqUictUw==}
-    dev: false
 
   /@react-dnd/invariant@4.0.2:
     resolution: {integrity: sha512-xKCTqAK/FFauOM9Ta2pswIyT3D8AQlfrYdOi/toTPEhqCuAs1v5tcJ3Y08Izh1cJ5Jchwy9SeAXmMg6zrKs2iw==}
@@ -19534,20 +19568,20 @@ packages:
     dependencies:
       path-type: 4.0.0
 
-  /dnd-core@10.0.2:
-    resolution: {integrity: sha512-PrxEjxF0+6Y1n1n1Z9hSWZ1tvnDXv9syL+BccV1r1RC08uWNsyetf8AnWmUF3NgYPwy0HKQJwTqGkZK+1NlaFA==}
-    dependencies:
-      '@react-dnd/asap': 4.0.1
-      '@react-dnd/invariant': 2.0.0
-      redux: 4.2.0
-    dev: false
-
   /dnd-core@16.0.1:
     resolution: {integrity: sha512-HK294sl7tbw6F6IeuK16YSBUoorvHpY8RHO+9yFfaJyCDVb6n7PRcezrOEOa2SBCqiYpemh5Jx20ZcjKdFAVng==}
     dependencies:
       '@react-dnd/asap': 5.0.2
       '@react-dnd/invariant': 4.0.2
       redux: 4.2.0
+
+  /dnd-multi-backend@8.0.3(dnd-core@16.0.1):
+    resolution: {integrity: sha512-yFFARotr+OEJk787Fsj+V52pi6j7+Pt/CRp3IR2Ai3fnxA/z6J54T7+gxkXzXu4cvxTNE7NiBzzAaJ2f7JjFTw==}
+    peerDependencies:
+      dnd-core: ^16.0.1
+    dependencies:
+      dnd-core: 16.0.1
+    dev: false
 
   /dns-equal@1.0.0:
     resolution: {integrity: sha512-z+paD6YUQsk+AbGCEM4PrOXSss5gd66QfcVBFTKR/HpFL9jCqikS94HYwKww6fQyO7IxrIIyUu+g0Ka9tUS2Cg==}
@@ -28707,6 +28741,16 @@ packages:
       strip-json-comments: 2.0.1
     dev: false
 
+  /rdndmb-html5-to-touch@8.0.3(dnd-core@16.0.1):
+    resolution: {integrity: sha512-VfIbLjlL9NAnZzc2M5fGPCNkDyK12+ahgILGO5RjS7jkgUlxwB0c/XvxVQNfY/2ocg7isTY/G7tqxJk5fSTZAA==}
+    dependencies:
+      dnd-multi-backend: 8.0.3(dnd-core@16.0.1)
+      react-dnd-html5-backend: 16.0.1
+      react-dnd-touch-backend: 16.0.1
+    transitivePeerDependencies:
+      - dnd-core
+    dev: false
+
   /react-app-polyfill@1.0.6:
     resolution: {integrity: sha512-OfBnObtnGgLGfweORmdZbyEz+3dgVePQBb3zipiaDsMHV1NpWm0rDFYIVXFV/AK+x4VIIfWHhrdMIeoTLyRr2g==}
     engines: {node: '>=6'}
@@ -28816,6 +28860,39 @@ packages:
     resolution: {integrity: sha512-Wu3dw5aDJmOGw8WjH1I1/yTH+vlXEL4vmjk5p+MHxP8HuHJS1lAGeIdG/hze1AvNeXWo/JgULV87LyQOr+r5jw==}
     dependencies:
       dnd-core: 16.0.1
+
+  /react-dnd-multi-backend@8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-IwH7Mf6R05KIFohX0hHMTluoAvuUD8SO15KCD+9fY0nJ4nc1FGCMCSyMZw8R1XNStKp+JnNg3ZMtiaf5DebSUg==}
+    peerDependencies:
+      dnd-core: ^16.0.1
+      react: ^16.14.0 || ^17.0.2 || ^18.0.0
+      react-dnd: ^16.0.1
+      react-dom: ^16.14.0 || ^17.0.2 || ^18.0.0
+    dependencies:
+      dnd-core: 16.0.1
+      dnd-multi-backend: 8.0.3(dnd-core@16.0.1)
+      react: 17.0.2
+      react-dnd: 16.0.1(@types/node@18.15.3)(@types/react@17.0.53)(react@17.0.2)
+      react-dnd-preview: 8.0.3(react-dnd@16.0.1)(react@17.0.2)
+      react-dom: 17.0.2(react@17.0.2)
+    dev: false
+
+  /react-dnd-preview@8.0.3(react-dnd@16.0.1)(react@17.0.2):
+    resolution: {integrity: sha512-s69Ro47QYDthDhj73iQ0VioMCjtlZ1AytKBDkQaHKm5DTjA8D2bIaFKCBQd330QEW0SIzqLJrZGCSlIY2xraJg==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.2 || ^18.0.0
+      react-dnd: ^16.0.1
+    dependencies:
+      react: 17.0.2
+      react-dnd: 16.0.1(@types/node@18.15.3)(@types/react@17.0.53)(react@17.0.2)
+    dev: false
+
+  /react-dnd-touch-backend@16.0.1:
+    resolution: {integrity: sha512-NonoCABzzjyWGZuDxSG77dbgMZ2Wad7eQiCd/ECtsR2/NBLTjGksPUx9UPezZ1nQ/L7iD130Tz3RUshL/ClKLA==}
+    dependencies:
+      '@react-dnd/invariant': 4.0.2
+      dnd-core: 16.0.1
+    dev: false
 
   /react-dnd@16.0.1(@types/node@18.15.3)(@types/react@17.0.53)(react@17.0.2):
     resolution: {integrity: sha512-QeoM/i73HHu2XF9aKksIUuamHPDvRglEwdHL4jsp784BgUuWcg6mzfxT0QDdQz8Wj0qyRKx2eMg8iZtWvU4E2Q==}

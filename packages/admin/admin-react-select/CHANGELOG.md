@@ -165,6 +165,23 @@
 -   Updated dependencies [92eae2ba9]
     -   @comet/admin@7.0.0-beta.0
 
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin@6.14.1
+-   @comet/admin-icons@6.14.1
+
+## 6.14.0
+
+### Patch Changes
+
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [efccc42a3]
+-   Updated dependencies [012a768ee]
+    -   @comet/admin@6.14.0
+    -   @comet/admin-icons@6.14.0
+
 ## 6.13.0
 
 ### Patch Changes
