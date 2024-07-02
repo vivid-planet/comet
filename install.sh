@@ -36,7 +36,7 @@ ln -sf ../api/schema.gql ./demo/site/schema.gql
 ln -sf ../api/block-meta.json ./demo/site/block-meta.json
 ln -sf ../../api/src/comet-config.json ./demo/site/src/comet-config.json
 
-# site DEMO
+# site-pages DEMO
 ln -sf ../../.env ./demo/site-pages/.env
 ln -sf ../api/schema.gql ./demo/site-pages/schema.gql
 ln -sf ../api/block-meta.json ./demo/site-pages/block-meta.json
