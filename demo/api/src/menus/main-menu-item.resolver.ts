@@ -35,7 +35,7 @@ export class MainMenuItemResolver {
             })
             .getNodeOrFail(pageTreeNodeId);
 
-        const item = await this.mainMenuItemRepository.findOne({ node });
+        const item = await this.mainMenuItemRepository.findOne({ node: node.id });
 
         return (
             item ??
@@ -55,7 +55,7 @@ export class MainMenuItemResolver {
     ): Promise<MainMenuItem> {
         const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(pageTreeNodeId);
 
-        const existingItem = await this.mainMenuItemRepository.findOne({ node });
+        const existingItem = await this.mainMenuItemRepository.findOne({ node: node.id });
 
         if (existingItem) {
             if (lastUpdatedAt) {
@@ -73,6 +73,6 @@ export class MainMenuItemResolver {
             );
         }
 
-        return this.mainMenuItemRepository.findOneOrFail({ node });
+        return this.mainMenuItemRepository.findOneOrFail({ node: node.id });
     }
 }
