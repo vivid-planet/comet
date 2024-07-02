@@ -1,16 +1,9 @@
 import { BlockMigration } from "src/migrations/BlockMigration";
 import { BlockMigrationInterface } from "src/migrations/types";
 
-/* eslint-disable @typescript-eslint/naming-convention */
-enum AspectRatio {
-    "16X9" = "16X9",
-    "4X3" = "4X3",
-}
-/* eslint-enable @typescript-eslint/naming-convention */
-
 interface From {
     youtubeIdentifier?: string;
-    aspectRatio: AspectRatio;
+    aspectRatio: unknown;
     autoplay?: boolean;
     showControls?: boolean;
     loop?: boolean;
