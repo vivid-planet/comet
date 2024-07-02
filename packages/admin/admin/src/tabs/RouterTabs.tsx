@@ -7,7 +7,6 @@ import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useStackApi } from "../stack/Api";
-import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
 import { TabScrollButton } from "./TabScrollButton";
 
@@ -165,33 +164,22 @@ export function RouterTabs(inProps: Props) {
                 return (
                     <Route path={path}>
                         {({ match }) => {
-                            let ret = null;
-
                             if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
-                                ret = (
+                                return (
                                     <Content ownerState={{ contentHidden: false }} {...slotProps?.content}>
                                         {child.props.children}
                                     </Content>
                                 );
                             } else if (child.props.forceRender) {
-                                ret = (
+                                return (
                                     <Content ownerState={{ contentHidden: true }} {...slotProps?.content}>
                                         {child.props.children}
                                     </Content>
                                 );
                             } else {
-                                // don't render tab contents, return early as we don't need StackBreadcrumb either
+                                // don't render tab contents
                                 return null;
-                            }
-                            if (stackApi && stackSwitchApi) {
-                                return (
-                                    <StackBreadcrumb url={path} title={child.props.label} invisible={true}>
-                                        {ret}
-                                    </StackBreadcrumb>
-                                );
-                            } else {
-                                return ret;
                             }
                         }}
                     </Route>
