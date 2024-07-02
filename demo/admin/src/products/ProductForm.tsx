@@ -240,7 +240,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
                             <OnChangeField name="manufacturerCountry">
                                 {(value, previousValue) => {
-                                    if (!isEqual(value, previousValue)) {
+                                    if (value.id !== previousValue.id) {
                                         form.change("manufacturer", undefined);
                                     }
                                 }}
