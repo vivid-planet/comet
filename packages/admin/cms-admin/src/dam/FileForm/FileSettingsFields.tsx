@@ -11,6 +11,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { GQLLicenseType } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
+import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
 import { DamFileDetails, EditFileFormValues } from "./EditFile";
 import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
@@ -106,6 +107,21 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                                 });
                             }
                         }
+                    }}
+                    formatOnBlur
+                    format={(value: string) => {
+                        const hasExtension = value.includes(".");
+                        const name = hasExtension ? value.split(".").slice(0, -1).join(".") : value;
+
+                        const extension = hasExtension ? value.split(".").pop() : undefined;
+                        let formattedFilename = slugifyFilename(name, extension);
+
+                        if (!hasExtension) {
+                            const originalExtension = file.name.split(".").pop();
+                            formattedFilename = `${formattedFilename}.${originalExtension}`;
+                        }
+
+                        return formattedFilename;
                     }}
                     fullWidth
                 />
