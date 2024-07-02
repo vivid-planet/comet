@@ -70,7 +70,7 @@ export async function generateCrudInput(
         const fieldName = prop.name;
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
-        if (!prop.nullable) {
+        if (!prop.nullable && prop.name != "position") {
             decorators.push("@IsNotEmpty()");
         } else {
             decorators.push("@IsNullable()");
@@ -78,6 +78,15 @@ export async function generateCrudInput(
         if (["id", "createdAt", "updatedAt", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
+        } else if (prop.name == "position") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
+            decorators.push(`@Min(1)`);
+            decorators.push("@IsInt()");
+            decorators.push(`@Field(() => Int, ${fieldOptions})`);
+
+            type = "number";
         } else if (prop.enum) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
@@ -378,7 +387,7 @@ export async function generateCrudInput(
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt, Min } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";

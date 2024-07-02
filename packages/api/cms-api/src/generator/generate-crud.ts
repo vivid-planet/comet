@@ -81,6 +81,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "filter") &&
             !prop.name.startsWith("scope_") &&
+            prop.name != "position" &&
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "text" ||
@@ -118,6 +119,8 @@ export function buildOptions(metadata: EntityMetadata<any>) {
 
     const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
 
+    const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
+
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
 
@@ -139,6 +142,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         crudSortProps,
         hasSortArg,
         hasSlugProp,
+        hasPositionProp,
         statusProp,
         statusActiveItems,
         hasStatusFilter,
@@ -463,6 +467,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
     const { hasSearchArg, hasFilterArg, crudSearchPropNames } = buildOptions(metadata);
 
+    // TODO vermutlich sollte hier die update-position funktion landen (generateService)
     const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
@@ -852,6 +857,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasSearchArg,
         hasSortArg,
         hasFilterArg,
+        hasPositionProp,
         statusProp,
         hasStatusFilter,
         dedicatedResolverArgProps,
@@ -1066,6 +1072,16 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                       })
                       .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
+            ${
+                hasPositionProp
+                    ? `
+            if (input.position !== undefined) {
+                await this.incrementPositions(input.position);
+            } else {
+                input.position = (await this.getLastPosition()) + 1;
+            }`
+                    : ""
+            }
 
             ${createInputHandlingCode}
 
@@ -1087,6 +1103,20 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+
+            ${
+                hasPositionProp
+                    ? `
+            if (input.position !== undefined) {
+                if (${instanceNameSingular}.position < input.position) {
+                    await this.decrementPositions(${instanceNameSingular}.position, input.position);
+                } else if (${instanceNameSingular}.position > input.position) {
+                    await this.incrementPositions(input.position, ${instanceNameSingular}.position);
+                }
+            }`
+                    : ""
+            }
+
             ${updateInputHandlingCode}
 
             await this.entityManager.flush();
@@ -1104,7 +1134,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @AffectedEntity(${metadata.className})
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-            this.entityManager.remove(${instanceNameSingular});
+            this.entityManager.remove(${instanceNameSingular});${
+                      hasPositionProp ? `await this.decrementPositions(${instanceNameSingular}.position);` : ""
+                  }
             await this.entityManager.flush();
             return true;
         }
@@ -1114,6 +1146,31 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
         ${relationsFieldResolverCode}
 
+        ${
+            hasPositionProp
+                ? `
+                async incrementPositions(lowestPosition: number, highestPosition?: number) {
+                    // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
+                    await this.repository.nativeUpdate(
+                        { position: { $gte: lowestPosition, $lt: highestPosition } }, // add filter for grouping if necessary
+                        { position: this.entityManager.raw("position + 1") },
+                    );
+                }
+
+                async decrementPositions(lowestPosition: number, highestPosition?: number) {
+                    // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
+                    await this.repository.nativeUpdate(
+                        { position: { $gt: lowestPosition, $lte: highestPosition } }, // add filter for grouping if necessary
+                        { position: this.entityManager.raw("position - 1") },
+                    );
+                }
+
+                async getLastPosition() {
+                    return this.repository.count({}); // add filter for grouping if necessary
+                }
+                `
+                : ""
+        }
     }
     `;
     return resolverOut;

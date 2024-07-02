@@ -67,6 +67,12 @@ export class ProductCategoryResolver {
 
     @Mutation(() => ProductCategory)
     async createProductCategory(@Args("input", { type: () => ProductCategoryInput }) input: ProductCategoryInput): Promise<ProductCategory> {
+        if (input.position !== undefined) {
+            await this.incrementPositions(input.position);
+        } else {
+            input.position = (await this.getLastPosition()) + 1;
+        }
+
         const productCategory = this.repository.create({
             ...input,
         });
@@ -84,6 +90,14 @@ export class ProductCategoryResolver {
     ): Promise<ProductCategory> {
         const productCategory = await this.repository.findOneOrFail(id);
 
+        if (input.position !== undefined) {
+            if (productCategory.position < input.position) {
+                await this.decrementPositions(productCategory.position, input.position);
+            } else if (productCategory.position > input.position) {
+                await this.incrementPositions(input.position, productCategory.position);
+            }
+        }
+
         productCategory.assign({
             ...input,
         });
@@ -98,6 +112,7 @@ export class ProductCategoryResolver {
     async deleteProductCategory(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productCategory = await this.repository.findOneOrFail(id);
         this.entityManager.remove(productCategory);
+        await this.decrementPositions(productCategory.position);
         await this.entityManager.flush();
         return true;
     }
@@ -105,5 +120,25 @@ export class ProductCategoryResolver {
     @ResolveField(() => [Product])
     async products(@Parent() productCategory: ProductCategory): Promise<Product[]> {
         return productCategory.products.loadItems();
+    }
+
+    async incrementPositions(lowestPosition: number, highestPosition?: number) {
+        // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
+        await this.repository.nativeUpdate(
+            { position: { $gte: lowestPosition, $lt: highestPosition } }, // add filter for grouping if necessary
+            { position: this.entityManager.raw("position + 1") },
+        );
+    }
+
+    async decrementPositions(lowestPosition: number, highestPosition?: number) {
+        // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
+        await this.repository.nativeUpdate(
+            { position: { $gt: lowestPosition, $lte: highestPosition } }, // add filter for grouping if necessary
+            { position: this.entityManager.raw("position - 1") },
+        );
+    }
+
+    async getLastPosition() {
+        return this.repository.count({}); // add filter for grouping if necessary
     }
 }

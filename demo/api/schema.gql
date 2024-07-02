@@ -468,6 +468,7 @@ type ProductCategory {
   id: ID!
   title: String!
   slug: String!
+  position: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   products: [Product!]!
@@ -1030,6 +1031,7 @@ input ProductCategorySort {
 enum ProductCategorySortField {
   title
   slug
+  position
   createdAt
   updatedAt
 }
@@ -1413,11 +1415,13 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
+  position: Int!
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
+  position: Int
 }
 
 input ProductTagInput {
