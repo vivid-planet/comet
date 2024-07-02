@@ -26,6 +26,11 @@ export class UserPermissionInput {
     @IsString()
     permission: string;
 
+    @Field(() => GraphQLJSONObject, { nullable: true })
+    @IsObject()
+    @IsOptional()
+    configuration?: JSON;
+
     @Field(() => Date, { nullable: true })
     @IsDate()
     @IsOptional()

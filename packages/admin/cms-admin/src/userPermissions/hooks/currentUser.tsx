@@ -33,6 +33,7 @@ export const CurrentUserProvider: React.FC<{
                 language
                 permissions {
                     permission
+                    configuration
                     contentScopes
                 }
             }
@@ -50,13 +51,40 @@ export const CurrentUserProvider: React.FC<{
         },
         isAllowed:
             isAllowed ??
-            ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
+            ((
+                user: CurrentUserInterface,
+                permission: string | { permission: string; configuration: Record<string, unknown> },
+                contentScope?: ContentScopeInterface,
+            ) => {
                 if (user.email === undefined) return false;
-                return user.permissions.some(
-                    (p) =>
-                        p.permission === permission &&
-                        (!contentScope || p.contentScopes.some((cs) => Object.entries(contentScope).every(([scope, value]) => cs[scope] === value))),
-                );
+
+                let requiredPermission: string;
+                let requiredConfiguration: null | Record<string, unknown> = null;
+                if (typeof permission === "string") {
+                    if (permission.indexOf(".") > 0) {
+                        requiredPermission = permission.split(".")[0];
+                        requiredConfiguration = { [permission.split(".")[1]]: true };
+                    } else {
+                        requiredPermission = permission;
+                    }
+                } else {
+                    requiredPermission = permission.permission;
+                    requiredConfiguration = permission.configuration;
+                }
+
+                return user.permissions.some((p) => {
+                    if (p.permission !== requiredPermission) return false;
+
+                    if (requiredConfiguration) {
+                        if (!p.configuration) return false;
+                        for (const key of Object.keys(requiredConfiguration)) {
+                            if (requiredConfiguration[key] !== p.configuration[key]) return false;
+                        }
+                    }
+
+                    if (!contentScope) return true;
+                    return p.contentScopes.some((cs) => Object.entries(contentScope).every(([scope, value]) => cs[scope] === value));
+                });
             }),
     };
 

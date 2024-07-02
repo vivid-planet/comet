@@ -15,7 +15,7 @@ import { ProductCategoryInput, ProductCategoryUpdateInput } from "./dto/product-
 import { ProductCategoriesService } from "./product-categories.service";
 
 @Resolver(() => ProductCategory)
-@RequiredPermission(["products"], { skipScopeCheck: true })
+@RequiredPermission(["products.read"], { skipScopeCheck: true })
 export class ProductCategoryResolver {
     constructor(
         private readonly entityManager: EntityManager,
@@ -67,6 +67,7 @@ export class ProductCategoryResolver {
     }
 
     @Mutation(() => ProductCategory)
+    @RequiredPermission(["products.create"], { skipScopeCheck: true })
     async createProductCategory(@Args("input", { type: () => ProductCategoryInput }) input: ProductCategoryInput): Promise<ProductCategory> {
         const { products: productsInput, ...assignInput } = input;
         const productCategory = this.repository.create({
@@ -87,6 +88,7 @@ export class ProductCategoryResolver {
 
     @Mutation(() => ProductCategory)
     @AffectedEntity(ProductCategory)
+    @RequiredPermission(["products.update"], { skipScopeCheck: true })
     async updateProductCategory(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => ProductCategoryUpdateInput }) input: ProductCategoryUpdateInput,
@@ -116,6 +118,7 @@ export class ProductCategoryResolver {
 
     @Mutation(() => Boolean)
     @AffectedEntity(ProductCategory)
+    @RequiredPermission(["products.delete"], { skipScopeCheck: true })
     async deleteProductCategory(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productCategory = await this.repository.findOneOrFail(id);
         this.entityManager.remove(productCategory);

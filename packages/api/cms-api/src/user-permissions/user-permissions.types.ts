@@ -3,6 +3,7 @@ import { JwtPayload } from "jsonwebtoken";
 
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
+import { Permission } from "./dto/permission";
 import { UserPermission } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { User } from "./interfaces/user";
@@ -17,7 +18,7 @@ export type Users = [User[], number];
 export type SystemUser = true;
 
 type PermissionForUser = {
-    permission: string;
+    permission: string | string[] | Permission;
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
 export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermissions;
@@ -25,10 +26,12 @@ export type PermissionsForUser = PermissionForUser[] | UserPermissions.allPermis
 export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentScopes;
 
 export interface AccessControlServiceInterface {
-    isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
+    isAllowed(user: CurrentUser | SystemUser, permission: string | Permission, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
+
+export type PermissionConfiguration = Record<string, unknown>;
 
 export interface UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
