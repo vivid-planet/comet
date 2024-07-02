@@ -226,7 +226,7 @@ module.exports = {
             waitOn: ["tcp:$API_PORT"],
         },
 
-        //group demo site
+        //group demo site pages
         {
             name: "demo-site-pages",
             script: "pnpm --filter comet-demo-site-pages run dev",
