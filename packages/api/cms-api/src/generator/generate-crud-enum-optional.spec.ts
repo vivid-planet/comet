@@ -7,10 +7,13 @@ import { v4 as uuid } from "uuid";
 import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum TestEnum {
     AND = "AND",
     OR = "OR",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(TestEnum, {
     name: "TestEnumOperator",
 });

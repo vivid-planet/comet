@@ -34,14 +34,11 @@ class UserFilter {
     or?: UserFilter[];
 }
 
-/* eslint-disable @typescript-eslint/naming-convention */
-// TODO: Replace with PascalCase
 enum UserSortField {
     name = "name",
     email = "email",
     status = "status",
 }
-/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(UserSortField, {
     name: "UserSortField",
 });

@@ -31,11 +31,14 @@ export class TestEntityWithBoolean extends BaseEntity<TestEntityWithBoolean, "id
     foo: boolean;
 }
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum TestEnumType {
     Foo = "Foo",
     Bar = "Bar",
     Baz = "Baz",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(TestEnumType, {
     name: "TestEnumType",
 });

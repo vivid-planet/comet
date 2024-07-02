@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum ResizingType {
     FIT = "fit",
     FILL = "fill",
     AUTO = "auto",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum Gravity {
     CENTER = "ce", // default
     NORTH = "no", // (top edge);
@@ -16,7 +21,10 @@ export enum Gravity {
     SOUTHWEST = "sowe", // (bottom-left corner);
     SMART = "sm", // libvips detects the most "interesting" section of the image and considers it as the center of the resulting image;
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum Extension {
     JPG = "jpg",
     PNG = "png",
@@ -26,3 +34,4 @@ export enum Extension {
     ICO = "ico",
     TIFF = "tiff",
 }
+/* eslint-enable @typescript-eslint/naming-convention */

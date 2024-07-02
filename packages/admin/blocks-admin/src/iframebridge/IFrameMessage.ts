@@ -3,6 +3,8 @@
 // Messages sent from iFrame -> Admin
 import { ExternalLinkBlockData } from "../blocks.generated";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum IFrameMessageType {
     Ready = "Ready",
     SelectComponent = "SelectComponent",
@@ -16,6 +18,7 @@ export enum IFrameMessageType {
      */
     SitePreviewLocation = "SitePreviewLocation",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 export interface IReadyIFrameMessage {
     cometType: IFrameMessageType.Ready;
@@ -60,6 +63,8 @@ export type IFrameMessage =
     | IFrameLocationMessage
     | IFrameHoverComponentMessage;
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 // Messages sent from Admin -> iFrame
 export enum AdminMessageType {
     Block = "Block",
@@ -68,6 +73,7 @@ export enum AdminMessageType {
     HoverComponent = "HoverComponent",
     ContentScope = "ContentScope",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 export interface IAdminBlockMessage {
     cometType: AdminMessageType.Block;
     data: {

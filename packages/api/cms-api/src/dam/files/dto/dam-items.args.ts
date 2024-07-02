@@ -8,10 +8,13 @@ import { SortArgs } from "../../../common/sorting/sort.args";
 import { DamScopeInterface } from "../../types";
 import { EmptyDamScope } from "./empty-dam-scope";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum DamItemType {
     File = "File",
     Folder = "Folder",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(DamItemType, {
     name: "DamItemType",
 });

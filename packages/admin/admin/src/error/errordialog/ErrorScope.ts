@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum ErrorScope {
     Local = "local",
     Global = "global",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 const ErrorScopeContextIdentifier = "errorScope";
 

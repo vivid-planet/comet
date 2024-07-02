@@ -28,11 +28,14 @@ import { ProductToTag } from "./product-to-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum ProductStatus {
     Published = "Published",
     Unpublished = "Unpublished",
     Deleted = "Deleted",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(ProductStatus, { name: "ProductStatus" });
 
 @ObjectType()

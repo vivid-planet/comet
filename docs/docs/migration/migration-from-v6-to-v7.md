@@ -921,9 +921,9 @@ selfish-dolls-beg.md
 
 ## ESLint
 
-### Enforce PascalCase in enums
+### Enforce PascalCase / camelCase in enums
 
-We now enforce PascalCase for enums.
+We now enforce PascalCase for enum names and camelCase for enum members.
 If your project has enums that are cased differently, you should change the casing.
 
 In some cases, changing the enum casing can be problematic.
@@ -933,9 +933,33 @@ In such cases, you can disable the rule like so
 ```diff
 + /* eslint-disable @typescript-eslint/naming-convention */
   export enum ExampleEnum {
-      attr1 = "attr1",
+      Attr1 = "Attr1",
   }
 + /* eslint-enable @typescript-eslint/naming-convention */
+```
+
+It is also okay to disable the rule completely if it would be an unreasonable effort to change all enums:
+
+```json
+// .eslintrc.json
+"overrides": [
+    {
+        "files": ["*.ts", "*.tsx"],
+        "rules": {
+            "@typescript-eslint/naming-convention": [
+                "error",
+                {
+                    "selector": "enum",
+                    "format": null
+                },
+                {
+                    "selector": "enumMember",
+                    "format": null
+                }
+            ]
+        }
+    }
+]
 ```
 
 ### @typescript-eslint/prefer-enum-initializers

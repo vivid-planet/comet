@@ -5,7 +5,7 @@ import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
 
 /* eslint-disable @typescript-eslint/naming-convention */
-// TODO: Replace with PascalCase
+// TODO: Replace with camelCase
 export enum ProductSortField {
     title = "title",
     status = "status",

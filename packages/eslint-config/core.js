@@ -35,7 +35,7 @@ module.exports = {
                     },
                     {
                         selector: "enumMember",
-                        format: ["PascalCase"]
+                        format: ["camelCase"]
                     }
                 ],
                 "@typescript-eslint/prefer-enum-initializers": "error"

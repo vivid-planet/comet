@@ -295,7 +295,7 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
     import { IsEnum } from "class-validator";
 
     /* eslint-disable @typescript-eslint/naming-convention */
-    // TODO: Replace with PascalCase
+    // TODO: Replace with camelCase
     export enum ${classNameSingular}SortField {
         ${crudSortProps
             .map((prop) => {

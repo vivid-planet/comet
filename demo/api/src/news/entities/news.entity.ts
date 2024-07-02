@@ -8,17 +8,23 @@ import { v4 as uuid } from "uuid";
 import { NewsContentBlock } from "../blocks/news-content.block";
 import { NewsComment } from "./news-comment.entity";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum NewsStatus {
     Active = "Active",
     Deleted = "Deleted",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(NewsStatus, { name: "NewsStatus" });
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum NewsCategory {
     Events = "Events",
     Company = "Company",
     Awards = "Awards",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(NewsCategory, {
     name: "NewsCategory",
 });

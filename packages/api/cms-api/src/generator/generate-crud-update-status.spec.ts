@@ -8,12 +8,14 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum TestEntity1Status {
     Active = "Active",
     Archived = "Archived",
     Deleted = "Deleted",
 }
-
+/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(TestEntity1Status, { name: "TestEntity1Status" });
 
 @Entity()
@@ -99,12 +101,15 @@ describe("GenerateCrud Status with active", () => {
     });
 });
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum TestEntity2Status {
     Published = "Published",
     Unpublished = "Unpublished",
     Archived = "Archived",
     Deleted = "Deleted",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 registerEnumType(TestEntity2Status, { name: "TestEntity2Status" });
 
@@ -164,10 +169,13 @@ describe("GenerateCrud Status with published/unpublished", () => {
     });
 });
 
+/* eslint-disable @typescript-eslint/naming-convention */
+// TODO: Replace with camelCase
 export enum TestEntity3Status {
     Published = "Published",
     Unpublished = "Unpublished",
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 registerEnumType(TestEntity3Status, { name: "TestEntity3Status" });
 
