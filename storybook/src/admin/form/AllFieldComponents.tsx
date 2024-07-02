@@ -11,6 +11,7 @@ import {
     FinalFormSearchTextField,
     FinalFormSelect,
     FinalFormSwitch,
+    NumberField,
     SearchField,
     SelectField,
     SwitchField,
@@ -58,6 +59,7 @@ function Story() {
                                             </MenuItem>
                                         ))}
                                     </SelectField>
+                                    <NumberField name="number" label="Number" fullWidth />
                                     <AsyncSelectField
                                         name="asyncSelect"
                                         label="Async Select"
