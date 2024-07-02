@@ -199,8 +199,9 @@ export function ProductsGrid({ filter }: Props): React.ReactElement {
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
-    const rowCount = useBufferedRowCount(data?.products.totalCount);
     if (error) throw error;
+
+    const rowCount = useBufferedRowCount(data?.products.totalCount);
     const rows = data?.products.nodes ?? [];
 
     return (

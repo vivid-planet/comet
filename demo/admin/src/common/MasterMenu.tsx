@@ -26,6 +26,7 @@ import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
+import { FutureProductCategoriesPage } from "@src/products/future/ProductCategoriesPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
@@ -240,6 +241,14 @@ export const masterMenuData: MasterMenuData = [
                             component: FutureProductsWithLowPricePage,
                         },
                     },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.manufacturersFuture" defaultMessage="Categories" />,
+                        route: {
+                            path: "/product-categories-future",
+                            component: FutureProductCategoriesPage,
+                        },
+                    },
                 ],
             },
             {
@@ -253,14 +262,6 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/products",
                             component: ProductsPage,
-                        },
-                    },
-                    {
-                        type: "route",
-                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
-                        route: {
-                            path: "/product-categories",
-                            component: ProductCategoriesPage,
                         },
                     },
                     {
@@ -292,6 +293,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/manufacturers-handmade",
                             component: ManufacturersHandmadePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Product Categories" />,
+                        route: {
+                            path: "/products-categories-handmade",
+                            component: ProductCategoriesPage,
                         },
                     },
                 ],

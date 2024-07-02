@@ -15,6 +15,7 @@ import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
 import { GeneratorReturn, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
+import { findQueryTypeOrThrow } from "./utils/findQueryType";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
@@ -25,20 +26,6 @@ function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
         .join("\n")}}`;
-}
-
-function findQueryType(queryName: string, schema: IntrospectionQuery) {
-    const queryType = schema.__schema.types.find((type) => type.name === schema.__schema.queryType.name) as IntrospectionObjectType | undefined;
-    if (!queryType) throw new Error("Can't find Query type in gql schema");
-    const ret = queryType.fields.find((field) => field.name === queryName);
-    if (!ret) throw new Error(`Can't find query ${queryName} in gql schema`);
-    return ret;
-}
-
-function findQueryTypeOrThrow(queryName: string, schema: IntrospectionQuery) {
-    const ret = findQueryType(queryName, schema);
-    if (!ret) throw new Error(`Can't find query ${queryName} in gql schema`);
-    return ret;
 }
 
 export type Prop = { type: string; optional: boolean; name: string };
@@ -190,6 +177,7 @@ export function generateGrid(
 
     const hasSearch = gridQueryType.args.some((arg) => arg.name === "search");
     const hasScope = gridQueryType.args.some((arg) => arg.name === "scope");
+    const hasPaging = gridQueryType.args.some((arg) => arg.name === "offset");
 
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
@@ -345,7 +333,7 @@ export function generateGrid(
     const ${instanceGqlTypePlural}Query = gql\`
         query ${gqlTypePlural}Grid(${[
         ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
-        ...[`$offset: Int!`, `$limit: Int!`],
+        ...(hasPaging ? [`$offset: Int!`, `$limit: Int!`] : []),
         ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
         ...(hasSearch ? [`$search: String`] : []),
         ...(hasFilter ? [`$filter: ${gqlType}Filter`] : []),
@@ -353,16 +341,23 @@ export function generateGrid(
     ].join(", ")}) {
     ${gridQuery}(${[
         ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `${gqlArg.name}: $${gqlArg.name}`),
-        ...[`offset: $offset`, `limit: $limit`],
+        ...(hasPaging ? [`offset: $offset`, `limit: $limit`] : []),
         ...(hasSort ? [`sort: $sort`] : []),
         ...(hasSearch ? [`search: $search`] : []),
         ...(hasFilter ? [`filter: $filter`] : []),
         ...(hasScope ? [`scope: $scope`] : []),
     ].join(", ")}) {
-                nodes {
-                    ...${fragmentName}
+                ${
+                    hasPaging
+                        ? `
+                    nodes {
+                        ...${fragmentName}
+                    }
+                    totalCount
+                    `
+                        : `...${fragmentName}`
                 }
-                totalCount
+                
             }
         }
         \${${instanceGqlTypePlural}Fragment}
@@ -443,7 +438,7 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+        const dataGridProps = { ${hasPaging ? `...useDataGridRemote(), ` : ""}...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
@@ -584,24 +579,29 @@ export function generateGrid(
                     ...(hasScope ? ["scope"] : []),
                     ...(hasFilter ? (hasFilterProp ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"] : ["filter: gqlFilter"]) : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
-                    ...[
-                        `offset: dataGridProps.page * dataGridProps.pageSize`,
-                        `limit: dataGridProps.pageSize`,
-                        `sort: muiGridSortToGql(dataGridProps.sortModel)`,
-                    ],
+                    ...(hasPaging ? [`offset: dataGridProps.page * dataGridProps.pageSize`, `limit: dataGridProps.pageSize`] : []),
+                    ...[`sort: muiGridSortToGql(dataGridProps.sortModel)`],
                 ].join(", ")}
             },
         });
-        const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
         if (error) throw error;
-        const rows = data?.${gridQuery}.nodes ?? [];
+        ${
+            hasPaging
+                ? `
+            const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
+            const rows = data?.${gridQuery}.nodes ?? [];
+        `
+                : `
+            const rows = data?.${gridQuery} ?? [];
+        `
+        }
 
         return (
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick
                 rows={rows}
-                rowCount={rowCount}
+                ${hasPaging ? `rowCount={rowCount}` : ""}
                 columns={columns}
                 loading={loading}
                 ${

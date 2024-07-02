@@ -568,11 +568,6 @@ type PaginatedProducts {
   totalCount: Int!
 }
 
-type PaginatedProductCategories {
-  nodes: [ProductCategory!]!
-  totalCount: Int!
-}
-
 type PaginatedProductTags {
   nodes: [ProductTag!]!
   totalCount: Int!
@@ -763,7 +758,7 @@ type Query {
   products(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
   productCategory(id: ID!): ProductCategory!
   productCategoryBySlug(slug: String!): ProductCategory
-  productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
+  productCategories(search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): [ProductCategory!]!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
   productVariant(id: ID!): ProductVariant!
@@ -1375,7 +1370,7 @@ input ProductInput {
 }
 
 input ProductNestedProductStatisticsInput {
-  views: Float!
+  views: Int!
 }
 
 input ProductNestedProductColorInput {
