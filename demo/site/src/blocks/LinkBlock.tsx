@@ -1,8 +1,10 @@
 import {
     DamFileDownloadLinkBlock,
+    EmailLinkBlock,
     ExternalLinkBlock,
     InternalLinkBlock,
     OneOfBlock,
+    PhoneLinkBlock,
     PropsWithData,
     SupportedBlocks,
     withPreview,
@@ -31,6 +33,16 @@ const supportedBlocks: SupportedBlocks = {
         <DamFileDownloadLinkBlock data={props} title={title}>
             {children}
         </DamFileDownloadLinkBlock>
+    ),
+    email: ({ children, title, ...props }) => (
+        <EmailLinkBlock data={props} title={title}>
+            {children}
+        </EmailLinkBlock>
+    ),
+    phone: ({ children, title, ...props }) => (
+        <PhoneLinkBlock data={props} title={title}>
+            {children}
+        </PhoneLinkBlock>
     ),
 };
 

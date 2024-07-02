@@ -72,16 +72,16 @@ export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: P
     return (
         <Select value={value.name} onChange={handleChange} fullWidth>
             {sections.map((section, i) => [
-                hasMultipleSections ? (
-                    <>
-                        {i > 0 ? <SectionDivider /> : null}
-                        <ListSubheader key={`section-${section.name}`}>
-                            <Typography variant="body2" fontWeight="bold" color="text.primary">
-                                {section.label}
-                            </Typography>
-                        </ListSubheader>
-                    </>
-                ) : null,
+                ...(hasMultipleSections
+                    ? [
+                          i > 0 ? <SectionDivider /> : null,
+                          <ListSubheader key={`section-${section.name}`}>
+                              <Typography variant="body2" fontWeight="bold" color="text.primary">
+                                  {section.label}
+                              </Typography>
+                          </ListSubheader>,
+                      ]
+                    : []),
                 ...section.layouts.map((layout) => (
                     <MenuItem key={layout.name} value={layout.name}>
                         <MenuItemContent>

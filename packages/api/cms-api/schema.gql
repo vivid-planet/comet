@@ -530,6 +530,8 @@ type Mutation {
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
+  generateAltText(fileId: String!): String!
+  generateImageTitle(fileId: String!): String!
 }
 
 input CreateBuildsInput {

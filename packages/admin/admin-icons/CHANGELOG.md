@@ -1,5 +1,15 @@
 # @comet/admin-icons
 
+## 6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   efccc42a3: Add `YouTube` and `Vimeo` icons
+
+## 6.13.0
+
 ## 6.12.0
 
 ## 6.11.0

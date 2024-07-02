@@ -1,5 +1,47 @@
 # @comet/admin-rte
 
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin@6.14.1
+-   @comet/admin-icons@6.14.1
+
+## 6.14.0
+
+### Patch Changes
+
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [efccc42a3]
+-   Updated dependencies [012a768ee]
+    -   @comet/admin@6.14.0
+    -   @comet/admin-icons@6.14.0
+
+## 6.13.0
+
+### Minor Changes
+
+-   5e25348bb: Add a dialog option to the translation feature
+
+    If enabled a dialog will open when pressing the translation button showing the original text and an editable translation
+
+    Control if the dialog should be shown for the current scope via the `showApplyTranslationDialog` prop (default: true)
+
+    ```diff
+    <ContentTranslationServiceProvider
+        enabled={true}
+    +   showApplyTranslationDialog={true}
+        translate={...}
+    >
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [5e25348bb]
+-   Updated dependencies [796e83206]
+    -   @comet/admin@6.13.0
+    -   @comet/admin-icons@6.13.0
+
 ## 6.12.0
 
 ### Patch Changes
