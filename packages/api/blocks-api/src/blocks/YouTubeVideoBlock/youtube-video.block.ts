@@ -1,7 +1,9 @@
 import { IsBoolean, IsOptional, IsString, Matches } from "class-validator";
 
-import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
-import { BlockField } from "./decorators/field";
+import { typesafeMigrationPipe } from "../../migrations/typesafeMigrationPipe";
+import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "../block";
+import { BlockField } from "../decorators/field";
+import { RemoveAspectRatioMigration } from "./1-remove-aspect-ratio.migration";
 
 class YouTubeVideoBlockData extends BlockData {
     @BlockField({ nullable: true })
@@ -47,4 +49,10 @@ class YouTubeVideoBlockInput extends BlockInput {
     }
 }
 
-export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideoBlockInput, "YouTubeVideo");
+export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideoBlockInput, {
+    name: "YouTubeVideo",
+    migrate: {
+        version: 1,
+        migrations: typesafeMigrationPipe([RemoveAspectRatioMigration]),
+    },
+});
