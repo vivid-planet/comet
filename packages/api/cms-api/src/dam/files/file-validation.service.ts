@@ -1,8 +1,8 @@
 import { readFile } from "fs/promises";
-import * as mimedb from "mime-db";
+import { basename, extname } from "path";
 
 import { FileUploadInput } from "./dto/file-upload.input";
-import { svgContainsJavaScript } from "./files.utils";
+import { getValidExtensionsForMimetype, slugifyFilename, svgContainsJavaScript } from "./files.utils";
 
 export class FileValidationService {
     constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
@@ -34,17 +34,9 @@ export class FileValidationService {
             return `Invalid file name: Missing file extension`;
         }
 
-        let supportedExtensions: readonly string[] | undefined;
-        if (file.mimetype === "application/x-zip-compressed") {
-            // zip files in Windows, not supported by mime-db
-            // see https://github.com/jshttp/mime-db/issues/245
-            supportedExtensions = ["zip"];
-        } else {
-            supportedExtensions = mimedb[file.mimetype]?.extensions;
-        }
-
+        const supportedExtensions = getValidExtensionsForMimetype(file.mimetype);
         if (supportedExtensions === undefined || !supportedExtensions.includes(extension)) {
-            return `File type and extension mismatch: .${extension} and ${file.mimetype} are incompatible`;
+            return `File type and extension mismatch: ${extension} and ${file.mimetype} are incompatible`;
         }
 
         return undefined;
@@ -57,6 +49,27 @@ export class FileValidationService {
             if (svgContainsJavaScript(fileContent)) {
                 return "SVG must not contain JavaScript";
             }
+        }
+
+        return undefined;
+    }
+
+    validateFilename(filename: string, mimetype: string): string | undefined {
+        const extension = extname(filename);
+        const extensionWithoutDot = extension.slice(1);
+        const name = basename(filename, extension);
+
+        if (extension.length === 0) {
+            return `Filename ${filename} has no extension`;
+        }
+
+        const supportedExtensions = getValidExtensionsForMimetype(mimetype);
+        if (supportedExtensions === undefined || !supportedExtensions.includes(extensionWithoutDot)) {
+            return `File type and extension mismatch: ${extension} and ${mimetype} are incompatible`;
+        }
+
+        if (filename !== slugifyFilename(name, extension)) {
+            return `Filename ${filename} contains invalid symbols`;
         }
 
         return undefined;
