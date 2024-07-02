@@ -6,6 +6,7 @@
     "comet-demo-admin-server": "1.0.0",
     "comet-demo-api": "1.0.0",
     "comet-demo-site": "1.0.0",
+    "comet-demo-site-pages": "1.0.0",
     "comet-docs": "0.0.0",
     "@comet/admin": "6.10.0",
     "@comet/admin-babel-preset": "6.10.0",
