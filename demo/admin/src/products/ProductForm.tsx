@@ -64,13 +64,9 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image" | "manufacturer"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "image" | "manufacturerCountry"> & {
     image: BlockState<typeof rootBlocks.image>;
-    manufacturerFilter?: { id: string };
-    manufacturer?: {
-        id: string;
-        name: string;
-    };
+    manufacturerCountry?: { id: string };
 };
 
 export function ProductForm({ id }: FormProps): React.ReactElement {
@@ -97,15 +93,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         return {
             ...filteredData,
             image: rootBlocks.image.input2State(filteredData.image),
-            manufacturerFilter: filteredData.manufacturer
+            manufacturerCountry: filteredData.manufacturerCountry
                 ? {
-                      id: filteredData.manufacturer?.addressAsEmbeddable.country,
-                  }
-                : undefined,
-            manufacturer: filteredData.manufacturer
-                ? {
-                      id: filteredData.manufacturer.id,
-                      name: filteredData.manufacturer.name,
+                      id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
                   }
                 : undefined,
         };
@@ -122,7 +112,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async ({ manufacturerFilter, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
@@ -195,7 +185,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         />
                         <>
                             <AsyncSelectField
-                                name="manufacturerFilter"
+                                name="manufacturerCountry"
                                 loadOptions={async () => {
                                     const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
                                         query: gql`
@@ -234,7 +224,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                         variables: {
                                             filter: {
                                                 addressAsEmbeddable_country: {
-                                                    equal: values.manufacturerFilter?.id,
+                                                    equal: values.manufacturerCountry?.id,
                                                 },
                                             },
                                         },
@@ -245,10 +235,10 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 getOptionLabel={(option: GQLManufacturersQuery["manufacturers"]["nodes"][0]) => option.name}
                                 label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                                 fullWidth
-                                disabled={!values?.manufacturerFilter}
+                                disabled={!values?.manufacturerCountry}
                             />
 
-                            <OnChangeField name="manufacturerFilter">
+                            <OnChangeField name="manufacturerCountry">
                                 {(value, previousValue) => {
                                     if (!isEqual(value, previousValue)) {
                                         form.change("manufacturer", undefined);
