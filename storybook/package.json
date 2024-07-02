@@ -7,7 +7,7 @@
     ],
     "scripts": {
         "build-storybook": "build-storybook",
-        "storybook": "start-storybook -p 26638",
+        "storybook": "start-storybook -p 26638 --no-version-updates",
         "lint": "run-p lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
         "lint:tsc": "tsc --noEmit"
