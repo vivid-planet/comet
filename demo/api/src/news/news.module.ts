@@ -5,7 +5,6 @@ import { News, NewsContentScope } from "@src/news/entities/news.entity";
 
 import { NewsComment } from "./entities/news-comment.entity";
 import { NewsResolver } from "./generated/news.resolver";
-import { NewsService } from "./generated/news.service";
 import { NewsCommentResolver } from "./news-comment.resolver";
 import { NewsFieldResolver } from "./news-field.resolver";
 
@@ -14,7 +13,6 @@ import { NewsFieldResolver } from "./news-field.resolver";
     providers: [
         NewsResolver,
         NewsCommentResolver,
-        NewsService,
         NewsFieldResolver,
         DependenciesResolverFactory.create(News),
         DependentsResolverFactory.create(News),
