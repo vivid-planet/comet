@@ -189,6 +189,11 @@ type PaginatedUserList {
   totalCount: Int!
 }
 
+type AvailableContentScope {
+  contentScope: JSONObject!
+  label: String
+}
+
 type Link implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
@@ -607,7 +612,7 @@ type Query {
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
-  userPermissionsAvailableContentScopes: [JSONObject!]!
+  userPermissionsAvailableContentScopes: [AvailableContentScope!]!
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!

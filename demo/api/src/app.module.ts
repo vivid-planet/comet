@@ -7,6 +7,7 @@ import {
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
     ContentGenerationModule,
+    ContentScope,
     CronJobsModule,
     DamModule,
     DependenciesModule,
@@ -96,6 +97,8 @@ export class AppModule {
                             { domain: "main", language: "en" },
                             { domain: "secondary", language: "en" },
                         ],
+                        getLabelForContentScope: (contentScope: ContentScope) =>
+                            `${contentScope.domain[0].toUpperCase()}${contentScope.domain.slice(1)} ${contentScope.language.toUpperCase()}`,
                         userService,
                         accessControlService,
                     }),

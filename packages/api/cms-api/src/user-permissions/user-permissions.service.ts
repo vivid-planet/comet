@@ -151,6 +151,11 @@ export class UserPermissionsService {
             .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
     }
 
+    getLabelForContentScope(contentScope: ContentScope): string | null {
+        if (this.options.getLabelForContentScope) return this.options.getLabelForContentScope(contentScope);
+        return null;
+    }
+
     async createCurrentUser(user: User): Promise<CurrentUser> {
         const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user);
