@@ -23,10 +23,8 @@ export const createErrorDialogApolloLink = () => {
             error = graphQLErrors.map(({ message }) => message);
             if (graphQLErrors.some((e) => e.message === "UNAUTHENTICATED")) {
                 errorType = "unauthenticated"; // Error is triggered by Comet Guard
-            } else if (
-                graphQLErrors.some((e) => e.extensions?.code === "UNAUTHENTICATED" || e.extensions?.exception?.status === StatusCodes.UNAUTHORIZED)
-            ) {
-                errorType = "unauthorized"; // Error is triggered by UnauthorizedException (which triggers an unauthenticated error code)
+            } else if (graphQLErrors.some((e) => e.extensions.response.statusCode === StatusCodes.UNAUTHORIZED)) {
+                errorType = "unauthorized"; // Error is triggered by UnauthorizedException
             } else {
                 errorType = "graphql";
             }

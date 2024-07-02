@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, mixin } from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpException, Injectable, mixin } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard, IAuthGuard, Type } from "@nestjs/passport";
@@ -16,6 +16,17 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
             return context.getType().toString() === "graphql"
                 ? GqlExecutionContext.create(context).getContext().req
                 : context.switchToHttp().getRequest();
+        }
+
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+        handleRequest<CurrentUser>(err: unknown, user: any): CurrentUser {
+            if (err) {
+                throw err;
+            }
+            if (user) {
+                return user;
+            }
+            throw new HttpException("UNAUTHENTICATED", 401);
         }
 
         async canActivate(context: ExecutionContext): Promise<boolean> {
