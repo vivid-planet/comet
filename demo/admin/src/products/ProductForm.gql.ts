@@ -9,6 +9,15 @@ export const productFormFragment = gql`
         additionalTypes
         inStock
         image
+        manufacturerCountry: manufacturer {
+            addressAsEmbeddable {
+                country
+            }
+        }
+        manufacturer {
+            id
+            name
+        }
         category {
             id
             title
