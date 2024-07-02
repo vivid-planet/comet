@@ -16,10 +16,8 @@ import {
     useStoredState,
     useTableQueryFilter,
 } from "@comet/admin";
-import { MoreVertical } from "@comet/admin-icons";
-import { Button } from "@mui/material";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
@@ -35,8 +33,7 @@ import FolderDataGrid, {
 } from "./DataGrid/FolderDataGrid";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
-import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
-import { SelectedItemsChip } from "./DataGrid/selection/SelectedItemsChip";
+import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
 import EditFile from "./FileForm/EditFile";
 
 interface FolderProps extends DamConfig {
@@ -56,8 +53,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const [, , editDialogApi, selectionApi] = useEditDialog();
-    const { selectionMap } = useDamSelectionApi();
-    const selectionSize = selectionMap.size;
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
@@ -88,12 +83,6 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <ToolbarActions>
                                 {props.additionalToolbarItems}
                                 <DamMoreActions
-                                    button={
-                                        <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>
-                                            <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
-                                            {selectionSize > 0 && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
-                                        </Button>
-                                    }
                                     anchorOrigin={{
                                         vertical: "bottom",
                                         horizontal: "left",
