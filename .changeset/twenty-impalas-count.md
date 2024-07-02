@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-Increase required mikro-orm version to 5.8.4 (peerDependency)
+Increase minimum supported version of `@mikro-orm/core`, `@mikro-orm/migrations`, and `@mikro-orm/postgresql` to v5.8.4
