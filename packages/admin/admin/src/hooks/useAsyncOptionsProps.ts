@@ -12,27 +12,19 @@ export function useAsyncOptionsProps<T>(loadOptions: () => Promise<T[]>): AsyncO
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState<T[]>([]);
     const loading = open && options.length === 0;
-    React.useEffect(() => {
-        let active = true;
-        if (!loading) {
-            return undefined;
-        }
-        (async () => {
-            const response = await loadOptions();
-            if (active) {
-                setOptions(response);
-            }
-        })();
-        return () => {
-            active = false;
-        };
-    }, [loadOptions, loading]);
+
+    const handleOpen = async () => {
+        setOpen(true);
+        setOptions([]); // Reset options to show loading
+        setOptions(await loadOptions());
+    };
+
     return {
         isAsync: true,
         open,
         options,
         loading,
-        onOpen: () => setOpen(true),
+        onOpen: handleOpen,
         onClose: () => setOpen(false),
     };
 }

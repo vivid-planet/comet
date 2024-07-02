@@ -449,6 +449,23 @@
         ]
     },
     {
+        "name": "EmailLink",
+        "fields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "ExternalLink",
         "fields": [
             {
@@ -796,7 +813,9 @@
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
                                 "news": "NewsLink",
-                                "damFileDownload": "DamFileDownloadLink"
+                                "damFileDownload": "DamFileDownloadLink",
+                                "phone": "PhoneLink",
+                                "email": "EmailLink"
                             },
                             "nullable": false
                         }
@@ -826,7 +845,9 @@
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
                                 "news": "NewsLink",
-                                "damFileDownload": "DamFileDownloadLink"
+                                "damFileDownload": "DamFileDownloadLink",
+                                "phone": "PhoneLink",
+                                "email": "EmailLink"
                             },
                             "nullable": false
                         }
@@ -1256,6 +1277,23 @@
                     ]
                 },
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "PhoneLink",
+        "fields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
