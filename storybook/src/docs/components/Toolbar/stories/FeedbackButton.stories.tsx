@@ -10,7 +10,6 @@ storiesOf("stories/components/Toolbar/Feedback Button", module)
     .addDecorator(toolbarDecorator())
     .addDecorator(storyRouterDecorator())
     .add("Feedback", () => {
-        const [loading, setLoading] = React.useState(false);
         return (
             <Toolbar>
                 <ToolbarTitleItem>Feedback Button</ToolbarTitleItem>
@@ -19,13 +18,7 @@ storiesOf("stories/components/Toolbar/Feedback Button", module)
                     <FeedbackButton
                         color="primary"
                         variant="contained"
-                        loading={loading}
-                        onClick={() => {
-                            setLoading(true);
-                            setTimeout(() => {
-                                setLoading(false);
-                            }, 1000);
-                        }}
+                        onClick={async () => new Promise((resolve) => setTimeout(resolve, 2000))}
                         startIcon={<Assets />}
                         tooltipSuccessMessage="Saving was successful"
                         tooltipErrorMessage="Error while saving"
