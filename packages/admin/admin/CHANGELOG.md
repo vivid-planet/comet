@@ -1,5 +1,16 @@
 # @comet/admin
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   ce5eaede2: Move the `ScopeIndicator` from the `ToolbarBreadcrumbs` to the `Toolbar`
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.3
+-   @comet/admin-theme@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Minor Changes
