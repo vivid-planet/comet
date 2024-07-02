@@ -14,6 +14,7 @@ import * as rimraf from "rimraf";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
+import { CometValidationException } from "../../common/errors/validation.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
@@ -34,6 +35,7 @@ import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
+import { FileValidationService } from "./file-validation.service";
 import { createHashedPath, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
@@ -116,6 +118,7 @@ export class FilesService {
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+        private readonly fileValidationService: FileValidationService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -246,6 +249,13 @@ export class FilesService {
     async updateByEntity(entity: FileInterface, { image, ...input }: UpdateFileInput): Promise<FileInterface> {
         const folderId = input.folderId !== undefined ? input.folderId : entity.folder?.id;
         const folder = folderId ? await this.foldersService.findOneById(folderId) : null;
+
+        if (input.name) {
+            const filenameValidationError = this.fileValidationService.validateFilename(input.name, entity.mimetype);
+            if (filenameValidationError) {
+                throw new CometValidationException(filenameValidationError);
+            }
+        }
 
         if (entity.image && image?.cropArea) {
             entity.image.cropArea = image.cropArea;

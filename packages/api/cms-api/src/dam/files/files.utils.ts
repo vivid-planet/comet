@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import { unlink } from "fs/promises";
+import * as mimedb from "mime-db";
 import { sep } from "path";
 import slugify from "slugify";
 
@@ -78,4 +79,17 @@ export const removeMulterTempFile = async (file: FileUploadInput) => {
     delete (file as Partial<FileUploadInput>).path;
 
     await unlink(path);
+};
+
+export const getValidExtensionsForMimetype = (mimetype: string) => {
+    let supportedExtensions: readonly string[] | undefined;
+    if (mimetype === "application/x-zip-compressed") {
+        // zip files in Windows, not supported by mime-db
+        // see https://github.com/jshttp/mime-db/issues/245
+        supportedExtensions = ["zip"];
+    } else {
+        supportedExtensions = mimedb[mimetype]?.extensions;
+    }
+
+    return supportedExtensions;
 };
