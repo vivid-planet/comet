@@ -11,6 +11,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { GQLLicenseType } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
+import { getValidExtensionsForMimetype } from "../helpers/getValidExtensionsForMimetype";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
 import { DamFileDetails, EditFileFormValues } from "./EditFile";
@@ -111,12 +112,13 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                     formatOnBlur
                     format={(value: string) => {
                         const hasExtension = value.includes(".");
+                        const extension = hasExtension ? value.split(".").pop() : undefined;
                         const name = hasExtension ? value.split(".").slice(0, -1).join(".") : value;
 
-                        const extension = hasExtension ? value.split(".").pop() : undefined;
                         let formattedFilename = slugifyFilename(name, extension);
 
-                        if (!hasExtension) {
+                        const hasValidExtension = Boolean(extension && getValidExtensionsForMimetype(file.mimetype)?.includes(extension));
+                        if (!hasValidExtension) {
                             const originalExtension = file.name.split(".").pop();
                             formattedFilename = `${formattedFilename}.${originalExtension}`;
                         }
