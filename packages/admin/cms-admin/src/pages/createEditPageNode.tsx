@@ -531,7 +531,7 @@ const transformToSlug = (name: string, locale: string) => {
 };
 
 const isValidSlug = (value: string) => {
-    return /^([a-zA-Z0-9-._~]|%[0-9a-fA-F]{2})+$/.test(value);
+    return /^[a-z0-9]+(?:(-|_)[a-z0-9]+)*$/.test(value);
 };
 
 interface InitialValues {
