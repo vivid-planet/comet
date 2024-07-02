@@ -1,5 +1,7 @@
 # @comet/admin-icons
 
+## 7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ## 7.0.0-beta.1

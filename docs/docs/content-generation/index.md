@@ -56,7 +56,6 @@ export class AppModule {
       // ...
 +     ContentGenerationModule.register({
 +        Service: ContentGenerationService,
-+        config: { }
 +     }),
    ],
    // ...
@@ -66,18 +65,18 @@ export class AppModule {
 
 #### Azure OpenAI
 
-For the `AzureOpenAiContentGenerationService` to work, you must pass a config to the `ContentGenerationModule`:
+For the `AzureOpenAiContentGenerationService` to work, you must import and configure the `AzureOpenAiContentGenerationModule`:
 
 ```diff
 ContentGenerationModule.register({
-   Service: ContentGenerationService,
-   config: {
-+       openAiContentGenerationService: {
-+           apiKey: "example-key",
-+           apiUrl: "example-url",
-+           deploymentId: "example-deployment",
-+       },
-   },
+    Service: ContentGenerationService,
++   imports: [
++       AzureOpenAiContentGenerationModule.register({
++           apiUrl: config.azure.openAI.endpoint,
++           apiKey: config.azure.openAI.azureApiKey,
++           deploymentId: "gpt-4-vision-preview",
++       }),
++   ],
 });
 ```
 
