@@ -1,5 +1,13 @@
 # @comet/admin-date-time
 
+## 7.0.0-beta.3
+
+### Patch Changes
+
+-   Updated dependencies [ce5eaede2]
+    -   @comet/admin@7.0.0-beta.3
+    -   @comet/admin-icons@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Patch Changes

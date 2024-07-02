@@ -1,5 +1,18 @@
 # @comet/eslint-config
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   7a473ab8d: Prevent `@mui/icons-material` icon imports
+
+    Icons used in Comet DXP applications should match the Comet CI.
+    Use icons from `@comet/admin-icons` instead.
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Patch Changes
