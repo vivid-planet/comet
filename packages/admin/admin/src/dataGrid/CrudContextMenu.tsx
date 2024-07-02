@@ -6,6 +6,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { readClipboardText } from "../clipboard/readClipboardText";
 import { writeClipboardText } from "../clipboard/writeClipboardText";
+import { FeedbackButton } from "../common/buttons/feedback/FeedbackButton";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
@@ -13,7 +14,7 @@ import { RowActionsMenu } from "../rowActions/RowActionsMenu";
 
 interface DeleteDialogProps {
     dialogOpen: boolean;
-    onDelete: () => void;
+    onDelete: () => Promise<void>;
     onCancel: () => void;
 }
 
@@ -29,12 +30,18 @@ const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
                 <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="WARNING: This cannot be undone!" />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onDelete} color="primary">
+                <Button onClick={onCancel} color="primary">
                     <FormattedMessage {...messages.no} />
                 </Button>
-                <Button onClick={onCancel} color="primary" variant="contained">
+                <FeedbackButton
+                    startIcon={<DeleteIcon />}
+                    onClick={onDelete}
+                    color="primary"
+                    variant="contained"
+                    tooltipErrorMessage={<FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />}
+                >
                     <FormattedMessage {...messages.yes} />
-                </Button>
+                </FeedbackButton>
             </DialogActions>
         </Dialog>
     );
@@ -60,11 +67,15 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
 
     const handleDeleteClick = async () => {
         if (!onDelete) return;
-        await onDelete({
-            client,
-        });
-        if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
-        setDeleteDialogOpen(false);
+        try {
+            await onDelete({
+                client,
+            });
+            if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
+            setDeleteDialogOpen(false);
+        } catch (_) {
+            throw new Error("Delete failed");
+        }
     };
 
     const handlePasteClick = async () => {
@@ -164,13 +175,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                     )}
                 </RowActionsMenu>
             </RowActionsMenu>
-            <DeleteDialog
-                dialogOpen={deleteDialogOpen}
-                onDelete={() => {
-                    setDeleteDialogOpen(false);
-                }}
-                onCancel={handleDeleteClick}
-            />
+            <DeleteDialog dialogOpen={deleteDialogOpen} onCancel={() => setDeleteDialogOpen(false)} onDelete={handleDeleteClick} />
         </>
     );
 }
