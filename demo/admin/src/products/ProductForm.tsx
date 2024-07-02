@@ -1,17 +1,16 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
+    AsyncSelectField,
     CheckboxField,
     Field,
     filterByFragment,
     FinalForm,
-    FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
     SelectField,
     TextAreaField,
     TextField,
-    useAsyncOptionsProps,
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
@@ -25,25 +24,18 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
-    createProductMutation,
-    productCategoriesQuery,
-    productFormFragment,
-    productQuery,
-    productTagsQuery,
-    updateProductMutation,
-} from "./ProductForm.gql";
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+    GQLProductTagsSelectQuery,
+    GQLProductTagsSelectQueryVariables,
+} from "./ProductForm.generated";
+import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
-    GQLProductCategoriesQuery,
-    GQLProductCategoriesQueryVariables,
-    GQLProductCategorySelectFragment,
     GQLProductFormManualFragment,
     GQLProductQuery,
     GQLProductQueryVariables,
-    GQLProductTagsQuery,
-    GQLProductTagsQueryVariables,
-    GQLProductTagsSelectFragment,
     GQLUpdateProductMutation,
     GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
@@ -128,15 +120,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         }
     };
 
-    const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
-        const categories = await client.query<GQLProductCategoriesQuery, GQLProductCategoriesQueryVariables>({ query: productCategoriesQuery });
-        return categories.data.productCategories.nodes;
-    });
-    const tagsSelectAsyncProps = useAsyncOptionsProps(async () => {
-        const tags = await client.query<GQLProductTagsQuery, GQLProductTagsQueryVariables>({ query: productTagsQuery });
-        return tags.data.productTags.nodes;
-    });
-
     if (error) throw error;
 
     if (loading) {
@@ -174,22 +157,50 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             <MenuItem value="Shirt">Shirt</MenuItem>
                             <MenuItem value="Tie">Tie</MenuItem>
                         </SelectField>
-                        <Field
+                        <AsyncSelectField
                             fullWidth
                             name="category"
                             label="Category"
-                            component={FinalFormSelect}
-                            {...categorySelectAsyncProps}
-                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
+                            loadOptions={async () => {
+                                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                    query: gql`
+                                        query ProductCategoriesSelect {
+                                            productCategories {
+                                                nodes {
+                                                    id
+                                                    title
+                                                }
+                                            }
+                                        }
+                                    `,
+                                });
+
+                                return data.productCategories.nodes;
+                            }}
+                            getOptionLabel={(option) => option.title}
                         />
-                        <Field
+                        <AsyncSelectField
                             fullWidth
                             name="tags"
                             label="Tags"
-                            component={FinalFormSelect}
                             multiple
-                            {...tagsSelectAsyncProps}
-                            getOptionLabel={(option: GQLProductTagsSelectFragment) => option.title}
+                            loadOptions={async () => {
+                                const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({
+                                    query: gql`
+                                        query ProductTagsSelect {
+                                            productTags {
+                                                nodes {
+                                                    id
+                                                    title
+                                                }
+                                            }
+                                        }
+                                    `,
+                                });
+
+                                return data.productTags.nodes;
+                            }}
+                            getOptionLabel={(option) => option.title}
                         />
                         <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
                         <Field name="image" isEqual={isEqual}>
