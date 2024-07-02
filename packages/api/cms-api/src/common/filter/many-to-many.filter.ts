@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
-import { IsOptional, IsUUID } from "class-validator";
+import { IsOptional, IsString, IsUUID } from "class-validator";
 
 @InputType()
 export class ManyToManyFilter {
@@ -7,4 +7,9 @@ export class ManyToManyFilter {
     @IsOptional()
     @IsUUID()
     contains?: string;
+
+    @Field(() => String, { nullable: true })
+    @IsOptional()
+    @IsString()
+    search?: string;
 }
