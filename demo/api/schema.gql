@@ -468,6 +468,7 @@ type ProductCategory {
   id: ID!
   title: String!
   slug: String!
+  position: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   products: [Product!]!
@@ -1015,6 +1016,7 @@ enum ProductSortField {
 input ProductCategoryFilter {
   title: StringFilter
   slug: StringFilter
+  position: NumberFilter
   products: OneToManyFilter
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
@@ -1030,6 +1032,7 @@ input ProductCategorySort {
 enum ProductCategorySortField {
   title
   slug
+  position
   createdAt
   updatedAt
 }
@@ -1166,6 +1169,7 @@ type Mutation {
   createProductCategory(input: ProductCategoryInput!): ProductCategory!
   updateProductCategory(id: ID!, input: ProductCategoryUpdateInput!): ProductCategory!
   deleteProductCategory(id: ID!): Boolean!
+  updateProductCategoryPosition(id: ID!, position: Int!): Boolean!
   createProductTag(input: ProductTagInput!): ProductTag!
   updateProductTag(id: ID!, input: ProductTagUpdateInput!): ProductTag!
   deleteProductTag(id: ID!): Boolean!
@@ -1413,11 +1417,13 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
+  position: Float!
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
+  position: Float
 }
 
 input ProductTagInput {
