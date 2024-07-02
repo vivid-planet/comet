@@ -192,7 +192,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{ values: true }}
+            subscription={{}}
         >
             {({ values }) => (
                 <>
@@ -242,7 +242,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                                 {(props) => (
                                     <FormControlLabel
                                         label={
-                                            values?.useAlternativeAddress ? (
+                                            props.input.checked ? (
                                                 <FormattedMessage id="manufacturer.address.useAlternativeAddress.yes" defaultMessage="Yes" />
                                             ) : (
                                                 <FormattedMessage id="manufacturer.address.useAlternativeAddress.no" defaultMessage="No" />
