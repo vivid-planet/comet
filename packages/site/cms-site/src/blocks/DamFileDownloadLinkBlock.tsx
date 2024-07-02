@@ -12,15 +12,17 @@ interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
 
 export const DamFileDownloadLinkBlock = withPreview(
     ({ data: { file, openFileType }, children, title }: Props) => {
-        if (file === undefined) {
-            return <>{children}</>;
+        if (!file) {
+            return children;
         }
 
-        if (openFileType === "Download") {
-            return React.cloneElement(children, { href: file.fileUrl, title: title });
-        } else {
-            return React.cloneElement(children, { href: file.fileUrl, target: "_blank", rel: "noreferrer", title: title });
-        }
+        const childProps = {
+            href: file.fileUrl,
+            title,
+            ...(openFileType === "NewTab" && { target: "_blank" }),
+        };
+
+        return React.cloneElement(children, childProps);
     },
     { label: "DamFileDownloadLink" },
 );

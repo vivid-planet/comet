@@ -1,9 +1,11 @@
 import {
     AccessLogModule,
+    AzureOpenAiContentGenerationModule,
     BlobStorageModule,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
+    ContentGenerationModule,
     CronJobsModule,
     DamModule,
     DependenciesModule,
@@ -19,6 +21,7 @@ import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
+import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
@@ -137,6 +140,14 @@ export class AppModule {
                     directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
                     acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
+                ...(config.contentGeneration
+                    ? [
+                          ContentGenerationModule.register({
+                              Service: ContentGenerationService,
+                              imports: [AzureOpenAiContentGenerationModule.register(config.contentGeneration)],
+                          }),
+                      ]
+                    : []),
                 NewsModule,
                 MenusModule,
                 FooterModule,

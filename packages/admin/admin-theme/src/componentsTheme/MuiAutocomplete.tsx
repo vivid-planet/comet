@@ -17,6 +17,7 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
             bottom: 0,
             right: spacing(2),
             display: "flex",
+            transform: "none",
         },
         hasPopupIcon: {
             [`&.${autocompleteClasses.root} .${autocompleteClasses.inputRoot}`]: {

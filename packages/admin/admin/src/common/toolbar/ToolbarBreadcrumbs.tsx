@@ -26,7 +26,6 @@ const __DEBUG__useDebugBreadcrumbData = false;
 
 type ToolbarBreadcrumbsClassKey =
     | "root"
-    | "scopeIndicator"
     | "breadcrumbsList"
     | "mobileBreadcrumbsButton"
     | "currentBreadcrumbsItem"
@@ -42,7 +41,6 @@ type ToolbarBreadcrumbsClassKey =
 interface ToolbarBreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
-        scopeIndicator: "div";
         breadcrumbsList: "div";
         mobileBreadcrumbsButton: typeof ButtonBase;
         currentBreadcrumbsItem: typeof Typography;
@@ -55,7 +53,6 @@ interface ToolbarBreadcrumbsProps
         mobileMenuItemText: typeof ListItemText;
         mobileMenuItemNestingIndicator: "div";
     }> {
-    scopeIndicator?: React.ReactNode;
     iconMapping?: {
         itemSeparator?: React.ReactNode;
         openMobileMenu?: React.ReactNode;
@@ -64,7 +61,7 @@ interface ToolbarBreadcrumbsProps
 }
 
 export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
-    const { scopeIndicator, iconMapping = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarBreadcrumbs" });
+    const { iconMapping = {}, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarBreadcrumbs" });
     const {
         itemSeparator: itemSeparatorIcon = <ChevronRight />,
         openMobileMenu: openMobileMenuIcon = <ChevronDown />,
@@ -92,7 +89,6 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
     return (
         <>
             <Root ref={rootRef} {...slotProps?.root} {...restProps}>
-                {Boolean(scopeIndicator) && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
                 <BreadcrumbsList {...slotProps?.breadcrumbsList}>
                     {breadcrumbs.map(({ title, url }, index) => {
                         const isCurrentPage = index === breadcrumbs.length - 1;
@@ -202,15 +198,8 @@ const Root = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
         display: flex;
         align-items: center;
         gap: ${theme.spacing(2)};
-        padding-left: ${theme.spacing(2)};
-        padding-right: ${theme.spacing(2)};
     `,
 );
-
-const ScopeIndicator = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
-    componentName: "ToolbarBreadcrumbs",
-    slotName: "scopeIndicator",
-})();
 
 const BreadcrumbsList = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
     componentName: "ToolbarBreadcrumbs",

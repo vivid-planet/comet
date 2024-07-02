@@ -1,5 +1,5 @@
 ---
-"@comet/cms-api": minor
+"@comet/cms-api": major
 ---
 
 Require `strategyName` in `createStaticCredentialsBasicStrategy`

@@ -8,16 +8,17 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
-import { CreateProductForm } from "@src/products/future/generated/CreateProductForm";
+import { ContentScopeIndicator } from "@comet/cms-admin";
+import { CreateCapProductForm } from "@src/products/future/generated/CreateCapProductForm";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
-export function CreateProductPage(): React.ReactElement {
+export function CreateCapProductPage(): React.ReactElement {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.createCapProduct", defaultMessage: "Create Cap Product" })}>
             <SaveBoundary>
-                <StackToolbar>
+                <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
                     <ToolbarFillSpace />
@@ -25,7 +26,7 @@ export function CreateProductPage(): React.ReactElement {
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
                 </StackToolbar>
-                <CreateProductForm />
+                <CreateCapProductForm type="Cap" />
             </SaveBoundary>
         </Stack>
     );
