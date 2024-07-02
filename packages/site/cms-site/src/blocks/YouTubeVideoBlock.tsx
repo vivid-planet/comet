@@ -1,39 +1,11 @@
 "use client";
 import * as React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
-
-interface VideoContainerProps {
-    $heightInPercent: number;
-}
-
-const VideoContainer = styled.div<VideoContainerProps>`
-    height: 0;
-    overflow: hidden;
-    padding-top: ${({ $heightInPercent }) => $heightInPercent}%;
-    position: relative;
-
-    iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-`;
-
-const getHeightInPercentForAspectRatio = (aspectRatio: YouTubeVideoBlockData["aspectRatio"]) => {
-    switch (aspectRatio) {
-        case "16X9":
-            return 56.25;
-        case "4X3":
-            return 75;
-    }
-};
 
 const EXPECTED_YT_ID_LENGTH = 11;
 
@@ -47,8 +19,10 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
     return youtubeId ?? undefined;
 };
 
+type YouTubeVideoProps = PropsWithData<YouTubeVideoBlockData> & { aspectRatio?: string };
+
 export const YouTubeVideoBlock = withPreview(
-    ({ data: { youtubeIdentifier, autoplay, loop, showControls, aspectRatio } }: PropsWithData<YouTubeVideoBlockData>) => {
+    ({ data: { youtubeIdentifier, autoplay, loop, showControls }, aspectRatio = "16x9" }: YouTubeVideoProps) => {
         if (!youtubeIdentifier) return <PreviewSkeleton type="media" hasContent={false} />;
         const identifier = parseYoutubeIdentifier(youtubeIdentifier);
 
@@ -69,10 +43,29 @@ export const YouTubeVideoBlock = withPreview(
         youtubeUrl.search = searchParams.toString();
 
         return (
-            <VideoContainer $heightInPercent={getHeightInPercentForAspectRatio(aspectRatio)}>
-                <iframe src={youtubeUrl.toString()} style={{ border: 0 }} />
+            <VideoContainer $aspectRatio={aspectRatio?.replace("x", " / ")}>
+                <YouTubeContainer src={youtubeUrl.toString()} />
             </VideoContainer>
         );
     },
     { label: "Video" },
 );
+
+const VideoContainer = styled.div<{ $aspectRatio: string }>`
+    overflow: hidden;
+    position: relative;
+
+    ${({ $aspectRatio }) =>
+        css`
+            aspect-ratio: ${$aspectRatio};
+        `}
+`;
+
+const YouTubeContainer = styled.iframe`
+    position: absolute;
+    border: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+`;

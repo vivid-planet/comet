@@ -30,7 +30,6 @@ describe("composeBlocks", () => {
                 height: 50,
             },
             video: {
-                aspectRatio: "16X9",
                 youtubeIdentifier: "abc",
                 autoplay: true,
                 showControls: true,
@@ -42,7 +41,6 @@ describe("composeBlocks", () => {
                 height: 50,
             },
             video: {
-                aspectRatio: "16X9",
                 youtubeIdentifier: "abc",
                 autoplay: true,
                 showControls: true,
@@ -63,7 +61,6 @@ describe("composeBlocks", () => {
                 height: 10,
             },
             video: {
-                aspectRatio: "16X9",
                 youtubeIdentifier: "abc",
                 autoplay: true,
                 showControls: true,
@@ -71,9 +68,9 @@ describe("composeBlocks", () => {
         });
 
         propsMap.space.updateState({ height: 30 });
-        propsMap.video.updateState({ aspectRatio: "4X3", youtubeIdentifier: "def" });
+        propsMap.video.updateState({ youtubeIdentifier: "def" });
 
-        expect(getTestState()).toStrictEqual({ space: { height: 30 }, video: { aspectRatio: "4X3", youtubeIdentifier: "def" } });
+        expect(getTestState()).toStrictEqual({ space: { height: 30 }, video: { youtubeIdentifier: "def" } });
     });
 
     it("composes values of 1 BlockInterface and 1 settings - flattened", () => {
@@ -158,7 +155,6 @@ describe("composeBlocks", () => {
                 height: 50,
             },
             video: {
-                aspectRatio: "16X9",
                 youtubeIdentifier: "abc",
                 autoplay: true,
                 showControls: true,
@@ -171,7 +167,6 @@ describe("composeBlocks", () => {
                 height: 50,
             },
             video: {
-                aspectRatio: "16X9",
                 youtubeIdentifier: "abc",
                 autoplay: true,
                 showControls: true,
@@ -198,7 +193,6 @@ describe("composeBlocks", () => {
                 height: 10,
             },
             video: {
-                aspectRatio: "16X9",
                 youtubeIdentifier: "abc",
                 autoplay: true,
                 showControls: true,
@@ -207,12 +201,12 @@ describe("composeBlocks", () => {
         });
 
         propsMap.space.updateState({ height: 30 });
-        propsMap.video.updateState({ aspectRatio: "4X3", youtubeIdentifier: "def", autoplay: false, showControls: true });
+        propsMap.video.updateState({ youtubeIdentifier: "def", autoplay: false, showControls: true });
         propsMap.foo.updateState("baz");
 
         expect(getTestState()).toStrictEqual({
             space: { height: 30 },
-            video: { aspectRatio: "4X3", youtubeIdentifier: "def", autoplay: false, showControls: true },
+            video: { youtubeIdentifier: "def", autoplay: false, showControls: true },
             foo: "baz",
         });
     });
