@@ -7,7 +7,7 @@ type GraphQLClient = {
     request<Response, Variables>(document: string, variables?: Variables): Promise<Response>;
 };
 
-async function sitePreviewApiHandler(req: NextApiRequest, res: NextApiResponse, graphQLClient: GraphQLClient) {
+async function legacyPagesRouterSitePreviewApiHandler(req: NextApiRequest, res: NextApiResponse, graphQLClient: GraphQLClient) {
     const params = req.query;
     const settingsParam = params.settings;
     const scopeParam = params.scope;
@@ -47,4 +47,4 @@ async function sitePreviewApiHandler(req: NextApiRequest, res: NextApiResponse, 
     res.redirect(params.path ?? "/");
 }
 
-export { sitePreviewApiHandler };
+export { legacyPagesRouterSitePreviewApiHandler };
