@@ -23,7 +23,7 @@ import MainMenu from "@src/pages/mainMenu/MainMenu";
 import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
-import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
+import ProductCategoriesHandmadePage from "@src/products/categories/ProductCategoriesPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
@@ -257,14 +257,6 @@ export const masterMenuData: MasterMenuData = [
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
-                        route: {
-                            path: "/product-categories",
-                            component: ProductCategoriesPage,
-                        },
-                    },
-                    {
-                        type: "route",
                         primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
                         route: {
                             path: "/product-tags",
@@ -292,6 +284,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/manufacturers-handmade",
                             component: ManufacturersHandmadePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
+                        route: {
+                            path: "/product-categories-handmade",
+                            component: ProductCategoriesHandmadePage,
                         },
                     },
                 ],

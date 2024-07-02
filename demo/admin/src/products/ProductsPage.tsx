@@ -42,7 +42,9 @@ const ProductsPage: React.FC = () => {
             <StackSwitch initialPage="grid">
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                    <ProductsGrid />
+                    <MainContent fullHeight>
+                        <ProductsGrid />
+                    </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedProductId) => (

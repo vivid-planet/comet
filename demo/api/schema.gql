@@ -1413,11 +1413,13 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
+  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
+  products: [ID!]
 }
 
 input ProductTagInput {
