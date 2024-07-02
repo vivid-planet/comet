@@ -237,8 +237,9 @@ export function ManufacturersGrid(): React.ReactElement {
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
-    const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
     if (error) throw error;
+
+    const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
     const rows = data?.manufacturers.nodes ?? [];
 
     return (

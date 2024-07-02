@@ -2,6 +2,7 @@ import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectTy
 
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
+import { findQueryTypeOrThrow } from "./utils/findQueryType";
 import { Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
 
@@ -208,6 +209,8 @@ export function generateFormField(
         const fragmentVariableName = `${rootQuery}SelectFragment`;
         const fragmentName = `${objectType.name}Select`;
 
+        const hasPaging = findQueryTypeOrThrow(rootQuery, gqlIntrospection).args.some((arg) => arg.name === "offset");
+
         formFragmentField = `${name} { id ${labelField} }`;
 
         gqlDocuments[fragmentVariableName] = `
@@ -218,8 +221,16 @@ export function generateFormField(
         `;
         gqlDocuments[queryVariableName] = `query ${queryName} {
             ${rootQuery} {
-                nodes {
+                ${
+                    hasPaging
+                        ? `
+                    nodes {
+                        ...${fragmentName}
+                    }
+                    `
+                        : `
                     ...${fragmentName}
+                    `
                 }
             }
         }
@@ -232,7 +243,7 @@ export function generateFormField(
         });
         hooksCode += `const ${name}SelectAsyncProps = useAsyncOptionsProps(async () => {
             const result = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({ query: ${queryVariableName} });
-            return result.data.${rootQuery}.nodes;
+            return result.data.${rootQuery}${hasPaging ? `.nodes` : ""};
         });`;
 
         formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;

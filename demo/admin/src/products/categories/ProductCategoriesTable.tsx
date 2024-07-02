@@ -5,14 +5,9 @@ import {
     filterByFragment,
     GridColDef,
     GridFilterButton,
-    muiGridFilterToGql,
-    muiGridPagingToGql,
-    muiGridSortToGql,
     StackLink,
     ToolbarFillSpace,
     ToolbarItem,
-    useBufferedRowCount,
-    useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
@@ -98,25 +93,16 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
 ];
 
 function ProductCategoriesTable() {
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductCategoriesGrid") };
-    const sortModel = dataGridProps.sortModel;
+    const dataGridProps = { ...usePersistentColumnState("ProductCategoriesGrid") };
 
-    const { data, loading, error } = useQuery<GQLProductCategoriesListQuery, GQLProductCategoriesListQueryVariables>(productCategoriesQuery, {
-        variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
-            sort: muiGridSortToGql(sortModel),
-        },
-    });
-    const rows = data?.productCategories.nodes ?? [];
-    const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
+    const { data, loading, error } = useQuery<GQLProductCategoriesListQuery, GQLProductCategoriesListQueryVariables>(productCategoriesQuery);
+    const rows = data?.productCategories ?? [];
 
     return (
         <DataGridPro
             {...dataGridProps}
             disableSelectionOnClick
             rows={rows}
-            rowCount={rowCount}
             columns={columns}
             loading={loading}
             error={error}
@@ -140,13 +126,10 @@ const productCategoriesFragment = gql`
 `;
 
 const productCategoriesQuery = gql`
-    query ProductCategoriesList($offset: Int, $limit: Int, $sort: [ProductCategorySort!], $filter: ProductCategoryFilter, $search: String) {
-        productCategories(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
-            nodes {
-                id
-                ...ProductsCategoriesList
-            }
-            totalCount
+    query ProductCategoriesList($sort: [ProductCategorySort!], $filter: ProductCategoryFilter, $search: String) {
+        productCategories(sort: $sort, filter: $filter, search: $search) {
+            id
+            ...ProductsCategoriesList
         }
     }
     ${productCategoriesFragment}

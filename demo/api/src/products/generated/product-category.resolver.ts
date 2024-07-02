@@ -9,7 +9,6 @@ import { GraphQLResolveInfo } from "graphql";
 
 import { Product } from "../entities/product.entity";
 import { ProductCategory } from "../entities/product-category.entity";
-import { PaginatedProductCategories } from "./dto/paginated-product-categories";
 import { ProductCategoriesArgs } from "./dto/product-categories.args";
 import { ProductCategoryInput, ProductCategoryUpdateInput } from "./dto/product-category.input";
 import { ProductCategoriesService } from "./product-categories.service";
@@ -37,11 +36,8 @@ export class ProductCategoryResolver {
         return productCategory ?? null;
     }
 
-    @Query(() => PaginatedProductCategories)
-    async productCategories(
-        @Args() { search, filter, sort, offset, limit }: ProductCategoriesArgs,
-        @Info() info: GraphQLResolveInfo,
-    ): Promise<PaginatedProductCategories> {
+    @Query(() => [ProductCategory])
+    async productCategories(@Args() { search, filter, sort }: ProductCategoriesArgs, @Info() info: GraphQLResolveInfo): Promise<ProductCategory[]> {
         const where = this.productCategoriesService.getFindCondition({ search, filter });
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
@@ -51,7 +47,7 @@ export class ProductCategoryResolver {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const options: FindOptions<ProductCategory, any> = { offset, limit, populate };
+        const options: FindOptions<ProductCategory, any> = { populate };
 
         if (sort) {
             options.orderBy = sort.map((sortItem) => {
@@ -61,8 +57,7 @@ export class ProductCategoryResolver {
             });
         }
 
-        const [entities, totalCount] = await this.repository.findAndCount(where, options);
-        return new PaginatedProductCategories(entities, totalCount);
+        return this.repository.find(where, options);
     }
 
     @Mutation(() => ProductCategory)

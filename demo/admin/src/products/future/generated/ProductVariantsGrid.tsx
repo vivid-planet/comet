@@ -167,8 +167,9 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
-    const rowCount = useBufferedRowCount(data?.productVariants.totalCount);
     if (error) throw error;
+
+    const rowCount = useBufferedRowCount(data?.productVariants.totalCount);
     const rows = data?.productVariants.nodes ?? [];
 
     return (

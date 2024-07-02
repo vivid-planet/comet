@@ -83,7 +83,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
         const result = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
             query: productCategoriesQuery,
         });
-        return result.data.productCategories.nodes;
+        return result.data.productCategories;
     });
 
     return (
