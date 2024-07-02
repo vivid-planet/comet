@@ -3,6 +3,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    FieldSet,
     filterByFragment,
     FinalForm,
     FinalFormCheckbox,
@@ -24,6 +25,7 @@ import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
+import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
@@ -148,77 +150,103 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 <>
                     {saveConflict.dialogs}
                     <MainContent>
-                        <TextField
-                            required
-                            fullWidth
-                            name="title"
-                            label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
-                            validate={validateTitle}
-                        />
-
-                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
-
-                        <Field
-                            readOnly
-                            disabled
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <Lock />
-                                </InputAdornment>
+                        <FieldSet
+                            collapsible={false}
+                            initiallyExpanded={true}
+                            title={<FormattedMessage id="product.MainData.title" defaultMessage="Main Data" />}
+                            supportText={
+                                mode === "edit" && (
+                                    <FormSpy subscription={{ values: true }}>
+                                        {({ values }) => (
+                                            <FormattedMessage
+                                                id="product.MainData.supportText"
+                                                defaultMessage="Product: {title}"
+                                                values={{ ...values }}
+                                            />
+                                        )}
+                                    </FormSpy>
+                                )
                             }
-                            fullWidth
-                            name="createdAt"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
-                        />
+                        >
+                            <TextField
+                                required
+                                fullWidth
+                                name="title"
+                                label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                                validate={validateTitle}
+                            />
 
-                        <TextAreaField
-                            required
-                            fullWidth
-                            name="description"
-                            label={<FormattedMessage id="product.description" defaultMessage="Description" />}
-                        />
-                        <Field required fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
-                            {(props) => (
-                                <FinalFormSelect {...props}>
-                                    <MenuItem value="Cap">
-                                        <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
-                                    </MenuItem>
-                                    <MenuItem value="Shirt">
-                                        <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
-                                    </MenuItem>
-                                    <MenuItem value="Tie">
-                                        <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
-                                    </MenuItem>
-                                </FinalFormSelect>
-                            )}
-                        </Field>
-                        <Field
-                            fullWidth
-                            name="category"
-                            label={<FormattedMessage id="product.category" defaultMessage="Category" />}
-                            component={FinalFormSelect}
-                            {...categorySelectAsyncProps}
-                            getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
-                        />
-                        <Field name="inStock" label="" type="checkbox" fullWidth>
-                            {(props) => (
-                                <FormControlLabel
-                                    label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                    control={<FinalFormCheckbox {...props} />}
-                                />
-                            )}
-                        </Field>
+                            <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
-                        <Field
-                            fullWidth
-                            name="availableSince"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
-                        />
-                        <Field name="image" isEqual={isEqual}>
-                            {createFinalFormBlock(rootBlocks.image)}
-                        </Field>
+                            <Field
+                                readOnly
+                                disabled
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <Lock />
+                                    </InputAdornment>
+                                }
+                                fullWidth
+                                name="createdAt"
+                                component={FinalFormDatePicker}
+                                label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
+                            />
+
+                            <TextAreaField
+                                required
+                                fullWidth
+                                name="description"
+                                label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                            />
+                            <Field required fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
+                                {(props) => (
+                                    <FinalFormSelect {...props}>
+                                        <MenuItem value="Cap">
+                                            <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                                        </MenuItem>
+                                        <MenuItem value="Shirt">
+                                            <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
+                                        </MenuItem>
+                                        <MenuItem value="Tie">
+                                            <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
+                                        </MenuItem>
+                                    </FinalFormSelect>
+                                )}
+                            </Field>
+                            <Field
+                                fullWidth
+                                name="category"
+                                label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                                component={FinalFormSelect}
+                                {...categorySelectAsyncProps}
+                                getOptionLabel={(option: GQLProductCategorySelectFragment) => option.title}
+                            />
+                        </FieldSet>
+
+                        <FieldSet
+                            collapsible={true}
+                            initiallyExpanded={false}
+                            title={<FormattedMessage id="product.AdditionalData.title" defaultMessage="Additional Data" />}
+                        >
+                            <Field name="inStock" label="" type="checkbox" fullWidth>
+                                {(props) => (
+                                    <FormControlLabel
+                                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                        control={<FinalFormCheckbox {...props} />}
+                                    />
+                                )}
+                            </Field>
+
+                            <Field
+                                fullWidth
+                                name="availableSince"
+                                component={FinalFormDatePicker}
+                                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                            />
+                            <Field name="image" isEqual={isEqual}>
+                                {createFinalFormBlock(rootBlocks.image)}
+                            </Field>
+                        </FieldSet>
                     </MainContent>
                 </>
             )}
