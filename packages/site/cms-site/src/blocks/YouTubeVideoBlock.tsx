@@ -43,7 +43,7 @@ export const YouTubeVideoBlock = withPreview(
         youtubeUrl.search = searchParams.toString();
 
         return (
-            <VideoContainer $aspectRatio={aspectRatio?.replace("x", " / ")}>
+            <VideoContainer $aspectRatio={aspectRatio.replace("x", " / ")}>
                 <YouTubeContainer src={youtubeUrl.toString()} />
             </VideoContainer>
         );
