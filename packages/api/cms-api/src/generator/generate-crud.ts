@@ -949,8 +949,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
             ${[...new Set<string>(injectRepositories)]
                 .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
-                .join("\n")}
-            ${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
+                .join("\n")}${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
         @Query(() => ${metadata.className})

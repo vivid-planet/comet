@@ -29,7 +29,6 @@ export class NewsResolver {
         private readonly entityManager: EntityManager,
         private readonly newsService: NewsService,
         @InjectRepository(News) private readonly repository: EntityRepository<News>,
-
         private readonly blocksTransformer: BlocksTransformerService,
     ) {}
 
