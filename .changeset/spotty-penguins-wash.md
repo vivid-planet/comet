@@ -4,6 +4,17 @@
 "@comet/cms-api": major
 ---
 
-Removed `aspectRatio` from `YouTubeBlock`
+Remove `aspectRatio` from `YouTubeBlock`
 
-Attention: the site implementation of the `YouTubeBlock` needs an aspect ratio. The aspect ratio can now be set via the optional `aspectRatio` property of the `YouTubeBlock`, fallback is `16x9`.
+The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+**Migrate**
+
+The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+```diff
+ <YouTubeVideoBlock
+   data={video}
++  aspectRatio="9x16"
+ />
+```
