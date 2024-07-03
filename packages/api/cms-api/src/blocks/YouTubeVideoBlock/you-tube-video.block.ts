@@ -1,7 +1,8 @@
-import { BlockDataInterface, BlockField, createBlock, inputToData } from "@comet/blocks-api";
+import { BlockDataInterface, BlockField, createBlock, inputToData, typesafeMigrationPipe } from "@comet/blocks-api";
 import { IsOptional, IsString, Matches } from "class-validator";
 
-import { VideoBaseBlockData, VideoBaseBlockInput } from "./video-base.block";
+import { VideoBaseBlockData, VideoBaseBlockInput } from "../video-base.block";
+import { RemoveAspectRatioMigration } from "./migrations/1-remove-aspect-ratio.migration";
 
 class YouTubeVideoBlockData extends VideoBaseBlockData {
     @BlockField({ nullable: true })
@@ -23,4 +24,10 @@ class YouTubeVideoBlockInput extends VideoBaseBlockInput {
     }
 }
 
-export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideoBlockInput, "YouTubeVideo");
+export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideoBlockInput, {
+    name: "YouTubeVideo",
+    migrate: {
+        version: 1,
+        migrations: typesafeMigrationPipe([RemoveAspectRatioMigration]),
+    },
+});

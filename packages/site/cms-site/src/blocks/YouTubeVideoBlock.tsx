@@ -91,9 +91,9 @@ const VideoContainer = styled.div<{ $aspectRatio: string }>`
 
 const YouTubeContainer = styled.iframe`
     position: absolute;
+    border: 0;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border: 0;
 `;

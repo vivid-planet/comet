@@ -28,7 +28,7 @@ export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
-export { YouTubeVideoBlock } from "./blocks/you-tube-video.block";
+export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
 export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";

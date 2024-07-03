@@ -1083,6 +1083,11 @@
         "name": "YouTubeVideo",
         "fields": [
             {
+                "name": "youtubeIdentifier",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "autoplay",
                 "kind": "Boolean",
                 "nullable": true
@@ -1102,11 +1107,6 @@
                 "kind": "Block",
                 "block": "DamImage",
                 "nullable": false
-            },
-            {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
             }
         ],
         "inputFields": [
