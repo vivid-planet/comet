@@ -154,7 +154,7 @@
             {
                 "name": "previewImage",
                 "kind": "Block",
-                "block": "DamImage",
+                "block": "PixelImage",
                 "nullable": false
             },
             {
@@ -236,7 +236,7 @@
             {
                 "name": "previewImage",
                 "kind": "Block",
-                "block": "DamImage",
+                "block": "PixelImage",
                 "nullable": false
             },
             {
@@ -1083,11 +1083,6 @@
         "name": "YouTubeVideo",
         "fields": [
             {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
                 "name": "autoplay",
                 "kind": "Boolean",
                 "nullable": true
@@ -1105,8 +1100,13 @@
             {
                 "name": "previewImage",
                 "kind": "Block",
-                "block": "DamImage",
+                "block": "PixelImage",
                 "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
+                "nullable": true
             }
         ],
         "inputFields": [
@@ -1128,7 +1128,7 @@
             {
                 "name": "previewImage",
                 "kind": "Block",
-                "block": "DamImage",
+                "block": "PixelImage",
                 "nullable": false
             },
             {

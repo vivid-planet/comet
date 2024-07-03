@@ -298,7 +298,7 @@
             {
                 "name": "previewImage",
                 "kind": "Block",
-                "block": "DamImage",
+                "block": "PixelImage",
                 "nullable": false
             },
             {
@@ -380,7 +380,7 @@
             {
                 "name": "previewImage",
                 "kind": "Block",
-                "block": "DamImage",
+                "block": "PixelImage",
                 "nullable": false
             },
             {
@@ -2208,7 +2208,7 @@
             {
                 "name": "previewImage",
                 "kind": "Block",
-                "block": "DamImage",
+                "block": "PixelImage",
                 "nullable": false
             },
             {
@@ -2236,7 +2236,7 @@
             {
                 "name": "previewImage",
                 "kind": "Block",
-                "block": "DamImage",
+                "block": "PixelImage",
                 "nullable": false
             },
             {

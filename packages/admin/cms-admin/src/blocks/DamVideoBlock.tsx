@@ -21,15 +21,15 @@ import { FormattedMessage } from "react-intl";
 
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
 import { useContentScope } from "../contentScope/Provider";
-import { DamImageBlock } from "../dam/blocks/DamImageBlock";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
+import { PixelImageBlock } from "./PixelImageBlock";
 
-type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof DamImageBlock> };
+type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 
 export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlockInput> = {
     ...createBlockSkeleton(),
@@ -38,15 +38,15 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     displayName: <FormattedMessage id="comet.blocks.damVideo" defaultMessage="Video (CMS Asset)" />,
 
-    defaultValues: () => ({ showControls: true, previewImage: DamImageBlock.defaultValues() }),
+    defaultValues: () => ({ showControls: true, previewImage: PixelImageBlock.defaultValues() }),
 
     category: BlockCategory.Media,
 
-    input2State: (input) => ({ previewImage: DamImageBlock.input2State(input.previewImage) }),
+    input2State: (input) => ({ previewImage: PixelImageBlock.input2State(input.previewImage) }),
 
     state2Output: (state) => ({
         damFileId: state.damFile?.id,
-        previewImage: DamImageBlock.state2Output(state.previewImage),
+        previewImage: PixelImageBlock.state2Output(state.previewImage),
         autoplay: state.autoplay,
         loop: state.loop,
         showControls: state.showControls,
@@ -207,7 +207,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                     )}
                     <VideoOptionsFields />
                     <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
-                        <DamImageBlock.AdminComponent
+                        <PixelImageBlock.AdminComponent
                             state={state.previewImage}
                             updateState={(setStateAction) => {
                                 updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });

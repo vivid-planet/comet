@@ -1,12 +1,11 @@
-import { DamImageBlockData } from "@src/blocks.generated";
-import { DamImageBlock } from "@src/blocks/DamImageBlock";
-import { SvgUse } from "@src/blocks/helpers/SvgUse";
+import { PixelImageBlock } from "@comet/cms-site";
+import { PixelImageBlockData } from "@src/blocks.generated";
 import { useIntl } from "react-intl";
 import styled from "styled-components";
 
 interface VideoPreviewImageProps {
     onClick: () => void;
-    image: DamImageBlockData;
+    image: PixelImageBlockData;
     aspectRatio?: string;
     sizes?: string;
 }
@@ -15,14 +14,14 @@ export const VideoPreviewImage = ({ onClick, image, aspectRatio, sizes = "100vw"
     const intl = useIntl();
     return (
         <Root onClick={onClick} aria-label={intl.formatMessage({ id: "videoPreviewImage.ariaLabel.startVideo", defaultMessage: "Start video" })}>
-            <DamImageBlock
+            <PixelImageBlock
                 data={image}
                 aspectRatio={aspectRatio ? aspectRatio : "16x9"}
                 layout={aspectRatio ? "responsive" : "intrinsic"}
                 sizes={sizes}
             />
             <IconWrapper>
-                <PlayIcon href="/icons/play-circle.svg#play-circle" />
+                <StyledPlayButton />
             </IconWrapper>
         </Root>
     );
@@ -50,7 +49,11 @@ const IconWrapper = styled.div`
     opacity: 0.5;
 `;
 
-const PlayIcon = styled(SvgUse)`
+const StyledPlayButton = styled.div`
     width: 64px;
     height: 64px;
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: 32px 0 32px 64px;
+    border-color: transparent transparent transparent white;
 `;

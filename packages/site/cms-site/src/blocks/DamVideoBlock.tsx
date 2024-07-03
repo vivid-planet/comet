@@ -2,14 +2,14 @@
 import * as React from "react";
 import styled, { css } from "styled-components";
 
-import { DamImageBlockData, DamVideoBlockData } from "../blocks.generated";
+import { DamVideoBlockData, PixelImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
 interface VideoPreviewImageProps {
     onClick: () => void;
-    image: DamImageBlockData;
+    image: PixelImageBlockData;
     aspectRatio?: string;
     sizes?: string;
 }
@@ -27,7 +27,7 @@ export const DamVideoBlock = withPreview(
         }
 
         const [showPreviewImage, setShowPreviewImage] = React.useState(true);
-        const hasPreviewImage = previewImage && previewImage.block?.props.damFile;
+        const hasPreviewImage = previewImage && previewImage.damFile;
 
         return (
             <>

@@ -10,7 +10,7 @@ import {
 } from "@comet/blocks-api";
 import { IsBoolean, IsOptional } from "class-validator";
 
-import { DamImageBlock } from "../dam/blocks/dam-image.block";
+import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 
 export class VideoBaseBlockData extends BlockData {
     @BlockField({ nullable: true })
@@ -22,7 +22,7 @@ export class VideoBaseBlockData extends BlockData {
     @BlockField({ nullable: true })
     loop?: boolean;
 
-    @ChildBlock(DamImageBlock)
+    @ChildBlock(PixelImageBlock)
     previewImage: BlockDataInterface;
 }
 
@@ -42,8 +42,8 @@ export class VideoBaseBlockInput extends BlockInput {
     @BlockField({ nullable: true })
     loop?: boolean;
 
-    @ChildBlockInput(DamImageBlock)
-    previewImage: ExtractBlockInput<typeof DamImageBlock>;
+    @ChildBlockInput(PixelImageBlock)
+    previewImage: ExtractBlockInput<typeof PixelImageBlock>;
 
     transformToBlockData(): BlockDataInterface {
         return inputToData(VideoBaseBlockData, this);

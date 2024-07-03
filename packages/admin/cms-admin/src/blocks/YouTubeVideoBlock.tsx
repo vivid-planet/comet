@@ -15,10 +15,10 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
-import { DamImageBlock } from "../dam/blocks/DamImageBlock";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
+import { PixelImageBlock } from "./PixelImageBlock";
 
-type State = Omit<YouTubeVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof DamImageBlock> };
+type State = Omit<YouTubeVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 
 const EXPECTED_YT_ID_LENGTH = 11;
 
@@ -45,23 +45,21 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
     displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
 
-    defaultValues: () => ({ showControls: true, previewImage: DamImageBlock.defaultValues() }),
+    defaultValues: () => ({ showControls: true, previewImage: PixelImageBlock.defaultValues() }),
 
     category: BlockCategory.Media,
 
-    input2State: (input) => ({ ...input, previewImage: DamImageBlock.input2State(input.previewImage) }),
+    input2State: (input) => ({ ...input, previewImage: PixelImageBlock.input2State(input.previewImage) }),
 
-    state2Output: (state) => ({ ...state, previewImage: DamImageBlock.state2Output(state.previewImage) }),
+    state2Output: (state) => ({ ...state, previewImage: PixelImageBlock.state2Output(state.previewImage) }),
 
-    // @ts-expect-error attachedBlocks missing in generated type for OneOfBlockInput
-    output2State: async (output, context) => ({ ...output, previewImage: await DamImageBlock.output2State(output.previewImage, context) }),
+    output2State: async (output, context) => ({ ...output, previewImage: await PixelImageBlock.output2State(output.previewImage, context) }),
 
-    // @ts-expect-error type mismatch between generated types and OneOfBlockPreviewState
     createPreviewState: (state, previewContext) => {
         return {
             ...state,
             autoplay: false,
-            previewImage: DamImageBlock.createPreviewState(state.previewImage, previewContext),
+            previewImage: PixelImageBlock.createPreviewState(state.previewImage, previewContext),
             adminMeta: { route: previewContext.parentUrl },
         };
     },
@@ -92,7 +90,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                         <VideoOptionsFields />
                     </BlocksFinalForm>
                     <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
-                        <DamImageBlock.AdminComponent
+                        <PixelImageBlock.AdminComponent
                             state={state.previewImage}
                             updateState={(setStateAction) => {
                                 updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
