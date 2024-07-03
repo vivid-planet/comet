@@ -54,33 +54,24 @@ export const PixelImageBlock = withPreview(
 
         const blurDataUrl = createDominantImageDataUrl(dimensions.width, dimensions.height, damFile.image.dominantColor);
 
+        const nextImage = (
+            <NextImage
+                loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
+                src={urlTemplate}
+                fill
+                placeholder="blur"
+                blurDataURL={blurDataUrl}
+                alt={damFile.altText ?? ""}
+                {...nextImageProps}
+            />
+        );
+
+        // default behavior when fill is set to true: do not wrap in container -> an own container must be used
         if (fill) {
-            return (
-                <NextImage
-                    loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
-                    src={urlTemplate}
-                    fill
-                    placeholder="blur"
-                    blurDataURL={blurDataUrl}
-                    alt={damFile.altText ?? ""}
-                    {...nextImageProps}
-                />
-            );
+            return nextImage;
         }
 
-        return (
-            <ImageContainer $aspectRatio={usedAspectRatio}>
-                <NextImage
-                    loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
-                    src={urlTemplate}
-                    fill
-                    placeholder="blur"
-                    blurDataURL={blurDataUrl}
-                    alt={damFile.altText ?? ""}
-                    {...nextImageProps}
-                />
-            </ImageContainer>
-        );
+        return <ImageContainer $aspectRatio={usedAspectRatio}>{nextImage}</ImageContainer>;
     },
     { label: "PixelImage" },
 );
