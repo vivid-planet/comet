@@ -1375,7 +1375,7 @@ input ProductInput {
 }
 
 input ProductNestedProductStatisticsInput {
-  views: Float!
+  views: Int!
 }
 
 input ProductNestedProductColorInput {

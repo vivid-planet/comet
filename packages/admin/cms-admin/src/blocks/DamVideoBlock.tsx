@@ -27,7 +27,7 @@ import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
-import { VideoOptionsFields } from "./VideoOptionsFields";
+import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 
 type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof DamImageBlock> };
 

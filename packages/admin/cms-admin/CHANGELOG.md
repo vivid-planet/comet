@@ -1,5 +1,24 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   06768a70f: Make icon required for top level menu and group items
+
+    This fixes the problem, that there was no icon or text to display in the collapsed state of the menu if no icon was passed.
+    Icons are required for all top level menu items and the items of groups. Groups themselves do not require an icon.
+
+### Patch Changes
+
+-   Updated dependencies [ce5eaede2]
+    -   @comet/admin@7.0.0-beta.3
+    -   @comet/admin-date-time@7.0.0-beta.3
+    -   @comet/admin-icons@7.0.0-beta.3
+    -   @comet/admin-rte@7.0.0-beta.3
+    -   @comet/admin-theme@7.0.0-beta.3
+    -   @comet/blocks-admin@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Major Changes

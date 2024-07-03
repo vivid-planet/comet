@@ -16,7 +16,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
 import { DamImageBlock } from "../dam/blocks/DamImageBlock";
-import { VideoOptionsFields } from "./VideoOptionsFields";
+import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 
 type State = Omit<YouTubeVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof DamImageBlock> };
 
