@@ -1,5 +1,7 @@
 # @comet/blocks-api
 
+## 7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Minor Changes
