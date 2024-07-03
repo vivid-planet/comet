@@ -3,7 +3,7 @@ import { IsBoolean, IsOptional, IsString, Matches } from "class-validator";
 import { typesafeMigrationPipe } from "../../migrations/typesafeMigrationPipe";
 import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "../block";
 import { BlockField } from "../decorators/field";
-import { RemoveAspectRatioMigration } from "./1-remove-aspect-ratio.migration";
+import { RemoveAspectRatioMigration } from "./migrations/1-remove-aspect-ratio.migration";
 
 class YouTubeVideoBlockData extends BlockData {
     @BlockField({ nullable: true })
