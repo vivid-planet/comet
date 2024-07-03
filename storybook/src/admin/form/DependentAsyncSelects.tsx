@@ -30,7 +30,7 @@ storiesOf("@comet/admin/form", module)
                             <AsyncSelectField
                                 name="manufacturer"
                                 loadOptions={async () => {
-                                    const { data } = await client.query({
+                                    const { data } = await client.query<{ manufacturers: Manufacturer[] }>({
                                         query: gql`
                                             query Manufacturers {
                                                 manufacturers {
@@ -43,14 +43,14 @@ storiesOf("@comet/admin/form", module)
 
                                     return data.manufacturers;
                                 }}
-                                getOptionLabel={(option: Manufacturer) => option.name}
+                                getOptionLabel={(option) => option.name}
                                 label="Manufacturer"
                                 fullWidth
                             />
                             <AsyncSelectField
                                 name="product"
                                 loadOptions={async () => {
-                                    const { data } = await client.query({
+                                    const { data } = await client.query<{ products: Product[] }>({
                                         query: gql`
                                             query Products($manufacturer: ID) {
                                                 products(manufacturer: $manufacturer) {
@@ -64,7 +64,7 @@ storiesOf("@comet/admin/form", module)
 
                                     return data.products;
                                 }}
-                                getOptionLabel={(option: Product) => option.name}
+                                getOptionLabel={(option) => option.name}
                                 label="Product"
                                 fullWidth
                                 disabled={!values.manufacturer}
