@@ -57,7 +57,7 @@ export interface BreadcrumbItem {
     parentId: string;
     url: string;
     title: React.ReactNode;
-    stateUrl?: string;
+    locationUrl?: string;
 }
 
 export interface SwitchItem {
@@ -75,7 +75,7 @@ export function Stack(props: StackProps) {
 
     const getVisibleBreadcrumbs = React.useCallback(() => {
         return sortByParentId(breadcrumbs).map((i) => {
-            return { ...i, url: i.stateUrl ?? i.url };
+            return { ...i, url: i.locationUrl ?? i.url };
         });
     }, [breadcrumbs]);
 
@@ -142,10 +142,10 @@ export function Stack(props: StackProps) {
     }, []);
 
     React.useEffect(() => {
-        // execute on location change, set stateUrl for the last breadcrumb to the current location
+        // execute on location change, set locationUrl for the last breadcrumb to the current location
         setBreadcrumbs((old) => {
             const sorted = sortByParentId(old);
-            sorted[sorted.length - 1].stateUrl = location.pathname + location.search; // modify object in place
+            sorted[sorted.length - 1].locationUrl = location.pathname + location.search; // modify object in place
             return [...old]; // clone (with modified object) to new array to trigger a state update
         });
     }, [location]);
