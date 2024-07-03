@@ -65,7 +65,7 @@ export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDat
 export { strictBlockInputFactoryDecorator } from "./blocks/helpers/strictBlockInputFactoryDecorator";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
 export { transformToSaveIndex } from "./blocks/transformToSaveIndex/transformToSaveIndex";
-export { YouTubeVideoBlock } from "./blocks/youtube-video.block";
+export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/youtube-video.block";
 export { getBlocksMeta } from "./blocks-meta";
 export { FlatBlocks } from "./flat-blocks/flat-blocks";
 export { BlockMigration } from "./migrations/BlockMigration";
