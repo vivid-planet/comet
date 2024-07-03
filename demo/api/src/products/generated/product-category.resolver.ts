@@ -67,10 +67,11 @@ export class ProductCategoryResolver {
 
     @Mutation(() => ProductCategory)
     async createProductCategory(@Args("input", { type: () => ProductCategoryInput }) input: ProductCategoryInput): Promise<ProductCategory> {
-        if (input.position !== undefined) {
+        const lastPosition = await this.getLastPosition();
+        if (input.position !== undefined && input.position < lastPosition + 1) {
             await this.incrementPositions(input.position);
         } else {
-            input.position = (await this.getLastPosition()) + 1;
+            input.position = lastPosition + 1;
         }
 
         const productCategory = this.repository.create({
@@ -91,6 +92,10 @@ export class ProductCategoryResolver {
         const productCategory = await this.repository.findOneOrFail(id);
 
         if (input.position !== undefined) {
+            const lastPosition = await this.getLastPosition();
+            if (input.position > lastPosition + 1) {
+                input.position = lastPosition + 1;
+            }
             if (productCategory.position < input.position) {
                 await this.decrementPositions(productCategory.position, input.position);
             } else if (productCategory.position > input.position) {

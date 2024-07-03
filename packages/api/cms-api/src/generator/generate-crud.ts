@@ -1075,10 +1075,11 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             ${
                 hasPositionProp
                     ? `
-            if (input.position !== undefined) {
+            const lastPosition = await this.getLastPosition();
+            if (input.position !== undefined && input.position < lastPosition + 1) {
                 await this.incrementPositions(input.position);
             } else {
-                input.position = (await this.getLastPosition()) + 1;
+                input.position = lastPosition + 1;
             }`
                     : ""
             }
@@ -1108,6 +1109,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 hasPositionProp
                     ? `
             if (input.position !== undefined) {
+                const lastPosition = await this.getLastPosition();
+                if (input.position > lastPosition + 1) {
+                    input.position = lastPosition + 1;
+                }
                 if (${instanceNameSingular}.position < input.position) {
                     await this.decrementPositions(${instanceNameSingular}.position, input.position);
                 } else if (${instanceNameSingular}.position > input.position) {
