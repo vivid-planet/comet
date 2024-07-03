@@ -9,7 +9,7 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
     const isAllowed = useUserPermissionCheck();
     const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
-    const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
+    const flat = (routes: RouteProps[], item: MasterMenuItem & { icon?: React.ReactNode }): RouteProps[] => {
         if (item.type === "externalLink") {
             return routes;
         }
@@ -20,7 +20,7 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
             routes.push(item.route);
         }
         if (item.type === "collapsible" && !!item.items?.length) {
-            routes.concat(item.items.reduce(flat, routes));
+            routes.concat((item.items as Array<MasterMenuItem & { icon?: React.ReactNode }>).reduce(flat, routes));
         }
         return routes;
     };

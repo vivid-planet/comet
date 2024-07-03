@@ -1,5 +1,90 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.2
+
+### Major Changes
+
+-   3574617ea: Remove `EditPageLayout`
+
+    You can completely remove `EditPageLayout` from your application.
+    Instead, use `MainContent` to wrap all your page content except the `Toolbar`.
+    If needed, wrap `MainContent` and `Toolbar` in a fragment.
+
+    Example:
+
+    ```diff
+    - <EditPageLayout>
+    + <>
+          <Toolbar>
+              // ...
+          </Toolbar>
+    -     <div>
+    +     <MainContent>
+              // ...
+    -     </div>
+    +     </MainContent>
+    - </EditPageLayout>
+    + </>
+    ```
+
+### Minor Changes
+
+-   acfcef9e4: The `documentTypes` prop of `PagesPage` now also accepts a function mapping categories to document types
+
+    Previously, only the supported documentTypes of the current category could be passed to the `PagesPage`.
+    That made it impossible to verify if a document can be moved to another category.
+    If a document was moved to a category that didn't support its type, the PageTree crashed.
+
+    If a mapping function is passed to `documentTypes`, documents can only be moved to categories that support their type.
+
+    ```diff
+    <PagesPage
+    -   documentTypes={pageTreeDocumentTypes}
+    +   documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+    +       if (category === "TopMenu") {
+    +           return {
+    +               Page,
+    +               PredefinedPage,
+    +           };
+    +       }
+    +
+    +       return {
+    +           Page,
+    +           PredefinedPage,
+    +           Link,
+    +       };
+    +   }}
+        // ...
+    />
+    ```
+
+-   61a43d270: Add a menu item to `PixelImageBlock`, `SvgImageBlock` and `DamVideoBlock` that opens the chosen file in the DAM
+
+    Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+    ```diff
+    // App.tsx
+
+    <DependenciesConfigProvider
+        entityDependencyMap={{
+    +       DamFile: createDamFileDependency(),
+            // ...
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   e106a02b2: Make the `ContentScopeIndicator` show the scope label instead of the scope value
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [2de81e40b]
+    -   @comet/admin@7.0.0-beta.2
+    -   @comet/admin-theme@7.0.0-beta.2
+    -   @comet/admin-date-time@7.0.0-beta.2
+    -   @comet/admin-icons@7.0.0-beta.2
+    -   @comet/admin-rte@7.0.0-beta.2
+    -   @comet/blocks-admin@7.0.0-beta.2
+
 ## 7.0.0-beta.1
 
 ### Major Changes
@@ -452,6 +537,141 @@
     -   @comet/admin-rte@7.0.0-beta.0
     -   @comet/blocks-admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin@6.14.1
+-   @comet/admin-date-time@6.14.1
+-   @comet/admin-icons@6.14.1
+-   @comet/admin-rte@6.14.1
+-   @comet/admin-theme@6.14.1
+-   @comet/blocks-admin@6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   9055ff71a: Remove label from `DamVideoBlock` file field
+
+    This was done to streamline it with the `DamImageBlock`.
+
+-   dddb03d1b: Add capability to generate alt texts and titles for images in DAM
+
+    You can find instructions for adding this feature to your project [in the docs](https://docs.comet-dxp.com/docs/content-generation/).
+
+-   acfcef9e4: The `documentTypes` prop of `PagesPage` now also accepts a function mapping categories to document types
+
+    Previously, only the supported documentTypes of the current category could be passed to the `PagesPage`.
+    That made it impossible to verify if a document can be moved to another category.
+    If a document was moved to a category that didn't support its type, the PageTree crashed.
+
+    If a mapping function is passed to `documentTypes`, documents can only be moved to categories that support their type.
+
+    ```diff
+    <PagesPage
+    -   documentTypes={pageTreeDocumentTypes}
+    +   documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+    +       if (category === "TopMenu") {
+    +           return {
+    +               Page,
+    +               PredefinedPage,
+    +           };
+    +       }
+    +
+    +       return {
+    +           Page,
+    +           PredefinedPage,
+    +           Link,
+    +       };
+    +   }}
+        // ...
+    />
+    ```
+
+-   61a43d270: Add a menu item to `PixelImageBlock`, `SvgImageBlock` and `DamVideoBlock` that opens the chosen file in the DAM
+
+    Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+    ```diff
+    // App.tsx
+
+    <DependenciesConfigProvider
+        entityDependencyMap={{
+    +       DamFile: createDamFileDependency(),
+            // ...
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [2de81e40b]
+-   Updated dependencies [efccc42a3]
+-   Updated dependencies [012a768ee]
+    -   @comet/admin@6.14.0
+    -   @comet/admin-theme@6.14.0
+    -   @comet/admin-icons@6.14.0
+    -   @comet/admin-date-time@6.14.0
+    -   @comet/admin-rte@6.14.0
+    -   @comet/blocks-admin@6.14.0
+
+## 6.13.0
+
+### Minor Changes
+
+-   c51b250ca: Add loading spinner to `IFrameViewer`
+
+    This feature was added to inform users that the iframe is loading. It is particularly useful when loading takes a long time due to a slow network connection or a large amount of content or data. The feedback remains visible until the iframe is fully loaded and the `onLoad` event is triggered.
+
+-   dcf3f70f4: Add `overrideAcceptedMimeTypes` configuration to DAM
+
+    If set, only the mimetypes specified in `overrideAcceptedMimeTypes` will be accepted.
+
+    You must configure `overrideAcceptedMimeTypes` in the API and the admin interface:
+
+    API:
+
+    ```diff
+    // app.module.ts
+
+    DamModule.register({
+        damConfig: {
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+            // ...
+        },
+        // ...
+    }),
+    ```
+
+    Admin:
+
+    ```diff
+    // App.tsx
+
+    <DamConfigProvider
+        value={{
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   aee7ae4a2: Use the same logic for checking the user's content scope in Admin as it is used in the API.
+-   Updated dependencies [5e25348bb]
+-   Updated dependencies [796e83206]
+    -   @comet/admin@6.13.0
+    -   @comet/admin-rte@6.13.0
+    -   @comet/admin-date-time@6.13.0
+    -   @comet/admin-icons@6.13.0
+    -   @comet/admin-theme@6.13.0
+    -   @comet/blocks-admin@6.13.0
 
 ## 6.12.0
 

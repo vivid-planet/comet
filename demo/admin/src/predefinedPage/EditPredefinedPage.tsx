@@ -13,7 +13,7 @@ import {
     useStackApi,
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { EditPageLayout, PageName } from "@comet/cms-admin";
+import { PageName } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
@@ -86,7 +86,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
         >
             {({ pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => {
                 return (
-                    <EditPageLayout>
+                    <>
                         <Toolbar>
                             <ToolbarItem>
                                 <IconButton onClick={stackApi?.goBack}>
@@ -125,7 +125,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                                 ))}
                             </SelectField>
                         </MainContent>
-                    </EditPageLayout>
+                    </>
                 );
             }}
         </FinalForm>

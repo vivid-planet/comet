@@ -26,11 +26,13 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
+import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
+import { useDamScope } from "../config/useDamScope";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
@@ -122,6 +124,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const damConfig = useDamConfig();
+    const scope = useDamScope();
 
     const [updateDamFile, { loading: saving, error: hasSaveErrors }] = useMutation<GQLUpdateFileMutation, GQLUpdateFileMutationVariables>(
         updateDamFileMutation,
@@ -198,7 +201,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
         >
             {({ pristine, hasValidationErrors, submitting, handleSubmit }) => (
                 <>
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator scope={scope} />}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
                         {damConfig.enableLicenseFeature &&
@@ -256,7 +259,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                     label={intl.formatMessage({ id: "comet.dam.file.settings", defaultMessage: "Settings" })}
                                     path=""
                                 >
-                                    <FileSettingsFields isImage={!!file.image} folderId={file.folder?.id || null} />
+                                    <FileSettingsFields file={file} />
                                 </RouterTab>
                                 {file.image !== null && (
                                     <RouterTab

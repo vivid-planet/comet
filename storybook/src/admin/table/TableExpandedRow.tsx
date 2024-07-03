@@ -1,5 +1,5 @@
 import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, TableHeadColumns } from "@comet/admin";
-import { Add as AddIcon } from "@mui/icons-material";
+import { AddNoCircle } from "@comet/admin-icons";
 import { IconButton, TableCell } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import { storiesOf } from "@storybook/react";
@@ -24,7 +24,7 @@ function ExpandableTableRow({ rowProps, ...rest }: ITableRowProps<IRow>) {
                         }}
                         size="large"
                     >
-                        <AddIcon />
+                        <AddNoCircle />
                     </IconButton>
                 </TableCell>
             </TableBodyRow>

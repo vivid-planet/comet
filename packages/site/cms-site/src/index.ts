@@ -1,5 +1,7 @@
 export { BlockLoader, BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
 export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
+export { DamVideoBlock } from "./blocks/DamVideoBlock";
+export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { BlocksBlock } from "./blocks/factories/BlocksBlock";
 export { ListBlock } from "./blocks/factories/ListBlock";
@@ -8,6 +10,7 @@ export { OptionalBlock } from "./blocks/factories/OptionalBlock";
 export { SeoBlock } from "./blocks/factories/SeoBlock";
 export type { SupportedBlocks } from "./blocks/factories/types";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
+export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export type { PropsWithData } from "./blocks/PropsWithData";
 export { hasRichTextBlockContent } from "./blocks/RichTextBlock";
