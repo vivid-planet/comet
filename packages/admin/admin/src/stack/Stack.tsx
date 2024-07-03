@@ -74,7 +74,7 @@ export function Stack(props: StackProps) {
     const location = useLocation();
 
     const getVisibleBreadcrumbs = React.useCallback(() => {
-        return sortByParentId(breadcrumbs).map((i) => {
+        return breadcrumbs.map((i) => {
             return { ...i, url: i.locationUrl ?? i.url };
         });
     }, [breadcrumbs]);
@@ -94,7 +94,7 @@ export function Stack(props: StackProps) {
 
     const addBreadcrumb = React.useCallback((id: string, parentId: string, url: string, title: React.ReactNode) => {
         setBreadcrumbs((old) => {
-            return [
+            return sortByParentId([
                 ...old,
                 {
                     id,
@@ -102,23 +102,27 @@ export function Stack(props: StackProps) {
                     url,
                     title,
                 },
-            ];
+            ]);
         });
     }, []);
 
     const updateBreadcrumb = React.useCallback((id: string, parentId: string, url: string, title: React.ReactNode) => {
         setBreadcrumbs((old) => {
-            return old.map((crumb) => {
-                return crumb.id === id ? { ...crumb, parentId, url, title } : crumb;
-            });
+            return sortByParentId(
+                old.map((crumb) => {
+                    return crumb.id === id ? { ...crumb, parentId, url, title } : crumb;
+                }),
+            );
         });
     }, []);
 
     const removeBreadcrumb = React.useCallback((id: string) => {
         setBreadcrumbs((old) => {
-            return old.filter((crumb) => {
-                return crumb.id !== id;
-            });
+            return sortByParentId(
+                old.filter((crumb) => {
+                    return crumb.id !== id;
+                }),
+            );
         });
     }, []);
 
@@ -144,9 +148,7 @@ export function Stack(props: StackProps) {
     React.useEffect(() => {
         // execute on location change, set locationUrl for the last breadcrumb to the current location
         setBreadcrumbs((old) => {
-            const sorted = sortByParentId(old);
-            sorted[sorted.length - 1].locationUrl = location.pathname + location.search; // modify object in place
-            return [...old]; // clone (with modified object) to new array to trigger a state update
+            return [...old.slice(0, -1), { ...old[old.length - 1], locationUrl: location.pathname + location.search }];
         });
     }, [location]);
 
