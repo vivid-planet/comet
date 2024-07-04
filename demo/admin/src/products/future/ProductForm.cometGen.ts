@@ -7,7 +7,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
     fields: [
         {
-            type: "fieldset",
+            type: "fieldSet",
             title: "Main Data",
             supportText: "Product: {title}",
             collapsible: false,
@@ -28,7 +28,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
             ],
         },
         {
-            type: "fieldset",
+            type: "fieldSet",
             title: "Additional Data",
             collapsible: true,
             initiallyExpanded: false,
