@@ -15,7 +15,7 @@ export function generateFormLayout(
     let code = "";
     const formFragmentFields: string[] = [];
 
-    if (config.type === "accordion") {
+    if (config.type === "fieldset") {
         imports.push({ name: "FieldSet", importPath: "@comet/admin" });
         const supportPlaceholder = config.supportText?.includes("{");
         if (supportPlaceholder) {
