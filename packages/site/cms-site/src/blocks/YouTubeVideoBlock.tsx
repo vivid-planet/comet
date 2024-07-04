@@ -30,7 +30,7 @@ export const YouTubeVideoBlock = withPreview(
     ({
         data: { youtubeIdentifier, autoplay, loop, showControls, previewImage },
         aspectRatio = "16x9",
-        previewImageSizes = "100vw",
+        previewImageSizes,
         renderPreviewImage,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = React.useState(true);

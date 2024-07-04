@@ -17,8 +17,8 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
 export const DamVideoBlock = withPreview(
     ({
         data: { damFile, autoplay, loop, showControls, previewImage },
-        aspectRatio,
-        previewImageSizes = "100vw",
+        aspectRatio = "16x9",
+        previewImageSizes,
         renderPreviewImage,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
@@ -48,7 +48,7 @@ export const DamVideoBlock = withPreview(
                         loop={loop}
                         playsInline
                         muted={autoplay}
-                        $aspectRatio={aspectRatio ? aspectRatio.replace("x", " / ") : undefined}
+                        $aspectRatio={aspectRatio.replace("x", " / ")}
                     >
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
                     </Video>
@@ -59,12 +59,11 @@ export const DamVideoBlock = withPreview(
     { label: "Video" },
 );
 
-const Video = styled.video<{ $aspectRatio?: string }>`
+const Video = styled.video<{ $aspectRatio: string }>`
     width: 100%;
     object-fit: cover;
 
     ${({ $aspectRatio }) =>
-        $aspectRatio &&
         css`
             aspect-ratio: ${$aspectRatio};
         `}

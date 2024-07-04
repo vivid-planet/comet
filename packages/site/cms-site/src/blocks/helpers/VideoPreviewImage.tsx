@@ -8,7 +8,7 @@ import { PixelImageBlock } from "../PixelImageBlock";
 export interface VideoPreviewImageProps {
     onPlay: () => void;
     image: PixelImageBlockData;
-    aspectRatio?: string;
+    aspectRatio: string;
     sizes?: string;
 }
 
@@ -18,8 +18,9 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" 
         <Root onClick={onPlay} aria-label={intl.formatMessage({ id: "videoPreviewImage.ariaLabel.startVideo", defaultMessage: "Start video" })}>
             <PixelImageBlock
                 data={image}
-                aspectRatio={aspectRatio ? aspectRatio : "16x9"}
-                layout={aspectRatio ? "responsive" : "intrinsic"}
+                aspectRatio={aspectRatio}
+                // TODO: remove layout prop when #2245 is merged (https://github.com/vivid-planet/comet/pull/2245)
+                layout="responsive"
                 sizes={sizes}
             />
             <IconWrapper>
