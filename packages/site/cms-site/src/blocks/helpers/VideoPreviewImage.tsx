@@ -1,9 +1,11 @@
-import { PixelImageBlock } from "@comet/cms-site";
-import { PixelImageBlockData } from "@src/blocks.generated";
+import * as React from "react";
 import { useIntl } from "react-intl";
 import styled from "styled-components";
 
-interface VideoPreviewImageProps {
+import { PixelImageBlockData } from "../../blocks.generated";
+import { PixelImageBlock } from "../PixelImageBlock";
+
+export interface VideoPreviewImageProps {
     onClick: () => void;
     image: PixelImageBlockData;
     aspectRatio?: string;

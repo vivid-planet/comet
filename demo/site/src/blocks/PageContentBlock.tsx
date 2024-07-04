@@ -1,7 +1,6 @@
 "use client";
 import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks, YouTubeVideoBlock } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
-import { VideoPreviewImage } from "@src/blocks/helpers/VideoPreviewImage";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import * as React from "react";
@@ -24,8 +23,8 @@ const supportedBlocks: SupportedBlocks = {
     headline: (props) => <HeadlineBlock data={props} />,
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     textImage: (props) => <TextImageBlock data={props} />,
-    damVideo: (props) => <DamVideoBlock data={props} VideoPreviewImage={VideoPreviewImage} />,
-    youTubeVideo: (props) => <YouTubeVideoBlock data={props} VideoPreviewImage={VideoPreviewImage} />,
+    damVideo: (props) => <DamVideoBlock data={props} />,
+    youTubeVideo: (props) => <YouTubeVideoBlock data={props} />,
     linkList: (props) => <LinkListBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,

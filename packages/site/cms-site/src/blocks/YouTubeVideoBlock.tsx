@@ -2,9 +2,10 @@
 import * as React from "react";
 import styled, { css } from "styled-components";
 
-import { PixelImageBlockData, YouTubeVideoBlockData } from "../blocks.generated";
+import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
 const EXPECTED_YT_ID_LENGTH = 11;
@@ -19,17 +20,10 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
     return youtubeId ?? undefined;
 };
 
-interface VideoPreviewImageProps {
-    onClick: () => void;
-    image: PixelImageBlockData;
-    aspectRatio?: string;
-    sizes?: string;
-}
-
 interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     aspectRatio?: string;
     sizes?: string;
-    VideoPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
+    renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
 }
 
 export const YouTubeVideoBlock = withPreview(
@@ -37,7 +31,7 @@ export const YouTubeVideoBlock = withPreview(
         data: { youtubeIdentifier, autoplay, loop, showControls, previewImage },
         aspectRatio = "16x9",
         sizes = "100vw",
-        VideoPreviewImage,
+        renderPreviewImage,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = React.useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
@@ -66,8 +60,12 @@ export const YouTubeVideoBlock = withPreview(
 
         return (
             <>
-                {hasPreviewImage && showPreviewImage && VideoPreviewImage ? (
-                    <VideoPreviewImage onClick={() => setShowPreviewImage(false)} image={previewImage} aspectRatio={aspectRatio} sizes={sizes} />
+                {hasPreviewImage && showPreviewImage ? (
+                    renderPreviewImage ? (
+                        renderPreviewImage({ onClick: () => setShowPreviewImage(false), image: previewImage, aspectRatio, sizes })
+                    ) : (
+                        <VideoPreviewImage onClick={() => setShowPreviewImage(false)} image={previewImage} aspectRatio={aspectRatio} sizes={sizes} />
+                    )
                 ) : (
                     <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")}>
                         <YouTubeContainer src={youtubeUrl.toString()} allow="autoplay" />

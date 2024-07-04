@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "jose": "^5.2.4",
+        "react-intl": "^6.0.0",
         "rimraf": "^3.0.0",
         "scroll-into-view-if-needed": "^2.0.0",
         "use-debounce": "^6.0.0"
