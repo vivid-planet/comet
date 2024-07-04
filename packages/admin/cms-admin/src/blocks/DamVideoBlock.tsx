@@ -42,7 +42,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     category: BlockCategory.Media,
 
-    input2State: (input) => ({ previewImage: PixelImageBlock.input2State(input.previewImage) }),
+    input2State: (input) => ({ ...input, previewImage: PixelImageBlock.input2State(input.previewImage) }),
 
     state2Output: (state) => ({
         damFileId: state.damFile?.id,
