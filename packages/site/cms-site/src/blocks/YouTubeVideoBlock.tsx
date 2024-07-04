@@ -22,7 +22,7 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
 
 interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     aspectRatio?: string;
-    sizes?: string;
+    previewImageSizes?: string;
     renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
 }
 
@@ -30,7 +30,7 @@ export const YouTubeVideoBlock = withPreview(
     ({
         data: { youtubeIdentifier, autoplay, loop, showControls, previewImage },
         aspectRatio = "16x9",
-        sizes = "100vw",
+        previewImageSizes = "100vw",
         renderPreviewImage,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = React.useState(true);
@@ -62,9 +62,14 @@ export const YouTubeVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage ? (
-                        renderPreviewImage({ onClick: () => setShowPreviewImage(false), image: previewImage, aspectRatio, sizes })
+                        renderPreviewImage({ onPlay: () => setShowPreviewImage(false), image: previewImage, aspectRatio, sizes: previewImageSizes })
                     ) : (
-                        <VideoPreviewImage onClick={() => setShowPreviewImage(false)} image={previewImage} aspectRatio={aspectRatio} sizes={sizes} />
+                        <VideoPreviewImage
+                            onPlay={() => setShowPreviewImage(false)}
+                            image={previewImage}
+                            aspectRatio={aspectRatio}
+                            sizes={previewImageSizes}
+                        />
                     )
                 ) : (
                     <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")}>

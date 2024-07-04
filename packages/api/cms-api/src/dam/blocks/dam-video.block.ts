@@ -10,11 +10,11 @@ import {
 } from "@comet/blocks-api";
 import { IsOptional, IsUUID } from "class-validator";
 
-import { VideoBaseBlockData, VideoBaseBlockInput } from "../../blocks/video-base.block";
+import { BaseVideoBlockData, BaseVideoBlockInput } from "../../blocks/BaseVideoBlockData";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 
-class DamVideoBlockData extends VideoBaseBlockData {
+class DamVideoBlockData extends BaseVideoBlockData {
     damFileId?: string;
 
     async transformToPlain() {
@@ -37,7 +37,7 @@ class DamVideoBlockData extends VideoBaseBlockData {
     }
 }
 
-class DamVideoBlockInput extends VideoBaseBlockInput {
+class DamVideoBlockInput extends BaseVideoBlockInput {
     @BlockField({ nullable: true })
     @IsUUID()
     @IsOptional()

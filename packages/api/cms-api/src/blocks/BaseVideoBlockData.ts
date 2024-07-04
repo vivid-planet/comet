@@ -12,7 +12,7 @@ import { IsBoolean, IsOptional } from "class-validator";
 
 import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 
-export class VideoBaseBlockData extends BlockData {
+export class BaseVideoBlockData extends BlockData {
     @BlockField({ nullable: true })
     autoplay?: boolean;
 
@@ -26,7 +26,7 @@ export class VideoBaseBlockData extends BlockData {
     previewImage: BlockDataInterface;
 }
 
-export class VideoBaseBlockInput extends BlockInput {
+export class BaseVideoBlockInput extends BlockInput {
     @IsBoolean()
     @IsOptional()
     @BlockField({ nullable: true })
@@ -46,6 +46,6 @@ export class VideoBaseBlockInput extends BlockInput {
     previewImage: ExtractBlockInput<typeof PixelImageBlock>;
 
     transformToBlockData(): BlockDataInterface {
-        return inputToData(VideoBaseBlockData, this);
+        return inputToData(BaseVideoBlockData, this);
     }
 }

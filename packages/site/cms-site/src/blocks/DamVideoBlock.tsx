@@ -10,12 +10,17 @@ import { PropsWithData } from "./PropsWithData";
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
-    sizes?: string;
+    previewImageSizes?: string;
     renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
 }
 
 export const DamVideoBlock = withPreview(
-    ({ data: { damFile, autoplay, loop, showControls, previewImage }, aspectRatio, sizes = "100vw", renderPreviewImage }: DamVideoBlockProps) => {
+    ({
+        data: { damFile, autoplay, loop, showControls, previewImage },
+        aspectRatio,
+        previewImageSizes = "100vw",
+        renderPreviewImage,
+    }: DamVideoBlockProps) => {
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} />;
         }
@@ -27,9 +32,14 @@ export const DamVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage ? (
-                        renderPreviewImage({ onClick: () => setShowPreviewImage(false), image: previewImage, aspectRatio, sizes })
+                        renderPreviewImage({ onPlay: () => setShowPreviewImage(false), image: previewImage, aspectRatio, sizes: previewImageSizes })
                     ) : (
-                        <VideoPreviewImage onClick={() => setShowPreviewImage(false)} image={previewImage} aspectRatio={aspectRatio} sizes={sizes} />
+                        <VideoPreviewImage
+                            onPlay={() => setShowPreviewImage(false)}
+                            image={previewImage}
+                            aspectRatio={aspectRatio}
+                            sizes={previewImageSizes}
+                        />
                     )
                 ) : (
                     <Video

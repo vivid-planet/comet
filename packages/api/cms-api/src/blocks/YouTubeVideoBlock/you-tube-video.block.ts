@@ -1,15 +1,15 @@
 import { BlockDataInterface, BlockField, createBlock, inputToData, typesafeMigrationPipe } from "@comet/blocks-api";
 import { IsOptional, IsString, Matches } from "class-validator";
 
-import { VideoBaseBlockData, VideoBaseBlockInput } from "../video-base.block";
+import { BaseVideoBlockData, BaseVideoBlockInput } from "../BaseVideoBlockData";
 import { RemoveAspectRatioMigration } from "./migrations/1-remove-aspect-ratio.migration";
 
-class YouTubeVideoBlockData extends VideoBaseBlockData {
+class YouTubeVideoBlockData extends BaseVideoBlockData {
     @BlockField({ nullable: true })
     youtubeIdentifier?: string;
 }
 
-class YouTubeVideoBlockInput extends VideoBaseBlockInput {
+class YouTubeVideoBlockInput extends BaseVideoBlockInput {
     @IsOptional()
     @IsString()
     @BlockField({ nullable: true })

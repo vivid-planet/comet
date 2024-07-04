@@ -6,16 +6,16 @@ import { PixelImageBlockData } from "../../blocks.generated";
 import { PixelImageBlock } from "../PixelImageBlock";
 
 export interface VideoPreviewImageProps {
-    onClick: () => void;
+    onPlay: () => void;
     image: PixelImageBlockData;
     aspectRatio?: string;
     sizes?: string;
 }
 
-export const VideoPreviewImage = ({ onClick, image, aspectRatio, sizes = "100vw" }: VideoPreviewImageProps) => {
+export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" }: VideoPreviewImageProps) => {
     const intl = useIntl();
     return (
-        <Root onClick={onClick} aria-label={intl.formatMessage({ id: "videoPreviewImage.ariaLabel.startVideo", defaultMessage: "Start video" })}>
+        <Root onClick={onPlay} aria-label={intl.formatMessage({ id: "videoPreviewImage.ariaLabel.startVideo", defaultMessage: "Start video" })}>
             <PixelImageBlock
                 data={image}
                 aspectRatio={aspectRatio ? aspectRatio : "16x9"}
