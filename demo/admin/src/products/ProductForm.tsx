@@ -230,7 +230,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
                                 return data.manufacturers.nodes;
                             }}
-                            getOptionLabel={(option: GQLManufacturersQuery["manufacturers"]["nodes"][0]) => option.name}
+                            getOptionLabel={(option) => option.name}
                             label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                             fullWidth
                             disabled={!values?.manufacturerCountry}
