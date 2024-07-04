@@ -6,12 +6,7 @@
 "@comet/cms-api": major
 ---
 
-Revise video blocks.
-
-- add preview image to video blocks
-- move `YouTubeVideoBlock` to `@cms` packages
-
-The `YouTubeVideoBlock` and the `DamVideoBlock` do now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage`.
+Move `YouTubeVideoBlock` to `@cms` packages
 
 **Migrate**
 
