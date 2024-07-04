@@ -54,8 +54,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
     output2State: async (output, context: CmsBlockContext) => {
         if (!output.damFileId) {
-            // @ts-expect-error attachedBlocks missing in generated type for OneOfBlockInput
-            return { previewImage: await DamImageBlock.output2State(output.previewImage, context) };
+            return { previewImage: await PixelImageBlock.output2State(output.previewImage, context) };
         }
 
         const { data } = await context.apolloClient.query<GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables>({
@@ -86,8 +85,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
             autoplay: output.autoplay,
             loop: output.loop,
             showControls: output.showControls,
-            // @ts-expect-error attachedBlocks missing in generated type for OneOfBlockInput
-            previewImage: await DamImageBlock.output2State(output.previewImage, context),
+            previewImage: await PixelImageBlock.output2State(output.previewImage, context),
         };
     },
 
@@ -95,8 +93,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
         ...state,
         autoplay: false,
         loop: false,
-        // @ts-expect-error type mismatch between generated types and OneOfBlockPreviewState
-        previewImage: DamImageBlock.createPreviewState(state.previewImage, previewContext),
+        previewImage: PixelImageBlock.createPreviewState(state.previewImage, previewContext),
         adminMeta: { route: previewContext.parentUrl },
     }),
 

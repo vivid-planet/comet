@@ -54,6 +54,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
             autoplay: block.autoplay,
             loop: block.loop,
             showControls: block.showControls,
+            previewImage: block.previewImage,
         };
     }
 }
