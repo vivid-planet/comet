@@ -75,9 +75,9 @@ export { ContentGenerationServiceInterface } from "./content-generation/content-
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
-export { DamVideoBlock } from "./dam/blocks/dam-video.block";
 export { PixelImageBlock } from "./dam/blocks/pixel-image.block";
 export { SvgImageBlock } from "./dam/blocks/svg-image.block";
+export { DamVideoBlock } from "./dam/blocks/video/dam-video.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";

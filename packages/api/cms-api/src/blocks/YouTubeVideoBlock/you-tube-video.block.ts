@@ -3,6 +3,7 @@ import { IsOptional, IsString, Matches } from "class-validator";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "../BaseVideoBlockData";
 import { RemoveAspectRatioMigration } from "./migrations/1-remove-aspect-ratio.migration";
+import { AddPreviewImageMigration } from "./migrations/2-add-preview-image.migration";
 
 class YouTubeVideoBlockData extends BaseVideoBlockData {
     @BlockField({ nullable: true })
@@ -27,7 +28,7 @@ class YouTubeVideoBlockInput extends BaseVideoBlockInput {
 export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideoBlockInput, {
     name: "YouTubeVideo",
     migrate: {
-        version: 1,
-        migrations: typesafeMigrationPipe([RemoveAspectRatioMigration]),
+        version: 2,
+        migrations: typesafeMigrationPipe([RemoveAspectRatioMigration, AddPreviewImageMigration]),
     },
 });

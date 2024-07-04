@@ -7,12 +7,14 @@ import {
     BlockMetaFieldKind,
     createBlock,
     inputToData,
+    typesafeMigrationPipe,
 } from "@comet/blocks-api";
 import { IsOptional, IsUUID } from "class-validator";
 
-import { BaseVideoBlockData, BaseVideoBlockInput } from "../../blocks/BaseVideoBlockData";
-import { FILE_ENTITY } from "../files/entities/file.entity";
+import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/BaseVideoBlockData";
+import { FILE_ENTITY } from "../../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
+import { AddPreviewImageMigration } from "./migrations/1-add-preview-image.migration";
 
 class DamVideoBlockData extends BaseVideoBlockData {
     damFileId?: string;
@@ -115,6 +117,13 @@ class Meta extends AnnotationBlockMeta {
     }
 }
 
-export const DamVideoBlock = createBlock(DamVideoBlockData, DamVideoBlockInput, { name: "DamVideo", blockMeta: new Meta(DamVideoBlockData) });
+export const DamVideoBlock = createBlock(DamVideoBlockData, DamVideoBlockInput, {
+    name: "DamVideo",
+    blockMeta: new Meta(DamVideoBlockData),
+    migrate: {
+        version: 1,
+        migrations: typesafeMigrationPipe([AddPreviewImageMigration]),
+    },
+});
 
 export type { DamVideoBlockData };
