@@ -38,6 +38,18 @@ export function FinalFormNumberInput({
         setFormattedNumberValue(value);
     };
 
+    const updateFormattedNumberValue = React.useCallback(
+        (inputValue?: number) => {
+            if (!inputValue && inputValue !== 0) {
+                input.onChange(undefined);
+                setFormattedNumberValue("");
+            } else {
+                setFormattedNumberValue(getFormattedValue(inputValue));
+            }
+        },
+        [getFormattedValue, input],
+    );
+
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
         const { value } = event.target;
         const numberParts = intl.formatNumberToParts(1111.111);
@@ -59,16 +71,15 @@ export function FinalFormNumberInput({
 
         const inputValue: number | undefined = isNaN(numericValue) ? undefined : roundToDecimals(numericValue, decimals);
         input.onChange(inputValue);
+
+        if (input.value === inputValue) {
+            updateFormattedNumberValue(inputValue);
+        }
     };
 
     React.useEffect(() => {
-        if (!input.value && input.value !== 0) {
-            input.onChange(undefined);
-            setFormattedNumberValue("");
-        } else {
-            setFormattedNumberValue(getFormattedValue(input.value));
-        }
-    }, [getFormattedValue, decimals, input]);
+        updateFormattedNumberValue(input.value);
+    }, [updateFormattedNumberValue, input]);
 
     return (
         <InputBase
