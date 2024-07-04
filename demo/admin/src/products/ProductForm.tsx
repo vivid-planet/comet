@@ -183,69 +183,65 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <>
-                            <AsyncSelectField
-                                name="manufacturerCountry"
-                                loadOptions={async () => {
-                                    const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
-                                        query: gql`
-                                            query ManufacturerCountries {
-                                                manufacturerCountries {
-                                                    nodes {
-                                                        id
-                                                        used
-                                                    }
+                        <AsyncSelectField
+                            name="manufacturerCountry"
+                            loadOptions={async () => {
+                                const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
+                                    query: gql`
+                                        query ManufacturerCountries {
+                                            manufacturerCountries {
+                                                nodes {
+                                                    id
+                                                    used
                                                 }
                                             }
-                                        `,
-                                    });
+                                        }
+                                    `,
+                                });
 
-                                    return data.manufacturerCountries.nodes;
-                                }}
-                                getOptionLabel={(option: GQLManufacturerCountriesQuery["manufacturerCountries"]["nodes"][0]) => option.id}
-                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
-                                fullWidth
-                            />
-
-                            <AsyncSelectField
-                                name="manufacturer"
-                                loadOptions={async () => {
-                                    const { data } = await client.query<GQLManufacturersQuery, GQLManufacturersQueryVariables>({
-                                        query: gql`
-                                            query Manufacturers($filter: ManufacturerFilter) {
-                                                manufacturers(filter: $filter) {
-                                                    nodes {
-                                                        id
-                                                        name
-                                                    }
+                                return data.manufacturerCountries.nodes;
+                            }}
+                            getOptionLabel={(option) => option.id}
+                            label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
+                            fullWidth
+                        />
+                        <AsyncSelectField
+                            name="manufacturer"
+                            loadOptions={async () => {
+                                const { data } = await client.query<GQLManufacturersQuery, GQLManufacturersQueryVariables>({
+                                    query: gql`
+                                        query Manufacturers($filter: ManufacturerFilter) {
+                                            manufacturers(filter: $filter) {
+                                                nodes {
+                                                    id
+                                                    name
                                                 }
                                             }
-                                        `,
-                                        variables: {
-                                            filter: {
-                                                addressAsEmbeddable_country: {
-                                                    equal: values.manufacturerCountry?.id,
-                                                },
+                                        }
+                                    `,
+                                    variables: {
+                                        filter: {
+                                            addressAsEmbeddable_country: {
+                                                equal: values.manufacturerCountry?.id,
                                             },
                                         },
-                                    });
+                                    },
+                                });
 
-                                    return data.manufacturers.nodes;
-                                }}
-                                getOptionLabel={(option: GQLManufacturersQuery["manufacturers"]["nodes"][0]) => option.name}
-                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
-                                fullWidth
-                                disabled={!values?.manufacturerCountry}
-                            />
-
-                            <OnChangeField name="manufacturerCountry">
-                                {(value, previousValue) => {
-                                    if (value.id !== previousValue.id) {
-                                        form.change("manufacturer", undefined);
-                                    }
-                                }}
-                            </OnChangeField>
-                        </>
+                                return data.manufacturers.nodes;
+                            }}
+                            getOptionLabel={(option: GQLManufacturersQuery["manufacturers"]["nodes"][0]) => option.name}
+                            label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                            fullWidth
+                            disabled={!values?.manufacturerCountry}
+                        />
+                        <OnChangeField name="manufacturerCountry">
+                            {(value, previousValue) => {
+                                if (value.id !== previousValue.id) {
+                                    form.change("manufacturer", undefined);
+                                }
+                            }}
+                        </OnChangeField>
                         <SelectField name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />} required fullWidth>
                             <MenuItem value="Cap">
                                 <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
