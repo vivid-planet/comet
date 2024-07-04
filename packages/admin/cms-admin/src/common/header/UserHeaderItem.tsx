@@ -1,5 +1,9 @@
 import { gql, useMutation } from "@apollo/client";
+<<<<<<< HEAD
 import { AppHeaderDropdown, Loading } from "@comet/admin";
+=======
+import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
+>>>>>>> main
 import { Account, Info, Logout } from "@comet/admin-icons";
 import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -34,10 +38,12 @@ const signOutMutation = gql`
 
 interface UserHeaderItemProps {
     aboutModalLogo?: React.ReactElement;
+    buttonChildren?: AppHeaderDropdownProps["buttonChildren"];
+    children?: React.ReactNode;
 }
 
 export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
-    const { aboutModalLogo } = props;
+    const { aboutModalLogo, buttonChildren, children } = props;
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -47,7 +53,11 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     return (
+<<<<<<< HEAD
         <AppHeaderDropdown buttonChildren={isMobile ? <Account /> : user.name} startIcon={isMobile ? undefined : <Account />}>
+=======
+        <AppHeaderDropdown buttonChildren={buttonChildren ?? user.name} startIcon={<Account />}>
+>>>>>>> main
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
@@ -59,6 +69,7 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
                 >
                     <FormattedMessage id="comet.about" defaultMessage="About" />
                 </Button>
+                {children}
                 <Separator />
                 {isSigningOut ? (
                     <Loading />
