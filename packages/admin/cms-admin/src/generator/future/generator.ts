@@ -40,7 +40,7 @@ export type FormLayoutConfig<T> = {
 };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormLayoutConfig<T>(arg: any): arg is FormLayoutConfig<T> {
-    return arg.name === undefined;
+    return arg.type !== undefined && arg.type == "accordion";
 }
 
 export type FormConfig<T extends { __typename?: string }> = {
