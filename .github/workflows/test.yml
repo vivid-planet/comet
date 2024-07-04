@@ -26,8 +26,6 @@ jobs:
                   git config user.email github-actions@github.com
 
             - uses: pnpm/action-setup@v4
-              with:
-                  version: 8.2.0
 
             - name: Use Node.js 18.x
               uses: actions/setup-node@v3
