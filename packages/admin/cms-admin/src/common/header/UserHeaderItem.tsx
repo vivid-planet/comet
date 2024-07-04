@@ -1,9 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
-<<<<<<< HEAD
-import { AppHeaderDropdown, Loading } from "@comet/admin";
-=======
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
->>>>>>> main
 import { Account, Info, Logout } from "@comet/admin-icons";
 import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -53,11 +49,7 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     return (
-<<<<<<< HEAD
-        <AppHeaderDropdown buttonChildren={isMobile ? <Account /> : user.name} startIcon={isMobile ? undefined : <Account />}>
-=======
-        <AppHeaderDropdown buttonChildren={buttonChildren ?? user.name} startIcon={<Account />}>
->>>>>>> main
+        <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? <Account /> : user.name)} startIcon={isMobile ? undefined : <Account />}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
