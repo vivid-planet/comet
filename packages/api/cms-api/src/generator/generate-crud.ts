@@ -978,8 +978,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
             ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
-                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
-                .join(", ")}${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
+                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
+                .join("")}${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
         @Query(() => ${metadata.className})
