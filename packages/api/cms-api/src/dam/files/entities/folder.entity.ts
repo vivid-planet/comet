@@ -15,7 +15,8 @@ export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
         | "numberOfFiles"
         | "files"
         | "numberOfChildFolders"
-        | "isInboxFromOtherScope";
+        | "isInboxFromOtherScope"
+        | "isSharedBetweenAllScopes";
     id: string;
     name: string;
     parent: FolderInterface | null;
@@ -25,6 +26,7 @@ export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
     mpath: string[];
     archived: boolean;
     isInboxFromOtherScope: boolean;
+    isSharedBetweenAllScopes: boolean;
     files: FileInterface[];
     createdAt: Date;
     updatedAt: Date;
@@ -43,7 +45,8 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
             | "numberOfFiles"
             | "files"
             | "numberOfChildFolders"
-            | "isInboxFromOtherScope";
+            | "isInboxFromOtherScope"
+            | "isSharedBetweenAllScopes";
 
         @PrimaryKey({ columnType: "uuid" })
         @Field(() => ID)
@@ -85,6 +88,10 @@ export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> 
         @Property({ columnType: "boolean" })
         @Field()
         isInboxFromOtherScope: boolean = false;
+
+        @Property({ columnType: "boolean" })
+        @Field()
+        isSharedBetweenAllScopes: boolean = false;
 
         @OneToMany("DamFile", (file: FileInterface) => file.folder)
         files: FileInterface[];

@@ -298,6 +298,7 @@ type DamFolder {
   mpath: [ID!]!
   archived: Boolean!
   isInboxFromOtherScope: Boolean!
+  isSharedBetweenAllScopes: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   scope: DamScope!

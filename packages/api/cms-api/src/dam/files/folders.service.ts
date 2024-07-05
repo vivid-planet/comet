@@ -13,6 +13,7 @@ import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.args";
 import { UpdateFolderInput } from "./dto/folder.input";
+import { SHARED_FOLDER_FAKE_SCOPE, SHARED_FOLDER_NAME } from "./entities/folder.constants";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 import { createHashedPath } from "./files.utils";
@@ -44,7 +45,7 @@ export const withFoldersSelect = (
     }
 
     if (args.scope !== undefined) {
-        qb.andWhere({ scope: args.scope });
+        qb.andWhere({ $or: [{ scope: args.scope }, { isSharedBetweenAllScopes: true }] });
     }
 
     if (args.query) {
@@ -52,6 +53,7 @@ export const withFoldersSelect = (
     }
 
     if (args.sortColumnName && args.sortDirection) {
+        // qb.orderBy({ [`"folder"."name"='${SHARED_FOLDER_NAME}'`]: QueryOrder.DESC });
         qb.orderBy({ [`folder.${args.sortColumnName}`]: args.sortDirection });
     }
 
@@ -167,11 +169,13 @@ export class FoldersService {
         {
             parentId,
             isInboxFromOtherScope = false,
+            isSharedBetweenAllScopes = false,
             ...data
         }: {
             name: string;
             parentId?: string;
             isInboxFromOtherScope?: boolean;
+            isSharedBetweenAllScopes?: boolean;
         },
         scope?: DamScopeInterface,
     ): Promise<FolderInterface> {
@@ -181,9 +185,26 @@ export class FoldersService {
             parent = await this.findOneById(parentId);
             mpath = (await this.findAncestorsByParentId(parentId)).map((folder) => folder.id);
         }
-        const folder = this.foldersRepository.create({ ...data, isInboxFromOtherScope, parent, mpath, scope });
+        const folder = this.foldersRepository.create({ ...data, isInboxFromOtherScope, isSharedBetweenAllScopes, parent, mpath, scope });
         await this.foldersRepository.persistAndFlush(folder);
         return folder;
+    }
+
+    async createSharedFolder({ scope: passedScope }: { scope?: DamScopeInterface }): Promise<FolderInterface> {
+        const existingSharedFolder = await this.foldersRepository.findOne({ isSharedBetweenAllScopes: true });
+        if (existingSharedFolder) {
+            throw new Error("There can only be one shared folder");
+        }
+
+        let scope: DamScopeInterface | undefined = undefined;
+        if (passedScope) {
+            scope = {};
+            for (const dimension of Object.keys(passedScope)) {
+                scope[dimension] = SHARED_FOLDER_FAKE_SCOPE;
+            }
+        }
+
+        return this.create({ name: SHARED_FOLDER_NAME, isSharedBetweenAllScopes: true }, scope);
     }
 
     async updateById(id: string, data: UpdateFolderInput): Promise<FolderInterface> {
