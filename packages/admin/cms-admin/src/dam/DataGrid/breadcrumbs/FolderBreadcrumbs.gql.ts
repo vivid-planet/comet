@@ -4,6 +4,7 @@ export const damFolderBreadcrumbFragment = gql`
     fragment DamFolderBreadcrumb on DamFolder {
         id
         name
+        isSharedBetweenAllScopes
     }
 `;
 

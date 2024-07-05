@@ -26,6 +26,7 @@ export const damFileTableFragment = gql`
                 id
                 name
             }
+            isSharedBetweenAllScopes
         }
         image {
             ...DamFileThumbnail
@@ -49,6 +50,7 @@ export const damFolderTableFragment = gql`
         numberOfFiles
         numberOfChildFolders
         isInboxFromOtherScope
+        isSharedBetweenAllScopes
         updatedAt
         createdAt
     }

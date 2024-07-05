@@ -3,10 +3,11 @@ import { ChevronRight, LevelUp } from "@comet/admin-icons";
 import { Breadcrumbs, IconButton, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 
 import { useOptimisticQuery } from "../../../common/useOptimisticQuery";
+import { getFolderName } from "../../helpers/getFolderName";
 import { damFolderBreadcrumbFragment, damFolderBreadcrumbQuery } from "./FolderBreadcrumbs.gql";
 import { GQLDamFolderBreadcrumbFragment, GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables } from "./FolderBreadcrumbs.gql.generated";
 
@@ -76,6 +77,8 @@ const BackButton = ({ damBreadcrumbs }: BackButtonProps): React.ReactElement => 
 };
 
 const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElement => {
+    const intl = useIntl();
+
     const { data } = useOptimisticQuery<GQLDamFolderBreadcrumbQuery, GQLDamFolderBreadcrumbQueryVariables>(damFolderBreadcrumbQuery, {
         variables: {
             // Cannot be null because of skip
@@ -97,7 +100,11 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
         <FolderBreadcrumbWrapper>
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
                 <Typography component="span" variant="h6">
-                    {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
+                    {id === null ? (
+                        <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" />
+                    ) : (
+                        data && getFolderName(data.damFolder, { intl })
+                    )}
                 </Typography>
             </Link>
         </FolderBreadcrumbWrapper>

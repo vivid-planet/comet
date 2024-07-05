@@ -24,6 +24,7 @@ import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
+import { getFolderName } from "../helpers/getFolderName";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
@@ -264,12 +265,12 @@ const FolderDataGrid = ({
         onDragOver: () => {
             showHoverStyles();
             showUploadFooter({
-                folderName:
-                    currentFolderData?.damFolder.name ??
-                    intl.formatMessage({
-                        id: "comet.dam.footer.assetManager",
-                        defaultMessage: "Asset Manager",
-                    }),
+                folderName: currentFolderData
+                    ? getFolderName(currentFolderData.damFolder, { intl })
+                    : intl.formatMessage({
+                          id: "comet.dam.footer.assetManager",
+                          defaultMessage: "Asset Manager",
+                      }),
             });
         },
         onDragLeave: () => {

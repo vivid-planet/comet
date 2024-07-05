@@ -1,8 +1,10 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
+import { IntlShape, useIntl } from "react-intl";
 
 import { MarkedMatches, TextMatch } from "../../../common/MarkedMatches";
+import { getFolderName } from "../../helpers/getFolderName";
 import { isFile } from "../../helpers/isFile";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { ArchivedTag } from "../tags/ArchivedTag";
@@ -35,11 +37,11 @@ interface DamItemLabelProps {
     showLicenseWarnings?: boolean;
 }
 
-const getFilePath = (file: GQLDamFileTableFragment) => {
+const getFilePath = (file: GQLDamFileTableFragment, { intl }: { intl: IntlShape }) => {
     const pathArr = [];
 
     if (file.folder) {
-        const parentFolderNames = file.folder.parents.map((parentFolder) => parentFolder.name);
+        const parentFolderNames = file.folder.parents.map((parentFolder) => getFolderName(parentFolder, { intl }));
 
         pathArr.push(...parentFolderNames);
         pathArr.push(file.folder.name);
@@ -48,19 +50,23 @@ const getFilePath = (file: GQLDamFileTableFragment) => {
     return `/${pathArr.join("/")}`;
 };
 
-const getFolderPath = (folder: GQLDamFolderTableFragment) => {
-    const pathArr = folder.parents.map((parentFolder) => parentFolder.name) ?? [];
+const getFolderPath = (folder: GQLDamFolderTableFragment, { intl }: { intl: IntlShape }) => {
+    const pathArr = folder.parents.map((parentFolder) => getFolderName(parentFolder, { intl })) ?? [];
 
     return `/${pathArr.join("/")}`;
 };
 
 const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = false }: DamItemLabelProps): React.ReactElement => {
+    const intl = useIntl();
+
+    const assetName = isFile(asset) ? asset.name : getFolderName(asset, { intl });
+
     return (
         <LabelWrapper>
             <DamThumbnail asset={asset} />
             <NameWrapper>
-                <Typography>{matches ? <MarkedMatches text={asset.name} matches={matches} /> : asset.name}</Typography>
-                {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
+                <Typography>{matches ? <MarkedMatches text={assetName} matches={matches} /> : assetName}</Typography>
+                {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset, { intl }) : getFolderPath(asset, { intl })}</Path>}
             </NameWrapper>
             {isFile(asset) && asset.archived && <ArchivedTag />}
             {isFile(asset) && showLicenseWarnings && (

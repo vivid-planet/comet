@@ -117,7 +117,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         return <EditFile id={selectedId} />;
                     }}
                 </StackPage>
-                <StackPage name="folder" title={data?.damFolder.name}>
+                <StackPage name="folder">
                     {(selectedId) => {
                         setSelectedFolderId(selectedId);
                         return <Folder id={selectedId} filterApi={filterApi} {...props} />;

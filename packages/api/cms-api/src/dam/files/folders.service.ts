@@ -107,7 +107,7 @@ export class FoldersService {
         const qb = this.selectQueryBuilder().orderBy({ name: "ASC" });
 
         if (scope) {
-            qb.where({ scope });
+            qb.where({ $or: [{ scope: scope }, { isSharedBetweenAllScopes: true }] });
         }
 
         return qb.getResult();
@@ -275,7 +275,7 @@ export class FoldersService {
             }
 
             // Convert to JS object because deep-comparing classes and objects doesn't work
-            if (scope && targetFolder.scope && !isEqual({ ...targetFolder.scope }, scope)) {
+            if (!targetFolder.isSharedBetweenAllScopes && scope && targetFolder.scope && !isEqual({ ...targetFolder.scope }, scope)) {
                 throw new Error("Scope arg doesn't match folder scope");
             }
         }
