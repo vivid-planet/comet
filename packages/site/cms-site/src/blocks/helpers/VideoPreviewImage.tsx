@@ -33,10 +33,10 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" 
 const Root = styled.button`
     position: relative;
     width: 100%;
+    appearance: none;
     background: none;
     border: none;
     padding: 0;
-    cursor: pointer;
 `;
 
 const IconWrapper = styled.div`
