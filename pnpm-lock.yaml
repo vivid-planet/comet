@@ -2548,9 +2548,6 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
-      react-intl:
-        specifier: ^6.0.0
-        version: 6.6.8(@types/react@18.2.67)(react@18.2.0)(typescript@4.9.4)
       react-is:
         specifier: ^18.2.0
         version: 18.2.0
@@ -29144,6 +29141,7 @@ packages:
       react: 18.2.0
       tslib: 2.6.3
       typescript: 4.9.4
+    dev: false
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}

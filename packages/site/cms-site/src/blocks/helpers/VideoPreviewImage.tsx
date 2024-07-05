@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useIntl } from "react-intl";
 import styled from "styled-components";
 
 import { PixelImageBlockData } from "../../blocks.generated";
@@ -13,7 +12,6 @@ export interface VideoPreviewImageProps {
 }
 
 export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" }: VideoPreviewImageProps) => {
-    const intl = useIntl();
     return (
         <Root>
             <PixelImageBlock
@@ -23,10 +21,7 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" 
                 layout="responsive"
                 sizes={sizes}
             />
-            <IconWrapper
-                onClick={onPlay}
-                aria-label={intl.formatMessage({ id: "videoPreviewImage.ariaLabel.startVideo", defaultMessage: "Start video" })}
-            >
+            <IconWrapper onClick={onPlay}>
                 <StyledPlayButton />
             </IconWrapper>
         </Root>
