@@ -1,22 +1,13 @@
-import { IsBoolean, IsEnum, IsOptional, IsString, Matches } from "class-validator";
+import { IsBoolean, IsOptional, IsString, Matches } from "class-validator";
 
-import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
-import { BlockField } from "./decorators/field";
-
-/* eslint-disable @typescript-eslint/naming-convention */
-// TODO: Replace with camelCase
-enum AspectRatio {
-    "16X9" = "16X9",
-    "4X3" = "4X3",
-}
-/* eslint-enable @typescript-eslint/naming-convention */
+import { typesafeMigrationPipe } from "../../migrations/typesafeMigrationPipe";
+import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "../block";
+import { BlockField } from "../decorators/field";
+import { RemoveAspectRatioMigration } from "./migrations/1-remove-aspect-ratio.migration";
 
 class YouTubeVideoBlockData extends BlockData {
     @BlockField({ nullable: true })
     youtubeIdentifier?: string;
-
-    @BlockField({ type: "enum", enum: AspectRatio })
-    aspectRatio: AspectRatio;
 
     @BlockField({ nullable: true })
     autoplay?: boolean;
@@ -38,10 +29,6 @@ class YouTubeVideoBlockInput extends BlockInput {
     )
     youtubeIdentifier?: string;
 
-    @IsEnum(AspectRatio)
-    @BlockField({ type: "enum", enum: AspectRatio })
-    aspectRatio: AspectRatio;
-
     @IsBoolean()
     @IsOptional()
     @BlockField({ nullable: true })
@@ -62,4 +49,10 @@ class YouTubeVideoBlockInput extends BlockInput {
     }
 }
 
-export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideoBlockInput, "YouTubeVideo");
+export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideoBlockInput, {
+    name: "YouTubeVideo",
+    migrate: {
+        version: 1,
+        migrations: typesafeMigrationPipe([RemoveAspectRatioMigration]),
+    },
+});

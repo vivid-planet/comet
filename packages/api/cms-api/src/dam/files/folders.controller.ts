@@ -2,6 +2,7 @@ import { Controller, ForbiddenException, Get, Inject, NotFoundException, Param, 
 import { Response } from "express";
 
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
+import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
@@ -14,6 +15,7 @@ export class FoldersController {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
+    @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in method
     @Get("/:folderId/zip")
     async createZip(@Param("folderId") folderId: string, @Res() res: Response, @GetCurrentUser() user: CurrentUser): Promise<void> {
         const folder = await this.foldersService.findOneById(folderId);
