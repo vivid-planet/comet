@@ -15,7 +15,7 @@ export interface VideoPreviewImageProps {
 export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" }: VideoPreviewImageProps) => {
     const intl = useIntl();
     return (
-        <Root onClick={onPlay} aria-label={intl.formatMessage({ id: "videoPreviewImage.ariaLabel.startVideo", defaultMessage: "Start video" })}>
+        <Root>
             <PixelImageBlock
                 data={image}
                 aspectRatio={aspectRatio}
@@ -23,23 +23,22 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" 
                 layout="responsive"
                 sizes={sizes}
             />
-            <IconWrapper>
+            <IconWrapper
+                onClick={onPlay}
+                aria-label={intl.formatMessage({ id: "videoPreviewImage.ariaLabel.startVideo", defaultMessage: "Start video" })}
+            >
                 <StyledPlayButton />
             </IconWrapper>
         </Root>
     );
 };
 
-const Root = styled.button`
+const Root = styled.div`
     position: relative;
     width: 100%;
-    appearance: none;
-    background: none;
-    border: none;
-    padding: 0;
 `;
 
-const IconWrapper = styled.span`
+const IconWrapper = styled.button`
     position: absolute;
     top: 0;
     right: 0;
@@ -50,6 +49,10 @@ const IconWrapper = styled.span`
     justify-content: center;
     background-color: black;
     opacity: 0.5;
+    appearance: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
 `;
 
 const StyledPlayButton = styled.span`
