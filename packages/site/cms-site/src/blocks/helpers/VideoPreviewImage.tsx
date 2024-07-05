@@ -39,7 +39,7 @@ const Root = styled.button`
     padding: 0;
 `;
 
-const IconWrapper = styled.div`
+const IconWrapper = styled.span`
     position: absolute;
     top: 0;
     right: 0;
@@ -52,7 +52,7 @@ const IconWrapper = styled.div`
     opacity: 0.5;
 `;
 
-const StyledPlayButton = styled.div`
+const StyledPlayButton = styled.span`
     width: 64px;
     height: 64px;
     box-sizing: border-box;
