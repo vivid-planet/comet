@@ -1,5 +1,33 @@
 # @comet/admin
 
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   2fc764e29: Add `OnChangeField` helper to listen to field changes
+
+    **Example**
+
+    ```tsx
+    <OnChangeField name="product">
+        {(value, previousValue) => {
+            // Will be called when field 'product' changes
+        }}
+    </OnChangeField>
+    ```
+
+### Patch Changes
+
+-   012a768ee: Fix infinite update loop in `useAsyncOptionsProps`
+-   Updated dependencies [efccc42a3]
+    -   @comet/admin-icons@6.14.0
+
 ## 6.13.0
 
 ### Minor Changes

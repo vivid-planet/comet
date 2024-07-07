@@ -8,6 +8,10 @@ export interface DamConfig {
     requireLicense?: boolean;
     additionalToolbarItems?: React.ReactNode;
     importSources?: Record<string, { label: React.ReactNode }>;
+    contentGeneration?: {
+        generateAltText?: boolean;
+        generateImageTitle?: boolean;
+    };
 }
 
 export const DamConfigContext = React.createContext<DamConfig | undefined>(undefined);

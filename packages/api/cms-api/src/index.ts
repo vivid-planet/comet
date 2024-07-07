@@ -26,6 +26,8 @@ export { createLinkBlock } from "./blocks/createLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
 export { DamVideoBlock } from "./blocks/dam-video.block";
+export { EmailLinkBlock } from "./blocks/email-link.block";
+export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
@@ -59,8 +61,17 @@ export { PaginatedResponseFactory } from "./common/pagination/paginated-response
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsNullable } from "./common/validators/is-nullable";
+export { IsPhoneNumber, isPhoneNumber } from "./common/validators/is-phone-number";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
+export { AzureOpenAiContentGenerationModule } from "./content-generation/azure-open-ai/azure-open-ai-content-generation.module";
+export {
+    AzureOpenAiConfig,
+    AzureOpenAiContentGenerationService,
+    AzureOpenAiContentGenerationServiceConfig,
+} from "./content-generation/azure-open-ai/azure-open-ai-content-generation.service";
+export { ContentGenerationModule } from "./content-generation/content-generation.module";
+export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
@@ -150,6 +161,7 @@ export { AzureAITranslatorModule } from "./translation/azure-ai-translator.modul
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
 export { RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
+export { DisablePermissionCheck } from "./user-permissions/decorators/required-permission.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
