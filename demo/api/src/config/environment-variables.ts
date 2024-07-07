@@ -96,17 +96,16 @@ export class EnvironmentVariables {
     @IsString()
     S3_BUCKET: string;
 
-    @IsString()
-    @IsOptional()
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_KEY || v.AZURE_AI_TRANSLATOR_REGION)
     @IsUrl()
     AZURE_AI_TRANSLATOR_ENDPOINT?: string;
 
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_REGION)
     @IsString()
-    @IsOptional()
     AZURE_AI_TRANSLATOR_KEY?: string;
 
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_KEY)
     @IsString()
-    @IsOptional()
     AZURE_AI_TRANSLATOR_REGION?: string;
 
     @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY || v.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID)
