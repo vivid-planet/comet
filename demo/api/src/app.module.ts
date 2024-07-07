@@ -1,6 +1,6 @@
 import {
     AccessLogModule,
-    AzureAITranslatorModule,
+    AzureAiTranslatorModule,
     AzureOpenAiContentGenerationModule,
     BlobStorageModule,
     BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
@@ -171,7 +171,7 @@ export class AppModule {
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
-                ...(config.azureAiTranslator ? [AzureAITranslatorModule.register(config.azureAiTranslator)] : []),
+                ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({
                     shouldLogRequest: ({ user }) => {
                         // Ignore system user

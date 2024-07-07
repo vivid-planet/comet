@@ -3,23 +3,23 @@ import { Inject } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { AzureAITranslatorConfig } from "./azure-ai-translator.config";
+import { AzureAiTranslatorConfig } from "./azure-ai-translator.config";
 import { AZURE_AI_TRANSLATOR_CONFIG } from "./azure-ai-translator.constants";
-import { TranslationInput } from "./dto/translation.input";
+import { AzureAiTranslationInput } from "./dto/azure-ai-translation.input";
 
 @Resolver()
 @RequiredPermission(["translation"], { skipScopeCheck: true })
-export class AzureAITranslatorResolver {
+export class AzureAiTranslatorResolver {
     private readonly translationClient: TextTranslationClient;
 
-    constructor(@Inject(AZURE_AI_TRANSLATOR_CONFIG) private readonly config: AzureAITranslatorConfig) {
+    constructor(@Inject(AZURE_AI_TRANSLATOR_CONFIG) private readonly config: AzureAiTranslatorConfig) {
         this.translationClient = createClient(config.endpoint, {
             key: config.key,
             region: config.region,
         });
     }
     @Query(() => String)
-    async azureAiTranslate(@Args("input") input: TranslationInput): Promise<string> {
+    async azureAiTranslate(@Args("input") input: AzureAiTranslationInput): Promise<string> {
         const translateResponse = await this.translationClient.path("/translate").post({
             body: [{ text: input.text }],
             queryParameters: {
