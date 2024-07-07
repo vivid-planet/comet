@@ -27,6 +27,8 @@ export class AppModule {
 }
 ```
 
+Users need the `translation` permission to use the translation feature.
+
 **Admin:**
 
 Wrap the section where you want to use the content translation with the `AzureAiTranslatorProvider` provider:
@@ -34,3 +36,5 @@ Wrap the section where you want to use the content translation with the `AzureAi
 ```tsx
 <AzureAiTranslatorProvider enabled={true}>{/*  ...  */}</AzureAiTranslatorProvider>
 ```
+
+Note: `AzureAiTranslatorProvider` automatically checks for the `translation` permission. The translation button is only shown for users with this permission.
