@@ -18,6 +18,7 @@ export class AzureAiTranslatorResolver {
             region: config.region,
         });
     }
+
     @Query(() => String)
     async azureAiTranslate(@Args("input") input: AzureAiTranslationInput): Promise<string> {
         const translateResponse = await this.translationClient.path("/translate").post({
