@@ -3,9 +3,34 @@
 "@comet/cms-api": minor
 ---
 
-Add AzureAiTranslator to be availabe in all Comet Projects
-To enable Ai Translation add enabled prop to the Provider and add the following env Variables:
+Add an [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) implementation of the content translation feature
 
--   AZURE_AI_TRANSLATOR_ENDPOINT
--   AZURE_AI_TRANSLATOR_KEY
--   AZURE_AI_TRANSLATOR_REGION,
+To use it, do the following:
+
+**API:**
+
+```diff
+// app.module.ts
+export class AppModule {
+    static forRoot(config: Config): DynamicModule {
+        return {
+            imports: [
+                // ...
++               AzureAiTranslatorModule.register({
++                   endpoint: envVars.AZURE_AI_TRANSLATOR_ENDPOINT,
++                   key: envVars.AZURE_AI_TRANSLATOR_KEY,
++                   region: envVars.AZURE_AI_TRANSLATOR_REGION,
++               }),
+            ],
+        };
+    }
+}
+```
+
+**Admin:**
+
+Wrap the section where you want to use the content translation with the `AzureAiTranslatorProvider` provider:
+
+```tsx
+<AzureAiTranslatorProvider enabled={true}>{/*  ...  */}</AzureAiTranslatorProvider>
+```
