@@ -9,6 +9,7 @@ import {
     FinalFormSwitch,
     Loading,
     MainContent,
+    messages,
     TextField,
     useFormApiRef,
     useStackSwitchApi,
@@ -241,14 +242,8 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                             >
                                 {(props) => (
                                     <FormControlLabel
-                                        label={
-                                            props.input.checked ? (
-                                                <FormattedMessage id="manufacturer.address.useAlternativeAddress.yes" defaultMessage="Yes" />
-                                            ) : (
-                                                <FormattedMessage id="manufacturer.address.useAlternativeAddress.no" defaultMessage="No" />
-                                            )
-                                        }
                                         control={<FinalFormSwitch {...props} />}
+                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
                                     />
                                 )}
                             </Field>
