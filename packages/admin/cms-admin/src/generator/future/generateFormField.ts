@@ -138,14 +138,20 @@ export function generateFormField(
         </Field>`;
         formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${name}),`;
     } else if (config.type == "staticSelect") {
-        if (config.values) {
-            throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
-        }
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
-        const values = enumType.enumValues.map((i) => i.name);
+        const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
+            if (typeof value === "string") {
+                return {
+                    value,
+                    label: camelCaseToHumanReadable(value),
+                };
+            } else {
+                return value;
+            }
+        });
         code = `<Field
             ${required ? "required" : ""}
             fullWidth
@@ -161,9 +167,9 @@ export function generateFormField(
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
                     .map((value) => {
-                        const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
-                        const label = `<FormattedMessage id="${id}" defaultMessage="${camelCaseToHumanReadable(value)}" />`;
-                        return `<MenuItem value="${value}">${label}</MenuItem>`;
+                        const id = `${instanceGqlType}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
+                        const label = `<FormattedMessage id="${id}" defaultMessage="${value.label}" />`;
+                        return `<MenuItem value="${value.value}">${label}</MenuItem>`;
                     })
                     .join("\n")}
                 </FinalFormSelect>
