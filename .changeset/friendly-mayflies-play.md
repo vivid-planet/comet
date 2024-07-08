@@ -2,7 +2,7 @@
 "@comet/cms-site": major
 ---
 
-Rework `PixelImageBlock` to correctly use the "new" `next/image` component
+Revise `PixelImageBlock` to correctly use the "new" `next/image` component
 
 See the [docs](https://nextjs.org/docs/pages/api-reference/components/image-legacy#comparison) for a comparison between the new and the legacy component.
 
