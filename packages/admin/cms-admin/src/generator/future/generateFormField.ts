@@ -184,9 +184,9 @@ export function generateFormField(
                 introspectionFieldType.ofType.kind === "NON_NULL" ? introspectionFieldType.ofType.ofType : introspectionFieldType.ofType;
         }
         if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types, got ${introspectionFieldType.kind}`);
-        const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
-            | IntrospectionObjectType
-            | undefined;
+        const objectType = gqlIntrospection.__schema.types.find(
+            (t) => t.kind === "OBJECT" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
+        ) as IntrospectionObjectType | undefined;
         if (!objectType) throw new Error(`Object type ${introspectionFieldType.name} not found for field ${name}`);
 
         //find labelField: 1. as configured
