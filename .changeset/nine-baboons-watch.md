@@ -2,17 +2,23 @@
 "@comet/cms-admin": minor
 ---
 
-Redesign `EditImageDialog` to increase Imagesize, Hover Effects for Focalpoints and Open in DAM Button
+Rework `EditImageDialog`
 
-Note: To display the Button `DependenciesConfig` needs to be configured for `DamFile`:
+Changes
 
-```diff
-// App.tsx
+- Increase image size
+- Add hover effects for focal points
+- Add "Open in DAM" button
 
-<DependenciesConfigProvider
-    entityDependencyMap={{
-+       DamFile: createDamFileDependency(),
-        // ...
-    }}
->
-```
+  Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+  ```diff
+  // App.tsx
+
+  <DependenciesConfigProvider
+      entityDependencyMap={{
+  +       DamFile: createDamFileDependency(),
+          // ...
+      }}
+  >
+  ```
