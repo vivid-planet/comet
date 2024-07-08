@@ -27,7 +27,14 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { createProductMutation, productCategoriesQuery, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
+import {
+    createProductMutation,
+    productCategoriesQuery,
+    productFormFragment,
+    productQuery,
+    productTagsQuery,
+    updateProductMutation,
+} from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -37,6 +44,9 @@ import {
     GQLProductFormDetailsFragment,
     GQLProductQuery,
     GQLProductQueryVariables,
+    GQLProductTagSelectFragment,
+    GQLProductTagsSelectQuery,
+    GQLProductTagsSelectQueryVariables,
     GQLUpdateProductMutation,
     GQLUpdateProductMutationVariables,
 } from "./ProductForm.gql.generated";
@@ -98,6 +108,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             ...formValues,
             category: formValues.category?.id,
             image: rootBlocks.image.state2Output(formValues.image),
+            tags: formValues.tags?.id,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -127,6 +138,10 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             query: productCategoriesQuery,
         });
         return result.data.productCategories.nodes;
+    });
+    const tagsSelectAsyncProps = useAsyncOptionsProps(async () => {
+        const result = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({ query: productTagsQuery });
+        return result.data.productTags.nodes;
     });
 
     if (error) throw error;
@@ -219,6 +234,37 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
+                        <Field
+                            required
+                            fullWidth
+                            name="additionalTypes"
+                            multiple
+                            label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
+                        >
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Cap">
+                                        <FormattedMessage id="product.additionalTypes.cap" defaultMessage="Cap" />
+                                    </MenuItem>
+                                    <MenuItem value="Shirt">
+                                        <FormattedMessage id="product.additionalTypes.shirt" defaultMessage="Shirt" />
+                                    </MenuItem>
+                                    <MenuItem value="Tie">
+                                        <FormattedMessage id="product.additionalTypes.tie" defaultMessage="Tie" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
+                        <Field
+                            required
+                            fullWidth
+                            name="tags"
+                            multiple
+                            label={<FormattedMessage id="product.tags" defaultMessage="Tags" />}
+                            component={FinalFormSelect}
+                            {...tagsSelectAsyncProps}
+                            getOptionLabel={(option: GQLProductTagSelectFragment) => option.title}
+                        />
                     </MainContent>
                 </>
             )}

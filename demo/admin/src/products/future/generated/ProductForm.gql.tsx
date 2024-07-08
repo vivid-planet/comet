@@ -18,6 +18,22 @@ export const productCategoriesQuery = gql`
     }
     ${productCategoriesSelectFragment}
 `;
+export const productTagsSelectFragment = gql`
+    fragment ProductTagSelect on ProductTag {
+        id
+        title
+    }
+`;
+export const productTagsQuery = gql`
+    query ProductTagsSelect {
+        productTags {
+            nodes {
+                ...ProductTagSelect
+            }
+        }
+    }
+    ${productTagsSelectFragment}
+`;
 export const productFormFragment = gql`
     fragment ProductFormDetails on Product {
         title
@@ -32,6 +48,11 @@ export const productFormFragment = gql`
         inStock
         availableSince
         image
+        additionalTypes
+        tags {
+            id
+            title
+        }
     }
 `;
 export const productQuery = gql`

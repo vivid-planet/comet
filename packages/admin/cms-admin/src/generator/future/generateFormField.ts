@@ -25,7 +25,7 @@ export function generateFormField(
 
     const introspectionField = introspectionObject.fields.find((field) => field.name === name);
     if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
-    const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+    let introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
     const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
 
@@ -141,6 +141,13 @@ export function generateFormField(
         if (config.values) {
             throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
         }
+
+        const multiple = introspectionFieldType.kind === "LIST";
+        if (introspectionFieldType.kind === "LIST") {
+            introspectionFieldType =
+                introspectionFieldType.ofType.kind === "NON_NULL" ? introspectionFieldType.ofType.ofType : introspectionFieldType.ofType;
+        }
+
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
@@ -150,6 +157,7 @@ export function generateFormField(
             ${required ? "required" : ""}
             fullWidth
             name="${name}"
+            ${multiple ? "multiple" : ""}
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
             ${
                 config.helperText
@@ -170,7 +178,12 @@ export function generateFormField(
             }
         </Field>`;
     } else if (config.type == "asyncSelect") {
-        if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
+        const multiple = introspectionFieldType.kind === "LIST";
+        if (introspectionFieldType.kind === "LIST") {
+            introspectionFieldType =
+                introspectionFieldType.ofType.kind === "NON_NULL" ? introspectionFieldType.ofType.ofType : introspectionFieldType.ofType;
+        }
+        if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types, got ${introspectionFieldType.kind}`);
         const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
             | IntrospectionObjectType
             | undefined;
@@ -241,6 +254,7 @@ export function generateFormField(
                 ${required ? "required" : ""}
                 fullWidth
                 name="${name}"
+                ${multiple ? "multiple" : ""}
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
                 component={FinalFormSelect}
                 {...${name}SelectAsyncProps}
