@@ -1,6 +1,5 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
-    CrudVisibility,
     DataGridToolbar,
     GridCellContent,
     GridColDef,
@@ -22,13 +21,11 @@ import { FieldRenderProps } from "react-final-form";
 import { FormattedNumber, useIntl } from "react-intl";
 
 import {
-    GQLProductGridRelationsQuery,
-    GQLProductGridRelationsQueryVariables,
-    GQLProductsListManualFragment,
-    GQLProductsListQuery,
-    GQLProductsListQueryVariables,
-    GQLUpdateProductStatusMutation,
-    GQLUpdateProductStatusMutationVariables,
+    GQLProductsSelectGridItemFragment,
+    GQLProductsSelectGridListQuery,
+    GQLProductsSelectGridListQueryVariables,
+    GQLProductsSelectGridRelationsQuery,
+    GQLProductsSelectGridRelationsQueryVariables,
 } from "./ProductsSelectGrid.generated";
 
 function ProductsGridToolbar() {
@@ -51,12 +48,13 @@ function ProductsGridToolbar() {
 export function ProductsSelectGrid({ input }: FieldRenderProps<string[]>) {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
-    const client = useApolloClient();
-    const { data: relationsData } = useQuery<GQLProductGridRelationsQuery, GQLProductGridRelationsQueryVariables>(productRelationsQuery);
+    const { data: relationsData } = useQuery<GQLProductsSelectGridRelationsQuery, GQLProductsSelectGridRelationsQueryVariables>(
+        productRelationsQuery,
+    );
     const intl = useIntl();
     const theme = useTheme();
 
-    const columns: GridColDef<GQLProductsListManualFragment>[] = [
+    const columns: GridColDef<GQLProductsSelectGridItemFragment>[] = [
         {
             field: "overview",
             headerName: "Overview",
@@ -134,36 +132,11 @@ export function ProductsSelectGrid({ input }: FieldRenderProps<string[]>) {
             ],
             valueOptions: relationsData?.productTags.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
-        {
-            field: "status",
-            headerName: "Status",
-            flex: 1,
-            minWidth: 130,
-            type: "boolean",
-            valueGetter: (params) => params.row.status == "Published",
-            renderCell: (params) => {
-                return (
-                    <CrudVisibility
-                        visibility={params.row.status == "Published"}
-                        onUpdateVisibility={async (status) => {
-                            await client.mutate<GQLUpdateProductStatusMutation, GQLUpdateProductStatusMutationVariables>({
-                                mutation: updateProductStatusMutation,
-                                variables: { id: params.row.id, status: status ? "Published" : "Unpublished" },
-                                optimisticResponse: {
-                                    __typename: "Mutation",
-                                    updateProduct: { __typename: "Product", id: params.row.id, status: status ? "Published" : "Unpublished" },
-                                },
-                            });
-                        }}
-                    />
-                );
-            },
-        },
     ];
 
     const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
 
-    const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
+    const { data, loading, error } = useQuery<GQLProductsSelectGridListQuery, GQLProductsSelectGridListQueryVariables>(productsQuery, {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
@@ -198,16 +171,14 @@ export function ProductsSelectGrid({ input }: FieldRenderProps<string[]>) {
 }
 
 const productsFragment = gql`
-    fragment ProductsListManual on Product {
+    fragment ProductsSelectGridItem on Product {
         id
-        slug
         title
         description
         price
         type
         additionalTypes
         inStock
-        image
         status
         category {
             id
@@ -217,27 +188,15 @@ const productsFragment = gql`
             id
             title
         }
-        colors {
-            name
-            hexCode
-        }
-        variants {
-            id
-        }
-        articleNumbers
-        discounts {
-            quantity
-            price
-        }
     }
 `;
 
 const productsQuery = gql`
-    query ProductsList($offset: Int!, $limit: Int!, $sort: [ProductSort!], $filter: ProductFilter, $search: String) {
+    query ProductsSelectGridList($offset: Int!, $limit: Int!, $sort: [ProductSort!], $filter: ProductFilter, $search: String) {
         products(offset: $offset, limit: $limit, sort: $sort, filter: $filter, search: $search) {
             nodes {
                 id
-                ...ProductsListManual
+                ...ProductsSelectGridItem
             }
             totalCount
         }
@@ -246,7 +205,7 @@ const productsQuery = gql`
 `;
 
 const productRelationsQuery = gql`
-    query ProductGridRelations {
+    query ProductsSelectGridRelations {
         productCategories {
             nodes {
                 id
@@ -258,15 +217,6 @@ const productRelationsQuery = gql`
                 id
                 title
             }
-        }
-    }
-`;
-
-const updateProductStatusMutation = gql`
-    mutation UpdateProductStatus($id: ID!, $status: ProductStatus!) {
-        updateProduct(id: $id, input: { status: $status }) {
-            id
-            status
         }
     }
 `;

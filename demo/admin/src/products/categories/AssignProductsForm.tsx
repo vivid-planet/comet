@@ -62,7 +62,7 @@ export function AssignProductsForm({ productCategoryId }: FormProps): React.Reac
             initialValuesEqual={isEqual} //required to compare block data correctly
             subscription={{}}
         >
-            {({ handleSubmit, submitting }) => {
+            {() => {
                 return (
                     <Field name="productIds" fullWidth>
                         {(props) => (
