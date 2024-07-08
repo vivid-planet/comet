@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -125,7 +125,6 @@ export class Product extends BaseEntity<Product, "id"> {
     availableSince?: Date = undefined;
 
     @Property({ customType: new RootBlockType(DamImageBlock) })
-    @Field(() => RootBlockDataScalar(DamImageBlock))
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
 
