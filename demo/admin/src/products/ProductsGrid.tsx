@@ -140,7 +140,7 @@ export function ProductsGrid() {
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
-            valueOptions: relationsData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
+            valueOptions: relationsData?.productCategories.map((i) => ({ value: i.id, label: i.title })),
         },
         {
             field: "tags",
@@ -336,10 +336,8 @@ const productsQuery = gql`
 const productRelationsQuery = gql`
     query ProductGridRelations {
         productCategories {
-            nodes {
-                id
-                title
-            }
+            id
+            title
         }
         productTags {
             nodes {

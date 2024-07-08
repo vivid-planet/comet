@@ -149,7 +149,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
     const categorySelectAsyncProps = useAsyncOptionsProps(async () => {
         const categories = await client.query<GQLProductCategoriesQuery, GQLProductCategoriesQueryVariables>({ query: productCategoriesQuery });
-        return categories.data.productCategories.nodes;
+        return categories.data.productCategories;
     });
     const tagsSelectAsyncProps = useAsyncOptionsProps(async () => {
         const tags = await client.query<GQLProductTagsQuery, GQLProductTagsQueryVariables>({ query: productTagsQuery });

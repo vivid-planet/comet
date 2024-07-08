@@ -126,7 +126,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         const result = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
             query: productCategoriesQuery,
         });
-        return result.data.productCategories.nodes;
+        return result.data.productCategories;
     });
 
     if (error) throw error;

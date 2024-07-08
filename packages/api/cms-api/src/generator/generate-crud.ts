@@ -383,7 +383,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     ${generateImportsCode(imports)}
 
     @ArgsType()
-    export class ${argsClassName} extends OffsetBasedPaginationArgs {
+    export class ${argsClassName} ${generatorOptions.paging ? `extends OffsetBasedPaginationArgs` : ""} {
         ${
             scopeProp
                 ? `
@@ -1006,7 +1006,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         ${
-            generatorOptions.list
+            generatorOptions.list && generatorOptions.paging
                 ? `
         @Query(() => Paginated${classNamePlural})
         ${dedicatedResolverArgProps
@@ -1080,6 +1080,81 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new Paginated${classNamePlural}(entities, totalCount);
+        }
+        `
+                : ""
+        }
+
+        ${
+            generatorOptions.list && !generatorOptions.paging
+                ? `
+        @Query(() => [${metadata.className}])
+        ${dedicatedResolverArgProps
+            .map((dedicatedResolverArgProp) => {
+                return `@AffectedEntity(${dedicatedResolverArgProp.targetMeta?.className}, { idArg: "${dedicatedResolverArgProp.name}" })`;
+            })
+            .join("")}
+        async ${instanceNameSingular != instanceNamePlural ? instanceNamePlural : `${instanceNamePlural}List`}(
+            @Args() {${Object.entries({
+                scope: !!scopeProp,
+                ...dedicatedResolverArgProps.reduce((acc, dedicatedResolverArgProp) => {
+                    acc[dedicatedResolverArgProp.name] = true;
+                    return acc;
+                }, {} as Record<string, boolean>),
+                status: !!hasStatusFilter,
+                search: !!hasSearchArg,
+                filter: !!hasFilterArg,
+                sort: !!hasSortArg,
+            })
+                .filter(([key, use]) => use)
+                .map(([key]) => key)
+                .join(", ")}}: ${argsClassName}
+            ${hasOutputRelations ? `, @Info() info: GraphQLResolveInfo` : ""}
+        ): Promise<${metadata.className}[]> {
+            const where${
+                hasSearchArg || hasFilterArg
+                    ? ` = this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
+                    : `: ObjectQuery<${metadata.className}> = {}`
+            }
+            ${hasStatusFilter ? `where.status = { $in: status };` : ""}
+            ${scopeProp ? `where.scope = scope;` : ""}
+            ${dedicatedResolverArgProps
+                .map((dedicatedResolverArgProp) => {
+                    return `where.${dedicatedResolverArgProp.name} = ${dedicatedResolverArgProp.name};`;
+                })
+                .join("\n")}
+
+            ${
+                hasOutputRelations
+                    ? `const fields = extractGraphqlFields(info, { root: "nodes" });
+            const populate: string[] = [];`
+                    : ""
+            }
+            ${[...outputRelationManyToOneProps, ...outputRelationOneToManyProps, ...outputRelationManyToManyProps, ...outputRelationOneToOneProps]
+                .map(
+                    (r) =>
+                        `if (fields.includes("${r.name}")) {
+                            populate.push("${r.name}");
+                        }`,
+                )
+                .join("\n")}
+
+            ${hasOutputRelations ? `// eslint-disable-next-line @typescript-eslint/no-explicit-any` : ""}
+            const options: FindOptions<${metadata.className}${hasOutputRelations ? `, any` : ""}> = { ${hasOutputRelations ? `populate` : ""}};
+
+            ${
+                hasSortArg
+                    ? `if (sort) {
+                options.orderBy = sort.map((sortItem) => {
+                    return {
+                        [sortItem.field]: sortItem.direction,
+                    };
+                });
+            }`
+                    : ""
+            }
+
+            return this.repository.find(where, options);
         }
         `
                 : ""
@@ -1163,6 +1238,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
         update: generatorOptionsParam.update ?? true,
         delete: generatorOptionsParam.delete ?? true,
         list: generatorOptionsParam.list ?? true,
+        paging: generatorOptionsParam.paging ?? true,
     };
 
     const generatedFiles: GeneratedFile[] = [];
@@ -1186,11 +1262,13 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
                 type: "sort",
             });
         }
-        generatedFiles.push({
-            name: `dto/paginated-${fileNamePlural}.ts`,
-            content: generatePaginatedDto({ generatorOptions, metadata }),
-            type: "sort",
-        });
+        if (generatorOptions.paging) {
+            generatedFiles.push({
+                name: `dto/paginated-${fileNamePlural}.ts`,
+                content: generatePaginatedDto({ generatorOptions, metadata }),
+                type: "paginated",
+            });
+        }
         generatedFiles.push({
             name: `dto/${argsFileName}.ts`,
             content: generateArgsDto({ generatorOptions, metadata }),
