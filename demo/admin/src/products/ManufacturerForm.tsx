@@ -194,7 +194,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
             initialValuesEqual={isEqual} //required to compare block data correctly
             subscription={{}}
         >
-            {({ values }) => (
+            {() => (
                 <>
                     {saveConflict.dialogs}
                     <MainContent>
