@@ -1,7 +1,7 @@
 import { BlockDataInterface, BlockField, createBlock, inputToData, typesafeMigrationPipe } from "@comet/blocks-api";
 import { IsOptional, IsString, Matches } from "class-validator";
 
-import { BaseVideoBlockData, BaseVideoBlockInput } from "../BaseVideoBlockData";
+import { BaseVideoBlockData, BaseVideoBlockInput } from "../base-video-block";
 import { RemoveAspectRatioMigration } from "./migrations/1-remove-aspect-ratio.migration";
 import { AddPreviewImageMigration } from "./migrations/2-add-preview-image.migration";
 

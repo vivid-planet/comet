@@ -11,7 +11,7 @@ import {
 } from "@comet/blocks-api";
 import { IsOptional, IsUUID } from "class-validator";
 
-import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/BaseVideoBlockData";
+import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/base-video-block";
 import { FILE_ENTITY } from "../../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 import { AddPreviewImageMigration } from "./migrations/1-add-preview-image.migration";

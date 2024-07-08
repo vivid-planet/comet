@@ -16,7 +16,7 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" 
         <Root>
             <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} />
             <IconWrapper onClick={onPlay}>
-                <StyledPlayButton />
+                <PlayIcon />
             </IconWrapper>
         </Root>
     );
@@ -44,7 +44,7 @@ const IconWrapper = styled.button`
     cursor: pointer;
 `;
 
-const StyledPlayButton = styled.span`
+const PlayIcon = styled.span`
     width: 64px;
     height: 64px;
     box-sizing: border-box;
