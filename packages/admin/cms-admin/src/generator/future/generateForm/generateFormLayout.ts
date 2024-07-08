@@ -25,13 +25,13 @@ export function generateFormLayout(
         <FieldSet
             ${config.collapsible ? `collapsible` : ``}
             ${config.initiallyExpanded ? `initiallyExpanded` : ``}
-            title={<FormattedMessage id="${instanceGqlType}.${config.title.replace(/ /g, "")}.title" defaultMessage="${config.title}" />}
+            title={<FormattedMessage id="${instanceGqlType}.${config.name}.title" defaultMessage="${config.title}" />}
             ${
                 config.supportText
                     ? `supportText={
                         ${supportPlaceholder ? `mode === "edit" && (<FormSpy subscription={{ values: true }}>{({ values }) => (` : ``}
                         <FormattedMessage
-                            id="${instanceGqlType}.${config.title.replace(/ /g, "")}.supportText"
+                            id="${instanceGqlType}.${config.name}.supportText"
                             defaultMessage="${config.supportText}"
                             ${supportPlaceholder ? `values={{ ...values }}` : ``}
                         />

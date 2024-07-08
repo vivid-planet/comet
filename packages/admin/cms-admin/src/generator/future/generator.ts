@@ -32,6 +32,7 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
 
 export type FormLayoutConfig<T> = {
     type: "fieldSet";
+    name: string;
     title: string;
     supportText?: string; // can contain field-placeholder
     collapsible: boolean; // default true
