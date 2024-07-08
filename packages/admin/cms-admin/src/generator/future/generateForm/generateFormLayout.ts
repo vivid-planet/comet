@@ -23,8 +23,8 @@ export function generateFormLayout(
         }
         code = `
         <FieldSet
-            collapsible={${String(config.collapsible)}}
-            initiallyExpanded={${String(config.initiallyExpanded)}}
+            ${config.collapsible ? `collapsible` : ``}
+            ${config.initiallyExpanded ? `initiallyExpanded` : ``}
             title={<FormattedMessage id="${instanceGqlType}.${config.title.replace(/ /g, "")}.title" defaultMessage="${config.title}" />}
             ${
                 config.supportText
