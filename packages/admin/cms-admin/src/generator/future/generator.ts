@@ -45,7 +45,7 @@ export type GridColumnConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T> } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
