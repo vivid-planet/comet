@@ -1,6 +1,18 @@
 import { Migration } from "@mikro-orm/migrations";
 import * as mimedb from "mime-db";
-import { getValidExtensionsForMimetype } from "../../dam/files/files.utils";
+
+export const getValidExtensionsForMimetype = (mimetype: string) => {
+    let supportedExtensions: readonly string[] | undefined;
+    if (mimetype === "application/x-zip-compressed") {
+        // zip files in Windows, not supported by mime-db
+        // see https://github.com/jshttp/mime-db/issues/245
+        supportedExtensions = ["zip"];
+    } else {
+        supportedExtensions = mimedb[mimetype]?.extensions;
+    }
+
+    return supportedExtensions;
+};
 
 export class Migration20240702123233 extends Migration {
     async up(): Promise<void> {
