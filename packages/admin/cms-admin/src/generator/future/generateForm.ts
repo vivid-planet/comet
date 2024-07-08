@@ -96,7 +96,7 @@ export function generateForm(
     const formFragmentFields: string[] = [];
     const fieldsCode = config.fields
         .map((field) => {
-            const generated = generateFormField({ gqlIntrospection }, field, config);
+            const generated = generateFormField({ gqlIntrospection, baseOutputFilename }, field, config);
             for (const name in generated.gqlDocuments) {
                 gqlDocuments[name] = generated.gqlDocuments[name];
             }
@@ -192,8 +192,9 @@ export function generateForm(
         });
     }
 
-    const code = `import { useApolloClient, useQuery } from "@apollo/client";
+    const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
+        AsyncSelectField,
         Field,
         filterByFragment,
         FinalForm,
