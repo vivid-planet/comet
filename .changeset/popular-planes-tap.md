@@ -2,7 +2,6 @@
 "@comet/blocks-admin": major
 "@comet/cms-admin": major
 "@comet/blocks-api": major
-"@comet/cms-site": major
 "@comet/cms-api": major
 ---
 
