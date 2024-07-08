@@ -1001,23 +1001,6 @@ selfish-dolls-beg.md
 
 ## ESLint
 
-### Enforce PascalCase in enums
-
-We now enforce PascalCase for enums.
-If your project has enums that are cased differently, you should change the casing.
-
-In some cases, changing the enum casing can be problematic.
-For example, if the enum value is stored in the database.
-In such cases, you can disable the rule like so
-
-```diff
-+ /* eslint-disable @typescript-eslint/naming-convention */
-  export enum ExampleEnum {
-      attr1 = "attr1",
-  }
-+ /* eslint-enable @typescript-eslint/naming-convention */
-```
-
 ### @typescript-eslint/prefer-enum-initializers
 
 It's now mandatory to initialize enums:
