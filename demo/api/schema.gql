@@ -507,10 +507,10 @@ type ProductTag {
 type ProductVariant {
   id: ID!
   name: String!
-  image: DamImageBlockData!
   createdAt: DateTime!
   updatedAt: DateTime!
   product: Product!
+  image: DamImageBlockData!
 }
 
 type ProductDiscounts {
@@ -1375,7 +1375,7 @@ input ProductInput {
 }
 
 input ProductNestedProductStatisticsInput {
-  views: Float!
+  views: Int!
 }
 
 input ProductNestedProductColorInput {

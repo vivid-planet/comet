@@ -8,6 +8,7 @@ import {
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    OnChangeField,
     SelectField,
     TextAreaField,
     TextField,
@@ -18,6 +19,12 @@ import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
+import {
+    GQLManufacturerCountriesQuery,
+    GQLManufacturerCountriesQueryVariables,
+    GQLManufacturersQuery,
+    GQLManufacturersQueryVariables,
+} from "@src/products/ProductForm.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -48,8 +55,9 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image"> & {
+type FormValues = Omit<GQLProductFormManualFragment, "image" | "manufacturerCountry"> & {
     image: BlockState<typeof rootBlocks.image>;
+    manufacturerCountry?: { id: string };
 };
 
 export function ProductForm({ id }: FormProps): React.ReactElement {
@@ -63,17 +71,26 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormValues> = data?.product
-        ? {
-              ...filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product),
-              image: rootBlocks.image.input2State(data.product.image),
-          }
-        : {
-              image: rootBlocks.image.defaultValues(),
-              inStock: false,
-              additionalTypes: [],
-              tags: [],
-          };
+    const initialValues: Partial<FormValues> = React.useMemo<Partial<FormValues>>(() => {
+        const filteredData = data ? filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product) : undefined;
+        if (!filteredData) {
+            return {
+                image: rootBlocks.image.defaultValues(),
+                inStock: false,
+                additionalTypes: [],
+                tags: [],
+            };
+        }
+        return {
+            ...filteredData,
+            image: rootBlocks.image.input2State(filteredData.image),
+            manufacturerCountry: filteredData.manufacturerCountry
+                ? {
+                      id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
+                  }
+                : undefined,
+        };
+    }, [data]);
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -86,7 +103,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
@@ -97,6 +114,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
+            manufacturer: formValues.manufacturer?.id,
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -133,9 +151,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{}}
+            subscription={{ values: true }} // values required because disable and loadOptions of manufacturer-select depends on values
         >
-            {() => (
+            {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
                     <MainContent>
@@ -147,20 +165,97 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <SelectField name="type" label="Type" required fullWidth>
-                            <MenuItem value="Cap">Cap</MenuItem>
-                            <MenuItem value="Shirt">Shirt</MenuItem>
-                            <MenuItem value="Tie">Tie</MenuItem>
+                        <AsyncSelectField
+                            name="manufacturerCountry"
+                            loadOptions={async () => {
+                                const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
+                                    query: gql`
+                                        query ManufacturerCountries {
+                                            manufacturerCountries {
+                                                nodes {
+                                                    id
+                                                    used
+                                                }
+                                            }
+                                        }
+                                    `,
+                                });
+
+                                return data.manufacturerCountries.nodes;
+                            }}
+                            getOptionLabel={(option) => option.id}
+                            label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
+                            fullWidth
+                        />
+                        <AsyncSelectField
+                            name="manufacturer"
+                            loadOptions={async () => {
+                                const { data } = await client.query<GQLManufacturersQuery, GQLManufacturersQueryVariables>({
+                                    query: gql`
+                                        query Manufacturers($filter: ManufacturerFilter) {
+                                            manufacturers(filter: $filter) {
+                                                nodes {
+                                                    id
+                                                    name
+                                                }
+                                            }
+                                        }
+                                    `,
+                                    variables: {
+                                        filter: {
+                                            addressAsEmbeddable_country: {
+                                                equal: values.manufacturerCountry?.id,
+                                            },
+                                        },
+                                    },
+                                });
+
+                                return data.manufacturers.nodes;
+                            }}
+                            getOptionLabel={(option) => option.name}
+                            label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                            fullWidth
+                            disabled={!values?.manufacturerCountry}
+                        />
+                        <OnChangeField name="manufacturerCountry">
+                            {(value, previousValue) => {
+                                if (value.id !== previousValue.id) {
+                                    form.change("manufacturer", undefined);
+                                }
+                            }}
+                        </OnChangeField>
+                        <SelectField name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />} required fullWidth>
+                            <MenuItem value="Cap">
+                                <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                            </MenuItem>
+                            <MenuItem value="Shirt">
+                                <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
+                            </MenuItem>
+                            <MenuItem value="Tie">
+                                <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
+                            </MenuItem>
                         </SelectField>
-                        <SelectField name="additionalTypes" label="Additional Type" required fullWidth multiple>
-                            <MenuItem value="Cap">Cap</MenuItem>
-                            <MenuItem value="Shirt">Shirt</MenuItem>
-                            <MenuItem value="Tie">Tie</MenuItem>
+                        <SelectField
+                            name="additionalTypes"
+                            label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
+                            required
+                            fullWidth
+                            multiple
+                        >
+                            <MenuItem value="Cap">
+                                <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                            </MenuItem>
+                            <MenuItem value="Shirt">
+                                <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
+                            </MenuItem>
+                            <MenuItem value="Tie">
+                                <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
+                            </MenuItem>
                         </SelectField>
                         <AsyncSelectField
                             fullWidth
                             name="category"
-                            label="Category"
+                            label={<FormattedMessage id="product.category" defaultMessage="Category" />}
                             loadOptions={async () => {
                                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
                                     query: gql`
@@ -182,7 +277,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <AsyncSelectField
                             fullWidth
                             name="tags"
-                            label="Tags"
+                            label={<FormattedMessage id="product.tags" defaultMessage="Tags" />}
                             multiple
                             loadOptions={async () => {
                                 const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({

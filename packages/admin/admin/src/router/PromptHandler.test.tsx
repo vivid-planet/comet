@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
 import { fireEvent, render, waitFor } from "test-utils";
 
+import { ForcePromptRoute } from "./ForcePromptRoute";
 import { RouterPrompt } from "./Prompt";
 import { useSubRoutePrefix } from "./SubRoute";
 
@@ -166,5 +167,64 @@ test("route outside Prompt", async () => {
     await waitFor(() => {
         const sub = rendered.queryAllByText("sure?");
         expect(sub.length).toBe(1);
+    });
+});
+
+test("ForcePromptRoute", async () => {
+    function Story() {
+        return (
+            <Switch>
+                <Route path="/foo">
+                    <RouterPrompt
+                        message={() => {
+                            return "sure?";
+                        }}
+                        subRoutePath="/foo"
+                    >
+                        <ul>
+                            <li>
+                                <Link to="/foo/sub1">/foo/sub1</Link> (no prompt)
+                            </li>
+                            <li>
+                                <Link to="/foo/sub2">/foo/sub2</Link> (force prompt)
+                            </li>
+                            <li>
+                                <Link to="/foo">/foo</Link> (back)
+                            </li>
+                        </ul>
+                        <Route path="/foo/sub1">
+                            <div>sub1</div>
+                        </Route>
+                        <ForcePromptRoute path="/foo/sub2">
+                            <div>sub2</div>
+                        </ForcePromptRoute>
+                    </RouterPrompt>
+                </Route>
+                <Redirect to="/foo" />
+            </Switch>
+        );
+    }
+    const rendered = render(<Story />);
+
+    fireEvent.click(rendered.getByText("/foo/sub2"));
+
+    // verify navigation to bar did get blocked
+    await waitFor(() => {
+        const sub = rendered.queryAllByText("sub2");
+        expect(sub.length).toBe(0);
+    });
+
+    // and dirty dialog is shown
+    await waitFor(() => {
+        const sub = rendered.queryAllByText("sure?");
+        expect(sub.length).toBe(1);
+    });
+
+    fireEvent.click(rendered.getByText("/foo/sub1"));
+
+    // verify navigation didn't get blocked
+    await waitFor(() => {
+        const sub = rendered.queryAllByText("sub");
+        expect(sub.length).toBe(0);
     });
 });

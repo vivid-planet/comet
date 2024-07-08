@@ -19,10 +19,17 @@ export function generateImportsCode(imports: Imports): string {
         return true;
     });
 
-    const importsString = filteredImports
-        .map((imp) => {
-            return `import { ${imp.name} } from "${imp.importPath}";`;
-        })
-        .join("\n");
+    const importsPathToName: Record<string, string[]> = {};
+    for (const imp of filteredImports) {
+        if (!importsPathToName[imp.importPath]) {
+            importsPathToName[imp.importPath] = [];
+        }
+        importsPathToName[imp.importPath].push(imp.name);
+    }
+
+    let importsString = "";
+    for (const [importPath, importNames] of Object.entries(importsPathToName)) {
+        importsString += `import { ${importNames.sort().join(", ")} } from "${importPath}";\n`;
+    }
     return importsString;
 }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Route, RouteComponentProps, useHistory } from "react-router";
+import { Route, RouteComponentProps, useHistory, useLocation } from "react-router";
 
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
@@ -57,7 +57,7 @@ export interface BreadcrumbItem {
     parentId: string;
     url: string;
     title: React.ReactNode;
-    invisible: boolean;
+    locationUrl?: string;
 }
 
 export interface SwitchItem {
@@ -71,21 +71,12 @@ export function Stack(props: StackProps) {
     const [breadcrumbs, setBreadcrumbs] = React.useState<BreadcrumbItem[]>([]);
     const [switches, setSwitches] = React.useState<SwitchItem[]>([]);
     const history = useHistory();
+    const location = useLocation();
 
     const getVisibleBreadcrumbs = React.useCallback(() => {
-        let prev: BreadcrumbItem;
-        return sortByParentId(breadcrumbs)
-            .map((i) => {
-                return { ...i }; // clone so we can modify in filter below
-            })
-            .filter((i) => {
-                if (i.invisible) {
-                    prev.url = i.url;
-                    return false;
-                }
-                prev = i;
-                return true;
-            });
+        return breadcrumbs.map((i) => {
+            return { ...i, url: i.locationUrl ?? i.url };
+        });
     }, [breadcrumbs]);
 
     const goBack = React.useCallback(() => {
@@ -101,34 +92,37 @@ export function Stack(props: StackProps) {
         history.push(breadcrumbs[0].url);
     }, [history, breadcrumbs]);
 
-    const addBreadcrumb = React.useCallback((id: string, parentId: string, url: string, title: React.ReactNode, invisible: boolean) => {
+    const addBreadcrumb = React.useCallback((id: string, parentId: string, url: string, title: React.ReactNode) => {
         setBreadcrumbs((old) => {
-            return [
+            return sortByParentId([
                 ...old,
                 {
                     id,
                     parentId,
                     url,
                     title,
-                    invisible,
                 },
-            ];
+            ]);
         });
     }, []);
 
-    const updateBreadcrumb = React.useCallback((id: string, parentId: string, url: string, title: React.ReactNode, invisible: boolean) => {
+    const updateBreadcrumb = React.useCallback((id: string, parentId: string, url: string, title: React.ReactNode) => {
         setBreadcrumbs((old) => {
-            return old.map((crumb) => {
-                return crumb.id === id ? { id, parentId, url, title, invisible } : crumb;
-            });
+            return sortByParentId(
+                old.map((crumb) => {
+                    return crumb.id === id ? { ...crumb, parentId, url, title } : crumb;
+                }),
+            );
         });
     }, []);
 
     const removeBreadcrumb = React.useCallback((id: string) => {
         setBreadcrumbs((old) => {
-            return old.filter((crumb) => {
-                return crumb.id !== id;
-            });
+            return sortByParentId(
+                old.filter((crumb) => {
+                    return crumb.id !== id;
+                }),
+            );
         });
     }, []);
 
@@ -150,6 +144,13 @@ export function Stack(props: StackProps) {
             return old.filter((item) => item.id !== id);
         });
     }, []);
+
+    React.useEffect(() => {
+        // execute on location change, set locationUrl for the last breadcrumb to the current location
+        setBreadcrumbs((old) => {
+            return [...old.slice(0, -1), { ...old[old.length - 1], locationUrl: location.pathname + location.search }];
+        });
+    }, [location]);
 
     const visibleBreadcrumbs = getVisibleBreadcrumbs();
 
