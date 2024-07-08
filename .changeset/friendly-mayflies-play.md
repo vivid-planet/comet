@@ -2,37 +2,39 @@
 "@comet/cms-site": major
 ---
 
-Revise `PixelImageBlock` to correctly use the updated next image component (remove deprecated layout prop)
+Rework `PixelImageBlock` to correctly use the "new" `next/image` component
+
+See the [docs](https://nextjs.org/docs/pages/api-reference/components/image-legacy#comparison) for a comparison between the new and the legacy component.
 
 **Migrate**
 
-The block does not use the `layout` prop anymore, and it must be removed from the block's props because it can lead to an error with the current implementation of `PixelImageBlock`. (`layout="responsive"` is not compatible with the new prop `fill`, which we use as default behavior now) 
+Remove the `layout` prop from the block as it can lead to errors with the default implementation (`layout="responsive"` is not compatible with the new `fill` prop).
 
-`layout={"responsive" | "inherit"}` can safely be removed.
+- `layout={"responsive" | "inherit"}` can safely be removed
 
-```diff
-<PixelImageBlock 
-    data={block.props}
-    aspectRatio={aspectRatio}
--   layout={"responsive"}   // line is marked as deprecated, but "responsive" must be removed 
-    {...imageProps} 
-/>
-```
+    ```diff
+    <PixelImageBlock 
+        data={block.props}
+        aspectRatio={aspectRatio}
+    -   layout={"responsive"}   // line is marked as deprecated, but "responsive" must be removed 
+        {...imageProps} 
+    />
+    ```
 
-`layout={"fill"}` can be replaced with `fill={true}`
+- `layout={"fill"}` can be replaced with `fill={true}`
 
-```diff
-<PixelImageBlock 
-    data={block.props}
-    aspectRatio={aspectRatio}
--   layout={"fill"}
-+   fill
-    {...imageProps} 
-/>
-```
+    ```diff
+    <PixelImageBlock 
+        data={block.props}
+        aspectRatio={aspectRatio}
+    -   layout={"fill"}
+    +   fill
+        {...imageProps} 
+    />
+    ```
 
 Notes: 
 
-The `PixelImageBlock` is often wrapped in a `DamImageBlock`, the `layout` prop should be removed from the `PixelImageBlock` and all its usages.
+The `PixelImageBlock` is usually wrapped in a `DamImageBlock` in the application. The `layout` prop should be removed from it as well.
 
-If you want to use the added `fill` prop of the next/image component you can do that and embed the `PixelImageBlock` in a necessary container for customization (https://nextjs.org/docs/pages/api-reference/components/image#fill).
+You can use the newly added `fill` prop of the `next/image` component by embedding the `PixelImageBlock` in a parent element that assigns the `position` style. See the [docs](https://nextjs.org/docs/pages/api-reference/components/image#fill) for more information. 
