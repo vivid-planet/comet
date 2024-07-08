@@ -14,13 +14,7 @@ export interface VideoPreviewImageProps {
 export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" }: VideoPreviewImageProps) => {
     return (
         <Root>
-            <PixelImageBlock
-                data={image}
-                aspectRatio={aspectRatio}
-                // TODO: remove layout prop when #2245 is merged (https://github.com/vivid-planet/comet/pull/2245)
-                layout="responsive"
-                sizes={sizes}
-            />
+            <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} />
             <IconWrapper onClick={onPlay}>
                 <StyledPlayButton />
             </IconWrapper>
