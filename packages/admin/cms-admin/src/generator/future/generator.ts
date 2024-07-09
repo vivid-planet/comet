@@ -27,7 +27,7 @@ export type FormFieldConfig<T> = (
 ) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
-    return arg.name !== undefined;
+    return !isFormLayoutConfig(arg);
 }
 
 export type FormLayoutConfig<T> = {
