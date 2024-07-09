@@ -48,9 +48,7 @@ jobs:
                   test -f demo/site/lang/comet-demo-lang/site/en.json || echo "{}" > demo/site/lang/comet-demo-lang/site/en.json
                   test -f demo/site/lang/comet-demo-lang/site/de.json || echo "{}" > demo/site/lang/comet-demo-lang/site/de.json
 
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 8
+            - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 18.x
               uses: actions/setup-node@v3
