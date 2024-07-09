@@ -45,7 +45,7 @@ export function ProductsPage(): React.ReactElement {
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <MainContent fullHeight>
                         <ProductsGrid
-                            addButton={
+                            toolbarAction={
                                 <Button
                                     startIcon={<AddIcon />}
                                     component={StackLink}
@@ -57,7 +57,7 @@ export function ProductsPage(): React.ReactElement {
                                     <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                                 </Button>
                             }
-                            editButton={(params) => (
+                            rowAction={(params) => (
                                 <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                                     <Edit color="primary" />
                                 </IconButton>

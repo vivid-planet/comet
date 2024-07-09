@@ -166,9 +166,9 @@ export function generateGrid(
 
     const toolbar = config.toolbar ?? true;
 
-    const forwardAddButton = allowAdding && toolbar && config.buttonProps;
-    if (forwardAddButton) {
-        props.push({ name: "addButton", type: "React.ReactNode", optional: true });
+    const forwardToolbarAction = allowAdding && toolbar && config.toolbarActionProp;
+    if (forwardToolbarAction) {
+        props.push({ name: "toolbarAction", type: "React.ReactNode", optional: true });
     }
 
     const sortArg = gridQueryType.args.find((arg) => arg.name === "sort");
@@ -309,10 +309,10 @@ export function generateGrid(
 
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
-    const forwardEditButton = allowEditing && config.buttonProps;
-    if (forwardEditButton) {
+    const forwardRowAction = allowEditing && config.rowActionProp;
+    if (forwardRowAction) {
         props.push({
-            name: "editButton",
+            name: "rowAction",
             type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => React.ReactNode`,
             optional: true,
         });
@@ -429,7 +429,7 @@ export function generateGrid(
 
     ${
         toolbar
-            ? `function ${gqlTypePlural}GridToolbar(${forwardAddButton ? `{ addButton }: { addButton?: React.ReactNode }` : ``}) {
+            ? `function ${gqlTypePlural}GridToolbar(${forwardToolbarAction ? `{ toolbarAction }: { toolbarAction?: React.ReactNode }` : ``}) {
         return (
             <DataGridToolbar>
                 ${
@@ -449,8 +449,8 @@ export function generateGrid(
                 <ToolbarFillSpace />
                 ${
                     allowAdding
-                        ? forwardAddButton
-                            ? `{addButton && <ToolbarActions>{addButton}</ToolbarActions>}`
+                        ? forwardToolbarAction
+                            ? `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`
                             : `<ToolbarActions>
                            <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
                                <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
@@ -522,8 +522,8 @@ export function generateGrid(
                                 <>
                                 ${
                                     allowEditing
-                                        ? forwardEditButton
-                                            ? `{editButton && editButton(params)}`
+                                        ? forwardRowAction
+                                            ? `{rowAction && rowAction(params)}`
                                             : `
                                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                                             <Edit color="primary" />
@@ -637,9 +637,9 @@ export function generateGrid(
                         ? `components={{
                                 Toolbar: ${gqlTypePlural}GridToolbar,
                             }}${
-                                forwardAddButton
+                                forwardToolbarAction
                                     ? `componentsProps={{
-                                            toolbar: { addButton: addButton },
+                                            toolbar: { toolbarAction: toolbarAction },
                                         }}`
                                     : ``
                             }`

@@ -71,7 +71,7 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
+function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -81,19 +81,19 @@ function ProductsGridToolbar({ addButton }: { addButton?: React.ReactNode }) {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            {addButton && <ToolbarActions>{addButton}</ToolbarActions>}
+            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );
 }
 
 type Props = {
     filter?: GQLProductFilter;
-    addButton?: React.ReactNode;
+    toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    editButton?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
 };
 
-export function ProductsGrid({ filter, addButton, editButton }: Props): React.ReactElement {
+export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -152,7 +152,7 @@ export function ProductsGrid({ filter, addButton, editButton }: Props): React.Re
             renderCell: (params) => {
                 return (
                     <>
-                        {editButton && editButton(params)}
+                        {rowAction && rowAction(params)}
                         <CrudContextMenu
                             copyData={() => {
                                 // Don't copy id, because we want to create a new entity with this data
@@ -209,7 +209,7 @@ export function ProductsGrid({ filter, addButton, editButton }: Props): React.Re
                 Toolbar: ProductsGridToolbar,
             }}
             componentsProps={{
-                toolbar: { addButton: addButton },
+                toolbar: { toolbarAction: toolbarAction },
             }}
         />
     );
