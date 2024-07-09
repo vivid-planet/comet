@@ -1,6 +1,5 @@
 # @comet/blocks-api
 
-<<<<<<< HEAD
 ## 7.0.0-beta.3
 
 ## 7.0.0-beta.2
@@ -79,7 +78,7 @@
 
     -   Admin: `axios`
     -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
-=======
+
 ## 6.15.1
 
 ## 6.15.0
@@ -93,7 +92,6 @@
     The API only allowed URLs but blocked video IDs.
 
     Now, the API validation also accepts URLs and video IDs.
->>>>>>> main
 
 ## 6.14.1
 

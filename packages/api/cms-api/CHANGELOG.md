@@ -1,6 +1,5 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 7.0.0-beta.3
 
 ### Major Changes
@@ -293,7 +292,7 @@
 -   Updated dependencies [e15927594]
 -   Updated dependencies [ebf597120]
     -   @comet/blocks-api@7.0.0-beta.0
-=======
+
 ## 6.15.1
 
 ### Patch Changes
@@ -314,7 +313,6 @@
 
 -   Updated dependencies [c7f5637bd]
     -   @comet/blocks-api@6.15.0
->>>>>>> main
 
 ## 6.14.1
 

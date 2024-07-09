@@ -1,22 +1,10 @@
-<<<<<<< HEAD:packages/api/blocks-api/src/blocks/YouTubeVideoBlock/youtube-video.block.ts
-import { IsBoolean, IsOptional, IsString, Matches } from "class-validator";
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 
 import { typesafeMigrationPipe } from "../../migrations/typesafeMigrationPipe";
 import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "../block";
 import { BlockField } from "../decorators/field";
+import { IsValidYoutubeIdentifier } from "../validator/is-valid-youtube-identifier";
 import { RemoveAspectRatioMigration } from "./migrations/1-remove-aspect-ratio.migration";
-=======
-import { IsBoolean, IsEnum, IsOptional, IsString } from "class-validator";
-
-import { BlockData, BlockDataInterface, BlockInput, createBlock, inputToData } from "./block";
-import { BlockField } from "./decorators/field";
-import { IsValidYoutubeIdentifier } from "./validator/is-valid-youtube-identifier";
-
-enum AspectRatio {
-    "16X9" = "16X9",
-    "4X3" = "4X3",
-}
->>>>>>> main:packages/api/blocks-api/src/blocks/youtube-video.block.ts
 
 class YouTubeVideoBlockData extends BlockData {
     @BlockField({ nullable: true })

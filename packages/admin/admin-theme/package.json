@@ -1,10 +1,6 @@
 {
     "name": "@comet/admin-theme",
-<<<<<<< HEAD
     "version": "7.0.0-beta.3",
-=======
-    "version": "6.15.1",
->>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -29,23 +25,14 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-<<<<<<< HEAD
         "@comet/admin-icons": "workspace:^7.0.0-beta.3",
-=======
-        "@comet/admin-icons": "workspace:^6.15.1",
->>>>>>> main
         "@mui/utils": "^5.4.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-<<<<<<< HEAD
         "@comet/admin-babel-preset": "workspace:^7.0.0-beta.3",
         "@comet/eslint-config": "workspace:^7.0.0-beta.3",
-=======
-        "@comet/admin-babel-preset": "workspace:^6.15.1",
-        "@comet/eslint-config": "workspace:^6.15.1",
->>>>>>> main
         "@mui/material": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@mui/x-data-grid": "^5.0.0",

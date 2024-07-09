@@ -1,6 +1,5 @@
 # @comet/cms-site
 
-<<<<<<< HEAD
 ## 7.0.0-beta.3
 
 ## 7.0.0-beta.2
@@ -140,11 +139,10 @@
     Requires following changes to admin
 
     -   The `SitesConfig` must provide a `sitePreviewApiUrl`
-=======
+
 ## 6.15.1
 
 ## 6.15.0
->>>>>>> main
 
 ## 6.14.1
 
