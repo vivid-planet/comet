@@ -56,7 +56,7 @@ describe("GenerateCrudPosition", () => {
 
         orm.close();
     });
-    it("resolver should implement position-functions", async () => {
+    it("service should implement position-functions", async () => {
         LazyMetadataStorage.load();
         const orm = await MikroORM.init({
             type: "postgresql",
@@ -65,7 +65,7 @@ describe("GenerateCrudPosition", () => {
         });
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithPositionField"));
-        const file = out.find((file) => file.name == "test-entity-with-position-field.resolver.ts");
+        const file = out.find((file) => file.name == "test-entity-with-position-fields.service.ts");
         if (!file) throw new Error("File not found");
 
         const lintedOutput = await lintSource(file.content);

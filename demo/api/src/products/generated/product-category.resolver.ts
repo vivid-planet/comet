@@ -67,10 +67,10 @@ export class ProductCategoryResolver {
 
     @Mutation(() => ProductCategory)
     async createProductCategory(@Args("input", { type: () => ProductCategoryInput }) input: ProductCategoryInput): Promise<ProductCategory> {
-        const lastPosition = await this.getLastPosition();
+        const lastPosition = await this.productCategoriesService.getLastPosition();
         let position = input.position;
         if (position !== undefined && position < lastPosition + 1) {
-            await this.incrementPositions(position);
+            await this.productCategoriesService.incrementPositions(position);
         } else {
             position = lastPosition + 1;
         }
@@ -94,14 +94,14 @@ export class ProductCategoryResolver {
         const productCategory = await this.repository.findOneOrFail(id);
 
         if (input.position !== undefined) {
-            const lastPosition = await this.getLastPosition();
+            const lastPosition = await this.productCategoriesService.getLastPosition();
             if (input.position > lastPosition + 1) {
                 input.position = lastPosition + 1;
             }
             if (productCategory.position < input.position) {
-                await this.decrementPositions(productCategory.position, input.position);
+                await this.productCategoriesService.decrementPositions(productCategory.position, input.position);
             } else if (productCategory.position > input.position) {
-                await this.incrementPositions(input.position, productCategory.position);
+                await this.productCategoriesService.incrementPositions(input.position, productCategory.position);
             }
         }
 
@@ -119,7 +119,7 @@ export class ProductCategoryResolver {
     async deleteProductCategory(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productCategory = await this.repository.findOneOrFail(id);
         this.entityManager.remove(productCategory);
-        await this.decrementPositions(productCategory.position);
+        await this.productCategoriesService.decrementPositions(productCategory.position);
         await this.entityManager.flush();
         return true;
     }
@@ -127,25 +127,5 @@ export class ProductCategoryResolver {
     @ResolveField(() => [Product])
     async products(@Parent() productCategory: ProductCategory): Promise<Product[]> {
         return productCategory.products.loadItems();
-    }
-
-    async incrementPositions(lowestPosition: number, highestPosition?: number) {
-        // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
-        await this.repository.nativeUpdate(
-            { position: { $gte: lowestPosition, $lt: highestPosition } }, // add filter for grouping if necessary
-            { position: this.entityManager.raw("position + 1") },
-        );
-    }
-
-    async decrementPositions(lowestPosition: number, highestPosition?: number) {
-        // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
-        await this.repository.nativeUpdate(
-            { position: { $gt: lowestPosition, $lte: highestPosition } }, // add filter for grouping if necessary
-            { position: this.entityManager.raw("position - 1") },
-        );
-    }
-
-    async getLastPosition() {
-        return this.repository.count({}); // add filter for grouping if necessary
     }
 }

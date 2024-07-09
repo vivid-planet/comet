@@ -465,13 +465,12 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
 
 function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
-    const { hasSearchArg, hasFilterArg, crudSearchPropNames } = buildOptions(metadata);
+    const { hasSearchArg, hasFilterArg, hasPositionProp, crudSearchPropNames } = buildOptions(metadata);
 
-    // TODO vermutlich sollte hier die update-position funktion landen (generateService)
     const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
-    import { EntityRepository } from "@mikro-orm/postgresql";
+    import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
 
     ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
@@ -479,6 +478,15 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
 
     @Injectable()
     export class ${classNamePlural}Service {    
+        ${
+            hasPositionProp
+                ? `constructor(
+                    private readonly entityManager: EntityManager,
+                    @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
+                ) {}`
+                : ""
+        }
+
         ${
             hasSearchArg || hasFilterArg
                 ? `
@@ -508,6 +516,32 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
             return andFilters.length > 0 ? { $and: andFilters } : {};
         }
         `
+                : ""
+        }
+
+        ${
+            hasPositionProp
+                ? `
+                async incrementPositions(lowestPosition: number, highestPosition?: number) {
+                    // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
+                    await this.repository.nativeUpdate(
+                        { position: { $gte: lowestPosition, $lt: highestPosition } }, // add filter for grouping if necessary
+                        { position: this.entityManager.raw("position + 1") },
+                    );
+                }
+
+                async decrementPositions(lowestPosition: number, highestPosition?: number) {
+                    // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
+                    await this.repository.nativeUpdate(
+                        { position: { $gt: lowestPosition, $lte: highestPosition } }, // add filter for grouping if necessary
+                        { position: this.entityManager.raw("position - 1") },
+                    );
+                }
+
+                async getLastPosition() {
+                    return this.repository.count({}); // add filter for grouping if necessary
+                }
+                `
                 : ""
         }
     }
@@ -1076,10 +1110,10 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 // use local position-var because typescript does not narrow down input.position, keeping "| undefined" typing resulting in typescript error in create-function
                 hasPositionProp
                     ? `
-            const lastPosition = await this.getLastPosition();
+            const lastPosition = await this.${instanceNamePlural}Service.getLastPosition();
             let position = input.position;
             if (position !== undefined && position < lastPosition + 1) {
-                await this.incrementPositions(position);
+                await this.${instanceNamePlural}Service.incrementPositions(position);
             } else {
                 position = lastPosition + 1;
             }`
@@ -1111,14 +1145,14 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 hasPositionProp
                     ? `
             if (input.position !== undefined) {
-                const lastPosition = await this.getLastPosition();
+                const lastPosition = await this.${instanceNamePlural}Service.getLastPosition();
                 if (input.position > lastPosition + 1) {
                     input.position = lastPosition + 1;
                 }
                 if (${instanceNameSingular}.position < input.position) {
-                    await this.decrementPositions(${instanceNameSingular}.position, input.position);
+                    await this.${instanceNamePlural}Service.decrementPositions(${instanceNameSingular}.position, input.position);
                 } else if (${instanceNameSingular}.position > input.position) {
-                    await this.incrementPositions(input.position, ${instanceNameSingular}.position);
+                    await this.${instanceNamePlural}Service.incrementPositions(input.position, ${instanceNameSingular}.position);
                 }
             }`
                     : ""
@@ -1142,7 +1176,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             this.entityManager.remove(${instanceNameSingular});${
-                      hasPositionProp ? `await this.decrementPositions(${instanceNameSingular}.position);` : ""
+                      hasPositionProp ? `await this.${instanceNamePlural}Service.decrementPositions(${instanceNameSingular}.position);` : ""
                   }
             await this.entityManager.flush();
             return true;
@@ -1152,32 +1186,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         ${relationsFieldResolverCode}
-
-        ${
-            hasPositionProp
-                ? `
-                async incrementPositions(lowestPosition: number, highestPosition?: number) {
-                    // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
-                    await this.repository.nativeUpdate(
-                        { position: { $gte: lowestPosition, $lt: highestPosition } }, // add filter for grouping if necessary
-                        { position: this.entityManager.raw("position + 1") },
-                    );
-                }
-
-                async decrementPositions(lowestPosition: number, highestPosition?: number) {
-                    // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
-                    await this.repository.nativeUpdate(
-                        { position: { $gt: lowestPosition, $lte: highestPosition } }, // add filter for grouping if necessary
-                        { position: this.entityManager.raw("position - 1") },
-                    );
-                }
-
-                async getLastPosition() {
-                    return this.repository.count({}); // add filter for grouping if necessary
-                }
-                `
-                : ""
-        }
     }
     `;
     return resolverOut;

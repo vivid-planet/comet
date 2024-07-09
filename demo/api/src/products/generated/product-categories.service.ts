@@ -2,6 +2,8 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
 import { ObjectQuery } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 
 import { ProductCategory } from "../entities/product-category.entity";
@@ -9,6 +11,11 @@ import { ProductCategoryFilter } from "./dto/product-category.filter";
 
 @Injectable()
 export class ProductCategoriesService {
+    constructor(
+        private readonly entityManager: EntityManager,
+        @InjectRepository(ProductCategory) private readonly repository: EntityRepository<ProductCategory>,
+    ) {}
+
     getFindCondition(options: { search?: string; filter?: ProductCategoryFilter }): ObjectQuery<ProductCategory> {
         const andFilters = [];
 
@@ -21,5 +28,25 @@ export class ProductCategoriesService {
         }
 
         return andFilters.length > 0 ? { $and: andFilters } : {};
+    }
+
+    async incrementPositions(lowestPosition: number, highestPosition?: number) {
+        // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
+        await this.repository.nativeUpdate(
+            { position: { $gte: lowestPosition, $lt: highestPosition } }, // add filter for grouping if necessary
+            { position: this.entityManager.raw("position + 1") },
+        );
+    }
+
+    async decrementPositions(lowestPosition: number, highestPosition?: number) {
+        // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
+        await this.repository.nativeUpdate(
+            { position: { $gt: lowestPosition, $lte: highestPosition } }, // add filter for grouping if necessary
+            { position: this.entityManager.raw("position - 1") },
+        );
+    }
+
+    async getLastPosition() {
+        return this.repository.count({}); // add filter for grouping if necessary
     }
 }
