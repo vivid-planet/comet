@@ -527,7 +527,7 @@ function generateInputHandling(
     metadata: EntityMetadata<any>,
 ): { code: string; injectRepositories: EntityMetadata<any>[] } {
     const { instanceNameSingular } = buildNameVariants(metadata);
-    const { blockProps, scopeProp, dedicatedResolverArgProps } = buildOptions(metadata);
+    const { blockProps, scopeProp, hasPositionProp, dedicatedResolverArgProps } = buildOptions(metadata);
 
     const injectRepositories: EntityMetadata<any>[] = [];
 
@@ -604,7 +604,7 @@ function generateInputHandling(
     }
     ${options.assignEntityCode}
     ...${noAssignProps.length ? `assignInput` : options.inputName},
-        ${options.mode == "create" && scopeProp ? `scope,` : ""}
+        ${options.mode == "create" && scopeProp ? `scope,` : ""}${options.mode == "create" && hasPositionProp ? `position,` : ""}
         ${
             options.mode == "create"
                 ? dedicatedResolverArgProps
@@ -1073,13 +1073,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                       .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
             ${
+                // use local position-var because typescript does not narrow down input.position, keeping "| undefined" typing resulting in typescript error in create-function
                 hasPositionProp
                     ? `
             const lastPosition = await this.getLastPosition();
-            if (input.position !== undefined && input.position < lastPosition + 1) {
-                await this.incrementPositions(input.position);
+            let position = input.position;
+            if (position !== undefined && position < lastPosition + 1) {
+                await this.incrementPositions(position);
             } else {
-                input.position = lastPosition + 1;
+                position = lastPosition + 1;
             }`
                     : ""
             }

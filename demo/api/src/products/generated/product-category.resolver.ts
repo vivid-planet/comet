@@ -68,14 +68,16 @@ export class ProductCategoryResolver {
     @Mutation(() => ProductCategory)
     async createProductCategory(@Args("input", { type: () => ProductCategoryInput }) input: ProductCategoryInput): Promise<ProductCategory> {
         const lastPosition = await this.getLastPosition();
-        if (input.position !== undefined && input.position < lastPosition + 1) {
-            await this.incrementPositions(input.position);
+        let position = input.position;
+        if (position !== undefined && position < lastPosition + 1) {
+            await this.incrementPositions(position);
         } else {
-            input.position = lastPosition + 1;
+            position = lastPosition + 1;
         }
 
         const productCategory = this.repository.create({
             ...input,
+            position,
         });
 
         await this.entityManager.flush();

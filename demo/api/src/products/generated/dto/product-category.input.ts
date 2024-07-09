@@ -20,8 +20,8 @@ export class ProductCategoryInput {
     @IsNullable()
     @Min(1)
     @IsInt()
-    @Field(() => Int)
-    position: number;
+    @Field(() => Int, { nullable: true })
+    position?: number;
 }
 
 @InputType()

@@ -70,7 +70,8 @@ export async function generateCrudInput(
         const fieldName = prop.name;
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
-        if (!prop.nullable && prop.name != "position") {
+        if (prop.name == "position") prop.nullable = true; // position prop input is always optional
+        if (!prop.nullable) {
             decorators.push("@IsNotEmpty()");
         } else {
             decorators.push("@IsNullable()");
@@ -80,8 +81,8 @@ export async function generateCrudInput(
             continue;
         } else if (prop.name == "position") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
-            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
+            const defaultValue = initializer == "undefined" || initializer == "null" ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });
             decorators.push(`@Min(1)`);
             decorators.push("@IsInt()");
             decorators.push(`@Field(() => Int, ${fieldOptions})`);

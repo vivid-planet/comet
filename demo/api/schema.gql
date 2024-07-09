@@ -1415,7 +1415,7 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
-  position: Int!
+  position: Int
 }
 
 input ProductCategoryUpdateInput {
