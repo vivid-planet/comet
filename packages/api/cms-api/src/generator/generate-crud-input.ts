@@ -70,8 +70,8 @@ export async function generateCrudInput(
         const fieldName = prop.name;
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
-        if (prop.name == "position") prop.nullable = true; // position prop input is always optional
-        if (!prop.nullable) {
+        const shouldBeNullable = prop.nullable || prop.name == "position"; // position prop input is always optional
+        if (!shouldBeNullable) {
             decorators.push("@IsNotEmpty()");
         } else {
             decorators.push("@IsNullable()");
@@ -381,7 +381,7 @@ export async function generateCrudInput(
         }
 
         fieldsOut += `${decorators.join("\n")}
-    ${fieldName}${prop.nullable ? "?" : ""}: ${type};
+    ${fieldName}${shouldBeNullable ? "?" : ""}: ${type};
     
     `;
     }
