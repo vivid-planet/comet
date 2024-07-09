@@ -26,7 +26,7 @@ export const DamVideoBlock = withPreview(
         }
 
         const [showPreviewImage, setShowPreviewImage] = React.useState(true);
-        const hasPreviewImage = previewImage && previewImage.damFile;
+        const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
         return (
             <>
