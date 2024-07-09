@@ -28,8 +28,8 @@ const nextConfig = {
     compiler: {
         styledComponents: true,
     },
-    cacheHandler: process.env.NEXT_PHASE !== "phase-production-build" ? require.resolve("./cache-handler.mjs") : undefined,
-    cacheMaxMemorySize: process.env.NEXT_PHASE !== "phase-production-build" ? 0 : undefined, // disable default in-memory caching
+    cacheHandler: process.env.REDIS_ENABLED === "true" ? require.resolve("./cache-handler.mjs") : undefined,
+    cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
 };
 
 module.exports = nextConfig;
