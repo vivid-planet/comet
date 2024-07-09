@@ -1,5 +1,15 @@
 # @comet/eslint-config
 
+## 6.15.1
+
+### Patch Changes
+
+-   6cb850567: Fix Prettier peer dependency
+
+    The dependency range was incorrectly set to `>= 2`. Change to `^2.0.0` since Prettier v3 isn't supported at the moment.
+
+    -   @comet/eslint-plugin@6.15.1
+
 ## 6.15.0
 
 ### Patch Changes
