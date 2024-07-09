@@ -17,7 +17,7 @@ const users: User[] = [
     { id: "29734826-06b4-491b-ada7-cf1000d95790", name: "Maria" },
 ];
 
-storiesOf("stories/components/EditDialog/Edit Dialog and Selection (EditDialog Component) docs only", module)
+storiesOf("stories/components/EditDialog/Edit Dialog and Selection (EditDialog Component)", module)
     .addDecorator(editDialogDecorator())
     .add("Edit Dialog and Selection (EditDialog Component)", () => {
         const location = useLocation();
