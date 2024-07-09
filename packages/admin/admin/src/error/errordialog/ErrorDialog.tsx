@@ -1,10 +1,10 @@
 import { Accept, Copy } from "@comet/admin-icons";
-import { Dialog, Divider, Stack, Typography } from "@mui/material";
+import { Dialog, Divider, List, ListItem, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -152,8 +152,6 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
     );
 }
 
-<<<<<<< HEAD
-=======
 function UnauthenticatedUserMessage(): JSX.Element {
     return (
         <>
@@ -196,7 +194,6 @@ const ErrorListItem = styled(ListItem)`
     padding-left: 0;
 `;
 
->>>>>>> main
 type CopyToClipboardButtonProps = {
     copyData: string;
 };
