@@ -47,9 +47,9 @@ const productsFragment = gql`
         inStock
         soldCount
         availableSince
-        image
         createdAt
         updatedAt
+        image
     }
 `;
 
@@ -140,16 +140,6 @@ export function ProductsGrid(): React.ReactElement {
             width: 150,
         },
         {
-            field: "image",
-            headerName: intl.formatMessage({ id: "product.image", defaultMessage: "Image" }),
-            filterable: false,
-            sortable: false,
-            width: 150,
-            renderCell: (params) => {
-                return <BlockPreviewContent block={DamImageBlock} input={params.row.image} />;
-            },
-        },
-        {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
@@ -162,6 +152,16 @@ export function ProductsGrid(): React.ReactElement {
             type: "dateTime",
             valueGetter: ({ value }) => value && new Date(value),
             width: 150,
+        },
+        {
+            field: "image",
+            headerName: intl.formatMessage({ id: "product.image", defaultMessage: "Image" }),
+            filterable: false,
+            sortable: false,
+            width: 150,
+            renderCell: (params) => {
+                return <BlockPreviewContent block={DamImageBlock} input={params.row.image} />;
+            },
         },
         {
             field: "actions",
