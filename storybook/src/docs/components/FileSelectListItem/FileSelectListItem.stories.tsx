@@ -26,7 +26,7 @@ storiesOf("stories/components/FileSelectListItem", module)
                     file={{
                         name: "Filename.xyz",
                         size: 4.3 * 1024 * 1024, // 4.3 MB
-                        isDownloading: fileIsDownloading,
+                        downloading: fileIsDownloading,
                     }}
                     onClickDownload={() => {
                         setFileIsDownloading(true);

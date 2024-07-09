@@ -93,7 +93,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
         return <Skeleton variant="rounded" height={35} animation="wave" width="100%" sx={{ borderRadius: 2 }} {...slotProps?.skeleton} />;
     }
 
-    const fileIsDownloading = "isDownloading" in file && file.isDownloading;
+    const fileIsDownloading = "downloading" in file && file.downloading;
 
     const ownerState: OwnerState = {
         hasErrorWithDetails: "error" in file && typeof file.error !== "boolean",

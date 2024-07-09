@@ -51,7 +51,7 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles].map((file) => {
         if ("id" in file && downloadingFileIds.includes(file.id)) {
-            return { ...file, isDownloading: true };
+            return { ...file, downloading: true };
         }
 
         if ("id" in file && failedToDownloadFileIds.includes(file.id)) {
