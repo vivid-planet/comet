@@ -1,5 +1,6 @@
 # @comet/cms-api
 
+<<<<<<< HEAD
 ## 7.0.0-beta.3
 
 ### Major Changes
@@ -292,6 +293,28 @@
 -   Updated dependencies [e15927594]
 -   Updated dependencies [ebf597120]
     -   @comet/blocks-api@7.0.0-beta.0
+=======
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/blocks-api@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   9b29afd87: Add missing `@RequiredPermission` to `createZip` route
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [c7f5637bd]
+    -   @comet/blocks-api@6.15.0
+>>>>>>> main
 
 ## 6.14.1
 

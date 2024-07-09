@@ -38,7 +38,14 @@ export const CurrentUserProvider: React.FC<{
         }
     `);
 
+<<<<<<< HEAD
     if (error) return <Typography gutterBottom>{error.message}</Typography>;
+=======
+    if (error) {
+        return <>Cannot load user: {error.message}</>;
+    }
+
+>>>>>>> main
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {

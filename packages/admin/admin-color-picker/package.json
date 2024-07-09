@@ -1,6 +1,10 @@
 {
     "name": "@comet/admin-color-picker",
+<<<<<<< HEAD
     "version": "7.0.0-beta.3",
+=======
+    "version": "6.15.1",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -25,8 +29,13 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
+<<<<<<< HEAD
         "@comet/admin": "workspace:^7.0.0-beta.3",
         "@comet/admin-icons": "workspace:^7.0.0-beta.3",
+=======
+        "@comet/admin": "workspace:^6.15.1",
+        "@comet/admin-icons": "workspace:^6.15.1",
+>>>>>>> main
         "clsx": "^1.1.1",
         "react-colorful": "^5.5.1",
         "tinycolor2": "^1.4.1",
@@ -35,8 +44,13 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
+<<<<<<< HEAD
         "@comet/admin-babel-preset": "workspace:^7.0.0-beta.3",
         "@comet/eslint-config": "workspace:^7.0.0-beta.3",
+=======
+        "@comet/admin-babel-preset": "workspace:^6.15.1",
+        "@comet/eslint-config": "workspace:^6.15.1",
+>>>>>>> main
         "@mui/material": "^5.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",

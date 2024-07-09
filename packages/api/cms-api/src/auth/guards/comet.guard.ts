@@ -26,7 +26,11 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
             if (user) {
                 return user;
             }
+<<<<<<< HEAD
             throw new UnauthorizedException(info[0]?.message);
+=======
+            throw new HttpException("UNAUTHENTICATED", 401);
+>>>>>>> main
         }
 
         async canActivate(context: ExecutionContext): Promise<boolean> {

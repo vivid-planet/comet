@@ -1,5 +1,6 @@
 # @comet/admin-react-select
 
+<<<<<<< HEAD
 ## 7.0.0-beta.3
 
 ### Patch Changes
@@ -172,6 +173,23 @@
 -   Updated dependencies [b0249e3bc]
 -   Updated dependencies [92eae2ba9]
     -   @comet/admin@7.0.0-beta.0
+=======
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin@6.15.1
+-   @comet/admin-icons@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   Updated dependencies [406027806]
+-   Updated dependencies [0654f7bce]
+    -   @comet/admin-icons@6.15.0
+    -   @comet/admin@6.15.0
+>>>>>>> main
 
 ## 6.14.1
 
