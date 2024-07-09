@@ -1,5 +1,7 @@
 # @comet/admin-icons
 
+## 6.15.1
+
 ## 6.15.0
 
 ### Minor Changes
