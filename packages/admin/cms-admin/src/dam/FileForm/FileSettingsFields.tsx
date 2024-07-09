@@ -11,7 +11,6 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { GQLLicenseType } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
-import { getValidExtensionsForMimetype } from "../helpers/getValidExtensionsForMimetype";
 import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
 import { DamFileDetails, EditFileFormValues } from "./EditFile";
@@ -98,6 +97,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                         defaultMessage: "File Name",
                     })}
                     name="name"
+                    endAdornment={`.${file.name.split(".").pop()}`}
                     component={FinalFormInput}
                     validate={async (value, allValues, meta) => {
                         if (value && meta?.dirty) {
@@ -109,21 +109,24 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                             }
                         }
                     }}
-                    formatOnBlur
-                    format={(value: string) => {
-                        const hasExtension = value.includes(".");
-                        const extension = hasExtension ? value.split(".").pop() : undefined;
-                        const name = hasExtension ? value.split(".").slice(0, -1).join(".") : value;
+                    onBlur={() => {
+                        const filename: string | undefined = formApi.getFieldState("name")?.value;
+                        const nameWithoutExtension = filename?.split(".").slice(0, -1).join(".");
+                        const extension = file.name.split(".").pop();
 
-                        let formattedFilename = slugifyFilename(name, extension);
-
-                        const hasValidExtension = Boolean(extension && getValidExtensionsForMimetype(file.mimetype)?.includes(extension));
-                        if (!hasValidExtension) {
-                            const originalExtension = file.name.split(".").pop();
-                            formattedFilename = `${formattedFilename}.${originalExtension}`;
+                        if (nameWithoutExtension) {
+                            // slugify can't happen on format because then it wouldn't be possible
+                            // to type spaces and other special characters that are removed by slugify
+                            formApi.change("name", slugifyFilename(nameWithoutExtension, extension));
                         }
-
-                        return formattedFilename;
+                    }}
+                    format={(value: string) => {
+                        const nameWithoutExtension = value.split(".").slice(0, -1).join(".");
+                        return nameWithoutExtension;
+                    }}
+                    parse={(value: string) => {
+                        const extension = file.name.split(".").pop();
+                        return `${value}.${extension}`;
                     }}
                     fullWidth
                 />
