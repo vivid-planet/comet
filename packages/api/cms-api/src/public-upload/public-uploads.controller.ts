@@ -1,7 +1,6 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Controller, forwardRef, Get, Inject, Param, Post, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { Response } from "express";
+import { Controller, forwardRef, Get, Inject, NotFoundException, Param, Post, Res, UploadedFile, UseInterceptors } from "@nestjs/common";
 import rimraf from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
@@ -43,20 +42,18 @@ export class PublicUploadsController {
 
     @Get("download/:id")
     @DisableCometGuards()
-    async downloadFileById(@Param("id") id: string, @Res() res: Response): Promise<void> {
+    async downloadFileById(@Param("id") id: string, @Res() res: NodeJS.WritableStream): Promise<void> {
         const file = await this.publicUploadsRepository.findOne(id);
 
         if (!file) {
-            res.status(404).send("File not found");
-            return;
+            throw new NotFoundException();
         }
 
         const filePath = createHashedPath(file.contentHash);
         const fileExists = await this.blobStorageBackendService.fileExists(this.config.directory, filePath);
 
         if (!fileExists) {
-            res.status(404).send("File not found");
-            return;
+            throw new NotFoundException();
         }
 
         const stream = await this.blobStorageBackendService.getFile(this.config.directory, filePath);
