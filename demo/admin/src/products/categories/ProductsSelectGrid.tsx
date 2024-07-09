@@ -17,7 +17,6 @@ import { useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
-import { FieldRenderProps } from "react-final-form";
 import { FormattedNumber, useIntl } from "react-intl";
 
 import {
@@ -45,7 +44,7 @@ function ProductsGridToolbar() {
     );
 }
 
-export function ProductsSelectGrid({ input }: FieldRenderProps<string[]>) {
+export function ProductsSelectGrid({ value, onChange }: { value: string[]; onChange: (value: string[]) => void }) {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const { data: relationsData } = useQuery<GQLProductsSelectGridRelationsQuery, GQLProductsSelectGridRelationsQueryVariables>(
@@ -162,9 +161,9 @@ export function ProductsSelectGrid({ input }: FieldRenderProps<string[]>) {
             }}
             checkboxSelection
             keepNonExistentRowsSelected
-            selectionModel={input.value ? input.value : []}
+            selectionModel={value ? value : []}
             onSelectionModelChange={(newSelectionModel) => {
-                input.onChange(newSelectionModel);
+                onChange(newSelectionModel.map((rowId) => String(rowId)));
             }}
         />
     );

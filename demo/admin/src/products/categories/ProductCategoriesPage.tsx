@@ -16,7 +16,7 @@ import {
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Box } from "@mui/material";
-import { AssignProductsForm } from "@src/products/categories/AssignProductsForm";
+import { AssignProductsGrid } from "@src/products/categories/AssignProductsGrid";
 import { ProductsGrid } from "@src/products/ProductsGrid";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -76,11 +76,15 @@ const ProductCategoriesPage: React.FC = () => {
                                                 componentsProps={{
                                                     dialog: { fullWidth: true, maxWidth: "xl" },
                                                     dialogContent: {
-                                                        sx: { padding: 0, paddingTop: "0 !important" /* is connected to title-style */ },
+                                                        sx: {
+                                                            height: "70vh",
+                                                            padding: 0,
+                                                            paddingTop: "0 !important" /* is connected to title-style */,
+                                                        },
                                                     },
                                                 }}
                                             >
-                                                <AssignProductsForm productCategoryId={selectedId} />
+                                                <AssignProductsGrid productCategoryId={selectedId} />
                                             </EditDialog>
                                         </Box>
                                     </RouterTab>
