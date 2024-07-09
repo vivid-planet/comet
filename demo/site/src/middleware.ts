@@ -48,5 +48,12 @@ export const config = {
         "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json).*)",
     ],
     // TODO find a better solution for this (https://nextjs.org/docs/messages/edge-dynamic-code-evaluation)
-    unstable_allowDynamic: ["/node_modules/graphql/**"],
+    unstable_allowDynamic: [
+        "/node_modules/graphql/**",
+        /*
+         * cache-manager uses lodash.clonedeep which uses dynamic code evaluation.
+         * See https://github.com/lodash/lodash/issues/5525.
+         */
+        "**/node_modules/.pnpm/**/lodash.clonedeep/**",
+    ],
 };
