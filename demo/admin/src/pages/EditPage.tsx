@@ -13,10 +13,10 @@ import {
     useCmsBlockContext,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, MenuItem, Select } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import { GQLPageTreeNodeCategory, GQLUserGroup } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
@@ -86,6 +86,12 @@ const usePage = createUsePage({
     `,
 });
 
+declare module "@comet/blocks-admin" {
+    interface IPreviewContext {
+        userGroup: GQLUserGroup;
+    }
+}
+
 export const EditPage: React.FC<Props> = ({ id, category }) => {
     const intl = useIntl();
     const { pageState, rootBlocksApi, hasChanges, loading, dialogs, pageSaveButton, handleSavePage } = usePage({
@@ -99,6 +105,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
     const previewApi = useBlockPreview();
 
     const blockContext = useCmsBlockContext();
+    const [previewUserGroup, setPreviewUserGroup] = React.useState<GQLUserGroup>("All");
 
     const handleSaveAction = async () => {
         try {
@@ -116,6 +123,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
             ...blockContext,
             parentUrl: match.url,
             showVisibleOnly: previewApi.showOnlyVisible,
+            userGroup: previewUserGroup,
         });
     }
 
@@ -159,7 +167,23 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </ToolbarActions>
             </Toolbar>
             <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewUrl={`${siteConfig.previewUrl}/admin/page`} previewState={previewState} previewApi={previewApi}>
+                <BlockPreviewWithTabs
+                    previewUrl={`${siteConfig.previewUrl}/admin/page`}
+                    previewState={previewState}
+                    previewApi={previewApi}
+                    actions={
+                        <Select<GQLUserGroup>
+                            value={previewUserGroup}
+                            onChange={(event) => {
+                                setPreviewUserGroup(event.target.value as GQLUserGroup);
+                            }}
+                        >
+                            <MenuItem value="All">All</MenuItem>
+                            <MenuItem value="Admin">Admin</MenuItem>
+                            <MenuItem value="User">User</MenuItem>
+                        </Select>
+                    }
+                >
                     {[
                         {
                             key: "content",

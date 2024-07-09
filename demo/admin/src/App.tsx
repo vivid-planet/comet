@@ -19,8 +19,10 @@ import {
     MasterMenuRoutes,
     SitePreview,
     SitesConfigProvider,
+    useSearchState,
 } from "@comet/cms-admin";
 import { css, Global } from "@emotion/react";
+import { MenuItem, Select } from "@mui/material";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
@@ -33,10 +35,11 @@ import * as React from "react";
 import { DndProvider } from "react-dnd-multi-backend";
 import * as ReactDOM from "react-dom";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import { Route, Switch } from "react-router-dom";
+import { Route, RouteComponentProps, Switch } from "react-router-dom";
 
 import MasterHeader from "./common/MasterHeader";
 import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { GQLUserGroup } from "./graphql.generated";
 import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
@@ -121,7 +124,7 @@ class App extends React.Component {
                                                                             {/* @TODO: add preview to contentScope once site is capable of contentScope */}
                                                                             <Route
                                                                                 path={`${match.path}/preview`}
-                                                                                render={(props) => <SitePreview {...props} />}
+                                                                                render={(props) => <CustomSitePreview {...props} />}
                                                                             />
                                                                             <Route
                                                                                 render={() => (
@@ -153,3 +156,32 @@ class App extends React.Component {
     }
 }
 export default App;
+
+declare module "@comet/cms-admin" {
+    interface SitePreviewParams {
+        userGroup: GQLUserGroup;
+    }
+}
+
+function CustomSitePreview(props: RouteComponentProps) {
+    const [previewUserGroup, setPreviewUserGroup] = useSearchState("userGroup", (param) => param ?? "All");
+
+    return (
+        <SitePreview
+            {...props}
+            actions={
+                <Select
+                    value={previewUserGroup}
+                    onChange={(event) => {
+                        setPreviewUserGroup(event.target.value);
+                    }}
+                >
+                    <MenuItem value="All">All</MenuItem>
+                    <MenuItem value="Admin">Admin</MenuItem>
+                    <MenuItem value="User">User</MenuItem>
+                </Select>
+            }
+            additionalSitePreviewParams={{ userGroup: previewUserGroup as GQLUserGroup }}
+        />
+    );
+}

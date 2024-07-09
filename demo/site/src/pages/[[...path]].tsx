@@ -1,5 +1,5 @@
 import { defaultLanguage, domain } from "@src/config";
-import { GQLPage } from "@src/graphql.generated";
+import { GQLPage, GQLUserGroup } from "@src/graphql.generated";
 import NotFound404 from "@src/pages/404";
 import PageTypePage, { loader as pageTypePageLoader } from "@src/pageTypes/Page";
 import createGraphQLClient from "@src/util/createGraphQLClient";
@@ -20,6 +20,7 @@ import { GQLPagesQuery, GQLPagesQueryVariables, GQLPageTypeQuery, GQLPageTypeQue
 interface PageProps {
     documentType: string;
     id: string;
+    userGroup: GQLUserGroup;
 }
 export type PageUniversalProps = PageProps & GQLPage;
 
@@ -63,6 +64,7 @@ interface CreateGetUniversalPropsOptions {
     includeInvisiblePages?: boolean;
     includeInvisibleBlocks?: boolean;
     previewDamUrls?: boolean;
+    userGroup?: GQLUserGroup;
 }
 
 // a function to create a universal function which can be used as getStaticProps or getServerSideProps (preview)
@@ -70,6 +72,7 @@ export function createGetUniversalProps({
     includeInvisiblePages = false,
     includeInvisibleBlocks = false,
     previewDamUrls = false,
+    userGroup = "All",
 }: CreateGetUniversalPropsOptions = {}) {
     return async function getUniversalProps<Context extends GetStaticPropsContext | GetServerSidePropsContext>({
         params,
@@ -99,6 +102,7 @@ export function createGetUniversalProps({
                 ...(await loaderForPageType({ client, scope, pageTreeNodeId })),
                 documentType: data.pageTreeNodeByPath.documentType,
                 id: pageTreeNodeId,
+                userGroup,
             },
         };
     };
