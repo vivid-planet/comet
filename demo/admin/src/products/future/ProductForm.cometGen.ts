@@ -8,6 +8,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
     fields: [
         {
             type: "fieldSet",
+            name: "mainData",
             title: "Main Data",
             supportText: "Product: {title}",
             collapsible: false,
@@ -29,6 +30,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
         },
         {
             type: "fieldSet",
+            name: "additionalData",
             title: "Additional Data",
             collapsible: true,
             initiallyExpanded: false,

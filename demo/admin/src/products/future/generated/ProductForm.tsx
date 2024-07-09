@@ -151,15 +151,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                     {saveConflict.dialogs}
                     <MainContent>
                         <FieldSet
-                            collapsible={false}
-                            initiallyExpanded={true}
-                            title={<FormattedMessage id="product.MainData.title" defaultMessage="Main Data" />}
+                            initiallyExpanded
+                            title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
                             supportText={
                                 mode === "edit" && (
                                     <FormSpy subscription={{ values: true }}>
                                         {({ values }) => (
                                             <FormattedMessage
-                                                id="product.MainData.supportText"
+                                                id="product.mainData.supportText"
                                                 defaultMessage="Product: {title}"
                                                 values={{ ...values }}
                                             />
@@ -223,11 +222,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             />
                         </FieldSet>
 
-                        <FieldSet
-                            collapsible={true}
-                            initiallyExpanded={false}
-                            title={<FormattedMessage id="product.AdditionalData.title" defaultMessage="Additional Data" />}
-                        >
+                        <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
                             <Field name="inStock" label="" type="checkbox" fullWidth>
                                 {(props) => (
                                     <FormControlLabel
