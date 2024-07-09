@@ -48,6 +48,7 @@ describe("GenerateCrudPosition", () => {
             const fieldDecorator = structure.properties?.[0].decorators?.find((i) => i.name === "Field");
             expect(fieldDecorator).not.toBeUndefined();
             expect(fieldDecorator?.arguments).toContain("() => Int");
+            expect(fieldDecorator?.arguments).toContain("{ nullable: true }");
 
             const minDecorator = structure.properties?.[0].decorators?.find((i) => i.name === "Min");
             expect(minDecorator).not.toBeUndefined();
