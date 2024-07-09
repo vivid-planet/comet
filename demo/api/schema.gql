@@ -454,16 +454,6 @@ type ManufacturerCountry {
   used: Float!
 }
 
-type PaginatedManufacturers {
-  nodes: [Manufacturer!]!
-  totalCount: Int!
-}
-
-type PaginatedManufacturerCountries {
-  nodes: [ManufacturerCountry!]!
-  totalCount: Int!
-}
-
 type ProductCategory {
   id: ID!
   title: String!
@@ -561,6 +551,16 @@ enum ProductType {
   Cap
   Shirt
   Tie
+}
+
+type PaginatedManufacturers {
+  nodes: [Manufacturer!]!
+  totalCount: Int!
+}
+
+type PaginatedManufacturerCountries {
+  nodes: [ManufacturerCountry!]!
+  totalCount: Int!
 }
 
 type PaginatedProducts {
@@ -915,6 +915,7 @@ input NewsCategoryEnumFilter {
 
 input OneToManyFilter {
   contains: ID
+  search: String
 }
 
 input NewsSort {
@@ -988,7 +989,7 @@ input ManyToOneFilter {
 
 input ManyToManyFilter {
   contains: ID
-  search: ID
+  search: String
 }
 
 input ProductSort {
