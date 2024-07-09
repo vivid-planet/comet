@@ -1,16 +1,10 @@
-import { ClickAwayListener, ClickAwayListenerProps, Grow, InputBase, InputBaseProps, Paper, PaperProps, Popper, PopperProps } from "@mui/material";
+import { ClickAwayListener, Grow, InputBase as MuiInputBase, InputBaseProps, Paper as MuiPaper, Popper as MuiPopper } from "@mui/material";
+import { useThemeProps } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
-import { WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
-import { styles } from "./InputWithPopper.styles";
-
-export type InputWithPopperComponentsProps = InputBaseProps["componentsProps"] & {
-    clickAwayListener?: Partial<ClickAwayListenerProps>;
-    popper?: Partial<PopperProps>;
-    transition?: Partial<TransitionProps>;
-    paper?: Partial<PaperProps>;
-};
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { InputBase, Paper, Popper, Root } from "./InputWithPopper.slots";
 
 export type InputWithPopperComponents = InputBaseProps["components"] & {
     Transition?: React.ElementType<TransitionProps>;
@@ -18,26 +12,36 @@ export type InputWithPopperComponents = InputBaseProps["components"] & {
 
 type ClosePopper = (focusInput?: boolean) => void;
 
-export interface InputWithPopperProps extends Omit<InputBaseProps, "componentsProps" | "components" | "inputRef"> {
+type BaseProps = ThemedComponentBaseProps<{
+    root: "div";
+    inputBase: typeof MuiInputBase;
+    popper: typeof MuiPopper;
+    paper: typeof MuiPaper;
+    clickAwayListener: typeof ClickAwayListener;
+}>;
+
+export interface InputWithPopperProps extends Omit<InputBaseProps, "components" | "inputRef" | "sx" | "slotProps">, BaseProps {
     children: ((closePopper: ClosePopper) => React.ReactNode) | React.ReactNode;
-    componentsProps?: InputWithPopperComponentsProps;
     components?: InputWithPopperComponents;
     onOpenPopper?: () => void;
     onClosePopper?: () => void;
     inputRef?: React.RefObject<HTMLElement>;
+    slotProps?: BaseProps["slotProps"] & {
+        transition?: TransitionProps;
+    };
 }
 
-function InputWithPopper({
-    classes,
-    children,
-    value = "",
-    componentsProps,
-    onOpenPopper,
-    onClosePopper,
-    components = {},
-    inputRef: inputRefProp,
-    ...inputBaseProps
-}: InputWithPopperProps & WithStyles<typeof styles>): React.ReactElement {
+export const InputWithPopper = (inProps: InputWithPopperProps) => {
+    const {
+        children,
+        value = "",
+        onOpenPopper,
+        onClosePopper,
+        components = {},
+        inputRef: inputRefProp,
+        slotProps,
+        ...inputBaseProps
+    } = useThemeProps({ props: inProps, name: "CometAdminInputWithPopper" });
     const { Transition = Grow, ...inputBaseComponents } = components;
 
     const rootRef = React.useRef<HTMLDivElement>(null);
@@ -95,26 +99,26 @@ function InputWithPopper({
             onClickAway={() => {
                 closePopper();
             }}
-            {...componentsProps?.clickAwayListener}
+            {...slotProps?.clickAwayListener}
         >
-            <div ref={rootRef} className={classes.root}>
+            <Root ref={rootRef} {...slotProps?.root}>
                 <InputBase
                     autoComplete="off"
                     value={value}
                     {...inputBaseProps}
                     inputRef={inputRef}
-                    classes={{ root: classes.inputBase }}
                     onFocus={(e) => {
                         inputBaseProps?.onFocus && inputBaseProps.onFocus(e);
                         openPopper();
                     }}
                     components={inputBaseComponents}
-                    componentsProps={{
-                        root: componentsProps?.root,
+                    {...slotProps?.inputBase}
+                    slotProps={{
+                        ...slotProps?.inputBase?.slotProps,
                         input: {
-                            ...componentsProps?.input,
+                            ...slotProps?.inputBase?.slotProps?.input,
                             onClick: (e) => {
-                                componentsProps?.input?.onClick && componentsProps.input.onClick(e);
+                                slotProps?.inputBase?.slotProps?.input?.onClick?.(e);
                                 /**
                                  * Opening the popper when clicking inside the `input`, is necessary to allow the user to re-open the popper,
                                  * when the input is already in focus but the popper has been closed.
@@ -128,24 +132,18 @@ function InputWithPopper({
                     open={showPopper}
                     anchorEl={rootRef.current}
                     placement="bottom-start"
-                    className={classes.popper}
                     transition
                     onResize={undefined} // see https://github.com/mui/material-ui/issues/35287
                     onResizeCapture={undefined}
-                    {...componentsProps?.popper}
+                    {...slotProps?.popper}
                 >
                     {({ TransitionProps }) => (
-                        <Transition {...TransitionProps} {...componentsProps?.transition}>
-                            <Paper classes={{ root: classes.paper }} {...componentsProps?.paper}>
-                                {typeof children === "function" ? children(closePopper) : children}
-                            </Paper>
+                        <Transition {...TransitionProps} {...slotProps?.transition}>
+                            <Paper {...slotProps?.paper}>{typeof children === "function" ? children(closePopper) : children}</Paper>
                         </Transition>
                     )}
                 </Popper>
-            </div>
+            </Root>
         </ClickAwayListener>
     );
-}
-
-const InputWithPopperWithStyles = withStyles(styles, { name: "CometAdminInputWithPopper" })(InputWithPopper);
-export { InputWithPopperWithStyles as InputWithPopper };
+};

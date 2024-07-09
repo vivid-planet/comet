@@ -1,14 +1,18 @@
 import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
+    ContentScopeIndicator,
     createRedirectsPage,
     CronJobsPage,
     DamPage,
+    DocumentInterface,
+    DocumentType,
     MasterMenu as CometMasterMenu,
     MasterMenuData,
     PagesPage,
     PublisherPage,
     UserPermissionsPage,
 } from "@comet/cms-admin";
+import { ContentScope } from "@src/common/ContentScopeProvider";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -20,7 +24,12 @@ import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
+import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
+import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
+import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
+import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
+import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import * as React from "react";
@@ -28,7 +37,6 @@ import { FormattedMessage } from "react-intl";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 
 import { ComponentDemo } from "./ComponentDemo";
-import { ContentScopeIndicator } from "./ContentScopeIndicator";
 import { EditPageNode } from "./EditPageNode";
 
 export const pageTreeDocumentTypes = {
@@ -41,6 +49,7 @@ const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock
 
 export const masterMenuData: MasterMenuData = [
     {
+        type: "route",
         primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
         icon: <DashboardIcon />,
         route: {
@@ -49,9 +58,11 @@ export const masterMenuData: MasterMenuData = [
         },
     },
     {
+        type: "collapsible",
         primary: <FormattedMessage id="menu.pageTree" defaultMessage="Page tree" />,
         icon: <PageTree />,
-        submenu: pageTreeCategories.map((category) => ({
+        items: pageTreeCategories.map((category) => ({
+            type: "route",
             primary: category.label,
             to: `/pages/pagetree/${categoryToUrlParam(category.category as GQLPageTreeNodeCategory)}`,
         })),
@@ -68,10 +79,23 @@ export const masterMenuData: MasterMenuData = [
                     <PagesPage
                         path={`/pages/pagetree/${match.params.category}`}
                         allCategories={pageTreeCategories}
-                        documentTypes={pageTreeDocumentTypes}
+                        documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+                            if (category === "TopMenu") {
+                                return {
+                                    Page,
+                                    PredefinedPage,
+                                };
+                            }
+
+                            return {
+                                Page,
+                                PredefinedPage,
+                                Link,
+                            };
+                        }}
                         editPageNode={EditPageNode}
                         category={category}
-                        renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} variant="toolbar" />}
+                        renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
                     />
                 );
             },
@@ -79,10 +103,12 @@ export const masterMenuData: MasterMenuData = [
         requiredPermission: "pageTree",
     },
     {
+        type: "collapsible",
         primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
         icon: <Data />,
-        submenu: [
+        items: [
             {
+                type: "route",
                 primary: <FormattedMessage id="menu.news" defaultMessage="News" />,
                 route: {
                     path: "/structured-content/news",
@@ -93,24 +119,22 @@ export const masterMenuData: MasterMenuData = [
         requiredPermission: "news",
     },
     {
+        type: "route",
         primary: <FormattedMessage id="menu.dam" defaultMessage="Assets" />,
         icon: <Assets />,
         route: {
             path: "/assets",
-            render: () => (
-                <DamPage
-                    renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} domainOnly variant="toolbar" />}
-                    additionalToolbarItems={<ImportFromUnsplash />}
-                />
-            ),
+            render: () => <DamPage additionalToolbarItems={<ImportFromUnsplash />} />,
         },
         requiredPermission: "dam",
     },
     {
+        type: "collapsible",
         primary: <FormattedMessage id="menu.projectSnips" defaultMessage="Project snips" />,
         icon: <Snips />,
-        submenu: [
+        items: [
             {
+                type: "route",
                 primary: <FormattedMessage id="menu.mainMenu" defaultMessage="Main menu" />,
                 route: {
                     path: "/project-snips/main-menu",
@@ -121,10 +145,12 @@ export const masterMenuData: MasterMenuData = [
         requiredPermission: "pageTree",
     },
     {
+        type: "collapsible",
         primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
         icon: <Wrench />,
-        submenu: [
+        items: [
             {
+                type: "route",
                 primary: <FormattedMessage id="menu.publisher" defaultMessage="Publisher" />,
                 route: {
                     path: "/system/publisher",
@@ -133,6 +159,7 @@ export const masterMenuData: MasterMenuData = [
                 requiredPermission: "builds",
             },
             {
+                type: "route",
                 primary: <FormattedMessage id="menu.cronJobs" defaultMessage="Cron Jobs" />,
                 route: {
                     path: "/system/cron-jobs",
@@ -141,6 +168,7 @@ export const masterMenuData: MasterMenuData = [
                 requiredPermission: "cronJobs",
             },
             {
+                type: "route",
                 primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
                 route: {
                     path: "/system/redirects",
@@ -149,8 +177,10 @@ export const masterMenuData: MasterMenuData = [
                 requiredPermission: "pageTree",
             },
         ],
+        requiredPermission: "pageTree",
     },
     {
+        type: "route",
         primary: <FormattedMessage id="menu.componentDemo" defaultMessage="Component demo" />,
         icon: <Snips />,
         route: {
@@ -160,41 +190,7 @@ export const masterMenuData: MasterMenuData = [
         requiredPermission: "pageTree",
     },
     {
-        primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-        icon: <Snips />,
-        submenu: [
-            {
-                primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-                route: {
-                    path: "/products",
-                    component: ProductsPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
-                route: {
-                    path: "/product-categories",
-                    component: ProductCategoriesPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
-                route: {
-                    path: "/product-tags",
-                    component: ProductTagsPage,
-                },
-            },
-            {
-                primary: <FormattedMessage id="menu.productsHandmade" defaultMessage="Products Handmade" />,
-                route: {
-                    path: "/products-handmade",
-                    component: ProductsHandmadePage,
-                },
-            },
-        ],
-        requiredPermission: "products",
-    },
-    {
+        type: "route",
         primary: <FormattedMessage id="menu.userPermissions" defaultMessage="User Permissions" />,
         icon: <Snips />,
         route: {
@@ -202,6 +198,106 @@ export const masterMenuData: MasterMenuData = [
             component: UserPermissionsPage,
         },
         requiredPermission: "userPermissions",
+    },
+    {
+        type: "group",
+        title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+        items: [
+            {
+                type: "collapsible",
+                primary: <FormattedMessage id="menu.futureGenerator" defaultMessage="Future Generator" />,
+                icon: <Snips />,
+                items: [
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                        route: {
+                            path: "/products-future",
+                            component: FutureProductsPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.createCapProductFuture" defaultMessage="Create Cap Product Future" />,
+                        route: {
+                            path: "/create-cap-product-future",
+                            component: FutureCreateCapProductPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.manufacturersFuture" defaultMessage="Manufacturers Future" />,
+                        route: {
+                            path: "/manufacturers-future",
+                            component: FutureManufacturersPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products with low price Future" />,
+                        route: {
+                            path: "/products-with-low-price-future",
+                            component: FutureProductsWithLowPricePage,
+                        },
+                    },
+                ],
+            },
+            {
+                type: "collapsible",
+                primary: <FormattedMessage id="menu.oldGenerator" defaultMessage="Old Generator" />,
+                icon: <Snips />,
+                items: [
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+                        route: {
+                            path: "/products",
+                            component: ProductsPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
+                        route: {
+                            path: "/product-categories",
+                            component: ProductCategoriesPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
+                        route: {
+                            path: "/product-tags",
+                            component: ProductTagsPage,
+                        },
+                    },
+                ],
+            },
+            {
+                type: "collapsible",
+                primary: <FormattedMessage id="menu.handmade" defaultMessage="Handmade" />,
+                icon: <Snips />,
+                items: [
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productsHandmade" defaultMessage="Products Handmade" />,
+                        route: {
+                            path: "/products-handmade",
+                            component: ProductsHandmadePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.manufacturersHandmade" defaultMessage="Manufacturers Handmade" />,
+                        route: {
+                            path: "/manufacturers-handmade",
+                            component: ManufacturersHandmadePage,
+                        },
+                    },
+                ],
+            },
+        ],
+        requiredPermission: "products",
     },
 ];
 

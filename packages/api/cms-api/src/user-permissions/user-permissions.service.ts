@@ -1,17 +1,19 @@
+import { DiscoveryService } from "@golevelup/nestjs-discovery";
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { Inject, Injectable } from "@nestjs/common";
-import { differenceInDays } from "date-fns";
+import { Inject, Injectable, Optional } from "@nestjs/common";
+import { isFuture, isPast } from "date-fns";
+import { JwtPayload } from "jsonwebtoken";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
 
+import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
-import { User } from "./dto/user";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
-import { Permission } from "./interfaces/user-permission.interface";
+import { User } from "./interfaces/user";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import {
     AccessControlServiceInterface,
@@ -24,27 +26,57 @@ import {
 export class UserPermissionsService {
     constructor(
         @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
-        @Inject(USER_PERMISSIONS_USER_SERVICE) private readonly userService: UserPermissionsUserServiceInterface,
+        @Inject(USER_PERMISSIONS_USER_SERVICE) @Optional() private readonly userService: UserPermissionsUserServiceInterface | undefined,
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
         @InjectRepository(UserPermission) private readonly permissionRepository: EntityRepository<UserPermission>,
         @InjectRepository(UserContentScopes) private readonly contentScopeRepository: EntityRepository<UserContentScopes>,
+        private readonly discoveryService: DiscoveryService,
     ) {}
 
     async getAvailableContentScopes(): Promise<ContentScope[]> {
-        return this.options.availableContentScopes ?? [];
+        if (this.options.availableContentScopes) {
+            if (typeof this.options.availableContentScopes === "function") {
+                return this.options.availableContentScopes();
+            }
+            return this.options.availableContentScopes;
+        }
+        return [];
     }
 
-    async getAvailablePermissions(): Promise<(keyof Permission)[]> {
+    async getAvailablePermissions(): Promise<string[]> {
         return [
-            ...new Set<keyof Permission>(["dam", "pageTree", "userPermissions", "cronJobs", "builds", ...(this.options.availablePermissions ?? [])]),
+            ...new Set(
+                [
+                    ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.providersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.controllerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                    ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
+                ]
+                    .flatMap((p) => p.meta.requiredPermission)
+                    .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
+                    .filter((p) => p !== DisablePermissionCheck)
+                    .sort(),
+            ),
         ];
     }
 
+    async createUserFromIdToken(idToken: JwtPayload): Promise<User> {
+        if (this.userService?.createUserFromIdToken) return this.userService.createUserFromIdToken(idToken);
+        if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
+        return {
+            id: idToken.sub,
+            name: idToken.name,
+            email: idToken.email,
+        };
+    }
+
     async getUser(id: string): Promise<User> {
+        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         return this.userService.getUser(id);
     }
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
+        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         return this.userService.findUsers(args);
     }
 
@@ -57,18 +89,17 @@ export class UserPermissionsService {
         });
     }
 
-    async getPermissions(userId: string): Promise<UserPermission[]> {
+    async getPermissions(user: User): Promise<UserPermission[]> {
         const availablePermissions = await this.getAvailablePermissions();
         const permissions = (
             await this.permissionRepository.find({
-                $and: [{ userId }, { permission: { $in: availablePermissions } }],
+                $and: [{ userId: user.id }, { permission: { $in: availablePermissions } }],
             })
         ).map((p) => {
             p.source = UserPermissionSource.MANUAL;
             return p;
         });
         if (this.accessControlService.getPermissionsForUser) {
-            const user = await this.getUser(userId);
             if (user) {
                 let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
                 if (permissionsByRule === UserPermissions.allPermissions) {
@@ -78,68 +109,74 @@ export class UserPermissionsService {
                     const permission = new UserPermission();
                     permission.id = getUuid(JSON.stringify(p));
                     permission.source = UserPermissionSource.BY_RULE;
-                    permission.userId = userId;
-                    permission.assign({
-                        permission: p.permission,
-                        validFrom: p.validFrom,
-                        validTo: p.validTo,
-                        reason: p.reason,
-                        requestedBy: p.requestedBy,
-                        approvedBy: p.approvedBy,
-                    });
+                    permission.userId = user.id;
+                    permission.overrideContentScopes = !!p.contentScopes;
+                    permission.assign(p);
                     permissions.push(permission);
                 }
             }
         }
 
-        return permissions.sort(
-            (a, b) => availablePermissions.indexOf(a.permission as keyof Permission) - availablePermissions.indexOf(b.permission as keyof Permission),
-        );
+        return permissions
+            .filter((value) => availablePermissions.some((p) => p === value.permission)) // Filter out permissions that are not defined in availablePermissions (e.g. outdated database entries)
+            .sort((a, b) => availablePermissions.indexOf(a.permission) - availablePermissions.indexOf(b.permission));
     }
 
-    async getContentScopes(userId: string, skipManual = false): Promise<ContentScope[]> {
-        const availableContentScopes = await this.getAvailableContentScopes();
+    async getContentScopes(user: User, includeContentScopesManual = true): Promise<ContentScope[]> {
         const contentScopes: ContentScope[] = [];
+        const availableContentScopes = await this.getAvailableContentScopes();
+
         if (this.accessControlService.getContentScopesForUser) {
-            const user = await this.getUser(userId);
-            if (user) {
-                const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
-                if (userContentScopes === UserPermissions.allContentScopes) {
-                    contentScopes.push(...availableContentScopes);
-                } else {
-                    contentScopes.push(...userContentScopes);
-                }
+            const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
+            if (userContentScopes === UserPermissions.allContentScopes) {
+                contentScopes.push(...availableContentScopes);
+            } else {
+                contentScopes.push(...userContentScopes);
             }
         }
-        if (!skipManual) {
-            const entity = await this.contentScopeRepository.findOne({ userId });
+
+        if (includeContentScopesManual) {
+            const entity = await this.contentScopeRepository.findOne({ userId: user.id });
             if (entity) {
-                contentScopes.push(...entity.contentScopes);
+                contentScopes.push(...entity.contentScopes.filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))));
             }
         }
-        return [...new Set(contentScopes)] // Make values unique
-            .filter((value) => availableContentScopes.some((cs) => isEqual(cs, value))) // Allow only values that are defined in availableContentScopes
+
+        return contentScopes;
+    }
+
+    normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
+        return [...new Set(contentScopes.map((cs) => JSON.stringify(cs)))] // Make values unique
+            .map((cs) => JSON.parse(cs))
             .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
     }
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
-        const currentUser = new CurrentUser();
-        Object.assign(currentUser, {
-            id: user.id,
-            name: user.name,
-            email: user.email ?? "",
-            language: user.language,
-            contentScopes: await this.getContentScopes(user.id),
-            permissions: (await this.getPermissions(user.id))
-                .filter(
-                    (p) =>
-                        (!p.validFrom || differenceInDays(new Date(), p.validFrom) >= 0) &&
-                        (!p.validTo || differenceInDays(p.validTo, new Date()) >= 0),
-                )
-                .map((p) => ({
-                    permission: p.permission,
-                })),
-        });
-        return currentUser;
+        const availableContentScopes = await this.getAvailableContentScopes();
+        const userContentScopes = await this.getContentScopes(user);
+        const permissions = (await this.getPermissions(user))
+            .filter((p) => (!p.validFrom || isPast(p.validFrom)) && (!p.validTo || isFuture(p.validTo)))
+            .reduce((acc: CurrentUser["permissions"], userPermission) => {
+                const contentScopes = userPermission.overrideContentScopes ? userPermission.contentScopes : userContentScopes;
+                const existingPermission = acc.find((p) => p.permission === userPermission.permission);
+                if (existingPermission) {
+                    existingPermission.contentScopes = [...existingPermission.contentScopes, ...contentScopes];
+                } else {
+                    acc.push({
+                        permission: userPermission.permission,
+                        contentScopes,
+                    });
+                }
+                return acc;
+            }, [])
+            .map((p) => {
+                p.contentScopes = this.normalizeContentScopes(p.contentScopes, availableContentScopes);
+                return p;
+            });
+
+        return {
+            ...user,
+            permissions,
+        };
     }
 }

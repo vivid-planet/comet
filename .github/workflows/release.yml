@@ -11,13 +11,14 @@ jobs:
     release:
         name: Release
         runs-on: ubuntu-latest
+        concurrency:
+            group: release
+            cancel-in-progress: true
         steps:
             - name: Checkout Repo
               uses: actions/checkout@v3
 
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 8
+            - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 18.x
               uses: actions/setup-node@v3

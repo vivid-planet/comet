@@ -1,4 +1,4 @@
-import { ComponentNameToClassKey, ThemeOptions } from "@mui/material";
+import { Breakpoints, ComponentNameToClassKey, ThemeOptions } from "@mui/material";
 import { Components, Palette } from "@mui/material/styles";
 import { Typography } from "@mui/material/styles/createTypography";
 import { Shadows } from "@mui/material/styles/shadows";
@@ -7,8 +7,10 @@ import { Spacing } from "@mui/system";
 
 import { getMuiAccordion } from "./MuiAccordion";
 import { getMuiAlert } from "./MuiAlert";
+import { getMuiAlertTitle } from "./MuiAlertTitle";
 import { getMuiAppBar } from "./MuiAppBar";
 import { getMuiAutocomplete } from "./MuiAutocomplete";
+import { getMuiBadge } from "./MuiBadge";
 import { getMuiButton } from "./MuiButton";
 import { getMuiButtonGroup } from "./MuiButtonGroup";
 import { getMuiCardContent } from "./MuiCardContent";
@@ -53,6 +55,7 @@ type ThemeData = {
     spacing: Spacing;
     zIndex: ZIndex;
     shadows: Shadows;
+    breakpoints: Breakpoints;
 };
 
 export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassKey> = (
@@ -63,8 +66,11 @@ export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassK
 export const getComponentsTheme = (components: Components, themeData: ThemeData): ThemeOptions["components"] => ({
     ...components,
     MuiAccordion: getMuiAccordion(components.MuiAccordion, themeData),
+    MuiAlert: getMuiAlert(components.MuiAlert, themeData),
+    MuiAlertTitle: getMuiAlertTitle(components.MuiAlertTitle, themeData),
     MuiAppBar: getMuiAppBar(components.MuiAppBar, themeData),
     MuiAutocomplete: getMuiAutocomplete(components.MuiAutocomplete, themeData),
+    MuiBadge: getMuiBadge(components.MuiBadge, themeData),
     MuiButton: getMuiButton(components.MuiButton, themeData),
     MuiButtonGroup: getMuiButtonGroup(components.MuiButtonGroup, themeData),
     MuiCardContent: getMuiCardContent(components.MuiCardContent, themeData),
@@ -78,20 +84,20 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiDialogTitle: getMuiDialogTitle(components.MuiDialogTitle, themeData),
     MuiDrawer: getMuiDrawer(components.MuiDrawer, themeData),
     MuiFormControlLabel: getMuiFormControlLabel(components.MuiFormControlLabel, themeData),
-    MuiFormLabel: getMuiFormLabel(components.MuiFormLabel, themeData),
     MuiFormHelperText: getMuiFormHelperText(components.MuiFormHelperText, themeData),
+    MuiFormLabel: getMuiFormLabel(components.MuiFormLabel, themeData),
     MuiIconButton: getMuiIconButton(components.MuiIconButton, themeData),
+    MuiInput: getMuiInput(components.MuiInput, themeData),
     MuiInputAdornment: getMuiInputAdornment(components.MuiInputAdornment, themeData),
     MuiInputBase: getMuiInputBase(components.MuiInputBase, themeData),
-    MuiInput: getMuiInput(components.MuiInput, themeData),
     MuiLinearProgress: getMuiLinearProgress(components.MuiLinearProgress, themeData),
     MuiLink: getMuiLink(components.MuiLink, themeData),
     MuiListItem: getMuiListItem(components.MuiListItem, themeData),
+    MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, themeData),
     MuiPaper: getMuiPaper(components.MuiPaper, themeData),
     MuiPopover: getMuiPopover(components.MuiPopover, themeData),
     MuiRadio: getMuiRadio(components.MuiRadio, themeData),
     MuiSelect: getMuiSelect(components.MuiSelect, themeData),
-    MuiNativeSelect: getMuiNativeSelect(components.MuiNativeSelect, themeData),
     MuiSvgIcon: getMuiSvgIcon(components.MuiSvgIcon, themeData),
     MuiSwitch: getMuiSwitch(components.MuiSwitch, themeData),
     MuiTab: getMuiTab(components.MuiTab, themeData),
@@ -102,5 +108,4 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiToggleButtonGroup: getMuiToggleButtonGroup(components.MuiToggleButtonGroup, themeData),
     MuiTooltip: getMuiTooltip(components.MuiTooltip, themeData),
     MuiTypography: getMuiTypography(components.MuiTypography, themeData),
-    MuiAlert: getMuiAlert(components.MuiAlert, themeData),
 });

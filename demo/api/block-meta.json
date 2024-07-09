@@ -161,6 +161,60 @@
         ]
     },
     {
+        "name": "DamFileDownloadLink",
+        "fields": [
+            {
+                "name": "file",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "fileId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "DamImage",
         "fields": [
             {
@@ -325,6 +379,47 @@
         ]
     },
     {
+        "name": "DemoSpace",
+        "fields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "d150",
+                    "d200",
+                    "d250",
+                    "d300",
+                    "d350",
+                    "d400",
+                    "d450",
+                    "d500",
+                    "d550",
+                    "d600"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "spacing",
+                "kind": "Enum",
+                "enum": [
+                    "d150",
+                    "d200",
+                    "d250",
+                    "d300",
+                    "d350",
+                    "d400",
+                    "d450",
+                    "d500",
+                    "d550",
+                    "d600"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "DemoTextLink",
         "fields": [
             {
@@ -350,6 +445,23 @@
                 "kind": "Block",
                 "block": "Link",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "EmailLink",
+        "fields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -654,6 +766,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
                             "name": "documentType",
                             "kind": "String",
                             "nullable": false
@@ -680,6 +797,11 @@
         "name": "Link",
         "fields": [
             {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "attachedBlocks",
                 "kind": "NestedObjectList",
                 "object": {
@@ -695,7 +817,10 @@
                             "blocks": {
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
-                                "news": "NewsLink"
+                                "news": "NewsLink",
+                                "damFileDownload": "DamFileDownloadLink",
+                                "phone": "PhoneLink",
+                                "email": "EmailLink"
                             },
                             "nullable": false
                         }
@@ -724,7 +849,10 @@
                             "blocks": {
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
-                                "news": "NewsLink"
+                                "news": "NewsLink",
+                                "damFileDownload": "DamFileDownloadLink",
+                                "phone": "PhoneLink",
+                                "email": "EmailLink"
                             },
                             "nullable": false
                         }
@@ -738,6 +866,11 @@
                 "name": "activeType",
                 "kind": "String",
                 "nullable": false
+            },
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -908,7 +1041,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"
@@ -945,7 +1078,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"
@@ -955,6 +1088,23 @@
                     ]
                 },
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "NewsDetail",
+        "fields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -1060,7 +1210,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "space": "Space",
+                                "space": "DemoSpace",
                                 "richtext": "RichText",
                                 "headline": "Headline",
                                 "image": "DamImage",
@@ -1074,7 +1224,8 @@
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },
@@ -1118,7 +1269,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "space": "Space",
+                                "space": "DemoSpace",
                                 "richtext": "RichText",
                                 "headline": "Headline",
                                 "image": "DamImage",
@@ -1132,7 +1283,8 @@
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },
@@ -1149,6 +1301,23 @@
                     ]
                 },
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "PhoneLink",
+        "fields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -2010,16 +2179,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "autoplay",
@@ -2041,16 +2201,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "autoplay",

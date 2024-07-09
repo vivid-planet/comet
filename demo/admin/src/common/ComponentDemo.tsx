@@ -1,16 +1,29 @@
 import {
+    CheckboxField,
     Field,
     FieldContainer,
     FinalForm,
-    FinalFormCheckbox,
-    FinalFormInput,
     FinalFormRadio,
-    FinalFormSelect,
-    FinalFormSwitch,
     MainContent,
+    SelectField,
     Stack,
+    SwitchField,
+    TextAreaField,
+    TextField,
 } from "@comet/admin";
-import { Add, FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest, Snips } from "@comet/admin-icons";
+import {
+    Add,
+    FocusPointCenter,
+    FocusPointEast,
+    FocusPointNorth,
+    FocusPointNortheast,
+    FocusPointNorthwest,
+    FocusPointSouth,
+    FocusPointSoutheast,
+    FocusPointSouthwest,
+    FocusPointWest,
+    Snips,
+} from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentNestedButton,
@@ -29,7 +42,6 @@ import {
     resolveNewState,
 } from "@comet/blocks-admin";
 import { DamImageBlock, FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
-import { FormatAlignCenter, VerticalAlignBottom, VerticalAlignCenter } from "@mui/icons-material";
 import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
 
@@ -128,51 +140,43 @@ export function ComponentDemo(): React.ReactElement {
                             }}
                             initialValues={{ richText: RichTextBlock.defaultValues() }}
                         >
-                            <Field name="text" placeholder="Input" component={FinalFormInput} fullWidth />
+                            <TextField name="text" placeholder="Input" fullWidth />
 
-                            <Field name="select" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Option 1">Option 1</MenuItem>
-                                        <MenuItem value="Option 2">Option 2</MenuItem>
-                                        <MenuItem value="Option 3">Option 3</MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                            <SelectField name="select" fullWidth>
+                                <MenuItem value="Option 1">Option 1</MenuItem>
+                                <MenuItem value="Option 2">Option 2</MenuItem>
+                                <MenuItem value="Option 3">Option 3</MenuItem>
+                            </SelectField>
 
-                            <Field name="text" label="Input with label" component={FinalFormInput} fullWidth />
+                            <TextField name="text" label="Input with label" fullWidth />
 
-                            <Field name="select" label="Select with label" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Option 1">Option 1</MenuItem>
-                                        <MenuItem value="Option 2">Option 2</MenuItem>
-                                        <MenuItem value="Option 3">Option 3</MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                            <TextField name="textDisabled" label="Input disabled" placeholder="Input" fullWidth disabled />
 
-                            <Field name="select" label="Select">
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Option 1">Option 1</MenuItem>
-                                        <MenuItem value="Option 2">Option 2</MenuItem>
-                                        <MenuItem value="Option 3">Option 3</MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                            <SelectField name="select" label="Select with label" fullWidth>
+                                <MenuItem value="Option 1">Option 1</MenuItem>
+                                <MenuItem value="Option 2">Option 2</MenuItem>
+                                <MenuItem value="Option 3">Option 3</MenuItem>
+                            </SelectField>
 
-                            <Field name="select" label="inline">
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Option 1">Option 1</MenuItem>
-                                        <MenuItem value="Option 2">Option 2</MenuItem>
-                                        <MenuItem value="Option 3">Option 3</MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                            <SelectField name="selectDisabled" label="SelectField disabled" fullWidth disabled>
+                                <MenuItem value="Option 1">Option 1</MenuItem>
+                                <MenuItem value="Option 2">Option 2</MenuItem>
+                                <MenuItem value="Option 3">Option 3</MenuItem>
+                            </SelectField>
 
-                            <Field
+                            <SelectField name="select" label="Select">
+                                <MenuItem value="Option 1">Option 1</MenuItem>
+                                <MenuItem value="Option 2">Option 2</MenuItem>
+                                <MenuItem value="Option 3">Option 3</MenuItem>
+                            </SelectField>
+
+                            <SelectField name="select" label="inline">
+                                <MenuItem value="Option 1">Option 1</MenuItem>
+                                <MenuItem value="Option 2">Option 2</MenuItem>
+                                <MenuItem value="Option 3">Option 3</MenuItem>
+                            </SelectField>
+
+                            <SelectField
                                 name="select"
                                 label={
                                     <>
@@ -183,32 +187,24 @@ export function ComponentDemo(): React.ReactElement {
                                     </>
                                 }
                             >
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Option 1">1</MenuItem>
-                                        <MenuItem value="Option 2">2</MenuItem>
-                                        <MenuItem value="Option 3">3</MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                                <MenuItem value="Option 1">1</MenuItem>
+                                <MenuItem value="Option 2">2</MenuItem>
+                                <MenuItem value="Option 3">3</MenuItem>
+                            </SelectField>
 
-                            <Field name="select-custom" label="Custom select" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Option 1">
-                                            <CustomSelectItem icon={<Snips />} primary="Option 1" secondary="Secondary text" />
-                                        </MenuItem>
-                                        <MenuItem value="Option 2">
-                                            <CustomSelectItem icon={<Snips />} primary="Option 2" secondary="Secondary text" />
-                                        </MenuItem>
-                                        <MenuItem value="Option 3">
-                                            <CustomSelectItem icon={<Snips />} primary="Option 3" secondary="Secondary text" />
-                                        </MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                            <SelectField name="select-custom" label="Custom select" fullWidth>
+                                <MenuItem value="Option 1">
+                                    <CustomSelectItem icon={<Snips />} primary="Option 1" secondary="Secondary text" />
+                                </MenuItem>
+                                <MenuItem value="Option 2">
+                                    <CustomSelectItem icon={<Snips />} primary="Option 2" secondary="Secondary text" />
+                                </MenuItem>
+                                <MenuItem value="Option 3">
+                                    <CustomSelectItem icon={<Snips />} primary="Option 3" secondary="Secondary text" />
+                                </MenuItem>
+                            </SelectField>
 
-                            <Field name="textArea" label="Text Area" component={FinalFormInput} multiline minRows={3} fullWidth />
+                            <TextAreaField name="textArea" label="Text Area" fullWidth />
 
                             <Field name="richText" label="Rich Text" component={FinalFormRichTextBlock} fullWidth />
 
@@ -222,26 +218,22 @@ export function ComponentDemo(): React.ReactElement {
                                 <Field name="single-choice" type="radio" value="Option 3" fullWidth>
                                     {(props) => <FormControlLabel label="Option 3" control={<FinalFormRadio {...props} />} />}
                                 </Field>
+                                <Field name="single-choice" type="radio" value="Option 4 disabled" fullWidth disabled>
+                                    {(props) => <FormControlLabel label="Option 4 disabled" control={<FinalFormRadio {...props} />} />}
+                                </Field>
                             </FieldContainer>
                             <FieldContainer label="Multiple choice">
-                                <Field name="multiple-choice-1" type="checkbox" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 1" control={<FinalFormCheckbox {...props} />} />}
-                                </Field>
-                                <Field name="multiple-choice-2" type="checkbox" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 2" control={<FinalFormCheckbox {...props} />} />}
-                                </Field>
-                                <Field name="multiple-choice-3" type="checkbox" fullWidth>
-                                    {(props) => <FormControlLabel label="Option 3" control={<FinalFormCheckbox {...props} />} />}
-                                </Field>
+                                <CheckboxField name="multiple-choice-1" label="Option 1" fullWidth />
+                                <CheckboxField name="multiple-choice-2" label="Option 2" fullWidth />
+                                <CheckboxField name="multiple-choice-3" label="Option 3" fullWidth />
+                                <CheckboxField name="multiple-choice-4-disabled" label="Option 4 disabled" fullWidth disabled />
                             </FieldContainer>
 
-                            <Field name="switch" label="Switch with label">
-                                {(props) => <FormControlLabel label={null} control={<FinalFormSwitch {...props} />} />}
-                            </Field>
+                            <SwitchField name="switch" fieldLabel="Switch with label" />
 
-                            <Field name="switch">
-                                {(props) => <FormControlLabel label="Switch with inline label" control={<FinalFormSwitch {...props} />} />}
-                            </Field>
+                            <SwitchField name="switch" label="Switch with inline label" />
+
+                            <SwitchField name="switch" fieldLabel="Switch disabled" disabled />
 
                             <Field
                                 name="button-group-row"
@@ -263,13 +255,13 @@ export function ComponentDemo(): React.ReactElement {
                                 component={FinalFormToggleButtonGroup}
                                 options={[
                                     { value: "topLeft", icon: <FocusPointNorthwest /> },
-                                    { value: "topMiddle", icon: <VerticalAlignCenter /> },
+                                    { value: "topMiddle", icon: <FocusPointNorth /> },
                                     { value: "topRight", icon: <FocusPointNortheast /> },
-                                    { value: "middleLeft", icon: <VerticalAlignBottom /> },
+                                    { value: "middleLeft", icon: <FocusPointWest /> },
                                     { value: "center", icon: <FocusPointCenter /> },
-                                    { value: "middleRight", icon: <VerticalAlignBottom /> },
+                                    { value: "middleRight", icon: <FocusPointEast /> },
                                     { value: "bottomLeft", icon: <FocusPointSouthwest /> },
-                                    { value: "bottomMiddle", icon: <FormatAlignCenter /> },
+                                    { value: "bottomMiddle", icon: <FocusPointSouth /> },
                                     { value: "bottomRight", icon: <FocusPointSoutheast /> },
                                 ]}
                                 optionsPerRow={3}
@@ -355,27 +347,18 @@ export function ComponentDemo(): React.ReactElement {
                                         // noop
                                     }}
                                 >
-                                    <Field name="aspectRatio" label="Aspect ratio">
-                                        {(props) => (
-                                            <FinalFormSelect {...props}>
-                                                <MenuItem value="2:3">2:3</MenuItem>
-                                                <MenuItem value="4:3">4:3</MenuItem>
-                                                <MenuItem value="16:9">16:9</MenuItem>
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
-                                    <Field name="overlay" label="Overlay">
-                                        {(props) => (
-                                            <FinalFormSelect {...props}>
-                                                <MenuItem value="0%">0%</MenuItem>
-                                                <MenuItem value="10%">10%</MenuItem>
-                                                <MenuItem value="20%">20%</MenuItem>
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
-                                    <Field name="shadow" label="Shadow">
-                                        {(props) => <FormControlLabel label={null} control={<FinalFormSwitch {...props} />} />}
-                                    </Field>
+                                    <SelectField name="aspectRatio" label="Aspect ratio">
+                                        <MenuItem value="2:3">2:3</MenuItem>
+                                        <MenuItem value="4:3">4:3</MenuItem>
+                                        <MenuItem value="16:9">16:9</MenuItem>
+                                    </SelectField>
+                                    <SelectField name="overlay" label="Overlay">
+                                        <MenuItem value="0%">0%</MenuItem>
+                                        <MenuItem value="10%">10%</MenuItem>
+                                        <MenuItem value="20%">20%</MenuItem>
+                                    </SelectField>
+
+                                    <SwitchField name="shadow" fieldLabel="Shadow" />
                                 </BlocksFinalForm>
                             </AdminComponentPaper>
                         </AdminComponentSection>

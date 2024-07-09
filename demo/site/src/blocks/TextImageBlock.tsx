@@ -1,3 +1,4 @@
+"use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { TextImageBlockData } from "@src/blocks.generated";
 import * as React from "react";
@@ -10,9 +11,9 @@ export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
         return (
             <Root>
-                {imagePosition === "left" && <DamImageBlock data={image} aspectRatio={imageAspectRatio} />}
+                {imagePosition === "left" && <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />}
                 <RichTextBlock data={text} />
-                {imagePosition === "right" && <DamImageBlock data={image} aspectRatio={imageAspectRatio} />}
+                {imagePosition === "right" && <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />}
             </Root>
         );
     },

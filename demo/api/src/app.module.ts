@@ -1,31 +1,32 @@
 import {
     AccessLogModule,
+    AzureOpenAiContentGenerationModule,
     BlobStorageModule,
-    BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
+    ContentGenerationModule,
     CronJobsModule,
     DamModule,
     DependenciesModule,
-    FilesService,
-    ImagesService,
     KubernetesModule,
     PageTreeModule,
-    PageTreeService,
     PublicUploadModule,
     RedirectsModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
-import { ApolloDriver } from "@nestjs/apollo";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
+import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
+import { ValidationError } from "apollo-server-express";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
@@ -55,34 +56,43 @@ export class AppModule {
             imports: [
                 ConfigModule.forRoot(config),
                 DbModule,
-                GraphQLModule.forRootAsync({
+                GraphQLModule.forRootAsync<ApolloDriverConfig>({
                     driver: ApolloDriver,
                     imports: [BlocksModule],
-                    useFactory: (dependencies: Record<string, unknown>) => ({
+                    useFactory: (moduleRef: ModuleRef) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
+                        formatError: (error) => {
+                            // Disable GraphQL field suggestions in production
+                            if (process.env.NODE_ENV !== "development") {
+                                if (error instanceof ValidationError) {
+                                    return new ValidationError("Invalid request.");
+                                }
+                            }
+                            return error;
+                        },
                         context: ({ req }: { req: Request }) => ({ ...req }),
                         cors: {
                             credentials: true,
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
                         buildSchemaOptions: {
-                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
+                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },
                         // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
                         fieldResolverEnhancers: ["guards", "interceptors", "filters"] as Enhancer[],
                     }),
-                    inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
+                    inject: [ModuleRef],
                 }),
                 AuthModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availablePermissions: ["news", "products"],
                         availableContentScopes: [
                             { domain: "main", language: "de" },
                             { domain: "main", language: "en" },
                             { domain: "secondary", language: "en" },
+                            { domain: "secondary", language: "de" },
                         ],
                         userService,
                         accessControlService,
@@ -90,19 +100,7 @@ export class AppModule {
                     inject: [UserService, AccessControlService],
                     imports: [AuthModule],
                 }),
-                BlocksModule.forRoot({
-                    imports: [PagesModule],
-                    useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
-                        return {
-                            transformerDependencies: {
-                                pageTreeService,
-                                filesService,
-                                imagesService,
-                            },
-                        };
-                    },
-                    inject: [PageTreeService, FilesService, ImagesService],
-                }),
+                BlocksModule,
                 DependenciesModule,
                 KubernetesModule.register({
                     helmRelease: config.helmRelease,
@@ -117,7 +115,6 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
-                    sitePreviewSecret: config.sitePreviewSecret,
                 }),
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
@@ -125,12 +122,10 @@ export class AppModule {
                 }),
                 DamModule.register({
                     damConfig: {
-                        filesBaseUrl: `${config.apiUrl}/dam/files`,
-                        imagesBaseUrl: `${config.apiUrl}/dam/images`,
+                        apiUrl: config.apiUrl,
                         secret: config.dam.secret,
                         allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,
-                        additionalMimeTypes: config.dam.additionalMimetypes,
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
                         cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
@@ -145,13 +140,29 @@ export class AppModule {
                     directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
                     acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
+                ...(config.contentGeneration
+                    ? [
+                          ContentGenerationModule.register({
+                              Service: ContentGenerationService,
+                              imports: [AzureOpenAiContentGenerationModule.register(config.contentGeneration)],
+                          }),
+                      ]
+                    : []),
                 NewsModule,
                 MenusModule,
                 FooterModule,
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
-                AccessLogModule,
+                AccessLogModule.forRoot({
+                    shouldLogRequest: ({ user }) => {
+                        // Ignore system user
+                        if (user === "system-user") {
+                            return false;
+                        }
+                        return true;
+                    },
+                }),
             ],
         };
     }

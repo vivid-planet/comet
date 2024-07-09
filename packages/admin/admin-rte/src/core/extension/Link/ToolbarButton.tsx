@@ -1,11 +1,10 @@
-import { RteLink } from "@comet/admin-icons";
-import { Check, Clear, Delete } from "@mui/icons-material";
+import { Check, Close, Delete, RteLink } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@mui/material";
 import { EditorState, RichUtils } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import ControlButton from "../../Controls/ControlButton";
+import { ControlButton } from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
 import findEntityDataInCurrentSelection from "../../utils/findEntityDataInCurrentSelection";
 import findEntityInCurrentSelection from "../../utils/findEntityInCurrentSelection";
@@ -113,7 +112,7 @@ function LinkDialog(props: {
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} startIcon={<Clear />}>
+                <Button onClick={handleClose} startIcon={<Close />}>
                     {/** Same as in @comet/admin/messages.ts, not referenced as no dependency specified */}
                     <FormattedMessage id="comet.generic.cancel" defaultMessage="Cancel" />
                 </Button>

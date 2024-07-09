@@ -49,16 +49,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "autoplay",
@@ -80,16 +71,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "autoplay",

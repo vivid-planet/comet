@@ -1,11 +1,8 @@
 import "reflect-metadata";
 
 export { AccessLogModule } from "./access-log/access-log.module";
-export { CurrentUserInterface } from "./auth/current-user/current-user";
-export { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "./auth/current-user/current-user-loader";
+export { DisableCometGuards } from "./auth/decorators/disable-comet-guards.decorator";
 export { GetCurrentUser } from "./auth/decorators/get-current-user.decorator";
-export { DisableGlobalGuard } from "./auth/decorators/global-guard-disable.decorator";
-export { PublicApi } from "./auth/decorators/public-api.decorator";
 export { createCometAuthGuard } from "./auth/guards/comet.guard";
 export { createAuthResolver } from "./auth/resolver/auth.resolver";
 export { createAuthProxyJwtStrategy } from "./auth/strategies/auth-proxy-jwt.strategy";
@@ -19,19 +16,18 @@ export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage
 export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
-export { BLOCKS_MODULE_OPTIONS, BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES } from "./blocks/blocks.constants";
-export { BlocksModule, BlocksModuleOptions } from "./blocks/blocks.module";
+export { BlocksModule } from "./blocks/blocks.module";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
+export { createLinkBlock } from "./blocks/createLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
-export { DamVideoBlock } from "./blocks/dam-video.block";
-export { PixelImageBlock } from "./blocks/PixelImageBlock";
+export { EmailLinkBlock } from "./blocks/email-link.block";
+export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
-export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
 export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";
@@ -47,27 +43,44 @@ export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
 export { BooleanFilter } from "./common/filter/boolean.filter";
-export { DateFilter } from "./common/filter/date.filter";
+export { DateTimeFilter } from "./common/filter/date-time.filter";
 export { createEnumFilter } from "./common/filter/enum.filter.factory";
+export { createEnumsFilter } from "./common/filter/enums.filter.factory";
+export { ManyToManyFilter } from "./common/filter/many-to-many.filter";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
 export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
+export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";
 export { extractGraphqlFields } from "./common/graphql/extract-graphql-fields";
+export { CdnGuard } from "./common/guards/cdn.guard";
 export { PartialType } from "./common/helper/partial-type.helper";
 export { OffsetBasedPaginationArgs } from "./common/pagination/offset-based.args";
 export { PaginatedResponseFactory } from "./common/pagination/paginated-response.factory";
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsNullable } from "./common/validators/is-nullable";
+export { IsPhoneNumber, isPhoneNumber } from "./common/validators/is-phone-number";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
+export { AzureOpenAiContentGenerationModule } from "./content-generation/azure-open-ai/azure-open-ai-content-generation.module";
+export {
+    AzureOpenAiConfig,
+    AzureOpenAiContentGenerationService,
+    AzureOpenAiContentGenerationServiceConfig,
+} from "./content-generation/azure-open-ai/azure-open-ai-content-generation.service";
+export { ContentGenerationModule } from "./content-generation/content-generation.module";
+export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
+export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
+export { DamVideoBlock } from "./dam/blocks/dam-video.block";
+export { PixelImageBlock } from "./dam/blocks/pixel-image.block";
+export { SvgImageBlock } from "./dam/blocks/svg-image.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
-export { defaultDamAcceptedMimetypes } from "./dam/common/mimeTypes/default-dam-accepted-mimetypes";
+export { damDefaultAcceptedMimetypes } from "./dam/common/mimeTypes/dam-default-accepted-mimetypes";
 export { DamConfig } from "./dam/dam.config";
 export { DAM_CONFIG, IMGPROXY_CONFIG } from "./dam/dam.constants";
 export { DamModule } from "./dam/dam.module";
@@ -94,11 +107,13 @@ export { IsAllowedImageSize, IsAllowedImageSizeConstraint } from "./dam/images/v
 export { IsValidImageAspectRatio, IsValidImageAspectRatioConstraint } from "./dam/images/validators/is-valid-aspect-ratio.validator";
 export { Extension, Gravity, ResizingType } from "./dam/imgproxy/imgproxy.enum";
 export { ImgproxyConfig, ImgproxyService } from "./dam/imgproxy/imgproxy.service";
+export { EntityInfo, EntityInfoServiceInterface } from "./dependencies/decorators/entity-info.decorator";
 export { DependenciesModule } from "./dependencies/dependencies.module";
 export { DependenciesResolverFactory } from "./dependencies/dependencies.resolver.factory";
 export { DependenciesService } from "./dependencies/dependencies.service";
-export { Dependency } from "./dependencies/dependency";
 export { DependentsResolverFactory } from "./dependencies/dependents.resolver.factory";
+export { BaseDependencyInterface } from "./dependencies/dto/base-dependency.interface";
+export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
@@ -131,6 +146,8 @@ export { PageTreeNodeBase } from "./page-tree/entities/page-tree-node-base.entit
 export { PAGE_TREE_REPOSITORY } from "./page-tree/page-tree.constants";
 export { PageTreeModule } from "./page-tree/page-tree.module";
 export { PageTreeReadApi, PageTreeService } from "./page-tree/page-tree.service";
+export { PageTreeNodeDocumentEntityInfoService } from "./page-tree/page-tree-node-document-entity-info.service";
+export { PageTreeNodeDocumentEntityScopeService } from "./page-tree/page-tree-node-document-entity-scope.service";
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
@@ -145,12 +162,12 @@ export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redire
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
 export { RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";
+export { DisablePermissionCheck } from "./user-permissions/decorators/required-permission.decorator";
 export { ScopedEntity, ScopedEntityMeta } from "./user-permissions/decorators/scoped-entity.decorator";
 export { CurrentUser } from "./user-permissions/dto/current-user";
 export { FindUsersArgs } from "./user-permissions/dto/paginated-user-list";
-export { User } from "./user-permissions/dto/user";
 export { ContentScope } from "./user-permissions/interfaces/content-scope.interface";
-export { Permission } from "./user-permissions/interfaces/user-permission.interface";
+export { User } from "./user-permissions/interfaces/user";
 export { UserPermissionsModule } from "./user-permissions/user-permissions.module";
 export {
     AccessControlServiceInterface,

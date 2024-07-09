@@ -1,8 +1,5 @@
-import { Domain as DomainIcon } from "@comet/admin-icons";
 import {
     ContentScopeConfigProps,
-    ContentScopeControls as ContentScopeControlsLibrary,
-    ContentScopeControlsConfig,
     ContentScopeProvider as ContentScopeProviderLibrary,
     ContentScopeProviderProps,
     ContentScopeValues,
@@ -27,24 +24,7 @@ export function useContentScope(): UseContentScopeApi<ContentScope> {
     return useContentScopeLibrary<ContentScope>();
 }
 
-const controlsConfig: ContentScopeControlsConfig<ContentScope> = {
-    domain: {
-        label: "Domain",
-        icon: DomainIcon,
-        searchable: true,
-    },
-    language: {
-        label: "Language",
-        icon: DomainIcon,
-    },
-};
-
-// @TODO (maybe): make factory in library to statically create Provider and Controls
-
-// convenince wrapper for app (Bind config and Generic)
-export const ContentScopeControls: React.FC = () => {
-    return <ContentScopeControlsLibrary<ContentScope> config={controlsConfig} />;
-};
+// @TODO (maybe): make factory in library to statically create Provider
 
 export function useContentScopeConfig(p: ContentScopeConfigProps): void {
     return useContentScopeConfigLibrary(p);
@@ -54,15 +34,18 @@ const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">
     const sitesConfig = useSitesConfig<SitesConfig>();
     const user = useCurrentUser();
 
-    const allowedUserDomains = user.contentScopes.map((scope) => scope.domain);
+    const allowedUserDomains = user.allowedContentScopes.map((scope) => scope.domain);
 
     const allowedSiteConfigs = Object.fromEntries(
         Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),
     );
-    const values: ContentScopeValues<ContentScope> = {
-        domain: Object.keys(allowedSiteConfigs).map((key) => ({ value: key })),
-        language: [{ label: "English", value: "en" }],
-    };
+
+    const values: ContentScopeValues<ContentScope> = Object.keys(allowedSiteConfigs).flatMap((key) => {
+        return [
+            { domain: { value: key }, language: { label: "English", value: "en" } },
+            { domain: { value: key }, language: { label: "German", value: "de" } },
+        ];
+    });
 
     return (
         <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={{ domain: Object.keys(allowedSiteConfigs)[0], language: "en" }}>

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Type } from "@nestjs/common";
 import { ClassConstructor, instanceToPlain, plainToInstance } from "class-transformer";
 
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
@@ -6,9 +7,12 @@ import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMig
 import { BlockMigrationInterface } from "../migrations/types";
 import { SearchText } from "../search/get-search-text";
 import { AnnotationBlockMeta, getBlockFieldData, getFieldKeys } from "./decorators/field";
-import { TransformDependencies } from "./dependencies";
 import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
 import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
+
+export interface BlockTransformerServiceInterface<Block extends BlockDataInterface = BlockDataInterface, T = any> {
+    transformToPlain(block: Block, context: BlockContext): T | Promise<T>;
+}
 
 export interface TraversableTransformResponse {
     [member: string]:
@@ -50,7 +54,7 @@ export declare type BlockIndexItem = {
 export declare type BlockIndex = Array<BlockIndexItem>;
 
 export interface BlockDataInterface {
-    transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<TraversableTransformResponse>;
+    transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
     transformToSave(): TraversableTransformResponse;
     indexData(): BlockIndexData;
     searchText(): SearchText[];
@@ -59,8 +63,7 @@ export interface BlockDataInterface {
 }
 
 export abstract class BlockData implements BlockDataInterface {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async transformToPlain(deps: TransformDependencies, ctx: BlockContext): Promise<TraversableTransformResponse> {
+    async transformToPlain(context: BlockContext) {
         return { ...(this as any) };
     }
 
@@ -292,6 +295,7 @@ export function getRegisteredBlocks(): Block[] {
 export interface BlockContext {
     includeInvisibleContent?: boolean;
     previewDamUrls?: boolean;
+    relativeDamUrls?: boolean;
 }
 
 export function transformToSave(block: BlockDataInterface): TraversableTransformResponse {

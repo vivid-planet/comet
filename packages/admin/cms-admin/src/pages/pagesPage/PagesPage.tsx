@@ -16,7 +16,6 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -39,7 +38,7 @@ interface Props {
     category: string;
     path: string;
     allCategories: AllCategories;
-    documentTypes: Record<DocumentType, DocumentInterface>;
+    documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: React.ComponentType<EditPageNodeProps>;
     renderContentScopeIndicator: (scope: ContentScopeInterface) => React.ReactNode;
 }
@@ -50,7 +49,7 @@ export function PagesPage({
     category,
     path,
     allCategories,
-    documentTypes,
+    documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
 }: Props): React.ReactElement {
@@ -61,6 +60,7 @@ export function PagesPage({
 
     const siteConfig = useSiteConfig({ scope });
     const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
+    const documentTypes = typeof passedDocumentTypes === "function" ? passedDocumentTypes(category) : passedDocumentTypes;
 
     React.useEffect(() => {
         setRedirectPathAfterChange(path);
@@ -79,7 +79,7 @@ export function PagesPage({
     });
 
     useFocusAwarePolling({
-        pollInterval: process.env.NODE_ENV === "development" ? undefined : 10000,
+        pollInterval: 10000,
         refetch,
         startPolling,
         stopPolling,
@@ -137,8 +137,7 @@ export function PagesPage({
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
                 <StackSwitch>
                     <StackPage name="table">
-                        {renderContentScopeIndicator(scope)}
-                        <Toolbar>
+                        <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
                             <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                             <FormControlLabel
                                 control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}
@@ -157,9 +156,18 @@ export function PagesPage({
                                 </Button>
                             </ToolbarActions>
                         </Toolbar>
-                        <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
-                            <PageTreeContent fullHeight>
-                                <ActionToolbarBox>
+                        <PageTreeContext.Provider
+                            value={{
+                                allCategories,
+                                currentCategory: category,
+                                documentTypes,
+                                getDocumentTypesByCategory: typeof passedDocumentTypes === "function" ? passedDocumentTypes : undefined,
+                                tree,
+                                query: pagesQuery,
+                            }}
+                        >
+                            <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
+                                <Box>
                                     <PagesPageActionToolbar
                                         selectedState={selectState}
                                         onSelectAllPressed={() => {
@@ -179,8 +187,8 @@ export function PagesPage({
                                             setExpandedIds([]);
                                         }}
                                     />
-                                </ActionToolbarBox>
-                                <FullHeightPaper variant="outlined">
+                                </Box>
+                                <Paper variant="outlined" sx={{ flex: 1 }}>
                                     {loading && isInitialLoad.current ? (
                                         <Loading behavior="fillParent" />
                                     ) : (
@@ -203,8 +211,8 @@ export function PagesPage({
                                             />
                                         </>
                                     )}
-                                </FullHeightPaper>
-                            </PageTreeContent>
+                                </Paper>
+                            </MainContent>
                         </PageTreeContext.Provider>
 
                         <EditDialog>
@@ -219,6 +227,10 @@ export function PagesPage({
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.pages.editContent", defaultMessage: "Edit content" })}>
                         {(selectedId) => {
                             const page = data?.pages.find((page) => page.id == selectedId);
+
+                            if (loading && isInitialLoad.current) {
+                                return <Loading behavior="fillPageHeight" />;
+                            }
 
                             if (!page) {
                                 return (
@@ -268,24 +280,3 @@ export function PagesPage({
         </DamScopeProvider>
     );
 }
-
-const PageTreeContent = withStyles({
-    root: {
-        display: "flex",
-        flexDirection: "column",
-    },
-})(MainContent);
-
-const FullHeightPaper = withStyles({
-    root: {
-        flex: 1,
-    },
-})(Paper);
-
-const ActionToolbarBox = withStyles({
-    root: {
-        width: "100%",
-        paddingLeft: 24,
-        paddingRight: 50,
-    },
-})(Box);

@@ -129,9 +129,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                 name="permission"
                                 component={FinalFormSelect}
                                 options={availablePermissionsData.availablePermissions}
-                                getOptionLabel={(permission: string) => (
-                                    <FormattedMessage id={`permission.${permission}`} defaultMessage={camelCaseToHumanReadable(permission)} />
-                                )}
+                                getOptionLabel={(permission: string) => camelCaseToHumanReadable(permission)}
                                 disabled={disabled}
                                 label={<FormattedMessage id="comet.userPermissions.permission" defaultMessage="Permission" />}
                             />
@@ -160,6 +158,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                     component={FinalFormInput}
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.reason" defaultMessage="Reason" />}
+                                    disableContentTranslation
                                 />
                                 <Field
                                     fullWidth
@@ -167,6 +166,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                     component={FinalFormInput}
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.requestedBy" defaultMessage="Requested by" />}
+                                    disableContentTranslation
                                 />
                                 <Field
                                     fullWidth
@@ -174,6 +174,7 @@ export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, ha
                                     component={FinalFormInput}
                                     disabled={disabled}
                                     label={<FormattedMessage id="comet.userPermissions.approvedBy" defaultMessage="Approved by" />}
+                                    disableContentTranslation
                                 />
                             </FormSection>
                         </DialogContent>

@@ -13,7 +13,21 @@ export class ProductsService {
         const andFilters = [];
 
         if (options.search) {
-            andFilters.push(searchToMikroOrmQuery(options.search, ["title", "slug", "description", "type", "category.title", "category.slug"]));
+            andFilters.push(
+                searchToMikroOrmQuery(options.search, [
+                    "title",
+                    "slug",
+                    "description",
+                    "type",
+                    "category.title",
+                    "category.slug",
+                    "manufacturer.name",
+                    "manufacturer.addressAsEmbeddable_street",
+                    "manufacturer.addressAsEmbeddable_country",
+                    "manufacturer.addressAsEmbeddable_alternativeAddress_street",
+                    "manufacturer.addressAsEmbeddable_alternativeAddress_country",
+                ]),
+            );
         }
 
         if (options.filter) {

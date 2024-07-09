@@ -6,16 +6,16 @@ import mime from "mime";
 import fetch from "node-fetch";
 import { PassThrough } from "stream";
 
-import { CurrentUserInterface } from "../../auth/current-user/current-user";
+import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { ScaledImagesCacheService } from "../cache/scaled-images-cache.service";
 import { FocalPoint } from "../common/enums/focal-point.enum";
-import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
+import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
@@ -59,7 +59,7 @@ export class ImagesController {
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
         @Res() res: Response,
-        @GetCurrentUser() user: CurrentUserInterface,
+        @GetCurrentUser() user: CurrentUser,
     ): Promise<void> {
         if (params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
@@ -71,7 +71,7 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
             throw new ForbiddenException();
         }
 
@@ -85,7 +85,7 @@ export class ImagesController {
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
         @Res() res: Response,
-        @GetCurrentUser() user: CurrentUserInterface,
+        @GetCurrentUser() user: CurrentUser,
     ): Promise<void> {
         if (params.cropArea.focalPoint === FocalPoint.SMART) {
             throw new NotFoundException();
@@ -97,7 +97,7 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        if (file.scope !== undefined && !this.accessControlService.isAllowedContentScope(user, file.scope)) {
+        if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
             throw new ForbiddenException();
         }
 
@@ -106,16 +106,9 @@ export class ImagesController {
         });
     }
 
-    @DisableGlobalGuard()
+    @DisableCometGuards()
     @Get(`/:hash/${smartImageUrl}`)
-    async smartCroppedImage(
-        @Param() params: HashImageParams,
-        @Headers("Accept") accept: string,
-        @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-        @Res() res: Response,
-    ): Promise<void> {
-        this.checkCdnOrigin(cdnOriginCheck);
-
+    async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
         }
@@ -129,16 +122,9 @@ export class ImagesController {
         return this.getCroppedImage(file, params, accept, res);
     }
 
-    @DisableGlobalGuard()
+    @DisableCometGuards()
     @Get(`/:hash/${focusImageUrl}`)
-    async focusCroppedImage(
-        @Param() params: HashImageParams,
-        @Headers("Accept") accept: string,
-        @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-        @Res() res: Response,
-    ): Promise<void> {
-        this.checkCdnOrigin(cdnOriginCheck);
-
+    async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {
             throw new NotFoundException();
         }
@@ -154,14 +140,6 @@ export class ImagesController {
 
     private isValidHash({ hash, ...imageParams }: HashImageParams): boolean {
         return hash === this.imagesService.createHash(imageParams);
-    }
-
-    private checkCdnOrigin(incomingCdnOriginHeader: string): void {
-        if (this.config.cdnEnabled && !this.config.disableCdnOriginHeaderCheck) {
-            if (incomingCdnOriginHeader !== this.config.cdnOriginHeader) {
-                throw new ForbiddenException();
-            }
-        }
     }
 
     private async getCroppedImage(

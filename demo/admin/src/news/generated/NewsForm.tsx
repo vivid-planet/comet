@@ -4,13 +4,14 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByFragment,
     FinalForm,
-    FinalFormInput,
     FinalFormSaveButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -20,14 +21,13 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { ContentScopeIndicator, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -75,7 +75,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.news
                 ? {
-                      ...filter<GQLNewsFormFragment>(newsFormFragment, data.news),
+                      ...filterByFragment<GQLNewsFormFragment>(newsFormFragment, data.news),
 
                       image: rootBlocks.image.input2State(data.news.image),
                       content: rootBlocks.content.input2State(data.news.content),
@@ -116,15 +116,15 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
             }
             await client.mutate<GQLUpdateNewsMutation, GQLUpdateNewsMutationVariables>({
                 mutation: updateNewsMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.news?.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
                 mutation: createNewsMutation,
                 variables: { scope, input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createNews.id;
+                const id = mutationResponse?.createNews.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage("edit", id);
@@ -143,9 +143,9 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
     return (
         <FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues}>
             {({ values }) => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                         <ToolbarItem>
                             <IconButton onClick={stackApi?.goBack}>
                                 <ArrowLeft />
@@ -160,27 +160,21 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="news.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="date"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="news.date" defaultMessage="Date" />}
-                        />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="news.slug" defaultMessage="Slug" />} />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title" />} />
+                        <Field fullWidth name="status" label={<FormattedMessage id="news.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Active">
+                                        <FormattedMessage id="news.status.active" defaultMessage="Active" />
+                                    </MenuItem>
+                                    <MenuItem value="Deleted">
+                                        <FormattedMessage id="news.status.deleted" defaultMessage="Deleted" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
+                        <DateField required fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date" />} />
                         <Field fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
@@ -203,7 +197,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.content)}
                         </Field>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

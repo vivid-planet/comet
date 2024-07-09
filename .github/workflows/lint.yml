@@ -6,7 +6,6 @@ on:
             - opened
             - synchronize
             - reopened
-            - closed
     push:
         branches:
             - main
@@ -33,16 +32,28 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/admin/lang/comet-lang"
 
-            - name: "Demo: Clone translations"
+            - name: "Demo Admin: Clone translations"
               uses: actions/checkout@v3
               with:
                   repository: vivid-planet/comet-demo-lang
                   token: ${{ secrets.GITHUB_TOKEN }}
                   path: "demo/admin/lang/comet-demo-lang"
 
-            - uses: pnpm/action-setup@v2
+            - name: "Demo Site: Clone translations"
+              uses: actions/checkout@v3
               with:
-                  version: 8
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo/site/lang/comet-demo-lang"
+
+            - name: "Demo Site Pages: Clone translations"
+              uses: actions/checkout@v3
+              with:
+                  repository: vivid-planet/comet-demo-lang
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  path: "demo/site-pages/lang/comet-demo-lang"
+
+            - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 18.x
               uses: actions/setup-node@v3
@@ -57,7 +68,7 @@ jobs:
               run: pnpm run copy-schema-files
 
             - name: Build
-              run: pnpm run build:lib
+              run: pnpm run build:packages
 
             - name: Lint
               run: |
@@ -65,13 +76,8 @@ jobs:
                   pnpm run lint
                   # check for duplicate ids of formatted messages
                   pnpm run intl:extract
-
-            - name: Test
-              run: pnpm run test
-
-            - name: Upload test results
-              uses: actions/upload-artifact@v3
-              if: success() || failure()
-              with:
-                  name: test-results
-                  path: packages/**/junit.xml
+                  # check if schema files are up to date
+                  pnpm --filter '@comet/blocks-api' run generate-block-meta
+                  pnpm --filter '@comet/cms-api' run generate-block-meta
+                  pnpm --filter '@comet/cms-api' run generate-schema
+                  git diff --exit-code HEAD --

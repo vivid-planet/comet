@@ -1,18 +1,7 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import {
-    Field,
-    FinalForm,
-    FinalFormSaveButton,
-    FinalFormSelect,
-    Loading,
-    MainContent,
-    Toolbar,
-    ToolbarFillSpace,
-    ToolbarItem,
-    useStackApi,
-} from "@comet/admin";
+import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { EditPageLayout, PageName } from "@comet/cms-admin";
+import { PageName } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -84,7 +73,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
         >
             {({ pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => {
                 return (
-                    <EditPageLayout>
+                    <>
                         <Toolbar>
                             <ToolbarItem>
                                 <IconButton onClick={stackApi?.goBack}>
@@ -98,19 +87,15 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                             </ToolbarItem>
                         </Toolbar>
                         <MainContent>
-                            <Field label={<FormattedMessage id="structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        {predefinedPageOptions.map((item, index) => (
-                                            <MenuItem value={item.value} key={index}>
-                                                {item.name}
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                            <SelectField label={<FormattedMessage id="structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
+                                {predefinedPageOptions.map((item, index) => (
+                                    <MenuItem value={item.value} key={index}>
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </SelectField>
                         </MainContent>
-                    </EditPageLayout>
+                    </>
                 );
             }}
         </FinalForm>

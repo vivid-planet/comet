@@ -61,18 +61,9 @@ export function generateImageUrl({ src, width }: Pick<ImageLoaderProps, "src" | 
     return src.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
 }
 
-type Props = Omit<NextImageProps, "loader"> &
-    (
-        | { layout?: "fixed" | "intrinsic" }
-        // The sizes prop must be specified for images with layout "fill" or "responsive", as recommended in the next/image documentation
-        // https://nextjs.org/docs/api-reference/next/image#sizes
-        | {
-              layout?: "fill" | "responsive";
-              sizes: string;
-          }
-    ) & { aspectRatio?: string };
+type Props = Omit<NextImageProps, "loader"> & { aspectRatio: string };
 
-export function Image({ aspectRatio = "16x9", ...nextImageProps }: Props): React.ReactElement {
+export function Image({ aspectRatio, ...nextImageProps }: Props): React.ReactElement {
     const usedAspectRatio = parseAspectRatio(aspectRatio);
 
     return <NextImage loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)} {...nextImageProps} />;

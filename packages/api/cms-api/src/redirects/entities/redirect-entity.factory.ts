@@ -2,11 +2,10 @@ import { Block, BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/bl
 import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { RootBlockType } from "../../blocks/root-block-type";
-import { DocumentInterface } from "../../document/dto/document-interface";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "../redirects.enum";
 import { RedirectScopeInterface } from "../types";
 
@@ -27,11 +26,8 @@ export interface RedirectInterface {
 export class RedirectEntityFactory {
     static create({ linkBlock, Scope: RedirectScope }: { linkBlock: Block; Scope?: Type<RedirectScopeInterface> }): Type<RedirectInterface> {
         @Entity({ abstract: true })
-        @ObjectType({
-            implements: () => [DocumentInterface],
-            isAbstract: true,
-        })
-        class RedirectBase implements RedirectInterface, DocumentInterface {
+        @ObjectType({ isAbstract: true })
+        class RedirectBase implements RedirectInterface {
             [OptionalProps]?: "createdAt" | "updatedAt" | "active";
 
             @PrimaryKey({ columnType: "uuid" })
@@ -84,9 +80,7 @@ export class RedirectEntityFactory {
 
         if (RedirectScope) {
             @Entity()
-            @ObjectType({
-                implements: () => [DocumentInterface],
-            })
+            @ObjectType()
             @RootBlockEntity()
             class Redirect extends RedirectBase {
                 @Embedded(() => RedirectScope)
@@ -96,9 +90,7 @@ export class RedirectEntityFactory {
             return Redirect;
         } else {
             @Entity()
-            @ObjectType({
-                implements: () => [DocumentInterface],
-            })
+            @ObjectType()
             @RootBlockEntity()
             class Redirect extends RedirectBase {}
             return Redirect;

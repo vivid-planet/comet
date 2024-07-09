@@ -1,28 +1,29 @@
-import { Inject, Injectable, Optional } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PassportStrategy, Type } from "@nestjs/passport";
 import { Strategy } from "passport-custom";
 
-import { CurrentUserInterface } from "../current-user/current-user";
-import { CURRENT_USER_LOADER, CurrentUserLoaderInterface } from "../current-user/current-user-loader";
+import { UserPermissionsService } from "../..//user-permissions/user-permissions.service";
+import { CurrentUser } from "../../user-permissions/dto/current-user";
+import { User } from "../../user-permissions/interfaces/user";
 
 interface StaticAuthedUserStrategyConfig {
-    staticAuthedUser: CurrentUserInterface | string;
+    staticAuthedUser: User | string;
     userExtraData?: unknown;
 }
 
 export function createStaticAuthedUserStrategy(config: StaticAuthedUserStrategyConfig): Type {
     @Injectable()
     class StaticAuthedUserStrategy extends PassportStrategy(Strategy, "static-authed-user") {
-        constructor(@Optional() @Inject(CURRENT_USER_LOADER) private readonly currentUserLoader: CurrentUserLoaderInterface) {
+        constructor(private readonly service: UserPermissionsService) {
             super();
         }
 
-        async validate(): Promise<CurrentUserInterface> {
+        async validate(): Promise<CurrentUser> {
             if (typeof config.staticAuthedUser === "string") {
-                if (!this.currentUserLoader) throw new Error("You have to provide CURRENT_USER_LOADER when setting staticAuthedUser as string");
-                return this.currentUserLoader.load(config.staticAuthedUser, config.userExtraData);
+                const user = await this.service.getUser(config.staticAuthedUser);
+                return this.service.createCurrentUser(user);
             }
-            return config.staticAuthedUser;
+            return this.service.createCurrentUser(config.staticAuthedUser);
         }
     }
     return StaticAuthedUserStrategy;

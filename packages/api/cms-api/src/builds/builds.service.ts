@@ -1,14 +1,14 @@
 import { V1CronJob, V1Job } from "@kubernetes/client-node";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL, LABEL_ANNOTATION, PARENT_CRON_JOB_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ContentScope } from "../user-permissions/interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
@@ -22,6 +22,8 @@ const JOB_HISTORY_LIMIT = 20;
 
 @Injectable()
 export class BuildsService {
+    private readonly logger = new Logger(BuildsService.name);
+
     constructor(
         @InjectRepository(ChangesSinceLastBuild) private readonly changesRepository: EntityRepository<ChangesSinceLastBuild>,
         private readonly buildTemplatesService: BuildTemplatesService,
@@ -29,18 +31,14 @@ export class BuildsService {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
-    private async getAllowedBuildJobs(user: CurrentUserInterface): Promise<V1Job[]> {
+    private async getAllowedBuildJobs(user: CurrentUser): Promise<V1Job[]> {
         const allJobs = await this.kubernetesService.getAllJobs(`${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`);
         return allJobs.filter((job) => {
-            return this.accessControlService.isAllowedContentScope(user, this.kubernetesService.getContentScope(job) ?? {});
+            return this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(job) ?? {});
         });
     }
 
     async createBuilds(trigger: string, builderCronJobs: V1CronJob[]): Promise<boolean> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
         // No ACL here, because this is only used for clean-up
         const builderJobs = await this.kubernetesService.getAllJobs(
             `${BUILDER_LABEL} = true, ${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}`,
@@ -89,11 +87,7 @@ export class BuildsService {
         return this.createBuilds(trigger, builderCronJobs);
     }
 
-    async getBuilds(user: CurrentUserInterface, options?: { limit?: number | undefined }): Promise<Build[]> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
+    async getBuilds(user: CurrentUser, options?: { limit?: number | undefined }): Promise<Build[]> {
         const buildJobs = await this.getAllowedBuildJobs(user);
         return Promise.all(
             buildJobs.slice(0, options?.limit).map(async (job) => {
@@ -114,11 +108,7 @@ export class BuildsService {
         );
     }
 
-    async getAutoBuildStatus(user: CurrentUserInterface): Promise<AutoBuildStatus> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
+    async getAutoBuildStatus(user: CurrentUser): Promise<AutoBuildStatus> {
         const autoBuildStatus = new AutoBuildStatus();
         autoBuildStatus.hasChangesSinceLastBuild = await this.hasChangesSinceLastBuild();
 
@@ -161,5 +151,50 @@ export class BuildsService {
 
     async getScopesWithChanges(): Promise<ContentScope[]> {
         return (await this.changesRepository.find({ scope: { $ne: "all" } })).map((change) => change.scope) as ContentScope[];
+    }
+
+    async getBuilderCronJobsToStart(scopesWithChanges: ContentScope[]): Promise<V1CronJob[]> {
+        const builderCronJobs = await this.buildTemplatesService.getAllBuilderCronJobs();
+
+        const getMatchingBuilderCronJobs = (scope: ContentScope) => {
+            const matchingCronJobs: V1CronJob[] = [];
+
+            for (const cronJob of builderCronJobs) {
+                const cronJobScope = this.kubernetesService.getContentScope(cronJob);
+
+                if (!cronJobScope) {
+                    this.logger.warn(`CronJob ${cronJob.metadata?.name} has no scope, skipping...`);
+                    continue;
+                }
+
+                // Exact match between job's scope and the scope with changes.
+                if (Object.entries(cronJobScope).every(([key, value]) => (scope as Record<string, unknown>)[key] === value)) {
+                    return [cronJob];
+                }
+
+                // Check if scopes match partially. For instance, a job's scope may be { "domain": "main" }, but the change was in
+                // { "domain": "main", "language": "en" }. Or the job's scope may be { "domain": "main", "language": "en" }, but the change
+                // was in { "domain": "main" }. In both cases, the job should still be started.
+                if (Object.entries(cronJobScope).some(([key, value]) => (scope as Record<string, unknown>)[key] === value)) {
+                    matchingCronJobs.push(cronJob);
+                }
+            }
+
+            if (matchingCronJobs.length === 0) {
+                throw new Error(`Found changes in scope ${JSON.stringify(scope)} but no matching builder cron job!`);
+            }
+
+            return matchingCronJobs;
+        };
+
+        const uniqueMatchingCronJobs = new Set<V1CronJob>();
+
+        for (const scope of scopesWithChanges) {
+            for (const job of getMatchingBuilderCronJobs(scope)) {
+                uniqueMatchingCronJobs.add(job);
+            }
+        }
+
+        return Array.from(uniqueMatchingCronJobs);
     }
 }

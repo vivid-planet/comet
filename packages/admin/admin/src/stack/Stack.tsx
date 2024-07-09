@@ -1,6 +1,5 @@
-import * as history from "history";
 import * as React from "react";
-import { Route, RouteComponentProps } from "react-router";
+import { Route, RouteComponentProps, useHistory, useLocation } from "react-router";
 
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
@@ -50,6 +49,7 @@ const sortByParentId = <TSortNode extends SortNode>(nodes: TSortNode[]) => {
 
 interface StackProps {
     topLevelTitle: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export interface BreadcrumbItem {
@@ -57,7 +57,7 @@ export interface BreadcrumbItem {
     parentId: string;
     url: string;
     title: React.ReactNode;
-    invisible: boolean;
+    locationUrl?: string;
 }
 
 export interface SwitchItem {
@@ -67,151 +67,123 @@ export interface SwitchItem {
     activePage?: string;
 }
 
-interface IState {
-    breadcrumbs: BreadcrumbItem[];
-    switches: SwitchItem[];
-}
+export function Stack(props: StackProps) {
+    const [breadcrumbs, setBreadcrumbs] = React.useState<BreadcrumbItem[]>([]);
+    const [switches, setSwitches] = React.useState<SwitchItem[]>([]);
+    const history = useHistory();
+    const location = useLocation();
 
-export class Stack extends React.Component<StackProps, IState> {
-    private history: history.History;
-    constructor(props: StackProps) {
-        super(props);
-        this.state = {
-            breadcrumbs: [],
-            switches: [],
-        };
-    }
+    const getVisibleBreadcrumbs = React.useCallback(() => {
+        return breadcrumbs.map((i) => {
+            return { ...i, url: i.locationUrl ?? i.url };
+        });
+    }, [breadcrumbs]);
 
-    public render() {
-        const breadcrumbs = this.getVisibleBreadcrumbs();
-
-        return (
-            <StackApiContext.Provider
-                value={{
-                    addBreadcrumb: this.addBreadcrumb.bind(this),
-                    updateBreadcrumb: this.updateBreadcrumb.bind(this),
-                    removeBreadcrumb: this.removeBreadcrumb.bind(this),
-                    goBack: this.goBack.bind(this),
-                    goAllBack: this.goAllBack.bind(this),
-
-                    addSwitchMeta: this.addSwitchMeta,
-                    removeSwitchMeta: this.removeSwitchMeta,
-                    switches: sortByParentId(this.state.switches),
-                    breadCrumbs: breadcrumbs,
-                }}
-            >
-                <Route>
-                    {(routerProps: RouteComponentProps<any>) => {
-                        const { topLevelTitle, children } = this.props;
-                        this.history = routerProps.history;
-                        if (!routerProps.match) {
-                            return children;
-                        }
-                        return (
-                            <>
-                                <StackBreadcrumb title={topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
-                                    {children}
-                                </StackBreadcrumb>
-                            </>
-                        );
-                    }}
-                </Route>
-            </StackApiContext.Provider>
-        );
-    }
-
-    private getVisibleBreadcrumbs() {
-        let prev: BreadcrumbItem;
-        const breadcrumbs = sortByParentId(this.state.breadcrumbs)
-            .map((i) => {
-                return { ...i }; // clone so we can modify in filter below
-            })
-            .filter((i) => {
-                if (i.invisible) {
-                    prev.url = i.url;
-                    return false;
-                }
-                prev = i;
-                return true;
-            });
-        return breadcrumbs;
-    }
-
-    private goBack() {
-        const breadcrumbs = this.getVisibleBreadcrumbs();
+    const goBack = React.useCallback(() => {
+        const breadcrumbs = getVisibleBreadcrumbs();
         if (breadcrumbs[breadcrumbs.length - 2]) {
-            this.history.push(breadcrumbs[breadcrumbs.length - 2].url);
+            history.push(breadcrumbs[breadcrumbs.length - 2].url);
         } else {
-            this.history.push(breadcrumbs[breadcrumbs.length - 1].url);
+            history.push(breadcrumbs[breadcrumbs.length - 1].url);
         }
-    }
+    }, [history, getVisibleBreadcrumbs]);
 
-    private goAllBack() {
-        this.history.push(this.state.breadcrumbs[0].url);
-    }
+    const goAllBack = React.useCallback(() => {
+        history.push(breadcrumbs[0].url);
+    }, [history, breadcrumbs]);
 
-    private addBreadcrumb(id: string, parentId: string, url: string, title: React.ReactNode, invisible: boolean) {
-        this.setState((state) => {
-            const breadcrumbs = [
-                ...state.breadcrumbs,
+    const addBreadcrumb = React.useCallback((id: string, parentId: string, url: string, title: React.ReactNode) => {
+        setBreadcrumbs((old) => {
+            return sortByParentId([
+                ...old,
                 {
                     id,
                     parentId,
                     url,
                     title,
-                    invisible,
                 },
-            ];
-
-            return {
-                breadcrumbs,
-            };
+            ]);
         });
-    }
+    }, []);
 
-    private updateBreadcrumb(id: string, parentId: string, url: string, title: React.ReactNode, invisible: boolean) {
-        this.setState((state) => {
-            const breadcrumbs = state.breadcrumbs.map((crumb) => {
-                return crumb.id === id ? { id, parentId, url, title, invisible } : crumb;
-            });
-            return {
-                breadcrumbs,
-            };
+    const updateBreadcrumb = React.useCallback((id: string, parentId: string, url: string, title: React.ReactNode) => {
+        setBreadcrumbs((old) => {
+            return sortByParentId(
+                old.map((crumb) => {
+                    return crumb.id === id ? { ...crumb, parentId, url, title } : crumb;
+                }),
+            );
         });
-    }
+    }, []);
 
-    private removeBreadcrumb(id: string) {
-        this.setState((state) => {
-            const breadcrumbs = state.breadcrumbs.filter((crumb) => {
-                return crumb.id !== id;
-            });
-            return {
-                breadcrumbs,
-            };
+    const removeBreadcrumb = React.useCallback((id: string) => {
+        setBreadcrumbs((old) => {
+            return sortByParentId(
+                old.filter((crumb) => {
+                    return crumb.id !== id;
+                }),
+            );
         });
-    }
+    }, []);
 
-    private addSwitchMeta = (id: string, options: { parentId: string; activePage: string; isInitialPageActive: boolean }) => {
-        this.setState((state) => {
-            const switches = [...state.switches];
+    const addSwitchMeta = React.useCallback((id: string, options: { parentId: string; activePage: string; isInitialPageActive: boolean }) => {
+        setSwitches((old) => {
+            const switches = [...old];
             const index = switches.findIndex((i) => i.id === id);
             if (index === -1) {
                 switches.push({ id, ...options });
             } else {
                 switches[index] = { id, ...options };
             }
-            return {
-                switches,
-            };
+            return switches;
         });
-    };
+    }, []);
 
-    private removeSwitchMeta = (id: string) => {
-        this.setState((state) => {
-            const switches = state.switches.filter((item) => item.id !== id);
-            return {
-                switches,
-            };
+    const removeSwitchMeta = React.useCallback((id: string) => {
+        setSwitches((old) => {
+            return old.filter((item) => item.id !== id);
         });
-    };
+    }, []);
+
+    React.useEffect(() => {
+        // execute on location change, set locationUrl for the last breadcrumb to the current location
+        setBreadcrumbs((old) => {
+            return [...old.slice(0, -1), { ...old[old.length - 1], locationUrl: location.pathname + location.search }];
+        });
+    }, [location]);
+
+    const visibleBreadcrumbs = getVisibleBreadcrumbs();
+
+    return (
+        <StackApiContext.Provider
+            value={{
+                addBreadcrumb: addBreadcrumb,
+                updateBreadcrumb: updateBreadcrumb,
+                removeBreadcrumb: removeBreadcrumb,
+                goBack: goBack,
+                goAllBack: goAllBack,
+
+                addSwitchMeta: addSwitchMeta,
+                removeSwitchMeta: removeSwitchMeta,
+                switches: sortByParentId(switches),
+                breadCrumbs: visibleBreadcrumbs,
+            }}
+        >
+            <Route>
+                {(routerProps: RouteComponentProps<any>) => {
+                    const { topLevelTitle, children } = props;
+                    if (!routerProps.match) {
+                        return children;
+                    }
+                    return (
+                        <>
+                            <StackBreadcrumb title={topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
+                                {children}
+                            </StackBreadcrumb>
+                        </>
+                    );
+                }}
+            </Route>
+        </StackApiContext.Provider>
+    );
 }

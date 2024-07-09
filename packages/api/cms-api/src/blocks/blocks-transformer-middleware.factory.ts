@@ -1,27 +1,44 @@
 import { isBlockDataInterface } from "@comet/blocks-api";
+import { ContextId, ContextIdFactory, ModuleRef } from "@nestjs/core";
+import { REQUEST_CONTEXT_ID } from "@nestjs/core/router/request/request-constants";
 import { FieldMiddleware, MiddlewareContext, NextFn } from "@nestjs/graphql";
 
 import { getRequestContextHeadersFromRequest } from "../common/decorators/request-context.decorator";
-import { PageTreeService } from "../page-tree/page-tree.service";
-import { PageTreeNodeVisibility } from "../page-tree/types";
 import { transformToPlain } from "./blocks-transformer";
 
 export class BlocksTransformerMiddlewareFactory {
-    static create(dependencies: Record<string, unknown>): FieldMiddleware {
+    static create(moduleRef: ModuleRef): FieldMiddleware {
         return async ({ context }: MiddlewareContext, next: NextFn) => {
             const fieldValue = await next();
 
             if (isBlockDataInterface(fieldValue)) {
-                const { includeInvisibleBlocks, previewDamUrls, includeInvisiblePages } = getRequestContextHeadersFromRequest(context.req);
+                const { includeInvisibleBlocks, previewDamUrls, relativeDamUrls } = getRequestContextHeadersFromRequest(context.req);
+
+                let contextId: ContextId;
+
+                if (context[REQUEST_CONTEXT_ID]) {
+                    /**
+                     * The request is already registered by either using
+                     * a request-scoped service or the request provider
+                     * (`CONTEXT`) in the root GraphQL resolver. We can
+                     * reuse the context ID.
+                     */
+                    contextId = ContextIdFactory.getByRequest(context);
+                } else {
+                    /**
+                     * We need to generate a context ID and register the
+                     * middleware context as "request" to be able to
+                     * resolve request-scoped services.
+                     */
+                    contextId = ContextIdFactory.create();
+                    moduleRef.registerRequestByContextId(context, contextId);
+                }
+
                 return transformToPlain(
                     fieldValue,
-                    {
-                        ...dependencies,
-                        pageTreeReadApi: (dependencies.pageTreeService as PageTreeService).createReadApi({
-                            visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
-                        }),
-                    },
-                    { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls },
+                    { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls, relativeDamUrls },
+                    moduleRef,
+                    contextId,
                 );
             } else {
                 return fieldValue;

@@ -1,14 +1,14 @@
 import { useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
+    filterByFragment,
+    GridColDef,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -17,8 +17,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter } from "graphql-anywhere";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -35,8 +34,7 @@ import {
 
 function ProductCategoriesTableToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -49,7 +47,7 @@ function ProductCategoriesTableToolbar() {
                     <FormattedMessage id="products.newCategory" defaultMessage="New Category" />
                 </Button>
             </ToolbarItem>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -74,7 +72,12 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
                         onPaste={async ({ input, client }) => {
                             await client.mutate<GQLCreateProductCategoryMutation, GQLCreateProductCategoryMutationVariables>({
                                 mutation: createProductMutation,
-                                variables: { input: { ...input, products: [] } },
+                                variables: {
+                                    input: {
+                                        title: input.title,
+                                        slug: input.slug,
+                                    },
+                                },
                             });
                         }}
                         onDelete={async ({ client }) => {
@@ -85,7 +88,7 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
                         }}
                         refetchQueries={["ProductCategoriesList"]}
                         copyData={() => {
-                            return filter<GQLProductsCategoriesListFragment>(productCategoriesFragment, params.row);
+                            return filterByFragment<GQLProductsCategoriesListFragment>(productCategoriesFragment, params.row);
                         }}
                     />
                 </>
@@ -109,20 +112,18 @@ function ProductCategoriesTable() {
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
 
     return (
-        <MainContent fullHeight disablePadding>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductCategoriesTableToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            error={error}
+            components={{
+                Toolbar: ProductCategoriesTableToolbar,
+            }}
+        />
     );
 }
 

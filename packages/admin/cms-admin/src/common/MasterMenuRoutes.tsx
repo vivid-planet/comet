@@ -2,28 +2,25 @@ import { RouteWithErrorBoundary } from "@comet/admin";
 import * as React from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
-import { CurrentUserContext } from "../userPermissions/hooks/currentUser";
-import { isMasterMenuItemAnchor, MasterMenuData, MasterMenuItem } from "./MasterMenu";
+import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
+import { MasterMenuData, MasterMenuItem } from "./MasterMenu";
 
 export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RouteProps[] {
-    const context = React.useContext(CurrentUserContext);
-    const checkPermission = (item: MasterMenuItem): boolean => {
-        if (!item.requiredPermission) return true;
-        if (context === undefined)
-            throw new Error("MasterMenuRoutes: requiredPermission is set but CurrentUserContext not found. Make sure CurrentUserProvider exists.");
-        return context.isAllowed(context.currentUser, item.requiredPermission);
-    };
+    const isAllowed = useUserPermissionCheck();
+    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
-    const flat = (routes: RouteProps[], item: MasterMenuItem): RouteProps[] => {
-        if (isMasterMenuItemAnchor(item)) {
+    const flat = (routes: RouteProps[], item: MasterMenuItem & { icon?: React.ReactNode }): RouteProps[] => {
+        if (item.type === "externalLink") {
             return routes;
         }
-
+        if (item.type === "group") {
+            return routes.concat(item.items.reduce(flat, []));
+        }
         if (item.route && checkPermission(item)) {
             routes.push(item.route);
         }
-        if (item.submenu) {
-            routes.concat(item.submenu.reduce(flat, routes));
+        if (item.type === "collapsible" && !!item.items?.length) {
+            routes.concat((item.items as Array<MasterMenuItem & { icon?: React.ReactNode }>).reduce(flat, routes));
         }
         return routes;
     };

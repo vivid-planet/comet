@@ -1,8 +1,7 @@
 import { Alert, messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab } from "@comet/admin-icons";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, Stack, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -12,26 +11,7 @@ interface SaveConflictDialogProps {
     onDiscardChangesPressed: () => void;
 }
 
-export const useStyles = makeStyles((theme) => ({
-    iconContainer: {
-        marginRight: 10,
-    },
-    fillSpace: {
-        display: "flex",
-        flex: 1,
-    },
-    discardButtonRoot: {
-        backgroundColor: theme.palette.error.main,
-        color: theme.palette.error.contrastText,
-        "&:hover": {
-            backgroundColor: theme.palette.error.dark,
-        },
-    },
-}));
-
 function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: SaveConflictDialogProps): React.ReactElement {
-    const styles = useStyles();
-
     return (
         <Dialog open={open} onClose={onClosePressed} maxWidth="md">
             <DialogTitle>
@@ -62,24 +42,20 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                         <Typography variant="h4" fontWeight="bold">
                             <FormattedMessage id="comet.saveConflictDialog.whatCanIDoNow.heading" defaultMessage="What can I do now?" />
                         </Typography>
-                        <StyledList>
-                            <StyledListItem>
-                                <Typography>
-                                    <FormattedMessage
-                                        id="comet.saveConflictDialog.whatCanIDoNow.option2"
-                                        defaultMessage="View the other changes in a new tab: You must make your changes again in the new tab."
-                                    />
-                                </Typography>
-                            </StyledListItem>
-                            <StyledListItem>
-                                <Typography>
-                                    <FormattedMessage
-                                        id="comet.saveConflictDialog.whatCanIDoNow.option1"
-                                        defaultMessage="Discard your unsaved changes: All your changes will be lost."
-                                    />
-                                </Typography>
-                            </StyledListItem>
-                        </StyledList>
+                        <Typography variant="list">
+                            <Typography variant="listItem">
+                                <FormattedMessage
+                                    id="comet.saveConflictDialog.whatCanIDoNow.option2"
+                                    defaultMessage="View the other changes in a new tab: You must make your changes again in the new tab."
+                                />
+                            </Typography>
+                            <Typography variant="listItem">
+                                <FormattedMessage
+                                    id="comet.saveConflictDialog.whatCanIDoNow.option1"
+                                    defaultMessage="Discard your unsaved changes: All your changes will be lost."
+                                />
+                            </Typography>
+                        </Typography>
                     </Box>
 
                     <Box>
@@ -87,32 +63,26 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                             <FormattedMessage id="comet.saveConflictDialog.avoidConflicts.heading" defaultMessage="How can I avoid conflicts?" />
                         </Typography>
 
-                        <StyledList>
-                            <StyledListItem>
-                                <Typography>
-                                    <FormattedMessage
-                                        id="comet.saveConflictDialog.avoidConflicts.tip1"
-                                        defaultMessage="Avoid opening the same page in multiple tabs."
-                                    />
-                                </Typography>
-                            </StyledListItem>
-                            <StyledListItem>
-                                <Typography>
-                                    <FormattedMessage
-                                        id="comet.saveConflictDialog.avoidConflicts.tip3"
-                                        defaultMessage="Save your changes regularly. Don't leave a page open for a long time with unsaved changes."
-                                    />
-                                </Typography>
-                            </StyledListItem>
-                            <StyledListItem>
-                                <Typography>
-                                    <FormattedMessage
-                                        id="comet.saveConflictDialog.avoidConflicts.tip2"
-                                        defaultMessage="Avoid editing a page while another user is also editing it."
-                                    />
-                                </Typography>
-                            </StyledListItem>
-                        </StyledList>
+                        <Typography variant="list">
+                            <Typography variant="listItem">
+                                <FormattedMessage
+                                    id="comet.saveConflictDialog.avoidConflicts.tip1"
+                                    defaultMessage="Avoid opening the same page in multiple tabs."
+                                />
+                            </Typography>
+                            <Typography variant="listItem">
+                                <FormattedMessage
+                                    id="comet.saveConflictDialog.avoidConflicts.tip3"
+                                    defaultMessage="Save your changes regularly. Don't leave a page open for a long time with unsaved changes."
+                                />
+                            </Typography>
+                            <Typography variant="listItem">
+                                <FormattedMessage
+                                    id="comet.saveConflictDialog.avoidConflicts.tip2"
+                                    defaultMessage="Avoid editing a page while another user is also editing it."
+                                />
+                            </Typography>
+                        </Typography>
                     </Box>
                 </Stack>
             </DialogContent>
@@ -120,19 +90,18 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
                 <Button onClick={onClosePressed} startIcon={<Clear />} color="info">
                     <FormattedMessage {...messages.close} />
                 </Button>
-                <div className={styles.fillSpace} />
-                <Button
+                <DialogActionsSpacer />
+                <DiscardButton
                     startIcon={<Delete />}
                     onClick={() => {
                         onClosePressed();
                         onDiscardChangesPressed();
                     }}
                     variant="contained"
-                    classes={{ root: styles.discardButtonRoot }}
                     color="info"
                 >
                     <FormattedMessage id="comet.saveConflictDialog.actionButtons.discardChanges" defaultMessage="Discard your changes" />
-                </Button>
+                </DiscardButton>
                 <Button
                     startIcon={<OpenNewTab />}
                     onClick={() => {
@@ -152,14 +121,17 @@ function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: S
     );
 }
 
-const StyledList = styled(List)`
-    list-style-type: disc;
-    padding-inline-start: ${({ theme }) => theme.spacing(6)};
+const DialogActionsSpacer = styled("div")`
+    flex: 1;
 `;
 
-const StyledListItem = styled(ListItem)`
-    display: list-item;
-    padding-left: 0;
+const DiscardButton = styled(Button)`
+    background-color: ${({ theme }) => theme.palette.error.main};
+    color: ${({ theme }) => theme.palette.error.contrastText};
+
+    &:hover {
+        background-color: ${({ theme }) => theme.palette.error.dark};
+    }
 `;
 
 export { SaveConflictDialog };

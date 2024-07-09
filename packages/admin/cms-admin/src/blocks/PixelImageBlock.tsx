@@ -1,6 +1,6 @@
-import { gql } from "@apollo/client";
+import { gql, useApolloClient } from "@apollo/client";
 import { Field } from "@comet/admin";
-import { Crop, Delete, MoreVertical } from "@comet/admin-icons";
+import { Crop, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentPaper,
@@ -14,15 +14,16 @@ import {
 import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { FileField } from "..";
 import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
+import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
+import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
+import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { EditImageDialog } from "./image/EditImageDialog";
 import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
@@ -158,8 +159,10 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         const [open, setOpen] = React.useState(false);
         const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
         const context = useCmsBlockContext();
-        const classes = useStyles();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
+        const contentScope = useContentScope();
+        const apolloClient = useApolloClient();
+        const dependencyMap = useDependenciesConfig();
 
         // useSyncImageAttributes({ state, updateState });
 
@@ -184,7 +187,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                 {state.damFile?.image ? (
                     <>
                         <AdminComponentPaper disablePadding>
-                            <ButtonBase component="div" onClick={() => setOpen(true)} classes={{ root: classes.contentRoot }}>
+                            <ContentRoot component="div" onClick={() => setOpen(true)}>
                                 <Grid container alignItems="center" spacing={3}>
                                     <Grid item>{previewUrl && <PreviewImage src={previewUrl} width="70" height="70" />}</Grid>
                                     <Grid item xs>
@@ -206,7 +209,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                         </IconButton>
                                     </Grid>
                                 </Grid>
-                            </ButtonBase>
+                            </ContentRoot>
                             <Divider />
                             <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined, cropArea: undefined })}>
                                 <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
@@ -219,6 +222,22 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                 </ListItemIcon>
                                 <FormattedMessage id="comet.blocks.image.cropImage" defaultMessage="Crop image" />
                             </MenuItem>
+                            {dependencyMap["DamFile"] && state.damFile?.id && (
+                                <MenuItem
+                                    onClick={async () => {
+                                        // id is checked three lines above
+                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                        const path = await dependencyMap["DamFile"].resolvePath({ apolloClient, id: state.damFile!.id });
+                                        const url = contentScope.match.url + path;
+                                        window.open(url, "_blank");
+                                    }}
+                                >
+                                    <ListItemIcon>
+                                        <OpenNewTab />
+                                    </ListItemIcon>
+                                    <FormattedMessage id="comet.blocks.image.openInDam" defaultMessage="Open in DAM" />
+                                </MenuItem>
+                            )}
                         </Menu>
                         {open && (
                             <EditImageDialog
@@ -273,16 +292,11 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     },
 };
 
-const useStyles = makeStyles((theme) => ({
-    contentRoot: {
-        padding: theme.spacing(3),
-        width: "100%",
-        textAlign: "left",
-    },
-    emptyButtonRoot: {
-        padding: theme.spacing(4),
-    },
-}));
+const ContentRoot = styled(ButtonBase)`
+    padding: ${({ theme }) => theme.spacing(3)};
+    width: 100%;
+    text-align: left;
+` as typeof ButtonBase;
 
 const PreviewImage = styled("img")`
     object-fit: cover;

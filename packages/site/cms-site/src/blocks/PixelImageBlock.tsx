@@ -1,6 +1,8 @@
+"use client";
 // eslint-disable-next-line no-restricted-imports
 import NextImage, { ImageProps } from "next/image";
 import * as React from "react";
+import styled from "styled-components";
 
 import { PixelImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
@@ -8,22 +10,12 @@ import { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
-interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height"> {
-    aspectRatio?: string | "inherit";
-    layout: "fill" | "fixed" | "intrinsic" | "responsive";
-    // Workaround to prevent flicker on already loaded images.
-    // See https://github.com/vercel/next.js/issues/27539 for more information.
-    disableBlurPlaceholder?: boolean;
+interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
+    aspectRatio: string | "inherit";
 }
 
 export const PixelImageBlock = withPreview(
-    ({
-        aspectRatio = "16x9",
-        data: { damFile, cropArea, urlTemplate },
-        layout,
-        disableBlurPlaceholder = false,
-        ...nextImageProps
-    }: PixelImageBlockProps) => {
+    ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
         if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} />;
 
         // If we have a crop area set, DAM setting are overwritten, so we use that
@@ -35,18 +27,6 @@ export const PixelImageBlock = withPreview(
             usedAspectRatio = calculateInheritAspectRatio(damFile.image, usedCropArea);
         } else {
             usedAspectRatio = parseAspectRatio(aspectRatio);
-        }
-
-        if (layout === "fill") {
-            return (
-                <NextImage
-                    loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
-                    src={urlTemplate}
-                    layout="fill"
-                    alt={damFile.altText}
-                    {...nextImageProps}
-                />
-            );
         }
 
         let dimensions: ImageDimensions;
@@ -72,35 +52,26 @@ export const PixelImageBlock = withPreview(
             );
         }
 
-        if (disableBlurPlaceholder) {
-            return (
-                <NextImage
-                    loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
-                    src={urlTemplate}
-                    width={dimensions.width}
-                    height={dimensions.height}
-                    layout={layout}
-                    priority
-                    alt={damFile.altText}
-                    {...nextImageProps}
-                />
-            );
-        }
-
         const blurDataUrl = createDominantImageDataUrl(dimensions.width, dimensions.height, damFile.image.dominantColor);
-        return (
+
+        const nextImage = (
             <NextImage
                 loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
                 src={urlTemplate}
-                width={dimensions.width}
-                height={dimensions.height}
-                layout={layout}
+                fill
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
-                alt={damFile.altText}
+                alt={damFile.altText ?? ""}
                 {...nextImageProps}
             />
         );
+
+        // default behavior when fill is set to true: do not wrap in container -> an own container must be used
+        if (fill) {
+            return nextImage;
+        }
+
+        return <ImageContainer $aspectRatio={usedAspectRatio}>{nextImage}</ImageContainer>;
     },
     { label: "PixelImage" },
 );
@@ -116,3 +87,9 @@ function createDominantImageDataUrl(w: number, h: number, dominantColor = "#ffff
 
     return `data:image/svg+xml;base64,${toBase64(svg)}`;
 }
+
+const ImageContainer = styled.div<{ $aspectRatio: number }>`
+    position: relative;
+    width: 100%;
+    aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
+`;

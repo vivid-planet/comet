@@ -17,6 +17,60 @@
         ]
     },
     {
+        "name": "DamFileDownloadLink",
+        "fields": [
+            {
+                "name": "file",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "fileId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "DamImage",
         "fields": [
             {
@@ -181,6 +235,23 @@
         ]
     },
     {
+        "name": "EmailLink",
+        "fields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "ExternalLink",
         "fields": [
             {
@@ -236,6 +307,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
                             "name": "documentType",
                             "kind": "String",
                             "nullable": false
@@ -262,6 +338,11 @@
         "name": "Link",
         "fields": [
             {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "attachedBlocks",
                 "kind": "NestedObjectList",
                 "object": {
@@ -276,7 +357,9 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "internal": "InternalLink",
-                                "external": "ExternalLink"
+                                "external": "ExternalLink",
+                                "email": "EmailLink",
+                                "phone": "PhoneLink"
                             },
                             "nullable": false
                         }
@@ -304,7 +387,9 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "internal": "InternalLink",
-                                "external": "ExternalLink"
+                                "external": "ExternalLink",
+                                "email": "EmailLink",
+                                "phone": "PhoneLink"
                             },
                             "nullable": false
                         }
@@ -316,6 +401,11 @@
         "inputFields": [
             {
                 "name": "activeType",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "title",
                 "kind": "String",
                 "nullable": true
             }
@@ -347,6 +437,23 @@
                 "name": "visible",
                 "kind": "Boolean",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "PhoneLink",
+        "fields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -966,16 +1073,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "autoplay",
@@ -997,16 +1095,7 @@
             {
                 "name": "youtubeIdentifier",
                 "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
+                "nullable": true
             },
             {
                 "name": "autoplay",

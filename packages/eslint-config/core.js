@@ -24,6 +24,7 @@ module.exports = {
             rules: {
                 "@typescript-eslint/no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
                 "@typescript-eslint/no-inferrable-types": ["error", { ignoreProperties: true }],
+                "@typescript-eslint/prefer-enum-initializers": "error"
             },
         },
     ],

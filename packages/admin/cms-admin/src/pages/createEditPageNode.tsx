@@ -39,6 +39,7 @@ interface CreateEditPageNodeProps {
     additionalFormFields?: React.ReactNode;
     nodeFragment?: { name: string; fragment: DocumentNode };
     valuesToInput?: (values: EditPageNodeFinalFormValues) => EditPageNodeFinalFormValues;
+    disableHideInMenu?: boolean;
 }
 
 export interface EditPageNodeProps {
@@ -52,6 +53,7 @@ export function createEditPageNode({
     additionalFormFields,
     nodeFragment,
     valuesToInput,
+    disableHideInMenu = false,
 }: CreateEditPageNodeProps): (props: EditPageNodeProps) => JSX.Element {
     const editPageNodeQuery = gql`
         query EditPageNode($id: ID!) {
@@ -64,6 +66,7 @@ export function createEditPageNode({
                 hideInMenu
                 parentId
                 numberOfDescendants
+                visibility
                 document {
                     ... on DocumentInterface {
                         id
@@ -188,6 +191,8 @@ export function createEditPageNode({
             }
         };
 
+        const isActivePage = data?.page?.visibility === "Published";
+
         // Use `p-debounce` instead of `use-debounce`
         // because Final Form expects all validate calls to be resolved.
         // `p-debounce` resolves all calls, `use-debounce` doesn't
@@ -308,6 +313,7 @@ export function createEditPageNode({
                                                         fieldRenderProps.input.onChange(event.target.value);
                                                     }}
                                                     fullWidth
+                                                    disableContentTranslation
                                                 />
                                             );
                                         }}
@@ -381,7 +387,11 @@ export function createEditPageNode({
                                                                 </>
                                                             }
                                                         >
-                                                            <Field name="createAutomaticRedirectsOnSlugChange" type="checkbox" initialValue={true}>
+                                                            <Field
+                                                                name="createAutomaticRedirectsOnSlugChange"
+                                                                type="checkbox"
+                                                                initialValue={isActivePage}
+                                                            >
                                                                 {(props) => (
                                                                     <FormControlLabel
                                                                         label={
@@ -445,25 +455,27 @@ export function createEditPageNode({
                                         </FinalFormSelect>
                                     )}
                                 </Field>
-                                <Field
-                                    label={intl.formatMessage({
-                                        id: "comet.pages.pages.page.menuVisibility",
-                                        defaultMessage: "Menu Visibility",
-                                    })}
-                                    name="hideInMenu"
-                                    type="checkbox"
-                                    variant="horizontal"
-                                >
-                                    {(props) => (
-                                        <FormControlLabel
-                                            label={intl.formatMessage({
-                                                id: "comet.pages.pages.page.hideInMenu",
-                                                defaultMessage: "Hide in Menu",
-                                            })}
-                                            control={<FinalFormCheckbox {...props} />}
-                                        />
-                                    )}
-                                </Field>
+                                {!disableHideInMenu && (
+                                    <Field
+                                        label={intl.formatMessage({
+                                            id: "comet.pages.pages.page.menuVisibility",
+                                            defaultMessage: "Menu Visibility",
+                                        })}
+                                        name="hideInMenu"
+                                        type="checkbox"
+                                        variant="horizontal"
+                                    >
+                                        {(props) => (
+                                            <FormControlLabel
+                                                label={intl.formatMessage({
+                                                    id: "comet.pages.pages.page.hideInMenu",
+                                                    defaultMessage: "Hide in Menu",
+                                                })}
+                                                control={<FinalFormCheckbox {...props} />}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
 
                                 {additionalFormFields}
                             </>

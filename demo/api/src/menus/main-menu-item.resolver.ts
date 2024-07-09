@@ -17,7 +17,6 @@ import { MainMenuItem } from "./entities/main-menu-item.entity";
 
 @Resolver(() => MainMenuItem)
 @RequiredPermission(["pageTree"])
-@AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
 export class MainMenuItemResolver {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
@@ -25,6 +24,7 @@ export class MainMenuItemResolver {
     ) {}
 
     @Query(() => MainMenuItem)
+    @AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
     async mainMenuItem(
         @Args("pageTreeNodeId", { type: () => ID }) pageTreeNodeId: string,
         @RequestContext() { includeInvisiblePages }: RequestContextInterface,
@@ -35,7 +35,7 @@ export class MainMenuItemResolver {
             })
             .getNodeOrFail(pageTreeNodeId);
 
-        const item = await this.mainMenuItemRepository.findOne({ node });
+        const item = await this.mainMenuItemRepository.findOne({ node: node.id });
 
         return (
             item ??
@@ -47,6 +47,7 @@ export class MainMenuItemResolver {
     }
 
     @Mutation(() => MainMenuItem)
+    @AffectedEntity(MainMenuItem, { pageTreeNodeIdArg: "pageTreeNodeId" })
     async updateMainMenuItem(
         @Args("pageTreeNodeId", { type: () => ID }) pageTreeNodeId: string,
         @Args("input", { type: () => MainMenuItemInput }) input: MainMenuItemInput,
@@ -54,7 +55,7 @@ export class MainMenuItemResolver {
     ): Promise<MainMenuItem> {
         const node = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(pageTreeNodeId);
 
-        const existingItem = await this.mainMenuItemRepository.findOne({ node });
+        const existingItem = await this.mainMenuItemRepository.findOne({ node: node.id });
 
         if (existingItem) {
             if (lastUpdatedAt) {
@@ -72,6 +73,6 @@ export class MainMenuItemResolver {
             );
         }
 
-        return this.mainMenuItemRepository.findOneOrFail({ node });
+        return this.mainMenuItemRepository.findOneOrFail({ node: node.id });
     }
 }

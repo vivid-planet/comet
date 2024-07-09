@@ -18,7 +18,7 @@ const defaultContentScopeContext: ContentScopeContext = {
     setRedirectPathAfterChange: () => {
         //
     },
-    values: {},
+    values: [],
 };
 
 type NonNull<T> = T extends null ? never : T;
@@ -38,9 +38,9 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     values: ContentScopeValues<S>;
 };
 
-export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = {
-    [P in keyof S]: Array<{ label?: string; value: NonNull<S[P]> }>;
-};
+export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInterface> = Array<{
+    [P in keyof S]: { label?: string; value: NonNull<S[P]> };
+}>;
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html
 // ... and get rid of "as" type-assertions
@@ -67,10 +67,19 @@ function formatScopeToRouterMatchParams<S extends ContentScopeInterface = Conten
 }
 
 function defaultCreatePath(values: ContentScopeValues) {
-    return Object.keys(values).reduce((a, key) => {
-        const plainValues = values[key].map((c) => c.value);
+    const dimensionValues: { [dimension: string]: Set<string> } = {};
+    values.forEach((value) => {
+        Object.keys(value).forEach((dimension) => {
+            if (!dimensionValues[dimension]) {
+                dimensionValues[dimension] = new Set();
+            }
+            dimensionValues[dimension].add(value[dimension].value);
+        });
+    });
+    return Object.keys(dimensionValues).reduce((path, dimension) => {
+        const plainValues = Array.from(dimensionValues[dimension]);
         const whiteListedValuesString = plainValues ? `(${plainValues.join("|")})` : "";
-        return `${a}/:${key}${whiteListedValuesString}`;
+        return `${path}/:${dimension}${whiteListedValuesString}`;
     }, "");
 }
 

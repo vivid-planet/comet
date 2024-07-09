@@ -35,7 +35,8 @@ import FolderDataGrid, {
 } from "./DataGrid/FolderDataGrid";
 import { RenderDamLabelOptions } from "./DataGrid/label/DamItemLabelColumn";
 import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
-import { DamSelectionProvider } from "./DataGrid/selection/DamSelectionContext";
+import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
+import { SelectedItemsChip } from "./DataGrid/selection/SelectedItemsChip";
 import EditFile from "./FileForm/EditFile";
 
 interface FolderProps extends DamConfig {
@@ -55,6 +56,8 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const [, , editDialogApi, selectionApi] = useEditDialog();
+    const { selectionMap } = useDamSelectionApi();
+    const selectionSize = selectionMap.size;
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
@@ -76,8 +79,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <EditDialogApiContext.Provider value={editDialogApi}>
-                        {props.contentScopeIndicator}
-                        <Toolbar>
+                        <Toolbar scopeIndicator={props.contentScopeIndicator}>
                             <ToolbarItem>
                                 <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                             </ToolbarItem>
@@ -88,6 +90,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                                     button={
                                         <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }}>
                                             <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
+                                            {selectionSize > 0 && <SelectedItemsChip>{selectionSize}</SelectedItemsChip>}
                                         </Button>
                                     }
                                     anchorOrigin={{

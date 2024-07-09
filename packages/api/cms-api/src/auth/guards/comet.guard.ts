@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, HttpException, Injectable, mixin } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { GqlExecutionContext } from "@nestjs/graphql";
+import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { AuthGuard, IAuthGuard, Type } from "@nestjs/passport";
 import { Request } from "express";
 import { isObservable, lastValueFrom } from "rxjs";
@@ -19,30 +19,40 @@ export function createCometAuthGuard(type?: string | string[]): Type<IAuthGuard>
         }
 
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-        handleRequest<CurrentUserInterface>(err: unknown, user: any): CurrentUserInterface {
+        handleRequest<CurrentUser>(err: unknown, user: any): CurrentUser {
             if (err) {
                 throw err;
             }
             if (user) {
                 return user;
             }
-            throw new HttpException("UserNotAuthenticated", 200);
+            throw new HttpException("UNAUTHENTICATED", 401);
         }
 
         async canActivate(context: ExecutionContext): Promise<boolean> {
-            if (this.reflector.getAllAndOverride("disableGlobalGuard", [context.getHandler(), context.getClass()])) {
+            const disableCometGuard = this.reflector.getAllAndOverride("disableCometGuards", [context.getHandler(), context.getClass()]);
+            const hasIncludeInvisibleContentHeader = !!this.getRequest(context).headers["x-include-invisible-content"];
+            if (disableCometGuard && !hasIncludeInvisibleContentHeader) {
                 return true;
             }
 
-            const isPublicApi = this.reflector.getAllAndOverride("publicApi", [context.getHandler(), context.getClass()]);
-            const includeInvisibleContent = !!this.getRequest(context).headers["x-include-invisible-content"];
-
-            if (isPublicApi && !includeInvisibleContent) {
+            if (this.isResolvingGraphQLField(context)) {
                 return true;
             }
 
             const canActivate = await super.canActivate(context);
             return isObservable(canActivate) ? lastValueFrom(canActivate) : canActivate;
+        }
+
+        // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
+        private isResolvingGraphQLField(context: ExecutionContext): boolean {
+            if (context.getType<GqlContextType>() === "graphql") {
+                const gqlContext = GqlExecutionContext.create(context);
+                const info = gqlContext.getInfo();
+                const parentType = info.parentType.name;
+                return parentType !== "Query" && parentType !== "Mutation";
+            }
+            return false;
         }
     }
     return mixin(CometAuthGuard);

@@ -1,5 +1,234 @@
 # @comet/eslint-config
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   7a473ab8d: Prevent `@mui/icons-material` icon imports
+
+    Icons used in Comet DXP applications should match the Comet CI.
+    Use icons from `@comet/admin-icons` instead.
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   45585f4cc: Enforce PascalCase for enums
+
+    Changing the casing of an existing enum can be problematic, e.g., if the enum values are persisted in the database.
+    In such cases, the rule can be disabled like so
+
+    ```diff
+    + /* eslint-disable @typescript-eslint/naming-convention */
+      export enum ExampleEnum {
+          attr1 = "attr1",
+      }
+    + /* eslint-enable @typescript-eslint/naming-convention */
+    ```
+
+-   45585f4cc: Add the rule `@typescript-eslint/prefer-enum-initializers` to require enum initializers
+
+    ```ts
+    // ✅
+    enum ExampleEnum {
+        One = "One",
+        Two = "Two",
+    }
+    ```
+
+    ```ts
+    // ❌
+    enum ExampleEnum {
+        One,
+        Two,
+    }
+    ```
+
+-   af37ac9d1: nextjs: Enable `react/jsx-curly-brace-presence` rule
+
+### Minor Changes
+
+-   769bd72f0: Uses the Next.JS Preview mode for the site preview
+
+    The preview is entered by navigating to an API-Route in the site, which has to be executed in a secured environment.
+    In the API-Routes the current scope is checked (and possibly stored), then the client is redirected to the Preview.
+
+    // TODO Move the following introduction to the migration guide before releasing
+
+    Requires following changes to site:
+
+    -   Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
+    -   Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
+    -   Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
+    -   Remove `createGetUniversalProps`
+        -   Just implement `getStaticProps`/`getServerSideProps` (Preview Mode will SSR automatically)
+        -   Get `previewData` from `context` and use it to configure the GraphQL Client
+    -   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
+    -   Provide a protected environment for the site
+        -   Make sure that a Authorization-Header is present in this environment
+        -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
+        -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
+        -   Use the `path`-part of the return value to redirect to the preview
+
+    Requires following changes to admin
+
+    -   The `SitesConfig` must provide a `sitePreviewApiUrl`
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   6cb850567: Fix Prettier peer dependency
+
+    The dependency range was incorrectly set to `>= 2`. Change to `^2.0.0` since Prettier v3 isn't supported at the moment.
+
+    -   @comet/eslint-plugin@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.15.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.14.1
+
+## 6.14.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.14.0
+
+## 6.13.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.13.0
+
+## 6.12.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.12.0
+
+## 6.11.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.11.0
+
+## 6.10.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.10.0
+
+## 6.9.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.9.0
+
+## 6.8.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.6.1
+
+## 6.6.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.6.0
+
+## 6.5.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.5.0
+
+## 6.4.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.2.1
+
+## 6.2.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.1.0
+
+## 6.0.0
+
+### Major Changes
+
+-   72f98c7a: Enable `import/newline-after-import`
+-   47eb81c6: Enable no-other-module-relative-import rule by default
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

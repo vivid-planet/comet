@@ -22,12 +22,16 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
+import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../../contentScope/Provider";
+import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
+import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
+import { useDamScope } from "../config/useDamScope";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
-import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
+import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
@@ -106,8 +110,10 @@ interface EditFileInnerProps {
 }
 
 const EditFileInner = ({ file, id }: EditFileInnerProps) => {
+    const dependencyMap = useDependenciesConfig();
     const intl = useIntl();
     const damConfig = useDamConfig();
+    const scope = useDamScope();
     const apolloClient = useApolloClient();
 
     const onSubmit = React.useCallback(
@@ -144,11 +150,12 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                             cropArea,
                         },
                         license: values.license?.type === "NO_LICENSE" ? null : { ...values.license, type: values.license?.type },
+                        folderId: file.folder?.id ?? null,
                     },
                 },
             });
         },
-        [apolloClient, id],
+        [apolloClient, file.folder?.id, id],
     );
 
     const initialBlockListWidth = 100 / 3;
@@ -181,7 +188,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
         >
             {() => (
                 <>
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator scope={scope} />}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
                         {damConfig.enableLicenseFeature &&
@@ -211,7 +218,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                     label={intl.formatMessage({ id: "comet.dam.file.settings", defaultMessage: "Settings" })}
                                     path=""
                                 >
-                                    <FileSettingsFields isImage={!!file.image} folderId={file.folder?.id || null} />
+                                    <FileSettingsFields file={file} />
                                 </RouterTab>
                                 {file.image !== null && (
                                     <RouterTab
@@ -237,14 +244,20 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {/*<RouterTab*/}
-                                {/*    key="dependencies"*/}
-                                {/*    label={intl.formatMessage({ id: "comet.dam.file.dependencies", defaultMessage: "Dependencies" })}*/}
-                                {/*    path="/dependencies"*/}
-                                {/*>*/}
-                                {/*    /!*@TODO: Add Dependencies*!/*/}
-                                {/*    <div />*/}
-                                {/*</RouterTab>*/}
+                                {Object.keys(dependencyMap).length > 0 && (
+                                    <RouterTab
+                                        key="dependents"
+                                        label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
+                                        path="/dependents"
+                                    >
+                                        <DependencyList
+                                            query={damFileDependentsQuery}
+                                            variables={{
+                                                id: id,
+                                            }}
+                                        />
+                                    </RouterTab>
+                                )}
                             </RouterTabs>
                         </ReactSplit>
                     </MainContent>

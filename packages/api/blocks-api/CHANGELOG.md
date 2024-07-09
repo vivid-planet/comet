@@ -1,5 +1,244 @@
 # @comet/blocks-api
 
+## 7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+### Minor Changes
+
+-   87ef5fa36: YouTubeVideoBlock: Add validation for identifier
+
+    Must be either a valid YouTube URL or video identifier.
+
+## 7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   e15927594: Support "real" dependency injection in `BlockData#transformToPlain`
+
+    Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
+    This is now replaced by a technique that allows actual dependency injection.
+
+    **Example**
+
+    ```ts
+    class NewsLinkBlockData extends BlockData {
+        @BlockField({ nullable: true })
+        id?: string;
+
+        transformToPlain() {
+            // Return service that does the transformation
+            return NewsLinkBlockTransformerService;
+        }
+    }
+
+    type TransformResponse = {
+        news?: {
+            id: string;
+            slug: string;
+        };
+    };
+
+    @Injectable()
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
+        // Use dependency injection here
+        constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+
+        async transformToPlain(block: NewsLinkBlockData, context: BlockContext) {
+            if (!block.id) {
+                return {};
+            }
+
+            const news = await this.repository.findOneOrFail(block.id);
+
+            return {
+                news: {
+                    id: news.id,
+                    slug: news.slug,
+                },
+            };
+        }
+    }
+    ```
+
+    Adding this new technique results in a few breaking changes:
+
+    -   Remove dynamic registration of `BlocksModule`
+    -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+    -   Remove `dependencies` from `BlockData#transformToPlain`
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+
+-   ebf597120: Remove unused/unnecessary peer dependencies
+
+    Some dependencies were incorrectly marked as peer dependencies.
+    If you don't use them in your application, you may remove the following dependencies:
+
+    -   Admin: `axios`
+    -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+
+## 6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   c7f5637bd: Fix validation of `YouTubeVideoBlock`
+
+    Previously, the validation of the `YouTubeVideoBlock` differed between admin and API.
+    The admin allowed YouTube URLs and YouTube video IDs.
+    The API only allowed URLs but blocked video IDs.
+
+    Now, the API validation also accepts URLs and video IDs.
+
+## 6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   87ef5fa36: YouTubeVideoBlock: Add validation for identifier
+
+    Must be either a valid YouTube URL or video identifier.
+
+## 6.13.0
+
+## 6.12.0
+
+## 6.11.0
+
+### Patch Changes
+
+-   93a84b651: Fix type of `youtubeIdentifier` in `YouTubeVideoBlock`
+
+    Previously, it was incorrectly typed as required. Now it's optional.
+
+## 6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   8be9565d1: typesafeMigrationPipe: Add support for 20 migrations
+
+## 6.8.0
+
+### Minor Changes
+
+-   90c6f192e: Deprecate `SpaceBlock`
+
+    It will be replaced by the `createSpaceBlock` factory since it had no real use case.
+
+-   90c6f192e: Add `createSpaceBlock` factory
+
+    Allows selecting a spacing value out of a list of provided options.
+
+    **Example**
+
+    API
+
+    ```tsx
+    enum Spacing {
+        d150 = "d150",
+        d200 = "d200",
+    }
+
+    export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");
+    ```
+
+    Admin
+
+    ```tsx
+    const options = [
+        { value: "d150", label: "Dynamic 150" },
+        { value: "d200", label: "Dynamic 200" },
+    ];
+
+    export const SpaceBlock = createSpaceBlock<string>({ defaultValue: options[0].value, options });
+    ```
+
+### Patch Changes
+
+-   be8664c75: Fix `RichTextBlock` draft content validation
+
+    Extend validation to validate inline links in draft content.
+
+## 6.7.0
+
+## 6.6.2
+
+## 6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   e880929d8: Improve typing of `@RootBlockEntity()` decorator
+
+    The target entity can now be passed as generic to have the correct type in `isVisible`:
+
+    ```ts
+    @RootBlockEntity<Product>({
+        isVisible: (product) => product.visible,
+    })
+    export class Product extends BaseEntity<Product, "id"> {}
+    ```
+
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+## 6.4.0
+
+### Patch Changes
+
+-   0efae68ff: Prevent XSS attacks in `@IsLinkTarget()` validator
+
+## 6.3.0
+
+## 6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   75865caa: Deprecate `isHref` validator, `IsHref` decorator and `IsHrefConstraint` class.
+
+    New versions `isLinkTarget`, `IsLinkTarget` and `IsLinkTargetConstraint` are added as replacement.
+
+## 6.1.0
+
+## 6.0.0
+
 ## 5.6.0
 
 ### Minor Changes
@@ -33,6 +272,7 @@
 
     -   Install `@comet/cli` as a dev dependency
     -   Replace the scripts in the package.json of your admin:
+
         ```json
             "generate-block-types": "comet generate-block-types --inputs",
             "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"npm run generate-block-types\""

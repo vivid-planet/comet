@@ -1,25 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    Field,
-    FinalForm,
-    FinalFormInput,
-    FinalFormSaveButton,
-    FinalFormSubmitEvent,
-    MainContent,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    ToolbarTitleItem,
-    useFormApiRef,
-    useStackApi,
-    useStackSwitchApi,
-} from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
-import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, IconButton } from "@mui/material";
+import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import { resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -49,7 +32,6 @@ interface FormProps {
 type FormState = GQLProductCategoryFormFragment;
 
 function ProductCategoryForm({ id }: FormProps): React.ReactElement {
-    const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormState>();
@@ -62,7 +44,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormState> = data?.productCategory
         ? {
-              ...filter<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
+              ...filterByFragment<GQLProductCategoryFormFragment>(productCategoryFormFragment, data.productCategory),
           }
         : {};
 
@@ -87,18 +69,15 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
 
     const handleSubmit = async (formState: FormState, form: FormApi<FormState>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
-        const output = {
-            ...formState,
-            products: [], // TODO don't reset on update
-        };
+        const output = { ...formState };
         if (mode === "edit") {
             if (!id) throw new Error();
             await client.mutate<GQLProductCategoryFormUpdateProductCategoryMutation, GQLProductCategoryFormUpdateProductCategoryMutationVariables>({
                 mutation: updateProductCategoryMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.productCategory.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<
+            const { data: mutationResponse } = await client.mutate<
                 GQLProductCategoryFormCreateProductCategoryMutation,
                 GQLProductCategoryFormCreateProductCategoryMutationVariables
             >({
@@ -106,7 +85,7 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductCategory.id;
+                const id = mutationResponse?.createProductCategory.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -127,47 +106,13 @@ function ProductCategoryForm({ id }: FormProps): React.ReactElement {
     return (
         <FinalForm<FormState> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} subscription={{}}>
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
-                    <Toolbar>
-                        <ToolbarItem>
-                            <IconButton onClick={stackApi?.goBack}>
-                                <ArrowLeft />
-                            </IconButton>
-                        </ToolbarItem>
-                        <ToolbarTitleItem>
-                            <Field name="title">
-                                {({ input }) =>
-                                    input.value ? (
-                                        input.value
-                                    ) : (
-                                        <FormattedMessage id="products.productCategoryDetail" defaultMessage="Product Category Detail" />
-                                    )
-                                }
-                            </Field>
-                        </ToolbarTitleItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
-                        </ToolbarActions>
-                    </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

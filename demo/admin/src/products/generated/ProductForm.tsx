@@ -4,6 +4,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    filterByFragment,
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
@@ -12,6 +13,7 @@ import {
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    TextField,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -21,12 +23,12 @@ import {
     useStackApi,
     useStackSwitchApi,
 } from "@comet/admin";
+import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { ContentScopeIndicator, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -71,7 +73,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.product
                 ? {
-                      ...filter<GQLProductFormFragment>(productFormFragment, data.product),
+                      ...filterByFragment<GQLProductFormFragment>(productFormFragment, data.product),
                       price: String(data.product.price),
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -110,15 +112,15 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             }
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
                 mutation: updateProductMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.product?.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+            const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProduct.id;
+                const id = mutationResponse?.createProduct.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage("edit", id);
@@ -137,9 +139,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     return (
         <FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues}>
             {({ values }) => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
                         <ToolbarItem>
                             <IconButton onClick={stackApi?.goBack}>
                                 <ArrowLeft />
@@ -154,25 +156,27 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
-                        <Field
-                            required
-                            fullWidth
-                            name="slug"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
-                        <Field
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
+                        <Field fullWidth name="status" label={<FormattedMessage id="product.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Published">
+                                        <FormattedMessage id="product.status.published" defaultMessage="Published" />
+                                    </MenuItem>
+                                    <MenuItem value="Unpublished">
+                                        <FormattedMessage id="product.status.unpublished" defaultMessage="Unpublished" />
+                                    </MenuItem>
+                                    <MenuItem value="Deleted">
+                                        <FormattedMessage id="product.status.deleted" defaultMessage="Deleted" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
+                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+                        <TextField
                             required
                             fullWidth
                             name="description"
-                            component={FinalFormInput}
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
@@ -205,11 +209,16 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 />
                             )}
                         </Field>
+                        <DateField
+                            fullWidth
+                            name="availableSince"
+                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                        />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

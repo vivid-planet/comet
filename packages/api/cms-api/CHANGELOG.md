@@ -1,5 +1,740 @@
 # @comet/cms-api
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   caefa1c5d: Rename `DateFilter` to `DateTimeFilter`
+
+    This leaves room for a future DateFilter that only filters by date, not time.
+
+    **Upgrading**
+
+    1. Change import
+
+    ```diff
+    - import { DateFilter } from "@comet/cms-api";
+    + import { DateTimeFilter } from "@comet/cms-api";
+    ```
+
+    2. Re-run API Generator.
+
+-   fe22985d6: API Generator: Replace graphql-type-json with graphql-scalars for JSON columns
+
+    **Upgrading**
+
+    1. Install graphql-scalars: `npm install graphql-scalars`
+    2. Uninstall graphql-type-json: `npm install graphql-type-json`
+    3. Update imports:
+
+        ```diff
+        - import { GraphQLJSONObject } from "graphql-type-json";
+        + import { GraphQLJSONObject } from "graphql-scalars";
+        ```
+
+### Minor Changes
+
+-   5e8713488: API Generator: Add support for filtering one-to-many relations by id
+
+### Patch Changes
+
+-   9c8a9a190: API Generator: Add missing type for integer fields in input type
+    -   @comet/blocks-api@7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+### Minor Changes
+
+-   2f0675b83: API Generator: Add support for filtering many-to-many-relations by id
+
+### Patch Changes
+
+-   Updated dependencies [87ef5fa36]
+    -   @comet/blocks-api@7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+### Major Changes
+
+-   c3940df58: Replace `additionalMimeTypes` and `overrideAcceptedMimeTypes` in `DamModule#damConfig` with `acceptedMimeTypes`
+
+    You can now add mime types like this:
+
+    ```ts
+    DamModule.register({
+        damConfig: {
+            acceptedMimeTypes: [...damDefaultAcceptedMimetypes, "something-else"],
+        },
+    });
+    ```
+
+    And remove them like this:
+
+    ```ts
+    DamModule.register({
+        damConfig: {
+            acceptedMimeTypes: damDefaultAcceptedMimetypes.filter((mimeType) => mimeType !== "application/zip"),
+        },
+    });
+    ```
+
+    Don't forget to also remove/add the mime types in the admin's `DamConfigProvider`
+
+-   c3940df58: Rename `defaultDamAcceptedMimetypes` to `damDefaultAcceptedMimetypes`
+
+### Minor Changes
+
+-   f38ecc186: API Generator: Add support for enum array filter and sort
+
+### Patch Changes
+
+-   10424c744: Fix `SvgImageBlock` in site by always loading `fileUrl`
+
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   9a1b01669: Remove CDN config from DAM
+
+    It was a bad idea to introduce this in the first place, because `@comet/cms-api` should not be opinionated about how the CDN works.
+
+    Modern applications require all traffic to be routed through a CDN. Cloudflare offers a tunnel, which made the origin-check obsolete, so we introduced a flag to disable the origin check.
+
+    Also changes the behavior of the `FilesService::createFileUrl()`-method which now expects an options-object as second argument.
+
+    ## How to migrate (only required if CDN is used):
+
+    Remove the following env vars from the API
+
+    ```
+    DAM_CDN_ENABLED=
+    DAM_CDN_DOMAIN=
+    DAM_CDN_ORIGIN_HEADER=
+    DAM_DISABLE_CDN_ORIGIN_HEADER_CHECK=false
+    ```
+
+    If you want to enable the origin check:
+
+    1. Set the following env vars for the API
+
+    ```
+    CDN_ORIGIN_CHECK_SECRET="Use value from DAM_CDN_ORIGIN_HEADER to avoid downtime"
+    ```
+
+    _environment-variables.ts_
+
+    ```
+    @IsOptional()
+    @IsString()
+    CDN_ORIGIN_CHECK_SECRET: string;
+    ```
+
+    _config.ts_
+
+    ```
+    cdn: {
+        originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
+    },
+    ```
+
+    2. Add CdnGuard
+
+    ```
+    // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
+    if (config.cdn.originCheckSecret) {
+        app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));
+    }
+    ```
+
+    3. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
+
+-   f74544524: Change language field in User and CurrentUser to locale
+-   0588e212c: Remove `locale`-field from `User`-object
+
+    -   Providing the locale is not mandatory for ID-Tokens
+    -   Does not have a real use case (better rely on the Accept-Language header of the browser to determine the language of the current user)
+
+-   46b86ba5f: `FilesService#createFileDownloadUrl` now expects an options object as second parameter
+
+    ```diff
+    - this.filesService.createFileDownloadUrl(file, previewDamUrls)
+    + this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls })
+    ```
+
+-   0e6debb06: CRUD Generator: Remove `lastUpdatedAt` argument from update mutations
+-   ebf597120: Make `@nestjs/platform-express` a peer dependency
+
+    Make sure that `@nestjs/platform-express` is installed in the application.
+
+-   e15927594: Support "real" dependency injection in `BlockData#transformToPlain`
+
+    Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
+    This is now replaced by a technique that allows actual dependency injection.
+
+    **Example**
+
+    ```ts
+    class NewsLinkBlockData extends BlockData {
+        @BlockField({ nullable: true })
+        id?: string;
+
+        transformToPlain() {
+            // Return service that does the transformation
+            return NewsLinkBlockTransformerService;
+        }
+    }
+
+    type TransformResponse = {
+        news?: {
+            id: string;
+            slug: string;
+        };
+    };
+
+    @Injectable()
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
+        // Use dependency injection here
+        constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+
+        async transformToPlain(block: NewsLinkBlockData, context: BlockContext) {
+            if (!block.id) {
+                return {};
+            }
+
+            const news = await this.repository.findOneOrFail(block.id);
+
+            return {
+                news: {
+                    id: news.id,
+                    slug: news.slug,
+                },
+            };
+        }
+    }
+    ```
+
+    Adding this new technique results in a few breaking changes:
+
+    -   Remove dynamic registration of `BlocksModule`
+    -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+    -   Remove `dependencies` from `BlockData#transformToPlain`
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+
+-   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
+
+    -   Add foreign id as argument to create mutation
+    -   Add foreign id as argument to list query
+
+-   28322b422: Refactor auth-decorators
+
+    -   Remove `@PublicApi()`-decorator
+    -   Rename `@DisableGlobalGuard()`-decorator to `@DisableCometGuards()`
+
+    The `@DisableCometGuards()`-decorator will only disable the AuthGuard when no `x-include-invisible-content`-header is set.
+
+-   ebf597120: Remove unused/unnecessary peer dependencies
+
+    Some dependencies were incorrectly marked as peer dependencies.
+    If you don't use them in your application, you may remove the following dependencies:
+
+    -   Admin: `axios`
+    -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+
+-   2497a062f: API Generator: Remove support for `visible` boolean, use `status` enum instead.
+
+    Recommended enum values: Published/Unpublished or Visible/Invisible or Active/Deleted or Active/Archived
+
+    Remove support for update visibility mutation, use existing generic update instead
+
+-   769bd72f0: Uses the Next.JS Preview mode for the site preview
+
+    The preview is entered by navigating to an API-Route in the site, which has to be executed in a secured environment.
+    In the API-Routes the current scope is checked (and possibly stored), then the client is redirected to the Preview.
+
+    // TODO Move the following introduction to the migration guide before releasing
+
+    Requires following changes to site:
+
+    -   Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
+    -   Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
+    -   Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
+    -   Remove `createGetUniversalProps`
+        -   Just implement `getStaticProps`/`getServerSideProps` (Preview Mode will SSR automatically)
+        -   Get `previewData` from `context` and use it to configure the GraphQL Client
+    -   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
+    -   Provide a protected environment for the site
+        -   Make sure that a Authorization-Header is present in this environment
+        -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
+        -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
+        -   Use the `path`-part of the return value to redirect to the preview
+
+    Requires following changes to admin
+
+    -   The `SitesConfig` must provide a `sitePreviewApiUrl`
+
+### Minor Changes
+
+-   f1d0f023d: API Generator: Add `list` option to `@CrudGenerator()` to allow disabling the list query
+
+    Related DTO classes will still be generated as they might be useful for application code.
+
+-   36cdd70f1: InternalLinkBlock: add scope to targetPage in output
+
+    This allows for example using the language from scope as url prefix in a multi-language site
+
+-   1d2f54bee: Require `strategyName` in `createStaticCredentialsBasicStrategy`
+
+    The `strategyName` is then used as SystemUser which allows to distinguish between different system users (e.g. activate logging)
+
+### Patch Changes
+
+-   Updated dependencies [e15927594]
+-   Updated dependencies [ebf597120]
+    -   @comet/blocks-api@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/blocks-api@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   9b29afd87: Add missing `@RequiredPermission` to `createZip` route
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [c7f5637bd]
+    -   @comet/blocks-api@6.15.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/blocks-api@6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   dddb03d1b: Add capability to generate alt texts and titles for images in DAM
+
+    You can find instructions for adding this feature to your project [in the docs](https://docs.comet-dxp.com/docs/content-generation/).
+
+-   73dfb61c9: Add `IsPhoneNumber` and `isPhoneNumber` validators to validate phone numbers
+
+### Patch Changes
+
+-   b7dbd7a18: Export `DisablePermissionCheck` constant to enable usage in application code
+-   Updated dependencies [73dfb61c9]
+-   Updated dependencies [87ef5fa36]
+    -   @comet/blocks-api@6.14.0
+
+## 6.13.0
+
+### Minor Changes
+
+-   2a5e00bfb: API Generator: Add `list` option to `@CrudGenerator()` to allow disabling the list query
+
+    Related DTO classes will still be generated as they might be useful for application code.
+
+-   dcf3f70f4: Add `overrideAcceptedMimeTypes` configuration to DAM
+
+    If set, only the mimetypes specified in `overrideAcceptedMimeTypes` will be accepted.
+
+    You must configure `overrideAcceptedMimeTypes` in the API and the admin interface:
+
+    API:
+
+    ```diff
+    // app.module.ts
+
+    DamModule.register({
+        damConfig: {
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+            // ...
+        },
+        // ...
+    }),
+    ```
+
+    Admin:
+
+    ```diff
+    // App.tsx
+
+    <DamConfigProvider
+        value={{
+            // ...
+    +       overrideAcceptedMimeTypes: ["image/png"],
+        }}
+    >
+    ```
+
+-   07a7291fe: Adjust `searchToMikroOrmQuery` function to reduce the amount of irrelevant results
+
+    This is done by using a combination of AND- and OR-queries. For example, a search of `red shirt` won't give all products containing `red` OR `shirt` but rather returns all products that have the words `red` AND `shirt` in some column. The words don't have to be in the same column.
+
+### Patch Changes
+
+-   5bbb2ee76: API Generator: Don't add `skipScopeCheck` when the entity has a `@ScopedEntity()` decorator
+-   ebdd108f0: API Generator: Fix imports in generated code for more than one level deep relations
+-   b925f940f: API Generator: Support relation with primary key type `int` (in addition to `integer`)
+    -   @comet/blocks-api@6.13.0
+
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+-   0597b1e0a: Add `DisablePermissionCheck` constant for use in `@RequiredPermission` decorator
+
+    You can disable authorization for a resolver or operation by adding the decorator `@RequiredPermission(DisablePermissionCheck)`
+
+### Patch Changes
+
+-   67176820c: API CrudSingleGenerator: Run `transformToBlockData()` for block fields on create
+-   b158e6a2c: ChangesCheckerConsole: Start exactly matching job or all partially matching jobs
+
+    Previously, the first job with a partially matching content scope was started.
+    Doing so could lead to problems when multiple jobs with overlapping content scopes exist.
+    For instance, jobs with the scopes `{ domain: "main", language: "de" }` and `{ domain: "main", language: "en" }` both partially match a change in `{ domain: "main", language: "de" }`.
+    To fix this, we either start a single job if the content scope matches exactly or start all jobs with partially matching content scopes.
+
+    -   @comet/blocks-api@6.12.0
+
+## 6.11.0
+
+### Minor Changes
+
+-   0db10a5f8: Add a console script to import redirects from a csv file
+
+    You can use the script like this: `npm run console import-redirects file-to-import.csv`
+
+    The CSV file must look like this:
+
+    ```csv
+    source;target;target_type;comment;scope_domain
+    /test-source;/test-target;internal;Internal Example;main
+    /test-source-external;https://www.comet-dxp.com/;external;External Example;secondary
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [93a84b651]
+    -   @comet/blocks-api@6.11.0
+
+## 6.10.0
+
+### Minor Changes
+
+-   536fdb85a: Add `createUserFromIdToken` to `UserService`-interface
+
+    This allows to override the default implementation of creating the User-Object from the JWT when logging in via `createAuthProxyJwtStrategy`
+
+-   f528bc340: CronJobModule: Show logs for job run
+
+### Patch Changes
+
+-   d340cabc2: DAM: Fix the duplicate name check when updating a file
+
+    Previously, there were two bugs:
+
+    1. In the `EditFile` form, the `folderId` wasn't passed to the mutation
+    2. In `FilesService#updateByEntity`, the duplicate check was always done against the root folder if no `folderId` was passed
+
+    This caused an error when saving a file in any folder if there was another file with the same name in the root folder.
+    And it was theoretically possible to create two files with the same name in one folder (though this was still prevented by admin-side validation).
+
+-   584d14d86: Only return duplicates within the same scope in the `FilesResolver#duplicates` field resolver
+
+    As a side effect `FilesService#findAllByHash` now accepts an optional scope parameter.
+
+    -   @comet/blocks-api@6.10.0
+
+## 6.9.0
+
+### Minor Changes
+
+-   94ac6b729: API Generator: Fix generated API for many-to-many-relations with custom relation entity
+
+### Patch Changes
+
+-   Updated dependencies [8be9565d1]
+    -   @comet/blocks-api@6.9.0
+
+## 6.8.0
+
+### Minor Changes
+
+-   d6ca50a52: Enhanced the access log functionality to now skip logging for field resolvers in GraphQL context. This change improves the readability and relevance of our logs by reducing unnecessary entries.
+-   ebdbabc21: Extend `searchToMikroOrmQuery` function to support quoted search strings.
+
+    Quotes searches can be done with single (`'...'`) or double quotation marks (`"..."`).
+
+### Patch Changes
+
+-   35efa037b: API-Generator: Remove unnecessary await for delete mutation
+-   d3a06fcaf: Prevent block-meta.json write in read-only file systems
+-   a696ec7b9: Handle DAM scope correctly in the `findCopiesOfFileInScope` query and the `importDamFileByDownload` mutation
+
+    Previously, these endpoints would cause errors if no DAM scoping was used.
+
+-   Updated dependencies [be8664c75]
+-   Updated dependencies [90c6f192e]
+-   Updated dependencies [90c6f192e]
+    -   @comet/blocks-api@6.8.0
+
+## 6.7.0
+
+### Minor Changes
+
+-   645f19df9: Add `nullable` param to `@AffectedEntity` to support id args that can be `null` or `undefined`
+-   a0506e103: API Generator: Support validator decorators for input generation
+
+### Patch Changes
+
+-   645f19df9: Fix mutations `moveDamFiles`, `copyFilesToScope`, `archiveDamFiles` and `restoreDamFiles` by adding `@AffectedEntity` to enable scope checks
+-   8315f10cb: Fix order of `@RequiredPermission()` decorators
+
+    Decorators defined on handlers should be considered before decorators defined on classes.
+
+-   6eeaaa223: The CometAuthGuards now only creates the `CurrentUser` just on a request-basis and skips when called in a fieldResolver (e.g. when `fieldResolverEnhancers` contains `guards`).
+    -   @comet/blocks-api@6.7.0
+
+## 6.6.2
+
+### Patch Changes
+
+-   @comet/blocks-api@6.6.2
+
+## 6.6.1
+
+### Patch Changes
+
+-   890795fda: Fix calculation of `totalCount` in `DependenciesService#getDependents`
+    -   @comet/blocks-api@6.6.1
+
+## 6.6.0
+
+### Minor Changes
+
+-   6160119fe: Provide a `User`-interface that allows module augmentation and hence storing additional data.
+-   38df2b4de: Add `userToLog`-option to AccessLogModule
+
+### Patch Changes
+
+-   Updated dependencies [e880929d8]
+    -   @comet/blocks-api@6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+-   2f64daa9b: Add `title` field to link block
+
+    Perform the following steps to use it in an application:
+
+    1. API: Use the new `createLinkBlock` factory to create the LinkBlock:
+
+        ```ts
+        import { createLinkBlock } from "@comet/cms-api";
+
+        // ...
+
+        const LinkBlock = createLinkBlock({
+            supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+        });
+        ```
+
+    2. Site: Pass the `title` prop to LinkBlock's child blocks:
+
+    ```diff
+    const supportedBlocks: SupportedBlocks = {
+    -   internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    +   internal: ({ children, title, ...props }) => <InternalLinkBlock data={props} title={title}>{children}</InternalLinkBlock>,
+        // ...
+    };
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2f64daa9b]
+    -   @comet/blocks-api@6.5.0
+
+## 6.4.0
+
+### Minor Changes
+
+-   9ff9d9840: Support using a service in `@ScopedEntity()` decorator
+
+    This can be useful when an entity's scope cannot be derived directly from the passed entity.
+    For example, a `Page` document's scope is derived by the `PageTreeNode` the document is attached to, but there is no database relation between the two entities.
+
+    For page tree document types you can use the provided `PageTreeNodeDocumentEntityScopeService`.
+
+-   955182b09: Make permission-check for field-resolvers optional
+-   322da3831: Add `@EntityInfo()` decorator
+
+    Adding `@EntityInfo()` to an entity is necessary to correctly display dependencies in the admin application.
+    You can find more information in [the docs](https://docs.comet-dxp.com/docs/dependencies/).
+
+-   1910551c7: Log the correct user IP even if the app is behind a proxy
+
+    The package [request-ip](https://www.npmjs.com/package/request-ip) is now used to get the actual user IP even if the app runs behind a proxy. Previously, the proxy's IP was logged.
+
+-   2d1b9467a: createImageLinkBlock: Allow overriding name
+
+    This allows using two different `ImageLink` blocks in one application.
+
+    Perform the following steps to override the name:
+
+    1. API: Add the name as second argument in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock(
+            { link: InternalLinkBlock },
+        +   "MyCustomImageLink"
+        );
+        ```
+
+    2. Admin: Set the `name` option in the `createImageLinkBlock` factory:
+
+        ```diff
+        const MyCustomImageLinkBlock = createImageLinkBlock({
+            link: InternalLinkBlock,
+        +   name: "MyCustomImageLink"
+        });
+        ```
+
+### Patch Changes
+
+-   8568153d8: API Generator: Add missing `ObjectQuery` import
+-   1910551c7: Remove user name from access log
+
+    We decided to remove the user name because of privacy concerns.
+
+-   bfc1a4614: API Generator: Correctly support default value for date fields
+-   b478a8b71: Don't fail in ChangesCheckerInterceptor because of stricter content scope check
+-   Updated dependencies [0efae68ff]
+    -   @comet/blocks-api@6.4.0
+
+## 6.3.0
+
+### Minor Changes
+
+-   fc1b16fe: Allow overriding the block context in `BlocksTransformerService#transformToPlain`
+
+### Patch Changes
+
+-   e2e2114b: Fix parsing of `contentScopeAnnotation` in `KubernetesService#getContentScope`
+    -   @comet/blocks-api@6.3.0
+
+## 6.2.1
+
+### Patch Changes
+
+-   f1457306: Ignore user permissions when using system user
+
+    The `UserPermissionsGuard` didn't allow requests when using a system user (e.g., basic authorization during site build).
+
+    -   @comet/blocks-api@6.2.1
+
+## 6.2.0
+
+### Minor Changes
+
+-   beeea1dd: Remove `availablePermissions`-option in `UserPermissionsModule`
+
+    Simply remove the `Permission` interface module augmentation and the `availablePermissions`-option from the application.
+
+-   151e1218: Support multiple `@AffectedEntity()`-decorators for a single function
+
+### Patch Changes
+
+-   04afb3ee: Fix attached document deletion when deleting a page tree node
+-   ad153c99: Always use preview DAM URLs in the admin application
+
+    This fixes a bug where the PDF preview in the DAM wouldn't work because the file couldn't be included in an iFrame on the admin domain.
+
+    We already intended to use preview URLs everywhere in [v5.3.0](https://github.com/vivid-planet/comet/releases/tag/v5.3.0#:~:text=Always%20use%20the%20/preview%20file%20URLs%20in%20the%20admin%20application). However, the `x-preview-dam-urls` header wasn't passed correctly to the `createFileUrl()` method everywhere. As a result, preview URLs were only used in blocks but not in the DAM. Now, the DAM uses preview URLs as well.
+
+-   Updated dependencies [75865caa]
+    -   @comet/blocks-api@6.2.0
+
+## 6.1.0
+
+### Minor Changes
+
+-   7ea43eb3: Make the `UserService`-option of the `UserPermissionsModule` optional.
+
+    The service is still necessary though for the Administration-Panel.
+
+-   86cd5c63: Allow a callback for the `availableContentScopes`-option of the `UserPermissionsModule`
+
+    Please be aware that when using this possibility to make sure to cache the
+    response properly as this is called for every request to the API.
+
+-   737ab3b9: Allow returning multiple content scopes in `ScopedEntity`-decorator
+-   f416510b: Remove `CurrentUserLoader` and `CurrentUserInterface`
+
+    Overriding the the current user in the application isn't supported anymore when using the new `UserPermissionsModule`, which provides the current user DTO itself.
+
+### Patch Changes
+
+-   ef84331f: Fix type of @RequiredPermission to accept a non-array string for a single permission
+-   8e158f8d: Add missing `@RequiredPermission()` decorator to `FileLicensesResolver`
+-   50184410: API Generator: Add missing `scope` argument and filter to `<entity>BySlug` query
+-   1f6c58e8: API Generator: support GraphQLJSONObject input for fields that are not a InputType class
+    -   @comet/blocks-api@6.1.0
+
+## 6.0.0
+
+### Major Changes
+
+-   d20f59c0: Enhance CronJob module
+
+    -   Show latest job run on `CronJobsPage`
+    -   Add option to manually trigger cron jobs to `CronJobsPage`
+    -   Add subpage to `CronJobsPage` that shows all job runs
+
+    Warning: Only include this module if all your users should be able to trigger cron jobs manually or you have sufficient access control in place.
+
+    Includes the following breaking changes:
+
+    -   Rename `JobStatus` to `KubernetesJobStatus` to avoid naming conflicts
+    -   Rename `BuildRuntime` to `JobRuntime`
+
+-   b3ceaef1: Replace ContentScopeModule with UserPermissionsModule
+
+    Breaking changes:
+
+    -   ContentScope-Module has been removed
+    -   canAccessScope has been moved to AccessControlService and refactored into isAllowed
+    -   contentScopes- and permissions-fields have been added to CurrentUser-Object
+    -   role- and rights-fields has been removed from CurrentUser-Object
+    -   AllowForRole-decorator has been removed
+    -   Rename decorator SubjectEntity to AffectedEntity
+    -   Add RequiredPermission-decorator and make it mandatory when using UserPermissionsModule
+
+    Upgrade-Guide: tbd
+
+### Patch Changes
+
+-   @comet/blocks-api@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

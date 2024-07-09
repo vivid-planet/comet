@@ -1,6 +1,9 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 } from "uuid";
+
+import { ContentScope } from "../interfaces/content-scope.interface";
 
 export enum UserPermissionSource {
     MANUAL = "MANUAL",
@@ -46,4 +49,12 @@ export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Field({ nullable: true })
     @Property({ columnType: "text", nullable: true })
     approvedBy?: string;
+
+    @Field()
+    @Property()
+    overrideContentScopes: boolean = false;
+
+    @Field(() => [GraphQLJSONObject])
+    @Property({ type: "json" })
+    contentScopes: ContentScope[] = [];
 }

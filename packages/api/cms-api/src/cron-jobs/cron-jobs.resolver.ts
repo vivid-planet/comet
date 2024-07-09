@@ -1,15 +1,16 @@
-import { Inject } from "@nestjs/common";
+import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { format } from "date-fns";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { BUILDER_LABEL } from "../builds/builds.constants";
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { KubernetesJobStatus } from "../kubernetes/job-status.enum";
 import { INSTANCE_LABEL } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../user-permissions/user-permissions.types";
 import { CronJobsService } from "./cron-jobs.service";
@@ -19,6 +20,7 @@ import { JobsService } from "./jobs.service";
 
 @Resolver(() => CronJob)
 @RequiredPermission(["cronJobs"], { skipScopeCheck: true })
+@UseGuards(PreventLocalInvocationGuard)
 export class CronJobsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,
@@ -28,11 +30,7 @@ export class CronJobsResolver {
     ) {}
 
     @Query(() => [CronJob])
-    async kubernetesCronJobs(@GetCurrentUser() user: CurrentUserInterface): Promise<CronJob[]> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
+    async kubernetesCronJobs(@GetCurrentUser() user: CurrentUser): Promise<CronJob[]> {
         const cronJobs = await this.kubernetesService.getAllCronJobs(
             `${INSTANCE_LABEL} = ${this.kubernetesService.helmRelease}, ${BUILDER_LABEL} != true`,
         );
@@ -40,7 +38,7 @@ export class CronJobsResolver {
             .filter((cronJob) => {
                 const contentScope = this.kubernetesService.getContentScope(cronJob);
                 if (contentScope) {
-                    return this.accessControlService.isAllowedContentScope(user, contentScope);
+                    return this.accessControlService.isAllowed(user, "builds", contentScope);
                 }
 
                 return true;
@@ -49,14 +47,10 @@ export class CronJobsResolver {
     }
 
     @Query(() => CronJob)
-    async kubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUserInterface): Promise<CronJob> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
+    async kubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUser): Promise<CronJob> {
         const cronJob = await this.kubernetesService.getCronJob(name);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
-        if (contentScope && !this.accessControlService.isAllowedContentScope(user, contentScope)) {
+        if (contentScope && !this.accessControlService.isAllowed(user, "builds", contentScope)) {
             throw new Error("Access denied");
         }
 
@@ -65,10 +59,10 @@ export class CronJobsResolver {
 
     @Mutation(() => Job)
     @SkipBuild()
-    async triggerKubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUserInterface): Promise<Job> {
+    async triggerKubernetesCronJob(@Args("name") name: string, @GetCurrentUser() user: CurrentUser): Promise<Job> {
         const cronJob = await this.kubernetesService.getCronJob(name);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
-        if (contentScope && !this.accessControlService.isAllowedContentScope(user, contentScope)) {
+        if (contentScope && !this.accessControlService.isAllowed(user, "builds", contentScope)) {
             throw new Error("Access denied");
         }
 

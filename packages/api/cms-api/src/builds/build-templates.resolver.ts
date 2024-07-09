@@ -1,24 +1,22 @@
+import { UseGuards } from "@nestjs/common";
 import { Query, Resolver } from "@nestjs/graphql";
 
-import { CurrentUserInterface } from "../auth/current-user/current-user";
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { LABEL_ANNOTATION } from "../kubernetes/kubernetes.constants";
-import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
+import { CurrentUser } from "../user-permissions/dto/current-user";
 import { BuildTemplatesService } from "./build-templates.service";
 import { BuildTemplateObject } from "./dto/build-template.object";
 
 @Resolver(() => BuildTemplateObject)
 @RequiredPermission(["builds"], { skipScopeCheck: true }) // Scopes are checked in Code
+@UseGuards(PreventLocalInvocationGuard)
 export class BuildTemplatesResolver {
-    constructor(private readonly kubernetesService: KubernetesService, private readonly buildTemplatesService: BuildTemplatesService) {}
+    constructor(private readonly buildTemplatesService: BuildTemplatesService) {}
 
     @Query(() => [BuildTemplateObject])
-    async buildTemplates(@GetCurrentUser() user: CurrentUserInterface): Promise<BuildTemplateObject[]> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
+    async buildTemplates(@GetCurrentUser() user: CurrentUser): Promise<BuildTemplateObject[]> {
         const builderCronJobs = await this.buildTemplatesService.getAllowedBuilderCronJobs(user);
         return builderCronJobs.map((cronJob) => ({
             id: cronJob.metadata?.uid as string,

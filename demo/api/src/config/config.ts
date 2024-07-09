@@ -11,12 +11,27 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
     if (errors.length > 0) {
         throw new Error(errors.toString());
     }
+
+    let contentGeneration = undefined;
+    if (
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY &&
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL &&
+        envVars.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID
+    ) {
+        contentGeneration = {
+            apiKey: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY,
+            apiUrl: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL,
+            deploymentId: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID,
+        };
+    }
+
     return {
         ...cometConfig,
         debug: processEnv.NODE_ENV !== "production",
         helmRelease: envVars.HELM_RELEASE,
         apiUrl: envVars.API_URL,
         apiPort: envVars.API_PORT,
+        adminUrl: envVars.ADMIN_URL,
         corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
         imgproxy: {
             ...cometConfig.imgproxy,
@@ -24,6 +39,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             url: envVars.IMGPROXY_URL,
             key: envVars.IMGPROXY_KEY,
         },
+        contentGeneration,
         dam: {
             ...cometConfig.dam,
             secret: envVars.DAM_SECRET,
@@ -48,7 +64,9 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
         },
-        sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
+        cdn: {
+            originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
+        },
     };
 }
 

@@ -1,25 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import {
-    Field,
-    FinalForm,
-    FinalFormInput,
-    FinalFormSaveButton,
-    FinalFormSubmitEvent,
-    MainContent,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    ToolbarTitleItem,
-    useFormApiRef,
-    useStackApi,
-    useStackSwitchApi,
-} from "@comet/admin";
-import { ArrowLeft } from "@comet/admin-icons";
-import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { CircularProgress, IconButton } from "@mui/material";
+import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextField, useFormApiRef, useStackSwitchApi } from "@comet/admin";
+import { resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -49,7 +32,6 @@ interface FormProps {
 type FormState = GQLProductTagFormFragment;
 
 function ProductTagForm({ id }: FormProps): React.ReactElement {
-    const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormState>();
@@ -62,7 +44,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormState> = data?.productTag
         ? {
-              ...filter<GQLProductTagFormFragment>(productTagFormFragment, data.productTag),
+              ...filterByFragment<GQLProductTagFormFragment>(productTagFormFragment, data.productTag),
           }
         : {};
 
@@ -92,10 +74,10 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
             if (!id) throw new Error();
             await client.mutate<GQLProductTagFormUpdateProductTagMutation, GQLProductTagFormUpdateProductTagMutationVariables>({
                 mutation: updateProductTagMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.productTag.updatedAt },
+                variables: { id, input: output },
             });
         } else {
-            const { data: mutationReponse } = await client.mutate<
+            const { data: mutationResponse } = await client.mutate<
                 GQLProductTagFormCreateProductTagMutation,
                 GQLProductTagFormCreateProductTagMutationVariables
             >({
@@ -103,7 +85,7 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
                 variables: { input: output },
             });
             if (!event.navigatingBack) {
-                const id = mutationReponse?.createProductTag.id;
+                const id = mutationResponse?.createProductTag.id;
                 if (id) {
                     setTimeout(() => {
                         stackSwitchApi.activatePage(`edit`, id);
@@ -124,40 +106,12 @@ function ProductTagForm({ id }: FormProps): React.ReactElement {
     return (
         <FinalForm<FormState> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues} subscription={{}}>
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
-                    <Toolbar>
-                        <ToolbarItem>
-                            <IconButton onClick={stackApi?.goBack}>
-                                <ArrowLeft />
-                            </IconButton>
-                        </ToolbarItem>
-                        <ToolbarTitleItem>
-                            <Field name="title">
-                                {({ input }) =>
-                                    input.value ? (
-                                        input.value
-                                    ) : (
-                                        <FormattedMessage id="products.productTagDetail" defaultMessage="Product Tag Detail" />
-                                    )
-                                }
-                            </Field>
-                        </ToolbarTitleItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
-                        </ToolbarActions>
-                    </Toolbar>
                     <MainContent>
-                        <Field
-                            required
-                            fullWidth
-                            name="title"
-                            component={FinalFormInput}
-                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
-                        />
+                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

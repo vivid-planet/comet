@@ -38,7 +38,6 @@ schema.gql
 schema.json
 block-meta.json
 src/**/*.generated.ts
-preBuild/**/*.generated.ts
 
 public/sitemap.xml
 public/robots.txt
@@ -46,3 +45,7 @@ public/robots.txt
 tsconfig.tsbuildinfo
 
 src/comet-config.json
+
+lang
+lang-extracted
+lang-compiled

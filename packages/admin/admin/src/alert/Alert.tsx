@@ -1,11 +1,20 @@
 import { Close } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { Alert as MuiAlert, AlertTitle, buttonClasses, IconButton, Theme, Typography } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import clsx from "clsx";
+import { Alert as MuiAlert, alertClasses, AlertTitle, buttonClasses, IconButton, Typography } from "@mui/material";
+import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-export interface AlertProps {
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+
+export interface AlertProps
+    extends ThemedComponentBaseProps<{
+        root: typeof MuiAlert;
+        title: typeof AlertTitle;
+        text: typeof Typography;
+        action: "div";
+        closeIcon: typeof IconButton;
+    }> {
     severity?: "info" | "warning" | "error" | "success";
     title?: React.ReactNode;
     children?: React.ReactNode;
@@ -13,91 +22,128 @@ export interface AlertProps {
     action?: React.ReactNode;
 }
 
-export type AlertClassKey = "root" | "message" | "title" | "text" | "action" | "closeIcon" | "hasTitle";
+export type AlertClassKey = "root" | "title" | "text" | "action" | "closeIcon" | "hasTitle" | "singleRow";
 
-const styles = (theme: Theme) =>
-    createStyles<AlertClassKey, AlertProps>({
-        root: {
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: 4,
-            boxShadow: theme.shadows[2],
-            position: "relative",
-            padding: theme.spacing(2, "12px", 2, 4),
-            minHeight: 40, // to ensure consistent height for the content, regardless of the presence of a button or close icon, in order to set the outer padding correctly
-        },
-        message: {
-            display: "flex",
-            alignItems: "center",
-            flexGrow: 1,
-            padding: 0,
-            paddingLeft: theme.spacing(2),
-            marginBottom: 0,
-        },
-        title: {
-            fontWeight: 600,
-            marginBottom: theme.spacing(1),
-        },
-        text: {
-            flexGrow: 1,
-            marginRight: theme.spacing(4),
-        },
-        action: {},
-        closeIcon: {},
-        hasTitle: {
-            alignItems: "flex-start",
+type OwnerState = {
+    hasTitle: boolean;
+    renderAsSingleRow: boolean;
+};
 
-            [`& .${buttonClasses.text}`]: {
-                marginLeft: -15,
-            },
+export const Alert = React.forwardRef<HTMLDivElement, AlertProps>((inProps, ref) => {
+    const {
+        severity = "info",
+        title,
+        children,
+        onClose,
+        action,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminAlert" });
+    const singleRow = !title && (action || onClose);
 
-            "& $action": {
-                marginTop: theme.spacing(2),
-            },
+    const ownerState: OwnerState = {
+        hasTitle: Boolean(title),
+        renderAsSingleRow: Boolean(singleRow),
+    };
 
-            "& $closeIcon": {
-                position: "absolute",
-                right: 10,
-                top: 10,
-            },
-            "& $message": {
-                flexDirection: "column",
-                alignItems: "flex-start",
-            },
-            "&$root": {
-                paddingBottom: "6px",
-                paddingTop: theme.spacing(4),
-            },
-        },
-    });
-
-function Alert({ severity = "info", title, children, classes, onClose, action }: AlertProps & WithStyles<typeof styles>): React.ReactElement {
     return (
-        <MuiAlert
-            classes={{
-                root: clsx(classes.root, Boolean(title) && classes.hasTitle),
-                message: classes.message,
-            }}
-            severity={severity}
-        >
-            {Boolean(title) && <AlertTitle className={classes.title}>{title}</AlertTitle>}
-            <Typography className={classes.text} variant="body2">
+        <Root ref={ref} ownerState={ownerState} severity={severity} {...slotProps?.root} {...restProps}>
+            {Boolean(title) && <Title {...slotProps?.title}>{title}</Title>}
+            <Text variant="body2" {...slotProps?.text}>
                 {children}
-            </Typography>
-            <div className={classes.action}>{action}</div>
-            {onClose && (
-                <IconButton className={classes.closeIcon} onClick={onClose}>
-                    <Close />
-                </IconButton>
+            </Text>
+            {action && (
+                <Action ownerState={ownerState} {...slotProps?.action}>
+                    {action}
+                </Action>
             )}
-        </MuiAlert>
+            {onClose && (
+                <CloseIcon onClick={onClose} ownerState={ownerState} {...slotProps?.closeIcon}>
+                    <Close />
+                </CloseIcon>
+            )}
+        </Root>
     );
-}
+});
 
-const AdminComponentWithStyles = withStyles(styles, { name: "CometAdminAlert" })(Alert);
+const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
+    componentName: "Alert",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.hasTitle && "hasTitle", ownerState.renderAsSingleRow && "singleRow"];
+    },
+})(
+    ({ theme, ownerState }) => css`
+        padding: ${theme.spacing(4, "12px", 4, 4)};
 
-export { AdminComponentWithStyles as Alert };
+        & .${alertClasses.message} {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        ${ownerState.hasTitle &&
+        css`
+            position: relative;
+            align-items: flex-start;
+            padding: ${theme.spacing(4, 6, "8px", 3)};
+
+            & .${buttonClasses.text} {
+                margin-left: -15px;
+            }
+
+            & .${alertClasses.message} {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        `}
+
+        ${ownerState.renderAsSingleRow &&
+        css`
+            display: flex;
+            align-items: center;
+            padding: ${theme.spacing(2, "12px", 2, 4)};
+        `}
+    `,
+);
+
+const Title = createComponentSlot(AlertTitle)<AlertClassKey>({
+    componentName: "Alert",
+    slotName: "title",
+})();
+
+const Text = createComponentSlot(Typography)<AlertClassKey>({
+    componentName: "Alert",
+    slotName: "text",
+})(css`
+    flex-grow: 1;
+`);
+
+const Action = createComponentSlot("div")<AlertClassKey, OwnerState>({
+    componentName: "Alert",
+    slotName: "action",
+})(
+    ({ theme, ownerState }) => css`
+        ${ownerState.hasTitle &&
+        css`
+            margin-top: ${theme.spacing(2)};
+        `}
+    `,
+);
+
+const CloseIcon = createComponentSlot(IconButton)<AlertClassKey, OwnerState>({
+    componentName: "Alert",
+    slotName: "closeIcon",
+})(
+    ({ ownerState }) => css`
+        ${ownerState.hasTitle &&
+        css`
+            position: absolute;
+            right: 2px;
+            top: 2px;
+        `}
+    `,
+);
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
@@ -110,7 +156,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminAlert?: {
-            defaultProps?: ComponentsPropsList["CometAdminAlert"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminAlert"]>;
             styleOverrides?: ComponentNameToClassKey["CometAdminAlert"];
         };
     }

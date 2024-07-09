@@ -1,5 +1,75 @@
 # @comet/admin-icons
 
+## 7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+## 6.15.1
+
+## 6.15.0
+
+### Minor Changes
+
+-   406027806: Add `RteUppercase` icon
+
+## 6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   efccc42a3: Add `YouTube` and `Vimeo` icons
+
+## 6.13.0
+
+## 6.12.0
+
+## 6.11.0
+
+## 6.10.0
+
+## 6.9.0
+
+## 6.8.0
+
+## 6.7.0
+
+## 6.6.2
+
+## 6.6.1
+
+## 6.6.0
+
+## 6.5.0
+
+## 6.4.0
+
+## 6.3.0
+
+## 6.2.1
+
+## 6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+-   08e0da09: Fix icons inside tooltips by forwarding the ref
+
+## 6.0.0
+
+### Major Changes
+
+-   a525766c: Remove deprecated icons `Betrieb`, `Logische Filter`, `Pool`, `Pool 2`, `State Green`, `State Green Ring`, `State Orange`, `State Orange Ring`, `State Red`, `State Red Ring`, `Vignette 1` and `Vignette 2`.
+
+### Patch Changes
+
+-   76e50aa8: Fix broken `Logout` icon
+
 ## 5.6.0
 
 ## 5.5.0

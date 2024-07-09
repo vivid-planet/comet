@@ -7,7 +7,7 @@ import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 export const NewsContentBlock = createBlocksBlock({
     name: "NewsContentBlock",
     supportedBlocks: {
-        heading: HeadlineBlock,
+        headline: HeadlineBlock,
         richtext: RichTextBlock,
         image: DamImageBlock,
         textImage: TextImageBlock,
