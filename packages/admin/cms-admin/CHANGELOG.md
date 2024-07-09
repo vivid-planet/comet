@@ -1,5 +1,41 @@
 # @comet/cms-admin
 
+## 6.15.0
+
+### Minor Changes
+
+-   cdc861cb7: Add `buttonChildren` and `children` props to `UserHeaderItem`
+
+    This increases the flexibility of the `UserHeaderItem` component by allowing the `AppHeaderDropdown` label to be passed via `buttonChildren`. More buttons or other list items in the dropdown can be passed via `children`.
+
+    **Example:**
+
+    ```tsx
+    <UserHeaderItem buttonChildren="Some custom label">
+        <Button variant="contained">Some custom button</Button>
+        <Button>Some custom button 2</Button>
+    </UserHeaderItem>
+    ```
+
+### Patch Changes
+
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [406027806]
+-   Updated dependencies [0654f7bce]
+-   Updated dependencies [ec7fb9ff2]
+    -   @comet/admin-icons@6.15.0
+    -   @comet/admin@6.15.0
+    -   @comet/blocks-admin@6.15.0
+    -   @comet/admin-date-time@6.15.0
+    -   @comet/admin-rte@6.15.0
+    -   @comet/admin-theme@6.15.0
+
 ## 6.14.1
 
 ### Patch Changes
