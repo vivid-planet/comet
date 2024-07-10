@@ -22,7 +22,7 @@ export class IsValidYoutubeIdentifierConstraint implements ValidatorConstraintIn
             return false;
         }
 
-        // copy of blocks-admin/src/blocks/YouTubeVideoBlock.tsx
+        // copy of cms-admin/src/blocks/YouTubeVideoBlock.tsx
         // regex from https://stackoverflow.com/a/51870158
         const regExp =
             /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/;
