@@ -655,6 +655,7 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+  azureAiTranslate(input: AzureAiTranslationInput!): String!
 }
 
 input UserFilter {
@@ -900,6 +901,11 @@ enum ProductTagSortField {
   title
   createdAt
   updatedAt
+}
+
+input AzureAiTranslationInput {
+  text: String!
+  targetLanguage: String!
 }
 
 type Mutation {

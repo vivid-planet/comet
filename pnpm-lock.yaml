@@ -2126,6 +2126,9 @@ importers:
 
   packages/api/cms-api:
     dependencies:
+      '@azure-rest/ai-translation-text':
+        specifier: ^1.0.0-beta.1
+        version: 1.0.0-beta.1
       '@azure/openai':
         specifier: 1.0.0-beta.11
         version: 1.0.0-beta.11
@@ -4151,6 +4154,19 @@ packages:
     dependencies:
       tslib: 2.4.1
 
+  /@azure-rest/ai-translation-text@1.0.0-beta.1:
+    resolution: {integrity: sha512-h1xDrmVRbk6eAAqTHxy9Npv543cWteqgop15sVXBQhadOwzHoREn+UqMCzNfvL6/AjiInUlwNSaNQK1ANgobLA==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@azure-rest/core-client': 1.4.0
+      '@azure/core-auth': 1.4.0
+      '@azure/core-rest-pipeline': 1.15.2
+      '@azure/logger': 1.0.3
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@azure-rest/core-client@1.4.0:
     resolution: {integrity: sha512-ozTDPBVUDR5eOnMIwhggbnVmOrka4fXCs8n8mvUo4WLLc38kki6bAOByDoVZZPz/pZy2jMt2kwfpvy/UjALj6w==}
     engines: {node: '>=18.0.0'}
@@ -4220,6 +4236,22 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.4.1
+
+  /@azure/core-rest-pipeline@1.15.2:
+    resolution: {integrity: sha512-BmWfpjc/QXc2ipHOh6LbUzp3ONCaa6xzIssTU0DwH9bbYNXJlGUL6tujx5TrbVd/QQknmS+vlQJGrCq2oL1gZA==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-auth': 1.4.0
+      '@azure/core-tracing': 1.1.2
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.0.3
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.4
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /@azure/core-rest-pipeline@1.16.0:
     resolution: {integrity: sha512-CeuTvsXxCUmEuxH5g/aceuSl6w2EugvNHKAtKKVdiX915EjJJxAwfzNNWZreNnbxHZ2fi0zaM6wwS23x2JVqSQ==}
@@ -31000,6 +31032,10 @@ packages:
 
   /tslib@2.4.1:
     resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
+
+  /tslib@2.6.2:
+    resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
+    dev: false
 
   /tslib@2.6.3:
     resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
