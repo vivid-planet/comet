@@ -1,5 +1,6 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { Savable } from "@comet/admin";
+import { CircularProgress } from "@mui/material";
 import {
     GQLGetProductIdsForProductCategoryQuery,
     GQLGetProductIdsForProductCategoryQueryVariables,
@@ -9,6 +10,7 @@ import {
 import { ProductsSelectGrid } from "@src/products/categories/ProductsSelectGrid";
 import isEqual from "lodash.isequal";
 import React, { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 const setProductCategoryMutation = gql`
     mutation SetProductCategory($id: ID!, $input: [ID!]!) {
@@ -35,21 +37,21 @@ interface FormProps {
 export function AssignProductsGrid({ productCategoryId }: FormProps): React.ReactElement {
     const client = useApolloClient();
 
-    const [selection, setSelection] = useState<{ initialValues?: string[]; values: string[] }>({ values: [] });
+    const { data, error, loading } = useQuery<GQLGetProductIdsForProductCategoryQuery, GQLGetProductIdsForProductCategoryQueryVariables>(
+        getProductIdsForProductCategory,
+        {
+            variables: { id: productCategoryId },
+        },
+    );
+    const initialValues = data?.products.nodes ? data.products.nodes.map((product) => product.id).sort() : [];
+    const [values, setValues] = useState<string[]>(initialValues);
     useEffect(() => {
-        let active = true;
-        (async () => {
-            const response = await client.query<GQLGetProductIdsForProductCategoryQuery, GQLGetProductIdsForProductCategoryQueryVariables>({
-                query: getProductIdsForProductCategory,
-                variables: { id: productCategoryId },
-            });
-            const orderedIds = response.data.products.nodes.map((product) => product.id).sort();
-            if (active) setSelection({ initialValues: orderedIds, values: orderedIds });
-        })();
-        return () => {
-            active = false;
-        };
-    }, [client, productCategoryId]);
+        setValues(initialValues);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data?.products.nodes]);
+
+    if (error) return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
+    if (loading) return <CircularProgress />;
 
     return (
         <>
@@ -57,20 +59,20 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
                 doSave={async () => {
                     await client.mutate<GQLSetProductCategoryMutation, GQLSetProductCategoryMutationVariables>({
                         mutation: setProductCategoryMutation,
-                        variables: { id: productCategoryId, input: selection.values },
+                        variables: { id: productCategoryId, input: values },
+                        refetchQueries: ["GetProductIdsForProductCategory"],
                     });
-                    setSelection({ initialValues: selection.values, values: selection.values });
                     return true;
                 }}
-                hasChanges={!isEqual(selection.initialValues, selection.values)}
+                hasChanges={!isEqual(initialValues, values)}
                 doReset={() => {
-                    setSelection({ initialValues: selection.initialValues, values: selection.initialValues ?? [] });
+                    setValues(initialValues);
                 }}
             />
             <ProductsSelectGrid
-                value={selection.values}
+                value={values}
                 onChange={(productIds) => {
-                    setSelection({ initialValues: selection.initialValues, values: productIds.sort() });
+                    setValues(productIds.sort());
                 }}
             />
         </>
