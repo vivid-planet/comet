@@ -1,5 +1,20 @@
 # @comet/admin
 
+## 7.0.0-beta.4
+
+### Minor Changes
+
+-   a0bd09afa: Add `ForcePromptRoute`, a `Route` that triggers a prompt even if it is a subroute
+
+    Used in `StackSwitch` so that navigating to a nested stack subpage will show a prompt (if dirty)
+
+-   170720b0c: Stack: Update parent breadcrumb URL in state to not forget filters and other states when going back
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.4
+-   @comet/admin-theme@7.0.0-beta.4
+
 ## 7.0.0-beta.3
 
 ### Major Changes

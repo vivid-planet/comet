@@ -1,5 +1,45 @@
 # @comet/blocks-admin
 
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [a0bd09afa]
+-   Updated dependencies [170720b0c]
+    -   @comet/admin@7.0.0-beta.4
+    -   @comet/admin-icons@7.0.0-beta.4
+
 ## 7.0.0-beta.3
 
 ### Patch Changes

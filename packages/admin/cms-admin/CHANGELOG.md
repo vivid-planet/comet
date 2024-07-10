@@ -1,5 +1,44 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+### Minor Changes
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
+### Patch Changes
+
+-   Updated dependencies [a0bd09afa]
+-   Updated dependencies [b7560e3a7]
+-   Updated dependencies [170720b0c]
+-   Updated dependencies [a58918893]
+    -   @comet/admin@7.0.0-beta.4
+    -   @comet/blocks-admin@7.0.0-beta.4
+    -   @comet/admin-date-time@7.0.0-beta.4
+    -   @comet/admin-icons@7.0.0-beta.4
+    -   @comet/admin-rte@7.0.0-beta.4
+    -   @comet/admin-theme@7.0.0-beta.4
+
 ## 7.0.0-beta.3
 
 ### Major Changes
