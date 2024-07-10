@@ -6,17 +6,17 @@ import { PropsWithData } from "./PropsWithData";
 interface PhoneLinkBlockProps extends PropsWithData<PhoneLinkBlockData> {
     children: React.ReactElement;
     title?: string;
+    className?: string;
 }
 
-export const PhoneLinkBlock = ({ data: { phone }, children, title }: PhoneLinkBlockProps) => {
+export const PhoneLinkBlock = ({ data: { phone }, children, title, className }: PhoneLinkBlockProps) => {
     if (!phone) {
-        return children;
+        return <span className={className}>{children}</span>;
     }
 
-    const childProps = {
-        href: `tel:${phone}`,
-        title,
-    };
-
-    return React.cloneElement(children, childProps);
+    return (
+        <a href={`tel:${phone}`} title={title} className={className}>
+            {children}
+        </a>
+    );
 };

@@ -9,7 +9,7 @@ import { LinkBlock } from "./LinkBlock";
 
 const GreenCustomHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => <h3 style={{ color: "green" }}>{children}</h3>;
 
-export const DefaultStyleLink = styled.a`
+const DefaultStyleLink = styled(LinkBlock)`
     color: ${({ theme }) => theme.colors.primary};
 `;
 
@@ -64,9 +64,9 @@ const defaultRenderers: Renderers = {
         // key is the entity key value from raw
         LINK: (children, data, { key }) => {
             return (
-                <LinkBlock key={key} data={data as LinkBlockData}>
-                    <DefaultStyleLink>{children}</DefaultStyleLink>
-                </LinkBlock>
+                <DefaultStyleLink key={key} data={data as LinkBlockData}>
+                    {children}
+                </DefaultStyleLink>
             );
         },
     },

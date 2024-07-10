@@ -13,12 +13,12 @@ export function TopNavigation({ data }: Props): JSX.Element {
         <TopLevelNavigation>
             {data.map((item) => (
                 <TopLevelLinkContainer key={item.id}>
-                    <PageLink page={item}>{(active) => <Link $active={active}>{item.name}</Link>}</PageLink>
+                    <Link page={item}>{item.name}</Link>
                     {item.childNodes.length > 0 && (
                         <SubLevelNavigation>
                             {item.childNodes.map((node) => (
                                 <li key={node.id}>
-                                    <PageLink page={node}>{(active) => <Link $active={active}>{node.name}</Link>}</PageLink>
+                                    <Link page={node}>{node.name}</Link>
                                 </li>
                             ))}
                         </SubLevelNavigation>
@@ -59,13 +59,17 @@ const TopLevelLinkContainer = styled.li`
     }
 `;
 
-const Link = styled.a<{ $active: boolean }>`
+const Link = styled(PageLink)`
     text-decoration: none;
     padding: 5px 10px;
-    color: ${({ $active, theme }) => ($active ? theme.colors.white : theme.colors.n200)};
+    color: ${({ theme }) => theme.colors.n200};
     font-size: 12px;
 
     &:hover {
         text-decoration: underline;
+    }
+
+    &.active {
+        color: ${({ theme }) => theme.colors.white};
     }
 `;

@@ -6,17 +6,17 @@ import { PropsWithData } from "./PropsWithData";
 interface EmailLinkBlockProps extends PropsWithData<EmailLinkBlockData> {
     children: React.ReactElement;
     title?: string;
+    className?: string;
 }
 
-export const EmailLinkBlock = ({ data: { email }, children, title }: EmailLinkBlockProps) => {
+export const EmailLinkBlock = ({ data: { email }, children, title, className }: EmailLinkBlockProps) => {
     if (!email) {
-        return children;
+        return <span className={className}>{children}</span>;
     }
 
-    const childProps = {
-        href: `mailto:${email}`,
-        title,
-    };
-
-    return React.cloneElement(children, childProps);
+    return (
+        <a href={`mailto:${email}`} title={title} className={className}>
+            {children}
+        </a>
+    );
 };

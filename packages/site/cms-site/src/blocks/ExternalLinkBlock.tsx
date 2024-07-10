@@ -10,9 +10,10 @@ import { PropsWithData } from "./PropsWithData";
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
     children: React.ReactElement;
     title?: string;
+    className?: string;
 }
 
-export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children, title }: ExternalLinkBlockProps): React.ReactElement {
+export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children, title, className }: ExternalLinkBlockProps): React.ReactElement {
     const preview = usePreview();
 
     if (preview.previewType === "SitePreview" || preview.previewType === "BlockPreview") {
@@ -27,18 +28,20 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
             }
         };
 
-        return React.cloneElement(children, { href: "#", onClick, title });
+        return (
+            <a href="#" onClick={onClick} title={title} className={className}>
+                {children}
+            </a>
+        );
     } else {
         if (!targetUrl) {
-            return children;
+            return <span className={className}>{children}</span>;
         }
 
-        const childProps = {
-            href: targetUrl ? targetUrl : "#",
-            target: openInNewWindow ? "_blank" : undefined,
-            title,
-        };
-
-        return React.cloneElement(children, childProps);
+        return (
+            <a href={targetUrl ? targetUrl : "#"} target={openInNewWindow ? "_blank" : undefined} title={title} className={className}>
+                {children}
+            </a>
+        );
     }
 }
