@@ -1,5 +1,73 @@
 # @comet/cms-site
 
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   15eb9e173: Revise `PixelImageBlock` to correctly use the "new" `next/image` component
+
+    See the [docs](https://nextjs.org/docs/pages/api-reference/components/image-legacy#comparison) for a comparison between the new and the legacy component.
+
+    **Migrate**
+
+    Remove the `layout` prop from the block as it can lead to errors with the default implementation (`layout="responsive"` is not compatible with the new `fill` prop).
+
+    -   `layout={"responsive" | "inherit"}` can safely be removed
+
+        ```diff
+        <PixelImageBlock
+            data={block.props}
+            aspectRatio={aspectRatio}
+        -   layout={"responsive"}   // line is marked as deprecated, but "responsive" must be removed
+            {...imageProps}
+        />
+        ```
+
+    -   `layout={"fill"}` can be replaced with `fill={true}`
+
+        ```diff
+        <PixelImageBlock
+            data={block.props}
+            aspectRatio={aspectRatio}
+        -   layout={"fill"}
+        +   fill
+            {...imageProps}
+        />
+        ```
+
+    Notes:
+
+    The `PixelImageBlock` is usually wrapped in a `DamImageBlock` in the application. The `layout` prop should be removed from it as well.
+
+    You can use the newly added `fill` prop of the `next/image` component by embedding the `PixelImageBlock` in a parent element that assigns the `position` style. See the [docs](https://nextjs.org/docs/pages/api-reference/components/image#fill) for more information.
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+### Minor Changes
+
+-   cf9496fdb: Add `legacyPagesRouterSitePreviewApiHandler` helper
+
+    Used to enable the site preview (Preview Mode) for projects which use the Pages Router. This helper is added to ease migrating. New projects should use the App Router instead.
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
 ## 7.0.0-beta.3
 
 ## 7.0.0-beta.2
