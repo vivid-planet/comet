@@ -4,13 +4,11 @@ import {
     messages,
     RouterPrompt,
     SaveButton,
-    SplitButton,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarTitleItem,
-    useStackApi,
 } from "@comet/admin";
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import { AdminComponentRoot, BlockOutputApi, BlockState, HiddenInSubroute, IFrameBridgeProvider, resolveNewState } from "@comet/blocks-admin";
@@ -60,7 +58,6 @@ type RichTextBlockOutput = BlockOutputApi<typeof RichTextBlock>;
 const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item }) => {
     const previewApi = useBlockPreview();
     const match = useRouteMatch();
-    const stackApi = useStackApi();
     const [updateMainMenuItem, { loading: saving, error: saveError }] = useMutation<
         GQLUpdateMainMenuItemMutation,
         GQLUpdateMainMenuItemMutationVariables
@@ -136,32 +133,17 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                     >
                         <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
-
-                    <SplitButton localStorageKey="EditMainMenuItemSave" disabled={!hasChanges}>
-                        <SaveButton
-                            startIcon={<Save />}
-                            saving={saving}
-                            hasErrors={saveError != null}
-                            color="primary"
-                            variant="contained"
-                            onClick={handleSaveClick}
-                        >
-                            <FormattedMessage {...messages.save} />
-                        </SaveButton>
-                        <SaveButton
-                            startIcon={<Save />}
-                            saving={saving}
-                            hasErrors={saveError != null}
-                            color="primary"
-                            variant="contained"
-                            onClick={async () => {
-                                await handleSaveClick();
-                                stackApi?.goBack();
-                            }}
-                        >
-                            <FormattedMessage {...messages.saveAndGoBack} />
-                        </SaveButton>
-                    </SplitButton>
+                    <SaveButton
+                        disabled={!hasChanges}
+                        startIcon={<Save />}
+                        saving={saving}
+                        hasErrors={saveError != null}
+                        color="primary"
+                        variant="contained"
+                        onClick={handleSaveClick}
+                    >
+                        <FormattedMessage {...messages.save} />
+                    </SaveButton>
                 </ToolbarActions>
             </Toolbar>
             {hasChanges && (
