@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
 const EXPECTED_YT_ID_LENGTH = 11;
@@ -19,33 +20,63 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
     return youtubeId ?? undefined;
 };
 
-type YouTubeVideoProps = PropsWithData<YouTubeVideoBlockData> & { aspectRatio?: string };
+interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
+    aspectRatio?: string;
+    previewImageSizes?: string;
+    renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
+}
 
 export const YouTubeVideoBlock = withPreview(
-    ({ data: { youtubeIdentifier, autoplay, loop, showControls }, aspectRatio = "16x9" }: YouTubeVideoProps) => {
-        if (!youtubeIdentifier) return <PreviewSkeleton type="media" hasContent={false} />;
-        const identifier = parseYoutubeIdentifier(youtubeIdentifier);
+    ({
+        data: { youtubeIdentifier, autoplay, loop, showControls, previewImage },
+        aspectRatio = "16x9",
+        previewImageSizes,
+        renderPreviewImage,
+    }: YouTubeVideoBlockProps) => {
+        const [showPreviewImage, setShowPreviewImage] = React.useState(true);
+        const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
+        if (!youtubeIdentifier) {
+            return <PreviewSkeleton type="media" hasContent={false} />;
+        }
+
+        const identifier = parseYoutubeIdentifier(youtubeIdentifier);
         const searchParams = new URLSearchParams();
         searchParams.append("modestbranding", "1");
 
-        searchParams.append("autoplay", Number(autoplay).toString());
-        autoplay && searchParams.append("mute", "1");
+        if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
+            searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
+        if (autoplay) searchParams.append("mute", "1");
 
-        searchParams.append("controls", Number(showControls).toString());
+        if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
 
-        searchParams.append("loop", Number(loop).toString());
+        if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
         // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
-        loop && identifier && searchParams.append("playlist", identifier);
+        if (loop && identifier) searchParams.append("playlist", identifier);
 
         const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
         const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
         youtubeUrl.search = searchParams.toString();
 
         return (
-            <VideoContainer $aspectRatio={aspectRatio.replace("x", " / ")}>
-                <YouTubeContainer src={youtubeUrl.toString()} />
-            </VideoContainer>
+            <>
+                {hasPreviewImage && showPreviewImage ? (
+                    renderPreviewImage ? (
+                        renderPreviewImage({ onPlay: () => setShowPreviewImage(false), image: previewImage, aspectRatio, sizes: previewImageSizes })
+                    ) : (
+                        <VideoPreviewImage
+                            onPlay={() => setShowPreviewImage(false)}
+                            image={previewImage}
+                            aspectRatio={aspectRatio}
+                            sizes={previewImageSizes}
+                        />
+                    )
+                ) : (
+                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")}>
+                        <YouTubeContainer src={youtubeUrl.toString()} allow="autoplay" />
+                    </VideoContainer>
+                )}
+            </>
         );
     },
     { label: "Video" },

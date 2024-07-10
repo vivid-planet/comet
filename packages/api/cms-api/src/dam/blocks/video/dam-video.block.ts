@@ -1,31 +1,23 @@
 import {
     AnnotationBlockMeta,
-    BlockData,
     BlockDataInterface,
     BlockField,
     BlockIndexData,
-    BlockInput,
     BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
     inputToData,
+    typesafeMigrationPipe,
 } from "@comet/blocks-api";
-import { IsBoolean, IsOptional, IsUUID } from "class-validator";
+import { IsOptional, IsUUID } from "class-validator";
 
-import { FILE_ENTITY } from "../files/entities/file.entity";
+import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/base-video-block";
+import { FILE_ENTITY } from "../../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
+import { AddPreviewImageMigration } from "./migrations/1-add-preview-image.migration";
 
-class DamVideoBlockData extends BlockData {
+class DamVideoBlockData extends BaseVideoBlockData {
     damFileId?: string;
-
-    @BlockField({ nullable: true })
-    autoplay?: boolean;
-
-    @BlockField({ nullable: true })
-    loop?: boolean;
-
-    @BlockField({ nullable: true })
-    showControls?: boolean;
 
     async transformToPlain() {
         return DamVideoBlockTransformerService;
@@ -47,26 +39,11 @@ class DamVideoBlockData extends BlockData {
     }
 }
 
-class DamVideoBlockInput extends BlockInput {
+class DamVideoBlockInput extends BaseVideoBlockInput {
     @BlockField({ nullable: true })
     @IsUUID()
     @IsOptional()
     damFileId?: string;
-
-    @IsBoolean()
-    @IsOptional()
-    @BlockField({ nullable: true })
-    autoplay?: boolean;
-
-    @IsBoolean()
-    @IsOptional()
-    @BlockField({ nullable: true })
-    loop?: boolean;
-
-    @IsBoolean()
-    @IsOptional()
-    @BlockField({ nullable: true })
-    showControls?: boolean;
 
     transformToBlockData(): BlockDataInterface {
         return inputToData(DamVideoBlockData, this);
@@ -140,6 +117,13 @@ class Meta extends AnnotationBlockMeta {
     }
 }
 
-export const DamVideoBlock = createBlock(DamVideoBlockData, DamVideoBlockInput, { name: "DamVideo", blockMeta: new Meta(DamVideoBlockData) });
+export const DamVideoBlock = createBlock(DamVideoBlockData, DamVideoBlockInput, {
+    name: "DamVideo",
+    blockMeta: new Meta(DamVideoBlockData),
+    migrate: {
+        version: 1,
+        migrations: typesafeMigrationPipe([AddPreviewImageMigration]),
+    },
+});
 
 export type { DamVideoBlockData };

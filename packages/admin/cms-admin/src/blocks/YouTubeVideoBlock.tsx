@@ -1,16 +1,24 @@
-import { Field, FinalFormInput, FinalFormSwitch } from "@comet/admin";
+import { Field, FinalFormInput } from "@comet/admin";
+import {
+    AdminComponentSection,
+    BlockCategory,
+    BlockInterface,
+    BlocksFinalForm,
+    BlockState,
+    createBlockSkeleton,
+    resolveNewState,
+    SelectPreviewComponent,
+    useAdminComponentPaper,
+} from "@comet/blocks-admin";
 import { Box } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
-import { BlocksFinalForm } from "../form/BlocksFinalForm";
-import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { useAdminComponentPaper } from "./common/AdminComponentPaper";
-import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
-import { BlockCategory, BlockInterface } from "./types";
+import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
+import { PixelImageBlock } from "./PixelImageBlock";
 
-type State = YouTubeVideoBlockData;
+type State = Omit<YouTubeVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 
 const EXPECTED_YT_ID_LENGTH = 11;
 
@@ -37,12 +45,23 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
     displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
 
-    defaultValues: () => ({ autoplay: false, showControls: false, loop: false }),
+    defaultValues: () => ({ showControls: true, previewImage: PixelImageBlock.defaultValues() }),
 
     category: BlockCategory.Media,
 
-    createPreviewState: (state, previewCtx) => {
-        return { ...state, autoplay: false, adminMeta: { route: previewCtx.parentUrl } };
+    input2State: (input) => ({ ...input, previewImage: PixelImageBlock.input2State(input.previewImage) }),
+
+    state2Output: (state) => ({ ...state, previewImage: PixelImageBlock.state2Output(state.previewImage) }),
+
+    output2State: async (output, context) => ({ ...output, previewImage: await PixelImageBlock.output2State(output.previewImage, context) }),
+
+    createPreviewState: (state, previewContext) => {
+        return {
+            ...state,
+            autoplay: false,
+            previewImage: PixelImageBlock.createPreviewState(state.previewImage, previewContext),
+            adminMeta: { route: previewContext.parentUrl },
+        };
     },
 
     definesOwnPadding: true,
@@ -56,12 +75,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
                 <SelectPreviewComponent>
-                    <BlocksFinalForm
-                        onSubmit={(newState) => {
-                            updateState(newState);
-                        }}
-                        initialValues={state}
-                    >
+                    <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                         <Field
                             label={intl.formatMessage({
                                 id: "comet.blocks.youTubeVideo.youtubeIdentifier",
@@ -73,25 +87,16 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                             fullWidth
                             disableContentTranslation
                         />
-                        <Field
-                            label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.autoplay", defaultMessage: "Autoplay" })}
-                            name="autoplay"
-                            type="checkbox"
-                            component={FinalFormSwitch}
-                        />
-                        <Field
-                            label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.showControls", defaultMessage: "Show controls" })}
-                            name="showControls"
-                            type="checkbox"
-                            component={FinalFormSwitch}
-                        />
-                        <Field
-                            label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.loop", defaultMessage: "Loop" })}
-                            name="loop"
-                            type="checkbox"
-                            component={FinalFormSwitch}
-                        />
+                        <VideoOptionsFields />
                     </BlocksFinalForm>
+                    <AdminComponentSection title={<FormattedMessage id="comet.blocks.video.previewImage" defaultMessage="Preview Image" />}>
+                        <PixelImageBlock.AdminComponent
+                            state={state.previewImage}
+                            updateState={(setStateAction) => {
+                                updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
+                            }}
+                        />
+                    </AdminComponentSection>
                 </SelectPreviewComponent>
             </Box>
         );

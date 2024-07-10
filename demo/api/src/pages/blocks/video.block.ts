@@ -1,5 +1,5 @@
-import { createOneOfBlock, YouTubeVideoBlock } from "@comet/blocks-api";
-import { DamVideoBlock } from "@comet/cms-api";
+import { createOneOfBlock } from "@comet/blocks-api";
+import { DamVideoBlock, YouTubeVideoBlock } from "@comet/cms-api";
 
 export const VideoBlock = createOneOfBlock(
     {

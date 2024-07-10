@@ -1,8 +1,8 @@
 import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
-import { FilesService } from "../files/files.service";
-import { DamScopeInterface } from "../types";
+import { FilesService } from "../../files/files.service";
+import { DamScopeInterface } from "../../types";
 import { DamVideoBlockData } from "./dam-video.block";
 
 type TransformResponse = {
@@ -54,6 +54,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
             autoplay: block.autoplay,
             loop: block.loop,
             showControls: block.showControls,
+            previewImage: block.previewImage,
         };
     }
 }
