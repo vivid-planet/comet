@@ -7,7 +7,7 @@ export const IsValidYouTubeIdentifier = () => {
         registerDecorator({
             target: object.constructor,
             propertyName,
-            validator: IsValidYoutubeIdentifierConstraint,
+            validator: IsValidYouTubeIdentifierConstraint,
         });
     };
 };
@@ -16,7 +16,7 @@ const EXPECTED_YT_ID_LENGTH = 11;
 
 @ValidatorConstraint({ name: "IsValidYoutubeIdentifier" })
 @Injectable()
-export class IsValidYoutubeIdentifierConstraint implements ValidatorConstraintInterface {
+export class IsValidYouTubeIdentifierConstraint implements ValidatorConstraintInterface {
     validate(value: unknown): boolean {
         if (!isString(value)) {
             return false;
