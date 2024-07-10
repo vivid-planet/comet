@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function Logo(): React.ReactElement {
+export function CometLogoWhite(): React.ReactElement {
     return (
         <svg width="133" height="34" viewBox="0 0 133 34">
             <path
@@ -10,5 +10,3 @@ function Logo(): React.ReactElement {
         </svg>
     );
 }
-
-export { Logo };
