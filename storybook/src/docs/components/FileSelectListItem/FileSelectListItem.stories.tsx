@@ -10,8 +10,6 @@ storiesOf("stories/components/FileSelectListItem", module)
         </Card>
     ))
     .add("FileSelectListItem", () => {
-        const [fileIsDownloading, setFileIsDownloading] = React.useState(false);
-
         return (
             <>
                 {/* Data for this file has not been loaded yet */}
@@ -26,16 +24,13 @@ storiesOf("stories/components/FileSelectListItem", module)
                     file={{
                         name: "Filename.xyz",
                         size: 4.3 * 1024 * 1024, // 4.3 MB
-                        downloading: fileIsDownloading,
                     }}
                     onClickDownload={() => {
-                        setFileIsDownloading(true);
+                        console.log("Downloading file");
                         // Handle download
-                        setTimeout(() => {
-                            setFileIsDownloading(false);
-                        }, 2000);
                     }}
                     onClickDelete={() => {
+                        console.log("Deleting file");
                         // Handle delete
                     }}
                 />
@@ -64,6 +59,7 @@ storiesOf("stories/components/FileSelectListItem", module)
                         error: "File too large",
                     }}
                     onClickDelete={() => {
+                        console.log("Deleting file");
                         // Handle delete
                     }}
                 />

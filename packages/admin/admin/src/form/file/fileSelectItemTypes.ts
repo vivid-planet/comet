@@ -3,7 +3,6 @@ import { ReactNode } from "react";
 export type ValidFileSelectItem<AdditionalFileValues = Record<string, unknown>> = {
     name: string;
     size: number;
-    downloading?: boolean;
 } & AdditionalFileValues;
 
 export type ErrorFileSelectItem = {

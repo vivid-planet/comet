@@ -1,7 +1,6 @@
 import { Delete, Download, Error, ThreeDotSaving } from "@comet/admin-icons";
 import {
     Chip,
-    CircularProgress,
     ComponentsOverrides,
     css,
     IconButton as MuiIconButton,
@@ -58,7 +57,6 @@ export type FileSelectListItemProps = ThemedComponentBaseProps<{
     onClickDelete?: () => void;
     iconMapping?: {
         download?: React.ReactNode;
-        downloading?: React.ReactNode;
         loading?: React.ReactNode;
         delete?: React.ReactNode;
         error?: React.ReactNode;
@@ -83,7 +81,6 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
 
     const {
         download: downloadIcon = <Download />,
-        downloading: downloadingIcon = <CircularProgress size={16} />,
         delete: deleteIcon = <Delete />,
         loading: loadingIcon = <ThreeDotSaving />,
         error: errorIcon = <Error fontSize="inherit" />,
@@ -92,8 +89,6 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
     if ("loading" in file && !file.name) {
         return <Skeleton variant="rounded" height={35} animation="wave" width="100%" sx={{ borderRadius: 2 }} {...slotProps?.skeleton} />;
     }
-
-    const fileIsDownloading = "downloading" in file && file.downloading;
 
     const ownerState: OwnerState = {
         hasErrorWithDetails: "error" in file && typeof file.error !== "boolean",
@@ -121,8 +116,8 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
                                 <ErrorIconContainer {...slotProps?.errorIconContainer}>{errorIcon}</ErrorIconContainer>
                             )}
                             {Boolean(onClickDownload) && (
-                                <IconButton onClick={onClickDownload} disabled={disabled || fileIsDownloading} {...slotProps?.iconButton}>
-                                    {fileIsDownloading ? downloadingIcon : downloadIcon}
+                                <IconButton onClick={onClickDownload} disabled={disabled} {...slotProps?.iconButton}>
+                                    {downloadIcon}
                                 </IconButton>
                             )}
                             {Boolean(onClickDelete) && (

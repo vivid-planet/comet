@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
-import { saveAs } from "file-saver";
 import React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -41,25 +40,13 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
     const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
-    const [downloadingFileIds, setDownloadingFileIds] = React.useState<string[]>([]);
-    const [failedToDownloadFileIds, setFailedToDownloadFileIds] = React.useState<string[]>([]);
 
     const apiUrl = "http://localhost:4000"; // TODO: Where do we get the url from? Env? Hook?
 
     const singleFile = maxFiles === 1;
     const inputValue = React.useMemo(() => (Array.isArray(input.value) ? input.value : input.value ? [input.value] : []), [input.value]);
 
-    const files = [...inputValue, ...failedUploads, ...uploadingFiles].map((file) => {
-        if ("id" in file && downloadingFileIds.includes(file.id)) {
-            return { ...file, downloading: true };
-        }
-
-        if ("id" in file && failedToDownloadFileIds.includes(file.id)) {
-            return { ...file, error: <FormattedMessage id="comet.finalFormFileUpload.downloadFailed" defaultMessage="Download failed." /> };
-        }
-
-        return file;
-    });
+    const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
     return (
         <FileSelect<GQLFinalFormFileUploadFragment>
@@ -144,19 +131,7 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
                 }
             }}
             onDownload={async (file) => {
-                setDownloadingFileIds([...downloadingFileIds, file.id]);
-                fetch(`${apiUrl}/public-upload/files/download/${file.id}`).then(async (response) => {
-                    if (!response.ok) {
-                        setDownloadingFileIds(downloadingFileIds.filter((id) => id !== file.id));
-                        setFailedToDownloadFileIds([...failedToDownloadFileIds, file.id]);
-                        return;
-                    }
-
-                    response.blob().then((blob) => {
-                        saveAs(blob, file.name);
-                        setDownloadingFileIds(downloadingFileIds.filter((id) => id !== file.id));
-                    });
-                });
+                window.open(`${apiUrl}/public-upload/files/download/${file.id}`);
             }}
             files={files}
             maxFiles={maxFiles}
