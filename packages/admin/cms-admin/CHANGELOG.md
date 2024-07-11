@@ -1,5 +1,24 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   06768a70f: Make icon required for top level menu and group items
+
+    This fixes the problem, that there was no icon or text to display in the collapsed state of the menu if no icon was passed.
+    Icons are required for all top level menu items and the items of groups. Groups themselves do not require an icon.
+
+### Patch Changes
+
+-   Updated dependencies [ce5eaede2]
+    -   @comet/admin@7.0.0-beta.3
+    -   @comet/admin-date-time@7.0.0-beta.3
+    -   @comet/admin-icons@7.0.0-beta.3
+    -   @comet/admin-rte@7.0.0-beta.3
+    -   @comet/admin-theme@7.0.0-beta.3
+    -   @comet/blocks-admin@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Major Changes
@@ -537,6 +556,53 @@
     -   @comet/admin-rte@7.0.0-beta.0
     -   @comet/blocks-admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin@6.15.1
+-   @comet/admin-date-time@6.15.1
+-   @comet/admin-icons@6.15.1
+-   @comet/admin-rte@6.15.1
+-   @comet/admin-theme@6.15.1
+-   @comet/blocks-admin@6.15.1
+
+## 6.15.0
+
+### Minor Changes
+
+-   cdc861cb7: Add `buttonChildren` and `children` props to `UserHeaderItem`
+
+    This increases the flexibility of the `UserHeaderItem` component by allowing the `AppHeaderDropdown` label to be passed via `buttonChildren`. More buttons or other list items in the dropdown can be passed via `children`.
+
+    **Example:**
+
+    ```tsx
+    <UserHeaderItem buttonChildren="Some custom label">
+        <Button variant="contained">Some custom button</Button>
+        <Button>Some custom button 2</Button>
+    </UserHeaderItem>
+    ```
+
+### Patch Changes
+
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [406027806]
+-   Updated dependencies [0654f7bce]
+-   Updated dependencies [ec7fb9ff2]
+    -   @comet/admin-icons@6.15.0
+    -   @comet/admin@6.15.0
+    -   @comet/blocks-admin@6.15.0
+    -   @comet/admin-date-time@6.15.0
+    -   @comet/admin-rte@6.15.0
+    -   @comet/admin-theme@6.15.0
 
 ## 6.14.1
 

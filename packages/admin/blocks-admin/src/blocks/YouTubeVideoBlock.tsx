@@ -1,5 +1,5 @@
-import { Field, FieldContainer, FinalFormInput, FinalFormRadio, FinalFormSwitch } from "@comet/admin";
-import { Box, FormControlLabel } from "@mui/material";
+import { Field, FinalFormInput, FinalFormSwitch } from "@comet/admin";
+import { Box } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -37,7 +37,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
     displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
 
-    defaultValues: () => ({ youtubeIdentifier: "", autoplay: false, showControls: false, loop: false, aspectRatio: "16X9" }),
+    defaultValues: () => ({ autoplay: false, showControls: false, loop: false }),
 
     category: BlockCategory.Media,
 
@@ -73,24 +73,6 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                             fullWidth
                             disableContentTranslation
                         />
-                        <FieldContainer label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.aspectRatio", defaultMessage: "Aspect Ratio" })}>
-                            <Field name="aspectRatio" type="radio" value="16X9">
-                                {(props) => (
-                                    <FormControlLabel
-                                        label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.aspectRatio.16X9", defaultMessage: "16:9" })}
-                                        control={<FinalFormRadio {...props} />}
-                                    />
-                                )}
-                            </Field>
-                            <Field name="aspectRatio" type="radio" value="4X3">
-                                {(props) => (
-                                    <FormControlLabel
-                                        label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.aspectRatio.4X3", defaultMessage: "4:3" })}
-                                        control={<FinalFormRadio {...props} />}
-                                    />
-                                )}
-                            </Field>
-                        </FieldContainer>
                         <Field
                             label={intl.formatMessage({ id: "comet.blocks.youTubeVideo.autoplay", defaultMessage: "Autoplay" })}
                             name="autoplay"

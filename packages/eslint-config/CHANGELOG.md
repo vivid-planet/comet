@@ -1,5 +1,18 @@
 # @comet/eslint-config
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   7a473ab8d: Prevent `@mui/icons-material` icon imports
+
+    Icons used in Comet DXP applications should match the Comet CI.
+    Use icons from `@comet/admin-icons` instead.
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Patch Changes
@@ -80,6 +93,22 @@
 ### Patch Changes
 
 -   @comet/eslint-plugin@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   6cb850567: Fix Prettier peer dependency
+
+    The dependency range was incorrectly set to `>= 2`. Change to `^2.0.0` since Prettier v3 isn't supported at the moment.
+
+    -   @comet/eslint-plugin@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.15.0
 
 ## 6.14.1
 

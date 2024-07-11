@@ -4,14 +4,11 @@ import { SortDirection } from "@comet/cms-api";
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
 
-/* eslint-disable @typescript-eslint/naming-convention */
-// TODO: Replace with PascalCase
 export enum ProductTagSortField {
     title = "title",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
 }
-/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(ProductTagSortField, {
     name: "ProductTagSortField",
 });

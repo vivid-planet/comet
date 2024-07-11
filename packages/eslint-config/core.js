@@ -15,9 +15,6 @@ module.exports = {
         "import/no-duplicates": "error",
         "import/newline-after-import": "error",
     },
-    parserOptions: {
-        project: true,
-    },
     overrides: [
         {
             files: ["*.ts", "*.tsx"],
@@ -27,17 +24,6 @@ module.exports = {
             rules: {
                 "@typescript-eslint/no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
                 "@typescript-eslint/no-inferrable-types": ["error", { ignoreProperties: true }],
-                "@typescript-eslint/naming-convention": [
-                    "error",
-                    {
-                        selector: "enum",
-                        format: ["PascalCase"]
-                    },
-                    {
-                        selector: "enumMember",
-                        format: ["PascalCase"]
-                    }
-                ],
                 "@typescript-eslint/prefer-enum-initializers": "error"
             },
         },

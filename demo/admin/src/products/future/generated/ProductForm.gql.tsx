@@ -2,38 +2,6 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { gql } from "@apollo/client";
 
-export const productCategoriesSelectFragment = gql`
-    fragment ProductCategorySelect on ProductCategory {
-        id
-        title
-    }
-`;
-export const productCategoriesQuery = gql`
-    query ProductCategoriesSelect {
-        productCategories {
-            nodes {
-                ...ProductCategorySelect
-            }
-        }
-    }
-    ${productCategoriesSelectFragment}
-`;
-export const productTagsSelectFragment = gql`
-    fragment ProductTagSelect on ProductTag {
-        id
-        title
-    }
-`;
-export const productTagsQuery = gql`
-    query ProductTagsSelect {
-        productTags {
-            nodes {
-                ...ProductTagSelect
-            }
-        }
-    }
-    ${productTagsSelectFragment}
-`;
 export const productFormFragment = gql`
     fragment ProductFormDetails on Product {
         title
@@ -41,18 +9,18 @@ export const productFormFragment = gql`
         createdAt
         description
         type
+        additionalTypes
         category {
+            id
+            title
+        }
+        tags {
             id
             title
         }
         inStock
         availableSince
         image
-        additionalTypes
-        tags {
-            id
-            title
-        }
     }
 `;
 export const productQuery = gql`

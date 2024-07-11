@@ -1,5 +1,5 @@
 import { gql, useApolloClient } from "@apollo/client";
-import { Field, FieldContainer, FinalFormSwitch } from "@comet/admin";
+import { Field, FieldContainer } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab, Video } from "@comet/admin-icons";
 import {
     AdminComponentButton,
@@ -23,6 +23,7 @@ import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 
 type State = DamVideoBlockData;
 
@@ -128,21 +129,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
 
         return (
             <Box padding={isInPaper ? 3 : 0} pb={0}>
-                <BlocksFinalForm
-                    onSubmit={(values) => {
-                        updateState((prevState) => {
-                            // case: autoplay = false and showControls = false is not allowed
-                            if (!values.autoplay && prevState.autoplay) {
-                                return { ...prevState, ...values, showControls: true };
-                            }
-                            if (!values.showControls && prevState.showControls) {
-                                return { ...prevState, ...values, autoplay: true };
-                            }
-                            return { ...prevState, ...values };
-                        });
-                    }}
-                    initialValues={state}
-                >
+                <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                     {state.damFile ? (
                         <FieldContainer fullWidth>
                             <AdminComponentPaper disablePadding>
@@ -203,24 +190,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
                     ) : (
                         <Field name="damFile" component={FileField} fullWidth allowedMimetypes={["video/mp4"]} />
                     )}
-                    <Field
-                        type="checkbox"
-                        name="autoplay"
-                        label={<FormattedMessage id="comet.blocks.video.autoplay" defaultMessage="Autoplay" />}
-                        component={FinalFormSwitch}
-                    />
-                    <Field
-                        type="checkbox"
-                        name="loop"
-                        label={<FormattedMessage id="comet.blocks.video.loop" defaultMessage="Loop" />}
-                        component={FinalFormSwitch}
-                    />
-                    <Field
-                        type="checkbox"
-                        name="showControls"
-                        label={<FormattedMessage id="comet.blocks.video.showControls" defaultMessage="Show controls" />}
-                        component={FinalFormSwitch}
-                    />
+                    <VideoOptionsFields />
                 </BlocksFinalForm>
             </Box>
         );

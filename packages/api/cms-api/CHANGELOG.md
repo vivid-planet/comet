@@ -1,5 +1,46 @@
 # @comet/cms-api
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   caefa1c5d: Rename `DateFilter` to `DateTimeFilter`
+
+    This leaves room for a future DateFilter that only filters by date, not time.
+
+    **Upgrading**
+
+    1. Change import
+
+    ```diff
+    - import { DateFilter } from "@comet/cms-api";
+    + import { DateTimeFilter } from "@comet/cms-api";
+    ```
+
+    2. Re-run API Generator.
+
+-   fe22985d6: API Generator: Replace graphql-type-json with graphql-scalars for JSON columns
+
+    **Upgrading**
+
+    1. Install graphql-scalars: `npm install graphql-scalars`
+    2. Uninstall graphql-type-json: `npm install graphql-type-json`
+    3. Update imports:
+
+        ```diff
+        - import { GraphQLJSONObject } from "graphql-type-json";
+        + import { GraphQLJSONObject } from "graphql-scalars";
+        ```
+
+### Minor Changes
+
+-   5e8713488: API Generator: Add support for filtering one-to-many relations by id
+
+### Patch Changes
+
+-   9c8a9a190: API Generator: Add missing type for integer fields in input type
+    -   @comet/blocks-api@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Minor Changes
@@ -251,6 +292,27 @@
 -   Updated dependencies [e15927594]
 -   Updated dependencies [ebf597120]
     -   @comet/blocks-api@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/blocks-api@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   9b29afd87: Add missing `@RequiredPermission` to `createZip` route
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [c7f5637bd]
+    -   @comet/blocks-api@6.15.0
 
 ## 6.14.1
 

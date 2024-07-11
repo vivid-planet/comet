@@ -1,5 +1,16 @@
 # @comet/admin
 
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   ce5eaede2: Move the `ScopeIndicator` from the `ToolbarBreadcrumbs` to the `Toolbar`
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.3
+-   @comet/admin-theme@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Minor Changes
@@ -361,6 +372,26 @@
 -   Updated dependencies [33ba50719]
     -   @comet/admin-theme@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [406027806]
+    -   @comet/admin-icons@6.15.0
 
 ## 6.14.1
 
