@@ -1,10 +1,10 @@
 import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
-import { ManyToOneIntFilter } from "src/common/filter/many-to-one-int.filter";
 
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
 import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
 import { ManyToOneFilter } from "./many-to-one.filter";
+import { ManyToOneIntFilter } from "./many-to-one-int.filter";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
 
