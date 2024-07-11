@@ -30,8 +30,11 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
             return null;
         }
 
-        // Links to other targets can never be active
-        return <LinkBlock data={page.document.content}>{children}</LinkBlock>;
+        return (
+            <LinkBlock data={page.document.content} className={className}>
+                {children}
+            </LinkBlock>
+        );
     } else if (page.documentType === "Page") {
         return (
             <Link href={`/${page.scope.language}${page.path}`} className={className}>
