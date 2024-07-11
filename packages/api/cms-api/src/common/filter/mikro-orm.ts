@@ -1,4 +1,5 @@
 import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
+import { ManyToOneIntFilter } from "src/common/filter/many-to-one-int.filter";
 
 import { BooleanFilter } from "./boolean.filter";
 import { DateFilter } from "./date.filter";
@@ -86,6 +87,16 @@ export function filterToMikroOrmQuery(
             ret.$eq = filterProperty.equal;
         }
     } else if (filterProperty instanceof ManyToOneFilter) {
+        if (filterProperty.equal !== undefined) {
+            ret.$eq = filterProperty.equal;
+        }
+        if (filterProperty.notEqual !== undefined) {
+            ret.$ne = filterProperty.notEqual;
+        }
+        if (filterProperty.isAnyOf !== undefined) {
+            ret.$in = filterProperty.isAnyOf;
+        }
+    } else if (filterProperty instanceof ManyToOneIntFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
         }
