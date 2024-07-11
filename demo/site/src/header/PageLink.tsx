@@ -12,11 +12,18 @@ interface Props {
     page: GQLPageLinkFragment;
     children: React.ReactNode;
     className?: string;
+    activeClassName?: string;
 }
 
-function PageLink({ page, children, className }: Props): JSX.Element | null {
+function PageLink({ page, children, className: passedClassName, activeClassName }: Props): JSX.Element | null {
     const pathname = usePathname();
     const active = (pathname.substring(3) || "/") === page.path; // Remove language prefix
+
+    let className = passedClassName;
+
+    if (active) {
+        className = className ? `${className} ${activeClassName}` : activeClassName;
+    }
 
     if (page.documentType === "Link") {
         if (page.document === null || page.document.__typename !== "Link") {
@@ -27,7 +34,7 @@ function PageLink({ page, children, className }: Props): JSX.Element | null {
         return <LinkBlock data={page.document.content}>{children}</LinkBlock>;
     } else if (page.documentType === "Page") {
         return (
-            <Link href={`/${page.scope.language}${page.path}`} className={active ? `active ${className}` : className}>
+            <Link href={`/${page.scope.language}${page.path}`} className={className}>
                 {children}
             </Link>
         );
@@ -39,10 +46,7 @@ function PageLink({ page, children, className }: Props): JSX.Element | null {
         const type = (page.document as GQLPredefinedPage).type;
 
         return (
-            <Link
-                href={type && predefinedPagePaths[type] ? `/${page.scope.language}${predefinedPagePaths[type]}` : ""}
-                className={active ? `active ${className}` : className}
-            >
+            <Link href={type && predefinedPagePaths[type] ? `/${page.scope.language}${predefinedPagePaths[type]}` : ""} className={className}>
                 {children}
             </Link>
         );

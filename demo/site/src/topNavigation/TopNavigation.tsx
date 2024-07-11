@@ -13,12 +13,16 @@ export function TopNavigation({ data }: Props): JSX.Element {
         <TopLevelNavigation>
             {data.map((item) => (
                 <TopLevelLinkContainer key={item.id}>
-                    <Link page={item}>{item.name}</Link>
+                    <Link page={item} activeClassName="active">
+                        {item.name}
+                    </Link>
                     {item.childNodes.length > 0 && (
                         <SubLevelNavigation>
                             {item.childNodes.map((node) => (
                                 <li key={node.id}>
-                                    <Link page={node}>{node.name}</Link>
+                                    <Link page={node} activeClassName="active">
+                                        {node.name}
+                                    </Link>
                                 </li>
                             ))}
                         </SubLevelNavigation>

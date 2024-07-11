@@ -16,12 +16,16 @@ function Header({ header }: Props): JSX.Element {
                 <TopLevelNavigation>
                     {header.items.map((item) => (
                         <TopLevelLinkContainer key={item.id}>
-                            <Link page={item.node}>{item.node.name}</Link>
+                            <Link page={item.node} activeClassName="active">
+                                {item.node.name}
+                            </Link>
                             {item.node.childNodes.length > 0 && (
                                 <SubLevelNavigation>
                                     {item.node.childNodes.map((node) => (
                                         <li key={node.id}>
-                                            <Link page={node}>{node.name}</Link>
+                                            <Link page={node} activeClassName="active">
+                                                {node.name}
+                                            </Link>
                                         </li>
                                     ))}
                                 </SubLevelNavigation>
