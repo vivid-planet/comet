@@ -849,43 +849,6 @@ Example:
  />
 ```
 
-### Make relative DAM URLs work
-
-This requires the following change (depending on which router you use):
-
-#### Pages Router
-
-```diff
-// next.config.js
-
-const nextConfig = {
-    rewrites: async () => {
-        if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
-        var rewrites = await require("./preBuild/build/preBuild/src/createRewrites").createRewrites();
--       return rewrites;
-+       return [
-+           ...rewrites,
-+           {
-+               source: "/dam/:path*",
-+               destination: process.env.API_URL + "/dam/:path*",
-+           },
-+       ];
-    },
-    // ...
-```
-
-#### App Router
-
-```diff
-// middleware.ts
-
-export async function middleware(request: NextRequest) {
-+   if (request.nextUrl.pathname.startsWith("/dam/")) {
-+       return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
-+   }
-    // ...
-```
-
 ### Switch to Next.js Preview Mode
 
 #### Requires following changes to site:
