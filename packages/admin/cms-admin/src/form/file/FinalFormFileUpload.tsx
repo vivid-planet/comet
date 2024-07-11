@@ -24,13 +24,6 @@ type SuccessfulApiResponse = {
     contentHash: string;
 };
 
-type FailedApiResponse = {
-    statusCode: number;
-    message: string;
-};
-
-type ApiResponse = SuccessfulApiResponse | FailedApiResponse;
-
 export type FinalFormFileUploadProps<MaxFiles> = (MaxFiles extends 1
     ? { maxFiles?: MaxFiles } & FieldRenderProps<GQLFinalFormFileUploadFragment, HTMLInputElement>
     : { maxFiles?: MaxFiles } & FieldRenderProps<GQLFinalFormFileUploadFragment[], HTMLInputElement>) &
@@ -79,42 +72,41 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
 
                 setUploadingFiles(acceptedFiles.map((file) => ({ name: file.name, loading: true })));
 
-                const fetches = acceptedFiles.map((file) => {
+                const successfullyUploadedFiles: GQLFinalFormFileUploadFragment[] = [];
+
+                for (const file of acceptedFiles) {
                     const formData = new FormData();
                     formData.append("file", file);
-                    return fetch(`${apiUrl}/public-upload/files/upload`, {
+                    const response = await fetch(`${apiUrl}/public-upload/files/upload`, {
                         method: "POST",
                         body: formData,
                     });
-                });
+                    const jsonResponse: SuccessfulApiResponse = await response.json();
 
-                const responses = await Promise.all(fetches)
-                    .then((responses) => Promise.all(responses.map((response) => response.json() as Promise<ApiResponse>)))
-                    .finally(() => {
-                        setUploadingFiles(uploadingFiles.filter((loadingFile) => !acceptedFiles.some((file) => file.name === loadingFile.name)));
-                    });
+                    if ("id" in jsonResponse) {
+                        setUploadingFiles((existing) => existing.filter((loadingFile) => loadingFile.name !== file.name));
+                        const newlyUploadedFile: GQLFinalFormFileUploadFragment = {
+                            id: jsonResponse.id,
+                            name: jsonResponse.name,
+                            size: jsonResponse.size,
+                        };
 
-                const successfulUploadResponses = responses.filter((item) => "id" in item) as SuccessfulApiResponse[];
-                const failedUploads = acceptedFiles.filter((file) => !successfulUploadResponses.some((item) => item.name === file.name));
-
-                failedUploads.forEach((file) => {
-                    setFailedUploads((prevFailedUploads) => [
-                        ...prevFailedUploads,
-                        {
-                            name: file.name,
-                            error: <FormattedMessage id="comet.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />,
-                        },
-                    ]);
-                });
-
-                const successfullyUploadedFiles = [...successfulUploadResponses.map(({ id, name, size }) => ({ id, name, size }))];
-
-                if (singleFile) {
-                    if (successfullyUploadedFiles.length) {
-                        input.onChange(successfullyUploadedFiles[0]);
+                        if (singleFile) {
+                            input.onChange(newlyUploadedFile);
+                        } else {
+                            successfullyUploadedFiles.push(newlyUploadedFile);
+                            input.onChange([...inputValue, ...successfullyUploadedFiles]);
+                        }
+                    } else {
+                        setUploadingFiles((existing) => existing.filter((loadingFile) => loadingFile.name !== file.name));
+                        setFailedUploads((existing) => [
+                            ...existing,
+                            {
+                                name: file.name,
+                                error: <FormattedMessage id="comet.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />,
+                            },
+                        ]);
                     }
-                } else {
-                    input.onChange([...inputValue, ...successfullyUploadedFiles]);
                 }
             }}
             onRemove={(fileToRemove) => {
