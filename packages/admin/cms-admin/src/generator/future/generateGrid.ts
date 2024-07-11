@@ -236,7 +236,11 @@ export function generateGrid(
         } else if (type == "staticSelect") {
             const introspectionField = schemaEntity.fields.find((field) => field.name === name);
             if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
-            const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+            let introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
+            if (introspectionFieldType.kind === "LIST") {
+                introspectionFieldType =
+                    introspectionFieldType.ofType.kind === "NON_NULL" ? introspectionFieldType.ofType.ofType : introspectionFieldType.ofType;
+            }
 
             const enumType = gqlIntrospection.__schema.types.find(
                 (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
