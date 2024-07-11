@@ -1,7 +1,7 @@
 import { Migration } from "@mikro-orm/migrations";
 import * as mimedb from "mime-db";
 
-export const getValidExtensionsForMimetype = (mimetype: string) => {
+const getValidExtensionsForMimetype = (mimetype: string) => {
     let supportedExtensions: readonly string[] | undefined;
     if (mimetype === "application/x-zip-compressed") {
         // zip files in Windows, not supported by mime-db
