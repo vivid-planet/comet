@@ -9,16 +9,28 @@ interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
     children: React.ReactElement;
     title?: string;
     className?: string;
+    legacyBehavior?: boolean;
 }
 
 export const DamFileDownloadLinkBlock = withPreview(
-    ({ data: { file, openFileType }, children, title, className }: Props) => {
+    ({ data: { file, openFileType }, children, title, className, legacyBehavior }: Props) => {
         if (!file) {
+            if (legacyBehavior) {
+                return children;
+            }
+
             return <span className={className}>{children}</span>;
         }
 
+        const href = file.fileUrl;
+        const target = openFileType === "NewTab" ? "_blank" : undefined;
+
+        if (legacyBehavior) {
+            return React.cloneElement(children, { href, target, title });
+        }
+
         return (
-            <a href={file.fileUrl} target={openFileType === "NewTab" ? "_blank" : undefined} title={title} className={className}>
+            <a href={href} target={target} title={title} className={className}>
                 {children}
             </a>
         );

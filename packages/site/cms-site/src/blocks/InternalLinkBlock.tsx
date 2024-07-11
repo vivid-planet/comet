@@ -9,6 +9,7 @@ interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
     children: React.ReactNode;
     title?: string;
     className?: string;
+    legacyBehavior?: boolean;
 }
 
 /**
@@ -19,13 +20,28 @@ export function InternalLinkBlock({
     children,
     title,
     className,
+    legacyBehavior,
 }: InternalLinkBlockProps): React.ReactElement {
     if (!targetPage) {
+        if (legacyBehavior) {
+            return <>{children}</>;
+        }
+
         return <span className={className}>{children}</span>;
     }
 
+    const href = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
+
+    if (legacyBehavior) {
+        return (
+            <Link href={href} title={title} passHref legacyBehavior>
+                {children}
+            </Link>
+        );
+    }
+
     return (
-        <Link href={targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path} title={title} className={className}>
+        <Link href={href} title={title} className={className}>
             {children}
         </Link>
     );
