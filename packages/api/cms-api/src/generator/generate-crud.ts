@@ -127,7 +127,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, ManyToOneFilter, ManyToOneFilter, createEnumFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, ManyToOneFilter, ManyToOneIntFilter, createEnumFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
