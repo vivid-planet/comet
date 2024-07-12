@@ -543,7 +543,7 @@ type Product {
   statistics: ProductStatistics
   createdAt: DateTime!
   updatedAt: DateTime!
-  factsheet: PublicUpload
+  priceList: PublicUpload
   datasheets: [PublicUpload!]!
   category: ProductCategory
   manufacturer: Manufacturer
@@ -943,7 +943,7 @@ input ProductFilter {
   createdAt: DateFilter
   updatedAt: DateFilter
   manufacturer: ManyToOneFilter
-  factsheet: ManyToOneFilter
+  priceList: ManyToOneFilter
   datasheets: ManyToManyFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
@@ -1004,7 +1004,7 @@ enum ProductSortField {
   createdAt
   updatedAt
   manufacturer
-  factsheet
+  priceList
 }
 
 input ProductCategoryFilter {
@@ -1358,7 +1358,7 @@ input ProductInput {
   tags: [ID!]! = []
   tagsWithStatus: [ProductNestedProductToTagInput!]! = []
   manufacturer: ID = null
-  factsheet: ID = null
+  priceList: ID = null
   datasheets: [ID!]! = []
 }
 
@@ -1396,7 +1396,7 @@ input ProductUpdateInput {
   tags: [ID!]
   tagsWithStatus: [ProductNestedProductToTagInput!]
   manufacturer: ID
-  factsheet: ID
+  priceList: ID
   datasheets: [ID!]
 }
 

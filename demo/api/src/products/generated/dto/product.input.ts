@@ -118,7 +118,7 @@ export class ProductInput {
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })
     @IsString()
-    factsheet?: string;
+    priceList?: string;
 
     @Field(() => [ID], { defaultValue: [] })
     @IsArray()

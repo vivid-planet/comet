@@ -106,7 +106,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
-            factsheet: formValues.factsheet ? formValues.factsheet.id : null,
+            priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
         };
 
@@ -205,8 +205,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Card sx={{ mb: 4 }}>
                             <CardContent>
                                 <Field
-                                    label={<FormattedMessage id="product.factsheet" defaultMessage="Factsheet" />}
-                                    name="factsheet"
+                                    label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
+                                    name="priceList"
                                     component={FinalFormFileUpload}
                                     maxFiles={1}
                                     maxFileSize={1024 * 1024 * 4} // 4 MB

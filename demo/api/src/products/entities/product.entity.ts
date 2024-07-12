@@ -201,7 +201,7 @@ export class Product extends BaseEntity<Product, "id"> {
 
     @ManyToOne(() => PublicUpload, { nullable: true, ref: true })
     @Field(() => PublicUpload, { nullable: true })
-    factsheet?: Ref<PublicUpload> = undefined;
+    priceList?: Ref<PublicUpload> = undefined;
 
     @ManyToMany(() => PublicUpload)
     @Field(() => [PublicUpload])

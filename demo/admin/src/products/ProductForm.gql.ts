@@ -19,7 +19,7 @@ export const productFormFragment = gql`
         additionalTypes
         inStock
         image
-        factsheet {
+        priceList {
             ...FinalFormFileUpload
         }
         datasheets {

@@ -67,8 +67,8 @@ export class ProductResolver {
         if (fields.includes("manufacturer")) {
             populate.push("manufacturer");
         }
-        if (fields.includes("factsheet")) {
-            populate.push("factsheet");
+        if (fields.includes("priceList")) {
+            populate.push("priceList");
         }
         if (fields.includes("colors")) {
             populate.push("colors");
@@ -113,7 +113,7 @@ export class ProductResolver {
             datasheets: datasheetsInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
-            factsheet: factsheetInput,
+            priceList: priceListInput,
             statistics: statisticsInput,
             image: imageInput,
             ...assignInput
@@ -123,7 +123,7 @@ export class ProductResolver {
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             manufacturer: manufacturerInput ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput)) : undefined,
-            factsheet: factsheetInput ? Reference.create(await this.publicUploadRepository.findOneOrFail(factsheetInput)) : undefined,
+            priceList: priceListInput ? Reference.create(await this.publicUploadRepository.findOneOrFail(priceListInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
         if (colorsInput) {
@@ -192,7 +192,7 @@ export class ProductResolver {
             datasheets: datasheetsInput,
             category: categoryInput,
             manufacturer: manufacturerInput,
-            factsheet: factsheetInput,
+            priceList: priceListInput,
             statistics: statisticsInput,
             image: imageInput,
             ...assignInput
@@ -253,8 +253,8 @@ export class ProductResolver {
                 ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput))
                 : undefined;
         }
-        if (factsheetInput !== undefined) {
-            product.factsheet = factsheetInput ? Reference.create(await this.publicUploadRepository.findOneOrFail(factsheetInput)) : undefined;
+        if (priceListInput !== undefined) {
+            product.priceList = priceListInput ? Reference.create(await this.publicUploadRepository.findOneOrFail(priceListInput)) : undefined;
         }
 
         if (imageInput) {
@@ -286,8 +286,8 @@ export class ProductResolver {
     }
 
     @ResolveField(() => PublicUpload, { nullable: true })
-    async factsheet(@Parent() product: Product): Promise<PublicUpload | undefined> {
-        return product.factsheet?.load();
+    async priceList(@Parent() product: Product): Promise<PublicUpload | undefined> {
+        return product.priceList?.load();
     }
 
     @ResolveField(() => [ProductColor])

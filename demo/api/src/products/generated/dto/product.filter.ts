@@ -120,7 +120,7 @@ export class ProductFilter {
     @ValidateNested()
     @IsOptional()
     @Type(() => ManyToOneFilter)
-    factsheet?: ManyToOneFilter;
+    priceList?: ManyToOneFilter;
 
     @Field(() => ManyToManyFilter, { nullable: true })
     @ValidateNested()

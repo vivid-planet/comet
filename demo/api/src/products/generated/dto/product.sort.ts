@@ -21,7 +21,7 @@ export enum ProductSortField {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     manufacturer = "manufacturer",
-    factsheet = "factsheet",
+    priceList = "priceList",
 }
 /* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(ProductSortField, {

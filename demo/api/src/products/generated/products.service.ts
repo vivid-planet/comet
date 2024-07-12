@@ -26,10 +26,10 @@ export class ProductsService {
                     "manufacturer.addressAsEmbeddable_country",
                     "manufacturer.addressAsEmbeddable_alternativeAddress_street",
                     "manufacturer.addressAsEmbeddable_alternativeAddress_country",
-                    "factsheet.id",
-                    "factsheet.name",
-                    "factsheet.mimetype",
-                    "factsheet.contentHash",
+                    "priceList.id",
+                    "priceList.name",
+                    "priceList.mimetype",
+                    "priceList.contentHash",
                 ]),
             );
         }
