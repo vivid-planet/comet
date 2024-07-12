@@ -2,7 +2,7 @@ import { Block, BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/bl
 import { Embedded, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Type } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { RootBlockType } from "../../blocks/root-block-type";

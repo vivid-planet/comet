@@ -4,9 +4,9 @@ import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
 import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
-import { DamVideoBlockTransformerService } from "./blocks/dam-video-block-transformer.service";
 import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
+import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";

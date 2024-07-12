@@ -1,0 +1,7 @@
+{
+    "extends": "@comet/eslint-config/nextjs",
+    "ignorePatterns": ["**/**/*.generated.ts", "dist/**"],
+    "rules": {
+        "@calm/react-intl/missing-formatted-message": "off"
+    }
+}

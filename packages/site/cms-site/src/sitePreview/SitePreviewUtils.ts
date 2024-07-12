@@ -8,7 +8,7 @@ import { type NextRequest } from "next/server";
 import { GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Scope = Record<string, any>;
+export type Scope = Record<string, any>;
 
 export type SitePreviewData = {
     includeInvisible: boolean;

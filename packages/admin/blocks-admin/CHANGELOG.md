@@ -1,5 +1,61 @@
 # @comet/blocks-admin
 
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [a0bd09afa]
+-   Updated dependencies [170720b0c]
+    -   @comet/admin@7.0.0-beta.4
+    -   @comet/admin-icons@7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+### Patch Changes
+
+-   Updated dependencies [ce5eaede2]
+    -   @comet/admin@7.0.0-beta.3
+    -   @comet/admin-icons@7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+### Patch Changes
+
+-   Updated dependencies [2fc764e29]
+    -   @comet/admin@7.0.0-beta.2
+    -   @comet/admin-icons@7.0.0-beta.2
+
 ## 7.0.0-beta.1
 
 ### Patch Changes
@@ -153,6 +209,40 @@
 -   Updated dependencies [92eae2ba9]
     -   @comet/admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin@6.15.1
+-   @comet/admin-icons@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   ec7fb9ff2: Fix a validation error for default values in `YouTubeVideoBlock`
+-   Updated dependencies [406027806]
+-   Updated dependencies [0654f7bce]
+    -   @comet/admin-icons@6.15.0
+    -   @comet/admin@6.15.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin@6.14.1
+-   @comet/admin-icons@6.14.1
+
+## 6.14.0
+
+### Patch Changes
+
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [efccc42a3]
+-   Updated dependencies [012a768ee]
+    -   @comet/admin@6.14.0
+    -   @comet/admin-icons@6.14.0
 
 ## 6.13.0
 

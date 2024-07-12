@@ -120,10 +120,11 @@ export async function generateCrudInput(
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             if (integerTypes.includes(prop.columnTypes[0])) {
                 decorators.push("@IsInt()");
+                decorators.push(`@Field(() => Int, ${fieldOptions})`);
             } else {
                 decorators.push("@IsNumber()");
+                decorators.push(`@Field(${fieldOptions})`);
             }
-            decorators.push(`@Field(${fieldOptions})`);
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
@@ -375,11 +376,11 @@ export async function generateCrudInput(
     `;
     }
     const className = options.className ?? `${metadata.className}Input`;
-    const inputOut = `import { Field, InputType, ID } from "@nestjs/graphql";
+    const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 ${generateImportsCode(imports)}
 

@@ -4,10 +4,11 @@ import {
     BooleanFilter,
     createEnumFilter,
     createEnumsFilter,
-    DateFilter,
+    DateTimeFilter,
     ManyToManyFilter,
     ManyToOneFilter,
     NumberFilter,
+    OneToManyFilter,
     StringFilter,
 } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
@@ -80,11 +81,23 @@ export class ProductFilter {
     @Type(() => NumberFilter)
     soldCount?: NumberFilter;
 
-    @Field(() => DateFilter, { nullable: true })
+    @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => DateFilter)
-    availableSince?: DateFilter;
+    @Type(() => DateTimeFilter)
+    availableSince?: DateTimeFilter;
+
+    @Field(() => OneToManyFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => OneToManyFilter)
+    colors?: OneToManyFilter;
+
+    @Field(() => OneToManyFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => OneToManyFilter)
+    variants?: OneToManyFilter;
 
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()
@@ -98,17 +111,23 @@ export class ProductFilter {
     @Type(() => ManyToManyFilter)
     tags?: ManyToManyFilter;
 
-    @Field(() => DateFilter, { nullable: true })
+    @Field(() => OneToManyFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => DateFilter)
-    createdAt?: DateFilter;
+    @Type(() => OneToManyFilter)
+    tagsWithStatus?: OneToManyFilter;
 
-    @Field(() => DateFilter, { nullable: true })
+    @Field(() => DateTimeFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => DateFilter)
-    updatedAt?: DateFilter;
+    @Type(() => DateTimeFilter)
+    createdAt?: DateTimeFilter;
+
+    @Field(() => DateTimeFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => DateTimeFilter)
+    updatedAt?: DateTimeFilter;
 
     @Field(() => ManyToOneFilter, { nullable: true })
     @ValidateNested()

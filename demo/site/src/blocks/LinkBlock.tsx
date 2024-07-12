@@ -1,5 +1,14 @@
 "use client";
-import { DamFileDownloadLinkBlock, ExternalLinkBlock, OneOfBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
+import {
+    DamFileDownloadLinkBlock,
+    EmailLinkBlock,
+    ExternalLinkBlock,
+    OneOfBlock,
+    PhoneLinkBlock,
+    PropsWithData,
+    SupportedBlocks,
+    withPreview,
+} from "@comet/cms-site";
 import { LinkBlockData } from "@src/blocks.generated";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import * as React from "react";
@@ -26,6 +35,16 @@ const supportedBlocks: SupportedBlocks = {
         <DamFileDownloadLinkBlock data={props} title={title}>
             {children}
         </DamFileDownloadLinkBlock>
+    ),
+    email: ({ children, title, ...props }) => (
+        <EmailLinkBlock data={props} title={title}>
+            {children}
+        </EmailLinkBlock>
+    ),
+    phone: ({ children, title, ...props }) => (
+        <PhoneLinkBlock data={props} title={title}>
+            {children}
+        </PhoneLinkBlock>
     ),
 };
 

@@ -1,5 +1,148 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+### Minor Changes
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
+### Patch Changes
+
+-   Updated dependencies [a0bd09afa]
+-   Updated dependencies [b7560e3a7]
+-   Updated dependencies [170720b0c]
+-   Updated dependencies [a58918893]
+    -   @comet/admin@7.0.0-beta.4
+    -   @comet/blocks-admin@7.0.0-beta.4
+    -   @comet/admin-date-time@7.0.0-beta.4
+    -   @comet/admin-icons@7.0.0-beta.4
+    -   @comet/admin-rte@7.0.0-beta.4
+    -   @comet/admin-theme@7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   06768a70f: Make icon required for top level menu and group items
+
+    This fixes the problem, that there was no icon or text to display in the collapsed state of the menu if no icon was passed.
+    Icons are required for all top level menu items and the items of groups. Groups themselves do not require an icon.
+
+### Patch Changes
+
+-   Updated dependencies [ce5eaede2]
+    -   @comet/admin@7.0.0-beta.3
+    -   @comet/admin-date-time@7.0.0-beta.3
+    -   @comet/admin-icons@7.0.0-beta.3
+    -   @comet/admin-rte@7.0.0-beta.3
+    -   @comet/admin-theme@7.0.0-beta.3
+    -   @comet/blocks-admin@7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+### Major Changes
+
+-   3574617ea: Remove `EditPageLayout`
+
+    You can completely remove `EditPageLayout` from your application.
+    Instead, use `MainContent` to wrap all your page content except the `Toolbar`.
+    If needed, wrap `MainContent` and `Toolbar` in a fragment.
+
+    Example:
+
+    ```diff
+    - <EditPageLayout>
+    + <>
+          <Toolbar>
+              // ...
+          </Toolbar>
+    -     <div>
+    +     <MainContent>
+              // ...
+    -     </div>
+    +     </MainContent>
+    - </EditPageLayout>
+    + </>
+    ```
+
+### Minor Changes
+
+-   acfcef9e4: The `documentTypes` prop of `PagesPage` now also accepts a function mapping categories to document types
+
+    Previously, only the supported documentTypes of the current category could be passed to the `PagesPage`.
+    That made it impossible to verify if a document can be moved to another category.
+    If a document was moved to a category that didn't support its type, the PageTree crashed.
+
+    If a mapping function is passed to `documentTypes`, documents can only be moved to categories that support their type.
+
+    ```diff
+    <PagesPage
+    -   documentTypes={pageTreeDocumentTypes}
+    +   documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+    +       if (category === "TopMenu") {
+    +           return {
+    +               Page,
+    +               PredefinedPage,
+    +           };
+    +       }
+    +
+    +       return {
+    +           Page,
+    +           PredefinedPage,
+    +           Link,
+    +       };
+    +   }}
+        // ...
+    />
+    ```
+
+-   61a43d270: Add a menu item to `PixelImageBlock`, `SvgImageBlock` and `DamVideoBlock` that opens the chosen file in the DAM
+
+    Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+    ```diff
+    // App.tsx
+
+    <DependenciesConfigProvider
+        entityDependencyMap={{
+    +       DamFile: createDamFileDependency(),
+            // ...
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   e106a02b2: Make the `ContentScopeIndicator` show the scope label instead of the scope value
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [2de81e40b]
+    -   @comet/admin@7.0.0-beta.2
+    -   @comet/admin-theme@7.0.0-beta.2
+    -   @comet/admin-date-time@7.0.0-beta.2
+    -   @comet/admin-icons@7.0.0-beta.2
+    -   @comet/admin-rte@7.0.0-beta.2
+    -   @comet/blocks-admin@7.0.0-beta.2
+
 ## 7.0.0-beta.1
 
 ### Major Changes
@@ -452,6 +595,134 @@
     -   @comet/admin-rte@7.0.0-beta.0
     -   @comet/blocks-admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin@6.15.1
+-   @comet/admin-date-time@6.15.1
+-   @comet/admin-icons@6.15.1
+-   @comet/admin-rte@6.15.1
+-   @comet/admin-theme@6.15.1
+-   @comet/blocks-admin@6.15.1
+
+## 6.15.0
+
+### Minor Changes
+
+-   cdc861cb7: Add `buttonChildren` and `children` props to `UserHeaderItem`
+
+    This increases the flexibility of the `UserHeaderItem` component by allowing the `AppHeaderDropdown` label to be passed via `buttonChildren`. More buttons or other list items in the dropdown can be passed via `children`.
+
+    **Example:**
+
+    ```tsx
+    <UserHeaderItem buttonChildren="Some custom label">
+        <Button variant="contained">Some custom button</Button>
+        <Button>Some custom button 2</Button>
+    </UserHeaderItem>
+    ```
+
+### Patch Changes
+
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [406027806]
+-   Updated dependencies [0654f7bce]
+-   Updated dependencies [ec7fb9ff2]
+    -   @comet/admin-icons@6.15.0
+    -   @comet/admin@6.15.0
+    -   @comet/blocks-admin@6.15.0
+    -   @comet/admin-date-time@6.15.0
+    -   @comet/admin-rte@6.15.0
+    -   @comet/admin-theme@6.15.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin@6.14.1
+-   @comet/admin-date-time@6.14.1
+-   @comet/admin-icons@6.14.1
+-   @comet/admin-rte@6.14.1
+-   @comet/admin-theme@6.14.1
+-   @comet/blocks-admin@6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   9055ff71a: Remove label from `DamVideoBlock` file field
+
+    This was done to streamline it with the `DamImageBlock`.
+
+-   dddb03d1b: Add capability to generate alt texts and titles for images in DAM
+
+    You can find instructions for adding this feature to your project [in the docs](https://docs.comet-dxp.com/docs/content-generation/).
+
+-   acfcef9e4: The `documentTypes` prop of `PagesPage` now also accepts a function mapping categories to document types
+
+    Previously, only the supported documentTypes of the current category could be passed to the `PagesPage`.
+    That made it impossible to verify if a document can be moved to another category.
+    If a document was moved to a category that didn't support its type, the PageTree crashed.
+
+    If a mapping function is passed to `documentTypes`, documents can only be moved to categories that support their type.
+
+    ```diff
+    <PagesPage
+    -   documentTypes={pageTreeDocumentTypes}
+    +   documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+    +       if (category === "TopMenu") {
+    +           return {
+    +               Page,
+    +               PredefinedPage,
+    +           };
+    +       }
+    +
+    +       return {
+    +           Page,
+    +           PredefinedPage,
+    +           Link,
+    +       };
+    +   }}
+        // ...
+    />
+    ```
+
+-   61a43d270: Add a menu item to `PixelImageBlock`, `SvgImageBlock` and `DamVideoBlock` that opens the chosen file in the DAM
+
+    Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+    ```diff
+    // App.tsx
+
+    <DependenciesConfigProvider
+        entityDependencyMap={{
+    +       DamFile: createDamFileDependency(),
+            // ...
+        }}
+    >
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [2de81e40b]
+-   Updated dependencies [efccc42a3]
+-   Updated dependencies [012a768ee]
+    -   @comet/admin@6.14.0
+    -   @comet/admin-theme@6.14.0
+    -   @comet/admin-icons@6.14.0
+    -   @comet/admin-date-time@6.14.0
+    -   @comet/admin-rte@6.14.0
+    -   @comet/blocks-admin@6.14.0
 
 ## 6.13.0
 
