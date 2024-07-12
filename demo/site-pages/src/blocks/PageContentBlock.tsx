@@ -33,5 +33,14 @@ const supportedBlocks: SupportedBlocks = {
 };
 
 export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = ({ data }) => {
-    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
+    return (
+        <BlocksBlock
+            data={data}
+            supportedBlocks={supportedBlocks}
+            reportError={(error) => {
+                console.error("Error", error);
+                // In the application, error handling tools can be used to report errors
+            }}
+        />
+    );
 };

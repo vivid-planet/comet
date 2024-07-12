@@ -14,5 +14,14 @@ const supportedBlocks: SupportedBlocks = {
 };
 
 export const NewsContentBlock: React.FC<PropsWithData<NewsContentBlockData>> = ({ data }) => {
-    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
+    return (
+        <BlocksBlock
+            data={data}
+            supportedBlocks={supportedBlocks}
+            reportError={(error) => {
+                console.error("Error", error);
+                // In the application, error handling tools can be used to report errors
+            }}
+        />
+    );
 };

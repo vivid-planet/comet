@@ -75,7 +75,10 @@ const supportedBlocks: SupportedBlocks = {
 };
 
 export function PageContentBlock({ data }: PropsWithData<PageContentBlockData>) {
-    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
+    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} reportError={(error) => {
+                console.error("Error", error);
+                // In the application, error handling tools can be used to report errors
+            }} />;
 };
 ```
 
@@ -239,7 +242,10 @@ const supportedBlocks: SupportedBlocks = {
 };
 
 function ColumnsContentBlock({ data }: PropsWithData<ColumnsContentBlockData>) {
-    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
+    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} reportError={(error) => {
+                console.error("Error", error);
+                // In the application, error handling tools can be used to report errors
+            }} />;
 };
 
 export function ColumnsBlock({ data: { layout, columns } }: PropsWithData<ColumnsBlockData>) {

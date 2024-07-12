@@ -18,7 +18,16 @@ const supportedBlocks: SupportedBlocks = {
 
 const ColumnsContentBlock = withPreview(
     ({ data }: PropsWithData<ColumnsContentBlockData>) => {
-        return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
+        return (
+            <BlocksBlock
+                data={data}
+                supportedBlocks={supportedBlocks}
+                reportError={(error) => {
+                    console.error("Error", error);
+                    // In the application, error handling tools can be used to report errors
+                }}
+            />
+        );
     },
     { label: "Columns content" },
 );
