@@ -4,7 +4,7 @@ import { ErrorInfo } from "react";
 import styled from "styled-components";
 
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
-import { ErrorBoundary } from "./ErrorBoundary";
+import { ErrorBoundary } from "../helpers/ErrorBoundary";
 import { SupportedBlocks } from "./types";
 
 interface Props {
