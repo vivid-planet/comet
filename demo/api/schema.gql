@@ -459,8 +459,18 @@ type Manufacturer {
   updatedAt: DateTime!
 }
 
+type ManufacturerCountry {
+  id: String!
+  used: Float!
+}
+
 type PaginatedManufacturers {
   nodes: [Manufacturer!]!
+  totalCount: Int!
+}
+
+type PaginatedManufacturerCountries {
+  nodes: [ManufacturerCountry!]!
   totalCount: Int!
 }
 
@@ -507,10 +517,10 @@ type ProductTag {
 type ProductVariant {
   id: ID!
   name: String!
-  image: DamImageBlockData!
   createdAt: DateTime!
   updatedAt: DateTime!
   product: Product!
+  image: DamImageBlockData!
 }
 
 type ProductDiscounts {
@@ -536,7 +546,6 @@ type Product {
   inStock: Boolean!
   soldCount: Int
   availableSince: DateTime
-  image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
@@ -551,6 +560,7 @@ type Product {
   variants: [ProductVariant!]!
   tagsWithStatus: [ProductToTag!]!
   tags: [ProductTag!]!
+  image: DamImageBlockData!
 }
 
 enum ProductStatus {
@@ -772,6 +782,8 @@ type Query {
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
+  manufacturerCountry(id: ID!): ManufacturerCountry!
+  manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
 }
 
 input UserFilter {
@@ -826,8 +838,8 @@ input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
   active: BooleanFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [RedirectFilter!]
   or: [RedirectFilter!]
 }
@@ -836,7 +848,7 @@ input BooleanFilter {
   equal: Boolean
 }
 
-input DateFilter {
+input DateTimeFilter {
   equal: DateTime
   lowerThan: DateTime
   greaterThan: DateTime
@@ -892,10 +904,11 @@ input NewsFilter {
   slug: StringFilter
   title: StringFilter
   status: NewsStatusEnumFilter
-  date: DateFilter
+  date: DateTimeFilter
   category: NewsCategoryEnumFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  comments: OneToManyFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [NewsFilter!]
   or: [NewsFilter!]
 }
@@ -910,6 +923,10 @@ input NewsCategoryEnumFilter {
   isAnyOf: [NewsCategory!]
   equal: NewsCategory
   notEqual: NewsCategory
+}
+
+input OneToManyFilter {
+  contains: ID
 }
 
 input NewsSort {
@@ -937,11 +954,14 @@ input ProductFilter {
   price: NumberFilter
   inStock: BooleanFilter
   soldCount: NumberFilter
-  availableSince: DateFilter
+  availableSince: DateTimeFilter
+  colors: OneToManyFilter
+  variants: OneToManyFilter
   category: ManyToOneFilter
   tags: ManyToManyFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  tagsWithStatus: OneToManyFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   manufacturer: ManyToOneFilter
   priceList: ManyToOneFilter
   datasheets: ManyToManyFilter
@@ -1010,8 +1030,9 @@ enum ProductSortField {
 input ProductCategoryFilter {
   title: StringFilter
   slug: StringFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  products: OneToManyFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [ProductCategoryFilter!]
   or: [ProductCategoryFilter!]
 }
@@ -1031,8 +1052,9 @@ enum ProductCategorySortField {
 input ProductTagFilter {
   title: StringFilter
   products: ManyToManyFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  productsWithStatus: OneToManyFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [ProductTagFilter!]
   or: [ProductTagFilter!]
 }
@@ -1050,8 +1072,8 @@ enum ProductTagSortField {
 
 input ProductVariantFilter {
   name: StringFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [ProductVariantFilter!]
   or: [ProductVariantFilter!]
 }
@@ -1078,7 +1100,7 @@ input ManufacturerFilter {
   addressAsEmbeddable_alternativeAddress_streetNumber: NumberFilter
   addressAsEmbeddable_alternativeAddress_zip: NumberFilter
   addressAsEmbeddable_alternativeAddress_country: StringFilter
-  updatedAt: DateFilter
+  updatedAt: DateTimeFilter
   and: [ManufacturerFilter!]
   or: [ManufacturerFilter!]
 }
@@ -1099,6 +1121,13 @@ enum ManufacturerSortField {
   addressAsEmbeddable_alternativeAddress_zip
   addressAsEmbeddable_alternativeAddress_country
   updatedAt
+}
+
+input ManufacturerCountryFilter {
+  id: StringFilter
+  used: NumberFilter
+  and: [ManufacturerCountryFilter!]
+  or: [ManufacturerCountryFilter!]
 }
 
 type Mutation {
@@ -1363,7 +1392,7 @@ input ProductInput {
 }
 
 input ProductNestedProductStatisticsInput {
-  views: Float!
+  views: Int!
 }
 
 input ProductNestedProductColorInput {

@@ -1,10 +1,22 @@
 import { IntrospectionQuery } from "graphql";
 
+import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
 import { generateFormField } from "./generateFormField";
 import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
+
+export type Prop = { type: string; optional: boolean; name: string };
+function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
+    if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
+    return {
+        formPropsTypeCode: `interface FormProps {
+            ${props.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
+        }`,
+        formPropsParamsCode: `{${props.map((prop) => prop.name).join(", ")}}: FormProps`,
+    };
+}
 
 export function generateForm(
     {
@@ -20,12 +32,39 @@ export function generateForm(
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
+    const props: Prop[] = [];
 
     const mode = config.mode ?? "all";
     const editMode = mode === "edit" || mode == "all";
     const addMode = mode === "add" || mode == "all";
 
-    const createMutation = addMode ? findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection) : undefined;
+    const createMutationType = addMode && findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection);
+
+    const gqlArgs: ReturnType<typeof getForwardedGqlArgs>["gqlArgs"] = [];
+    if (createMutationType) {
+        const {
+            imports: forwardedGqlArgsImports,
+            props: forwardedGqlArgsProps,
+            gqlArgs: forwardedGqlArgs,
+        } = getForwardedGqlArgs({
+            fields: config.fields,
+            gqlOperation: createMutationType,
+            gqlIntrospection,
+        });
+        imports.push(...forwardedGqlArgsImports);
+        props.push(...forwardedGqlArgsProps);
+        gqlArgs.push(...forwardedGqlArgs);
+    }
+
+    if (editMode) {
+        if (mode === "all") {
+            props.push({ name: "id", optional: true, type: "string" });
+        } else if (mode === "edit") {
+            props.push({ name: "id", optional: false, type: "string" });
+        }
+    }
+
+    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
     const rootBlockFields = config.fields
         .filter((field) => field.type == "block")
@@ -57,7 +96,7 @@ export function generateForm(
     const formFragmentFields: string[] = [];
     const fieldsCode = config.fields
         .map((field) => {
-            const generated = generateFormField({ gqlIntrospection }, field, config);
+            const generated = generateFormField({ gqlIntrospection, baseOutputFilename }, field, config);
             for (const name in generated.gqlDocuments) {
                 gqlDocuments[name] = generated.gqlDocuments[name];
             }
@@ -89,10 +128,28 @@ export function generateForm(
         `;
     }
 
-    if (addMode && createMutation) {
+    if (addMode && createMutationType) {
         gqlDocuments[`create${gqlType}Mutation`] = `
-            mutation Create${gqlType}($input: ${gqlType}Input!) {
-                ${createMutation.name}(input: $input) {
+            mutation Create${gqlType}(${
+            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
+                ? `${gqlArgs
+                      .filter((gqlArg) => !gqlArg.isInputArgSubfield)
+                      .map((gqlArg) => {
+                          return `$${gqlArg.name}: ${gqlArg.type}!`;
+                      })
+                      .join(", ")}, `
+                : ``
+        }$input: ${gqlType}Input!) {
+                ${createMutationType.name}(${
+            gqlArgs.filter((gqlArg) => !gqlArg.isInputArgSubfield).length
+                ? `${gqlArgs
+                      .filter((gqlArg) => !gqlArg.isInputArgSubfield)
+                      .map((gqlArg) => {
+                          return `${gqlArg.name}: $${gqlArg.name}`;
+                      })
+                      .join(", ")}, `
+                : ``
+        }input: $input) {
                     id
                     updatedAt
                     ...${fragmentName}
@@ -135,8 +192,9 @@ export function generateForm(
         });
     }
 
-    const code = `import { useApolloClient, useQuery } from "@apollo/client";
+    const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
+        AsyncSelectField,
         Field,
         filterByFragment,
         FinalForm,
@@ -182,18 +240,9 @@ export function generateForm(
             : ""
     };
 
-    ${
-        editMode
-            ? `
-    interface FormProps {
-        ${mode == "all" ? `id?: string;` : ""}
-        ${mode == "edit" ? `id: string;` : ""}
-    }
-    `
-            : ""
-    }
+    ${formPropsTypeCode}
     
-    export function ${exportName}(${editMode ? `{ id }: FormProps` : ""}): React.ReactElement {
+    export function ${exportName}(${formPropsParamsCode}): React.ReactElement {
         const client = useApolloClient();
         ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
@@ -285,14 +334,28 @@ export function generateForm(
                 }
             ${mode == "all" ? `} else {` : ""}
                 ${
-                    addMode && createMutation
+                    addMode && createMutationType
                         ? `
                 const { data: mutationResponse } = await client.mutate<GQLCreate${gqlType}Mutation, GQLCreate${gqlType}MutationVariables>({
                     mutation: create${gqlType}Mutation,
-                    variables: { input: output },
+                    variables: { input: ${
+                        gqlArgs.filter((prop) => prop.isInputArgSubfield).length
+                            ? `{ ...output, ${gqlArgs
+                                  .filter((prop) => prop.isInputArgSubfield)
+                                  .map((prop) => prop.name)
+                                  .join(",")} }`
+                            : "output"
+                    }${
+                              gqlArgs.filter((prop) => !prop.isInputArgSubfield).length
+                                  ? `, ${gqlArgs
+                                        .filter((prop) => !prop.isInputArgSubfield)
+                                        .map((arg) => arg.name)
+                                        .join(",")}`
+                                  : ""
+                          } },
                 });
                 if (!event.navigatingBack) {
-                    const id = mutationResponse?.${createMutation.name}.id;
+                    const id = mutationResponse?.${createMutationType.name}.id;
                     if (id) {
                         setTimeout(() => {
                             stackSwitchApi.activatePage(\`edit\`, id);

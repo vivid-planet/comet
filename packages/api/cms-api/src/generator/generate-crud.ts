@@ -8,7 +8,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
-import { findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 // TODO move into own file
@@ -92,6 +92,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
                 prop.type === "DateType" ||
                 prop.type === "Date" ||
                 prop.reference === "m:1" ||
+                prop.reference === "1:m" ||
                 prop.reference === "m:n" ||
                 prop.type === "EnumArrayType") &&
             !dedicatedResolverArgProps.some((dedicatedResolverArgProp) => dedicatedResolverArgProp.name == prop.name),
@@ -183,7 +184,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, ManyToOneFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -233,11 +234,11 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     ${prop.name}?: BooleanFilter;
                     `;
                 } else if (prop.type === "DateType" || prop.type === "Date") {
-                    return `@Field(() => DateFilter, { nullable: true })
+                    return `@Field(() => DateTimeFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()
-                    @Type(() => DateFilter)
-                    ${prop.name}?: DateFilter;
+                    @Type(() => DateTimeFilter)
+                    ${prop.name}?: DateTimeFilter;
                     `;
                 } else if (prop.reference === "m:1") {
                     return `@Field(() => ManyToOneFilter, { nullable: true })
@@ -245,6 +246,13 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @IsOptional()
                     @Type(() => ManyToOneFilter)
                     ${prop.name}?: ManyToOneFilter;
+                    `;
+                } else if (prop.reference === "1:m") {
+                    return `@Field(() => OneToManyFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => OneToManyFilter)
+                    ${prop.name}?: OneToManyFilter;
                     `;
                 } else if (prop.reference === "m:n") {
                     return `@Field(() => ManyToManyFilter, { nullable: true })
@@ -286,8 +294,6 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
     import { Type } from "class-transformer";
     import { IsEnum } from "class-validator";
 
-    /* eslint-disable @typescript-eslint/naming-convention */
-    // TODO: Replace with PascalCase
     export enum ${classNameSingular}SortField {
         ${crudSortProps
             .map((prop) => {
@@ -295,7 +301,6 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
             })
             .join("\n")}
     }
-    /* eslint-enable @typescript-eslint/naming-convention */
     registerEnumType(${classNameSingular}SortField, {
         name: "${classNameSingular}SortField",
     });
@@ -721,20 +726,26 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
 
     const imports: Imports = [];
 
-    const { imports: fieldImports, code, hasOutputRelations } = generateRelationsFieldResolver({ generatorOptions, metadata });
+    const {
+        imports: fieldImports,
+        code,
+        hasOutputRelations,
+        needsBlocksTransformer,
+    } = generateRelationsFieldResolver({ generatorOptions, metadata });
     if (!hasOutputRelations) return null;
     imports.push(...fieldImports);
 
     imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
 
     return `
-    import { RequiredPermission } from "@comet/cms-api";
+    import { RequiredPermission, RootBlockDataScalar, BlocksTransformerService } from "@comet/cms-api";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
+        ${needsBlocksTransformer ? `constructor(private readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
     }
     `;
@@ -765,6 +776,10 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         }
     }
 
+    const resolveFieldBlockProps = metadata.props.filter((prop) => {
+        return hasFieldFeature(metadata.class, prop.name, "resolveField") && prop.type === "RootBlockType";
+    });
+
     const hasOutputRelations =
         outputRelationManyToOneProps.length > 0 ||
         outputRelationOneToManyProps.length > 0 ||
@@ -776,6 +791,12 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
     for (const prop of [...relationManyToOneProps, ...relationOneToManyProps, ...relationManyToManyProps, ...relationOneToOneProps]) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
         imports.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+    }
+
+    for (const prop of resolveFieldBlockProps) {
+        const blockName = findBlockName(prop.name, metadata);
+        const importPath = findBlockImportPath(blockName, `${generatorOptions.targetDirectory}`, metadata);
+        imports.push({ name: blockName, importPath });
     }
 
     const code = `
@@ -823,12 +844,24 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         )
         .join("\n")}
 
+        ${resolveFieldBlockProps
+            .map(
+                (prop) => `
+        @ResolveField(() => RootBlockDataScalar(${findBlockName(prop.name, metadata)}))
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<object> {
+            return this.blocksTransformer.transformToPlain(${instanceNameSingular}.${prop.name});
+        }
+        `,
+            )
+            .join("\n")}
+
     `.trim();
 
     return {
         code,
         imports,
         hasOutputRelations,
+        needsBlocksTransformer: resolveFieldBlockProps.length > 0,
     };
 }
 
@@ -884,6 +917,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         imports: relationsFieldResolverImports,
         code: relationsFieldResolverCode,
         hasOutputRelations,
+        needsBlocksTransformer,
     } = generateRelationsFieldResolver({
         generatorOptions,
         metadata,
@@ -913,11 +947,18 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
     }
 
+    imports.push({ name: "extractGraphqlFields", importPath: "@comet/cms-api" });
+    imports.push({ name: "SortDirection", importPath: "@comet/cms-api" });
+    imports.push({ name: "RequiredPermission", importPath: "@comet/cms-api" });
+    imports.push({ name: "AffectedEntity", importPath: "@comet/cms-api" });
+    imports.push({ name: "validateNotModified", importPath: "@comet/cms-api" });
+    imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
+    imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
+
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { extractGraphqlFields, SortDirection, RequiredPermission, AffectedEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
 
     import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
@@ -934,8 +975,8 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
             ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
-                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
-                .join(", ")}
+                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
+                .join("")}${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
         @Query(() => ${metadata.className})

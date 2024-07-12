@@ -1,5 +1,5 @@
 import { BooleanFilter } from "./boolean.filter";
-import { DateFilter } from "./date.filter";
+import { DateTimeFilter } from "./date-time.filter";
 import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery, splitSearchString } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
@@ -291,7 +291,7 @@ describe("filtersToMikroOrmQuery", () => {
                 } else if (
                     filterValue instanceof StringFilter ||
                     filterValue instanceof NumberFilter ||
-                    filterValue instanceof DateFilter ||
+                    filterValue instanceof DateTimeFilter ||
                     filterValue instanceof BooleanFilter
                 ) {
                     acc[filterKey] = filterToMikroOrmQuery(filterValue, filterKey);

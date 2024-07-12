@@ -4,6 +4,8 @@ import {
     createRedirectsPage,
     CronJobsPage,
     DamPage,
+    DocumentInterface,
+    DocumentType,
     MasterMenu as CometMasterMenu,
     MasterMenuData,
     PagesPage,
@@ -22,7 +24,7 @@ import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
-import { CreateProductPage as FutureCreateProductPage } from "@src/products/future/CreateProductPage";
+import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
@@ -77,7 +79,20 @@ export const masterMenuData: MasterMenuData = [
                     <PagesPage
                         path={`/pages/pagetree/${match.params.category}`}
                         allCategories={pageTreeCategories}
-                        documentTypes={pageTreeDocumentTypes}
+                        documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+                            if (category === "TopMenu") {
+                                return {
+                                    Page,
+                                    PredefinedPage,
+                                };
+                            }
+
+                            return {
+                                Page,
+                                PredefinedPage,
+                                Link,
+                            };
+                        }}
                         editPageNode={EditPageNode}
                         category={category}
                         renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
@@ -191,6 +206,7 @@ export const masterMenuData: MasterMenuData = [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.futureGenerator" defaultMessage="Future Generator" />,
+                icon: <Snips />,
                 items: [
                     {
                         type: "route",
@@ -202,10 +218,10 @@ export const masterMenuData: MasterMenuData = [
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.createProductFuture" defaultMessage="Create Product Future" />,
+                        primary: <FormattedMessage id="menu.createCapProductFuture" defaultMessage="Create Cap Product Future" />,
                         route: {
-                            path: "/create-product-future",
-                            component: FutureCreateProductPage,
+                            path: "/create-cap-product-future",
+                            component: FutureCreateCapProductPage,
                         },
                     },
                     {
@@ -229,6 +245,7 @@ export const masterMenuData: MasterMenuData = [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.oldGenerator" defaultMessage="Old Generator" />,
+                icon: <Snips />,
                 items: [
                     {
                         type: "route",
@@ -259,6 +276,7 @@ export const masterMenuData: MasterMenuData = [
             {
                 type: "collapsible",
                 primary: <FormattedMessage id="menu.handmade" defaultMessage="Handmade" />,
+                icon: <Snips />,
                 items: [
                     {
                         type: "route",

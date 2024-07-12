@@ -8,7 +8,7 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
-    FinalFormSaveSplitButton,
+    FinalFormSaveButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
@@ -152,7 +152,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
+                            <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>

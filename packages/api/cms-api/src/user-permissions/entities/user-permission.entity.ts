@@ -1,17 +1,14 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 } from "uuid";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
 
-/* eslint-disable @typescript-eslint/naming-convention */
-// TODO: Replace with PascalCase
 export enum UserPermissionSource {
     MANUAL = "MANUAL",
     BY_RULE = "BY_RULE",
 }
-/* eslint-enable @typescript-eslint/naming-convention */
 registerEnumType(UserPermissionSource, {
     name: "UserPermissionSource",
 });

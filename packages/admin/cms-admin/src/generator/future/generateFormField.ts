@@ -6,7 +6,7 @@ import { Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
 
 export function generateFormField(
-    { gqlIntrospection }: { gqlIntrospection: IntrospectionQuery },
+    { gqlIntrospection, baseOutputFilename }: { gqlIntrospection: IntrospectionQuery; baseOutputFilename: string },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormFieldConfig<any>,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,7 +38,7 @@ export function generateFormField(
     const imports: Imports = [];
 
     const gqlDocuments: Record<string, string> = {};
-    let hooksCode = "";
+    const hooksCode = "";
 
     let validateCode = "";
     if (config.validate) {
@@ -202,49 +202,38 @@ export function generateFormField(
         }
 
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
-        const queryType = objectType.name;
-        const queryVariableName = `${rootQuery}Query`;
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
-        const fragmentVariableName = `${rootQuery}SelectFragment`;
-        const fragmentName = `${objectType.name}Select`;
 
         formFragmentField = `${name} { id ${labelField} }`;
-
-        gqlDocuments[fragmentVariableName] = `
-            fragment ${fragmentName} on ${queryType} {
-                id
-                ${labelField}
-            }
-        `;
-        gqlDocuments[queryVariableName] = `query ${queryName} {
-            ${rootQuery} {
-                nodes {
-                    ...${fragmentName}
-                }
-            }
-        }
-        \${${fragmentVariableName}}
-        `;
-
-        imports.push({
-            name: "useAsyncOptionsProps",
-            importPath: "@comet/admin",
-        });
-        hooksCode += `const ${name}SelectAsyncProps = useAsyncOptionsProps(async () => {
-            const result = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({ query: ${queryVariableName} });
-            return result.data.${rootQuery}.nodes;
-        });`;
-
         formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+        imports.push({
+            name: `GQL${queryName}Query`,
+            importPath: `./${baseOutputFilename}.generated`,
+        });
+        imports.push({
+            name: `GQL${queryName}QueryVariables`,
+            importPath: `./${baseOutputFilename}.generated`,
+        });
 
-        code = `<Field
+        code = `<AsyncSelectField
                 ${required ? "required" : ""}
                 fullWidth
                 name="${name}"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
-                component={FinalFormSelect}
-                {...${name}SelectAsyncProps}
-                getOptionLabel={(option: GQL${fragmentName}Fragment) => option.${labelField}}
+                loadOptions={async () => {
+                    const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
+                        query: gql\`query ${queryName} {
+                            ${rootQuery} {
+                                nodes {
+                                    id
+                                    ${labelField}
+                                }
+                            }
+                        }\`
+                    });
+                    return data.${rootQuery}.nodes;
+                }}
+                getOptionLabel={(option) => option.${labelField}}
             />`;
     } else {
         throw new Error(`Unsupported type`);

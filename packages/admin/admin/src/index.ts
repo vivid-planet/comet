@@ -100,6 +100,7 @@ export { FinalFormRangeInput, FinalFormRangeInputClassKey, FinalFormRangeInputPr
 export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
 export { FinalFormSelect, FinalFormSelectProps } from "./form/FinalFormSelect";
 export { FormSection, FormSectionClassKey, FormSectionProps } from "./form/FormSection";
+export { OnChangeField } from "./form/helpers/OnChangeField";
 export { FinalFormRadio, FinalFormRadioProps } from "./form/Radio";
 export { FinalFormSwitch, FinalFormSwitchProps } from "./form/Switch";
 export { FormMutation } from "./FormMutation";
@@ -129,6 +130,7 @@ export { MuiThemeProvider } from "./mui/ThemeProvider";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog, RouterConfirmationDialogClassKey, RouterConfirmationDialogProps } from "./router/ConfirmationDialog";
 export { RouterContext } from "./router/Context";
+export { ForcePromptRoute } from "./router/ForcePromptRoute";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
 export { RouterPrompt } from "./router/Prompt";
 export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";

@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
 import { Loading } from "@comet/admin";
-import { Typography } from "@mui/material";
 import React from "react";
 
 import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
@@ -38,7 +37,10 @@ export const CurrentUserProvider: React.FC<{
         }
     `);
 
-    if (error) return <Typography gutterBottom>{error.message}</Typography>;
+    if (error) {
+        return <>Cannot load user: {error.message}</>;
+    }
+
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
