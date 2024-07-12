@@ -87,10 +87,10 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
                     message={() => {
                         const isDirty = Object.keys(this.state.changes).length > 0 || this.state.changedOrder;
                         if (isDirty) {
-                            return true;
+                            return "Do you want to save your changes?"; //TODO translate, we need intl context
+                            //return intl.formatMessage(messages.saveUnsavedChanges);
                         }
-                        return "Do you want to save your changes?"; //TODO translate, we need intl context
-                        //return intl.formatMessage(messages.saveUnsavedChanges);
+                        return true;
                     }}
                     saveAction={async () => {
                         await this.submitLocalDataChanges();
