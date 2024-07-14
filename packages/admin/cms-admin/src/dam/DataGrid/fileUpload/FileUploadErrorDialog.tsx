@@ -57,7 +57,7 @@ export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors 
                 <FormattedMessage id="comet.pages.dam.uploadErrors" defaultMessage="Upload errors" />
             </DialogTitle>
             <DialogContent>
-                <Typography style={{ paddingBottom: "16px" }} variant="h6">
+                <Typography style={{ paddingBottom: "16px" }} variant="subtitle1">
                     <FormattedMessage id="comet.pages.dam.followingFilesCouldNotBeUploaded" defaultMessage="Following files could not be uploaded:" />
                 </Typography>
                 <Table>
@@ -76,7 +76,7 @@ export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors 
                             return (
                                 <TableRow key={errorsOfFile[0].file.path ?? errorsOfFile[0].file.name}>
                                     <TableCell>
-                                        <Typography variant="h6">{errorsOfFile[0].file.name}</Typography>
+                                        <Typography variant="subtitle1">{errorsOfFile[0].file.name}</Typography>
                                         <Path variant="body2">{errorsOfFile[0].file.path}</Path>
                                     </TableCell>
                                     <TableCell>

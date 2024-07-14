@@ -56,7 +56,7 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
                         <WarningIconWrapper>
                             <WarningIcon color="inherit" fontSize="large" />
                         </WarningIconWrapper>
-                        <Typography variant="h6">
+                        <Typography variant="subtitle1">
                             {dialogInformation?.hasSubpages ? (
                                 <FormattedMessage
                                     id="comet.pages.pages.page.deleteDialog.contentIncludingSubpages"
