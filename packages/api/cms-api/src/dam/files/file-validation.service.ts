@@ -1,8 +1,7 @@
 import { readFile } from "fs/promises";
-import { basename, extname } from "path";
 
 import { FileUploadInput } from "./dto/file-upload.input";
-import { getValidExtensionsForMimetype, slugifyFilename, svgContainsJavaScript } from "./files.utils";
+import { getValidExtensionsForMimetype, svgContainsJavaScript } from "./files.utils";
 
 export class FileValidationService {
     constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
@@ -49,27 +48,6 @@ export class FileValidationService {
             if (svgContainsJavaScript(fileContent)) {
                 return "SVG must not contain JavaScript";
             }
-        }
-
-        return undefined;
-    }
-
-    validateFilename(filename: string, mimetype: string): string | undefined {
-        const extension = extname(filename);
-        const extensionWithoutDot = extension.slice(1);
-        const name = basename(filename, extension);
-
-        if (extension.length === 0) {
-            return `Filename ${filename} has no extension`;
-        }
-
-        const supportedExtensions = getValidExtensionsForMimetype(mimetype);
-        if (supportedExtensions === undefined || !supportedExtensions.includes(extensionWithoutDot)) {
-            return `File type and extension mismatch: ${extension} and ${mimetype} are incompatible`;
-        }
-
-        if (filename !== slugifyFilename(name, extension)) {
-            return `Filename ${filename} contains invalid symbols`;
         }
 
         return undefined;

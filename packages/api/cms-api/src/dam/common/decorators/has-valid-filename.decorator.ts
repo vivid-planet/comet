@@ -2,11 +2,12 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { registerDecorator, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
+import { basename, extname } from "path";
 
 import { UpdateFileInput } from "../files/dto/file.input";
 import { UpdateDamFileArgs } from "../files/dto/update-dam-file.args";
 import { FILE_ENTITY, FileInterface } from "../files/entities/file.entity";
-import { FileValidationService } from "../files/file-validation.service";
+import { slugifyFilename } from "../files/files.utils";
 
 export const HasValidFilename = () => {
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -28,23 +29,38 @@ export interface HasValidFilenameValidationArguments extends ValidationArguments
 export class HasValidFilenameConstraint implements ValidatorConstraintInterface {
     errorMessage: string | undefined;
 
-    constructor(
-        private readonly fileValidationService: FileValidationService,
-        @InjectRepository(FILE_ENTITY) private readonly filesRepository: EntityRepository<FileInterface>,
-    ) {}
+    constructor(@InjectRepository(FILE_ENTITY) private readonly filesRepository: EntityRepository<FileInterface>) {}
 
     async validate(value: UpdateFileInput, validationArguments: HasValidFilenameValidationArguments): Promise<boolean> {
         if (value.name === undefined) {
             return true;
         }
 
+        const newFilename = value.name;
+        const newExtension = extname(newFilename);
+        const newBasename = basename(newFilename, newExtension);
+
+        if (newExtension.length === 0) {
+            this.errorMessage = `Filename ${newFilename} has no extension`;
+            return false;
+        }
+
+        if (newFilename !== slugifyFilename(newBasename, newExtension)) {
+            this.errorMessage = `Filename ${newFilename} contains invalid symbols`;
+            return false;
+        }
+
         const id = validationArguments.object.id;
         const file = await this.filesRepository.findOneOrFail({ id });
 
-        const filenameValidationError = this.fileValidationService.validateFilename(value.name, file.mimetype);
-        this.errorMessage = filenameValidationError;
+        const oldExtension = extname(file.name);
 
-        return filenameValidationError === undefined;
+        if (newExtension !== oldExtension) {
+            this.errorMessage = `Extension cannot be changed. Previous extension: ${oldExtension}, new extension: ${newExtension}`;
+            return false;
+        }
+
+        return true;
     }
 
     defaultMessage(): string {
