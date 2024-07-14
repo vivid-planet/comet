@@ -14,7 +14,6 @@ import * as rimraf from "rimraf";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
-import { CometValidationException } from "../../common/errors/validation.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
@@ -249,13 +248,6 @@ export class FilesService {
     async updateByEntity(entity: FileInterface, { image, ...input }: UpdateFileInput): Promise<FileInterface> {
         const folderId = input.folderId !== undefined ? input.folderId : entity.folder?.id;
         const folder = folderId ? await this.foldersService.findOneById(folderId) : null;
-
-        if (input.name) {
-            const filenameValidationError = this.fileValidationService.validateFilename(input.name, entity.mimetype);
-            if (filenameValidationError) {
-                throw new CometValidationException(filenameValidationError);
-            }
-        }
 
         if (entity.image && image?.cropArea) {
             entity.image.cropArea = image.cropArea;

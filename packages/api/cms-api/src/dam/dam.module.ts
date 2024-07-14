@@ -4,6 +4,7 @@ import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, defaultDamAcceptedMimetypes, DependentsResolverFactory } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
+import { HasValidFilenameConstraint } from "./common/is-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
@@ -122,6 +123,7 @@ export class DamModule {
                 CalculateDominantImageColor,
                 FileValidationService,
                 FileUploadService,
+                HasValidFilenameConstraint,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider, FileUploadService],
