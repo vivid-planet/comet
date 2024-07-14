@@ -2,7 +2,7 @@ import { ArgsType, Field, ID } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsString, ValidateNested } from "class-validator";
 
-import { HasValidFilename } from "../../common/has-valid-filename.decorator";
+import { HasValidFilename } from "../../common/decorators/has-valid-filename.decorator";
 import { UpdateFileInput } from "./file.input";
 
 @ArgsType()

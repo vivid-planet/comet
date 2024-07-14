@@ -4,7 +4,7 @@ import { TypeMetadataStorage } from "@nestjs/graphql";
 
 import { BlobStorageModule, defaultDamAcceptedMimetypes, DependentsResolverFactory } from "..";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
-import { HasValidFilenameConstraint } from "./common/has-valid-filename.decorator";
+import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
