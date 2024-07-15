@@ -96,7 +96,7 @@ const FolderBreadcrumb = ({ id, url }: FolderBreadcrumbProps): React.ReactElemen
     return (
         <FolderBreadcrumbWrapper>
             <Link color="inherit" underline="none" key={id} to={url} component={RouterLink}>
-                <Typography component="span" variant="h6">
+                <Typography component="span" variant="subtitle1">
                     {id === null ? <FormattedMessage id="comet.pages.dam.assetManager" defaultMessage="Asset Manager" /> : data?.damFolder.name}
                 </Typography>
             </Link>
