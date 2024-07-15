@@ -16,33 +16,33 @@ import * as React from "react";
 import { InternalLinkBlock } from "./InternalLinkBlock";
 
 const supportedBlocks: SupportedBlocks = {
-    internal: ({ children, title, ...props }) => (
-        <InternalLinkBlock data={props} title={title}>
+    internal: ({ children, title, className, ...props }) => (
+        <InternalLinkBlock data={props} title={title} className={className}>
             {children}
         </InternalLinkBlock>
     ),
-    external: ({ children, title, ...props }) => (
-        <ExternalLinkBlock data={props} title={title}>
+    external: ({ children, title, className, ...props }) => (
+        <ExternalLinkBlock data={props} title={title} className={className}>
             {children}
         </ExternalLinkBlock>
     ),
-    news: ({ children, title, ...props }) => (
-        <NewsLinkBlock data={props} title={title}>
+    news: ({ children, title, className, ...props }) => (
+        <NewsLinkBlock data={props} title={title} className={className}>
             {children}
         </NewsLinkBlock>
     ),
-    damFileDownload: ({ children, title, ...props }) => (
-        <DamFileDownloadLinkBlock data={props} title={title}>
+    damFileDownload: ({ children, title, className, ...props }) => (
+        <DamFileDownloadLinkBlock data={props} title={title} className={className}>
             {children}
         </DamFileDownloadLinkBlock>
     ),
-    email: ({ children, title, ...props }) => (
-        <EmailLinkBlock data={props} title={title}>
+    email: ({ children, title, className, ...props }) => (
+        <EmailLinkBlock data={props} title={title} className={className}>
             {children}
         </EmailLinkBlock>
     ),
-    phone: ({ children, title, ...props }) => (
-        <PhoneLinkBlock data={props} title={title}>
+    phone: ({ children, title, className, ...props }) => (
+        <PhoneLinkBlock data={props} title={title} className={className}>
             {children}
         </PhoneLinkBlock>
     ),
@@ -50,12 +50,13 @@ const supportedBlocks: SupportedBlocks = {
 
 interface LinkBlockProps extends PropsWithData<LinkBlockData> {
     children: React.ReactNode;
+    className?: string;
 }
 
 export const LinkBlock = withPreview(
-    ({ data, children }: LinkBlockProps) => {
+    ({ data, children, className }: LinkBlockProps) => {
         return (
-            <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
+            <OneOfBlock data={data} supportedBlocks={supportedBlocks} className={className}>
                 {children}
             </OneOfBlock>
         );

@@ -7,11 +7,17 @@ import * as React from "react";
 interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
     children: React.ReactNode;
     title?: string;
+    className?: string;
 }
 
-export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title }: InternalLinkBlockProps): React.ReactElement {
+export function InternalLinkBlock({
+    data: { targetPage, targetPageAnchor },
+    children,
+    title,
+    className,
+}: InternalLinkBlockProps): React.ReactElement {
     if (!targetPage) {
-        return <>{children}</>;
+        return <span className={className}>{children}</span>;
     }
 
     let href = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
@@ -23,7 +29,7 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
     }
 
     return (
-        <Link href={href} passHref title={title} legacyBehavior>
+        <Link href={href} title={title} className={className}>
             {children}
         </Link>
     );

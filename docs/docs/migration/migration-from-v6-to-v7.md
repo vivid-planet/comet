@@ -831,6 +831,52 @@ The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
 Instead, implement your own `InternalLinkBlock`.
 This is needed for more flexibility, e.g., support for internationalized routing.
 
+### Add `legacyBevavior` to all link block usages
+
+All link blocks in `@comet/cms-site` now render a child `<a>` tag by default to align with the new behavior of the Next `Link` component, which is used by `InternalLinkBlock`.
+For existing projects, add the `legacyBehavior` prop to all library link block usages to use the old behavior, where the `<a>` tag is defined in the application. For example:
+
+```diff title=LinkBlock.tsx
+const supportedBlocks: SupportedBlocks = {
+    internal: ({ children, title, ...props }) => (
+        <InternalLinkBlock
+            data={props}
+            title={title}
++           legacyBehavior
+        >
+            {children}
+        </InternalLinkBlock>
+    ),
+    external: ({ children, title, ...props }) => (
+        <ExternalLinkBlock
+            data={props}
+            title={title}
++           legacyBehavior
+        >
+            {children}
+        </ExternalLinkBlock>
+    ),
+    /* Other link blocks */
+};
+
+export const LinkBlock = withPreview(
+    ({ data, children }: LinkBlockProps) => {
+        return (
+            <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
+                {children}
+            </OneOfBlock>
+        );
+    },
+    { label: "Link" },
+);
+```
+
+:::info
+
+New projects shouldn't use the legacy behavior. Instead, add support to pass the `className` prop through to the `LinkBlock` an its child blocks. See [this PR](https://github.com/vivid-planet/comet/pull/2271) for an example.
+
+:::
+
 ### Add `aspectRatio` to `PixelImageBlock` and `Image`
 
 Previously, there was a default aspect ratio of `16x9`.
