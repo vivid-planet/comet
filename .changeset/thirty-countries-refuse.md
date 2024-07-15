@@ -2,7 +2,7 @@
 "@comet/cms-site": major
 ---
 
-Remove `next/link` legacy behavior
+Remove `next/link` legacy behavior as default behavior
 
 Previously, Next required the `Link` component to have a child `<a>` tag. To style this tag correctly in the application, none of the library link blocks (`DamFileDownloadLinkBlock`, `ExternalLinkBlock`, `EmailLinkBlock`, `InternalLinkBlock`, and `PhoneLinkBlock`) rendered the tag, but cloned the children with the correct props instead.
 
