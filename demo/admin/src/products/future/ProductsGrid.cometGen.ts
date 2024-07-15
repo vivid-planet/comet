@@ -6,6 +6,8 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     gqlType: "Product",
     fragmentName: "ProductsGridFuture", // configurable as it must be unique across project
     filterProp: true,
+    toolbarActionProp: true,
+    rowActionProp: true,
     columns: [
         { type: "boolean", name: "inStock", headerName: "In stock", width: 90 },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },

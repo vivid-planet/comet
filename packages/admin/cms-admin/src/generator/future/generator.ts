@@ -61,6 +61,8 @@ export type GridConfig<T extends { __typename?: string }> = {
     readOnly?: boolean;
     filterProp?: boolean;
     toolbar?: boolean;
+    toolbarActionProp?: boolean;
+    rowActionProp?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
