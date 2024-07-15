@@ -833,9 +833,8 @@ This is needed for more flexibility, e.g., support for internationalized routing
 
 ### Add `legacyBevavior` to all link block usages
 
-Previously, Next required the `Link` component to have a child `<a>` tag. To style this tag correctly in the application, none of the library link blocks rendered the tag, but cloned the children with the correct props instead. However, since Next v13 the `Link` component no longer requires a child `<a>` tag. Consequently, we don't need to render the tag for the `InternalLinkBlock` (which uses `Link` internally) anymore. In order to style all link blocks correctly, we now render an `<a>` tag for all other link blocks.
-
-To migrate, add the `legacyBehavior` to all library link block usages. For example:
+All link blocks in `@comet/cms-site` now render a child `<a>` tag by default to align with the new behavior of the Next `Link` component, which is used by `InternalLinkBlock`.
+For existing projects, add the `legacyBehavior` prop to all library link block usages to use the old behavior, where the `<a>` tag is defined in the application. For example:
 
 ```diff title=LinkBlock.tsx
 const supportedBlocks: SupportedBlocks = {
