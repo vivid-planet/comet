@@ -118,8 +118,11 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
                                 <ErrorIconContainer {...slotProps?.errorIconContainer}>{errorIcon}</ErrorIconContainer>
                             )}
                             {(Boolean(onClickDownload) || !!downloadUrl) && (
-                                // @ts-expect-error TODO: Fix type of href
-                                <IconButton onClick={onClickDownload} href={downloadUrl} disabled={disabled} {...slotProps?.iconButton}>
+                                <IconButton
+                                    disabled={disabled}
+                                    {...(downloadUrl ? { href: downloadUrl } : { onClick: onClickDownload })}
+                                    {...slotProps?.iconButton}
+                                >
                                     {downloadIcon}
                                 </IconButton>
                             )}
