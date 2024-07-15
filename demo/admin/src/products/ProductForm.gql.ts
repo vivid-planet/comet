@@ -1,14 +1,5 @@
 import { gql } from "@apollo/client";
-
-// TODO: import from "@comet/admin" once the types are generated correctly in `ProductForm.gql.generated.ts`
-// import { finalFormFileUploadFragment } from "@comet/cms-admin";
-const finalFormFileUploadFragment = gql`
-    fragment FinalFormFileUpload on PublicUpload {
-        id
-        name
-        size
-    }
-`;
+import { finalFormFileUploadFragment } from "@comet/cms-admin";
 
 export const productFormFragment = gql`
     fragment ProductFormManual on Product {

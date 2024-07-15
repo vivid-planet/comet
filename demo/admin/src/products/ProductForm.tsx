@@ -16,7 +16,14 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, FinalFormFileUpload, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import {
+    DamImageBlock,
+    FinalFormFileUpload,
+    GQLFinalFormFileUploadFragment,
+    queryUpdatedAt,
+    resolveHasSaveConflict,
+    useFormSaveConflict,
+} from "@comet/cms-admin";
 import { Card, CardContent, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import {
@@ -55,7 +62,13 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image" | "manufacturerCountry"> & {
+// Set types for FinalFormFileUpload manually, as they cannot be generated from the fragment in `@comet/cms-admin`
+type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets"> & {
+    priceList: GQLFinalFormFileUploadFragment | null;
+    datasheets: Array<GQLFinalFormFileUploadFragment>;
+};
+
+type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry"> & {
     image: BlockState<typeof rootBlocks.image>;
     manufacturerCountry?: { id: string };
 };
@@ -72,7 +85,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     );
 
     const initialValues: Partial<FormValues> = React.useMemo<Partial<FormValues>>(() => {
-        const filteredData = data ? filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product) : undefined;
+        const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
         if (!filteredData) {
             return {
                 image: rootBlocks.image.defaultValues(),
