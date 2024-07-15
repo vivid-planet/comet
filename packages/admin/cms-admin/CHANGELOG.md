@@ -1,5 +1,56 @@
 # @comet/cms-admin
 
+## 6.16.0
+
+### Minor Changes
+
+-   5e830f8d9: Add an [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) implementation of the content translation feature
+
+    To use it, do the following:
+
+    **API:**
+
+    ```diff
+    // app.module.ts
+    export class AppModule {
+        static forRoot(config: Config): DynamicModule {
+            return {
+                imports: [
+                    // ...
+    +               AzureAiTranslatorModule.register({
+    +                   endpoint: envVars.AZURE_AI_TRANSLATOR_ENDPOINT,
+    +                   key: envVars.AZURE_AI_TRANSLATOR_KEY,
+    +                   region: envVars.AZURE_AI_TRANSLATOR_REGION,
+    +               }),
+                ],
+            };
+        }
+    }
+    ```
+
+    Users need the `translation` permission to use the translation feature.
+
+    **Admin:**
+
+    Wrap the section where you want to use the content translation with the `AzureAiTranslatorProvider` provider:
+
+    ```tsx
+    <AzureAiTranslatorProvider enabled={true}>{/*  ...  */}</AzureAiTranslatorProvider>
+    ```
+
+    Note: `AzureAiTranslatorProvider` automatically checks for the `translation` permission. The translation button is only shown for users with this permission.
+
+### Patch Changes
+
+-   Updated dependencies [fb0fe2539]
+-   Updated dependencies [747fe32cc]
+    -   @comet/admin@6.16.0
+    -   @comet/admin-date-time@6.16.0
+    -   @comet/admin-icons@6.16.0
+    -   @comet/admin-rte@6.16.0
+    -   @comet/admin-theme@6.16.0
+    -   @comet/blocks-admin@6.16.0
+
 ## 6.15.1
 
 ### Patch Changes
