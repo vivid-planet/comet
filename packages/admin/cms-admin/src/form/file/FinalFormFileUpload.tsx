@@ -122,9 +122,7 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
                     setFailedUploads((existingFiles) => existingFiles.filter((failedFile) => failedFile.name !== fileToRemove.name));
                 }
             }}
-            onDownload={async (file) => {
-                window.open(`${apiUrl}/public-upload/files/download/${file.id}`);
-            }}
+            getDownloadUrl={(file) => `${apiUrl}/public-upload/files/download/${file.id}`}
             files={files}
             maxFiles={maxFiles}
             error={

@@ -39,6 +39,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     onDrop: DropzoneOptions["onDrop"];
     onRemove: (file: FileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
     onDownload?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => void;
+    getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string;
     disabled?: boolean;
     accept?: Accept;
     maxFileSize?: number;
@@ -60,6 +61,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
         onDrop,
         onRemove,
         onDownload,
+        getDownloadUrl,
         files,
         error,
         ...restProps
@@ -104,17 +106,20 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
             {files.length > 0 && (
                 <FileList {...slotProps?.fileList}>
                     {files.map((file, index) => {
+                        const isValidFile = !("error" in file) && !("loading" in file);
+
                         return (
                             <FileListItem
                                 key={index}
                                 file={file}
                                 onClickDownload={
-                                    "error" in file || "loading" in file || !onDownload
-                                        ? undefined
-                                        : () => {
+                                    isValidFile && onDownload
+                                        ? () => {
                                               onDownload(file);
                                           }
+                                        : undefined
                                 }
+                                downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
                                 onClickDelete={() => onRemove(file)}
                                 {...slotProps?.fileListItem}
                             />
