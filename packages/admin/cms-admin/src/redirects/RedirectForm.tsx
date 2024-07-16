@@ -14,11 +14,12 @@ import {
     ToolbarTitleItem,
 } from "@comet/admin";
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
-import { Card, CardContent, Grid, MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLRedirectSourceTypeValues } from "../graphql.generated";
 import { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
 import { redirectDetailQuery } from "./RedirectForm.gql";
@@ -167,7 +168,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
         >
             {({ values, pristine, hasValidationErrors, submitting, handleSubmit, validating }) => (
                 <>
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator scope={scope} />}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>
                             {values.source ? values.source : <FormattedMessage id="comet.redirects.defaultTitle" defaultMessage="Redirect Detail" />}
@@ -178,68 +179,54 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Card>
-                            <CardContent>
-                                <Grid container spacing={4}>
-                                    <Grid item xs={3}>
-                                        <Field
-                                            label={intl.formatMessage({
-                                                id: "comet.pages.redirects.redirect.source.type",
-                                                defaultMessage: "Source type",
-                                            })}
-                                            name="sourceType"
-                                            required
-                                            fullWidth
-                                        >
-                                            {(props) => (
-                                                <FinalFormSelect {...props} fullWidth>
-                                                    {sourceTypeOptions.map((option) => (
-                                                        <MenuItem value={option.value} key={option.value}>
-                                                            {option.label}
-                                                        </MenuItem>
-                                                    ))}
-                                                </FinalFormSelect>
-                                            )}
-                                        </Field>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            label={intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" })}
-                                            name="source"
-                                            required
-                                            component={FinalFormInput}
-                                            // @TODO: FIX ts-type here: https://github.com/vivid-planet/comet-admin/blob/next/packages/admin/src/form/Field.tsx#L18
-                                            // type object doesnt work with "strict"
-                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                            validate={validateSource as any}
-                                            fullWidth
-                                            placeholder="/example-path"
-                                            disableContentTranslation
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <Field
-                                            name="target"
-                                            label={intl.formatMessage({
-                                                id: "comet.pages.redirects.redirect.target",
-                                                defaultMessage: "Target",
-                                            })}
-                                            required
-                                            fullWidth
-                                            component={targetInput}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            label={intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" })}
-                                            name="comment"
-                                            component={FinalFormInput}
-                                            fullWidth
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </CardContent>
-                        </Card>
+                        <Field
+                            label={intl.formatMessage({
+                                id: "comet.pages.redirects.redirect.source.type",
+                                defaultMessage: "Source type",
+                            })}
+                            name="sourceType"
+                            required
+                            fullWidth
+                        >
+                            {(props) => (
+                                <FinalFormSelect {...props} fullWidth>
+                                    {sourceTypeOptions.map((option) => (
+                                        <MenuItem value={option.value} key={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </FinalFormSelect>
+                            )}
+                        </Field>
+                        <Field
+                            label={intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" })}
+                            name="source"
+                            required
+                            component={FinalFormInput}
+                            // @TODO: FIX ts-type here: https://github.com/vivid-planet/comet-admin/blob/next/packages/admin/src/form/Field.tsx#L18
+                            // type object doesnt work with "strict"
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            validate={validateSource as any}
+                            fullWidth
+                            placeholder="/example-path"
+                            disableContentTranslation
+                        />
+                        <Field
+                            name="target"
+                            label={intl.formatMessage({
+                                id: "comet.pages.redirects.redirect.target",
+                                defaultMessage: "Target",
+                            })}
+                            required
+                            fullWidth
+                            component={targetInput}
+                        />
+                        <Field
+                            label={intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" })}
+                            name="comment"
+                            component={FinalFormInput}
+                            fullWidth
+                        />
                     </MainContent>
                 </>
             )}
