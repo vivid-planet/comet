@@ -2,4 +2,6 @@
 "@comet/admin": minor
 ---
 
-Export white version of the COMET logo
+Add `color` prop to `CometLogo`
+
+It now supports a colored and a white version of the logo.

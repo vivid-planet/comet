@@ -1,4 +1,4 @@
-import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogoWhite } from "@comet/admin";
+import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
 import * as React from "react";
 
 interface Props {
@@ -10,7 +10,7 @@ function Header({ children, logo }: Props): React.ReactElement {
     return (
         <AppHeader>
             <AppHeaderMenuButton />
-            {logo || <CometLogoWhite />}
+            {logo || <CometLogo color="white" />}
             <AppHeaderFillSpace />
             {children}
         </AppHeader>
