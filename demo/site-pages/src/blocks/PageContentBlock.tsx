@@ -37,7 +37,7 @@ export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = (
         <BlocksBlock
             data={data}
             supportedBlocks={supportedBlocks}
-            reportError={(error) => {
+            onError={(error) => {
                 console.error("Error", error);
                 // In the application, error handling tools can be used to report errors
             }}

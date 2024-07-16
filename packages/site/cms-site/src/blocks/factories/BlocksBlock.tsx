@@ -12,10 +12,10 @@ interface Props {
     data: {
         blocks: Array<{ key: string; type: string; visible: boolean; props: unknown }>;
     };
-    reportError: (error: Error, errorInfo: ErrorInfo) => void;
+    onError: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }, reportError }: Props) => {
+export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }, onError }: Props) => {
     if (blocks.length === 0) {
         return <PreviewSkeleton hasContent={false} />;
     }
@@ -41,7 +41,7 @@ export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }
                         <ErrorBoundary
                             blockType={block.type}
                             fallback={process.env.NODE_ENV === "production" ? null : <ErrorFallback blockType={block.type} />}
-                            reportError={reportError}
+                            onError={onError}
                         >
                             {blockFunction(block.props)}
                         </ErrorBoundary>

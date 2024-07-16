@@ -3,7 +3,7 @@ import React, { ErrorInfo, PropsWithChildren } from "react";
 type Props = {
     fallback: React.ReactNode;
     blockType: string;
-    reportError: (error: Error, errorInfo: ErrorInfo) => void;
+    onError: (error: Error, errorInfo: ErrorInfo) => void;
 };
 
 type State = {
@@ -22,7 +22,7 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<Props>, Sta
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        this.props.reportError(error, errorInfo);
+        this.props.onError(error, errorInfo);
     }
 
     render() {

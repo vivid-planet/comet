@@ -425,7 +425,7 @@ const supportedBlocks: SupportedBlocks = {
 };
 
 export function PageContentBlock({ data }: PropsWithData<PageContentBlockData>) {
-    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} reportError={(error) => {
+    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} onError={(error) => {
                 console.error("Error", error);
                 // In the application, error handling tools can be used to report errors
             }} />;
