@@ -1,5 +1,44 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+### Minor Changes
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
+### Patch Changes
+
+-   Updated dependencies [a0bd09afa]
+-   Updated dependencies [b7560e3a7]
+-   Updated dependencies [170720b0c]
+-   Updated dependencies [a58918893]
+    -   @comet/admin@7.0.0-beta.4
+    -   @comet/blocks-admin@7.0.0-beta.4
+    -   @comet/admin-date-time@7.0.0-beta.4
+    -   @comet/admin-icons@7.0.0-beta.4
+    -   @comet/admin-rte@7.0.0-beta.4
+    -   @comet/admin-theme@7.0.0-beta.4
+
 ## 7.0.0-beta.3
 
 ### Major Changes
@@ -556,6 +595,53 @@
     -   @comet/admin-rte@7.0.0-beta.0
     -   @comet/blocks-admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin@6.15.1
+-   @comet/admin-date-time@6.15.1
+-   @comet/admin-icons@6.15.1
+-   @comet/admin-rte@6.15.1
+-   @comet/admin-theme@6.15.1
+-   @comet/blocks-admin@6.15.1
+
+## 6.15.0
+
+### Minor Changes
+
+-   cdc861cb7: Add `buttonChildren` and `children` props to `UserHeaderItem`
+
+    This increases the flexibility of the `UserHeaderItem` component by allowing the `AppHeaderDropdown` label to be passed via `buttonChildren`. More buttons or other list items in the dropdown can be passed via `children`.
+
+    **Example:**
+
+    ```tsx
+    <UserHeaderItem buttonChildren="Some custom label">
+        <Button variant="contained">Some custom button</Button>
+        <Button>Some custom button 2</Button>
+    </UserHeaderItem>
+    ```
+
+### Patch Changes
+
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [406027806]
+-   Updated dependencies [0654f7bce]
+-   Updated dependencies [ec7fb9ff2]
+    -   @comet/admin-icons@6.15.0
+    -   @comet/admin@6.15.0
+    -   @comet/blocks-admin@6.15.0
+    -   @comet/admin-date-time@6.15.0
+    -   @comet/admin-rte@6.15.0
+    -   @comet/admin-theme@6.15.0
 
 ## 6.14.1
 

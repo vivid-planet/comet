@@ -507,10 +507,10 @@ type ProductTag {
 type ProductVariant {
   id: ID!
   name: String!
-  image: DamImageBlockData!
   createdAt: DateTime!
   updatedAt: DateTime!
   product: Product!
+  image: DamImageBlockData!
 }
 
 type ProductDiscounts {
@@ -536,7 +536,6 @@ type Product {
   inStock: Boolean!
   soldCount: Int
   availableSince: DateTime
-  image: DamImageBlockData!
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
@@ -549,6 +548,7 @@ type Product {
   variants: [ProductVariant!]!
   tagsWithStatus: [ProductToTag!]!
   tags: [ProductTag!]!
+  image: DamImageBlockData!
 }
 
 enum ProductStatus {

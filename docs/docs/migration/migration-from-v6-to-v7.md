@@ -831,6 +831,52 @@ The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
 Instead, implement your own `InternalLinkBlock`.
 This is needed for more flexibility, e.g., support for internationalized routing.
 
+### Add `legacyBevavior` to all link block usages
+
+All link blocks in `@comet/cms-site` now render a child `<a>` tag by default to align with the new behavior of the Next `Link` component, which is used by `InternalLinkBlock`.
+For existing projects, add the `legacyBehavior` prop to all library link block usages to use the old behavior, where the `<a>` tag is defined in the application. For example:
+
+```diff title=LinkBlock.tsx
+const supportedBlocks: SupportedBlocks = {
+    internal: ({ children, title, ...props }) => (
+        <InternalLinkBlock
+            data={props}
+            title={title}
++           legacyBehavior
+        >
+            {children}
+        </InternalLinkBlock>
+    ),
+    external: ({ children, title, ...props }) => (
+        <ExternalLinkBlock
+            data={props}
+            title={title}
++           legacyBehavior
+        >
+            {children}
+        </ExternalLinkBlock>
+    ),
+    /* Other link blocks */
+};
+
+export const LinkBlock = withPreview(
+    ({ data, children }: LinkBlockProps) => {
+        return (
+            <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
+                {children}
+            </OneOfBlock>
+        );
+    },
+    { label: "Link" },
+);
+```
+
+:::info
+
+New projects shouldn't use the legacy behavior. Instead, add support to pass the `className` prop through to the `LinkBlock` an its child blocks. See [this PR](https://github.com/vivid-planet/comet/pull/2271) for an example.
+
+:::
+
 ### Add `aspectRatio` to `PixelImageBlock` and `Image`
 
 Previously, there was a default aspect ratio of `16x9`.
@@ -849,63 +895,106 @@ Example:
  />
 ```
 
-### Make relative DAM URLs work
-
-This requires the following change (depending on which router you use):
-
-#### Pages Router
-
-```diff
-// next.config.js
-
-const nextConfig = {
-    rewrites: async () => {
-        if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
-        var rewrites = await require("./preBuild/build/preBuild/src/createRewrites").createRewrites();
--       return rewrites;
-+       return [
-+           ...rewrites,
-+           {
-+               source: "/dam/:path*",
-+               destination: process.env.API_URL + "/dam/:path*",
-+           },
-+       ];
-    },
-    // ...
-```
-
-#### App Router
-
-```diff
-// middleware.ts
-
-export async function middleware(request: NextRequest) {
-+   if (request.nextUrl.pathname.startsWith("/dam/")) {
-+       return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
-+   }
-    // ...
-```
-
-### Switch to Next.js preview mode
+### Switch to Next.js Preview Mode
 
 #### Requires following changes to site:
 
--   Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
--   Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
--   Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
--   Remove `createGetUniversalProps`
-    -   Just implement `getStaticProps`/`getServerSideProps` (Preview Mode will SSR automatically)
-    -   Get `previewData` from `context` and use it to configure the GraphQL Client
--   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
--   Provide a protected environment for the site
-    -   Make sure that a Authorization-Header is present in this environment
-    -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
-    -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
-    -   Use the `path`-part of the return value to redirect to the preview
+Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
 
-#### Requires following changes to admin:
+```diff
+- import { useRouter } from "@comet/cms-site";
++ import { useRouter } from "next/router";
+```
 
--   The `SitesConfig` must provide a `sitePreviewApiUrl`
+Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
+
+```diff
+- import { Link } from "@comet/cms-site";
++ import { Link } from "next/link";
+```
+
+Remove the preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters).
+
+```sh
+rm -rf src/pages/preview/
+```
+
+Remove `createGetUniversalProps` from the "normal" pages:
+
+```diff
+- export function createGetUniversalProps({
+-     includeInvisibleBlocks = false,
+-     includeInvisiblePages = false,
+-     previewDamUrls = false,
+- }: CreateGetUniversalPropsOptions = {}) {
+-     /* ... */
+- }
+```
+
+Instead, implement `getStaticProps` (Preview Mode will automatically switch to SSR). Use `previewData` from `context` to configure the GraphQL Client:
+
+```diff
++ import { ParsedUrlQuery } from "querystring";
++ import { SitePreviewParams } from "@comet/cms-site";
+
+  export const getStaticProps: GetStaticProps<
+      PageProps,
++     ParsedUrlQuery,
++     SitePreviewParams
+  > = async (
+      context,
+  ) => {
++     const { scope, previewData } = context.previewData ?? {
++         scope: { domain, language: context.locale ?? defaultLanguage },
++         previewData: undefined,
++     };
+
+      const client = createGraphQLClient({
++         includeInvisiblePages: context.preview,
++         includeInvisibleBlocks: previewData?.includeInvisible,
++         previewDamUrls: context.preview,
+      });
+
+      /* ... */
+  };
+```
+
+Add the `SitePreviewProvider` to `App` (typically in `src/pages/_app.page.tsx`):
+
+```diff
+function CustomApp({ Component, pageProps }: AppProps) {
+    const router = useRouter();
+
+    return (
+        <>
+            {/* ... */}
+-           <Component {...pageProps} />
++           {router.isPreview ? (
++               <SitePreviewProvider>
++                   <Component {...pageProps} />
++               </SitePreviewProvider>
++           ) : (
++               <Component {...pageProps} />
++           )}
+        </>
+    );
+}
+```
+
+Add an API Route to enable the preview mode. Must be the same as in `siteConfig.sitePreviewApiUrl` (default: `${siteConfig.url}/api/site-preview`):
+
+```ts
+// In pages/api/site-preview.page.ts
+import { legacyPagesRouterSitePreviewApiHandler } from "@comet/cms-site";
+import createGraphQLClient from "@src/util/createGraphQLClient";
+import { NextApiHandler } from "next";
+
+const SitePreviewApiHandler: NextApiHandler = async (req, res) => {
+    await legacyPagesRouterSitePreviewApiHandler(req, res, createGraphQLClient());
+};
+
+export default SitePreviewApiHandler;
+```
 
 ### TODO: GraphQL fetch client
 
@@ -920,23 +1009,6 @@ plenty-cougars-warn.md
 selfish-dolls-beg.md
 
 ## ESLint
-
-### Enforce PascalCase in enums
-
-We now enforce PascalCase for enums.
-If your project has enums that are cased differently, you should change the casing.
-
-In some cases, changing the enum casing can be problematic.
-For example, if the enum value is stored in the database.
-In such cases, you can disable the rule like so
-
-```diff
-+ /* eslint-disable @typescript-eslint/naming-convention */
-  export enum ExampleEnum {
-      attr1 = "attr1",
-  }
-+ /* eslint-enable @typescript-eslint/naming-convention */
-```
 
 ### @typescript-eslint/prefer-enum-initializers
 

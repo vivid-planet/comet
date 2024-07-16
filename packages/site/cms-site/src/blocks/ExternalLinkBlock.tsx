@@ -10,9 +10,17 @@ import { PropsWithData } from "./PropsWithData";
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
     children: React.ReactElement;
     title?: string;
+    className?: string;
+    legacyBehavior?: boolean;
 }
 
-export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children, title }: ExternalLinkBlockProps): React.ReactElement {
+export function ExternalLinkBlock({
+    data: { targetUrl, openInNewWindow },
+    children,
+    title,
+    className,
+    legacyBehavior,
+}: ExternalLinkBlockProps): React.ReactElement {
     const preview = usePreview();
 
     if (preview.previewType === "SitePreview" || preview.previewType === "BlockPreview") {
@@ -27,18 +35,35 @@ export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, childr
             }
         };
 
-        return React.cloneElement(children, { href: "#", onClick, title });
-    } else {
-        if (!targetUrl) {
-            return children;
+        if (legacyBehavior) {
+            return React.cloneElement(children, { href: "#", onClick, title });
         }
 
-        const childProps = {
-            href: targetUrl ? targetUrl : "#",
-            target: openInNewWindow ? "_blank" : undefined,
-            title,
-        };
+        return (
+            <a href="#" onClick={onClick} title={title} className={className}>
+                {children}
+            </a>
+        );
+    } else {
+        if (!targetUrl) {
+            if (legacyBehavior) {
+                return children;
+            }
 
-        return React.cloneElement(children, childProps);
+            return <span className={className}>{children}</span>;
+        }
+
+        const href = targetUrl;
+        const target = openInNewWindow ? "_blank" : undefined;
+
+        if (legacyBehavior) {
+            return React.cloneElement(children, { href, target, title });
+        }
+
+        return (
+            <a href={href} target={target} title={title} className={className}>
+                {children}
+            </a>
+        );
     }
 }

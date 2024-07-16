@@ -1,5 +1,7 @@
 # @comet/admin-icons
 
+## 7.0.0-beta.4
+
 ## 7.0.0-beta.3
 
 ## 7.0.0-beta.2
@@ -7,6 +9,14 @@
 ## 7.0.0-beta.1
 
 ## 7.0.0-beta.0
+
+## 6.15.1
+
+## 6.15.0
+
+### Minor Changes
+
+-   406027806: Add `RteUppercase` icon
 
 ## 6.14.1
 

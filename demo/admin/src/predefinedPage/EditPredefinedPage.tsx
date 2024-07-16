@@ -1,21 +1,8 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import {
-    FinalForm,
-    Loading,
-    MainContent,
-    messages,
-    SaveButton,
-    SelectField,
-    SplitButton,
-    Toolbar,
-    ToolbarFillSpace,
-    ToolbarItem,
-    useStackApi,
-} from "@comet/admin";
+import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { PageName } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
-import { FORM_ERROR } from "final-form";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -96,24 +83,7 @@ export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
                             <PageName pageId={id} />
                             <ToolbarFillSpace />
                             <ToolbarItem>
-                                <SplitButton disabled={pristine || hasValidationErrors || submitting}>
-                                    <SaveButton hasErrors={hasSubmitErrors} type="submit">
-                                        <FormattedMessage {...messages.save} />
-                                    </SaveButton>
-                                    <SaveButton
-                                        saving={submitting}
-                                        hasErrors={hasSubmitErrors}
-                                        onClick={async () => {
-                                            const submitResult = await handleSubmit();
-                                            const error = submitResult?.[FORM_ERROR];
-                                            if (!error) {
-                                                stackApi?.goBack();
-                                            }
-                                        }}
-                                    >
-                                        <FormattedMessage {...messages.saveAndGoBack} />
-                                    </SaveButton>
-                                </SplitButton>
+                                <FinalFormSaveButton />
                             </ToolbarItem>
                         </Toolbar>
                         <MainContent>

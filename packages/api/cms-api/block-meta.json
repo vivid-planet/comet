@@ -142,14 +142,20 @@
                 "nullable": true
             },
             {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
                 "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
             },
             {
                 "name": "damFile",
@@ -213,12 +219,12 @@
         ],
         "inputFields": [
             {
-                "name": "damFileId",
-                "kind": "String",
+                "name": "autoplay",
+                "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "autoplay",
+                "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
             },
@@ -228,8 +234,14 @@
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "damFileId",
+                "kind": "String",
                 "nullable": true
             }
         ]
@@ -1071,20 +1083,6 @@
         "name": "YouTubeVideo",
         "fields": [
             {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
-            {
                 "name": "autoplay",
                 "kind": "Boolean",
                 "nullable": true
@@ -1097,25 +1095,22 @@
             {
                 "name": "loop",
                 "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
-            {
                 "name": "autoplay",
                 "kind": "Boolean",
                 "nullable": true
@@ -1128,6 +1123,17 @@
             {
                 "name": "loop",
                 "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ]

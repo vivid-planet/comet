@@ -12,9 +12,10 @@ interface Props {
     };
     supportedBlocks: SupportedBlocks;
     children?: React.ReactNode;
+    className?: string;
 }
 
-export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children }) => {
+export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children, className }) => {
     if (!block) {
         return null;
     }
@@ -33,5 +34,5 @@ export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps 
         return null;
     }
 
-    return <>{blockFunction({ ...block.props, ...additionalProps, children })}</>;
+    return <>{blockFunction({ ...block.props, ...additionalProps, children, className })}</>;
 };
