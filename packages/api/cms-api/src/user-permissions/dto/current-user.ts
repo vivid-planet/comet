@@ -7,6 +7,8 @@ import { ContentScope } from "../interfaces/content-scope.interface";
 export class CurrentUserPermission {
     @Field()
     permission: string;
+    @Field(() => GraphQLJSONObject, { nullable: true })
+    configuration?: Record<string, unknown>;
     @Field(() => [GraphQLJSONObject])
     contentScopes: ContentScope[];
 }
