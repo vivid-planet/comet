@@ -80,10 +80,6 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
             `}
         `}
 
-        & [class*="${inputBaseClasses.root}"] {
-            width: 100%;
-        }
-
         ${ownerState.variant === "horizontal" &&
         !ownerState.forceVertical &&
         css`
@@ -168,6 +164,10 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
         css`
             flex-grow: 1;
         `}
+
+        & > [class*="${inputBaseClasses.root}"] {
+            width: 100%;
+        }
     `,
 );
 
