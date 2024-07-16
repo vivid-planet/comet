@@ -32,7 +32,7 @@ We provide [Helm](https://helm.sh/) Charts, which are available on [GitHub](http
 
 Comet Applications can also be deployed to serverless container platforms like [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) or [Digital Ocean App Platform](https://docs.digitalocean.com/products/app-platform/).
 
-It's important to note that deploying to a serverless platform comes with its own set of limitations. For instance, you won't be able to use [CronJobModule](../cron-jobs/index.md) and the KubernetesModule in this setup.
+It's important to note that deploying to a serverless platform comes with its own set of limitations. For instance, you won't be able to use the [CronJobModule](../cron-jobs/index.md) and the KubernetesModule in this setup.
 
 ### Docker Compose
 
