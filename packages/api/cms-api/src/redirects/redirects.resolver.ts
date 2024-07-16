@@ -106,8 +106,9 @@ export function createRedirectsResolver({
         async redirectSourceAvailable(
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("source", { type: () => String }) source: string,
+            @Args("excludedId", { type: () => ID, nullable: true }) excludedId?: string,
         ): Promise<boolean> {
-            return this.redirectService.isRedirectSourceAvailable(source, nonEmptyScopeOrNothing(scope));
+            return this.redirectService.isRedirectSourceAvailable(source, nonEmptyScopeOrNothing(scope), { excludedId });
         }
 
         @Mutation(() => Redirect)

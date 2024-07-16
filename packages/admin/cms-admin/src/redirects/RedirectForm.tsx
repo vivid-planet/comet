@@ -113,13 +113,14 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
 
             const { data } = await client.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
                 query: gql`
-                    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
-                        redirectSourceAvailable(scope: $scope, source: $source)
+                    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!, $excludedId: ID) {
+                        redirectSourceAvailable(scope: $scope, source: $source, excludedId: $excludedId)
                     }
                 `,
                 variables: {
                     scope,
                     source: value,
+                    excludedId: id,
                 },
                 fetchPolicy: "network-only",
             });
