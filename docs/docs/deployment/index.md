@@ -24,7 +24,7 @@ There are several ways to deploy these microservices. The best deployment method
 
 ### Kubernetes
 
-As stated in the [Overview](../overview/index.md), Comet DXP is a cloud-native CMS. Kubernetes is the preferred way to deploy a Comet application, as it provides the most flexibility and supports all enterprise requirements. However, this is usually the most expensive way of deploying a Comet application.
+Comet DXP is a cloud-native CMS, so Kubernetes is the preferred way to deploy a Comet application, as it provides the most flexibility and supports all enterprise requirements. However, it is usually the most expensive way.
 
 We provide [Helm](https://helm.sh/) Charts, which are available on [GitHub](https://github.com/vivid-planet/comet-charts), for easy deployment.
 
