@@ -4,7 +4,8 @@ import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { notFound } from "next/navigation";
 
-import { Content, fragment } from "./content";
+import { Content } from "./content";
+import { fragment } from "./fragment";
 import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
 export default async function NewsDetailPage({ params }: { params: { slug: string; lang: string } }) {

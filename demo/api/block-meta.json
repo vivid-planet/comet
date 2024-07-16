@@ -1129,6 +1129,44 @@
                 "name": "id",
                 "kind": "String",
                 "nullable": true
+            },
+            {
+                "name": "news",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "slug",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "NestedObject",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "domain",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "language",
+                                        "kind": "String",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": true
             }
         ],
         "inputFields": [
