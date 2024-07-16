@@ -1,5 +1,23 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.5
+
+### Minor Changes
+
+-   569ad0463: Deprecate `SplitButton`, `FinalFormSaveSplitButton` and `SplitButtonContext` and remove all uses of these components in our libraries
+
+    The reason is that we decided to retire the SplitButton pattern.
+
+### Patch Changes
+
+-   Updated dependencies [569ad0463]
+    -   @comet/admin@7.0.0-beta.5
+    -   @comet/admin-date-time@7.0.0-beta.5
+    -   @comet/admin-icons@7.0.0-beta.5
+    -   @comet/admin-rte@7.0.0-beta.5
+    -   @comet/admin-theme@7.0.0-beta.5
+    -   @comet/blocks-admin@7.0.0-beta.5
+
 ## 7.0.0-beta.4
 
 ### Major Changes
