@@ -7,6 +7,7 @@ import rimraf from "rimraf";
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../dam/files/files.utils";
+import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { PublicUploadFileUploadInterface } from "./dto/public-upload-file-upload.interface";
 import { PublicUpload } from "./entities/public-upload.entity";
 import { PublicUploadConfig } from "./public-upload.config";
@@ -42,7 +43,7 @@ export class PublicUploadsController {
     }
 
     @Get("download/:id")
-    @DisableCometGuards()
+    @RequiredPermission(["publicUploads"], { skipScopeCheck: true })
     async downloadFileById(@Param("id") id: string, @Res() res: Response): Promise<void> {
         const file = await this.publicUploadsRepository.findOne(id);
 
