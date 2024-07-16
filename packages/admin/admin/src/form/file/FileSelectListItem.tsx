@@ -120,7 +120,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
                             {(Boolean(onClickDownload) || !!downloadUrl) && (
                                 <IconButton
                                     disabled={disabled}
-                                    {...(downloadUrl ? { href: downloadUrl } : { onClick: onClickDownload })}
+                                    {...(downloadUrl ? { href: downloadUrl, download: true } : { onClick: onClickDownload })}
                                     {...slotProps?.iconButton}
                                 >
                                     {downloadIcon}
