@@ -1,15 +1,16 @@
 import { useQuery } from "@apollo/client";
 import {
+    DataGridToolbar,
     GridColDef,
     GridFilterButton,
     LocalErrorScopeApolloContext,
+    MainContent,
     muiGridFilterToGql,
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
     TableDeleteButton,
-    Toolbar,
-    ToolbarAutomaticTitleItem,
+    ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -24,10 +25,9 @@ import { DataGrid, getGridSingleSelectOperators, GridToolbarQuickFilter } from "
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import RedirectActiveness from "./RedirectActiveness";
-import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsTable.gql";
-import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsTable.gql.generated";
+import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
+import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";
 
 interface Props {
     linkBlock: BlockInterface;
@@ -36,25 +36,24 @@ interface Props {
 
 function RedirectsTableToolbar() {
     return (
-        <Toolbar scopeIndicator={<ContentScopeIndicator />}>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarItem>
+            <ToolbarFillSpace />
+            <ToolbarActions>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="comet.pages.redirects.add" defaultMessage="Add" />
+                    <FormattedMessage id="comet.pages.redirects.add" defaultMessage="New redirect" />
                 </Button>
-            </ToolbarItem>
-        </Toolbar>
+            </ToolbarActions>
+        </DataGridToolbar>
     );
 }
 
-export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
+export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
     const intl = useIntl();
 
     const typeOptions = [
@@ -174,7 +173,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
     const rowCount = useBufferedRowCount(data?.paginatedRedirects.totalCount);
 
     return (
-        <DataGridContainer>
+        <MainContent fullHeight>
             <DataGrid
                 {...dataGridProps}
                 rows={rows}
@@ -185,7 +184,7 @@ export function RedirectsTable({ linkBlock, scope }: Props): JSX.Element {
                 disableSelectionOnClick
                 components={{ Toolbar: RedirectsTableToolbar }}
             />
-        </DataGridContainer>
+        </MainContent>
     );
 }
 
@@ -196,9 +195,4 @@ const TargetWrapper = styled("div")`
 const IconWrapper = styled("div")`
     display: flex;
     flex-direction: row;
-`;
-
-const DataGridContainer = styled("div")`
-    width: 100%;
-    height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
 `;
