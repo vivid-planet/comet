@@ -120,6 +120,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                 font-size: 16px;
                 line-height: 20px;
                 margin-left: 12px;
+                font-weight: 450;
             }
         `}
 
