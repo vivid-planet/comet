@@ -4,6 +4,7 @@ import { jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
+import path from "path";
 
 import { GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 
@@ -25,7 +26,7 @@ function getPreviewScopeSigningKey() {
     return process.env.SITE_PREVIEW_SECRET || "secret";
 }
 
-export async function sitePreviewRoute(request: NextRequest, graphQLFetch: GraphQLFetch) {
+export async function sitePreviewRoute(request: NextRequest, graphQLFetch: GraphQLFetch, options?: { apiRoutePostfix?: string }) {
     const previewScopeSigningKey = getPreviewScopeSigningKey();
     const params = request.nextUrl.searchParams;
     const settingsParam = params.get("settings");
@@ -64,7 +65,10 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
 
     draftMode().enable();
 
-    return redirect(params.get("path") || "/");
+    const apiRoutePostfix = options?.apiRoutePostfix ?? "/api/site-preview";
+    const basePath = request.nextUrl.pathname.split(apiRoutePostfix)[0];
+
+    return redirect(path.join(basePath, params.get("path") ?? "") || "/");
 }
 
 /**
