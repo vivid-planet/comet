@@ -63,6 +63,7 @@ export function generateFormField(
         <${TextInputComponent}
             ${required ? "required" : ""}
             ${config.readOnly ? readOnlyPropsWithLock : ""}
+            variant="horizontal"
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
@@ -78,6 +79,7 @@ export function generateFormField(
             <Field
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
+                variant="horizontal"
                 fullWidth
                 name="${name}"
                 component={FinalFormInput}
@@ -99,7 +101,7 @@ export function generateFormField(
         }
         formValueToGqlInputCode = `${name}: ${assignment},`;
     } else if (config.type == "boolean") {
-        code = `<Field name="${name}" label="" type="checkbox" fullWidth ${validateCode}>
+        code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
@@ -119,6 +121,7 @@ export function generateFormField(
             <Field
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
+                variant="horizontal"
                 fullWidth
                 name="${name}"
                 component={FinalFormDatePicker}
@@ -148,6 +151,7 @@ export function generateFormField(
         const values = enumType.enumValues.map((i) => i.name);
         code = `<Field
             ${required ? "required" : ""}
+            variant="horizontal"
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
@@ -217,6 +221,7 @@ export function generateFormField(
 
         code = `<AsyncSelectField
                 ${required ? "required" : ""}
+                variant="horizontal"
                 fullWidth
                 name="${name}"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
