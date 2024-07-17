@@ -86,65 +86,63 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <>
-                    <MainContent>
-                        <TextField
-                            required
-                            fullWidth
-                            name="title"
-                            label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
-                            validate={validateTitle}
-                        />
+                <MainContent>
+                    <TextField
+                        required
+                        fullWidth
+                        name="title"
+                        label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                        validate={validateTitle}
+                    />
 
-                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+                    <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
-                        <TextAreaField
-                            required
-                            fullWidth
-                            name="description"
-                            label={<FormattedMessage id="product.description" defaultMessage="Description" />}
-                        />
-                        <AsyncSelectField
-                            fullWidth
-                            name="category"
-                            label={<FormattedMessage id="product.category" defaultMessage="Category" />}
-                            loadOptions={async () => {
-                                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                                    query: gql`
-                                        query ProductCategoriesSelect {
-                                            productCategories {
-                                                nodes {
-                                                    id
-                                                    title
-                                                }
+                    <TextAreaField
+                        required
+                        fullWidth
+                        name="description"
+                        label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                    />
+                    <AsyncSelectField
+                        fullWidth
+                        name="category"
+                        label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                        loadOptions={async () => {
+                            const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                query: gql`
+                                    query ProductCategoriesSelect {
+                                        productCategories {
+                                            nodes {
+                                                id
+                                                title
                                             }
                                         }
-                                    `,
-                                });
-                                return data.productCategories.nodes;
-                            }}
-                            getOptionLabel={(option) => option.title}
-                        />
-                        <Field name="inStock" label="" type="checkbox" fullWidth>
-                            {(props) => (
-                                <FormControlLabel
-                                    label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                    control={<FinalFormCheckbox {...props} />}
-                                />
-                            )}
-                        </Field>
+                                    }
+                                `,
+                            });
+                            return data.productCategories.nodes;
+                        }}
+                        getOptionLabel={(option) => option.title}
+                    />
+                    <Field name="inStock" label="" type="checkbox" fullWidth>
+                        {(props) => (
+                            <FormControlLabel
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                control={<FinalFormCheckbox {...props} />}
+                            />
+                        )}
+                    </Field>
 
-                        <Field
-                            fullWidth
-                            name="availableSince"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
-                        />
-                        <Field name="image" isEqual={isEqual}>
-                            {createFinalFormBlock(rootBlocks.image)}
-                        </Field>
-                    </MainContent>
-                </>
+                    <Field
+                        fullWidth
+                        name="availableSince"
+                        component={FinalFormDatePicker}
+                        label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                    />
+                    <Field name="image" isEqual={isEqual}>
+                        {createFinalFormBlock(rootBlocks.image)}
+                    </Field>
+                </MainContent>
             )}
         </FinalForm>
     );

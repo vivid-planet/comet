@@ -33,17 +33,15 @@ storiesOf("stories/components/Toolbar/Custom Back Button", module)
                         <ToolbarActions>
                             <StackSwitchApiContext.Consumer>
                                 {(stackSwitchApi) => (
-                                    <>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => {
-                                                stackSwitchApi?.activatePage("automaticTitleDetail", "details");
-                                            }}
-                                        >
-                                            <Typography>Go To Details</Typography>
-                                        </Button>
-                                    </>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => {
+                                            stackSwitchApi?.activatePage("automaticTitleDetail", "details");
+                                        }}
+                                    >
+                                        <Typography>Go To Details</Typography>
+                                    </Button>
                                 )}
                             </StackSwitchApiContext.Consumer>
                         </ToolbarActions>

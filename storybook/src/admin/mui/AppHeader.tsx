@@ -5,6 +5,7 @@ import {
     AppHeaderFillSpace,
     AppHeaderMenuButton,
     CometLogo,
+    MainContent,
     MasterLayout,
     Menu as CometMenu,
     MenuItemRouterLink,
@@ -80,7 +81,7 @@ function MasterHeader() {
 export function Story() {
     return (
         <MasterLayout menuComponent={Menu} headerComponent={MasterHeader}>
-            <React.Fragment />
+            <MainContent>Some content</MainContent>
         </MasterLayout>
     );
 }

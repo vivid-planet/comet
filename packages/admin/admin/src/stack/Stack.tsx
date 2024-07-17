@@ -174,11 +174,9 @@ export function Stack(props: StackProps) {
                         return children;
                     }
                     return (
-                        <>
-                            <StackBreadcrumb title={topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
-                                {children}
-                            </StackBreadcrumb>
-                        </>
+                        <StackBreadcrumb title={topLevelTitle} url={routerProps.match.url} ignoreParentId={true}>
+                            {children}
+                        </StackBreadcrumb>
                     );
                 }}
             </Route>

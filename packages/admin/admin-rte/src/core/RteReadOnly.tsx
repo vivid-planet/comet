@@ -62,17 +62,15 @@ const RteReadOnly: React.FC<IProps> = ({ value: editorState, options: passedOpti
     }
 
     return (
-        <>
-            <DraftJsEditor
-                ref={editorRef}
-                editorState={editorState}
-                onChange={handleOnChange}
-                spellCheck={false}
-                customStyleMap={styleMap}
-                readOnly={true}
-                blockRenderMap={blockRenderMap}
-            />
-        </>
+        <DraftJsEditor
+            ref={editorRef}
+            editorState={editorState}
+            onChange={handleOnChange}
+            spellCheck={false}
+            customStyleMap={styleMap}
+            readOnly={true}
+            blockRenderMap={blockRenderMap}
+        />
     );
 };
 

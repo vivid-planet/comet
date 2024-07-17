@@ -390,12 +390,12 @@ export function generateForm(
                 subscription={{}}
             >
                 {() => (
-                    <>
+                    ${editMode ? `<>` : ``}
                         ${editMode ? `{saveConflict.dialogs}` : ``}
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>
-                    </>
+                    ${editMode ? `</>` : ``}
                 )}
             </FinalForm>
         );

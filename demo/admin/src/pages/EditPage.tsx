@@ -119,7 +119,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
         });
     }
 
-    if (!pageState) return <></>;
+    if (!pageState) return null;
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;

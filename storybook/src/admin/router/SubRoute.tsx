@@ -9,48 +9,44 @@ import { storyRouterDecorator } from "../../story-router.decorator";
 function Cmp1() {
     const urlPrefix = useSubRoutePrefix();
     return (
-        <>
-            <Switch>
-                <Route path={`${urlPrefix}/sub`}>
-                    <div>Cmp1 Sub</div>
-                </Route>
-                <SubRouteIndexRoute>
-                    <div>
-                        <Link to={`${urlPrefix}/sub`}>Cmp1 SubLink</Link>
-                    </div>
-                </SubRouteIndexRoute>
-            </Switch>
-        </>
+        <Switch>
+            <Route path={`${urlPrefix}/sub`}>
+                <div>Cmp1 Sub</div>
+            </Route>
+            <SubRouteIndexRoute>
+                <div>
+                    <Link to={`${urlPrefix}/sub`}>Cmp1 SubLink</Link>
+                </div>
+            </SubRouteIndexRoute>
+        </Switch>
     );
 }
 
 function Cmp2() {
     const urlPrefix = useSubRoutePrefix();
     return (
-        <>
-            <Switch>
-                <Route path={`${urlPrefix}/sub`}>
-                    <div>
-                        <Link to={`${urlPrefix}/sub`}>Sub</Link>
-                        <br />
-                        <Link to={`${urlPrefix}/sub/sub2`}>Sub2</Link>
-                    </div>
-                    <Switch>
-                        <Route path={`${urlPrefix}/sub/sub2`}>
-                            <div>Cmp2 Sub2</div>
-                        </Route>
-                        <Route>
-                            <div>Cmp2 Sub</div>
-                        </Route>
-                    </Switch>
-                </Route>
-                <SubRouteIndexRoute>
-                    <div>
-                        <Link to={`${urlPrefix}/sub`}>Cmp2 SubLink</Link>
-                    </div>
-                </SubRouteIndexRoute>
-            </Switch>
-        </>
+        <Switch>
+            <Route path={`${urlPrefix}/sub`}>
+                <div>
+                    <Link to={`${urlPrefix}/sub`}>Sub</Link>
+                    <br />
+                    <Link to={`${urlPrefix}/sub/sub2`}>Sub2</Link>
+                </div>
+                <Switch>
+                    <Route path={`${urlPrefix}/sub/sub2`}>
+                        <div>Cmp2 Sub2</div>
+                    </Route>
+                    <Route>
+                        <div>Cmp2 Sub</div>
+                    </Route>
+                </Switch>
+            </Route>
+            <SubRouteIndexRoute>
+                <div>
+                    <Link to={`${urlPrefix}/sub`}>Cmp2 SubLink</Link>
+                </div>
+            </SubRouteIndexRoute>
+        </Switch>
     );
 }
 
