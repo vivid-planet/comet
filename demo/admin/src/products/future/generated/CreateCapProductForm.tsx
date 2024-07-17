@@ -108,6 +108,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                             fullWidth
                             name="category"
                             label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                            displayEmpty
                             loadOptions={async () => {
                                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
                                     query: gql`
@@ -121,7 +122,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                                         }
                                     `,
                                 });
-                                return data.productCategories.nodes;
+                                return [{ id: "", title: "Please select" }, ...data.productCategories.nodes];
                             }}
                             getOptionLabel={(option) => option.title}
                         />

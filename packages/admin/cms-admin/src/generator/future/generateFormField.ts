@@ -150,7 +150,9 @@ export function generateFormField(
             ${required ? "required" : ""}
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
+            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            ${!required ? "displayEmpty" : ""}
+            >
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
@@ -159,6 +161,13 @@ export function generateFormField(
             ${validateCode}
             {(props) =>
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
+                ${
+                    !required
+                        ? `<MenuItem value="" >
+                            <FormattedMessage id="${instanceGqlType}.${name}.pleaseSelect" defaultMessage="Please select" />
+                           </MenuItem>`
+                        : ""
+                }
                 ${values
                     .map((value) => {
                         const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
@@ -220,6 +229,7 @@ export function generateFormField(
                 fullWidth
                 name="${name}"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                ${!required ? "displayEmpty" : ""}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName} {
@@ -231,7 +241,11 @@ export function generateFormField(
                             }
                         }\`
                     });
-                    return data.${rootQuery}.nodes;
+                    ${
+                        !required
+                            ? `return [{ id: "",  ${labelField}: "Please select"}, ...data.${rootQuery}.nodes ];`
+                            : `return data.${rootQuery}.nodes;`
+                    }
                 }}
                 getOptionLabel={(option) => option.${labelField}}
             />`;
