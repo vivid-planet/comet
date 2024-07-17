@@ -44,9 +44,6 @@ const styles = (theme: Theme) => {
                     marginRight: theme.spacing(4),
                 },
             },
-            "& [class*='MuiInputBase-root']": {
-                width: "100%",
-            },
         },
         vertical: {},
         horizontal: {
@@ -81,7 +78,11 @@ const styles = (theme: Theme) => {
             },
         },
         label: {},
-        inputContainer: {},
+        inputContainer: {
+            "& > [class*='MuiInputBase-root']": {
+                width: "100%",
+            },
+        },
         hasError: {
             "& $label:not([class*='Mui-focused'])": {
                 color: theme.palette.error.main,
