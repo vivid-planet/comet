@@ -13,7 +13,6 @@ build/
 dist/
 schema.json
 fragmentTypes.json
-lerna.json
 storybook-static
 schema.graphql
 block-meta.json
