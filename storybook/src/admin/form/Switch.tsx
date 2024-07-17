@@ -12,25 +12,21 @@ function Story() {
                     //
                 }}
                 render={({ handleSubmit, values }) => (
-                    <>
-                        <form onSubmit={handleSubmit}>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Field name="foo" label="Switch with yes, no">
-                                        {(props) => <FormControlLabel label={values.foo ? "Yes" : "No"} control={<FinalFormSwitch {...props} />} />}
-                                    </Field>
-                                    <Box marginBottom={4}>
-                                        <Divider />
-                                    </Box>
-                                    <Field name="bar">
-                                        {(props) => (
-                                            <FormControlLabel label="Switch with label on the right" control={<FinalFormSwitch {...props} />} />
-                                        )}
-                                    </Field>
-                                </CardContent>
-                            </Card>
-                        </form>
-                    </>
+                    <form onSubmit={handleSubmit}>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Field name="foo" label="Switch with yes, no">
+                                    {(props) => <FormControlLabel label={values.foo ? "Yes" : "No"} control={<FinalFormSwitch {...props} />} />}
+                                </Field>
+                                <Box marginBottom={4}>
+                                    <Divider />
+                                </Box>
+                                <Field name="bar">
+                                    {(props) => <FormControlLabel label="Switch with label on the right" control={<FinalFormSwitch {...props} />} />}
+                                </Field>
+                            </CardContent>
+                        </Card>
+                    </form>
                 )}
             />
         </div>

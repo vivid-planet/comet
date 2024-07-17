@@ -206,11 +206,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             <FinalFormContextProvider {...formContext}>
                 {saveBoundaryApi && (
                     <FormSpy subscription={{ dirty: true }}>
-                        {(props) => (
-                            <>
-                                <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />
-                            </>
-                        )}
+                        {(props) => <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />}
                     </FormSpy>
                 )}
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>

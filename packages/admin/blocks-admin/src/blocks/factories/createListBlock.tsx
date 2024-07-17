@@ -278,166 +278,182 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                             <StackSwitchApiContext.Consumer>
                                 {(stackApi) => {
                                     return (
-                                        <>
-                                            <SelectPreviewComponent>
-                                                <AdminComponentPaper disablePadding>
-                                                    <AdminComponentStickyHeader>
-                                                        <BlockListHeader>
-                                                            {state.blocks.length ? (
-                                                                <SelectAllFromControlLabel
-                                                                    control={
-                                                                        <Checkbox
-                                                                            checked={selectedCount === state.blocks.length && selectedCount > 0}
-                                                                            indeterminate={selectedCount > 0 && selectedCount !== state.blocks.length}
-                                                                            onChange={handleToggleSelectAll}
-                                                                        />
+                                        <SelectPreviewComponent>
+                                            <AdminComponentPaper disablePadding>
+                                                <AdminComponentStickyHeader>
+                                                    <BlockListHeader>
+                                                        {state.blocks.length ? (
+                                                            <SelectAllFromControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={selectedCount === state.blocks.length && selectedCount > 0}
+                                                                        indeterminate={selectedCount > 0 && selectedCount !== state.blocks.length}
+                                                                        onChange={handleToggleSelectAll}
+                                                                    />
+                                                                }
+                                                                label={
+                                                                    <FormattedMessage id="comet.blocks.list.selectAll" defaultMessage="Select all" />
+                                                                }
+                                                            />
+                                                        ) : (
+                                                            <div />
+                                                        )}
+                                                        <BlockListHeaderActionContainer>
+                                                            {selectedCount > 0 && (
+                                                                <>
+                                                                    <IconButton onClick={deleteAllSelectedBlocks} size="large">
+                                                                        <Delete />
+                                                                    </IconButton>
+                                                                    <IconButton onClick={copySelectedBlocks} size="large">
+                                                                        <Copy />
+                                                                    </IconButton>
+                                                                </>
+                                                            )}
+                                                            <IconButton onClick={() => pasteBlock(0)} size="large">
+                                                                <Paste />
+                                                            </IconButton>
+                                                        </BlockListHeaderActionContainer>
+                                                    </BlockListHeader>
+                                                </AdminComponentStickyHeader>
+                                                <div>
+                                                    {state.blocks.map((data, blockIndex) => {
+                                                        const isMinVisibleBlocksMet = !!minVisibleBlocks && totalVisibleBlocks >= minVisibleBlocks;
+                                                        const isMaxVisibleBlocksReached =
+                                                            !!maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks;
+
+                                                        const canToggleVisibility = isMaxVisibleBlocksReached ? data.visible : true;
+
+                                                        const showMaxBlocksAllowedMessage = isMaxVisibleBlocksReached && !data.visible;
+                                                        const showMinBlocksRequiredMessage =
+                                                            !isMinVisibleBlocksMet || (minVisibleBlocks === totalVisibleBlocks && data.visible);
+
+                                                        return (
+                                                            <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
+                                                                <BlockRow
+                                                                    id={data.key}
+                                                                    renderPreviewContent={() => (
+                                                                        <BlockPreviewContent block={block} state={data.props} />
+                                                                    )}
+                                                                    index={blockIndex}
+                                                                    onContentClick={() => {
+                                                                        stackApi.activatePage("edit", data.key);
+                                                                    }}
+                                                                    onDeleteClick={() => {
+                                                                        deleteBlocks([data.key]);
+                                                                    }}
+                                                                    moveBlock={(from, to) => {
+                                                                        updateState((prevState) => {
+                                                                            const blocks = [...prevState.blocks];
+                                                                            const blockToMove = blocks.splice(from, 1)[0];
+                                                                            blocks.splice(to, 0, blockToMove);
+                                                                            return { ...prevState, blocks };
+                                                                        });
+                                                                    }}
+                                                                    visibilityButton={
+                                                                        <Tooltip
+                                                                            title={
+                                                                                showMaxBlocksAllowedMessage ? (
+                                                                                    <FormattedMessage
+                                                                                        id="comet.blocks.list.maxVisibleBlocks"
+                                                                                        defaultMessage="Max. visible blocks allowed: {maxVisibleBlocks}"
+                                                                                        values={{ maxVisibleBlocks }}
+                                                                                    />
+                                                                                ) : showMinBlocksRequiredMessage ? (
+                                                                                    <FormattedMessage
+                                                                                        id="comet.blocks.list.minVisibleBlocks"
+                                                                                        defaultMessage="Min. visible blocks required: {minVisibleBlocks}"
+                                                                                        values={{ minVisibleBlocks }}
+                                                                                    />
+                                                                                ) : null
+                                                                            }
+                                                                        >
+                                                                            <Box component="span">
+                                                                                <IconButton
+                                                                                    onClick={() => canToggleVisibility && toggleVisible(data.key)}
+                                                                                    size="small"
+                                                                                    disabled={!canToggleVisibility}
+                                                                                >
+                                                                                    {data.visible ? (
+                                                                                        <Visible color="secondary" />
+                                                                                    ) : (
+                                                                                        <Invisible color="action" />
+                                                                                    )}
+                                                                                </IconButton>
+                                                                            </Box>
+                                                                        </Tooltip>
                                                                     }
-                                                                    label={
-                                                                        <FormattedMessage
-                                                                            id="comet.blocks.list.selectAll"
-                                                                            defaultMessage="Select all"
-                                                                        />
+                                                                    onAddNewBlock={(beforeIndex) => {
+                                                                        const key = addNewBlock(beforeIndex);
+                                                                        stackApi.activatePage("edit", key);
+                                                                    }}
+                                                                    onCopyClick={() => {
+                                                                        updateClipboardContent([
+                                                                            {
+                                                                                name: block.name,
+                                                                                visible: data.visible,
+                                                                                state: data.props,
+                                                                                additionalFields: Object.keys(additionalItemFields ?? {}).reduce(
+                                                                                    (fields, field) => ({ ...fields, [field]: data[field] }),
+                                                                                    {},
+                                                                                ),
+                                                                            },
+                                                                        ]);
+                                                                    }}
+                                                                    onPasteClick={() => {
+                                                                        pasteBlock(blockIndex + 1);
+                                                                    }}
+                                                                    selected={data.selected}
+                                                                    onSelectedClick={(selected) => {
+                                                                        selectBlock(data, selected);
+                                                                    }}
+                                                                    isValidFn={() => block.isValid(data.props)}
+                                                                    slideIn={data.slideIn}
+                                                                    hideBottomInsertBetweenButton={blockIndex >= state.blocks.length - 1}
+                                                                    additionalMenuItems={(onMenuClose) =>
+                                                                        AdditionalItemContextMenuItems ? (
+                                                                            <AdditionalItemContextMenuItems
+                                                                                item={data}
+                                                                                onChange={(updatedItem) => {
+                                                                                    updateState((previousState) => ({
+                                                                                        blocks: previousState.blocks.map((block) =>
+                                                                                            block.key === data.key ? updatedItem : block,
+                                                                                        ),
+                                                                                    }));
+                                                                                }}
+                                                                                onMenuClose={onMenuClose}
+                                                                            />
+                                                                        ) : undefined
+                                                                    }
+                                                                    additionalContent={
+                                                                        AdditionalItemContent ? <AdditionalItemContent item={data} /> : undefined
                                                                     }
                                                                 />
-                                                            ) : (
-                                                                <div />
-                                                            )}
-                                                            <BlockListHeaderActionContainer>
-                                                                {selectedCount > 0 && (
-                                                                    <>
-                                                                        <IconButton onClick={deleteAllSelectedBlocks} size="large">
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                        <IconButton onClick={copySelectedBlocks} size="large">
-                                                                            <Copy />
-                                                                        </IconButton>
-                                                                    </>
-                                                                )}
-                                                                <IconButton onClick={() => pasteBlock(0)} size="large">
-                                                                    <Paste />
-                                                                </IconButton>
-                                                            </BlockListHeaderActionContainer>
-                                                        </BlockListHeader>
-                                                    </AdminComponentStickyHeader>
-                                                    <div>
-                                                        {state.blocks.map((data, blockIndex) => {
-                                                            const isMinVisibleBlocksMet =
-                                                                !!minVisibleBlocks && totalVisibleBlocks >= minVisibleBlocks;
-                                                            const isMaxVisibleBlocksReached =
-                                                                !!maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks;
-
-                                                            const canToggleVisibility = isMaxVisibleBlocksReached ? data.visible : true;
-
-                                                            const showMaxBlocksAllowedMessage = isMaxVisibleBlocksReached && !data.visible;
-                                                            const showMinBlocksRequiredMessage =
-                                                                !isMinVisibleBlocksMet || (minVisibleBlocks === totalVisibleBlocks && data.visible);
-
-                                                            return (
-                                                                <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
-                                                                    <BlockRow
-                                                                        id={data.key}
-                                                                        renderPreviewContent={() => (
-                                                                            <BlockPreviewContent block={block} state={data.props} />
-                                                                        )}
-                                                                        index={blockIndex}
-                                                                        onContentClick={() => {
-                                                                            stackApi.activatePage("edit", data.key);
-                                                                        }}
-                                                                        onDeleteClick={() => {
-                                                                            deleteBlocks([data.key]);
-                                                                        }}
-                                                                        moveBlock={(from, to) => {
-                                                                            updateState((prevState) => {
-                                                                                const blocks = [...prevState.blocks];
-                                                                                const blockToMove = blocks.splice(from, 1)[0];
-                                                                                blocks.splice(to, 0, blockToMove);
-                                                                                return { ...prevState, blocks };
-                                                                            });
-                                                                        }}
-                                                                        visibilityButton={
-                                                                            <Tooltip
-                                                                                title={
-                                                                                    showMaxBlocksAllowedMessage ? (
-                                                                                        <FormattedMessage
-                                                                                            id="comet.blocks.list.maxVisibleBlocks"
-                                                                                            defaultMessage="Max. visible blocks allowed: {maxVisibleBlocks}"
-                                                                                            values={{ maxVisibleBlocks }}
-                                                                                        />
-                                                                                    ) : showMinBlocksRequiredMessage ? (
-                                                                                        <FormattedMessage
-                                                                                            id="comet.blocks.list.minVisibleBlocks"
-                                                                                            defaultMessage="Min. visible blocks required: {minVisibleBlocks}"
-                                                                                            values={{ minVisibleBlocks }}
-                                                                                        />
-                                                                                    ) : null
-                                                                                }
-                                                                            >
-                                                                                <Box component="span">
-                                                                                    <IconButton
-                                                                                        onClick={() => canToggleVisibility && toggleVisible(data.key)}
-                                                                                        size="small"
-                                                                                        disabled={!canToggleVisibility}
-                                                                                    >
-                                                                                        {data.visible ? (
-                                                                                            <Visible color="secondary" />
-                                                                                        ) : (
-                                                                                            <Invisible color="action" />
-                                                                                        )}
-                                                                                    </IconButton>
-                                                                                </Box>
-                                                                            </Tooltip>
-                                                                        }
-                                                                        onAddNewBlock={(beforeIndex) => {
-                                                                            const key = addNewBlock(beforeIndex);
-                                                                            stackApi.activatePage("edit", key);
-                                                                        }}
-                                                                        onCopyClick={() => {
-                                                                            updateClipboardContent([
-                                                                                {
-                                                                                    name: block.name,
-                                                                                    visible: data.visible,
-                                                                                    state: data.props,
-                                                                                    additionalFields: Object.keys(additionalItemFields ?? {}).reduce(
-                                                                                        (fields, field) => ({ ...fields, [field]: data[field] }),
-                                                                                        {},
-                                                                                    ),
-                                                                                },
-                                                                            ]);
-                                                                        }}
-                                                                        onPasteClick={() => {
-                                                                            pasteBlock(blockIndex + 1);
-                                                                        }}
-                                                                        selected={data.selected}
-                                                                        onSelectedClick={(selected) => {
-                                                                            selectBlock(data, selected);
-                                                                        }}
-                                                                        isValidFn={() => block.isValid(data.props)}
-                                                                        slideIn={data.slideIn}
-                                                                        hideBottomInsertBetweenButton={blockIndex >= state.blocks.length - 1}
-                                                                        additionalMenuItems={(onMenuClose) =>
-                                                                            AdditionalItemContextMenuItems ? (
-                                                                                <AdditionalItemContextMenuItems
-                                                                                    item={data}
-                                                                                    onChange={(updatedItem) => {
-                                                                                        updateState((previousState) => ({
-                                                                                            blocks: previousState.blocks.map((block) =>
-                                                                                                block.key === data.key ? updatedItem : block,
-                                                                                            ),
-                                                                                        }));
-                                                                                    }}
-                                                                                    onMenuClose={onMenuClose}
-                                                                                />
-                                                                            ) : undefined
-                                                                        }
-                                                                        additionalContent={
-                                                                            AdditionalItemContent ? <AdditionalItemContent item={data} /> : undefined
-                                                                        }
-                                                                    />
-                                                                </HoverPreviewComponent>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                    {state.blocks.length === 0 ? (
+                                                            </HoverPreviewComponent>
+                                                        );
+                                                    })}
+                                                </div>
+                                                {state.blocks.length === 0 ? (
+                                                    <AdminComponentButton
+                                                        variant="primary"
+                                                        onClick={() => {
+                                                            const key = addNewBlock();
+                                                            stackApi.activatePage("edit", key);
+                                                        }}
+                                                        size="large"
+                                                    >
+                                                        <LargeAddButtonContent>
+                                                            <LargeAddButtonIcon />
+                                                            <Typography>
+                                                                <FormattedMessage
+                                                                    id="comet.blocks.list.add"
+                                                                    defaultMessage="Add {itemName}"
+                                                                    values={{ itemName }}
+                                                                />
+                                                            </Typography>
+                                                        </LargeAddButtonContent>
+                                                    </AdminComponentButton>
+                                                ) : (
+                                                    <AdminComponentStickyFooter>
                                                         <AdminComponentButton
                                                             variant="primary"
                                                             onClick={() => {
@@ -445,40 +461,18 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                 stackApi.activatePage("edit", key);
                                                             }}
                                                             size="large"
+                                                            startIcon={<Add />}
                                                         >
-                                                            <LargeAddButtonContent>
-                                                                <LargeAddButtonIcon />
-                                                                <Typography>
-                                                                    <FormattedMessage
-                                                                        id="comet.blocks.list.add"
-                                                                        defaultMessage="Add {itemName}"
-                                                                        values={{ itemName }}
-                                                                    />
-                                                                </Typography>
-                                                            </LargeAddButtonContent>
+                                                            <FormattedMessage
+                                                                id="comet.blocks.list.add"
+                                                                defaultMessage="Add {itemName}"
+                                                                values={{ itemName }}
+                                                            />
                                                         </AdminComponentButton>
-                                                    ) : (
-                                                        <AdminComponentStickyFooter>
-                                                            <AdminComponentButton
-                                                                variant="primary"
-                                                                onClick={() => {
-                                                                    const key = addNewBlock();
-                                                                    stackApi.activatePage("edit", key);
-                                                                }}
-                                                                size="large"
-                                                                startIcon={<Add />}
-                                                            >
-                                                                <FormattedMessage
-                                                                    id="comet.blocks.list.add"
-                                                                    defaultMessage="Add {itemName}"
-                                                                    values={{ itemName }}
-                                                                />
-                                                            </AdminComponentButton>
-                                                        </AdminComponentStickyFooter>
-                                                    )}
-                                                </AdminComponentPaper>
-                                            </SelectPreviewComponent>
-                                        </>
+                                                    </AdminComponentStickyFooter>
+                                                )}
+                                            </AdminComponentPaper>
+                                        </SelectPreviewComponent>
                                     );
                                 }}
                             </StackSwitchApiContext.Consumer>

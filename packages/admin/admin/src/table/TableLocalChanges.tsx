@@ -82,21 +82,20 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
             });
         }
         return (
-            <>
-                <RouterPrompt
-                    message={() => {
-                        const isDirty = Object.keys(this.state.changes).length > 0 || this.state.changedOrder;
-                        if (isDirty) {
-                            return true;
-                        }
-                        return "Do you want to save your changes?"; //TODO translate, we need intl context
-                        //return intl.formatMessage(messages.saveUnsavedChanges);
-                    }}
-                    saveAction={async () => {
-                        await this.submitLocalDataChanges();
+            <RouterPrompt
+                message={() => {
+                    const isDirty = Object.keys(this.state.changes).length > 0 || this.state.changedOrder;
+                    if (isDirty) {
                         return true;
-                    }}
-                    /*
+                    }
+                    return "Do you want to save your changes?"; //TODO translate, we need intl context
+                    //return intl.formatMessage(messages.saveUnsavedChanges);
+                }}
+                saveAction={async () => {
+                    await this.submitLocalDataChanges();
+                    return true;
+                }}
+                /*
                     // TODO DirtyHandler removal: do we need a resetAction functionality here?
                     resetAction={() => {
                         this.setState({
@@ -105,15 +104,14 @@ export class TableLocalChanges<TData extends { id: string; [key: string]: any }>
                         });
                     }}
                     */
-                >
-                    {this.props.children({
-                        tableLocalChangesApi: this.tableLocalChangesApi,
-                        localChangesCount: Object.keys(this.state.changes).length,
-                        data: patchedData,
-                        loading: this.state.loading,
-                    })}
-                </RouterPrompt>
-            </>
+            >
+                {this.props.children({
+                    tableLocalChangesApi: this.tableLocalChangesApi,
+                    localChangesCount: Object.keys(this.state.changes).length,
+                    data: patchedData,
+                    loading: this.state.loading,
+                })}
+            </RouterPrompt>
         );
     }
 

@@ -37,15 +37,13 @@ storiesOf("stories/components/Final Form Range Input/Different Slider Thumb", mo
     `;
 
     return (
-        <>
-            <Form
-                onSubmit={(values) => {
-                    // values
-                }}
-                render={({ handleSubmit, values, form, initialValues }) => (
-                    <Field component={FinalFormRangeInput} name="price" min={0} max={100} sliderProps={{ ThumbComponent: Thumb }} />
-                )}
-            />
-        </>
+        <Form
+            onSubmit={(values) => {
+                // values
+            }}
+            render={({ handleSubmit, values, form, initialValues }) => (
+                <Field component={FinalFormRangeInput} name="price" min={0} max={100} sliderProps={{ ThumbComponent: Thumb }} />
+            )}
+        />
     );
 });

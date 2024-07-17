@@ -86,15 +86,13 @@ storiesOf("stories/components/Stack", module)
         function Foo({ payload }: { payload: string }) {
             const switchApi = useStackSwitchApi();
             return (
-                <>
-                    <button
-                        onClick={(e) => {
-                            switchApi.activatePage("page2", payload);
-                        }}
-                    >
-                        activate page2 with payload {payload}
-                    </button>
-                </>
+                <button
+                    onClick={(e) => {
+                        switchApi.activatePage("page2", payload);
+                    }}
+                >
+                    activate page2 with payload {payload}
+                </button>
             );
         }
     })
@@ -132,14 +130,12 @@ storiesOf("stories/components/Stack", module)
 
         function Page2() {
             return (
-                <>
-                    <StackSwitch>
-                        <StackPage name="page2-1">
-                            <Page2_1 />
-                        </StackPage>
-                        <StackPage name="page2-2">page 2-2</StackPage>
-                    </StackSwitch>
-                </>
+                <StackSwitch>
+                    <StackPage name="page2-1">
+                        <Page2_1 />
+                    </StackPage>
+                    <StackPage name="page2-2">page 2-2</StackPage>
+                </StackSwitch>
             );
         }
 
@@ -195,14 +191,12 @@ storiesOf("stories/components/Stack", module)
 
         function Page2() {
             return (
-                <>
-                    <StackSwitch>
-                        <StackPage name="page2-1">
-                            <Page2_1 />
-                        </StackPage>
-                        <StackPage name="page2-2">page 2-2</StackPage>
-                    </StackSwitch>
-                </>
+                <StackSwitch>
+                    <StackPage name="page2-1">
+                        <Page2_1 />
+                    </StackPage>
+                    <StackPage name="page2-2">page 2-2</StackPage>
+                </StackSwitch>
             );
         }
 
@@ -248,15 +242,13 @@ storiesOf("stories/components/Stack", module)
         function Foo({ payload }: { payload: string }) {
             const switchApi = useStackSwitchApi();
             return (
-                <>
-                    <button
-                        onClick={(e) => {
-                            switchApi.activatePage("page2", payload);
-                        }}
-                    >
-                        activate page2 with payload {payload}
-                    </button>
-                </>
+                <button
+                    onClick={(e) => {
+                        switchApi.activatePage("page2", payload);
+                    }}
+                >
+                    activate page2 with payload {payload}
+                </button>
             );
         }
     })

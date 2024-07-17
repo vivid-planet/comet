@@ -272,110 +272,124 @@ export function createColumnsBlock<T extends BlockInterface>({
                                     <StackSwitchApiContext.Consumer>
                                         {(stackApi) => {
                                             return (
-                                                <>
-                                                    <SelectPreviewComponent>
-                                                        <BlockListHeader>
-                                                            {state.columns.length ? (
-                                                                <SelectAllFromControlLabel
-                                                                    control={
-                                                                        <Checkbox
-                                                                            checked={selectedCount === state.columns.length && selectedCount > 0}
-                                                                            indeterminate={
-                                                                                selectedCount > 0 && selectedCount !== state.columns.length
-                                                                            }
-                                                                            onChange={handleToggleSelectAll}
-                                                                        />
-                                                                    }
-                                                                    label={
-                                                                        <FormattedMessage
-                                                                            id="comet.blocks.list.selectAll"
-                                                                            defaultMessage="Select all"
-                                                                        />
-                                                                    }
-                                                                />
-                                                            ) : (
-                                                                <div />
+                                                <SelectPreviewComponent>
+                                                    <BlockListHeader>
+                                                        {state.columns.length ? (
+                                                            <SelectAllFromControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={selectedCount === state.columns.length && selectedCount > 0}
+                                                                        indeterminate={selectedCount > 0 && selectedCount !== state.columns.length}
+                                                                        onChange={handleToggleSelectAll}
+                                                                    />
+                                                                }
+                                                                label={
+                                                                    <FormattedMessage id="comet.blocks.list.selectAll" defaultMessage="Select all" />
+                                                                }
+                                                            />
+                                                        ) : (
+                                                            <div />
+                                                        )}
+                                                        <BlockListHeaderActionContainer>
+                                                            {selectedCount > 0 && (
+                                                                <>
+                                                                    <IconButton onClick={deleteAllSelectedBlocks} size="large">
+                                                                        <Delete />
+                                                                    </IconButton>
+                                                                    <IconButton onClick={copySelectedBlocks} size="large">
+                                                                        <Copy />
+                                                                    </IconButton>
+                                                                </>
                                                             )}
-                                                            <BlockListHeaderActionContainer>
-                                                                {selectedCount > 0 && (
-                                                                    <>
-                                                                        <IconButton onClick={deleteAllSelectedBlocks} size="large">
-                                                                            <Delete />
-                                                                        </IconButton>
-                                                                        <IconButton onClick={copySelectedBlocks} size="large">
-                                                                            <Copy />
-                                                                        </IconButton>
-                                                                    </>
-                                                                )}
-                                                                <IconButton onClick={() => pasteBlock(0)} size="large">
-                                                                    <Paste />
-                                                                </IconButton>
-                                                            </BlockListHeaderActionContainer>
-                                                        </BlockListHeader>
+                                                            <IconButton onClick={() => pasteBlock(0)} size="large">
+                                                                <Paste />
+                                                            </IconButton>
+                                                        </BlockListHeaderActionContainer>
+                                                    </BlockListHeader>
 
-                                                        <Divider />
-                                                        <div>
-                                                            {state.columns.map((column, columnIndex) => {
-                                                                return (
-                                                                    <HoverPreviewComponent key={column.key} componentSlug={`${column.key}/content`}>
-                                                                        <BlockRow
-                                                                            id={column.key}
-                                                                            renderPreviewContent={() => (
-                                                                                <BlockPreviewContent block={contentBlock} state={column.props} />
-                                                                            )}
-                                                                            index={columnIndex}
-                                                                            onContentClick={() => {
-                                                                                stackApi.activatePage("edit", column.key);
-                                                                            }}
-                                                                            onDeleteClick={() => {
-                                                                                deleteBlocks([column.key]);
-                                                                            }}
-                                                                            moveBlock={(from, to) => {
-                                                                                updateState((prevState) => {
-                                                                                    const columns = [...prevState.columns];
-                                                                                    const columnToMove = columns.splice(from, 1)[0];
-                                                                                    columns.splice(to, 0, columnToMove);
-                                                                                    return { ...prevState, columns };
-                                                                                });
-                                                                            }}
-                                                                            visibilityButton={
-                                                                                <IconButton onClick={() => toggleVisible(column.key)} size="small">
-                                                                                    {column.visible ? (
-                                                                                        <Visible color="secondary" />
-                                                                                    ) : (
-                                                                                        <Invisible color="action" />
-                                                                                    )}
-                                                                                </IconButton>
-                                                                            }
-                                                                            onAddNewBlock={(beforeIndex) => {
-                                                                                const key = addNewBlock(beforeIndex);
-                                                                                stackApi.activatePage("edit", key);
-                                                                            }}
-                                                                            onCopyClick={() => {
-                                                                                updateClipboardContent([
-                                                                                    {
-                                                                                        name: contentBlock.name,
-                                                                                        visible: column.visible,
-                                                                                        state: column.props,
-                                                                                    },
-                                                                                ]);
-                                                                            }}
-                                                                            onPasteClick={() => {
-                                                                                pasteBlock(columnIndex + 1);
-                                                                            }}
-                                                                            selected={column.selected}
-                                                                            onSelectedClick={(selected) => {
-                                                                                selectBlock(column, selected);
-                                                                            }}
-                                                                            isValidFn={() => contentBlock.isValid(column.props)}
-                                                                            slideIn={column.slideIn}
-                                                                            hideBottomInsertBetweenButton={columnIndex >= state.columns.length - 1}
-                                                                        />
-                                                                    </HoverPreviewComponent>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                        {state.columns.length === 0 ? (
+                                                    <Divider />
+                                                    <div>
+                                                        {state.columns.map((column, columnIndex) => {
+                                                            return (
+                                                                <HoverPreviewComponent key={column.key} componentSlug={`${column.key}/content`}>
+                                                                    <BlockRow
+                                                                        id={column.key}
+                                                                        renderPreviewContent={() => (
+                                                                            <BlockPreviewContent block={contentBlock} state={column.props} />
+                                                                        )}
+                                                                        index={columnIndex}
+                                                                        onContentClick={() => {
+                                                                            stackApi.activatePage("edit", column.key);
+                                                                        }}
+                                                                        onDeleteClick={() => {
+                                                                            deleteBlocks([column.key]);
+                                                                        }}
+                                                                        moveBlock={(from, to) => {
+                                                                            updateState((prevState) => {
+                                                                                const columns = [...prevState.columns];
+                                                                                const columnToMove = columns.splice(from, 1)[0];
+                                                                                columns.splice(to, 0, columnToMove);
+                                                                                return { ...prevState, columns };
+                                                                            });
+                                                                        }}
+                                                                        visibilityButton={
+                                                                            <IconButton onClick={() => toggleVisible(column.key)} size="small">
+                                                                                {column.visible ? (
+                                                                                    <Visible color="secondary" />
+                                                                                ) : (
+                                                                                    <Invisible color="action" />
+                                                                                )}
+                                                                            </IconButton>
+                                                                        }
+                                                                        onAddNewBlock={(beforeIndex) => {
+                                                                            const key = addNewBlock(beforeIndex);
+                                                                            stackApi.activatePage("edit", key);
+                                                                        }}
+                                                                        onCopyClick={() => {
+                                                                            updateClipboardContent([
+                                                                                {
+                                                                                    name: contentBlock.name,
+                                                                                    visible: column.visible,
+                                                                                    state: column.props,
+                                                                                },
+                                                                            ]);
+                                                                        }}
+                                                                        onPasteClick={() => {
+                                                                            pasteBlock(columnIndex + 1);
+                                                                        }}
+                                                                        selected={column.selected}
+                                                                        onSelectedClick={(selected) => {
+                                                                            selectBlock(column, selected);
+                                                                        }}
+                                                                        isValidFn={() => contentBlock.isValid(column.props)}
+                                                                        slideIn={column.slideIn}
+                                                                        hideBottomInsertBetweenButton={columnIndex >= state.columns.length - 1}
+                                                                    />
+                                                                </HoverPreviewComponent>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                    {state.columns.length === 0 ? (
+                                                        <AdminComponentButton
+                                                            variant="primary"
+                                                            onClick={() => {
+                                                                const key = addNewBlock();
+                                                                stackApi.activatePage("edit", key);
+                                                            }}
+                                                            size="large"
+                                                        >
+                                                            <LargeAddButtonContent>
+                                                                <LargeAddButtonIcon />
+                                                                <Typography>
+                                                                    <FormattedMessage
+                                                                        id="comet.blocks.columns.addColumn"
+                                                                        defaultMessage="Add column"
+                                                                    />
+                                                                </Typography>
+                                                            </LargeAddButtonContent>
+                                                        </AdminComponentButton>
+                                                    ) : (
+                                                        <AdminComponentStickyFooter>
                                                             <AdminComponentButton
                                                                 variant="primary"
                                                                 onClick={() => {
@@ -383,37 +397,13 @@ export function createColumnsBlock<T extends BlockInterface>({
                                                                     stackApi.activatePage("edit", key);
                                                                 }}
                                                                 size="large"
+                                                                startIcon={<Add />}
                                                             >
-                                                                <LargeAddButtonContent>
-                                                                    <LargeAddButtonIcon />
-                                                                    <Typography>
-                                                                        <FormattedMessage
-                                                                            id="comet.blocks.columns.addColumn"
-                                                                            defaultMessage="Add column"
-                                                                        />
-                                                                    </Typography>
-                                                                </LargeAddButtonContent>
+                                                                <FormattedMessage id="comet.blocks.columns.addColumn" defaultMessage="Add column" />
                                                             </AdminComponentButton>
-                                                        ) : (
-                                                            <AdminComponentStickyFooter>
-                                                                <AdminComponentButton
-                                                                    variant="primary"
-                                                                    onClick={() => {
-                                                                        const key = addNewBlock();
-                                                                        stackApi.activatePage("edit", key);
-                                                                    }}
-                                                                    size="large"
-                                                                    startIcon={<Add />}
-                                                                >
-                                                                    <FormattedMessage
-                                                                        id="comet.blocks.columns.addColumn"
-                                                                        defaultMessage="Add column"
-                                                                    />
-                                                                </AdminComponentButton>
-                                                            </AdminComponentStickyFooter>
-                                                        )}
-                                                    </SelectPreviewComponent>
-                                                </>
+                                                        </AdminComponentStickyFooter>
+                                                    )}
+                                                </SelectPreviewComponent>
                                             );
                                         }}
                                     </StackSwitchApiContext.Consumer>

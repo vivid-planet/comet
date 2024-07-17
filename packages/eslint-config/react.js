@@ -25,6 +25,7 @@ module.exports = {
         "react/display-name": "off",
         "react/prop-types": "off",
         "react/jsx-curly-brace-presence": "error",
+        "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
         "no-restricted-imports": [
             "error",
             {
