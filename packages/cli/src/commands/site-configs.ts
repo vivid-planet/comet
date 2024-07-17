@@ -35,7 +35,6 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
             public: (siteConfigs: BaseSiteConfig[]): ExtractPublicSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) => ({
                     name: siteConfig.name,
-                    contentScope: siteConfig.contentScope,
                     domains: siteConfig.domains,
                     preloginEnabled: siteConfig.preloginEnabled || false,
                     public: siteConfig.public,
