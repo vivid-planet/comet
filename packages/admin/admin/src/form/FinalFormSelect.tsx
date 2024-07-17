@@ -28,7 +28,7 @@ export const FinalFormSelect = <T,>({
     },
     getOptionValue = (option: T) => {
         if (typeof option === "object" && option !== null) {
-            if ((option as any).id) return String((option as any).id);
+            if ((option as any).id || (option as any).id === "") return String((option as any).id);
             if ((option as any).value) return String((option as any).value);
             return JSON.stringify(option);
         } else {
@@ -85,11 +85,18 @@ export const FinalFormSelect = <T,>({
             }
             onChange={(event) => {
                 const value = event.target.value;
-                onChange(
-                    Array.isArray(value)
-                        ? value.map((v) => options.find((i) => getOptionValue(i) == v))
-                        : options.find((i) => getOptionValue(i) == value),
-                );
+
+                if (Array.isArray(value)) {
+                    onChange(value.map((v) => options.find((i) => getOptionValue(i) == v)));
+                } else {
+                    const selectedOption = options.find((i) => getOptionValue(i) == value);
+
+                    if (selectedOption && getOptionValue(selectedOption) === "") {
+                        onChange(undefined);
+                    } else {
+                        onChange(selectedOption);
+                    }
+                }
             }}
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
         >
