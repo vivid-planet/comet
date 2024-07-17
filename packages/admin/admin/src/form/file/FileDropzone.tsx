@@ -30,6 +30,7 @@ export type FileDropzoneClassKey =
     | "disabled"
     | "error"
     | "focused"
+    | "draggingTooManyFiles"
     | "dropzone"
     | "errorIconContainer"
     | "dropzoneText"
@@ -40,12 +41,14 @@ type OwnerState = {
     hasError: boolean;
     focused: boolean;
     dragging: boolean;
+    draggingTooManyFiles: boolean;
 };
 
 export const FileDropzone = (inProps: FileDropzoneProps) => {
     const {
         disabled,
         hasError,
+        maxFiles,
         hideDroppableArea,
         hideButton,
         // @ts-expect-error The type should be used from `DropzoneOptions`, however it's missing during lint/build.
@@ -70,6 +73,7 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
         name: "CometAdminFileDropzone",
     });
     const { error: errorIcon = <Error color="error" />, select: selectIcon = <Select /> } = iconMapping;
+    const [draggingTooManyFiles, setDraggingTooManyFiles] = React.useState(false);
     const [focused, setFocused] = React.useState(false);
     const [dragging, setDragging] = React.useState(false);
 
@@ -78,12 +82,30 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
         hasError: Boolean(hasError),
         focused,
         dragging,
+        draggingTooManyFiles,
     };
 
-    const dropzoneState = useDropzone({ ...restDropzoneOptions, disabled, multiple });
+    const dropzoneState = useDropzone({ ...restDropzoneOptions, maxFiles, disabled, multiple });
 
     return (
-        <Box display="contents" onDragOver={() => setDragging(true)} onDragLeave={() => setDragging(false)} onDrop={() => setDragging(false)}>
+        <Box
+            display="contents"
+            onDragOver={(e) => {
+                setDragging(true);
+
+                if (typeof maxFiles !== "undefined") {
+                    setDraggingTooManyFiles(e.dataTransfer.items.length > maxFiles);
+                }
+            }}
+            onDragLeave={() => {
+                setDragging(false);
+                setDraggingTooManyFiles(false);
+            }}
+            onDrop={() => {
+                setDragging(false);
+                setDraggingTooManyFiles(false);
+            }}
+        >
             <Root
                 {...dropzoneState.getRootProps()}
                 tabIndex={disabled ? -1 : 0}
@@ -123,7 +145,12 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
 const Root = createComponentSlot("div")<FileDropzoneClassKey, OwnerState>({
     componentName: "FileDropzone",
     slotName: "root",
-    classesResolver: ({ disabled, hasError, focused }) => [disabled && "disabled", hasError && "error", focused && "focused"],
+    classesResolver: ({ disabled, hasError, focused, draggingTooManyFiles }) => [
+        disabled && "disabled",
+        hasError && "error",
+        focused && "focused",
+        draggingTooManyFiles && "draggingTooManyFiles",
+    ],
 })(
     ({ theme, ownerState }) => css`
         display: flex;
@@ -139,6 +166,11 @@ const Root = createComponentSlot("div")<FileDropzoneClassKey, OwnerState>({
         ${ownerState.disabled &&
         css`
             pointer-events: none;
+        `}
+
+        ${ownerState.draggingTooManyFiles &&
+        css`
+            cursor: not-allowed;
         `}
     `,
 );
