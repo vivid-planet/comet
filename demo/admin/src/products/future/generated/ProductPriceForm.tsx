@@ -89,6 +89,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
                     {saveConflict.dialogs}
                     <MainContent>
                         <Field
+                            variant="horizontal"
                             fullWidth
                             name="price"
                             component={FinalFormInput}

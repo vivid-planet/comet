@@ -156,8 +156,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
-                        <Field fullWidth name="status" label={<FormattedMessage id="product.status" defaultMessage="Status" />}>
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="title"
+                            label={<FormattedMessage id="product.title" defaultMessage="Title" />}
+                        />
+                        <Field variant="horizontal" fullWidth name="status" label={<FormattedMessage id="product.status" defaultMessage="Status" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
                                     <MenuItem value="Published">
@@ -172,14 +178,21 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
-                        <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
                         <TextField
                             required
+                            variant="horizontal"
+                            fullWidth
+                            name="slug"
+                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
+                        />
+                        <TextField
+                            required
+                            variant="horizontal"
                             fullWidth
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <Field fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
+                        <Field variant="horizontal" fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
                             {(props) => (
                                 <FinalFormSelect {...props}>
                                     <MenuItem value="Cap">
@@ -195,13 +208,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             )}
                         </Field>
                         <Field
+                            variant="horizontal"
                             fullWidth
                             name="price"
                             component={FinalFormInput}
                             type="number"
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
-                        <Field name="inStock" label="" type="checkbox" fullWidth>
+                        <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                             {(props) => (
                                 <FormControlLabel
                                     label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
@@ -210,6 +224,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             )}
                         </Field>
                         <DateField
+                            variant="horizontal"
                             fullWidth
                             name="availableSince"
                             label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
