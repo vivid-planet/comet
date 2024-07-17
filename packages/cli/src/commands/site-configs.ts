@@ -27,18 +27,19 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
         const replacerFunctions: Record<string, (siteConfigs: BaseSiteConfig[]) => unknown> = {
             private: (siteConfigs: BaseSiteConfig[]): ExtractPrivateSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) =>
-                    ((siteConfig) => ({
-                        ...siteConfig,
+                    (({ public: publicVars, ...rest }) => ({
+                        ...publicVars,
+                        ...rest,
                         url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
                     }))(siteConfig),
                 ),
             public: (siteConfigs: BaseSiteConfig[]): ExtractPublicSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) => ({
+                    ...siteConfig.public,
                     name: siteConfig.name,
                     contentScope: siteConfig.contentScope,
                     domains: siteConfig.domains,
                     preloginEnabled: siteConfig.preloginEnabled || false,
-                    public: siteConfig.public,
                     url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
                 })),
         };
