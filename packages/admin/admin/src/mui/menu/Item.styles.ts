@@ -71,7 +71,6 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            margin-left: 12px;
         }
 
         ${ownerState.level === 1 &&
@@ -120,6 +119,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             .${listItemTextClasses.primary} {
                 font-size: 16px;
                 line-height: 20px;
+                margin-left: 12px;
             }
         `}
 
