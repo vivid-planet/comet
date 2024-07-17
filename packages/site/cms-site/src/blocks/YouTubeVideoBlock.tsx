@@ -24,6 +24,7 @@ interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
     renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
+    fill?: boolean;
 }
 
 export const YouTubeVideoBlock = withPreview(
@@ -32,6 +33,7 @@ export const YouTubeVideoBlock = withPreview(
         aspectRatio = "16x9",
         previewImageSizes,
         renderPreviewImage,
+        fill,
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = React.useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
@@ -62,17 +64,24 @@ export const YouTubeVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage ? (
-                        renderPreviewImage({ onPlay: () => setShowPreviewImage(false), image: previewImage, aspectRatio, sizes: previewImageSizes })
+                        renderPreviewImage({
+                            onPlay: () => setShowPreviewImage(false),
+                            image: previewImage,
+                            aspectRatio,
+                            sizes: previewImageSizes,
+                            fill: fill,
+                        })
                     ) : (
                         <VideoPreviewImage
                             onPlay={() => setShowPreviewImage(false)}
                             image={previewImage}
                             aspectRatio={aspectRatio}
                             sizes={previewImageSizes}
+                            fill={fill}
                         />
                     )
                 ) : (
-                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")}>
+                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
                         <YouTubeContainer src={youtubeUrl.toString()} allow="autoplay" />
                     </VideoContainer>
                 )}
@@ -82,14 +91,19 @@ export const YouTubeVideoBlock = withPreview(
     { label: "Video" },
 );
 
-const VideoContainer = styled.div<{ $aspectRatio: string }>`
+const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>`
     overflow: hidden;
     position: relative;
 
-    ${({ $aspectRatio }) =>
-        css`
-            aspect-ratio: ${$aspectRatio};
-        `}
+    ${({ $aspectRatio, $fill }) =>
+        $fill
+            ? css`
+                  width: 100%;
+                  height: 100%;
+              `
+            : css`
+                  aspect-ratio: ${$aspectRatio};
+              `}
 `;
 
 const YouTubeContainer = styled.iframe`

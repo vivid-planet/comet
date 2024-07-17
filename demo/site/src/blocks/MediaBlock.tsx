@@ -4,15 +4,15 @@ import { MediaBlockData } from "@src/blocks.generated";
 
 import { DamImageBlock } from "./DamImageBlock";
 
-const supportedBlocks: SupportedBlocks = {
-    image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
-    damVideo: (props) => <DamVideoBlock data={props} />,
-    youTubeVideo: (props) => <YouTubeVideoBlock data={props} />,
-};
+const getSupportedBlocks = (fill?: boolean): SupportedBlocks => ({
+    image: (props) => <DamImageBlock data={props} aspectRatio="inherit" fill={fill} />,
+    damVideo: (props) => <DamVideoBlock data={props} fill={fill} />,
+    youTubeVideo: (props) => <YouTubeVideoBlock data={props} fill={fill} />,
+});
 
 export const MediaBlock = withPreview(
-    ({ data }: PropsWithData<MediaBlockData>) => {
-        return <OneOfBlock data={data} supportedBlocks={supportedBlocks} />;
+    ({ data, fill }: PropsWithData<MediaBlockData> & { fill?: boolean }) => {
+        return <OneOfBlock data={data} supportedBlocks={getSupportedBlocks(fill)} />;
     },
     { label: "Media" },
 );
