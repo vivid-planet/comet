@@ -38,8 +38,8 @@ Many of the highlighted microservices can be exchanged or omitted.
 
 You can build two types of applications with COMET DXP:
 
--   **Content websites**: Websites that are primarily content-driven without a lot of structured data. Content websites heavily use the page tree and have at least one site.
--   **Data-driven applications**: Applications that are primarily data-driven. Data-driven applications might not heavily use the page tree and might not have a site at all.
+-   **Content websites**: Websites that are primarily content-driven without a lot of structured data. Content websites heavily use the CMS features (page tree, blocks etc.) and have at least one site.
+-   **Data-driven applications**: Applications that are primarily data-driven. Data-driven applications might not use the CMS features and might not have a site at all.
 
 :::note
 This terms are used throughout the documentation as some concepts heavily differ between this two types.
