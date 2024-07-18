@@ -53,4 +53,5 @@ export const messages = defineMessages({
     copyUrl: { id: "comet.generic.copyUrl", defaultMessage: "Copy URL" },
     deleteItem: { id: "comet.generic.deleteItem", defaultMessage: "Delete Item" },
     empty: { id: "comet.generic.empty", defaultMessage: "Empty" },
+    pleaseSelect: { id: "comet.generic.pleaseSelect", defaultMessage: "Please select" },
 });
