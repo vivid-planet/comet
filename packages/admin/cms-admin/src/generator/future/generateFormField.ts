@@ -164,7 +164,7 @@ export function generateFormField(
                 ${
                     !required
                         ? `<MenuItem value="">
-                            <FormattedMessage id="${instanceGqlType}.${name}.pleaseSelect" defaultMessage="Please select" />
+                            <FormattedMessage {...messages.pleaseSelect} />
                            </MenuItem>`
                         : ""
                 }
