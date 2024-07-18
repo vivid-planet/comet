@@ -21,7 +21,7 @@ import {
 import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridCellParams, GridFilterInputSingleSelect, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -120,12 +120,34 @@ export function ProductsGrid() {
             field: "additionalTypes",
             headerName: "Additional Types",
             width: 150,
-            renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
+            renderCell: (params) => {
+                const valueOptions = params.colDef.valueOptions;
+                return (
+                    <>
+                        {params.value
+                            .map((option) => {
+                                const valueOption = valueOptions.find((o) => o.value && o.value === option);
+                                if (valueOption && valueOption.label) {
+                                    return valueOption.label;
+                                } else {
+                                    return option;
+                                }
+                            })
+                            .join(", ")}
+                    </>
+                );
+            },
             filterOperators: [
                 {
                     value: "contains",
-                    getApplyFilterFn: (filterItem) => {
-                        throw new Error("not implemented, we filter server side");
+                    getApplyFilterFn: (filterItem, column) => {
+                        if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+                            return null;
+                        }
+
+                        return (params: GridCellParams) => {
+                            return Array.isArray(params.value) && params.value.includes(filterItem.value);
+                        };
                     },
                     InputComponent: GridFilterInputSingleSelect,
                 },

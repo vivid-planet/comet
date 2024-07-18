@@ -173,7 +173,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             {(props) => (
                                 <FinalFormSelect {...props}>
                                     <MenuItem value="Cap">
-                                        <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                                        <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />
                                     </MenuItem>
                                     <MenuItem value="Shirt">
                                         <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
