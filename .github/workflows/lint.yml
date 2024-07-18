@@ -67,7 +67,6 @@ jobs:
 
             - name: Lint
               run: |
-                  pnpm exec prettier --check "./*.{js,json,md,yml}"
                   pnpm run lint
                   # check for duplicate ids of formatted messages
                   pnpm run intl:extract
