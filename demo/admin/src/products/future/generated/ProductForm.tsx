@@ -27,7 +27,12 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import {
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+    GQLProductTagsSelectQuery,
+    GQLProductTagsSelectQueryVariables,
+} from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -95,6 +100,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         const output = {
             ...formValues,
             category: formValues.category?.id,
+            tags: formValues.tags?.id,
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
@@ -184,6 +190,27 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 </FinalFormSelect>
                             )}
                         </Field>
+                        <Field
+                            required
+                            fullWidth
+                            name="additionalTypes"
+                            multiple
+                            label={<FormattedMessage id="product.additionalTypes" defaultMessage="Additional Types" />}
+                        >
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Cap">
+                                        <FormattedMessage id="product.additionalTypes.cap" defaultMessage="Cap" />
+                                    </MenuItem>
+                                    <MenuItem value="Shirt">
+                                        <FormattedMessage id="product.additionalTypes.shirt" defaultMessage="Shirt" />
+                                    </MenuItem>
+                                    <MenuItem value="Tie">
+                                        <FormattedMessage id="product.additionalTypes.tie" defaultMessage="Tie" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
                         <AsyncSelectField
                             fullWidth
                             name="category"
@@ -202,6 +229,29 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     `,
                                 });
                                 return data.productCategories.nodes;
+                            }}
+                            getOptionLabel={(option) => option.title}
+                        />
+                        <AsyncSelectField
+                            required
+                            fullWidth
+                            name="tags"
+                            multiple
+                            label={<FormattedMessage id="product.tags" defaultMessage="Tags" />}
+                            loadOptions={async () => {
+                                const { data } = await client.query<GQLProductTagsSelectQuery, GQLProductTagsSelectQueryVariables>({
+                                    query: gql`
+                                        query ProductTagsSelect {
+                                            productTags {
+                                                nodes {
+                                                    id
+                                                    title
+                                                }
+                                            }
+                                        }
+                                    `,
+                                });
+                                return data.productTags.nodes;
                             }}
                             getOptionLabel={(option) => option.title}
                         />

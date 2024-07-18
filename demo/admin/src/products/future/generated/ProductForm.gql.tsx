@@ -9,7 +9,12 @@ export const productFormFragment = gql`
         createdAt
         description
         type
+        additionalTypes
         category {
+            id
+            title
+        }
+        tags {
             id
             title
         }
