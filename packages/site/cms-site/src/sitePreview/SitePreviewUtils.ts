@@ -4,7 +4,6 @@ import { jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
-import path from "path";
 
 import { GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 
@@ -24,6 +23,10 @@ function getPreviewScopeSigningKey() {
         throw new Error("SITE_PREVIEW_SECRET environment variable is required in production mode");
     }
     return process.env.SITE_PREVIEW_SECRET || "secret";
+}
+
+function removeSlashes(path: string): string {
+    return path.replace(/^\/+|\/+$/g, "");
 }
 
 export async function sitePreviewRoute(request: NextRequest, graphQLFetch: GraphQLFetch, options?: { apiRouteSuffix?: string }) {
@@ -66,9 +69,12 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
     draftMode().enable();
 
     const apiRouteSuffix = options?.apiRouteSuffix ?? "/api/site-preview";
-    const basePath = request.nextUrl.pathname.replace(apiRouteSuffix, "");
+    const basePath = removeSlashes(request.nextUrl.pathname.replace(apiRouteSuffix, ""));
+    const pathParam = removeSlashes(params.get("path") ?? "");
 
-    return redirect(path.join(basePath, params.get("path") ?? "") || "/");
+    const redirectPath = `/${removeSlashes(`${basePath}/${pathParam}`)}`;
+
+    return redirect(redirectPath || "/");
 }
 
 /**
