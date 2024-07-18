@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { ComponentsOverrides, Popover as MuiPopover, PopoverProps, Theme } from "@mui/material";
+import { ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
@@ -19,7 +19,6 @@ export interface AppHeaderDropdownProps
     children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
     buttonChildren?: React.ReactNode;
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
-    popoverProps?: Partial<PopoverProps>;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
 }
