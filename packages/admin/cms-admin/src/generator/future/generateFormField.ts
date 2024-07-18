@@ -163,7 +163,7 @@ export function generateFormField(
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${
                     !required
-                        ? `<MenuItem value="" >
+                        ? `<MenuItem value="">
                             <FormattedMessage id="${instanceGqlType}.${name}.pleaseSelect" defaultMessage="Please select" />
                            </MenuItem>`
                         : ""
