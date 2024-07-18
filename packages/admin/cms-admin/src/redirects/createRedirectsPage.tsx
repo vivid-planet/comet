@@ -40,8 +40,8 @@ function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirects
 
         return (
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.redirects", defaultMessage: "Redirects" })}>
-                <StackSwitch initialPage="redirectsTable">
-                    <StackPage name="redirectsTable">
+                <StackSwitch initialPage="grid">
+                    <StackPage name="grid">
                         <StackToolbar scopeIndicator={<ContentScopeIndicator scope={scope} />} />
                         <RedirectsGrid linkBlock={linkBlock} scope={scope} />
                     </StackPage>

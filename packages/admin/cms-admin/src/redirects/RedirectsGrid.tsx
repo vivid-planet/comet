@@ -34,7 +34,7 @@ interface Props {
     scope: Record<string, unknown>;
 }
 
-function RedirectsTableToolbar() {
+function RedirectsGridToolbar() {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -182,7 +182,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 loading={loading}
                 error={error}
                 disableSelectionOnClick
-                components={{ Toolbar: RedirectsTableToolbar }}
+                components={{ Toolbar: RedirectsGridToolbar }}
             />
         </MainContent>
     );
