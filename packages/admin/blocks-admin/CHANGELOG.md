@@ -1,5 +1,31 @@
 # @comet/blocks-admin
 
+## 6.16.0
+
+### Patch Changes
+
+-   Updated dependencies [fb0fe2539]
+-   Updated dependencies [747fe32cc]
+    -   @comet/admin@6.16.0
+    -   @comet/admin-icons@6.16.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin@6.15.1
+-   @comet/admin-icons@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   ec7fb9ff2: Fix a validation error for default values in `YouTubeVideoBlock`
+-   Updated dependencies [406027806]
+-   Updated dependencies [0654f7bce]
+    -   @comet/admin-icons@6.15.0
+    -   @comet/admin@6.15.0
+
 ## 6.14.1
 
 ### Patch Changes

@@ -37,7 +37,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
     displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
 
-    defaultValues: () => ({ youtubeIdentifier: "", autoplay: false, showControls: false, loop: false, aspectRatio: "16X9" }),
+    defaultValues: () => ({ autoplay: false, showControls: false, loop: false, aspectRatio: "16X9" }),
 
     category: BlockCategory.Media,
 
