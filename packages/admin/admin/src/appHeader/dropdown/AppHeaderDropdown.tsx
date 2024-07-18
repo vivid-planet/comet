@@ -83,7 +83,6 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
                 {buttonChildren}
             </Button>
             <Popover
-                {...slotProps?.popover}
                 open={_open}
                 anchorEl={rootRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -95,6 +94,7 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
                         minWidth: itemWidth,
                     },
                 }}
+                {...slotProps?.popover}
                 {...popoverProps}
             >
                 {typeof children === "function" ? children(() => _onOpenChange(false)) : children}
