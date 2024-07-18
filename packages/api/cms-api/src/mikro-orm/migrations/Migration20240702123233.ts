@@ -41,15 +41,17 @@ export class Migration20240702123233 extends Migration {
             })
             .join(" OR ");
 
-        this.addSql(`
-          WITH mimetype_extension_map AS (
-              SELECT jsonb_build_object(${sqlMimetypeToSingleExtensionMap}) AS map
-          )
-    
-          UPDATE "DamFile"
-          SET "name" = CONCAT("name", '.', mimetype_extension_map.map ->> "DamFile".mimetype)
-          FROM mimetype_extension_map
-          WHERE ${sqlCaseClauses};
-        `);
+        if (sqlCaseClauses.length > 0) {
+            this.addSql(`
+              WITH mimetype_extension_map AS (
+                  SELECT jsonb_build_object(${sqlMimetypeToSingleExtensionMap}) AS map
+              )
+        
+              UPDATE "DamFile"
+              SET "name" = CONCAT("name", '.', mimetype_extension_map.map ->> "DamFile".mimetype)
+              FROM mimetype_extension_map
+              WHERE ${sqlCaseClauses};
+            `);
+        }
     }
 }
