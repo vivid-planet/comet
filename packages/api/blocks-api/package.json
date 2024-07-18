@@ -18,8 +18,9 @@
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-meta": "ts-node generate-block-meta.ts",
         "generate-block-meta:watch": "chokidar \"src/\" -c \"npm run generate-block-meta\"",
-        "lint": "run-p lint:eslint lint:tsc",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest --verbose=true",
         "test:watch": "jest -w"
