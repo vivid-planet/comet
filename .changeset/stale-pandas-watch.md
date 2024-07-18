@@ -3,9 +3,7 @@
 "@comet/cms-api": patch
 ---
 
-Fix validation of redirect source path
+Redirect to edit page after adding a redirect
 
-Previously, the currently edited redirect wasn't excluded in the `RedirectSourceAvailable` check.
-This meant that the redirect couldn't be saved without changing the redirect source path.
-
-Now, the currently edited redirect is excluded from the `RedirectSourceAvailable` check.
+Previously, the use wasn't redirected to the edit page after creating a new redirect.
+This caused strange validation errors and made it impossible to edit the redirect after creating it.

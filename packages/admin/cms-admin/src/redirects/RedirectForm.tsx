@@ -12,6 +12,7 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarTitleItem,
+    useStackSwitchApi,
 } from "@comet/admin";
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
 import { MenuItem } from "@mui/material";
@@ -85,6 +86,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
     const initialValues = useInitialValues(id, linkBlock);
     const targetInput = React.useMemo(() => createFinalFormBlock(linkBlock), [linkBlock]);
     const client = useApolloClient();
+    const stackSwitchApi = useStackSwitchApi();
 
     const sourceTypeOptions = [
         {
@@ -97,11 +99,31 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
     ];
 
     const [submit] = useSubmitMutation(mode, id, linkBlock, scope);
-    const newlyCreatedRedirectId = React.useRef<string>();
 
     if (mode === "edit" && initialValues === undefined) {
         return <Loading behavior="fillPageHeight" />;
     }
+
+    const isRedirectSourceAvailable = async (newRedirectSource: string): Promise<boolean> => {
+        if (newRedirectSource === initialValues?.source) {
+            return true;
+        }
+
+        const { data } = await client.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
+            query: gql`
+                query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
+                    redirectSourceAvailable(scope: $scope, source: $source)
+                }
+            `,
+            variables: {
+                scope,
+                source: newRedirectSource,
+            },
+            fetchPolicy: "network-only",
+        });
+
+        return data.redirectSourceAvailable;
+    };
 
     const validateSource = async (value: string, allValues: GQLRedirectDetailFragment) => {
         if (allValues.sourceType === "path") {
@@ -111,21 +133,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                 return <FormattedMessage id="comet.pages.redirects.validate.path.invalidPathError" defaultMessage="Invalid path" />;
             }
 
-            const { data } = await client.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
-                query: gql`
-                    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!, $excludedId: ID) {
-                        redirectSourceAvailable(scope: $scope, source: $source, excludedId: $excludedId)
-                    }
-                `,
-                variables: {
-                    scope,
-                    source: value,
-                    excludedId: id,
-                },
-                fetchPolicy: "network-only",
-            });
-
-            if (!data.redirectSourceAvailable && initialValues?.source !== undefined && initialValues.source !== value) {
+            if (!(await isRedirectSourceAvailable(value))) {
                 return (
                     <FormattedMessage
                         id="comet.redirects.form.validation.sourceTaken"
@@ -150,9 +158,10 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
 
     const handleSaveClick = async (values: FormValues) => {
         const response = await submit(values);
-
         if (response.data && "createRedirect" in response.data) {
-            newlyCreatedRedirectId.current = (response.data as GQLCreateRedirectMutation).createRedirect.id;
+            setTimeout(() => {
+                stackSwitchApi.activatePage("edit", (response.data as GQLCreateRedirectMutation).createRedirect.id);
+            });
         }
     };
 
