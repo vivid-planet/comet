@@ -90,11 +90,11 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
     return (
         <Box
             display="contents"
-            onDragOver={(e) => {
+            onDragOver={(event) => {
                 setDragging(true);
 
                 if (typeof maxFiles !== "undefined") {
-                    setDraggingTooManyFiles(e.dataTransfer.items.length > maxFiles);
+                    setDraggingTooManyFiles(event.dataTransfer.items.length > maxFiles);
                 }
             }}
             onDragLeave={() => {
