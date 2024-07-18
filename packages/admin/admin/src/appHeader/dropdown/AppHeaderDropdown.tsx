@@ -46,7 +46,6 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
         children,
         buttonChildren,
         dropdownArrow = (isOpen: boolean) => (isOpen ? <ChevronUp /> : <ChevronDown />),
-        popoverProps,
         open,
         onOpenChange,
         slotProps,
@@ -95,7 +94,6 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
                     },
                 }}
                 {...slotProps?.popover}
-                {...popoverProps}
             >
                 {typeof children === "function" ? children(() => _onOpenChange(false)) : children}
             </Popover>
