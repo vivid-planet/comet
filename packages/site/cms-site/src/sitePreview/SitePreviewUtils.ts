@@ -66,7 +66,7 @@ export async function sitePreviewRoute(request: NextRequest, graphQLFetch: Graph
     draftMode().enable();
 
     const apiRouteSuffix = options?.apiRouteSuffix ?? "/api/site-preview";
-    const basePath = request.nextUrl.pathname.split(apiRouteSuffix)[0];
+    const basePath = request.nextUrl.pathname.replace(apiRouteSuffix, "");
 
     return redirect(path.join(basePath, params.get("path") ?? "") || "/");
 }
