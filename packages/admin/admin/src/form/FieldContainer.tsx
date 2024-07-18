@@ -197,7 +197,7 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
 export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerProps>) => {
     const {
         variant = "vertical",
-        fullWidth,
+        fullWidth: passedFullWidth,
         label,
         error,
         disabled,
@@ -210,6 +210,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminFormFieldContainer" });
+    const fullWidth = passedFullWidth ?? variant === "horizontal";
 
     const hasError = !!error;
     const hasWarning = !hasError && !!warning;
