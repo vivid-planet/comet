@@ -94,7 +94,7 @@ export { FileSelectListItem, FileSelectListItemClassKey, FileSelectListItemProps
 export { FinalFormAsyncAutocomplete, FinalFormAsyncAutocompleteProps } from "./form/FinalFormAsyncAutocomplete";
 export { FinalFormAsyncSelect, FinalFormAsyncSelectProps } from "./form/FinalFormAsyncSelect";
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
-export { FinalFormFileSelect, FinalFormFileSelectClassKey, FinalFormFileSelectProps } from "./form/FinalFormFileSelect";
+export { FinalFormFileSelect, FinalFormFileSelectProps } from "./form/FinalFormFileSelect";
 export { FinalFormInput, FinalFormInputProps } from "./form/FinalFormInput";
 export { FinalFormRangeInput, FinalFormRangeInputClassKey, FinalFormRangeInputProps } from "./form/FinalFormRangeInput";
 export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
