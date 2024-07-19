@@ -1,5 +1,15 @@
 # @comet/eslint-config
 
+## 7.0.0-beta.6
+
+### Major Changes
+
+-   2e20a8684: nextjs/react: Enable `react/jsx-no-useless-fragment` rule
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.6
+
 ## 7.0.0-beta.5
 
 ### Patch Changes

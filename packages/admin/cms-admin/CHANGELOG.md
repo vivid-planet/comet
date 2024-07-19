@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.6
+
+### Patch Changes
+
+-   Updated dependencies [119714999]
+    -   @comet/admin@7.0.0-beta.6
+    -   @comet/admin-date-time@7.0.0-beta.6
+    -   @comet/admin-icons@7.0.0-beta.6
+    -   @comet/admin-rte@7.0.0-beta.6
+    -   @comet/admin-theme@7.0.0-beta.6
+    -   @comet/blocks-admin@7.0.0-beta.6
+
 ## 7.0.0-beta.5
 
 ### Minor Changes
