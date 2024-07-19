@@ -1,5 +1,7 @@
 # @comet/cms-site
 
+## 7.0.0-beta.6
+
 ## 7.0.0-beta.5
 
 ### Major Changes
