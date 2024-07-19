@@ -10,7 +10,7 @@ type WindowWithCookiebot = Window & {
     };
 };
 
-export const isWindowWithCookiebot = (window: Window): window is WindowWithCookiebot => {
+const isWindowWithCookiebot = (window: Window): window is WindowWithCookiebot => {
     return "Cookiebot" in window;
 };
 
