@@ -10,11 +10,16 @@ const localStorageCookieApiKey = "comet-dev-cookie-api-consented-cookies";
  */
 export const useLocalStorageCookieApi: CookieApi = (): ReturnType<CookieApi> => {
     const [consentedCookies, setConsentedCookies] = useLocalStorage<string[]>(localStorageCookieApiKey, []);
+    const [simulateLoadingCookieProvider, setSimulateLoadingCookieProvider] = React.useState(true);
 
     React.useEffect(() => {
         const storedCookies = window.localStorage.getItem(localStorageCookieApiKey);
         const cookiesList = JSON.parse(storedCookies ?? "[]");
         logCookieUpdate(cookiesList);
+
+        setTimeout(() => {
+            setSimulateLoadingCookieProvider(false);
+        }, 1000);
     }, []);
 
     const openCookieSettings = React.useCallback(() => {
@@ -33,7 +38,7 @@ export const useLocalStorageCookieApi: CookieApi = (): ReturnType<CookieApi> => 
     }, [consentedCookies, openCookieSettings]);
 
     return {
-        consentedCookies,
+        consentedCookies: simulateLoadingCookieProvider ? [] : consentedCookies,
         openCookieSettings,
     };
 };
