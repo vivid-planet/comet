@@ -1,6 +1,6 @@
 import React from "react";
 
-import { CookieApiHook } from "./CookieApiHook";
+import { CookieApi } from "./CookieApi";
 
 type OneTrustOnConsentChangedEvent = {
     detail: string[];
@@ -46,31 +46,31 @@ const isWindowWithOneTrust = (window: Window): window is WindowWithOneTrust => {
     return "OneTrust" in window;
 };
 
-export const useOneTrustCookieApi: CookieApiHook = () => {
+export const useOneTrustCookieApi: CookieApi = () => {
     const [consentedCookies, setConsentedCookies] = React.useState<string[]>([]);
 
-    const startListeningForConsentChanges = React.useCallback((oneTrust: OneTrust) => {
-        const initialCookieConsent: string[] = [];
-        const domainData = oneTrust.GetDomainData();
-
-        domainData.ConsentIntegrationData.consentPayload.purposes.forEach((purpose) => {
-            if (purpose.TransactionType === "CONFIRMED") {
-                const targetGroup = domainData.Groups.find(({ PurposeId }) => PurposeId === purpose.Id);
-
-                if (targetGroup) {
-                    initialCookieConsent.push(targetGroup.OptanonGroupId);
-                }
-            }
-        });
-
-        setConsentedCookies(initialCookieConsent);
-
-        oneTrust.OnConsentChanged((event) => {
-            setConsentedCookies(event.detail);
-        });
-    }, []);
-
     React.useEffect(() => {
+        const startListeningForConsentChanges = (oneTrust: OneTrust) => {
+            const initialCookieConsent: string[] = [];
+            const domainData = oneTrust.GetDomainData();
+
+            domainData.ConsentIntegrationData.consentPayload.purposes.forEach((purpose) => {
+                if (purpose.TransactionType === "CONFIRMED") {
+                    const targetGroup = domainData.Groups.find(({ PurposeId }) => PurposeId === purpose.Id);
+
+                    if (targetGroup) {
+                        initialCookieConsent.push(targetGroup.OptanonGroupId);
+                    }
+                }
+            });
+
+            setConsentedCookies(initialCookieConsent);
+
+            oneTrust.OnConsentChanged((event) => {
+                setConsentedCookies(event.detail);
+            });
+        };
+
         const tryToAccessOneTrustInterval = setInterval(() => {
             if (isWindowWithOneTrust(window)) {
                 clearInterval(tryToAccessOneTrustInterval);
@@ -81,7 +81,7 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
         return () => {
             clearInterval(tryToAccessOneTrustInterval);
         };
-    }, [startListeningForConsentChanges]);
+    }, []);
 
     return {
         consentedCookies,

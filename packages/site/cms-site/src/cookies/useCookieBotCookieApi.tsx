@@ -1,6 +1,6 @@
 import React from "react";
 
-import { CookieApiHook } from "./CookieApiHook";
+import { CookieApi } from "./CookieApi";
 
 type WindowWithCookiebot = Window & {
     Cookiebot: {
@@ -14,21 +14,21 @@ const isWindowWithCookiebot = (window: Window): window is WindowWithCookiebot =>
     return "Cookiebot" in window;
 };
 
-export const useCookieBotCookieApi: CookieApiHook = () => {
+export const useCookieBotCookieApi: CookieApi = () => {
     const [consentedCookies, setConsentedCookies] = React.useState<string[]>([]);
 
     React.useEffect(() => {
-        const onCookiesUpdated = () => {
+        const handleCookieUpdated = () => {
             if (isWindowWithCookiebot(window)) {
                 const consentedList = window.Cookiebot.consent;
                 setConsentedCookies(Object.keys(consentedList).filter((key) => consentedList[key]));
             }
         };
 
-        window.addEventListener("CookiebotOnConsentReady", onCookiesUpdated);
+        window.addEventListener("CookiebotOnConsentReady", handleCookieUpdated);
 
         return () => {
-            window.removeEventListener("CookiebotOnConsentReady", onCookiesUpdated);
+            window.removeEventListener("CookiebotOnConsentReady", handleCookieUpdated);
         };
     }, []);
 

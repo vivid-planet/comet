@@ -24,28 +24,28 @@ Hooks for some cookie providers are already implemented:
 
 -   `useOneTrustCookieApi` for [OneTrust](https://www.onetrust.com/)
 -   `useCookieBotCookieApi` for [CookieBot](https://www.cookiebot.com/)
--   `useDevCookieApi` for local development and other environments that cannot embed the real cookie provider
+-   `useLocalStorageCookieApi` for local development and other environments that cannot embed the real cookie provider
 
-For other cookie providers, a custom hook can be created. It must have the type of `CookieApiHook`.
+For other cookie providers, a custom hook can be created. It must have the type of `CookieApi`.
 
-### Dev Cookie Api
+### LocalStorage Cookie Api
 
-For local development and other environments that do not embed the project's cookie provider, the `useDevCookieApi` hook can be used.
+For local development and other environments that do not embed the project's cookie provider, the `useLocalStorageCookieApi` hook can be used.
 
 #### Debugging using the dev tools console
 
-The dev cookie api can be accessed via the dev tools console with `window.cometDevCookieApi`.
+The localStorage cookie api can be accessed via the dev tools console with `window.cometLocalStorageCookieApi`.
 
 ##### Open Cookie Settings
 
 ```js
-window.cometDevCookieApi.openCookieSettings();
+window.cometLocalStorageCookieApi.openCookieSettings();
 ```
 
 ##### View the currently consented cookies
 
 ```js
-window.cometDevCookieApi.consentedCookies;
+window.cometLocalStorageCookieApi.consentedCookies;
 ```
 
 ## Using the `<CookieSafe />` component
@@ -95,13 +95,16 @@ export const CookieFallback = () => {
 
 The file should export `useCookieApi`, the correct cookie API hook for the current environment.
 
-For example, the `useDevCookieApi` hook is used for development, and the `useOneTrustCookieApi` hook is used for production.
+For example, the `useLocalStorageCookieApi` hook is used for development, and the `useOneTrustCookieApi` hook is used for production.
 
 ```ts
-import { useDevCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@comet/cms-site";
+import {
+    useLocalStorageCookieApi,
+    useOneTrustCookieApi as useProductionCookieApi,
+} from "@comet/cms-site";
 
 export const useCookieApi =
-    process.env.NODE_ENV === "development" ? useDevCookieApi : useProductionCookieApi;
+    process.env.NODE_ENV === "development" ? useLocalStorageCookieApi : useProductionCookieApi;
 ```
 
 Additionally, the file should export an object that provides the IDs of the cookies defined by the cookie provider.

@@ -9,7 +9,7 @@ type Props = React.PropsWithChildren<{
 
 // TODO: The Fallback is currently also rendered, when the page has loaded, but the cookie-banner has not been loaded yet.
 // - Maybe store the consented cookies in local-storage and use that value until the cookie-banner has been loaded.
-// - Maybe add a delay to the dev cookie-api, to simulate the loading of the cookie-banner locally.
+// - Maybe add a delay to the localStorage cookie-api, to simulate the loading of the cookie-banner locally.
 
 export const CookieSafe = ({ consented, fallback, children }: Props) => {
     const isInAdminPreview = useRouter().route.length === 0;

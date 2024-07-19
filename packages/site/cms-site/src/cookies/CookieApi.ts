@@ -1,4 +1,4 @@
-export type CookieApiHook = () => {
+export type CookieApi = () => {
     consentedCookies: string[];
     openCookieSettings: () => void;
 };

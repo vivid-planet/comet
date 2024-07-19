@@ -1,14 +1,14 @@
 import React from "react";
 import { useLocalStorage } from "usehooks-ts";
 
-import { CookieApiHook } from "./CookieApiHook";
+import { CookieApi } from "./CookieApi";
 
 const localStorageCookieApiKey = "comet-dev-cookie-api-consented-cookies";
 
 /**
  * Only for use in development environment.
  */
-export const useDevCookieApi: CookieApiHook = (): ReturnType<CookieApiHook> => {
+export const useLocalStorageCookieApi: CookieApi = (): ReturnType<CookieApi> => {
     const [consentedCookies, setConsentedCookies] = useLocalStorage<string[]>(localStorageCookieApiKey, []);
 
     React.useEffect(() => {
@@ -26,7 +26,7 @@ export const useDevCookieApi: CookieApiHook = (): ReturnType<CookieApiHook> => {
 
     React.useEffect(() => {
         // @ts-expect-error TODO: Can this be fixed?
-        window["cometDevCookieApi"] = {
+        window["cometLocalStorageCookieApi"] = {
             consentedCookies,
             openCookieSettings: openCookieSettings,
         };
