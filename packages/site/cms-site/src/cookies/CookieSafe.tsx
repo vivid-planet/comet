@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useRouter } from "../router/useRouter";
+import { usePreview } from "../preview/usePreview";
 
 type Props = React.PropsWithChildren<{
     consented: boolean;
@@ -11,8 +11,9 @@ type Props = React.PropsWithChildren<{
 // - Maybe store the consented cookies in local-storage and use that value until the cookie-banner has been loaded.
 
 export const CookieSafe = ({ consented, fallback, children }: Props) => {
-    const isInAdminPreview = useRouter().route.length === 0;
     const [isBeingRenderedOnClient, setIsBeingRenderedOnClient] = React.useState(false);
+    const { previewType } = usePreview();
+    const isInPreview = previewType !== "NoPreview";
 
     React.useEffect(() => {
         setIsBeingRenderedOnClient(true);
@@ -24,7 +25,7 @@ export const CookieSafe = ({ consented, fallback, children }: Props) => {
         return null;
     }
 
-    if (consented || isInAdminPreview) {
+    if (consented || isInPreview) {
         return <>{children}</>;
     }
 
