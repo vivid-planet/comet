@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import { GQLFocalPoint } from "../../graphql.generated";
 
 export const ImageContainer = styled("div")`
+    padding-left: 40px;
     .ReactCrop__crop-selection {
         border: 2px solid ${({ theme }) => theme.palette.primary.main};
     }
@@ -87,10 +88,9 @@ export const FocalPointHandle = styled("button")<FocalPointHandleProps>`
         border-radius: 50%;
         background-color: ${({ theme }) => theme.palette.primary.main};
         margin: 9px;
-        /* transform: translate(-50%, -50%); */
-        /* left: 50%; */
-        /* top: 50%; */
-        transition: all 0.5s ease;
+        transition-property: width, height, border, margin;
+        transition-duration: 0.5s;
+        transition-timing-function: ease;
 
         ${({ selected, theme }) =>
             selected &&

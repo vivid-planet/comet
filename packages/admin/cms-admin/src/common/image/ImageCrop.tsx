@@ -36,7 +36,6 @@ export const ImageCrop = (props: ImageCropProps): React.ReactElement => {
                         crop={disabled ? {} : { ...value, unit: "%" }}
                         ruleOfThirds={true}
                         disabled={disabled}
-                        style={{ marginLeft: "40px" }}
                         imageStyle={{ width: "auto", height: "auto" }}
                         onChange={(newCrop, percentCrop) => {
                             // Prevent reset at first rendering

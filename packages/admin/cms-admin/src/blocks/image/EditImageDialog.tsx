@@ -51,7 +51,7 @@ interface Props {
         height: number;
         size?: number;
     };
-    damFileId?: string;
+    damFileId: string;
     onClose: () => void;
     initialValues: {
         useInheritedDamSettings?: boolean;
@@ -185,8 +185,6 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                     variant="text"
                                                     color="inherit"
                                                     onClick={async () => {
-                                                        // id is checked three lines above
-                                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                                         const path = await dependencyMap["DamFile"].resolvePath({
                                                             apolloClient,
                                                             id: damFileId,
