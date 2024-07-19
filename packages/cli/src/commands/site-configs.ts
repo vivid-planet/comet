@@ -28,16 +28,17 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
             private: (siteConfigs: BaseSiteConfig[]): ExtractPrivateSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) =>
                     (({ public: publicVars, ...rest }) => ({
+                        ...publicVars,
                         ...rest,
                         url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
                     }))(siteConfig),
                 ),
             public: (siteConfigs: BaseSiteConfig[]): ExtractPublicSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) => ({
+                    ...siteConfig.public,
                     name: siteConfig.name,
                     domains: siteConfig.domains,
                     preloginEnabled: siteConfig.preloginEnabled || false,
-                    public: siteConfig.public,
                     url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
                 })),
         };
