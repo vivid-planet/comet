@@ -1,5 +1,5 @@
 ---
-"@comet/admin": patch
+"@comet/admin": major
 ---
 
 Allow options with empty id to clear the form value when using `FinalFormSelect`/`SelectField` with the `options` prop and `FinalFormAsyncSelect`/`AsyncSelectField`
