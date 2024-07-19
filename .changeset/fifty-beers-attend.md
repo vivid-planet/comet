@@ -4,4 +4,4 @@
 
 Remove `popoverProps` from `AppHeaderDropdown`
 
-Use `slotProps#popover` instead.
+Use `slotProps.popover` instead.
