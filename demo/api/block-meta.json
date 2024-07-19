@@ -738,6 +738,47 @@
         ]
     },
     {
+        "name": "HighlightTeaser",
+        "fields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "description",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "description",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "InternalLink",
         "fields": [
             {
@@ -1202,7 +1243,8 @@
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "highlightTeaser": "HighlightTeaser"
                             },
                             "nullable": false
                         },
@@ -1260,7 +1302,8 @@
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "highlightTeaser": "HighlightTeaser"
                             },
                             "nullable": false
                         },

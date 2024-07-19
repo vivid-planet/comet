@@ -1,6 +1,7 @@
 import { createBlocksBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
 import { AnchorBlock, DamImageBlock, DamVideoBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
+import { HighlightTeaserBlock } from "@src/common/blocks/HighlightTeaserBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
@@ -35,6 +36,7 @@ export const PageContentBlock = createBlocksBlock({
         twoLists: TwoListsBlock,
         media: MediaBlock,
         teaser: TeaserBlock,
+        highlightTeaser: HighlightTeaserBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

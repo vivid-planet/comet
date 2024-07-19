@@ -6,6 +6,7 @@ import { SpaceBlock } from "@src/common/blocks/space.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
+import { HighlightTeaserBlock } from "../../common/blocks/highlight-teaser";
 import { ColumnsBlock } from "./columns.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
@@ -31,6 +32,7 @@ const supportedBlocks = {
     twoLists: TwoListsBlock,
     media: MediaBlock,
     teaser: TeaserBlock,
+    highlightTeaser: HighlightTeaserBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
