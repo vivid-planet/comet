@@ -1,11 +1,19 @@
 import type { BaseSiteConfig, ExtractPrivateSiteConfig, ExtractPublicSiteConfig } from "@comet/cli";
 
-export type SiteConfig = BaseSiteConfig & {
-    contentScope: {
-        domain: string;
-        language: string;
+interface ContentScope {
+    domain: string;
+    language: string;
+}
+
+export type SiteConfig = BaseSiteConfig;
+
+export type PrivateSiteConfig = ExtractPrivateSiteConfig<SiteConfig> & {
+    public: {
+        contentScope: ContentScope;
     };
 };
-
-export type PrivateSiteConfig = ExtractPrivateSiteConfig<SiteConfig>;
-export type PublicSiteConfig = ExtractPublicSiteConfig<SiteConfig>;
+export type PublicSiteConfig = ExtractPublicSiteConfig<SiteConfig> & {
+    public: {
+        contentScope: ContentScope;
+    };
+};
