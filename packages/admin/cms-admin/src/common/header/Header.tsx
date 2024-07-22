@@ -1,8 +1,10 @@
+<<<<<<< HEAD
 import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton } from "@comet/admin";
 import { useMediaQuery, useTheme } from "@mui/material";
+=======
+import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
+>>>>>>> main
 import * as React from "react";
-
-import { Logo } from "./Logo";
 
 interface Props {
     children?: React.ReactNode;
@@ -16,7 +18,11 @@ function Header({ children, logo }: Props): React.ReactElement {
     return (
         <AppHeader>
             <AppHeaderMenuButton />
+<<<<<<< HEAD
             {!isMobile && (logo || <Logo />)}
+=======
+            {logo || <CometLogo color="white" />}
+>>>>>>> main
             <AppHeaderFillSpace />
             {children}
         </AppHeader>

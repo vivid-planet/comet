@@ -1,6 +1,10 @@
 {
     "name": "@comet/eslint-config",
+<<<<<<< HEAD
     "version": "7.0.0-beta.6",
+=======
+    "version": "6.16.0",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -8,8 +12,14 @@
     },
     "license": "BSD-2-Clause",
     "main": "core.js",
+    "scripts": {
+        "lint": "run-p lint:prettier lint:eslint",
+        "lint:eslint": "eslint --max-warnings 0 package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'"
+    },
     "dependencies": {
         "@calm/eslint-plugin-react-intl": "^1.4.1",
+        "@comet/eslint-plugin": "workspace:^6.16.0",
         "@next/eslint-plugin-next": "^12.0.0",
         "@typescript-eslint/eslint-plugin": "^5.48.2",
         "@typescript-eslint/parser": "^5.48.2",
@@ -24,7 +34,11 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-simple-import-sort": "^9.0.0",
         "eslint-plugin-unused-imports": "^2.0.0",
+<<<<<<< HEAD
         "@comet/eslint-plugin": "workspace:^7.0.0-beta.6"
+=======
+        "npm-run-all": "^4.1.5"
+>>>>>>> main
     },
     "devDependencies": {
         "eslint": "^8.32.0",

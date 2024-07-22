@@ -1,8 +1,5 @@
-package-lock.json
-.gitignore
-*.lock
-*.gql
-*.dist
-fragmentTypes.json
-graphql.generated.ts
-blocks-admin-lang/
+block-meta.json
+lang-compiled/
+lang/
+schema.json
+src/fragmentTypes.json

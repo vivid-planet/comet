@@ -22,4 +22,3 @@
     ],
     "ignorePatterns": ["bin/", "lib/**"]
 }
-

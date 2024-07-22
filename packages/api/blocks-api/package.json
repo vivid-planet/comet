@@ -1,6 +1,10 @@
 {
     "name": "@comet/blocks-api",
+<<<<<<< HEAD
     "version": "7.0.0-beta.6",
+=======
+    "version": "6.16.0",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -18,8 +22,9 @@
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
         "generate-block-meta": "ts-node generate-block-meta.ts",
         "generate-block-meta:watch": "chokidar \"src/\" -c \"npm run generate-block-meta\"",
-        "lint": "run-p lint:eslint lint:tsc",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest --verbose=true",
         "test:watch": "jest -w"
@@ -30,7 +35,11 @@
         "rimraf": "^3.0.0"
     },
     "devDependencies": {
+<<<<<<< HEAD
         "@comet/eslint-config": "workspace:^7.0.0-beta.6",
+=======
+        "@comet/eslint-config": "workspace:^6.16.0",
+>>>>>>> main
         "@nestjs/common": "^9.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",

@@ -1,6 +1,6 @@
 import { BlobStorageConfig } from "@comet/cms-api";
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional, IsString, MinLength, ValidateIf } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -96,9 +96,23 @@ export class EnvironmentVariables {
     @IsString()
     S3_BUCKET: string;
 
+<<<<<<< HEAD
     @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")
     CDN_ORIGIN_CHECK_SECRET: string;
+=======
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_KEY || v.AZURE_AI_TRANSLATOR_REGION)
+    @IsUrl()
+    AZURE_AI_TRANSLATOR_ENDPOINT?: string;
+
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_REGION)
+    @IsString()
+    AZURE_AI_TRANSLATOR_KEY?: string;
+
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_KEY)
+    @IsString()
+    AZURE_AI_TRANSLATOR_REGION?: string;
+>>>>>>> main
 
     @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY || v.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID)
     @IsString()

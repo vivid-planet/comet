@@ -1,13 +1,18 @@
 {
     "name": "@comet/eslint-plugin",
+<<<<<<< HEAD
     "version": "7.0.0-beta.6",
+=======
+    "version": "6.16.0",
+>>>>>>> main
     "main": "lib/index.js",
     "scripts": {
         "build": "$npm_execpath run clean && tsc",
         "clean": "rimraf lib",
         "dev": "tsc --watch",
-        "lint": "run-p lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc",
         "test": "jest",
         "test:watch": "jest --watch"

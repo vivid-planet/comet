@@ -766,12 +766,16 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
+<<<<<<< HEAD
   productVariant(id: ID!): ProductVariant!
   productVariants(offset: Int! = 0, limit: Int! = 25, product: ID!, search: String, filter: ProductVariantFilter, sort: [ProductVariantSort!]): PaginatedProductVariants!
   manufacturer(id: ID!): Manufacturer!
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
   manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
+=======
+  azureAiTranslate(input: AzureAiTranslationInput!): String!
+>>>>>>> main
 }
 
 input UserFilter {
@@ -1055,6 +1059,7 @@ enum ProductTagSortField {
   updatedAt
 }
 
+<<<<<<< HEAD
 input ProductVariantFilter {
   name: StringFilter
   createdAt: DateTimeFilter
@@ -1113,6 +1118,11 @@ input ManufacturerCountryFilter {
   used: NumberFilter
   and: [ManufacturerCountryFilter!]
   or: [ManufacturerCountryFilter!]
+=======
+input AzureAiTranslationInput {
+  text: String!
+  targetLanguage: String!
+>>>>>>> main
 }
 
 type Mutation {

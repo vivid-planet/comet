@@ -8,6 +8,7 @@ import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-tr
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
 import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
+import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
@@ -126,10 +127,14 @@ export class DamModule {
                 CalculateDominantImageColor,
                 FileValidationService,
                 FileUploadService,
+<<<<<<< HEAD
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
+=======
+                HasValidFilenameConstraint,
+>>>>>>> main
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [

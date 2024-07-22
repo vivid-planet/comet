@@ -1,9 +1,7 @@
 import {
-    EditDialog,
     Field,
     FinalForm,
     FinalFormInput,
-    IEditDialogApi,
     MainContent,
     Selected,
     Stack,
@@ -14,6 +12,7 @@ import {
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
+    useEditDialog,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
@@ -30,7 +29,7 @@ interface IExampleRow {
 }
 
 interface IEditFormProps {
-    row: IExampleRow;
+    row?: IExampleRow;
     mode: "edit" | "add";
 }
 function EditForm(props: IEditFormProps) {
@@ -53,7 +52,7 @@ function Story() {
         { id: 2, foo: "blub", bar: "blub" },
     ];
 
-    const editDialog = React.useRef<IEditDialogApi>(null);
+    const [EditDialog, selection, api] = useEditDialog();
 
     return (
         <>
@@ -71,7 +70,7 @@ function Story() {
                                     variant="contained"
                                     startIcon={<AddIcon />}
                                     onClick={(ev) => {
-                                        editDialog.current?.openAddDialog();
+                                        api.openAddDialog();
                                     }}
                                 >
                                     Add
@@ -98,7 +97,7 @@ function Story() {
                                         render: (row) => (
                                             <IconButton
                                                 onClick={(ev) => {
-                                                    editDialog.current?.openEditDialog(String(row.id));
+                                                    api.openEditDialog(String(row.id));
                                                 }}
                                                 size="large"
                                             >
@@ -116,21 +115,13 @@ function Story() {
                 </StackSwitch>
             </Stack>
 
-            <EditDialog ref={editDialog}>
-                {({ selectedId, selectionMode }) => (
-                    <>
-                        {selectionMode && (
-                            <Selected selectionMode={selectionMode} selectedId={selectedId} rows={data}>
-                                {(row, { selectionMode: sm }) => {
-                                    if (row === undefined) {
-                                        return null;
-                                    }
-
-                                    return <EditForm mode={sm} row={row} />;
-                                }}
-                            </Selected>
-                        )}
-                    </>
+            <EditDialog>
+                {selection.mode && (
+                    <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
+                        {(row, { selectionMode: sm }) => {
+                            return <EditForm mode={sm} row={row} />;
+                        }}
+                    </Selected>
                 )}
             </EditDialog>
             <p>This story uses a Stack plus an EditDialog</p>
@@ -141,4 +132,4 @@ function Story() {
 storiesOf("@comet/admin/table", module)
     .addDecorator(storyRouterDecorator())
     .addDecorator(apolloRestStoryDecorator())
-    .add("Stack+EditDialog", () => <Story />);
+    .add("Stack + EditDialog Hooks", () => <Story />);
