@@ -156,7 +156,7 @@ const Dropzone = createComponentSlot("div")<FileDropzoneClassKey, OwnerState>({
         align-self: stretch;
         border-radius: 4px;
         border: 1px dashed ${theme.palette.grey[200]};
-        background-color: transparent;
+        background-color: white;
         transition: background-color 200ms, border-color 200ms;
         cursor: pointer;
 
