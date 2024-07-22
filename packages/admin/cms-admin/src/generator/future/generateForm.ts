@@ -1,8 +1,7 @@
 import { IntrospectionQuery } from "graphql";
 
-import { generateFormLayout } from "./generateForm/generateFormLayout";
+import { generateFields } from "./generateForm/generateFields";
 import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
-import { generateFormField } from "./generateFormField";
 import { FormConfig, FormFieldConfig, GeneratorReturn, isFormFieldConfig, isFormLayoutConfig } from "./generator";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
@@ -103,36 +102,20 @@ export function generateForm(
 
     let hooksCode = "";
     let formValueToGqlInputCode = "";
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const generateFormFieldCode = (field: FormFieldConfig<any>) => {
-        const generated = generateFormField({ gqlIntrospection, baseOutputFilename }, field, config);
-        for (const name in generated.gqlDocuments) {
-            gqlDocuments[name] = generated.gqlDocuments[name];
-        }
-        imports.push(...generated.imports);
-        hooksCode += generated.hooksCode;
-        formValueToGqlInputCode += generated.formValueToGqlInputCode;
-        formFragmentFields.push(generated.formFragmentField);
-        return generated.code;
-    };
-
     const formFragmentFields: string[] = [];
-    const fieldsCode = config.fields
-        .map((field) => {
-            if (isFormFieldConfig(field)) {
-                return generateFormFieldCode(field);
-            } else if (isFormLayoutConfig(field)) {
-                const formLayoutFieldsCode = field.fields.map((field) => generateFormFieldCode(field)).join("\n");
-                const generated = generateFormLayout(field, formLayoutFieldsCode, config);
-                imports.push(...generated.imports);
-                formFragmentFields.push(...generated.formFragmentFields);
-                return generated.code;
-            } else {
-                throw new Error("Not supported config");
-            }
-        })
-        .join("\n");
+    const { code: fieldsCode, ...generatedFields } = generateFields({
+        gqlIntrospection,
+        baseOutputFilename,
+        fields: config.fields,
+        formConfig: config,
+    });
+    for (const name in generatedFields.gqlDocuments) {
+        gqlDocuments[name] = generatedFields.gqlDocuments[name];
+    }
+    imports.push(...generatedFields.imports);
+    hooksCode += generatedFields.hooksCode;
+    formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
+    formFragmentFields.push(...generatedFields.formFragmentFields);
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
