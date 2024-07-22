@@ -4,10 +4,10 @@
 
 Rework `typographyOptions`
 
-- Replace `typographyOptions` with `createTypographyOptions()` to enable using the theme's breakpoints for media queries
-- Add new default styles for variants `subtitle1`, `subtitle2`, `caption` and `overline`
-- Remove custom `fontWeights`
-- Switch the font from `Roboto` to `Roboto Flex`
+-   Replace `typographyOptions` with `createTypographyOptions()` to enable using the theme's breakpoints for media queries
+-   Add new default styles for variants `subtitle1`, `subtitle2`, `caption` and `overline`
+-   Remove custom `fontWeights`
+-   Switch the font from `Roboto` to `Roboto Flex`
 
 The font switch requires you to make the following two changes in your admin application:
 
@@ -19,7 +19,7 @@ The font switch requires you to make the following two changes in your admin app
 + "@fontsource-variable/roboto-flex": "^5.0.0",
 ```
 
-```diff 
+```diff
 // App.tsx
 - import "@fontsource/roboto/100.css";
 - import "@fontsource/roboto/300.css";
