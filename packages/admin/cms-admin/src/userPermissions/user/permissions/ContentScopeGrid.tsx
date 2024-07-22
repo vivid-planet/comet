@@ -1,11 +1,11 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { FieldSet } from "@comet/admin";
-import { Card, IconButton } from "@mui/material";
-import { DataGrid, GridColDef, GridRowId } from "@mui/x-data-grid";
+import { Delete, Filter } from "@comet/admin-icons";
+import { Card, IconButton, Typography } from "@mui/material";
+import { DataGrid, GridColDef, GridRowId, GridRowParams } from "@mui/x-data-grid";
 import React from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
-import { Delete, Filter } from "../../../../../admin-icons/lib";
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
 import {
     GQLContentScopesQuery,
@@ -22,7 +22,8 @@ export const ContentScopeGrid: React.FC<{
     userId: string;
 }> = ({ userId }) => {
     const client = useApolloClient();
-    const [dialogVisibility, setDialogVisibility] = React.useState<boolean>(false);
+    const intl = useIntl();
+    const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
     const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([]);
 
     const submit = async (data: GQLUserContentScopes) => {
@@ -45,7 +46,10 @@ export const ContentScopeGrid: React.FC<{
     const { data, loading, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
             query ContentScopes($userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes
+                availableContentScopes: userPermissionsAvailableContentScopes {
+                    contentScope
+                    label
+                }
                 userContentScopes: userPermissionsContentScopes(userId: $userId)
                 userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
@@ -63,28 +67,50 @@ export const ContentScopeGrid: React.FC<{
 
         submit(modiefiedData);
     };
-    let columns: GridColDef<GQLUserContentScopes>[] = [];
+    let columns: GridColDef<GQLUserContentScopes[number]>[] = [];
 
-    if (!loading) {
-        columns = [
-            ...Object.keys(data?.userContentScopes[0]).map((key) => ({
-                field: key,
-                flex: 1,
-                pinnable: false,
-                headerName: camelCaseToHumanReadable(key),
-                renderCell: ({ row }: GQLUserContentScopes[number]) => camelCaseToHumanReadable(row[key]),
-            })),
-            {
-                field: "actions",
-                width: 120,
-                headerName: "",
-                sortable: false,
-                pinnable: false,
-                filterable: false,
-                renderCell: ({ row }) => (
+    columns = [
+        {
+            field: "scopeName",
+            flex: 1,
+            pinnable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.contentScope", defaultMessage: "Scope Name" }),
+            renderCell: ({ row }: GQLUserContentScopes[number]) => {
+                const contentScope = data?.availableContentScopes.find((scope) => JSON.stringify(scope.contentScope) == JSON.stringify(row));
+                if (contentScope) {
+                    return (
+                        <Typography
+                            color={
+                                data?.userContentScopesSkipManual.some((automaticScopes) => JSON.stringify(row) === JSON.stringify(automaticScopes))
+                                    ? "#B3B3B3"
+                                    : "info"
+                            }
+                        >
+                            {contentScope.label
+                                ? contentScope.label
+                                : Object.entries(contentScope.contentScope).map(([_, value]) => `${camelCaseToHumanReadable(value as string)} `)}
+                        </Typography>
+                    );
+                }
+            },
+        },
+        {
+            field: "actions",
+            width: 120,
+            headerName: "",
+            sortable: false,
+            pinnable: false,
+            filterable: false,
+            renderCell: ({ row }) => {
+                const isProgrammaticallyApplied = data?.userContentScopesSkipManual.some(
+                    (automaticScopes) => JSON.stringify(row) === JSON.stringify(automaticScopes),
+                );
+
+                return (
                     <>
                         <IconButton
                             color="inherit"
+                            disabled={isProgrammaticallyApplied}
                             onClick={() => {
                                 deleteContentScope(row);
                             }}
@@ -92,24 +118,15 @@ export const ContentScopeGrid: React.FC<{
                             <Delete />
                         </IconButton>
                     </>
-                ),
+                );
             },
-        ];
-    }
+        },
+    ];
 
     if (error) throw new Error(error.message);
 
-    const deleteSelected = () => {
-        if (!data) return;
-        const modiefiedData = data?.userContentScopes.filter((contentScope: GQLUserContentScopes[number]) =>
-            selectionModel.map((row) => JSON.stringify(row)).includes(JSON.stringify(contentScope)),
-        );
-
-        submit(modiefiedData);
-    };
-
     const openSetContentScopesDialog = () => {
-        setDialogVisibility(true);
+        setDialogOpen(true);
     };
 
     return (
@@ -119,7 +136,7 @@ export const ContentScopeGrid: React.FC<{
             disablePadding
         >
             <Card>
-                <DataGrid<GQLUserContentScopes>
+                <DataGrid<GQLUserContentScopes[number]>
                     autoHeight
                     checkboxSelection
                     disableSelectionOnClick
@@ -130,6 +147,13 @@ export const ContentScopeGrid: React.FC<{
                     onSelectionModelChange={(newSelectionModel) => {
                         setSelectionModel(newSelectionModel);
                     }}
+                    isRowSelectable={(params: GridRowParams) => {
+                        return data
+                            ? !data.userContentScopesSkipManual.some(
+                                  (automaticScopes) => JSON.stringify(params.row) === JSON.stringify(automaticScopes),
+                              )
+                            : false;
+                    }}
                     rows={data?.userContentScopes ?? []}
                     columns={columns}
                     rowCount={data?.userContentScopes.length ?? 0}
@@ -137,11 +161,11 @@ export const ContentScopeGrid: React.FC<{
                     getRowHeight={() => "auto"}
                     sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" } }}
                     components={{
-                        Toolbar: () => <ContentScopeGridToolbar actions={{ openDialog: openSetContentScopesDialog, deleteSelected }} />,
+                        Toolbar: () => <ContentScopeGridToolbar actions={{ openDialog: openSetContentScopesDialog }} />,
                         OpenFilterButtonIcon: () => <Filter />,
                     }}
                 />
-                {dialogVisibility && <ContentScopeDialog userId={userId} handleDialogClose={() => setDialogVisibility(false)} />}
+                {dialogOpen && <ContentScopeDialog userId={userId} handleDialogClose={() => setDialogOpen(false)} />}
             </Card>
         </FieldSet>
     );

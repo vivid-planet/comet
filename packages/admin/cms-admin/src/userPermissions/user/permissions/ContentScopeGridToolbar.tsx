@@ -5,7 +5,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 type Props = {
-    actions?: { deleteSelected: () => void; openDialog: () => void };
+    actions?: { openDialog: () => void };
 };
 
 export const ContentScopeGridToolbar = ({ actions }: Props) => {
@@ -18,10 +18,6 @@ export const ContentScopeGridToolbar = ({ actions }: Props) => {
                 </CustomToolbarAction>
                 {actions ? (
                     <CustomToolbarAction>
-                        {/* TODO: Add Context Menu once https://github.com/vivid-planet/comet/pull/2115 is merged
-                        <Button variant="text" color="info" endIcon={<MoreVertical />} onClick={actions.deleteSelected}>
-                            <FormattedMessage id="comet.contentScopes.more" defaultMessage="More" />
-                        </Button> */}
                         <Button variant="contained" color="primary" startIcon={<Select />} onClick={actions.openDialog}>
                             <FormattedMessage id="comet.contentScope.select" defaultMessage="Select Scopes" />
                         </Button>
