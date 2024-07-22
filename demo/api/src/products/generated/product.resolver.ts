@@ -80,6 +80,7 @@ export class ProductResolver {
         }
 
         const [entities, totalCount] = await this.repository.findAndCount(where, options);
+        console.log(entities);
         return new PaginatedProducts(entities, totalCount);
     }
 

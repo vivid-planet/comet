@@ -475,6 +475,7 @@ type Product {
   statistics: ProductStatistics
   createdAt: DateTime!
   updatedAt: DateTime!
+  availableSince: String!
   category: ProductCategory
   variants: [ProductVariant!]!
   tagsWithStatus: [ProductToTag!]!
@@ -655,7 +656,6 @@ type Query {
   productCategories(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductCategoryFilter, sort: [ProductCategorySort!]): PaginatedProductCategories!
   productTag(id: ID!): ProductTag!
   productTags(offset: Int! = 0, limit: Int! = 25, search: String, filter: ProductTagFilter, sort: [ProductTagSort!]): PaginatedProductTags!
-  azureAiTranslate(input: AzureAiTranslationInput!): String!
 }
 
 input UserFilter {
@@ -819,6 +819,7 @@ input ProductFilter {
   category: ManyToOneFilter
   createdAt: DateFilter
   updatedAt: DateFilter
+  availableSince: StringFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
 }
@@ -861,6 +862,7 @@ enum ProductSortField {
   category
   createdAt
   updatedAt
+  availableSince
 }
 
 input ProductCategoryFilter {
@@ -901,11 +903,6 @@ enum ProductTagSortField {
   title
   createdAt
   updatedAt
-}
-
-input AzureAiTranslationInput {
-  text: String!
-  targetLanguage: String!
 }
 
 type Mutation {
@@ -1155,6 +1152,7 @@ input ProductInput {
   category: ID = null
   tags: [ID!]! = []
   tagsWithStatus: [ProductNestedProductToTagInput!]! = []
+  availableSince: String!
 }
 
 input ProductNestedProductStatisticsInput {
@@ -1187,6 +1185,7 @@ input ProductUpdateInput {
   category: ID
   tags: [ID!]
   tagsWithStatus: [ProductNestedProductToTagInput!]
+  availableSince: String
 }
 
 input ProductCategoryInput {

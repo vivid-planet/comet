@@ -16,6 +16,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
+import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { MenuItem } from "@mui/material";
@@ -198,6 +199,12 @@ function ProductForm({ id }: FormProps): React.ReactElement {
                             component={FinalFormInput}
                             type="number"
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                        />
+                        <Field
+                            fullWidth
+                            name="availableSince"
+                            component={FinalFormDatePicker}
+                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available since" />}
                         />
                         <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
                         <Field name="image" isEqual={isEqual}>

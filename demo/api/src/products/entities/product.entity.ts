@@ -168,4 +168,9 @@ export class Product extends BaseEntity<Product, "id"> {
     @Property({ onUpdate: () => new Date() })
     @Field()
     updatedAt: Date = new Date();
+
+    @Field()
+    @Property({ columnType: "date" })
+    // @Property({ type: types.date }), not supported by CRUD generator yet
+    availableSince: string;
 }

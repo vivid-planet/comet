@@ -88,6 +88,7 @@ function ProductsGrid() {
         },
         { field: "description", headerName: "Description", width: 150 },
         { field: "price", headerName: "Price", width: 150, type: "number" },
+        { field: "availableSince", headerName: "Available Since", width: 150, type: "date" },
         { field: "type", headerName: "Type", width: 150, type: "singleSelect", valueOptions: ["Cap", "Shirt", "Tie"] },
         {
             field: "category",
@@ -166,6 +167,7 @@ function ProductsGrid() {
                                             articleNumbers: input.articleNumbers,
                                             discounts: input.discounts,
                                             statistics: { views: 0 },
+                                            availableSince: input.availableSince,
                                         },
                                     },
                                 });
@@ -244,6 +246,7 @@ const productsFragment = gql`
             quantity
             price
         }
+        availableSince
     }
 `;
 

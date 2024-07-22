@@ -13,7 +13,9 @@ export class ProductsService {
         const andFilters = [];
 
         if (options.search) {
-            andFilters.push(searchToMikroOrmQuery(options.search, ["title", "slug", "description", "type", "category.title", "category.slug"]));
+            andFilters.push(
+                searchToMikroOrmQuery(options.search, ["title", "slug", "description", "type", "category.title", "category.slug", "availableSince"]),
+            );
         }
 
         if (options.filter) {

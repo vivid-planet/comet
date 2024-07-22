@@ -17,6 +17,7 @@ export const productFormFragment = gql`
             title
         }
         price
+        availableSince
     }
 `;
 

@@ -95,6 +95,11 @@ export class ProductInput {
     @IsArray()
     @Type(() => ProductNestedProductToTagInput)
     tagsWithStatus: ProductNestedProductToTagInput[];
+
+    @IsNotEmpty()
+    @IsString()
+    @Field()
+    availableSince: string;
 }
 
 @InputType()
