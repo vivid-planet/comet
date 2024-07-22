@@ -5,6 +5,7 @@ import {
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackLink,
     StackPage,
     StackSwitch,
     StackToolbar,
@@ -13,10 +14,12 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
 } from "@comet/admin";
+import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
+import { Button, IconButton } from "@mui/material";
 import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductForm } from "./generated/ProductForm";
 import { ProductPriceForm } from "./generated/ProductPriceForm";
@@ -41,7 +44,25 @@ export function ProductsPage(): React.ReactElement {
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <MainContent fullHeight>
-                        <ProductsGrid />
+                        <ProductsGrid
+                            toolbarAction={
+                                <Button
+                                    startIcon={<AddIcon />}
+                                    component={StackLink}
+                                    pageName="add"
+                                    payload="add"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
+                                </Button>
+                            }
+                            rowAction={(params) => (
+                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
+                                    <Edit color="primary" />
+                                </IconButton>
+                            )}
+                        />
                     </MainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
@@ -67,7 +88,13 @@ export function ProductsPage(): React.ReactElement {
                         </SaveBoundary>
                     )}
                 </StackPage>
-                <StackPage name="variants" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Product variants" })}>
+                <StackPage
+                    name="variants"
+                    title={intl.formatMessage({
+                        id: "products.editProduct",
+                        defaultMessage: "Product variants",
+                    })}
+                >
                     {(selectedId) => (
                         <>
                             <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />

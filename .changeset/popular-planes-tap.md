@@ -18,4 +18,3 @@ Move `YouTubeVideoBlock` to `@cms` packages
 - import { YouTubeVideoBlock } from "@comet/blocks-api";
 + import { YouTubeVideoBlock } from "@comet/cms-api";
 ```
-

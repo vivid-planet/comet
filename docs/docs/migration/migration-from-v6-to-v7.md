@@ -831,6 +831,52 @@ The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
 Instead, implement your own `InternalLinkBlock`.
 This is needed for more flexibility, e.g., support for internationalized routing.
 
+### Add `legacyBevavior` to all link block usages
+
+All link blocks in `@comet/cms-site` now render a child `<a>` tag by default to align with the new behavior of the Next `Link` component, which is used by `InternalLinkBlock`.
+For existing projects, add the `legacyBehavior` prop to all library link block usages to use the old behavior, where the `<a>` tag is defined in the application. For example:
+
+```diff title=LinkBlock.tsx
+const supportedBlocks: SupportedBlocks = {
+    internal: ({ children, title, ...props }) => (
+        <InternalLinkBlock
+            data={props}
+            title={title}
++           legacyBehavior
+        >
+            {children}
+        </InternalLinkBlock>
+    ),
+    external: ({ children, title, ...props }) => (
+        <ExternalLinkBlock
+            data={props}
+            title={title}
++           legacyBehavior
+        >
+            {children}
+        </ExternalLinkBlock>
+    ),
+    /* Other link blocks */
+};
+
+export const LinkBlock = withPreview(
+    ({ data, children }: LinkBlockProps) => {
+        return (
+            <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
+                {children}
+            </OneOfBlock>
+        );
+    },
+    { label: "Link" },
+);
+```
+
+:::info
+
+New projects shouldn't use the legacy behavior. Instead, add support to pass the `className` prop through to the `LinkBlock` an its child blocks. See [this PR](https://github.com/vivid-planet/comet/pull/2271) for an example.
+
+:::
+
 ### Add `aspectRatio` to `PixelImageBlock` and `Image`
 
 Previously, there was a default aspect ratio of `16x9`.
@@ -847,43 +893,6 @@ Example:
    layout="fill"
 +  aspectRatio="16x9"
  />
-```
-
-### Make relative DAM URLs work
-
-This requires the following change (depending on which router you use):
-
-#### Pages Router
-
-```diff
-// next.config.js
-
-const nextConfig = {
-    rewrites: async () => {
-        if (process.env.NEXT_PUBLIC_SITE_IS_PREVIEW === "true") return [];
-        var rewrites = await require("./preBuild/build/preBuild/src/createRewrites").createRewrites();
--       return rewrites;
-+       return [
-+           ...rewrites,
-+           {
-+               source: "/dam/:path*",
-+               destination: process.env.API_URL + "/dam/:path*",
-+           },
-+       ];
-    },
-    // ...
-```
-
-#### App Router
-
-```diff
-// middleware.ts
-
-export async function middleware(request: NextRequest) {
-+   if (request.nextUrl.pathname.startsWith("/dam/")) {
-+       return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
-+   }
-    // ...
 ```
 
 ### Switch to Next.js Preview Mode

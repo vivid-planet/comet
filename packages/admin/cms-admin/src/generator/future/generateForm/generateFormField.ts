@@ -1,17 +1,24 @@
 import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
-import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
-import { Imports } from "./utils/generateImportsCode";
-import { isFieldOptional } from "./utils/isFieldOptional";
+import { FormConfig, FormFieldConfig } from "../generator";
+import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { Imports } from "../utils/generateImportsCode";
+import { isFieldOptional } from "../utils/isFieldOptional";
+import { GenerateFieldsReturn } from "./generateFields";
 
-export function generateFormField(
-    { gqlIntrospection, baseOutputFilename }: { gqlIntrospection: IntrospectionQuery; baseOutputFilename: string },
+export function generateFormField({
+    gqlIntrospection,
+    baseOutputFilename,
+    config,
+    formConfig,
+}: {
+    gqlIntrospection: IntrospectionQuery;
+    baseOutputFilename: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormFieldConfig<any>,
+    config: FormFieldConfig<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formConfig: FormConfig<any>,
-): GeneratorReturn & { imports: Imports; hooksCode: string; formFragmentField: string; formValueToGqlInputCode: string } {
+    formConfig: FormConfig<any>;
+}): GenerateFieldsReturn {
     const gqlType = formConfig.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
@@ -63,6 +70,7 @@ export function generateFormField(
         <${TextInputComponent}
             ${required ? "required" : ""}
             ${config.readOnly ? readOnlyPropsWithLock : ""}
+            variant="horizontal"
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
@@ -78,6 +86,7 @@ export function generateFormField(
             <Field
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
+                variant="horizontal"
                 fullWidth
                 name="${name}"
                 component={FinalFormInput}
@@ -99,7 +108,7 @@ export function generateFormField(
         }
         formValueToGqlInputCode = `${name}: ${assignment},`;
     } else if (config.type == "boolean") {
-        code = `<Field name="${name}" label="" type="checkbox" fullWidth ${validateCode}>
+        code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
                     label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
@@ -119,6 +128,7 @@ export function generateFormField(
             <Field
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
+                variant="horizontal"
                 fullWidth
                 name="${name}"
                 component={FinalFormDatePicker}
@@ -148,6 +158,7 @@ export function generateFormField(
         const values = enumType.enumValues.map((i) => i.name);
         code = `<Field
             ${required ? "required" : ""}
+            variant="horizontal"
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
@@ -217,6 +228,7 @@ export function generateFormField(
 
         code = `<AsyncSelectField
                 ${required ? "required" : ""}
+                variant="horizontal"
                 fullWidth
                 name="${name}"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
@@ -242,7 +254,7 @@ export function generateFormField(
         code,
         hooksCode,
         formValueToGqlInputCode,
-        formFragmentField,
+        formFragmentFields: [formFragmentField],
         gqlDocuments,
         imports,
     };

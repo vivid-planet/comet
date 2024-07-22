@@ -1,9 +1,10 @@
-import { TableDndOrder, TableLocalChanges } from "@comet/admin";
+import { Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
 import { Button } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { dndProviderDecorator } from "../../dnd.decorator";
+import { storyRouterDecorator } from "../../story-router.decorator";
 
 interface IRow {
     id: string; // TODO add support for number in TableLocalChanges
@@ -21,43 +22,55 @@ function Story() {
     ];
 
     return (
-        <TableLocalChanges
-            data={data}
-            onSubmit={async (changes) => {
-                alert(JSON.stringify(changes));
-            }}
-            orderColumn="order" // if anything but 'pos' is used
-        >
-            {({ tableLocalChangesApi, data: changedData }) => (
-                <>
-                    <TableDndOrder
-                        data={changedData}
-                        totalCount={changedData.length}
-                        moveRow={tableLocalChangesApi.moveRow}
-                        onDragEnd={() => {
-                            // alternative to submit button
-                            // tableLocalChangesApi.submitLocalDataChanges();
+        <Stack topLevelTitle="Stack">
+            <StackSwitch>
+                <StackPage name="page-1">
+                    <TableLocalChanges
+                        data={data}
+                        onSubmit={async (changes) => {
+                            alert(JSON.stringify(changes));
                         }}
-                        columns={[
-                            {
-                                name: "task",
-                                header: "Task",
-                            },
-                        ]}
-                    />
-                    <Button
-                        onClick={() => {
-                            tableLocalChangesApi.submitLocalDataChanges();
-                        }}
+                        orderColumn="order" // if anything but 'pos' is used
                     >
-                        Submit
-                    </Button>
-                </>
-            )}
-        </TableLocalChanges>
+                        {({ tableLocalChangesApi, data: changedData }) => (
+                            <>
+                                <TableDndOrder
+                                    data={changedData}
+                                    totalCount={changedData.length}
+                                    moveRow={tableLocalChangesApi.moveRow}
+                                    onDragEnd={() => {
+                                        // alternative to submit button
+                                        // tableLocalChangesApi.submitLocalDataChanges();
+                                    }}
+                                    columns={[
+                                        {
+                                            name: "task",
+                                            header: "Task",
+                                        },
+                                    ]}
+                                />
+                                <Button
+                                    onClick={() => {
+                                        tableLocalChangesApi.submitLocalDataChanges();
+                                    }}
+                                >
+                                    Submit
+                                </Button>
+                                {/* Link to test router prompt */}
+                                <StackLink pageName="page-2" payload="any">
+                                    To page 2
+                                </StackLink>
+                            </>
+                        )}
+                    </TableLocalChanges>
+                </StackPage>
+                <StackPage name="page-2">Page 2</StackPage>
+            </StackSwitch>
+        </Stack>
     );
 }
 
 storiesOf("@comet/admin/table", module)
+    .addDecorator(storyRouterDecorator())
     .addDecorator(dndProviderDecorator())
     .add("DnD Order", () => <Story />);

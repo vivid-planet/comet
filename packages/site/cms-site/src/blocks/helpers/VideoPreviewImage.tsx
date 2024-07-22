@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import { PixelImageBlockData } from "../../blocks.generated";
 import { PixelImageBlock } from "../PixelImageBlock";
@@ -9,12 +9,13 @@ export interface VideoPreviewImageProps {
     image: PixelImageBlockData;
     aspectRatio: string;
     sizes?: string;
+    fill?: boolean;
 }
 
-export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" }: VideoPreviewImageProps) => {
+export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill }: VideoPreviewImageProps) => {
     return (
-        <Root>
-            <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} />
+        <Root $fill={fill}>
+            <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
             <IconWrapper onClick={onPlay}>
                 <PlayIcon />
             </IconWrapper>
@@ -22,9 +23,15 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw" 
     );
 };
 
-const Root = styled.div`
+const Root = styled.div<{ $fill?: boolean }>`
     position: relative;
     width: 100%;
+
+    ${({ $fill }) =>
+        $fill &&
+        css`
+            height: 100%;
+        `}
 `;
 
 const IconWrapper = styled.button`

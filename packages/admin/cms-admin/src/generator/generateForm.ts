@@ -327,6 +327,7 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
         if (!enumType) throw new Error(`Enum type not found`);
         const values = enumType.enumValues.map((i) => i.name);
         return `<Field
+            variant="horizontal"
             fullWidth
             name="${field.name}"
             label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}>
@@ -343,7 +344,7 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
             }
         </Field>`;
     } else if (type.kind === "SCALAR" && type.name === "Boolean") {
-        return `<Field name="${field.name}" label="" type="checkbox" fullWidth>
+        return `<Field name="${field.name}" label="" type="checkbox" variant="horizontal" fullWidth>
                 {(props) => (
                     <FormControlLabel
                         label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}
@@ -352,12 +353,12 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
                 )}
             </Field>`;
     } else if (type.kind === "SCALAR" && type.name === "String") {
-        return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+        return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} variant="horizontal" fullWidth name="${
             field.name
         }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
     } else if (type.kind === "SCALAR" && type.name === "DateTime") {
         //TODO DateTime vs Date
-        return `<DateField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+        return `<DateField ${field.type.kind === "NON_NULL" ? "required" : ""} variant="horizontal" fullWidth name="${
             field.name
         }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
     } else {
@@ -376,6 +377,7 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
             return "";
         }
         return `<Field ${field.type.kind === "NON_NULL" ? "required" : ""}
+                    variant="horizontal"
                     fullWidth
                     name="${field.name}"
                     component={${component}}

@@ -11,7 +11,7 @@ export const FullWidthImageBlock = withPreview(
     ({ data: { image, content } }: PropsWithData<FullWidthImageBlockData>) => {
         return (
             <Root>
-                <DamImageBlock data={image} layout="responsive" sizes="100vw" aspectRatio="16x9" />
+                <DamImageBlock data={image} sizes="100vw" aspectRatio="16x9" />
                 <OptionalBlock
                     block={(props) => (
                         <Content>

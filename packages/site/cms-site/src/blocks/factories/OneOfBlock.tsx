@@ -14,10 +14,11 @@ interface Props {
     };
     supportedBlocks: SupportedBlocks;
     children?: React.ReactNode;
+    className?: string;
     onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children, onError }) => {
+export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children, className, onError }) => {
     if (!block) {
         return null;
     }
@@ -36,5 +37,5 @@ export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps 
         return null;
     }
 
-    return <ErrorBoundary onError={onError}>{blockFunction({ ...block.props, ...additionalProps, children })}</ErrorBoundary>;
+    return <ErrorBoundary onError={onError}>{blockFunction({ ...block.props, ...additionalProps, children, className })}</ErrorBoundary>;
 };

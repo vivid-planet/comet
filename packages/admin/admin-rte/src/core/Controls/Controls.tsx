@@ -18,20 +18,18 @@ export default function Controls(p: IControlProps) {
     } = p;
     const hasCustomButtons = customToolbarButtons && customToolbarButtons.length > 0;
     return (
-        <>
-            <Toolbar {...p}>
-                {[
-                    HistoryControls,
-                    BlockTypesControls,
-                    TranslationControls,
-                    InlineStyleTypeControls,
-                    ListsControls,
-                    ListsIndentControls,
-                    LinkControls,
-                    SpecialCharactersControls,
-                    ...(hasCustomButtons ? [CustomControls] : []),
-                ]}
-            </Toolbar>
-        </>
+        <Toolbar {...p}>
+            {[
+                HistoryControls,
+                BlockTypesControls,
+                TranslationControls,
+                InlineStyleTypeControls,
+                ListsControls,
+                ListsIndentControls,
+                LinkControls,
+                SpecialCharactersControls,
+                ...(hasCustomButtons ? [CustomControls] : []),
+            ]}
+        </Toolbar>
     );
 }
