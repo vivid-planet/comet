@@ -1,7 +1,6 @@
 import React, { ErrorInfo, PropsWithChildren } from "react";
 
 type Props = {
-    fallback: React.ReactNode;
     blockType: string;
     onError: (error: Error, errorInfo: ErrorInfo) => void;
 };
@@ -17,17 +16,22 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<Props>, Sta
     }
 
     static getDerivedStateFromError() {
-        // Update state so the next render will show the fallback UI.
+        // Update state so the next render will show nothing instead of the broken block
         return { hasError: true };
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         this.props.onError(error, errorInfo);
+
+        if (process.env.NODE_ENV === "development") {
+            console.error("Error", error, errorInfo);
+            throw new Error(error.message);
+        }
     }
 
     render() {
         if (this.state.hasError) {
-            return this.props.fallback;
+            return null;
         }
 
         return this.props.children;

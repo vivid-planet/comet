@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 import { ErrorInfo } from "react";
-import styled from "styled-components";
 
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
 import { ErrorBoundary } from "../helpers/ErrorBoundary";
@@ -38,11 +37,7 @@ export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }
                 }
                 return (
                     <React.Fragment key={block.key}>
-                        <ErrorBoundary
-                            blockType={block.type}
-                            fallback={process.env.NODE_ENV === "production" ? null : <ErrorFallback blockType={block.type} />}
-                            onError={onError}
-                        >
+                        <ErrorBoundary blockType={block.type} onError={onError}>
                             {blockFunction(block.props)}
                         </ErrorBoundary>
                     </React.Fragment>
@@ -51,17 +46,3 @@ export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }
         </>
     );
 };
-
-function ErrorFallback({ blockType }: { blockType: string }) {
-    return <ErrorRoot>The following Block failed to render: {blockType}</ErrorRoot>;
-}
-
-const ErrorRoot = styled.div`
-    background-color: red;
-    color: white;
-    min-height: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-`;
