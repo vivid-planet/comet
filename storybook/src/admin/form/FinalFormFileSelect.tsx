@@ -4,20 +4,33 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
+type FormValues = {
+    singleFile: File;
+    multipleFiles: File[];
+    multipleImages: File[];
+    disabled: File[];
+};
+
 function Story() {
     return (
         <div style={{ width: 800 }}>
-            <Form
+            <Form<FormValues>
                 onSubmit={(values) => {
                     //
                 }}
-                render={({ handleSubmit }) => (
+                render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={4}>
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field fullWidth name="uploadDefault" label="File upload (default)" component={FinalFormFileSelect} />
+                                        <Field
+                                            name="singleFile"
+                                            label="File select (default)"
+                                            component={FinalFormFileSelect}
+                                            maxFiles={1}
+                                            fullWidth
+                                        />
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -25,13 +38,17 @@ function Story() {
                                 <Card variant="outlined">
                                     <CardContent>
                                         <Field
-                                            name="uploadMultipleDisabled"
-                                            label="File upload (dropzone only, multiple, max file size 5 MB), max 5 files"
-                                            disableSelectFileButton
+                                            name="multipleFiles"
+                                            label="File select (dropzone only, multiple, max file size 5 MB), max 5 files"
                                             component={FinalFormFileSelect}
-                                            maxSize={5 * 1024 * 1024}
-                                            multiple
+                                            maxSize={50 * 1024 * 1024}
                                             maxFiles={5}
+                                            fullWidth
+                                            slotProps={{
+                                                dropzone: {
+                                                    hideButton: true,
+                                                },
+                                            }}
                                         />
                                     </CardContent>
                                 </Card>
@@ -40,11 +57,16 @@ function Story() {
                                 <Card variant="outlined">
                                     <CardContent>
                                         <Field
-                                            name="uploadImages"
-                                            label="File upload (button only, accept only images)"
-                                            accept={{ "image/*": [] }}
-                                            disableDropzone
+                                            name="multipleImages"
+                                            label="File select (button only, accept only images)"
                                             component={FinalFormFileSelect}
+                                            accept={{ "image/*": [] }}
+                                            fullWidth
+                                            slotProps={{
+                                                dropzone: {
+                                                    hideDroppableArea: true,
+                                                },
+                                            }}
                                         />
                                     </CardContent>
                                 </Card>
@@ -52,11 +74,12 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field name="uploadDisabled" label="File upload (disabled)" disabled component={FinalFormFileSelect} />
+                                        <Field name="disabled" label="File select (disabled)" component={FinalFormFileSelect} disabled fullWidth />
                                     </CardContent>
                                 </Card>
                             </Grid>
                         </Grid>
+                        <pre>{JSON.stringify(values, null, 2)}</pre>
                     </form>
                 )}
             />
