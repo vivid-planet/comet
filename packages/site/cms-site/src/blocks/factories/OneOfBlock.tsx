@@ -1,5 +1,7 @@
 import * as React from "react";
+import { ErrorInfo } from "react";
 
+import { ErrorBoundary } from "../helpers/ErrorBoundary";
 import { SupportedBlocks } from "./types";
 
 interface Props {
@@ -12,9 +14,10 @@ interface Props {
     };
     supportedBlocks: SupportedBlocks;
     children?: React.ReactNode;
+    onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children }) => {
+export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children, onError }) => {
     if (!block) {
         return null;
     }
@@ -33,5 +36,9 @@ export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps 
         return null;
     }
 
-    return <>{blockFunction({ ...block.props, ...additionalProps, children })}</>;
+    return (
+        <>
+            <ErrorBoundary onError={onError}>{blockFunction({ ...block.props, ...additionalProps, children })}</ErrorBoundary>
+        </>
+    );
 };

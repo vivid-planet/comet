@@ -1,7 +1,7 @@
 import React, { ErrorInfo, PropsWithChildren } from "react";
 
 type Props = {
-    onError: (error: Error, errorInfo: ErrorInfo) => void;
+    onError?: (error: Error, errorInfo: ErrorInfo) => void;
 };
 
 type State = {
@@ -20,9 +20,13 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<Props>, Sta
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        this.props.onError(error, errorInfo);
+        if (this.props.onError) {
+            this.props.onError(error, errorInfo);
+        }
 
-        if (process.env.NODE_ENV === "development") {
+        // Throw error locally AND
+        // when a ListBlock or OneOfBlock is not used inside a BlocksBlock, throw the error as well when there is no onError defined.
+        if (process.env.NODE_ENV === "development" || !this.props.onError) {
             console.error("Error", error, errorInfo);
             throw new Error(error.message);
         }
