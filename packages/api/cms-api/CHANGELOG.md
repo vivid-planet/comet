@@ -1,6 +1,5 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 7.0.0-beta.6
 
 ### Patch Changes
@@ -273,37 +272,11 @@
                     id: news.id,
                     slug: news.slug,
                 },
-=======
-## 6.16.0
-
-### Minor Changes
-
--   5e830f8d9: Add an [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) implementation of the content translation feature
-
-    To use it, do the following:
-
-    **API:**
-
-    ```diff
-    // app.module.ts
-    export class AppModule {
-        static forRoot(config: Config): DynamicModule {
-            return {
-                imports: [
-                    // ...
-    +               AzureAiTranslatorModule.register({
-    +                   endpoint: envVars.AZURE_AI_TRANSLATOR_ENDPOINT,
-    +                   key: envVars.AZURE_AI_TRANSLATOR_KEY,
-    +                   region: envVars.AZURE_AI_TRANSLATOR_REGION,
-    +               }),
-                ],
->>>>>>> main
             };
         }
     }
     ```
 
-<<<<<<< HEAD
     Adding this new technique results in a few breaking changes:
 
     -   Remove dynamic registration of `BlocksModule`
@@ -383,7 +356,32 @@
 -   Updated dependencies [e15927594]
 -   Updated dependencies [ebf597120]
     -   @comet/blocks-api@7.0.0-beta.0
-=======
+
+## 6.16.0
+
+### Minor Changes
+
+-   5e830f8d9: Add an [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) implementation of the content translation feature
+
+    To use it, do the following:
+
+    **API:**
+
+    ```diff
+    // app.module.ts
+    export class AppModule {
+        static forRoot(config: Config): DynamicModule {
+            return {
+                imports: [
+                    // ...
+    +               AzureAiTranslatorModule.register({
+    +                   endpoint: envVars.AZURE_AI_TRANSLATOR_ENDPOINT,
+    +                   key: envVars.AZURE_AI_TRANSLATOR_KEY,
+    +                   region: envVars.AZURE_AI_TRANSLATOR_REGION,
+    +               }),
+                ],
+    ```
+
     Users need the `translation` permission to use the translation feature.
 
     **Admin:**
@@ -403,7 +401,6 @@
     Previously, we checked the existing file name (`entity.name`) for the check instead of the new name (`input.name`). This never resulted in an error.
 
     -   @comet/blocks-api@6.16.0
->>>>>>> main
 
 ## 6.15.1
 

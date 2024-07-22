@@ -44,86 +44,10 @@ export type FieldContainerClassKey =
     | "warning"
     | "helperText";
 
-<<<<<<< HEAD
 type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
     hasError: boolean;
     hasWarning: boolean;
     forceVertical: boolean;
-=======
-const styles = (theme: Theme) => {
-    return createStyles<FieldContainerClassKey, FieldContainerProps>({
-        root: {
-            maxWidth: "100%",
-            "&:not($fieldMarginNever)": {
-                marginBottom: theme.spacing(4),
-                "&:not($fullWidth)": {
-                    marginRight: theme.spacing(4),
-                },
-            },
-        },
-        vertical: {},
-        horizontal: {
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            "& $label": {
-                width: 220,
-                flexShrink: 0,
-                flexGrow: 0,
-                marginBottom: 0,
-            },
-            "&$fullWidth $inputContainer": {
-                flexGrow: 1,
-            },
-        },
-        fullWidth: {},
-        required: {},
-        disabled: {
-            "& $label": {
-                color: theme.palette.text.disabled,
-            },
-        },
-        fieldMarginAlways: {},
-        fieldMarginNever: {},
-        fieldMarginOnlyIfNotLast: {
-            "&:last-child": {
-                marginBottom: 0,
-                "&:not($fullWidth)": {
-                    marginRight: 0,
-                },
-            },
-        },
-        label: {},
-        inputContainer: {
-            "& > [class*='MuiInputBase-root']": {
-                width: "100%",
-            },
-        },
-        hasError: {
-            "& $label:not([class*='Mui-focused'])": {
-                color: theme.palette.error.main,
-            },
-            "& [class*='MuiInputBase-root']:not([class*='Mui-focused'])": {
-                borderColor: theme.palette.error.main,
-            },
-        },
-        error: {},
-        hasWarning: {
-            "& $label:not([class*='Mui-focused'])": {
-                color: theme.palette.warning.main,
-            },
-            "& [class*='MuiInputBase-root']:not([class*='Mui-focused'])": {
-                borderColor: theme.palette.warning.main,
-            },
-        },
-        warning: {
-            color: theme.palette.warning.main,
-        },
-        helperText: {
-            color: theme.palette.grey["300"],
-        },
-    });
->>>>>>> main
 };
 
 const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState>({

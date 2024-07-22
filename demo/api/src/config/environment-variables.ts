@@ -96,11 +96,10 @@ export class EnvironmentVariables {
     @IsString()
     S3_BUCKET: string;
 
-<<<<<<< HEAD
     @IsString()
     @ValidateIf(() => process.env.NODE_ENV === "production")
     CDN_ORIGIN_CHECK_SECRET: string;
-=======
+
     @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_KEY || v.AZURE_AI_TRANSLATOR_REGION)
     @IsUrl()
     AZURE_AI_TRANSLATOR_ENDPOINT?: string;
@@ -112,7 +111,6 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_KEY)
     @IsString()
     AZURE_AI_TRANSLATOR_REGION?: string;
->>>>>>> main
 
     @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY || v.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID)
     @IsString()

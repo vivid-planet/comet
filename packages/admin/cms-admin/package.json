@@ -1,10 +1,6 @@
 {
     "name": "@comet/cms-admin",
-<<<<<<< HEAD
     "version": "7.0.0-beta.6",
-=======
-    "version": "6.16.0",
->>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -39,21 +35,12 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-<<<<<<< HEAD
         "@comet/admin": "workspace:^7.0.0-beta.6",
         "@comet/admin-date-time": "workspace:^7.0.0-beta.6",
         "@comet/admin-icons": "workspace:^7.0.0-beta.6",
         "@comet/admin-rte": "workspace:^7.0.0-beta.6",
         "@comet/admin-theme": "workspace:^7.0.0-beta.6",
         "@comet/blocks-admin": "workspace:^7.0.0-beta.6",
-=======
-        "@comet/admin": "workspace:^6.16.0",
-        "@comet/admin-date-time": "workspace:^6.16.0",
-        "@comet/admin-icons": "workspace:^6.16.0",
-        "@comet/admin-rte": "workspace:^6.16.0",
-        "@comet/admin-theme": "workspace:^6.16.0",
-        "@comet/blocks-admin": "workspace:^6.16.0",
->>>>>>> main
         "@graphql-tools/graphql-file-loader": "^7.5.17",
         "@graphql-tools/load": "^7.8.14",
         "@graphql-typed-document-node/core": "^3.1.1",
@@ -96,15 +83,9 @@
         "@apollo/client": "^3.7.0",
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-<<<<<<< HEAD
         "@comet/admin-babel-preset": "workspace:^7.0.0-beta.6",
         "@comet/cli": "workspace:^7.0.0-beta.6",
         "@comet/eslint-config": "workspace:^7.0.0-beta.6",
-=======
-        "@comet/admin-babel-preset": "workspace:^6.16.0",
-        "@comet/cli": "workspace:^6.16.0",
-        "@comet/eslint-config": "workspace:^6.16.0",
->>>>>>> main
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@graphql-codegen/cli": "^2.0.0",

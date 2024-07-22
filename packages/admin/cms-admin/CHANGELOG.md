@@ -1,6 +1,5 @@
 # @comet/cms-admin
 
-<<<<<<< HEAD
 ## 7.0.0-beta.6
 
 ### Patch Changes
@@ -626,7 +625,7 @@
     -   @comet/admin-rte@7.0.0-beta.0
     -   @comet/blocks-admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
-=======
+
 ## 6.16.0
 
 ### Minor Changes
@@ -677,7 +676,6 @@
     -   @comet/admin-rte@6.16.0
     -   @comet/admin-theme@6.16.0
     -   @comet/blocks-admin@6.16.0
->>>>>>> main
 
 ## 6.15.1
 

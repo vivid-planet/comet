@@ -127,14 +127,11 @@ export class DamModule {
                 CalculateDominantImageColor,
                 FileValidationService,
                 FileUploadService,
-<<<<<<< HEAD
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
-=======
                 HasValidFilenameConstraint,
->>>>>>> main
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [

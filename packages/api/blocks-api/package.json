@@ -1,10 +1,6 @@
 {
     "name": "@comet/blocks-api",
-<<<<<<< HEAD
     "version": "7.0.0-beta.6",
-=======
-    "version": "6.16.0",
->>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -35,11 +31,7 @@
         "rimraf": "^3.0.0"
     },
     "devDependencies": {
-<<<<<<< HEAD
         "@comet/eslint-config": "workspace:^7.0.0-beta.6",
-=======
-        "@comet/eslint-config": "workspace:^6.16.0",
->>>>>>> main
         "@nestjs/common": "^9.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",
