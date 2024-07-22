@@ -11,7 +11,7 @@ interface Props {
     data: {
         blocks: Array<{ key: string; type: string; visible: boolean; props: unknown }>;
     };
-    onError: (error: Error, errorInfo: ErrorInfo) => void;
+    onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
 export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }, onError }: Props) => {

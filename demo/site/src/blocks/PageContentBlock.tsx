@@ -4,6 +4,7 @@ import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks, YouTubeVide
 import { PageContentBlockData } from "@src/blocks.generated";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
+import { handleErrorBoundaryBlockError } from "@src/util/handleErrorBoundaryBlockError";
 import * as React from "react";
 
 import { AnchorBlock } from "./AnchorBlock";
@@ -37,14 +38,5 @@ const supportedBlocks: SupportedBlocks = {
 };
 
 export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = ({ data }) => {
-    return (
-        <BlocksBlock
-            data={data}
-            supportedBlocks={supportedBlocks}
-            onError={(error) => {
-                console.error("Error", error);
-                // In the application, error handling tools can be used to report errors
-            }}
-        />
-    );
+    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} onError={handleErrorBoundaryBlockError} />;
 };

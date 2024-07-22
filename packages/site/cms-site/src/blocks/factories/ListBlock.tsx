@@ -22,7 +22,19 @@ export const ListBlock: React.FC<Props> = ({ block: blockFunction, data: { block
         <>
             {blocks.map((block) => (
                 <React.Fragment key={block.key}>
-                    <ErrorBoundary onError={onError}>{blockFunction(block.props)}</ErrorBoundary>
+                    <ErrorBoundary
+                        onError={(error, errorInfo) => {
+                            if (onError) {
+                                onError(error, errorInfo);
+                            } else {
+                                if (process.env.NODE_ENV === "development") {
+                                    throw error;
+                                }
+                            }
+                        }}
+                    >
+                        {blockFunction(block.props)}
+                    </ErrorBoundary>
                 </React.Fragment>
             ))}
         </>

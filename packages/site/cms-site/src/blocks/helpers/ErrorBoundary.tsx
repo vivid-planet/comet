@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ErrorInfo, PropsWithChildren } from "react";
 
 type Props = {
@@ -20,15 +22,10 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<Props>, Sta
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+        console.error(error, errorInfo);
+
         if (this.props.onError) {
             this.props.onError(error, errorInfo);
-        }
-
-        // Throw error locally AND
-        // when a ListBlock or OneOfBlock is not used inside a BlocksBlock, throw the error as well when there is no onError defined.
-        if (process.env.NODE_ENV === "development" || !this.props.onError) {
-            console.error("Error", error, errorInfo);
-            throw new Error(error.message);
         }
     }
 

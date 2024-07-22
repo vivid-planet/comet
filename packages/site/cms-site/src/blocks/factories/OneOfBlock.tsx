@@ -37,5 +37,19 @@ export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps 
         return null;
     }
 
-    return <ErrorBoundary onError={onError}>{blockFunction({ ...block.props, ...additionalProps, children, className })}</ErrorBoundary>;
+    return (
+        <ErrorBoundary
+            onError={(error, errorInfo) => {
+                if (onError) {
+                    onError(error, errorInfo);
+                } else {
+                    if (process.env.NODE_ENV === "development") {
+                        throw error;
+                    }
+                }
+            }}
+        >
+            {blockFunction({ ...block.props, ...additionalProps, children, className })}
+        </ErrorBoundary>
+    );
 };

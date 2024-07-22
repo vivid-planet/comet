@@ -1,5 +1,6 @@
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
+import { handleErrorBoundaryBlockError } from "@src/util/handleErrorBoundaryBlockError";
 import * as React from "react";
 import styled from "styled-components";
 
@@ -17,16 +18,7 @@ const supportedBlocks: SupportedBlocks = {
 
 const ColumnsContentBlock = withPreview(
     ({ data }: PropsWithData<ColumnsContentBlockData>) => {
-        return (
-            <BlocksBlock
-                data={data}
-                supportedBlocks={supportedBlocks}
-                onError={(error) => {
-                    console.error("Error", error);
-                    // In the application, error handling tools can be used to report errors
-                }}
-            />
-        );
+        return <BlocksBlock data={data} supportedBlocks={supportedBlocks} onError={handleErrorBoundaryBlockError} />;
     },
     { label: "Columns content" },
 );
