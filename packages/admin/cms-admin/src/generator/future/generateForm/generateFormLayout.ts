@@ -1,21 +1,42 @@
+import { IntrospectionQuery } from "graphql";
+
 import { FormConfig, FormLayoutConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
+import { generateFields, GenerateFieldsReturn } from "./generateFields";
 
-export function generateFormLayout(
+export function generateFormLayout({
+    gqlIntrospection,
+    baseOutputFilename,
+    config,
+    formConfig,
+}: {
+    gqlIntrospection: IntrospectionQuery;
+    baseOutputFilename: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: FormLayoutConfig<any>,
-    fieldsCode: string,
+    config: FormLayoutConfig<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formConfig: FormConfig<any>,
-) {
+    formConfig: FormConfig<any>;
+}): GenerateFieldsReturn {
     const gqlType = formConfig.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
-    const imports: Imports = [];
     let code = "";
+    let hooksCode = "";
+    let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
+    const gqlDocuments: Record<string, string> = {};
+    const imports: Imports = [];
 
     if (config.type === "fieldSet") {
+        const generatedFields = generateFields({ gqlIntrospection, baseOutputFilename, fields: config.fields, formConfig });
+        hooksCode += generatedFields.hooksCode;
+        formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
+        formFragmentFields.push(...generatedFields.formFragmentFields);
+        for (const name in generatedFields.gqlDocuments) {
+            gqlDocuments[name] = generatedFields.gqlDocuments[name];
+        }
+        imports.push(...generatedFields.imports);
+
         imports.push({ name: "FieldSet", importPath: "@comet/admin" });
         const supportPlaceholder = config.supportText?.includes("{");
         if (supportPlaceholder) {
@@ -40,14 +61,17 @@ export function generateFormLayout(
                     : ``
             }
         >
-            ${fieldsCode}
+            ${generatedFields.code}
         </FieldSet>`;
     } else {
         throw new Error(`Unsupported type`);
     }
     return {
         code,
-        imports,
+        hooksCode,
+        formValueToGqlInputCode,
         formFragmentFields,
+        gqlDocuments,
+        imports,
     };
 }

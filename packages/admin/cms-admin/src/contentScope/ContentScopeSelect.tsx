@@ -1,6 +1,6 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Domain, Search } from "@comet/admin-icons";
-import { Box, Divider, InputAdornment, InputBase, List, ListItem, ListItemButton, ListItemText, ListSubheader } from "@mui/material";
+import { Box, Divider, InputAdornment, InputBase, List, ListItem, ListItemButton, ListItemText, ListSubheader, Typography } from "@mui/material";
 import { capitalCase } from "change-case";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -83,7 +83,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 .map(([, option]) => option.label ?? option.value)
                 .join(" – ");
 
-            return <ListItemText primary={text} />;
+            return <ListItemText primaryTypographyProps={{ variant: "body2" }} sx={{ margin: 0 }} primary={text} />;
         };
     }
 
@@ -96,7 +96,21 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     }
 
     return (
-        <AppHeaderDropdown buttonChildren={renderSelectedOption(selectedOption)} startIcon={icon}>
+        <AppHeaderDropdown
+            buttonChildren={renderSelectedOption(selectedOption)}
+            startIcon={icon}
+            slotProps={{
+                popover: {
+                    anchorOrigin: { vertical: "bottom", horizontal: "left" },
+                    transformOrigin: { vertical: "top", horizontal: "left" },
+                    PaperProps: {
+                        sx: {
+                            minWidth: "350px",
+                        },
+                    },
+                },
+            }}
+        >
             {(hideDropdown) => (
                 <>
                     {searchable && (
@@ -135,7 +149,11 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
                             return (
                                 <React.Fragment key={group.value}>
-                                    {showGroupHeader && <ListSubheader>{humanReadableLabel(group)}</ListSubheader>}
+                                    {showGroupHeader && (
+                                        <ListSubheader sx={{ paddingX: (theme) => theme.spacing(3) }}>
+                                            <Typography variant="overline">{humanReadableLabel(group)}</Typography>
+                                        </ListSubheader>
+                                    )}
                                     {group.options.map((option) => (
                                         <ListItemButton
                                             key={JSON.stringify(option)}
@@ -145,6 +163,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                                 setSearchValue("");
                                             }}
                                             selected={option === selectedOption}
+                                            sx={{ paddingX: (theme) => theme.spacing(6) }}
                                         >
                                             {renderOption?.(option)}
                                         </ListItemButton>
