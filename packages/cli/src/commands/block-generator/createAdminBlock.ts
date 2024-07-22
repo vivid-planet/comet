@@ -19,7 +19,7 @@ import { RichTextBlock } from "./RichTextBlock";
 export const ${pascalCaseName}Block = createCompositeBlock({
     name: "${pascalCaseName}",
     displayName: <FormattedMessage id="${camelCaseName}.displayName" defaultMessage="${blockConfig.name}" />,
-    category: BlockCategory.TextAndContent,
+    category: BlockCategory.TextAndContent, ${/* TODO: Ask this when building config */ ""}
     blocks: {
         ${blockConfig.children.map((child) => getChildBlockCode(child, camelCaseName)).join(",\n")}
     },

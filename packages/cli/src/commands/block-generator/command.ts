@@ -29,7 +29,7 @@ const writeFile = async (data: FileCreationData, logMessage: string) => {
 };
 
 export const blockGeneratorCommand = new Command("block-generator").description("generate a block (POC)").action(async () => {
-    const config = getBlockConfig();
+    const config = await getBlockConfig();
 
     // eslint-disable-next-line no-console
     console.log(`Generating block "${config.name}"`);

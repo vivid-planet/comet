@@ -28,7 +28,8 @@
     "dependencies": {
         "commander": "^9.2.0",
         "prettier": "^2.7.1",
-        "jscodeshift": "^0.16.1"
+        "jscodeshift": "^0.16.1",
+        "@inquirer/prompts": "^5.3.0"
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:^7.0.0",
