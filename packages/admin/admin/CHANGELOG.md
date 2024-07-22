@@ -417,6 +417,17 @@
     -   @comet/admin-theme@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
 
+## 6.16.0
+
+### Minor Changes
+
+-   fb0fe2539: Add `FinalFormNumberInput` and `NumberField` as optimised fields for number inputs in FinalForms
+
+### Patch Changes
+
+-   747fe32cc: Fix incorrect router prompt in `TableLocalChanges` when there are no changes
+    -   @comet/admin-icons@6.16.0
+
 ## 6.15.1
 
 ### Patch Changes

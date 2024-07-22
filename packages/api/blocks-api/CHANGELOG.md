@@ -101,6 +101,8 @@
     -   Admin: `axios`
     -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
 
+## 6.16.0
+
 ## 6.15.1
 
 ## 6.15.0

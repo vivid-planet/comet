@@ -8,7 +8,7 @@ Add the rule `@typescript-eslint/prefer-enum-initializers` to require enum initi
 // ✅
 enum ExampleEnum {
     One = "One",
-    Two = "Two"
+    Two = "Two",
 }
 ```
 
@@ -16,6 +16,6 @@ enum ExampleEnum {
 // ❌
 enum ExampleEnum {
     One,
-    Two
+    Two,
 }
 ```

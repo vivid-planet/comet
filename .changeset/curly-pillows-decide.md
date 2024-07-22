@@ -13,11 +13,7 @@ You can use it like this:
 <DataGrid
     // ...
     components={{
-        Toolbar: () => (
-            <DataGridToolbar>
-                {/* ... */}
-            </DataGridToolbar>
-        ),
+        Toolbar: () => <DataGridToolbar>{/* ... */}</DataGridToolbar>,
     }}
 />
 ```

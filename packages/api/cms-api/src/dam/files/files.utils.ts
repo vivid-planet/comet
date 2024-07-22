@@ -1,12 +1,14 @@
 import { XMLParser } from "fast-xml-parser";
 import { unlink } from "fs/promises";
+import * as mimedb from "mime-db";
 import { sep } from "path";
 import slugify from "slugify";
 
 import { FileUploadInput } from "./dto/file-upload.input";
 
 export function slugifyFilename(filename: string, extension: string): string {
-    return `${slugify(filename, { locale: "de", lower: true, strict: true })}${extension}`;
+    const extensionWithDot = extension.startsWith(".") ? extension : `.${extension}`;
+    return `${slugify(filename)}${extensionWithDot}`;
 }
 
 export const createHashedPath = (contentHash: string): string => [contentHash.substr(0, 2), contentHash.substr(2, 2), contentHash].join(sep);
@@ -78,4 +80,17 @@ export const removeMulterTempFile = async (file: FileUploadInput) => {
     delete (file as Partial<FileUploadInput>).path;
 
     await unlink(path);
+};
+
+export const getValidExtensionsForMimetype = (mimetype: string) => {
+    let supportedExtensions: readonly string[] | undefined;
+    if (mimetype === "application/x-zip-compressed") {
+        // zip files in Windows, not supported by mime-db
+        // see https://github.com/jshttp/mime-db/issues/245
+        supportedExtensions = ["zip"];
+    } else {
+        supportedExtensions = mimedb[mimetype]?.extensions;
+    }
+
+    return supportedExtensions;
 };
