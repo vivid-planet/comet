@@ -39,7 +39,9 @@ export const CurrentUserProvider: React.FC<{
         }
     `);
 
-    if (error) throw error.message;
+    if (error) {
+        return <>Cannot load user: {error.message}</>;
+    }
 
     if (!data) return <Loading behavior="fillPageHeight" />;
 

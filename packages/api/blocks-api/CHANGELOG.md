@@ -1,5 +1,21 @@
 # @comet/blocks-api
 
+## 6.16.0
+
+## 6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   c7f5637bd: Fix validation of `YouTubeVideoBlock`
+
+    Previously, the validation of the `YouTubeVideoBlock` differed between admin and API.
+    The admin allowed YouTube URLs and YouTube video IDs.
+    The API only allowed URLs but blocked video IDs.
+
+    Now, the API validation also accepts URLs and video IDs.
+
 ## 6.14.1
 
 ## 6.14.0

@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-site",
-    "version": "6.14.1",
+    "version": "6.16.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -18,8 +18,9 @@
         "dev": "$npm_execpath generate-block-types && tsc --watch --preserveWatchOutput --project tsconfig.build.json",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
-        "lint": "$npm_execpath generate-block-types && run-p lint:eslint lint:tsc",
+        "lint": "$npm_execpath generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "test": "jest --verbose=true --passWithNoTests",
         "test:watch": "jest --watch"
@@ -32,8 +33,8 @@
         "use-debounce": "^6.0.0"
     },
     "devDependencies": {
-        "@comet/cli": "workspace:^6.14.1",
-        "@comet/eslint-config": "workspace:^6.14.1",
+        "@comet/cli": "workspace:^6.16.0",
+        "@comet/eslint-config": "workspace:^6.16.0",
         "@gitbeaker/node": "^34.0.0",
         "@testing-library/react-hooks": "^8.0.0",
         "@types/draft-js": "^0.11.10",

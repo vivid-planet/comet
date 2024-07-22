@@ -224,10 +224,11 @@ Add `db:migrate` and `createBlockIndexViews` to `start:dev` script in package.js
 
 ### User Permissions
 
-1. Add `<CurrentUserProvider>` to App.tsx
+1. Add `<CurrentUserProvider>` beneath `<MuiThemeProvider>` and move `<ErrorDialogHandler>` so that it becomes a sibling of `<CurrentUserProvider>` in App.tsx
 
     ```diff
-    <ApolloProvider client={apolloClient}>
+    <MuiThemeProvider theme={theme}>
+    +    <ErrorDialogHandler />
     +    <CurrentUserProvider>
     ```
 

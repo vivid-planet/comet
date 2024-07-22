@@ -12,11 +12,13 @@ import { FormattedMessage } from "react-intl";
 import { writeClipboardText } from "../../clipboard/writeClipboardText";
 import { messages } from "../../messages";
 
-export type ErrorType = "network" | "graphql" | "unknown";
+export type ErrorType = "network" | "graphql" | "unauthorized" | "unauthenticated" | "unknown";
 
 const errorTypeLabels: Record<ErrorType, React.ReactNode> = {
     graphql: <FormattedMessage id="comet.errorDialog.details.errorType.graphql" defaultMessage="Server error" />,
     network: <FormattedMessage id="comet.errorDialog.details.errorType.network" defaultMessage="Network error" />,
+    unauthorized: <FormattedMessage id="comet.errorDialog.details.errorType.unauthorized" defaultMessage="Not authorized" />,
+    unauthenticated: <FormattedMessage id="comet.errorDialog.details.errorType.unauthenticated" defaultMessage="Unauthenticated" />,
     unknown: <FormattedMessage id="comet.errorDialog.details.errorType.unknown" defaultMessage="Unknown error" />,
 };
 
@@ -50,18 +52,27 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
         return null;
     }
 
-    // Destructuring and default values
-    const {
-        error,
-        title = <FormattedMessage id="comet.errorDialog.title" defaultMessage="Error" />,
-        userMessage,
-        additionalInformation,
-    } = errorOptions;
+    const { error, additionalInformation } = errorOptions;
+    let { title, userMessage } = errorOptions;
+    const errorType = additionalInformation?.errorType ?? "unknown";
 
+    if (!title) {
+        title = errorTypeLabels[errorType];
+    }
+
+    if (!userMessage) {
+        if (errorType === "unauthenticated") {
+            userMessage = <UnauthenticatedUserMessage />;
+        } else if (errorType === "unauthorized") {
+            userMessage = <UnauthorizedUserMessage error={error} />;
+        } else {
+            userMessage = <DefaultUserMessage error={error} additionalInformation={additionalInformation} />;
+        }
+    }
     return (
         <Dialog open={show} onClose={onCloseClicked} fullScreen={fullScreen} maxWidth="md">
             <DialogTitle>{title}</DialogTitle>
-            <DialogContent>{userMessage ?? <DefaultUserMessage error={error} additionalInformation={additionalInformation} />}</DialogContent>
+            <DialogContent>{userMessage}</DialogContent>
             <DialogActions>
                 <Button onClick={onCloseClicked} color="primary" variant="contained">
                     <FormattedMessage {...messages.ok} />
@@ -135,6 +146,38 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
                     </Typography>
                 </>
             )}
+        </>
+    );
+}
+
+function UnauthenticatedUserMessage(): JSX.Element {
+    return (
+        <>
+            <Typography gutterBottom>
+                <FormattedMessage id="comet.errorDialog.sessionExpired.message" defaultMessage="Your login-session has expired." />
+            </Typography>
+            <Button href="/" color="info" variant="outlined">
+                <FormattedMessage id="comet.errorDialog.sessionExpired.button" defaultMessage="Re-login" />
+            </Button>
+        </>
+    );
+}
+
+function UnauthorizedUserMessage({ error }: Pick<ErrorDialogOptions, "error">): JSX.Element {
+    if (!Array.isArray(error)) {
+        error = [error];
+    }
+
+    return (
+        <>
+            <Typography gutterBottom>
+                <FormattedMessage id="comet.errorDialog.unauthorized.message" defaultMessage="You are not authorized to perform this action." />
+            </Typography>
+            <ErrorList>
+                {error.map((error) => (
+                    <ErrorListItem key={error}>{error}</ErrorListItem>
+                ))}
+            </ErrorList>
         </>
     );
 }

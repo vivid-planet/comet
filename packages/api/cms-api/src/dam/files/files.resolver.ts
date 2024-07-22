@@ -22,6 +22,7 @@ import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
+import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FileUploadService } from "./file-upload.service";
@@ -94,10 +95,7 @@ export function createFilesResolver({
 
         @Mutation(() => File)
         @AffectedEntity(File)
-        async updateDamFile(
-            @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
-        ): Promise<FileInterface> {
+        async updateDamFile(@Args({ type: () => UpdateDamFileArgs }) { id, input }: UpdateDamFileArgs): Promise<FileInterface> {
             return this.filesService.updateById(id, input);
         }
 
