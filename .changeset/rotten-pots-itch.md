@@ -5,6 +5,8 @@
 `FinalFormFileSelect` is now a simple final form wrapper around `FileSelect`
 
 Props now mirror those of `FileSelect` and are passed through to the `FileSelect` component.
+Setting `defaultProps` in the theme must now be done with `CometAdminFileSelect` instead of `CometAdminFinalFormFileSelect`.
+
 Class keys have been removed. Apply custom styling to `CometAdminFileSelect` instead of `FinalFormFileSelect`.
 
 The default value for `maxSize` has been removed.

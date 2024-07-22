@@ -107,15 +107,3 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
         />
     );
 }
-
-declare module "@mui/material/styles" {
-    interface ComponentsPropsList {
-        CometAdminFinalFormFileSelect: FinalFormFileSelectProps;
-    }
-
-    interface Components {
-        CometAdminFinalFormFileSelect?: {
-            defaultProps?: Partial<ComponentsPropsList["CometAdminFinalFormFileSelect"]>;
-        };
-    }
-}
