@@ -5,10 +5,8 @@ import * as React from "react";
 
 storiesOf("@comet/admin", module).add("Icon with Tooltip", () => {
     return (
-        <>
-            <Tooltip title="Add something">
-                <Add />
-            </Tooltip>
-        </>
+        <Tooltip title="Add something">
+            <Add />
+        </Tooltip>
     );
 });

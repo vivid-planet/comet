@@ -71,7 +71,6 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            margin-left: 12px;
         }
 
         ${ownerState.level === 1 &&
@@ -80,7 +79,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             box-sizing: border-box;
             color: ${theme.palette.grey[900]};
             height: 60px;
-            padding: 16px 20px;
+            padding: 16px 22px;
             background-color: ${!ownerState.open && ownerState.collapsibleOpen ? `${theme.palette.primary.main} !important` : "white !important"};
 
             .${listItemIconClasses.root} {
@@ -120,6 +119,8 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             .${listItemTextClasses.primary} {
                 font-size: 16px;
                 line-height: 20px;
+                margin-left: 10px;
+                font-weight: 450;
             }
         `}
 

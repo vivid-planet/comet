@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "7.0.0-beta.5",
+    "version": "7.0.0-beta.6",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -20,8 +20,9 @@
         "clean": "rimraf lib",
         "build": "$npm_execpath run clean && tsc -p tsconfig.build.json",
         "dev": "tsc --watch --preserveWatchOutput -p tsconfig.build.json",
-        "lint": "run-p lint:eslint lint:tsc",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "generate-schema": "ts-node generate-schema.ts",
         "generate-schema:watch": "chokidar \"src/\" -c \"$npm_execpath generate-schema\"",
@@ -32,9 +33,10 @@
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.591.0",
+        "@azure-rest/ai-translation-text": "^1.0.0-beta.1",
         "@azure/openai": "1.0.0-beta.11",
         "@azure/storage-blob": "^12.23.0",
-        "@comet/blocks-api": "workspace:^7.0.0-beta.5",
+        "@comet/blocks-api": "workspace:^7.0.0-beta.6",
         "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^3.0.0",
         "@hapi/accept": "^5.0.2",
@@ -82,7 +84,7 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "^3.47.0",
-        "@comet/eslint-config": "workspace:^7.0.0-beta.5",
+        "@comet/eslint-config": "workspace:^7.0.0-beta.6",
         "@golevelup/ts-jest": "^0.4.0",
         "@kubernetes/client-node": "^0.18.1",
         "@mikro-orm/core": "^5.9.8",

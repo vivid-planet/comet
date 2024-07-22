@@ -1,14 +1,15 @@
-import { Stack, StackPage, StackSwitch } from "@comet/admin";
+import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { BlockInterface, createOneOfBlock } from "@comet/blocks-admin";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
 import { InternalLinkBlock } from "../blocks/InternalLinkBlock";
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { RedirectForm } from "./RedirectForm";
-import { RedirectsTable } from "./RedirectsTable";
+import { RedirectsGrid } from "./RedirectsGrid";
 
 interface RedirectsPageProps {
     redirectPathAfterChange?: string;
@@ -39,9 +40,10 @@ function createRedirectsPage({ customTargets, scopeParts = [] }: CreateRedirects
 
         return (
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.redirects", defaultMessage: "Redirects" })}>
-                <StackSwitch initialPage="redirectsTable">
-                    <StackPage name="redirectsTable">
-                        <RedirectsTable linkBlock={linkBlock} scope={scope} />
+                <StackSwitch initialPage="grid">
+                    <StackPage name="grid">
+                        <StackToolbar scopeIndicator={<ContentScopeIndicator scope={scope} />} />
+                        <RedirectsGrid linkBlock={linkBlock} scope={scope} />
                     </StackPage>
                     <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.redirects.edit", defaultMessage: "edit" })}>
                         {(selectedId: string) => {

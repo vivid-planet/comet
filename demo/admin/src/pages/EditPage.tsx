@@ -3,6 +3,7 @@ import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, 
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
+    AzureAiTranslatorProvider,
     BlockPreviewWithTabs,
     ContentScopeIndicator,
     createUsePage,
@@ -126,7 +127,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
     }
 
     return (
-        <>
+        <AzureAiTranslatorProvider showApplyTranslationDialog={true} enabled={true}>
             {hasChanges && (
                 <RouterPrompt
                     message={(location) => {
@@ -201,6 +202,6 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </BlockPreviewWithTabs>
             </MainContent>
             {dialogs}
-        </>
+        </AzureAiTranslatorProvider>
     );
 };

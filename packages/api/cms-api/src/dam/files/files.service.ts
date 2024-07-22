@@ -34,6 +34,7 @@ import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
+import { FileValidationService } from "./file-validation.service";
 import { createHashedPath, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
@@ -116,6 +117,7 @@ export class FilesService {
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+        private readonly fileValidationService: FileValidationService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -251,10 +253,11 @@ export class FilesService {
             entity.image.cropArea = image.cropArea;
         }
 
-        const entityWithSameName = await this.findOneByFilenameAndFolder({ filename: entity.name, folderId }, entity.scope);
-
-        if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
-            throw new Error(`Entity with name '${entity.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
+        if (input.name) {
+            const entityWithSameName = await this.findOneByFilenameAndFolder({ filename: input.name, folderId }, entity.scope);
+            if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
+                throw new Error(`Entity with name '${input.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
+            }
         }
 
         const file = Object.assign(entity, {

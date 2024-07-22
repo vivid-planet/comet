@@ -44,6 +44,14 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             ...cometConfig.dam,
             secret: envVars.DAM_SECRET,
         },
+        azureAiTranslator:
+            envVars.AZURE_AI_TRANSLATOR_ENDPOINT && envVars.AZURE_AI_TRANSLATOR_KEY && envVars.AZURE_AI_TRANSLATOR_REGION
+                ? {
+                      endpoint: envVars.AZURE_AI_TRANSLATOR_ENDPOINT,
+                      key: envVars.AZURE_AI_TRANSLATOR_KEY,
+                      region: envVars.AZURE_AI_TRANSLATOR_REGION,
+                  }
+                : undefined,
         blob: {
             storage: {
                 driver: envVars.BLOB_STORAGE_DRIVER,

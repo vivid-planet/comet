@@ -1,5 +1,21 @@
 # @comet/admin
 
+## 7.0.0-beta.6
+
+### Minor Changes
+
+-   119714999: Automatically set `fullWidth` for `FieldContainer` with `variant="horizontal"`
+
+    Horizontal fields are automatically responsive:
+    If they are less than 600px wide, the layout automatically changes to vertical.
+    For this to work correctly, the fields must be `fullWidth`.
+    Therefore, `fullWidth` is now `true` by default for horizontal fields.
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.6
+-   @comet/admin-theme@7.0.0-beta.6
+
 ## 7.0.0-beta.5
 
 ### Minor Changes
@@ -400,6 +416,17 @@
 -   Updated dependencies [33ba50719]
     -   @comet/admin-theme@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.16.0
+
+### Minor Changes
+
+-   fb0fe2539: Add `FinalFormNumberInput` and `NumberField` as optimised fields for number inputs in FinalForms
+
+### Patch Changes
+
+-   747fe32cc: Fix incorrect router prompt in `TableLocalChanges` when there are no changes
+    -   @comet/admin-icons@6.16.0
 
 ## 6.15.1
 

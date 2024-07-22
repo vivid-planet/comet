@@ -25,6 +25,24 @@ export type FormFieldConfig<T> = (
     | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
 ) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
+    return !isFormLayoutConfig(arg);
+}
+
+export type FormLayoutConfig<T> = {
+    type: "fieldSet";
+    name: string;
+    title: string;
+    supportText?: string; // can contain field-placeholder
+    collapsible: boolean; // default true
+    initiallyExpanded: boolean; // default false
+    fields: FormFieldConfig<T>[];
+};
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export function isFormLayoutConfig<T>(arg: any): arg is FormLayoutConfig<T> {
+    return arg.type !== undefined && arg.type == "fieldSet";
+}
 
 export type FormConfig<T extends { __typename?: string }> = {
     type: "form";
@@ -32,7 +50,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     mode?: "edit" | "add" | "all";
     fragmentName?: string;
     createMutation?: string;
-    fields: FormFieldConfig<T>[];
+    fields: (FormFieldConfig<T> | FormLayoutConfig<T>)[];
 };
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };

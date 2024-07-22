@@ -365,6 +365,7 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  azureAiTranslate(input: AzureAiTranslationInput!): String!
 }
 
 input RedirectScopeInput {
@@ -491,6 +492,11 @@ enum UserSortField {
   name
   email
   status
+}
+
+input AzureAiTranslationInput {
+  text: String!
+  targetLanguage: String!
 }
 
 type Mutation {

@@ -4,6 +4,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
     Field,
+    FieldSet,
     filterByFragment,
     FinalForm,
     FinalFormCheckbox,
@@ -24,6 +25,7 @@ import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
+import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
@@ -139,107 +141,128 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 <>
                     {saveConflict.dialogs}
                     <MainContent>
-                        <TextField
-                            required
-                            variant="horizontal"
-                            fullWidth
-                            name="title"
-                            label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
-                            validate={validateTitle}
-                        />
-
-                        <TextField
-                            required
-                            variant="horizontal"
-                            fullWidth
-                            name="slug"
-                            label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
-                        />
-
-                        <Field
-                            readOnly
-                            disabled
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <Lock />
-                                </InputAdornment>
+                        <FieldSet
+                            initiallyExpanded
+                            title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
+                            supportText={
+                                mode === "edit" && (
+                                    <FormSpy subscription={{ values: true }}>
+                                        {({ values }) => (
+                                            <FormattedMessage
+                                                id="product.mainData.supportText"
+                                                defaultMessage="Product: {title}"
+                                                values={{ ...values }}
+                                            />
+                                        )}
+                                    </FormSpy>
+                                )
                             }
-                            variant="horizontal"
-                            fullWidth
-                            name="createdAt"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
-                        />
-
-                        <TextAreaField
-                            required
-                            variant="horizontal"
-                            fullWidth
-                            name="description"
-                            label={<FormattedMessage id="product.description" defaultMessage="Description" />}
-                        />
-                        <Field
-                            required
-                            variant="horizontal"
-                            fullWidth
-                            name="type"
-                            label={<FormattedMessage id="product.type" defaultMessage="Type" />}
                         >
-                            {(props) => (
-                                <FinalFormSelect {...props}>
-                                    <MenuItem value="Cap">
-                                        <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
-                                    </MenuItem>
-                                    <MenuItem value="Shirt">
-                                        <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
-                                    </MenuItem>
-                                    <MenuItem value="Tie">
-                                        <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
-                                    </MenuItem>
-                                </FinalFormSelect>
-                            )}
-                        </Field>
-                        <AsyncSelectField
-                            variant="horizontal"
-                            fullWidth
-                            name="category"
-                            label={<FormattedMessage id="product.category" defaultMessage="Category" />}
-                            loadOptions={async () => {
-                                const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
-                                    query: gql`
-                                        query ProductCategoriesSelect {
-                                            productCategories {
-                                                nodes {
-                                                    id
-                                                    title
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="title"
+                                label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
+                                validate={validateTitle}
+                            />
+
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="slug"
+                                label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
+                            />
+
+                            <Field
+                                readOnly
+                                disabled
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <Lock />
+                                    </InputAdornment>
+                                }
+                                variant="horizontal"
+                                fullWidth
+                                name="createdAt"
+                                component={FinalFormDatePicker}
+                                label={<FormattedMessage id="product.createdAt" defaultMessage="Created" />}
+                            />
+
+                            <TextAreaField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="description"
+                                label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                            />
+                            <Field
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="type"
+                                label={<FormattedMessage id="product.type" defaultMessage="Type" />}
+                            >
+                                {(props) => (
+                                    <FinalFormSelect {...props}>
+                                        <MenuItem value="Cap">
+                                            <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                                        </MenuItem>
+                                        <MenuItem value="Shirt">
+                                            <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
+                                        </MenuItem>
+                                        <MenuItem value="Tie">
+                                            <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
+                                        </MenuItem>
+                                    </FinalFormSelect>
+                                )}
+                            </Field>
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
+                                name="category"
+                                label={<FormattedMessage id="product.category" defaultMessage="Category" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
+                                        query: gql`
+                                            query ProductCategoriesSelect {
+                                                productCategories {
+                                                    nodes {
+                                                        id
+                                                        title
+                                                    }
                                                 }
                                             }
-                                        }
-                                    `,
-                                });
-                                return data.productCategories.nodes;
-                            }}
-                            getOptionLabel={(option) => option.title}
-                        />
-                        <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
-                            {(props) => (
-                                <FormControlLabel
-                                    label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
-                                    control={<FinalFormCheckbox {...props} />}
-                                />
-                            )}
-                        </Field>
+                                        `,
+                                    });
+                                    return data.productCategories.nodes;
+                                }}
+                                getOptionLabel={(option) => option.title}
+                            />
+                        </FieldSet>
 
-                        <Field
-                            variant="horizontal"
-                            fullWidth
-                            name="availableSince"
-                            component={FinalFormDatePicker}
-                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
-                        />
-                        <Field name="image" isEqual={isEqual}>
-                            {createFinalFormBlock(rootBlocks.image)}
-                        </Field>
+                        <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
+                            <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
+                                {(props) => (
+                                    <FormControlLabel
+                                        label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                        control={<FinalFormCheckbox {...props} />}
+                                    />
+                                )}
+                            </Field>
+
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="availableSince"
+                                component={FinalFormDatePicker}
+                                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                            />
+                            <Field name="image" isEqual={isEqual}>
+                                {createFinalFormBlock(rootBlocks.image)}
+                            </Field>
+                        </FieldSet>
                     </MainContent>
                 </>
             )}
