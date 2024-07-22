@@ -1,7 +1,6 @@
 import React, { ErrorInfo, PropsWithChildren } from "react";
 
 type Props = {
-    blockType: string;
     onError: (error: Error, errorInfo: ErrorInfo) => void;
 };
 

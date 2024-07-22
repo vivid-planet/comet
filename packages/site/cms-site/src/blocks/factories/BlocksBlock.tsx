@@ -37,9 +37,7 @@ export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }
                 }
                 return (
                     <React.Fragment key={block.key}>
-                        <ErrorBoundary blockType={block.type} onError={onError}>
-                            {blockFunction(block.props)}
-                        </ErrorBoundary>
+                        <ErrorBoundary onError={onError}>{blockFunction(block.props)}</ErrorBoundary>
                     </React.Fragment>
                 );
             })}
