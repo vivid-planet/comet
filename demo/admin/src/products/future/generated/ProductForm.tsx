@@ -160,13 +160,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         >
                             <TextField
                                 required
+                                variant="horizontal"
                                 fullWidth
                                 name="title"
                                 label={<FormattedMessage id="product.title" defaultMessage="Titel" />}
                                 validate={validateTitle}
                             />
 
-                            <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+                            <TextField
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="slug"
+                                label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
+                            />
 
                             <Field
                                 readOnly
@@ -176,6 +183,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                         <Lock />
                                     </InputAdornment>
                                 }
+                                variant="horizontal"
                                 fullWidth
                                 name="createdAt"
                                 component={FinalFormDatePicker}
@@ -184,11 +192,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
                             <TextAreaField
                                 required
+                                variant="horizontal"
                                 fullWidth
                                 name="description"
                                 label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                             />
-                            <Field required fullWidth name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />}>
+                            <Field
+                                required
+                                variant="horizontal"
+                                fullWidth
+                                name="type"
+                                label={<FormattedMessage id="product.type" defaultMessage="Type" />}
+                            >
                                 {(props) => (
                                     <FinalFormSelect {...props}>
                                         <MenuItem value="Cap">
@@ -204,6 +219,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 )}
                             </Field>
                             <AsyncSelectField
+                                variant="horizontal"
                                 fullWidth
                                 name="category"
                                 label={<FormattedMessage id="product.category" defaultMessage="Category" />}
@@ -227,7 +243,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
-                            <Field name="inStock" label="" type="checkbox" fullWidth>
+                            <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel
                                         label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
@@ -237,6 +253,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             </Field>
 
                             <Field
+                                variant="horizontal"
                                 fullWidth
                                 name="availableSince"
                                 component={FinalFormDatePicker}
