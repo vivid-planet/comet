@@ -5,6 +5,12 @@ import { CookieApi } from "./CookieApi";
 
 const localStorageCookieApiKey = "comet-dev-cookie-api-consented-cookies";
 
+declare global {
+    interface Window {
+        cometLocalStorageCookieApi: ReturnType<CookieApi>;
+    }
+}
+
 /**
  * Only for use in development environment.
  */
@@ -30,8 +36,7 @@ export const useLocalStorageCookieApi: CookieApi = (): ReturnType<CookieApi> => 
     }, [consentedCookies, setConsentedCookies]);
 
     React.useEffect(() => {
-        // @ts-expect-error TODO: Can this be fixed?
-        window["cometLocalStorageCookieApi"] = {
+        window.cometLocalStorageCookieApi = {
             consentedCookies,
             openCookieSettings: openCookieSettings,
         };
