@@ -23,9 +23,13 @@ export const useLocalStorageCookieApi: CookieApi = (): ReturnType<CookieApi> => 
         const cookiesList = JSON.parse(storedCookies ?? "[]");
         logCookieUpdate(cookiesList);
 
-        setTimeout(() => {
+        const simulateLoadingTimeout = setTimeout(() => {
             setSimulateLoadingCookieProvider(false);
         }, 1000);
+
+        return () => {
+            clearTimeout(simulateLoadingTimeout);
+        };
     }, []);
 
     const openCookieSettings = React.useCallback(() => {
