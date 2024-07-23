@@ -202,7 +202,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                         }
                                     `,
                                 });
-                                return [{ id: "", title: "Please select" }, ...data.productCategories.nodes];
+                                return data.productCategories.nodes;
                             }}
                             getOptionLabel={(option) => option.title}
                         />

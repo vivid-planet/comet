@@ -151,7 +151,6 @@ export function generateFormField(
             fullWidth
             name="${name}"
             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
-            ${!required ? "displayEmpty" : ""}
             >
             ${
                 config.helperText
@@ -161,13 +160,6 @@ export function generateFormField(
             ${validateCode}
             {(props) =>
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
-                ${
-                    !required
-                        ? `<MenuItem value="">
-                            <FormattedMessage {...messages.pleaseSelect} />
-                           </MenuItem>`
-                        : ""
-                }
                 ${values
                     .map((value) => {
                         const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
@@ -241,11 +233,7 @@ export function generateFormField(
                             }
                         }\`
                     });
-                    ${
-                        !required
-                            ? `return [{ id: "",  ${labelField}: "Please select"}, ...data.${rootQuery}.nodes ];`
-                            : `return data.${rootQuery}.nodes;`
-                    }
+                    return data.${rootQuery}.nodes;
                 }}
                 getOptionLabel={(option) => option.${labelField}}
             />`;
