@@ -162,8 +162,10 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
         throw new Error("Blocks block with a single block is not allowed. Please use a list block (createListBlock()) instead.");
     }
 
-    for (const blk in supportedBlocks) {
-        if (!supportedBlocks[blk]) throw new Error(`block '${blk}' is undefined (can happen because of cycling imports)`);
+    for (const block in supportedBlocks) {
+        if (!supportedBlocks[block]) {
+            throw new Error(`Supported block '${block}' is undefined. This is most likely due to a circular import`);
+        }
     }
 
     class BlocksBlockData extends BlockData {
