@@ -4,6 +4,7 @@ import React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
@@ -33,8 +34,9 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
     const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
-
-    const apiUrl = "http://localhost:4000"; // TODO: Where do we get the url from? Env? Hook?
+    const {
+        damConfig: { apiUrl }, // TODO: Think of a better solution to get the apiUrl, as this has nothing to do with DAM
+    } = useCmsBlockContext();
 
     const singleFile = maxFiles === 1;
     const inputValue = React.useMemo(() => (Array.isArray(input.value) ? input.value : input.value ? [input.value] : []), [input.value]);
