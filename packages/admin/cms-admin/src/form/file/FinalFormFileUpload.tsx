@@ -65,6 +65,12 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({
                         failedFile.error = <FormattedMessage id="comet.finalFormFileUpload.fileTooLarge" defaultMessage="File is too large." />;
                     }
 
+                    if (rejection.errors.some((error) => error.code === "file-invalid-type")) {
+                        failedFile.error = (
+                            <FormattedMessage id="comet.finalFormFileUpload.fileInvalidType" defaultMessage="File type is not allowed." />
+                        );
+                    }
+
                     setFailedUploads((existing) => [...existing, failedFile]);
                 });
 
