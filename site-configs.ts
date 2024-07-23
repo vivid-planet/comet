@@ -4,42 +4,50 @@ import { SiteConfig } from "./site-configs.types";
 export default (): SiteConfig[] => [
     {
         name: 'Comet Site "Main/DE"',
-        contentScope: {
-            domain: "main",
-            language: "de",
-        },
         domains: {
             main: "localhost:3000",
         },
+        public: {
+            contentScope: {
+                domain: "main",
+                language: "de",
+            },
+        }
     },
     {
         name: 'Comet Site "Main/EN"',
-        contentScope: {
-            domain: "main",
-            language: "en",
-        },
         domains: {
             main: "en.localhost:3000",
         },
+        public: {
+            contentScope: {
+                domain: "main",
+                language: "en",
+            },
+        }
     },
     {
         name: 'Comet Site "Secondary/DE"',
-        contentScope: {
-            domain: "secondary",
-            language: "de",
-        },
         domains: {
             main: "secondary-de.localhost:3000",
         },
+        public: {
+            contentScope: {
+                domain: "secondary",
+                language: "de",
+            },
+        }
     },
     {
         name: 'Comet Site "Secondary/EN"',
-        contentScope: {
-            domain: "secondary",
-            language: "en",
-        },
         domains: {
             main: "secondary-en.localhost:3000",
         },
+        public: {
+            contentScope: {
+                domain: "secondary",
+                language: "en",
+            },
+        }
     },
 ];

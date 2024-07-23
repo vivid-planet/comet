@@ -365,6 +365,7 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  azureAiTranslate(input: AzureAiTranslationInput!): String!
 }
 
 input RedirectScopeInput {
@@ -493,6 +494,11 @@ enum UserSortField {
   status
 }
 
+input AzureAiTranslationInput {
+  text: String!
+  targetLanguage: String!
+}
+
 type Mutation {
   createBuilds(input: CreateBuildsInput!): Boolean!
   createRedirect(scope: RedirectScopeInput! = {}, input: RedirectInput!): Redirect!
@@ -527,6 +533,8 @@ type Mutation {
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
+  generateAltText(fileId: String!): String!
+  generateImageTitle(fileId: String!): String!
 }
 
 input CreateBuildsInput {

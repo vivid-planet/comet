@@ -1,22 +1,30 @@
-import { gql, useApolloClient } from "@apollo/client";
-import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection } from "@comet/admin";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
+import { Field, FieldContainer, FinalFormInput, FinalFormSelect, FormSection, Loading } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Calendar } from "@comet/admin-icons";
-import { InputAdornment } from "@mui/material";
+import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
+import { IconButton, InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
+import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLLicenseType } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
+import { slugifyFilename } from "../helpers/slugifyFilename";
 import { CropSettingsFields } from "./CropSettingsFields";
-import { EditFileFormValues } from "./EditFile";
+import { DamFileDetails, EditFileFormValues } from "./EditFile";
 import { GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables } from "./FileSettingsFields.generated";
+import { generateAltTextMutation, generateImageTitleMutation } from "./FileSettingsFields.gql";
+import {
+    GQLGenerateAltTextMutation,
+    GQLGenerateAltTextMutationVariables,
+    GQLGenerateImageTitleMutation,
+    GQLGenerateImageTitleMutationVariables,
+} from "./FileSettingsFields.gql.generated";
 
 interface SettingsFormProps {
-    isImage: boolean;
-    folderId: string | null;
+    file: DamFileDetails;
 }
 
 const damIsFilenameOccupiedQuery = gql`
@@ -35,11 +43,15 @@ const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
     RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
 };
 
-export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): React.ReactElement => {
+export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElement => {
+    const folderId = file.folder?.id ?? null;
+    const isImage = !!file.image;
     const intl = useIntl();
     const apollo = useApolloClient();
     const scope = useDamScope();
     const damConfig = useDamConfig();
+    const formApi = useForm();
+    const { contentGeneration } = useDamConfig();
     const damIsFilenameOccupied = React.useCallback(
         async (filename: string): Promise<boolean> => {
             const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
@@ -69,6 +81,13 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
         [damConfig.requireLicense],
     );
 
+    const [generateAltText, { loading: loadingAltText }] = useMutation<GQLGenerateAltTextMutation, GQLGenerateAltTextMutationVariables>(
+        generateAltTextMutation,
+    );
+    const [generateImageTitle, { loading: loadingImageTitle }] = useMutation<GQLGenerateImageTitleMutation, GQLGenerateImageTitleMutationVariables>(
+        generateImageTitleMutation,
+    );
+
     return (
         <div>
             <FormSection title="General">
@@ -78,6 +97,7 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                         defaultMessage: "File Name",
                     })}
                     name="name"
+                    endAdornment={`.${file.name.split(".").pop()}`}
                     component={FinalFormInput}
                     validate={async (value, allValues, meta) => {
                         if (value && meta?.dirty) {
@@ -88,6 +108,25 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                 });
                             }
                         }
+                    }}
+                    onBlur={() => {
+                        const filename: string | undefined = formApi.getFieldState("name")?.value;
+                        const nameWithoutExtension = filename?.split(".").slice(0, -1).join(".");
+                        const extension = file.name.split(".").pop();
+
+                        if (nameWithoutExtension) {
+                            // slugify can't happen on format because then it wouldn't be possible
+                            // to type spaces and other special characters that are removed by slugify
+                            formApi.change("name", slugifyFilename(nameWithoutExtension, extension));
+                        }
+                    }}
+                    format={(value: string) => {
+                        const nameWithoutExtension = value.split(".").slice(0, -1).join(".");
+                        return nameWithoutExtension;
+                    }}
+                    parse={(value: string) => {
+                        const extension = file.name.split(".").pop();
+                        return `${value}.${extension}`;
                     }}
                     fullWidth
                 />
@@ -102,6 +141,20 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     name="altText"
                     component={FinalFormInput}
                     fullWidth
+                    endAdornment={
+                        isImage &&
+                        contentGeneration?.generateAltText && (
+                            <IconButton
+                                color="primary"
+                                onClick={async () => {
+                                    const { data } = await generateAltText({ variables: { fileId: file.id } });
+                                    formApi.change("altText", data?.generateAltText);
+                                }}
+                            >
+                                {loadingAltText ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
+                            </IconButton>
+                        )
+                    }
                 />
                 <Field
                     label={intl.formatMessage({
@@ -111,6 +164,20 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                     name="title"
                     component={FinalFormInput}
                     fullWidth
+                    endAdornment={
+                        isImage &&
+                        contentGeneration?.generateImageTitle && (
+                            <IconButton
+                                color="primary"
+                                onClick={async () => {
+                                    const { data } = await generateImageTitle({ variables: { fileId: file.id } });
+                                    formApi.change("title", data?.generateImageTitle);
+                                }}
+                            >
+                                {loadingImageTitle ? <Loading behavior="fillParent" fontSize="large" /> : <ArtificialIntelligence />}
+                            </IconButton>
+                        )
+                    }
                 />
             </FormSection>
             {damConfig.enableLicenseFeature && (

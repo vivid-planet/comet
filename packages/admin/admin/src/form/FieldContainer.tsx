@@ -80,10 +80,6 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
             `}
         `}
 
-        & [class*="${inputBaseClasses.root}"] {
-            width: 100%;
-        }
-
         ${ownerState.variant === "horizontal" &&
         !ownerState.forceVertical &&
         css`
@@ -168,6 +164,10 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
         css`
             flex-grow: 1;
         `}
+
+        & > [class*="${inputBaseClasses.root}"] {
+            width: 100%;
+        }
     `,
 );
 
@@ -197,7 +197,7 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
 export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerProps>) => {
     const {
         variant = "vertical",
-        fullWidth,
+        fullWidth: passedFullWidth,
         label,
         error,
         disabled,
@@ -210,6 +210,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminFormFieldContainer" });
+    const fullWidth = passedFullWidth ?? variant === "horizontal";
 
     const hasError = !!error;
     const hasWarning = !hasError && !!warning;

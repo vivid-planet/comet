@@ -9,6 +9,15 @@ export const productFormFragment = gql`
         additionalTypes
         inStock
         image
+        manufacturerCountry: manufacturer {
+            addressAsEmbeddable {
+                country
+            }
+        }
+        manufacturer {
+            id
+            name
+        }
         category {
             id
             title
@@ -51,40 +60,4 @@ export const updateProductMutation = gql`
         }
     }
     ${productFormFragment}
-`;
-
-export const productCategorySelectFragment = gql`
-    fragment ProductCategorySelect on ProductCategory {
-        id
-        title
-    }
-`;
-
-export const productCategoriesQuery = gql`
-    query ProductCategories {
-        productCategories {
-            nodes {
-                ...ProductCategorySelect
-            }
-        }
-    }
-    ${productCategorySelectFragment}
-`;
-
-export const productTagsSelectFragment = gql`
-    fragment ProductTagsSelect on ProductTag {
-        id
-        title
-    }
-`;
-
-export const productTagsQuery = gql`
-    query ProductTags {
-        productTags {
-            nodes {
-                ...ProductTagsSelect
-            }
-        }
-    }
-    ${productTagsSelectFragment}
 `;

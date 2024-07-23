@@ -26,9 +26,9 @@ import { createConfig } from "@src/config";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
 import { theme } from "@src/theme";
+import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import * as React from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd-multi-backend";
 import * as ReactDOM from "react-dom";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router-dom";
@@ -77,6 +77,10 @@ class App extends React.Component {
                                     label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
                                 },
                             },
+                            contentGeneration: {
+                                generateAltText: true,
+                                generateImageTitle: true,
+                            },
                         }}
                     >
                         <DependenciesConfigProvider
@@ -93,7 +97,7 @@ class App extends React.Component {
                                         <ErrorDialogHandler />
                                         <CurrentUserProvider>
                                             <RouterBrowserRouter>
-                                                <DndProvider backend={HTML5Backend}>
+                                                <DndProvider options={HTML5toTouch}>
                                                     <SnackbarProvider>
                                                         <CmsBlockContextProvider
                                                             damConfig={{

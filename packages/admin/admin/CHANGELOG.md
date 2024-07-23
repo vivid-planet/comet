@@ -1,5 +1,60 @@
 # @comet/admin
 
+## 7.0.0-beta.6
+
+### Minor Changes
+
+-   119714999: Automatically set `fullWidth` for `FieldContainer` with `variant="horizontal"`
+
+    Horizontal fields are automatically responsive:
+    If they are less than 600px wide, the layout automatically changes to vertical.
+    For this to work correctly, the fields must be `fullWidth`.
+    Therefore, `fullWidth` is now `true` by default for horizontal fields.
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.6
+-   @comet/admin-theme@7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+### Minor Changes
+
+-   569ad0463: Deprecate `SplitButton`, `FinalFormSaveSplitButton` and `SplitButtonContext` and remove all uses of these components in our libraries
+
+    The reason is that we decided to retire the SplitButton pattern.
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.5
+-   @comet/admin-theme@7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+### Minor Changes
+
+-   a0bd09afa: Add `ForcePromptRoute`, a `Route` that triggers a prompt even if it is a subroute
+
+    Used in `StackSwitch` so that navigating to a nested stack subpage will show a prompt (if dirty)
+
+-   170720b0c: Stack: Update parent breadcrumb URL in state to not forget filters and other states when going back
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.4
+-   @comet/admin-theme@7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   ce5eaede2: Move the `ScopeIndicator` from the `ToolbarBreadcrumbs` to the `Toolbar`
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.3
+-   @comet/admin-theme@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Minor Changes
@@ -361,6 +416,65 @@
 -   Updated dependencies [33ba50719]
     -   @comet/admin-theme@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.16.0
+
+### Minor Changes
+
+-   fb0fe2539: Add `FinalFormNumberInput` and `NumberField` as optimised fields for number inputs in FinalForms
+
+### Patch Changes
+
+-   747fe32cc: Fix incorrect router prompt in `TableLocalChanges` when there are no changes
+    -   @comet/admin-icons@6.16.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [406027806]
+    -   @comet/admin-icons@6.15.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   2fc764e29: Add `OnChangeField` helper to listen to field changes
+
+    **Example**
+
+    ```tsx
+    <OnChangeField name="product">
+        {(value, previousValue) => {
+            // Will be called when field 'product' changes
+        }}
+    </OnChangeField>
+    ```
+
+### Patch Changes
+
+-   012a768ee: Fix infinite update loop in `useAsyncOptionsProps`
+-   Updated dependencies [efccc42a3]
+    -   @comet/admin-icons@6.14.0
 
 ## 6.13.0
 

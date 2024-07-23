@@ -10,24 +10,35 @@ import { GQLPageLinkFragment } from "./PageLink.fragment.generated";
 
 interface Props {
     page: GQLPageLinkFragment;
-    children: ((active: boolean) => React.ReactNode) | React.ReactNode;
+    children: React.ReactNode;
+    className?: string;
+    activeClassName?: string;
 }
 
-function PageLink({ page, children }: Props): JSX.Element | null {
+function PageLink({ page, children, className: passedClassName, activeClassName }: Props): JSX.Element | null {
     const pathname = usePathname();
-    const active = pathname === page.path;
+    const active = (pathname.substring(3) || "/") === page.path; // Remove language prefix
+
+    let className = passedClassName;
+
+    if (active) {
+        className = className ? `${className} ${activeClassName}` : activeClassName;
+    }
 
     if (page.documentType === "Link") {
         if (page.document === null || page.document.__typename !== "Link") {
             return null;
         }
 
-        // TODO how to use language prefix in InternalLinkBlock?
-        return <LinkBlock data={page.document.content}>{typeof children === "function" ? children(active) : children}</LinkBlock>;
+        return (
+            <LinkBlock data={page.document.content} className={className}>
+                {children}
+            </LinkBlock>
+        );
     } else if (page.documentType === "Page") {
         return (
-            <Link href={`/${page.scope.language}${page.path}`} passHref legacyBehavior>
-                {typeof children === "function" ? children(active) : children}
+            <Link href={`/${page.scope.language}${page.path}`} className={className}>
+                {children}
             </Link>
         );
     } else if (page.documentType === "PredefinedPage") {
@@ -38,8 +49,8 @@ function PageLink({ page, children }: Props): JSX.Element | null {
         const type = (page.document as GQLPredefinedPage).type;
 
         return (
-            <Link href={type && predefinedPagePaths[type] ? `/${page.scope.language}${predefinedPagePaths[type]}` : ""} passHref legacyBehavior>
-                {typeof children === "function" ? children(active) : children}
+            <Link href={type && predefinedPagePaths[type] ? `/${page.scope.language}${predefinedPagePaths[type]}` : ""} className={className}>
+                {children}
             </Link>
         );
     } else {

@@ -15,4 +15,3 @@ Rework `Toolbar`
     It automatically switches from a normal `Button` to an `IconButton` for smaller screen sizes.
 
 -   To show a scope indicator, you must pass a `<ContentScopeIndicator />` to the `Toolbar` via the `scopeIndicator` prop
-

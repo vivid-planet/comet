@@ -7,7 +7,7 @@ import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps
 import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
-export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs";
+export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
@@ -16,6 +16,7 @@ export interface ToolbarProps
         mainContentContainer: "div";
         topBar: "div";
         breadcrumbs: typeof ToolbarBreadcrumbs;
+        scopeIndicator: "div";
     }> {
     elevation?: number;
     children?: React.ReactNode;
@@ -45,9 +46,21 @@ const Root = createComponentSlot(Paper)<ToolbarClassKey, OwnerState>({
 const TopBar = createComponentSlot("div")<ToolbarClassKey>({
     componentName: "Toolbar",
     slotName: "topBar",
-})(css`
-    min-height: 40px;
-`);
+})(
+    ({ theme }) => css`
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        gap: ${theme.spacing(2)};
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+    `,
+);
+
+const ScopeIndicator = createComponentSlot("div")<ToolbarClassKey>({
+    componentName: "Toolbar",
+    slotName: "scopeIndicator",
+})();
 
 const BottomBar = createComponentSlot(MuiToolbar)<ToolbarClassKey>({
     componentName: "Toolbar",
@@ -106,7 +119,8 @@ export const Toolbar = (inProps: ToolbarProps) => {
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!hideTopBar && (
                 <TopBar {...slotProps?.topBar}>
-                    <Breadcrumbs scopeIndicator={scopeIndicator} {...slotProps?.breadcrumbs} />
+                    {Boolean(scopeIndicator) && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
+                    <Breadcrumbs {...slotProps?.breadcrumbs} />
                 </TopBar>
             )}
             {children && (

@@ -6,13 +6,16 @@ import {
     FinalForm,
     FinalFormInput,
     FinalFormSubmitEvent,
+    FinalFormSwitch,
     Loading,
     MainContent,
+    messages,
     TextField,
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { Divider, FormControlLabel } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -30,6 +33,7 @@ import {
 } from "./ManufacturerForm.gql.generated";
 
 type FormValues = Omit<GQLManufacturerFormDetailsFragment, "address" | "addressAsEmbeddable"> & {
+    useAlternativeAddress: boolean;
     address:
         | (Omit<NonNullable<GQLManufacturerFormDetailsFragment["address"]>, "streetNumber" | "zip" | "alternativeAddress"> & {
               streetNumber: string | null;
@@ -77,6 +81,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
         if (!filteredData) return {};
         return {
             ...filteredData,
+            useAlternativeAddress: !!filteredData.address?.alternativeAddress,
             address: filteredData.address
                 ? {
                       ...filteredData.address,
@@ -119,7 +124,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ useAlternativeAddress, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
@@ -128,15 +133,16 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                       ...formValues.address,
                       streetNumber: formValues.address?.streetNumber ? parseInt(formValues.address.streetNumber) : null,
                       zip: parseInt(formValues.address.zip),
-                      alternativeAddress: formValues.address?.alternativeAddress
-                          ? {
-                                ...formValues.address.alternativeAddress,
-                                streetNumber: formValues.address?.alternativeAddress.streetNumber
-                                    ? parseInt(formValues.address.alternativeAddress.streetNumber)
-                                    : null,
-                                zip: parseInt(formValues.address.alternativeAddress.zip),
-                            }
-                          : undefined,
+                      alternativeAddress:
+                          useAlternativeAddress && formValues.address?.alternativeAddress
+                              ? {
+                                    ...formValues.address.alternativeAddress,
+                                    streetNumber: formValues.address?.alternativeAddress.streetNumber
+                                        ? parseInt(formValues.address.alternativeAddress.streetNumber)
+                                        : null,
+                                    zip: parseInt(formValues.address.alternativeAddress.zip),
+                                }
+                              : undefined,
                   }
                 : undefined,
             addressAsEmbeddable: {
@@ -227,54 +233,75 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
                                 name="address.country"
                                 label={<FormattedMessage id="manufacturer.address.country" defaultMessage="Address Country" />}
                             />
-                            <FieldSet
-                                collapsible={true}
-                                initiallyExpanded={false}
-                                title={<FormattedMessage id="manufacturer.address.alternativeAddress" defaultMessage="Alt-Address" />}
-                                supportText={
-                                    <FormattedMessage
-                                        id="manufacturer.address.alternativeAddress.supportText"
-                                        defaultMessage="An alt-address to be used"
-                                    />
-                                }
+                            <Divider sx={{ marginBottom: 5 }} />
+                            <Field
+                                fullWidth
+                                name="useAlternativeAddress"
+                                type="checkbox"
+                                label={<FormattedMessage id="manufacturer.address.useAlternativeAddress" defaultMessage="Use alternative address" />}
                             >
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="address.alternativeAddress.street"
-                                    label={
-                                        <FormattedMessage id="manufacturer.address.alternativeAddress.street" defaultMessage="Alt-Address Street" />
-                                    }
-                                />
-                                <Field
-                                    fullWidth
-                                    name="address.alternativeAddress.streetNumber"
-                                    component={FinalFormInput}
-                                    type="number"
-                                    label={
-                                        <FormattedMessage
-                                            id="manufacturer.address.alternativeAddress.streetNumber"
-                                            defaultMessage="Alt-Address Street Number"
-                                        />
-                                    }
-                                />
-                                <Field
-                                    required
-                                    fullWidth
-                                    name="address.alternativeAddress.zip"
-                                    component={FinalFormInput}
-                                    type="number"
-                                    label={<FormattedMessage id="manufacturer.address.alternativeAddress.zip" defaultMessage="Alt-Address Zip" />}
-                                />
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="address.alternativeAddress.country"
-                                    label={
-                                        <FormattedMessage id="manufacturer.address.alternativeAddress.country" defaultMessage="Alt-Address Country" />
-                                    }
-                                />
-                            </FieldSet>
+                                {(props) => (
+                                    <FormControlLabel
+                                        control={<FinalFormSwitch {...props} />}
+                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
+                                    />
+                                )}
+                            </Field>
+                            <Field name="useAlternativeAddress" subscription={{ value: true }}>
+                                {({ input: { value } }) =>
+                                    value ? (
+                                        <>
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                name="address.alternativeAddress.street"
+                                                label={
+                                                    <FormattedMessage
+                                                        id="manufacturer.address.alternativeAddress.street"
+                                                        defaultMessage="Alt-Address Street"
+                                                    />
+                                                }
+                                            />
+                                            <Field
+                                                fullWidth
+                                                name="address.alternativeAddress.streetNumber"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={
+                                                    <FormattedMessage
+                                                        id="manufacturer.address.alternativeAddress.streetNumber"
+                                                        defaultMessage="Alt-Address Street Number"
+                                                    />
+                                                }
+                                            />
+                                            <Field
+                                                required
+                                                fullWidth
+                                                name="address.alternativeAddress.zip"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={
+                                                    <FormattedMessage
+                                                        id="manufacturer.address.alternativeAddress.zip"
+                                                        defaultMessage="Alt-Address Zip"
+                                                    />
+                                                }
+                                            />
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                name="address.alternativeAddress.country"
+                                                label={
+                                                    <FormattedMessage
+                                                        id="manufacturer.address.alternativeAddress.country"
+                                                        defaultMessage="Alt-Address Country"
+                                                    />
+                                                }
+                                            />
+                                        </>
+                                    ) : null
+                                }
+                            </Field>
                         </FieldSet>
                         <FieldSet
                             collapsible={false}

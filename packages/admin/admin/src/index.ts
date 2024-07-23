@@ -82,6 +82,7 @@ export { AsyncAutocompleteField, AsyncAutocompleteFieldProps } from "./form/fiel
 export { AsyncSelectField, AsyncSelectFieldProps } from "./form/fields/AsyncSelectField";
 export { AutocompleteField, AutocompleteFieldProps } from "./form/fields/AutocompleteField";
 export { CheckboxField, CheckboxFieldProps } from "./form/fields/CheckboxField";
+export { NumberField, NumberFieldProps } from "./form/fields/NumberField";
 export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
 export { SelectField, SelectFieldProps } from "./form/fields/SelectField";
 export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
@@ -92,6 +93,7 @@ export { FinalFormAsyncSelect, FinalFormAsyncSelectProps } from "./form/FinalFor
 export { FinalFormContext, FinalFormContextProvider, FinalFormContextProviderProps, useFinalFormContext } from "./form/FinalFormContextProvider";
 export { FinalFormFileSelect, FinalFormFileSelectClassKey, FinalFormFileSelectProps } from "./form/FinalFormFileSelect";
 export { FinalFormInput, FinalFormInputProps } from "./form/FinalFormInput";
+export { FinalFormNumberInput, FinalFormNumberInputProps } from "./form/FinalFormNumberInput";
 export { FinalFormRangeInput, FinalFormRangeInputClassKey, FinalFormRangeInputProps } from "./form/FinalFormRangeInput";
 export { FinalFormSearchTextField, FinalFormSearchTextFieldProps } from "./form/FinalFormSearchTextField";
 export { FinalFormSelect, FinalFormSelectProps } from "./form/FinalFormSelect";
@@ -126,6 +128,7 @@ export { MuiThemeProvider } from "./mui/ThemeProvider";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog, RouterConfirmationDialogClassKey, RouterConfirmationDialogProps } from "./router/ConfirmationDialog";
 export { RouterContext } from "./router/Context";
+export { ForcePromptRoute } from "./router/ForcePromptRoute";
 export { RouterMemoryRouter } from "./router/MemoryRouter";
 export { RouterPrompt } from "./router/Prompt";
 export { RouterPromptHandler, SaveAction } from "./router/PromptHandler";

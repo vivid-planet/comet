@@ -23,9 +23,12 @@ export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
 export { createLinkBlock } from "./blocks/createLinkBlock";
 export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
 export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
+export { EmailLinkBlock } from "./blocks/email-link.block";
+export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
+export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
 export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";
@@ -58,14 +61,23 @@ export { PaginatedResponseFactory } from "./common/pagination/paginated-response
 export { SortArgs } from "./common/sorting/sort.args";
 export { SortDirection } from "./common/sorting/sort-direction.enum";
 export { IsNullable } from "./common/validators/is-nullable";
+export { IsPhoneNumber, isPhoneNumber } from "./common/validators/is-phone-number";
 export { IsSlug } from "./common/validators/is-slug";
 export { IsUndefinable } from "./common/validators/is-undefinable";
+export { AzureOpenAiContentGenerationModule } from "./content-generation/azure-open-ai/azure-open-ai-content-generation.module";
+export {
+    AzureOpenAiConfig,
+    AzureOpenAiContentGenerationService,
+    AzureOpenAiContentGenerationServiceConfig,
+} from "./content-generation/azure-open-ai/azure-open-ai-content-generation.service";
+export { ContentGenerationModule } from "./content-generation/content-generation.module";
+export { ContentGenerationServiceInterface } from "./content-generation/content-generation-service.interface";
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
-export { DamVideoBlock } from "./dam/blocks/dam-video.block";
 export { PixelImageBlock } from "./dam/blocks/pixel-image.block";
 export { SvgImageBlock } from "./dam/blocks/svg-image.block";
+export { DamVideoBlock } from "./dam/blocks/video/dam-video.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
@@ -148,6 +160,7 @@ export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
+export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
 export { RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";

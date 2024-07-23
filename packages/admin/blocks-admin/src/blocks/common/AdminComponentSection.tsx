@@ -16,7 +16,7 @@ export function AdminComponentSection({ children, title, disableBottomMargin }: 
         return (
             <Root disableBottomMargin={disableBottomMargin}>
                 <HiddenInSubroute>
-                    <Title variant="h6">{title}</Title>
+                    <Title variant="subtitle1">{title}</Title>
                 </HiddenInSubroute>
                 {children}
             </Root>

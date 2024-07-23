@@ -1,5 +1,38 @@
 # @comet/admin-color-picker
 
+## 7.0.0-beta.6
+
+### Patch Changes
+
+-   Updated dependencies [119714999]
+    -   @comet/admin@7.0.0-beta.6
+    -   @comet/admin-icons@7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+### Patch Changes
+
+-   Updated dependencies [569ad0463]
+    -   @comet/admin@7.0.0-beta.5
+    -   @comet/admin-icons@7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+### Patch Changes
+
+-   Updated dependencies [a0bd09afa]
+-   Updated dependencies [170720b0c]
+    -   @comet/admin@7.0.0-beta.4
+    -   @comet/admin-icons@7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+### Patch Changes
+
+-   Updated dependencies [ce5eaede2]
+    -   @comet/admin@7.0.0-beta.3
+    -   @comet/admin-icons@7.0.0-beta.3
+
 ## 7.0.0-beta.2
 
 ### Patch Changes
@@ -167,6 +200,48 @@
 -   Updated dependencies [92eae2ba9]
     -   @comet/admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.16.0
+
+### Patch Changes
+
+-   Updated dependencies [fb0fe2539]
+-   Updated dependencies [747fe32cc]
+    -   @comet/admin@6.16.0
+    -   @comet/admin-icons@6.16.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/admin@6.15.1
+-   @comet/admin-icons@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   Updated dependencies [406027806]
+-   Updated dependencies [0654f7bce]
+    -   @comet/admin-icons@6.15.0
+    -   @comet/admin@6.15.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/admin@6.14.1
+-   @comet/admin-icons@6.14.1
+
+## 6.14.0
+
+### Patch Changes
+
+-   Updated dependencies [2fc764e29]
+-   Updated dependencies [efccc42a3]
+-   Updated dependencies [012a768ee]
+    -   @comet/admin@6.14.0
+    -   @comet/admin-icons@6.14.0
 
 ## 6.13.0
 

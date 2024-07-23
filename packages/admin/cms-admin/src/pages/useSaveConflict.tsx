@@ -108,20 +108,18 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
         checkForConflicts,
         hasConflict,
         dialogs: (
-            <>
-                <SaveConflictDialog
-                    open={showDialog}
-                    onClosePressed={() => {
-                        stopPolling();
-                        setShowDialog(false);
-                    }}
-                    onDiscardChangesPressed={() => {
-                        setHasConflict(false);
-                        setShowDialog(false);
-                        onDiscardButtonPressed();
-                    }}
-                />
-            </>
+            <SaveConflictDialog
+                open={showDialog}
+                onClosePressed={() => {
+                    stopPolling();
+                    setShowDialog(false);
+                }}
+                onDiscardChangesPressed={() => {
+                    setHasConflict(false);
+                    setShowDialog(false);
+                    onDiscardButtonPressed();
+                }}
+            />
         ),
     };
 }

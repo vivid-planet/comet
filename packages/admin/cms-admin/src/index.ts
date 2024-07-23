@@ -9,12 +9,15 @@ export type { TextImageBlockFactoryOptions } from "./blocks/createTextImageBlock
 export { createTextImageBlock } from "./blocks/createTextImageBlock";
 export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
+export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { EditImageDialog } from "./blocks/image/EditImageDialog";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
+export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { useCmsBlockContext } from "./blocks/useCmsBlockContext";
+export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { BuildEntry } from "./builds/BuildEntry";
 export { PublisherPage } from "./builds/PublisherPage";
 export { includeInvisibleContentContext } from "./common/apollo/links/includeInvisibleContentContext";
@@ -105,6 +108,7 @@ export type { SiteConfig } from "./sitesConfig/SitesConfigContext";
 export { SitesConfigProvider } from "./sitesConfig/SitesConfigProvider";
 export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
+export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
 export { CurrentUserInterface, CurrentUserProvider, useCurrentUser, useUserPermissionCheck } from "./userPermissions/hooks/currentUser";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports

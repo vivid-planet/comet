@@ -286,14 +286,20 @@
                 "nullable": true
             },
             {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
                 "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
             },
             {
                 "name": "damFile",
@@ -357,12 +363,12 @@
         ],
         "inputFields": [
             {
-                "name": "damFileId",
-                "kind": "String",
+                "name": "autoplay",
+                "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "autoplay",
+                "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
             },
@@ -372,8 +378,14 @@
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "damFileId",
+                "kind": "String",
                 "nullable": true
             }
         ]
@@ -445,6 +457,23 @@
                 "kind": "Block",
                 "block": "Link",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "EmailLink",
+        "fields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -801,7 +830,9 @@
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
                                 "news": "NewsLink",
-                                "damFileDownload": "DamFileDownloadLink"
+                                "damFileDownload": "DamFileDownloadLink",
+                                "phone": "PhoneLink",
+                                "email": "EmailLink"
                             },
                             "nullable": false
                         }
@@ -831,7 +862,9 @@
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
                                 "news": "NewsLink",
-                                "damFileDownload": "DamFileDownloadLink"
+                                "damFileDownload": "DamFileDownloadLink",
+                                "phone": "PhoneLink",
+                                "email": "EmailLink"
                             },
                             "nullable": false
                         }
@@ -948,7 +981,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "image": "DamImage",
-                                "video": "DamVideo"
+                                "damVideo": "DamVideo",
+                                "youTubeVideo": "YouTubeVideo"
                             },
                             "nullable": false
                         }
@@ -976,7 +1010,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "image": "DamImage",
-                                "video": "DamVideo"
+                                "damVideo": "DamVideo",
+                                "youTubeVideo": "YouTubeVideo"
                             },
                             "nullable": false
                         }
@@ -1280,6 +1315,23 @@
                     ]
                 },
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "PhoneLink",
+        "fields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -2139,20 +2191,6 @@
         "name": "YouTubeVideo",
         "fields": [
             {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
-            {
                 "name": "autoplay",
                 "kind": "Boolean",
                 "nullable": true
@@ -2165,25 +2203,22 @@
             {
                 "name": "loop",
                 "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
-            {
                 "name": "autoplay",
                 "kind": "Boolean",
                 "nullable": true
@@ -2196,6 +2231,17 @@
             {
                 "name": "loop",
                 "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ]

@@ -8,19 +8,32 @@ import { PropsWithData } from "./PropsWithData";
 interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
     children: React.ReactElement;
     title?: string;
+    className?: string;
+    legacyBehavior?: boolean;
 }
 
 export const DamFileDownloadLinkBlock = withPreview(
-    ({ data: { file, openFileType }, children, title }: Props) => {
-        if (file === undefined) {
-            return <>{children}</>;
+    ({ data: { file, openFileType }, children, title, className, legacyBehavior }: Props) => {
+        if (!file) {
+            if (legacyBehavior) {
+                return children;
+            }
+
+            return <span className={className}>{children}</span>;
         }
 
-        if (openFileType === "Download") {
-            return React.cloneElement(children, { href: file.fileUrl, title: title });
-        } else {
-            return React.cloneElement(children, { href: file.fileUrl, target: "_blank", rel: "noreferrer", title: title });
+        const href = file.fileUrl;
+        const target = openFileType === "NewTab" ? "_blank" : undefined;
+
+        if (legacyBehavior) {
+            return React.cloneElement(children, { href, target, title });
         }
+
+        return (
+            <a href={href} target={target} title={title} className={className}>
+                {children}
+            </a>
+        );
     },
     { label: "DamFileDownloadLink" },
 );

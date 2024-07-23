@@ -6,7 +6,7 @@ import { isPreviewContentImageRule, isPreviewContentTextRule, PreviewContent, Pr
 
 // @TODO: Probably remove this preview-system, because BlockPreview is used everywhere now
 
-export function OneImageWithTextPreview({ content }: { content: PreviewContent[] }): JSX.Element {
+export function OneImageWithTextPreview({ content }: { content: PreviewContent[] }): JSX.Element | null {
     const text = content.filter(isPreviewContentTextRule).map(({ content }) => {
         return content;
     });
@@ -25,7 +25,7 @@ export function OneImageWithTextPreview({ content }: { content: PreviewContent[]
             return <Image image={images[0]} />;
         }
     } else {
-        return <></>;
+        return null;
     }
 }
 

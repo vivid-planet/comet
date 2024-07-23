@@ -118,7 +118,7 @@ export function ComponentDemo(): React.ReactElement {
 
                         <AdminComponentSectionGroup title="Grouped Section Headline">
                             <AdminComponentSection>
-                                <Typography variant="h6">Label</Typography>
+                                <Typography variant="subtitle1">Label</Typography>
                             </AdminComponentSection>
 
                             <AdminComponentSection>
