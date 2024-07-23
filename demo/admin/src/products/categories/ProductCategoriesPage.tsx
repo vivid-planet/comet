@@ -1,4 +1,5 @@
 import {
+    CancelButton,
     MainContent,
     RouterTab,
     RouterTabs,
@@ -12,14 +13,14 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarFillSpace,
-    useEditDialog,
 } from "@comet/admin";
+import { Add as AddIcon } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { Box } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { AssignProductsGrid } from "@src/products/categories/AssignProductsGrid";
 import { ProductsGrid } from "@src/products/ProductsGrid";
 import React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import ProductCategoriesTable from "./ProductCategoriesTable";
 import ProductCategoryForm from "./ProductCategoryForm";
@@ -37,7 +38,10 @@ const FormToolbar = () => (
 
 const ProductCategoriesPage: React.FC = () => {
     const intl = useIntl();
-    const [EditDialog] = useEditDialog();
+    const [isOpen, setIsOpen] = React.useState(false);
+    const handleCloseDialog = () => {
+        setIsOpen(false);
+    };
 
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories Handmade" })}>
@@ -70,22 +74,47 @@ const ProductCategoriesPage: React.FC = () => {
                                         })}
                                     >
                                         <Box sx={{ height: "100vh" }}>
-                                            <ProductsGrid filter={{ category: { equal: selectedId } }} />
-                                            {/* TODO change button behaviour and open edit-dialog, open discussion https://github.com/vivid-planet/comet/pull/2171 */}
-                                            <EditDialog
-                                                componentsProps={{
-                                                    dialog: { fullWidth: true, maxWidth: "xl" },
-                                                    dialogContent: {
-                                                        sx: {
+                                            <ProductsGrid
+                                                // TODO refresh ProductsGrid after saving assign-products
+                                                toolbarAction={
+                                                    <Button
+                                                        startIcon={<AddIcon />}
+                                                        onClick={() => setIsOpen(true)}
+                                                        variant="contained"
+                                                        color="primary"
+                                                    >
+                                                        <FormattedMessage
+                                                            id="products.editProductCategory.assignProducts"
+                                                            defaultMessage="Assign Products"
+                                                        />
+                                                    </Button>
+                                                }
+                                                filter={{ category: { equal: selectedId } }}
+                                            />
+                                            <SaveBoundary onAfterSave={() => setIsOpen(false)}>
+                                                <Dialog open={isOpen} onClose={handleCloseDialog} fullWidth maxWidth="xl">
+                                                    <DialogTitle>
+                                                        <FormattedMessage
+                                                            id="products.editProductCategory.assignProducts"
+                                                            defaultMessage="Assign Products"
+                                                        />
+                                                    </DialogTitle>
+                                                    <DialogContent
+                                                        sx={{
                                                             height: "70vh",
                                                             padding: 0,
                                                             paddingTop: "0 !important" /* is connected to title-style */,
-                                                        },
-                                                    },
-                                                }}
-                                            >
-                                                <AssignProductsGrid productCategoryId={selectedId} />
-                                            </EditDialog>
+                                                        }}
+                                                    >
+                                                        <AssignProductsGrid productCategoryId={selectedId} />
+                                                    </DialogContent>
+                                                    <DialogActions>
+                                                        {/* TODO Missing close-dialog-unsaved-changes-check */}
+                                                        <CancelButton onClick={handleCloseDialog} />
+                                                        <SaveBoundarySaveButton disabled={false} />
+                                                    </DialogActions>
+                                                </Dialog>
+                                            </SaveBoundary>
                                         </Box>
                                     </RouterTab>
                                 </RouterTabs>
