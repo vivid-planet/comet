@@ -54,6 +54,3 @@ Use `slotProps.dropzone.hideButton` instead.
 +    }}
  />
 ```
-
-The `multiple` prop has been removed and is no longer necessary.
-The multi-file behavior is now always active unless the `maxFiles` prop is set to 1.

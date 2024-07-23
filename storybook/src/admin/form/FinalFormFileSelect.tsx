@@ -24,13 +24,7 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field
-                                            name="singleFile"
-                                            label="File select (default)"
-                                            component={FinalFormFileSelect}
-                                            maxFiles={1}
-                                            fullWidth
-                                        />
+                                        <Field name="singleFile" label="Single file select" component={FinalFormFileSelect} fullWidth />
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -39,16 +33,11 @@ function Story() {
                                     <CardContent>
                                         <Field
                                             name="multipleFiles"
-                                            label="File select (dropzone only, multiple, max file size 5 MB), max 5 files"
+                                            label="Multi file select (max file size 5 MB)"
                                             component={FinalFormFileSelect}
-                                            maxSize={50 * 1024 * 1024}
-                                            maxFiles={5}
+                                            maxSize={5 * 1024 * 1024} // 5 MB
+                                            multiple
                                             fullWidth
-                                            slotProps={{
-                                                dropzone: {
-                                                    hideButton: true,
-                                                },
-                                            }}
                                         />
                                     </CardContent>
                                 </Card>
@@ -57,16 +46,12 @@ function Story() {
                                 <Card variant="outlined">
                                     <CardContent>
                                         <Field
-                                            name="multipleImages"
-                                            label="File select (button only, accept only images)"
+                                            name="fiveImages"
+                                            label="Select up to 5 images"
                                             component={FinalFormFileSelect}
                                             accept={{ "image/*": [] }}
+                                            maxFiles={5}
                                             fullWidth
-                                            slotProps={{
-                                                dropzone: {
-                                                    hideDroppableArea: true,
-                                                },
-                                            }}
                                         />
                                     </CardContent>
                                 </Card>
@@ -74,7 +59,7 @@ function Story() {
                             <Grid item xs={6}>
                                 <Card variant="outlined">
                                     <CardContent>
-                                        <Field name="disabled" label="File select (disabled)" component={FinalFormFileSelect} disabled fullWidth />
+                                        <Field name="disabled" label="Disabled file select" component={FinalFormFileSelect} disabled fullWidth />
                                     </CardContent>
                                 </Card>
                             </Grid>

@@ -61,7 +61,6 @@ const SingleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
                     setFile(undefined);
                 }}
                 onDownload={dummyFileDownload}
-                maxFiles={1}
                 maxFileSize={1024 * 1024 * 5} // 5 MB
                 files={file ? [file] : []}
                 error={tooManyFilesSelected ? "Selection was canceled. You can only select one file." : undefined}

@@ -43,6 +43,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     accept?: Accept;
     maxFileSize?: number;
     maxFiles?: number;
+    multiple?: boolean;
     error?: React.ReactNode;
     iconMapping?: {
         error?: React.ReactNode;
@@ -55,7 +56,8 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
         disabled,
         accept,
         maxFileSize,
-        maxFiles,
+        maxFiles: passedMaxFiles,
+        multiple: passedMultiple,
         iconMapping = {},
         onDrop,
         onRemove,
@@ -70,7 +72,9 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
 
     const { error: errorIcon = <ErrorIcon color="error" /> } = iconMapping;
 
-    const multiple = typeof maxFiles === "undefined" || maxFiles > 1;
+    const multiple = passedMultiple || (typeof passedMaxFiles !== "undefined" && passedMaxFiles > 1);
+    const maxFiles = typeof passedMaxFiles === "undefined" ? (multiple ? undefined : 1) : passedMaxFiles;
+
     const numberOfValidFiles = files?.filter((file) => !("error" in file)).length ?? 0;
     const maxAmountOfFilesSelected = typeof maxFiles !== "undefined" && multiple && numberOfValidFiles >= maxFiles;
     const maxNumberOfFilesToBeAdded = maxFiles ? maxFiles - numberOfValidFiles : undefined;

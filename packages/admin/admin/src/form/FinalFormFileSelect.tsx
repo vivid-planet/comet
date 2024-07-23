@@ -14,9 +14,9 @@ export interface FinalFormFileSelectProps
 export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
     const {
         disabled,
-        maxSize,
         maxFiles,
-        input: { onChange, value: fieldValue },
+        maxSize,
+        input: { onChange, value: fieldValue, multiple },
         meta,
         ...restProps
     } = useThemeProps({
@@ -26,7 +26,7 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
 
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
     const [rejectedFiles, setRejectedFiles] = React.useState<ErrorFileSelectItem[]>([]);
-    const singleFile = maxFiles === 1;
+    const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
 
     const onDrop = React.useCallback<NonNullable<DropzoneOptions["onDrop"]>>(
         (acceptedFiles, fileRejections) => {
@@ -92,6 +92,7 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
                 setRejectedFiles(rejectedFiles.filter((file) => file.name !== fileToRemove.name));
             }}
             disabled={disabled}
+            multiple={multiple}
             maxFiles={maxFiles}
             maxFileSize={maxSize}
             error={
