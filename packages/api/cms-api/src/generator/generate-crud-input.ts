@@ -126,7 +126,16 @@ export async function generateCrudInput(
                 decorators.push(`@Field(${fieldOptions})`);
             }
             type = "number";
-        } else if (prop.type === "DateType" || prop.type === "Date") {
+        } else if (prop.type === "DateType") {
+            // ISO Date without time
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
+            decorators.push("@IsDate()");
+            decorators.push(`@Field(() => GraphQLDate, ${fieldOptions})`);
+            type = "Date";
+        } else if (prop.type === "Date") {
+            // DateTime
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
@@ -382,6 +391,7 @@ import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOp
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
+import { GraphQLDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 
 @InputType()

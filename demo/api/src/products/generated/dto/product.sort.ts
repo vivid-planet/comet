@@ -15,6 +15,7 @@ export enum ProductSortField {
     inStock = "inStock",
     soldCount = "soldCount",
     availableSince = "availableSince",
+    lastCheckedAt = "lastCheckedAt",
     category = "category",
     createdAt = "createdAt",
     updatedAt = "updatedAt",

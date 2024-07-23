@@ -179,6 +179,13 @@ export function ProductsGrid() {
             ),
         },
         {
+            field: "availableSince",
+            headerName: "Available Since",
+            width: 130,
+            type: "date",
+            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
+        },
+        {
             field: "status",
             headerName: "Status",
             flex: 1,
@@ -317,6 +324,7 @@ const productsFragment = gql`
             quantity
             price
         }
+        availableSince
     }
 `;
 

@@ -138,7 +138,7 @@ export async function writeCrudGrid(
             let renderCell: string | undefined = undefined;
             let valueGetter: string | undefined = undefined;
 
-            let gridType: "number" | "boolean" | "dateTime" | undefined;
+            let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
             if (type.kind == "SCALAR") {
                 if (type.name == "Float" || type.name == "Int") {
                     gridType = "number" as const;
@@ -147,7 +147,10 @@ export async function writeCrudGrid(
                 } else if (type.name == "DateTime") {
                     gridType = "dateTime" as const;
                     valueGetter = `({ value }) => value && new Date(value)`;
-                    //TODO support date without time    gridType = "date";
+                } else if (type.name == "Date") {
+                    // ISO date
+                    gridType = "date" as const;
+                    valueGetter = `({ value }) => value && new Date(value)`;
                 } else {
                     if (rootBlocks[field.name]) {
                         renderCell = `(params) => {
