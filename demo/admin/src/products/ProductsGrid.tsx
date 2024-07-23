@@ -10,17 +10,17 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
-    StackLink,
+    ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
+import { StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useTheme } from "@mui/material";
+import { DataGridPro, GridFilterInputSingleSelect, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -41,7 +41,7 @@ import {
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar() {
+function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -54,20 +54,19 @@ function ProductsGridToolbar() {
             <ToolbarItem>
                 <GridColumnsButton />
             </ToolbarItem>
-            <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
-                </Button>
-            </ToolbarItem>
+            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );
 }
 
 type Props = {
     filter?: GQLProductFilter;
+    toolbarAction?: React.ReactNode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rowAction?: (params: GridRenderCellParams<any, GQLProductsListManualFragment, any>) => React.ReactNode;
 };
 
-export function ProductsGrid({ filter }: Props) {
+export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
@@ -217,9 +216,7 @@ export function ProductsGrid({ filter }: Props) {
                 return (
                     <>
                         <ProductsGridPreviewAction product={params.row} />
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
-                        </IconButton>
+                        {rowAction && rowAction(params)}
                         <CrudContextMenu
                             onPaste={async ({ input }) => {
                                 await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
@@ -285,6 +282,9 @@ export function ProductsGrid({ filter }: Props) {
             error={error}
             components={{
                 Toolbar: ProductsGridToolbar,
+            }}
+            componentsProps={{
+                toolbar: { toolbarAction: toolbarAction },
             }}
         />
     );
