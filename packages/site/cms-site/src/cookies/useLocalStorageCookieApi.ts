@@ -14,7 +14,7 @@ declare global {
 /**
  * Only for use in development environment.
  */
-export const useLocalStorageCookieApi: CookieApi = (): ReturnType<CookieApi> => {
+export const useLocalStorageCookieApi: CookieApi = () => {
     const [consentedCookies, setConsentedCookies] = useLocalStorage<string[]>(localStorageCookieApiKey, []);
     const [simulateLoadingCookieProvider, setSimulateLoadingCookieProvider] = React.useState(true);
 
