@@ -1,5 +1,38 @@
 # @comet/cms-api
 
+## 6.17.0
+
+### Minor Changes
+
+-   9ddf65554: Require a file extension when changing the filename in the DAM
+
+    Previously, files in the DAM could be renamed without restrictions.
+    Files could have invalid extensions (for their mimetype) or no extension at all.
+    This theoretically made the following attack possible:
+
+    1. Creating a dangerous .exe file locally
+    2. Renaming it to .jpg locally
+    3. Uploading the file as a .jpg
+    4. Renaming it to .exe in the DAM
+    5. The file is now downloaded as .exe
+
+    Now, filenames must always have an extension that matches their mimetype.
+    This is enforced in the admin and API.
+    Existing files without an extension are automatically assigned an extension via a DB migration.
+
+-   9ddf65554: Loosen the filename slugification rules
+
+    When uploading a file to the DAM, the filename is automatically slugified.
+    Previously, the slugification used pretty strict rules without a good reason.
+
+    Now, the rules were loosened allowing uppercase characters and most special characters.
+    Also, slugify now uses the locale `en` instead of `de` for special character replacements.
+
+### Patch Changes
+
+-   5a9c49ab5: CronJobModule: Fix job creation if resulting name exceeds 63 characters
+    -   @comet/blocks-api@6.17.0
+
 ## 6.16.0
 
 ### Minor Changes

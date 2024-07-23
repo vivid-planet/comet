@@ -1,5 +1,7 @@
 # @comet/admin-babel-preset
 
+## 6.17.0
+
 ## 6.16.0
 
 ## 6.15.1

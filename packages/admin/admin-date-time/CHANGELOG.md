@@ -1,5 +1,15 @@
 # @comet/admin-date-time
 
+## 6.17.0
+
+### Patch Changes
+
+-   Updated dependencies [536e95c02]
+-   Updated dependencies [7ecc30eba]
+-   Updated dependencies [ec4685bf3]
+    -   @comet/admin@6.17.0
+    -   @comet/admin-icons@6.17.0
+
 ## 6.16.0
 
 ### Patch Changes
