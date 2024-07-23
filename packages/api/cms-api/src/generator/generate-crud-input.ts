@@ -70,11 +70,14 @@ export async function generateCrudInput(
         const fieldName = prop.name;
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
-        const shouldBeNullable = prop.nullable || prop.name == "position"; // position prop input is always optional
-        if (!shouldBeNullable) {
-            decorators.push("@IsNotEmpty()");
-        } else {
-            decorators.push("@IsNullable()");
+        let isOptional = prop.nullable;
+
+        if (prop.name != "position") {
+            if (!prop.nullable) {
+                decorators.push("@IsNotEmpty()");
+            } else {
+                decorators.push("@IsNullable()");
+            }
         }
         if (["id", "createdAt", "updatedAt", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
@@ -83,6 +86,8 @@ export async function generateCrudInput(
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = initializer == "undefined" || initializer == "null" ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });
+            isOptional = true;
+            decorators.push(`@IsOptional()`);
             decorators.push(`@Min(1)`);
             decorators.push("@IsInt()");
             decorators.push(`@Field(() => Int, ${fieldOptions})`);
@@ -381,7 +386,7 @@ export async function generateCrudInput(
         }
 
         fieldsOut += `${decorators.join("\n")}
-    ${fieldName}${shouldBeNullable ? "?" : ""}: ${type};
+    ${fieldName}${isOptional ? "?" : ""}: ${type};
     
     `;
     }
