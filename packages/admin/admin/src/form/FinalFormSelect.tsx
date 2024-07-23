@@ -5,12 +5,13 @@ import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
+import { messages } from "../messages";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: React.ReactNode;
-    clearable?: boolean;
+    required?: boolean;
 }
 
 export const FinalFormSelect = <T,>({
@@ -28,7 +29,8 @@ export const FinalFormSelect = <T,>({
     },
     getOptionValue = (option: T) => {
         if (typeof option === "object" && option !== null) {
-            if ((option as any).id) return String((option as any).id);
+            // if ((option as any).id) return String((option as any).id);
+            if ((option as any).id || (option as any).id === "") return String((option as any).id);
             if ((option as any).value) return String((option as any).value);
             return JSON.stringify(option);
         } else {
@@ -36,7 +38,7 @@ export const FinalFormSelect = <T,>({
         }
     },
     children,
-    clearable,
+    required,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
@@ -44,7 +46,7 @@ export const FinalFormSelect = <T,>({
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
-    const endAdornment = clearable ? (
+    const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
             hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
@@ -64,7 +66,12 @@ export const FinalFormSelect = <T,>({
 
     if (children) {
         return (
-            <Select {...selectProps} value={value}>
+            <Select {...selectProps} value={value} displayEmpty={!required}>
+                {!required && !multiple && (
+                    <MenuItem value="">
+                        <FormattedMessage {...messages.pleaseSelect} />
+                    </MenuItem>
+                )}
                 {children}
             </Select>
         );
@@ -85,17 +92,32 @@ export const FinalFormSelect = <T,>({
             }
             onChange={(event) => {
                 const value = event.target.value;
-                onChange(
-                    Array.isArray(value)
-                        ? value.map((v) => options.find((i) => getOptionValue(i) == v))
-                        : options.find((i) => getOptionValue(i) == value),
-                );
+
+                if (Array.isArray(value)) {
+                    onChange(value.map((v) => options.find((i) => getOptionValue(i) == v)));
+                    return;
+                }
+
+                const newValue = options.find((i) => getOptionValue(i) == value);
+
+                if (newValue && getOptionValue(newValue) === "") {
+                    onChange(undefined);
+                } else {
+                    onChange(newValue);
+                }
             }}
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
+            displayEmpty={!required}
         >
             {loading && (
                 <MenuItem value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
+                </MenuItem>
+            )}
+
+            {!required && !multiple && (
+                <MenuItem value="">
+                    <FormattedMessage {...messages.pleaseSelect} />
                 </MenuItem>
             )}
 
