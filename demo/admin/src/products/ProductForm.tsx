@@ -323,7 +323,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
                             name="priceList"
                             component={FinalFormFileUpload}
-                            maxFiles={1}
                             maxFileSize={1024 * 1024 * 4} // 4 MB
                             fullWidth
                         />
@@ -331,7 +330,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
                             name="datasheets"
                             component={FinalFormFileUpload}
-                            maxFiles={5}
+                            multiple
                             maxFileSize={1024 * 1024 * 4} // 4 MB
                             fullWidth
                         />

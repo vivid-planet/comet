@@ -30,7 +30,11 @@ export type FinalFormFileUploadProps<MaxFiles> = (MaxFiles extends 1
     : { maxFiles?: MaxFiles } & FieldRenderProps<GQLFinalFormFileUploadFragment[], HTMLInputElement>) &
     Partial<FileSelectProps<GQLFinalFormFileUploadFragment>>;
 
-export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input, maxFiles, ...restProps }: FinalFormFileUploadProps<MaxFiles>) => {
+export const FinalFormFileUpload = <MaxFiles extends number | undefined>({
+    input: { onChange, value: fieldValue, multiple },
+    maxFiles,
+    ...restProps
+}: FinalFormFileUploadProps<MaxFiles>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
     const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
@@ -38,8 +42,8 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
         damConfig: { apiUrl }, // TODO: Think of a better solution to get the apiUrl, as this has nothing to do with DAM
     } = useCmsBlockContext();
 
-    const singleFile = maxFiles === 1;
-    const inputValue = React.useMemo(() => (Array.isArray(input.value) ? input.value : input.value ? [input.value] : []), [input.value]);
+    const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
+    const inputValue = React.useMemo(() => (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []), [fieldValue]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
@@ -65,7 +69,7 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
                 });
 
                 if (singleFile) {
-                    input.onChange(undefined);
+                    onChange(undefined);
                 }
 
                 if (tooManyFilesWereDropped || !acceptedFiles.length) {
@@ -94,10 +98,10 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
                         };
 
                         if (singleFile) {
-                            input.onChange(newlyUploadedFile);
+                            onChange(newlyUploadedFile);
                         } else {
                             successfullyUploadedFiles.push(newlyUploadedFile);
-                            input.onChange([...inputValue, ...successfullyUploadedFiles]);
+                            onChange([...inputValue, ...successfullyUploadedFiles]);
                         }
                     } else {
                         setUploadingFiles((existing) => existing.filter((loadingFile) => loadingFile.name !== file.name));
@@ -115,9 +119,9 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
                 setTooManyFilesSelected(false);
 
                 if (singleFile) {
-                    input.onChange(undefined);
+                    onChange(undefined);
                 } else if ("id" in fileToRemove) {
-                    input.onChange(inputValue.filter(({ id }) => id !== fileToRemove.id));
+                    onChange(inputValue.filter(({ id }) => id !== fileToRemove.id));
                 }
 
                 if ("error" in fileToRemove) {
@@ -126,6 +130,7 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({ input
             }}
             getDownloadUrl={(file) => `${apiUrl}/public-upload/files/download/${file.id}`}
             files={files}
+            multiple={multiple}
             maxFiles={maxFiles}
             error={
                 tooManyFilesSelected ? (
