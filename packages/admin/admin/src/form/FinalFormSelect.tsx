@@ -29,7 +29,6 @@ export const FinalFormSelect = <T,>({
     },
     getOptionValue = (option: T) => {
         if (typeof option === "object" && option !== null) {
-            // if ((option as any).id) return String((option as any).id);
             if ((option as any).id || (option as any).id === "") return String((option as any).id);
             if ((option as any).value) return String((option as any).value);
             return JSON.stringify(option);
