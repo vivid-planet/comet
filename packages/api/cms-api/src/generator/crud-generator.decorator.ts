@@ -71,3 +71,13 @@ export function hasFieldFeature(metadataClass: any, propName: string, option: ke
     const defaultValue = option == "dedicatedResolverArg" ? false : true;
     return crudField[option] ?? defaultValue;
 }
+
+export interface CrudPositionFieldOptions {
+    positionGroupFields?: string[];
+}
+export function CrudPositionField({ positionGroupFields }: CrudPositionFieldOptions = {}): PropertyDecorator {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return function (target: any, propertyKey: string | symbol) {
+        Reflect.defineMetadata(`data:crudPositionField`, { positionGroupFields }, target.constructor, propertyKey);
+    };
+}

@@ -119,10 +119,17 @@ export function buildOptions(metadata: EntityMetadata<any>) {
 
     const hasSlugProp = metadata.props.some((prop) => prop.name == "slug");
 
-    const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
-
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
+
+    const positionProps = metadata.props.filter((prop) => Reflect.getMetadata(`data:crudPositionField`, metadata.class, prop.name) !== undefined);
+    if (positionProps.length > 1) throw new Error(`CrudPositionField-Decorator is only allowed once per entity, please check ${metadata.className}.`);
+    const hasPositionProp = !!positionProps.length;
+    const positionGroupPropNames: string[] = hasPositionProp
+        ? Reflect.getMetadata(`data:crudPositionField`, metadata.class, positionProps[0].name).positionGroupFields ?? []
+        : [];
+    if (scopeProp) positionGroupPropNames.push(scopeProp.name); // if there is a scope prop it's always effecting position-group
+    const positionGroupProps = hasPositionProp ? metadata.props.filter((prop) => positionGroupPropNames.includes(prop.name)) : [];
 
     const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
     const skipScopeCheck = !scopeProp && !scopedEntity;
@@ -143,6 +150,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         hasSortArg,
         hasSlugProp,
         hasPositionProp,
+        positionGroupProps,
         statusProp,
         statusActiveItems,
         hasStatusFilter,
@@ -465,7 +473,9 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
 
 function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
-    const { hasSearchArg, hasFilterArg, hasPositionProp, crudSearchPropNames } = buildOptions(metadata);
+    const { hasSearchArg, hasFilterArg, hasPositionProp, positionGroupProps, crudSearchPropNames } = buildOptions(metadata);
+
+    const positionGroupType = positionGroupProps.length ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${prop.type}`).join(",")} }` : false;
 
     const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
     import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
@@ -474,6 +484,14 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     import { Injectable } from "@nestjs/common";
 
     ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
+    ${generateImportsCode(
+        positionGroupProps.reduce<Imports>((acc, prop) => {
+            if (prop.targetMeta) {
+                acc.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+            }
+            return acc;
+        }, []),
+    )}
     import { ${classNameSingular}Filter } from "./dto/${fileNameSingular}.filter";
 
     @Injectable()
@@ -522,24 +540,56 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
         ${
             hasPositionProp
                 ? `
-                async incrementPositions(lowestPosition: number, highestPosition?: number) {
+                async incrementPositions(${
+                    positionGroupProps.length ? `group: ${positionGroupType},` : ``
+                }lowestPosition: number, highestPosition?: number) {
                     // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
                     await this.repository.nativeUpdate(
-                        { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } }, // add filter for grouping if necessary
+                    ${
+                        positionGroupProps.length
+                            ? `{
+                            $and: [
+                                { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },
+                                this.getPositionGroupCondition(group),
+                            ],
+                        },`
+                            : `{ position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },`
+                    }
                         { position: this.entityManager.raw("position + 1") },
                     );
                 }
 
-                async decrementPositions(lowestPosition: number, highestPosition?: number) {
+                async decrementPositions(${
+                    positionGroupProps.length ? `group: ${positionGroupType},` : ``
+                }lowestPosition: number, highestPosition?: number) {
                     // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
                     await this.repository.nativeUpdate(
-                        { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } }, // add filter for grouping if necessary
+                    ${
+                        positionGroupProps.length
+                            ? `{
+                            $and: [
+                                { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },
+                                this.getPositionGroupCondition(group),
+                            ],
+                        },`
+                            : `{ position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },`
+                    }
                         { position: this.entityManager.raw("position - 1") },
                     );
                 }
 
-                async getLastPosition() {
-                    return this.repository.count({}); // add filter for grouping if necessary
+                async getLastPosition(${positionGroupProps.length ? `group: ${positionGroupType}` : ``}) {
+                    return this.repository.count(${positionGroupProps.length ? `this.getPositionGroupCondition(group)` : `{}`});
+                }
+
+                ${
+                    positionGroupProps.length
+                        ? `getPositionGroupCondition(data: ${positionGroupType}): FilterQuery<ProductCategory> {
+                    return {
+                        scope: data.scope,
+                    };
+                }`
+                        : ``
                 }
                 `
                 : ""
@@ -892,6 +942,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasSortArg,
         hasFilterArg,
         hasPositionProp,
+        positionGroupProps,
         statusProp,
         hasStatusFilter,
         dedicatedResolverArgProps,
@@ -1110,10 +1161,22 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 // use local position-var because typescript does not narrow down input.position, keeping "| undefined" typing resulting in typescript error in create-function
                 hasPositionProp
                     ? `
-            const lastPosition = await this.${instanceNamePlural}Service.getLastPosition();
+            const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps
+                                    .map((prop) => (prop.name === "scope" ? `scope` : `${prop.name}: input.${prop.name}`))
+                                    .join(",")} }`
+                              : ``
+                      });
             let position = input.position;
             if (position !== undefined && position < lastPosition + 1) {
-                await this.${instanceNamePlural}Service.incrementPositions(position);
+                await this.${instanceNamePlural}Service.incrementPositions(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps
+                                    .map((prop) => (prop.name === "scope" ? `scope` : `${prop.name}: input.${prop.name}`))
+                                    .join(",")} }, `
+                              : ``
+                      }position);
             } else {
                 position = lastPosition + 1;
             }`
@@ -1145,14 +1208,26 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 hasPositionProp
                     ? `
             if (input.position !== undefined) {
-                const lastPosition = await this.${instanceNamePlural}Service.getLastPosition();
+                const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} }`
+                              : ``
+                      });
                 if (input.position > lastPosition + 1) {
                     input.position = lastPosition + 1;
                 }
                 if (${instanceNameSingular}.position < input.position) {
-                    await this.${instanceNamePlural}Service.decrementPositions(${instanceNameSingular}.position, input.position);
+                    await this.${instanceNamePlural}Service.decrementPositions(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                              : ``
+                      }${instanceNameSingular}.position, input.position);
                 } else if (${instanceNameSingular}.position > input.position) {
-                    await this.${instanceNamePlural}Service.incrementPositions(input.position, ${instanceNameSingular}.position);
+                    await this.${instanceNamePlural}Service.incrementPositions(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                              : ``
+                      }input.position, ${instanceNameSingular}.position);
                 }
             }`
                     : ""
@@ -1176,7 +1251,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             this.entityManager.remove(${instanceNameSingular});${
-                      hasPositionProp ? `await this.${instanceNamePlural}Service.decrementPositions(${instanceNameSingular}.position);` : ""
+                      hasPositionProp
+                          ? `await this.${instanceNamePlural}Service.decrementPositions(${
+                                positionGroupProps.length
+                                    ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                                    : ``
+                            }${instanceNameSingular}.position);`
+                          : ""
                   }
             await this.entityManager.flush();
             return true;

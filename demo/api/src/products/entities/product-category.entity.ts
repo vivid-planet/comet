@@ -1,4 +1,5 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
+import { CrudPositionField } from "@comet/cms-api/lib/generator/crud-generator.decorator";
 import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Min } from "class-validator";
@@ -27,6 +28,7 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
     @Property({ columnType: "integer" })
     @Field(() => Int)
     @Min(1)
+    @CrudPositionField()
     position: number;
 
     @CrudField({

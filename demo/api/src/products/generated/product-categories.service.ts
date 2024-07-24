@@ -33,7 +33,7 @@ export class ProductCategoriesService {
     async incrementPositions(lowestPosition: number, highestPosition?: number) {
         // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
         await this.repository.nativeUpdate(
-            { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } }, // add filter for grouping if necessary
+            { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },
             { position: this.entityManager.raw("position + 1") },
         );
     }
@@ -41,12 +41,12 @@ export class ProductCategoriesService {
     async decrementPositions(lowestPosition: number, highestPosition?: number) {
         // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
         await this.repository.nativeUpdate(
-            { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } }, // add filter for grouping if necessary
+            { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },
             { position: this.entityManager.raw("position - 1") },
         );
     }
 
     async getLastPosition() {
-        return this.repository.count({}); // add filter for grouping if necessary
+        return this.repository.count({});
     }
 }
