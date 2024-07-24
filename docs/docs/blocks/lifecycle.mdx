@@ -3,10 +3,6 @@ title: Lifecycle
 sidebar_position: 5
 ---
 
-import LifecycleApi from "./lifecycle/lifecycle-api.svg";
-import LifecycleAdmin from "./lifecycle/lifecycle-admin.svg";
-import LifecycleFull from "./lifecycle/lifecycle-full.svg";
-
 # Deep dive: A block's lifecycle
 
 A block usually exists in all three microservices (API, Admin, and Site) and the database.
@@ -96,7 +92,14 @@ You can think of the block data as the GraphQL object type and the block input a
 
 <figure>
 
-<LifecycleApi />
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR;
+    input[Block input]-->|transformToBlockData|data[Block data];
+    data[Block data]-->|transformToSave|save[Block save];
+    save[Block save]-->|blockDataFactory|data[Block data];
+    data[Block data]-->|transformToPlain|plain[Block plain];
+```
 
 <figcaption>Different block states in the API</figcaption>
 
@@ -164,7 +167,14 @@ The API's output (= data) is the Admin's input, and the Admin's output is the AP
 
 <figure>
 
-<LifecycleAdmin />
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR;
+    input[Block input]-->|input2State|state[Block state];
+    state[Block state]-->|state2Output|output[Block output];
+    output[Block output]-->|output2State|state[Block state];
+    state[Block state]-->|createPreviewState|previewState[Block preview state];
+```
 
 <figcaption>Different block states in the Admin</figcaption>
 
@@ -215,7 +225,15 @@ You can see a block's full lifecycle across the microservices in the following f
 
 <figure>
 
-<LifecycleFull />
+```mermaid
+%%{ init: { 'flowchart': { 'curve': 'linear' } } }%%
+flowchart LR;
+    Admin-->|Block input|API;
+    API-->|Block plain|Site;
+    API-->|Block plain|Admin;
+    API-->|Block save|Database[(Database)];
+    Database[(Database)]-->|Block data|API;
+```
 
 <figcaption>Full block lifecycle</figcaption>
 
