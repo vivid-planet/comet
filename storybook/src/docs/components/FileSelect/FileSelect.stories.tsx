@@ -61,12 +61,6 @@ storiesOf("stories/components/FileSelect", module)
 
         return (
             <FileSelect
-                onDrop={(acceptedFiles, fileRejections) => {
-                    // Handle what happens with the dropped files
-                }}
-                onRemove={(file) => {
-                    // Handle remove
-                }}
                 onDownload={(file) => {
                     // Handle download
                 }}

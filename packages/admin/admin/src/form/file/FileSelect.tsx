@@ -36,8 +36,8 @@ type ThemeProps = ThemedComponentBaseProps<{
 
 export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>> = {
     files: FileSelectItem<AdditionalValidFileValues>[];
-    onDrop: DropzoneOptions["onDrop"];
-    onRemove: (file: FileSelectItem<AdditionalValidFileValues>) => void;
+    onDrop?: DropzoneOptions["onDrop"];
+    onRemove?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
     onDownload?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
     disabled?: boolean;
     readOnly?: boolean;
@@ -128,7 +128,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                                                   onDownload(file);
                                               }
                                     }
-                                    onClickDelete={readOnly ? undefined : () => onRemove(file)}
+                                    onClickDelete={readOnly || !onRemove ? undefined : () => onRemove(file)}
                                     {...slotProps?.fileListItem}
                                 />
                             ))}
