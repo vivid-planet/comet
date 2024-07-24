@@ -204,7 +204,6 @@ export function generateForm(
         FinalFormSubmitEvent,
         Loading,
         MainContent,
-        messages,
         TextAreaField,
         TextField,
         useFormApiRef,
