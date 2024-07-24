@@ -24,7 +24,7 @@ import {
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { Card, CardContent, MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import {
     GQLManufacturerCountriesQuery,
@@ -319,32 +319,22 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
-
-                        {/* TODO: Remove `Card` and `CardContent` once styling-followup is complete (COM-875)  */}
-                        <Card sx={{ mb: 4 }}>
-                            <CardContent>
-                                <Field
-                                    label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
-                                    name="priceList"
-                                    component={FinalFormFileUpload}
-                                    maxFiles={1}
-                                    maxFileSize={1024 * 1024 * 4} // 4 MB
-                                    fullWidth
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardContent>
-                                <Field
-                                    label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
-                                    name="datasheets"
-                                    component={FinalFormFileUpload}
-                                    maxFiles={5}
-                                    maxFileSize={1024 * 1024 * 4} // 4 MB
-                                    fullWidth
-                                />
-                            </CardContent>
-                        </Card>
+                        <Field
+                            label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
+                            name="priceList"
+                            component={FinalFormFileUpload}
+                            maxFiles={1}
+                            maxFileSize={1024 * 1024 * 4} // 4 MB
+                            fullWidth
+                        />
+                        <Field
+                            label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                            name="datasheets"
+                            component={FinalFormFileUpload}
+                            maxFiles={5}
+                            maxFileSize={1024 * 1024 * 4} // 4 MB
+                            fullWidth
+                        />
                     </MainContent>
                 </>
             )}
