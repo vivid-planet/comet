@@ -207,6 +207,12 @@ export function BaseOneOfBlockInput<BlockMap extends BaseBlockMap>({
     OneOfBlockData: Type<OneOfBlockDataInterface<BlockMap>>;
     OneOfBlockItemInput: Type<OneOfBlockItemInputInterface>;
 }): Type<OneOfBlockInputInterface<BlockMap>> {
+    for (const block in supportedBlocks) {
+        if (!supportedBlocks[block]) {
+            throw new Error(`Supported block '${block}' is undefined. This is most likely due to a circular import`);
+        }
+    }
+
     const supportedBlockTypes: Array<keyof BlockMap | null> = Object.keys(supportedBlocks);
 
     class OneOfBlockInput extends BlockInput {

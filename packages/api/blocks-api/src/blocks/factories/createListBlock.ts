@@ -116,7 +116,9 @@ export function createListBlock<B extends Block>(
     { block, ListBlockItemData = BaseListBlockItemData(block), ListBlockItemInput = BaseListBlockItemInput(block, ListBlockItemData) }: Options<B>,
     name: BlockFactoryNameOrOptions,
 ): Block<BlockDataInterface, ListBlockInputInterface<ExtractBlockInput<B>>> {
-    if (!block) throw new Error("block is undefined (can happen because of cycling imports)");
+    if (!block) {
+        throw new Error("Provided 'block' is undefined. This is most likely due to a circular import");
+    }
 
     class ListBlockData extends BlockData {
         @Type(() => ListBlockItemData)
