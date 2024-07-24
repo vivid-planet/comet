@@ -5,7 +5,7 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
-    mikroOrmQuery,
+    gqlArgsToMikroOrmQuery,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -61,7 +61,7 @@ export class ProductResolver {
         @Args() { status, search, filter, sort, offset, limit }: ProductsArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProducts> {
-        const where = mikroOrmQuery({ search, filter }, this.repository);
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
         where.status = { $in: status };
 
         const fields = extractGraphqlFields(info, { root: "nodes" });

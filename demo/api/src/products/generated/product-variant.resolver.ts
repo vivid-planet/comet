@@ -5,7 +5,7 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
-    mikroOrmQuery,
+    gqlArgsToMikroOrmQuery,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -44,7 +44,7 @@ export class ProductVariantResolver {
         @Args() { product, search, filter, sort, offset, limit }: ProductVariantsArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProductVariants> {
-        const where = mikroOrmQuery({ search, filter }, this.repository);
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
 
         where.product = product;
 

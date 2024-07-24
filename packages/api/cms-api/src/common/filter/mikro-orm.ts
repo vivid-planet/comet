@@ -253,7 +253,7 @@ export function searchToMikroOrmQuery(search: string, fieldsOrMetadata: string[]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mikroOrmQuery({ search, filter }: { search?: string; filter?: any }, repository: EntityRepository<any>): ObjectQuery<any> {
+export function gqlArgsToMikroOrmQuery({ search, filter }: { search?: string; filter?: any }, repository: EntityRepository<any>): ObjectQuery<any> {
     const andFilters = [];
 
     const metadata = repository.getEntityManager().getMetadata().get(repository.getEntityName());

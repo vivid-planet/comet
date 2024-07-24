@@ -884,7 +884,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     imports.push({ name: "validateNotModified", importPath: "@comet/cms-api" });
     imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
     imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
-    imports.push({ name: "mikroOrmQuery", importPath: "@comet/cms-api" });
+    imports.push({ name: "gqlArgsToMikroOrmQuery", importPath: "@comet/cms-api" });
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
@@ -961,7 +961,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
-                    ? ` = mikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.repository);`
+                    ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.repository);`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
             ${hasStatusFilter ? `where.status = { $in: status };` : ""}

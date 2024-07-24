@@ -5,7 +5,7 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
-    mikroOrmQuery,
+    gqlArgsToMikroOrmQuery,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -50,7 +50,7 @@ export class NewsResolver {
         @Args() { scope, status, search, filter, sort, offset, limit }: NewsListArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedNews> {
-        const where = mikroOrmQuery({ search, filter }, this.repository);
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
         where.status = { $in: status };
         where.scope = scope;
 
