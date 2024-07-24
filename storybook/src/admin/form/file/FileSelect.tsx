@@ -1,5 +1,6 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
+import { boolean } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
@@ -26,98 +27,95 @@ const dummyFileDownload = (file: any) => {
 const SingleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
     const [file, setFile] = React.useState<FileSelectItem | undefined>(hasExistingFiles ? dummyFiles[0] : undefined);
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
+    const noBackground = boolean("No Background", false);
 
     return (
-        <Card variant="outlined">
-            <CardContent>
-                <Typography variant="h6" gutterBottom>
-                    Single File Select
-                </Typography>
-                <FileSelect
-                    onDrop={(acceptedFiles, rejectedFiles) => {
-                        const tooManyFilesWereDropped = rejectedFiles.some((rejection) =>
-                            rejection.errors.some((error) => error.code === "too-many-files"),
-                        );
+        <Box padding={4} sx={{ backgroundColor: noBackground ? "transparent" : "white" }}>
+            <Typography variant="h6" gutterBottom>
+                Single File Select
+            </Typography>
+            <FileSelect
+                onDrop={(acceptedFiles, rejectedFiles) => {
+                    const tooManyFilesWereDropped = rejectedFiles.some((rejection) =>
+                        rejection.errors.some((error) => error.code === "too-many-files"),
+                    );
 
-                        setTooManyFilesSelected(tooManyFilesWereDropped);
+                    setTooManyFilesSelected(tooManyFilesWereDropped);
 
-                        if (!tooManyFilesWereDropped) {
-                            if (acceptedFiles.length > 0) {
-                                setFile({
-                                    name: acceptedFiles[0].name,
-                                    size: acceptedFiles[0].size,
-                                });
-                            }
-                            if (rejectedFiles.length > 0) {
-                                setFile({
-                                    name: rejectedFiles[0].file.name,
-                                    error: true,
-                                });
-                            }
+                    if (!tooManyFilesWereDropped) {
+                        if (acceptedFiles.length > 0) {
+                            setFile({
+                                name: acceptedFiles[0].name,
+                                size: acceptedFiles[0].size,
+                            });
                         }
-                    }}
-                    onRemove={() => {
-                        setFile(undefined);
-                    }}
-                    onDownload={dummyFileDownload}
-                    maxFiles={1}
-                    maxFileSize={1024 * 1024 * 5} // 5 MB
-                    files={file ? [file] : []}
-                    error={tooManyFilesSelected ? "Selection was canceled. You can only select one file." : undefined}
-                />
-            </CardContent>
-        </Card>
+                        if (rejectedFiles.length > 0) {
+                            setFile({
+                                name: rejectedFiles[0].file.name,
+                                error: true,
+                            });
+                        }
+                    }
+                }}
+                onRemove={() => {
+                    setFile(undefined);
+                }}
+                onDownload={dummyFileDownload}
+                maxFileSize={1024 * 1024 * 5} // 5 MB
+                files={file ? [file] : []}
+                error={tooManyFilesSelected ? "Selection was canceled. You can only select one file." : undefined}
+            />
+        </Box>
     );
 };
 
 const MultipleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
     const [files, setFiles] = React.useState<FileSelectItem[]>(hasExistingFiles ? dummyFiles : []);
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
+    const noBackground = boolean("No Background", false);
     const maxNumberOfFiles = 4;
 
     return (
-        <Card variant="outlined">
-            <CardContent>
-                <Typography variant="h6" gutterBottom>
-                    Multiple File Select
-                </Typography>
-                <FileSelect
-                    onDrop={(acceptedFiles, rejectedFiles) => {
-                        const tooManyFilesWereDropped = rejectedFiles.some((rejection) =>
-                            rejection.errors.some((error) => error.code === "too-many-files"),
-                        );
+        <Box padding={4} sx={{ backgroundColor: noBackground ? "transparent" : "white" }}>
+            <Typography variant="h6" gutterBottom>
+                Multiple File Select
+            </Typography>
+            <FileSelect
+                onDrop={(acceptedFiles, rejectedFiles) => {
+                    const tooManyFilesWereDropped = rejectedFiles.some((rejection) =>
+                        rejection.errors.some((error) => error.code === "too-many-files"),
+                    );
 
-                        setTooManyFilesSelected(tooManyFilesWereDropped);
+                    setTooManyFilesSelected(tooManyFilesWereDropped);
 
-                        if (!tooManyFilesWereDropped) {
-                            setFiles((existingFiles) => {
-                                return [
-                                    ...existingFiles,
-                                    ...acceptedFiles.map((file) => ({
-                                        name: file.name,
-                                        size: file.size,
-                                    })),
-                                    ...rejectedFiles.map((file) => ({
-                                        name: file.file.name,
-                                        error: true,
-                                    })),
-                                ];
-                            });
-                        }
-                    }}
-                    onRemove={(fileToRemove) => setFiles(files.filter((file) => file.name !== fileToRemove.name))}
-                    onDownload={dummyFileDownload}
-                    files={files}
-                    maxFiles={maxNumberOfFiles}
-                    maxFileSize={1024 * 1024 * 5} // 5 MB
-                    error={
-                        tooManyFilesSelected
-                            ? `Selection was canceled. You can only select a maximum of ${maxNumberOfFiles} files, please reduce your selection.`
-                            : undefined
+                    if (!tooManyFilesWereDropped) {
+                        setFiles((existingFiles) => {
+                            return [
+                                ...existingFiles,
+                                ...acceptedFiles.map((file) => ({
+                                    name: file.name,
+                                    size: file.size,
+                                })),
+                                ...rejectedFiles.map((file) => ({
+                                    name: file.file.name,
+                                    error: true,
+                                })),
+                            ];
+                        });
                     }
-                />
-            </CardContent>
-        </Card>
+                }}
+                onRemove={(fileToRemove) => setFiles(files.filter((file) => file.name !== fileToRemove.name))}
+                onDownload={dummyFileDownload}
+                files={files}
+                maxFiles={maxNumberOfFiles}
+                maxFileSize={1024 * 1024 * 5} // 5 MB
+                error={
+                    tooManyFilesSelected
+                        ? `Selection was canceled. You can only select a maximum of ${maxNumberOfFiles} files, please reduce your selection.`
+                        : undefined
+                }
+            />
+        </Box>
     );
 };
 

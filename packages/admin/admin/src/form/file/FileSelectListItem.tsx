@@ -89,7 +89,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
     } = iconMapping;
 
     if ("loading" in file && !file.name) {
-        return <Skeleton variant="rounded" height={35} animation="wave" width="100%" sx={{ borderRadius: 2 }} {...slotProps?.skeleton} />;
+        return <Skeleton variant="rounded" animation="wave" {...slotProps?.skeleton} />;
     }
 
     const ownerState: OwnerState = {
@@ -170,6 +170,7 @@ const Root = createComponentSlot("div")<FileSelectListItemClassKey, OwnerState>(
         background-color: ${theme.palette.grey[50]};
         transition: background-color 200ms;
         width: 100%;
+        border: 1px solid ${theme.palette.grey[100]};
         box-sizing: border-box;
 
         &:hover {
@@ -196,13 +197,19 @@ const Root = createComponentSlot("div")<FileSelectListItemClassKey, OwnerState>(
         `}
     `,
 );
-
 const Skeleton = createComponentSlot(MuiSkeleton)<FileSelectListItemClassKey>({
     componentName: "FileSelectListItem",
     slotName: "skeleton",
-})(css`
-    ${commonItemSpacingStyles};
-`);
+})(
+    ({ theme }) => css`
+        width: 100%;
+        height: 36px;
+        border: 1px solid ${theme.palette.grey[100]};
+        border-radius: 4px;
+        box-sizing: border-box;
+        ${commonItemSpacingStyles};
+    `,
+);
 
 const Content = createComponentSlot("div")<FileSelectListItemClassKey>({
     componentName: "FileSelectListItem",
@@ -243,9 +250,9 @@ const FileName = createComponentSlot(Typography)<FileSelectListItemClassKey, Own
         overflow: hidden;
         white-space: nowrap;
         flex-grow: 1;
-        line-height: 19px;
-        padding-top: 8px;
-        padding-bottom: 8px;
+        line-height: 16px;
+        padding-top: 9px;
+        padding-bottom: 9px;
 
         ${ownerState.hasErrorWithoutDetails &&
         css`
@@ -254,7 +261,8 @@ const FileName = createComponentSlot(Typography)<FileSelectListItemClassKey, Own
 
         ${ownerState.hasErrorWithDetails &&
         css`
-            padding-bottom: 1px;
+            padding-top: 7px;
+            padding-bottom: 4px;
         `}
 
         ${ownerState.disabled &&
@@ -302,7 +310,8 @@ const ErrorDetails = createComponentSlot("div")<FileSelectListItemClassKey>({
         align-items: center;
         gap: ${theme.spacing(1)};
         color: ${theme.palette.error.main};
-        padding-bottom: 8px;
+        padding-bottom: 7px;
+        font-size: 12px;
         line-height: 0;
     `,
 );
