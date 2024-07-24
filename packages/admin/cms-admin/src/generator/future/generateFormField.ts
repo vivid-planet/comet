@@ -150,8 +150,7 @@ export function generateFormField(
             ${required ? "required" : ""}
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
-            >
+            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
