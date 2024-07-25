@@ -1,7 +1,7 @@
 import { EntityMetadata } from "@mikro-orm/core";
 import { getMetadataStorage } from "class-validator";
 
-import { hasFieldFeature } from "./crud-generator.decorator";
+import { CrudGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
 import { buildOptions } from "./generate-crud";
 import { buildNameVariants } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
@@ -41,14 +41,13 @@ function findReferenceTargetType(
 }
 
 export async function generateCrudInput(
-    generatorOptions: { targetDirectory: string },
+    generatorOptions: CrudGeneratorOptions,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
     options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[] } = { nested: false, excludeFields: [] },
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
-
-    const { dedicatedResolverArgProps } = buildOptions(metadata);
+    const { dedicatedResolverArgProps } = buildOptions({ metadata, generatorOptions });
 
     const props = metadata.props
         .filter((prop) => {

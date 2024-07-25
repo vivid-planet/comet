@@ -50,7 +50,11 @@ export class ProductTagResolver {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const options: FindOptions<ProductTag, any> = { offset, limit, populate };
+        const options: FindOptions<ProductTag, any> = {
+            offset,
+            limit,
+            populate,
+        };
 
         if (sort) {
             options.orderBy = sort.map((sortItem) => {

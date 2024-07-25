@@ -32,7 +32,10 @@ export class ManufacturerResolver {
     async manufacturers(@Args() { search, filter, sort, offset, limit }: ManufacturersArgs): Promise<PaginatedManufacturers> {
         const where = this.manufacturersService.getFindCondition({ search, filter });
 
-        const options: FindOptions<Manufacturer> = { offset, limit };
+        const options: FindOptions<Manufacturer> = {
+            offset,
+            limit,
+        };
 
         if (sort) {
             options.orderBy = sort.map((sortItem) => {

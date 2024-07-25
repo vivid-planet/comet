@@ -31,7 +31,10 @@ export class ManufacturerCountryResolver {
     async manufacturerCountries(@Args() { search, filter, offset, limit }: ManufacturerCountriesArgs): Promise<PaginatedManufacturerCountries> {
         const where = this.manufacturerCountriesService.getFindCondition({ search, filter });
 
-        const options: FindOptions<ManufacturerCountry> = { offset, limit };
+        const options: FindOptions<ManufacturerCountry> = {
+            offset,
+            limit,
+        };
 
         const [entities, totalCount] = await this.repository.findAndCount(where, options);
         return new PaginatedManufacturerCountries(entities, totalCount);
