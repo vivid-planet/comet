@@ -319,6 +319,26 @@ Recommended enum values are (depending on the use case):
 The `update{Entity}Visibility` mutation is also removed.
 Use the generic `update{Entity}` mutation instead.
 
+### API Generator: Remove generated services
+
+The API Generator no longer generates the service with `getFindCondition`.
+Remove all previously generated services from the module definitions.
+For example:
+
+```diff title=news.module.ts
+import { NewsResolver } from "./generated/news.resolver";
+- import { NewsService } from "./generated/news.service";
+
+@Module({
+    imports: [MikroOrmModule.forFeature([News])],
+    providers: [
+        NewsResolver,
+-       NewsService,
+    ],
+})
+export class NewsModule {}
+```
+
 ## Admin
 
 ### Remove `axios` dependency
