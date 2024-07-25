@@ -46,4 +46,26 @@ storiesOf("stories/components/FileSelect", module)
                 maxFiles={5}
             />
         );
+    })
+    .add("ReadOnly FileSelect", () => {
+        const value: FileSelectItem[] = [
+            {
+                name: "Filename.xyz",
+                size: 4.3 * 1024 * 1024, // 4.3 MB
+            },
+            {
+                name: "Another file.png",
+                size: 568 * 1024, // 568 KB
+            },
+        ];
+
+        return (
+            <FileSelect
+                onDownload={(file) => {
+                    // Handle download
+                }}
+                files={value}
+                readOnly
+            />
+        );
     });
