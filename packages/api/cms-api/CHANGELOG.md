@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 6.17.1
+
+### Patch Changes
+
+-   76ca3bf98: Remove index signature from `ContentScope` interface
+
+    This allows using scope DTOs without index signature in `@ScopedEntity()`.
+
+    -   @comet/blocks-api@6.17.1
+
 ## 6.17.0
 
 ### Minor Changes
