@@ -1,4 +1,4 @@
-import { Delete, Download, Error, ThreeDotSaving } from "@comet/admin-icons";
+import { Delete, Download, Error, File as FileIcon, FileNotMenu, ThreeDotSaving } from "@comet/admin-icons";
 import {
     Chip,
     ComponentsOverrides,
@@ -19,6 +19,7 @@ import { useElementIsOverflowing } from "../../hooks/useElementIsOverflowing";
 import { FileSelectItem } from "./fileSelectItemTypes";
 
 type OwnerState = {
+    hasFilePreview: boolean;
     hasErrorWithDetails: boolean;
     hasErrorWithoutDetails: boolean;
     disabled: boolean;
@@ -26,10 +27,13 @@ type OwnerState = {
 
 export type FileSelectListItemClassKey =
     | "root"
+    | "hasFilePreview"
     | "hasErrorWithDetails"
     | "hasErrorWithoutDetails"
     | "disabled"
     | "skeleton"
+    | "preview"
+    | "previewImage"
     | "content"
     | "fileListItemInfos"
     | "fileName"
@@ -56,11 +60,15 @@ export type FileSelectListItemProps = ThemedComponentBaseProps<{
     onClickDownload?: () => void;
     downloadUrl?: string;
     onClickDelete?: () => void;
+    filePreview?: string | boolean;
     iconMapping?: {
         download?: React.ReactNode;
         loading?: React.ReactNode;
         delete?: React.ReactNode;
         error?: React.ReactNode;
+        filePreviewGenericFile?: React.ReactNode;
+        filePreviewLoading?: React.ReactNode;
+        filePreviewError?: React.ReactNode;
     };
 };
 
@@ -72,6 +80,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
         downloadUrl,
         onClickDelete,
         iconMapping = {},
+        filePreview,
         slotProps,
         ...restProps
     } = useThemeProps({
@@ -86,21 +95,42 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
         delete: deleteIcon = <Delete />,
         loading: loadingIcon = <ThreeDotSaving />,
         error: errorIcon = <Error fontSize="inherit" />,
+        filePreviewGenericFile: filePreviewGenericFileIcon = <FileIcon fontSize="inherit" color="inherit" />,
+        filePreviewLoading: filePreviewLoadingIcon = <ThreeDotSaving fontSize="inherit" color="inherit" />,
+        filePreviewError: filePreviewErrorIcon = <FileNotMenu fontSize="inherit" color="inherit" />,
     } = iconMapping;
 
-    if ("loading" in file && !file.name) {
-        return <Skeleton variant="rounded" animation="wave" {...slotProps?.skeleton} />;
-    }
+    const getFilePreviewContent = React.useCallback(() => {
+        if ("loading" in file) {
+            return filePreviewLoadingIcon;
+        }
+
+        if ("error" in file) {
+            return filePreviewErrorIcon;
+        }
+
+        if (typeof filePreview === "string") {
+            return <PreviewImage src={filePreview} />;
+        }
+
+        return filePreviewGenericFileIcon;
+    }, [file, filePreview, filePreviewGenericFileIcon, filePreviewLoadingIcon, filePreviewErrorIcon]);
 
     const ownerState: OwnerState = {
+        hasFilePreview: Boolean(filePreview),
         hasErrorWithDetails: "error" in file && typeof file.error !== "boolean",
         hasErrorWithoutDetails: "error" in file && typeof file.error === "boolean",
         disabled: Boolean(disabled),
     };
 
+    if ("loading" in file && !file.name) {
+        return <Skeleton ownerState={ownerState} variant="rounded" animation="wave" {...slotProps?.skeleton} />;
+    }
+
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
-            <Content {...slotProps?.content}>
+            {Boolean(filePreview) && <Preview ownerState={ownerState}>{getFilePreviewContent()}</Preview>}
+            <Content ownerState={ownerState} {...slotProps?.content}>
                 <Tooltip title={fileNameIsOverflowing ? file.name : undefined}>
                     <FileName ref={fileNameRef} variant="caption" ownerState={ownerState} {...slotProps?.fileName}>
                         {file.name}
@@ -119,6 +149,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
                             )}
                             {(Boolean(onClickDownload) || !!downloadUrl) && (
                                 <IconButton
+                                    ownerState={ownerState}
                                     disabled={disabled}
                                     {...(downloadUrl ? { href: downloadUrl, download: true } : { onClick: onClickDownload })}
                                     {...slotProps?.iconButton}
@@ -127,7 +158,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
                                 </IconButton>
                             )}
                             {Boolean(onClickDelete) && (
-                                <IconButton onClick={onClickDelete} disabled={disabled} {...slotProps?.iconButton}>
+                                <IconButton ownerState={ownerState} onClick={onClickDelete} disabled={disabled} {...slotProps?.iconButton}>
                                     {deleteIcon}
                                 </IconButton>
                             )}
@@ -147,23 +178,27 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
     );
 };
 
-const commonItemSpacingStyles = css`
-    &:not(:last-child) {
-        margin-bottom: 2px;
-    }
+const getCommonItemSpacingStyles = (ownerState: OwnerState) => css`
+    ${!ownerState.hasFilePreview &&
+    css`
+        &:not(:last-child) {
+            margin-bottom: 2px;
+        }
+    `}
 `;
 
 const Root = createComponentSlot("div")<FileSelectListItemClassKey, OwnerState>({
     componentName: "FileSelectListItem",
     slotName: "root",
-    classesResolver: ({ hasErrorWithDetails, hasErrorWithoutDetails, disabled }) => [
+    classesResolver: ({ hasFilePreview, hasErrorWithDetails, hasErrorWithoutDetails, disabled }) => [
+        hasFilePreview && "hasFilePreview",
         hasErrorWithDetails && "hasErrorWithDetails",
         hasErrorWithoutDetails && "hasErrorWithoutDetails",
         disabled && "disabled",
     ],
 })(
     ({ theme, ownerState }) => css`
-        ${commonItemSpacingStyles};
+        ${getCommonItemSpacingStyles(ownerState)};
         padding-right: ${theme.spacing(2)};
         padding-left: ${theme.spacing(2)};
         border-radius: 4px;
@@ -197,29 +232,77 @@ const Root = createComponentSlot("div")<FileSelectListItemClassKey, OwnerState>(
         `}
     `,
 );
-const Skeleton = createComponentSlot(MuiSkeleton)<FileSelectListItemClassKey>({
+const Skeleton = createComponentSlot(MuiSkeleton)<FileSelectListItemClassKey, OwnerState>({
     componentName: "FileSelectListItem",
     slotName: "skeleton",
 })(
-    ({ theme }) => css`
+    ({ theme, ownerState }) => css`
         width: 100%;
         height: 36px;
-        border: 1px solid ${theme.palette.grey[100]};
+        outline: 1px solid ${theme.palette.grey[100]};
+        outline-offset: -1px;
         border-radius: 4px;
         box-sizing: border-box;
-        ${commonItemSpacingStyles};
+        ${getCommonItemSpacingStyles(ownerState)};
+
+        ${ownerState.hasFilePreview &&
+        css`
+            aspect-ratio: 1;
+            height: auto;
+            padding-bottom: 34px;
+            box-sizing: content-box;
+        `}
     `,
 );
 
-const Content = createComponentSlot("div")<FileSelectListItemClassKey>({
+const Preview = createComponentSlot("div")<FileSelectListItemClassKey, OwnerState>({
+    componentName: "FileSelectListItem",
+    slotName: "preview",
+})(
+    ({ theme, ownerState }) => css`
+        aspect-ratio: 1;
+        margin-top: 7px;
+        margin-bottom: 4px;
+        background-color: ${theme.palette.grey[200]};
+        border-radius: 2px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        color: white;
+
+        ${ownerState.hasErrorWithDetails &&
+        css`
+            margin-bottom: 0;
+        `}
+    `,
+);
+
+const PreviewImage = createComponentSlot("img")<FileSelectListItemClassKey>({
+    componentName: "FileSelectListItem",
+    slotName: "previewImage",
+})(css`
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+`);
+
+const Content = createComponentSlot("div")<FileSelectListItemClassKey, OwnerState>({
     componentName: "FileSelectListItem",
     slotName: "content",
 })(
-    ({ theme }) => css`
+    ({ theme, ownerState }) => css`
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: ${theme.spacing(1)};
+
+        ${ownerState.hasFilePreview &&
+        !ownerState.hasErrorWithDetails &&
+        css`
+            margin-bottom: 7px;
+        `}
     `,
 );
 
@@ -237,6 +320,12 @@ const FileListItemInfos = createComponentSlot("div")<FileSelectListItemClassKey,
         css`
             padding-top: 3.5px;
             margin-bottom: -3.5px;
+
+            ${ownerState.hasFilePreview &&
+            css`
+                padding-top: 0;
+                margin-bottom: 0;
+            `}
         `};
     `,
 );
@@ -254,6 +343,12 @@ const FileName = createComponentSlot(Typography)<FileSelectListItemClassKey, Own
         padding-top: 9px;
         padding-bottom: 9px;
 
+        ${ownerState.hasFilePreview &&
+        css`
+            padding-top: ${theme.spacing(2)};
+            padding-bottom: ${theme.spacing(2)};
+        `}
+
         ${ownerState.hasErrorWithoutDetails &&
         css`
             color: ${theme.palette.error.main};
@@ -263,6 +358,11 @@ const FileName = createComponentSlot(Typography)<FileSelectListItemClassKey, Own
         css`
             padding-top: 7px;
             padding-bottom: 4px;
+
+            ${ownerState.hasFilePreview &&
+            css`
+                padding-top: 4px;
+            `}
         `}
 
         ${ownerState.disabled &&
@@ -321,11 +421,11 @@ const ErrorDetailsText = createComponentSlot(Typography)<FileSelectListItemClass
     slotName: "errorDetailsText",
 })();
 
-const IconButton = createComponentSlot(MuiIconButton)<FileSelectListItemClassKey>({
+const IconButton = createComponentSlot(MuiIconButton)<FileSelectListItemClassKey, OwnerState>({
     componentName: "FileSelectListItem",
     slotName: "iconButton",
 })(
-    ({ theme }) => css`
+    ({ theme, ownerState }) => css`
         padding: ${theme.spacing(1)};
         color: ${theme.palette.grey[300]};
         transition: background-color 200ms;
@@ -337,6 +437,15 @@ const IconButton = createComponentSlot(MuiIconButton)<FileSelectListItemClassKey
         &:last-child {
             margin-right: ${theme.spacing(-1)};
         }
+
+        ${ownerState.hasFilePreview &&
+        css`
+            padding: 4px;
+
+            &:last-child {
+                margin-right: -4px;
+            }
+        `}
     `,
 );
 
