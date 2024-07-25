@@ -1,4 +1,4 @@
-export interface PublicUploadConfig {
+export interface FileUploadsConfig {
     directory: string;
     maxFileSize: number;
     acceptedMimeTypes: string[];

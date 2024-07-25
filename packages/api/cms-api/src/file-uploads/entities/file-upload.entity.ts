@@ -2,9 +2,9 @@ import { BaseEntity, BigIntType, Entity, Index, OptionalProps, PrimaryKey, Prope
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-@ObjectType("PublicUpload")
-@Entity()
-export class PublicUpload extends BaseEntity<PublicUpload, "id"> {
+@ObjectType("FileUpload")
+@Entity({ tableName: "CometFileUpload" })
+export class FileUpload extends BaseEntity<FileUpload, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @Field(() => ID)

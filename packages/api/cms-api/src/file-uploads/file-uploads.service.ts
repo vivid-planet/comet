@@ -5,21 +5,21 @@ import hasha from "hasha";
 import { basename, extname } from "path";
 
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
+import { FileUploadInput } from "../dam/files/dto/file-upload.input";
 import { slugifyFilename } from "../dam/files/files.utils";
-import { PublicUploadFileUploadInterface } from "./dto/public-upload-file-upload.interface";
-import { PublicUpload } from "./entities/public-upload.entity";
-import { PublicUploadConfig } from "./public-upload.config";
-import { PUBLIC_UPLOAD_CONFIG } from "./public-upload.constants";
+import { FileUpload } from "./entities/file-upload.entity";
+import { FileUploadsConfig } from "./file-uploads.config";
+import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 
 @Injectable()
-export class PublicUploadsService {
+export class FileUploadsService {
     constructor(
-        @InjectRepository(PublicUpload) private readonly publicUploadsRepository: EntityRepository<PublicUpload>,
+        @InjectRepository(FileUpload) private readonly repository: EntityRepository<FileUpload>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
-        @Inject(PUBLIC_UPLOAD_CONFIG) private readonly config: PublicUploadConfig,
+        @Inject(FILE_UPLOADS_CONFIG) private readonly config: FileUploadsConfig,
     ) {}
 
-    async upload(file: PublicUploadFileUploadInterface): Promise<PublicUpload> {
+    async upload(file: FileUploadInput): Promise<FileUpload> {
         const contentHash = await hasha.fromFile(file.path, { algorithm: "md5" });
         await this.blobStorageBackendService.upload(file, contentHash, this.config.directory);
 
@@ -27,15 +27,15 @@ export class PublicUploadsService {
         const filename = basename(file.originalname, extension);
         const name = slugifyFilename(filename, extension);
 
-        const publicUpload = this.publicUploadsRepository.create({
+        const fileUpload = this.repository.create({
             name,
             size: file.size,
             mimetype: file.mimetype,
             contentHash,
         });
 
-        this.publicUploadsRepository.persist(publicUpload);
+        this.repository.persist(fileUpload);
 
-        return publicUpload;
+        return fileUpload;
     }
 }

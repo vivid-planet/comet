@@ -5,8 +5,8 @@ import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { ConsoleModule } from "nestjs-console";
 
+import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
-import { PublicUploadsFixtureService } from "./generators/public-uploads-fixture.service";
 import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.service";
 import { UnsplashImageFileFixtureService } from "./generators/unsplash-image-file-fixture.service";
 
@@ -17,7 +17,7 @@ import { UnsplashImageFileFixtureService } from "./generators/unsplash-image-fil
         ManyImagesTestPageFixtureService,
         UnsplashImageFileFixtureService,
         SvgImageFileFixtureService,
-        PublicUploadsFixtureService,
+        FileUploadsFixtureService,
     ],
 })
 export class FixturesModule {}
