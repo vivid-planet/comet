@@ -56,6 +56,7 @@ storiesOf("@comet/admin/form/File", module)
         };
 
         const disabled = boolean("Disabled", false);
+        const readOnly = boolean("ReadOnly", false);
         const multiple = boolean("Multiple", false);
         const hasError = boolean("Has Error", false);
         const hasMaxFileSize = boolean("Limit file size (5 MB)", false);
@@ -80,6 +81,7 @@ storiesOf("@comet/admin/form/File", module)
                 }}
                 files={filesMapping[filesSelection]}
                 disabled={disabled}
+                readOnly={readOnly}
                 multiple={multiple}
                 maxFileSize={
                     hasMaxFileSize
