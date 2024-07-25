@@ -42,6 +42,7 @@
         "@docusaurus/preset-classic": "2.4.1",
         "@docusaurus/theme-common": "2.4.1",
         "@docusaurus/theme-live-codeblock": "2.4.1",
+        "@docusaurus/theme-mermaid": "2.4.1",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@fontsource/roboto": "^4.2.3",
