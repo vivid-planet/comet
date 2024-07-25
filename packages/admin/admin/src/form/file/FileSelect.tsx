@@ -9,7 +9,7 @@ import { Alert } from "../../alert/Alert";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { FileDropzone } from "./FileDropzone";
-import { FileSelectItem } from "./fileSelectItemTypes";
+import { FileSelectItem, ValidFileSelectItem } from "./fileSelectItemTypes";
 import { FileSelectListItem } from "./FileSelectListItem";
 import { getFilesInfoText } from "./getFilesInfoText";
 
@@ -39,6 +39,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     onDrop?: DropzoneOptions["onDrop"];
     onRemove?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
     onDownload?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
+    getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string;
     disabled?: boolean;
     readOnly?: boolean;
     accept?: Accept;
@@ -64,6 +65,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
         onDrop,
         onRemove,
         onDownload,
+        getDownloadUrl,
         files,
         error,
         ...restProps
@@ -117,21 +119,26 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                 <FileList {...slotProps?.fileList}>
                     {files.length > 0 ? (
                         <>
-                            {files.map((file, index) => (
-                                <FileListItem
-                                    key={index}
-                                    file={file}
-                                    onClickDownload={
-                                        "error" in file || !onDownload
-                                            ? undefined
-                                            : () => {
-                                                  onDownload(file);
-                                              }
-                                    }
-                                    onClickDelete={readOnly || !onRemove ? undefined : () => onRemove(file)}
-                                    {...slotProps?.fileListItem}
-                                />
-                            ))}
+                            {files.map((file, index) => {
+                                const isValidFile = !("error" in file) && !("loading" in file);
+
+                                return (
+                                    <FileListItem
+                                        key={index}
+                                        file={file}
+                                        onClickDownload={
+                                            isValidFile && onDownload
+                                                ? () => {
+                                                      onDownload(file);
+                                                  }
+                                                : undefined
+                                        }
+                                        downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
+                                        onClickDelete={readOnly || !onRemove ? undefined : () => onRemove(file)}
+                                        {...slotProps?.fileListItem}
+                                    />
+                                );
+                            })}
                         </>
                     ) : (
                         <FileListItem

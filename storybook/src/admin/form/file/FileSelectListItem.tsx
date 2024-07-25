@@ -27,15 +27,18 @@ storiesOf("@comet/admin/form/File", module)
             Skeleton: { loading: true },
         };
 
+        const downloadMethods = ["No download", "Download function", "Download URL"];
+
         const selectedFile = select("File Item", fileItems, fileItems["Valid File"]);
-        const canBeDownloaded = boolean("Can Be Downloaded", true);
+        const downloadMethod = select("Can be downloaded", downloadMethods, downloadMethods[0]);
         const canBeDeleted = boolean("Can Be Deleted", true);
         const disabled = boolean("Disabled", false);
 
         return (
             <FileSelectListItem
                 file={selectedFile}
-                onClickDownload={canBeDownloaded ? () => alert("Download") : undefined}
+                onClickDownload={downloadMethod === "Download function" ? () => alert("Downloading file") : undefined}
+                downloadUrl={downloadMethod === "Download URL" ? "https://example.com" : undefined}
                 onClickDelete={canBeDeleted ? () => alert("Delete") : undefined}
                 disabled={disabled}
             />

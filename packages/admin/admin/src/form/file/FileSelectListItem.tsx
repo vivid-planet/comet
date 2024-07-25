@@ -54,6 +54,7 @@ export type FileSelectListItemProps = ThemedComponentBaseProps<{
     file: FileSelectItem;
     disabled?: boolean;
     onClickDownload?: () => void;
+    downloadUrl?: string;
     onClickDelete?: () => void;
     iconMapping?: {
         download?: React.ReactNode;
@@ -68,6 +69,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
         file,
         disabled,
         onClickDownload,
+        downloadUrl,
         onClickDelete,
         iconMapping = {},
         slotProps,
@@ -115,8 +117,12 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
                             {ownerState.hasErrorWithoutDetails && (
                                 <ErrorIconContainer {...slotProps?.errorIconContainer}>{errorIcon}</ErrorIconContainer>
                             )}
-                            {Boolean(onClickDownload) && (
-                                <IconButton onClick={onClickDownload} disabled={disabled} {...slotProps?.iconButton}>
+                            {(Boolean(onClickDownload) || !!downloadUrl) && (
+                                <IconButton
+                                    disabled={disabled}
+                                    {...(downloadUrl ? { href: downloadUrl, download: true } : { onClick: onClickDownload })}
+                                    {...slotProps?.iconButton}
+                                >
                                     {downloadIcon}
                                 </IconButton>
                             )}
