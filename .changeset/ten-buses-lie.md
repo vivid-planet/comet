@@ -2,8 +2,8 @@
 "@comet/cms-api": major
 ---
 
-API Generator: replace generated service with getFindCondition with a runtime function that gets searchable fields from meta data
+API Generator: Remove generated service
 
-Use new `gqlArgsToMikroOrmQuery` function to use the runtime based field detection
-
-Now the service is not generated anymore, when updating remove it from the nestjs module
+The `Service#getFindCondition` method is replaced with the new `gqlArgsToMikroOrmQuery` function, which detects an entity's searchable fields from its metadata.
+Consequently, the generated service isn't needed anymore and will therefore no longer be generated.
+Remove the service from the module after re-running the API Generator.
