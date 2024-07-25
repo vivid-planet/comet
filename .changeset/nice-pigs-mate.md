@@ -2,7 +2,7 @@
 "@comet/cms-api": major
 ---
 
-Rename public uploads to file uploads
+Rename "public uploads" to "file uploads"
 
 The name "public uploads" was not fitting since the uploads can also be used for "private" uploads in the Admin.
 The feature was therefore renamed to "file uploads".
