@@ -55,8 +55,8 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
     slotName: "root",
     classesResolver(ownerState) {
         return [
-            ownerState.variant === "vertical" && "vertical",
-            ownerState.variant === "horizontal" && "horizontal",
+            (ownerState.variant === "vertical" || ownerState.forceVertical) && "vertical",
+            ownerState.variant === "horizontal" && !ownerState.forceVertical && "horizontal",
             ownerState.fullWidth && "fullWidth",
             ownerState.hasError && "hasError",
             ownerState.hasWarning && "hasWarning",
