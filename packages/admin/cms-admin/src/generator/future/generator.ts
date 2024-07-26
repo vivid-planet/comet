@@ -1,6 +1,7 @@
 import { GridColDef } from "@comet/admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { SvgIconTypeMap } from "@mui/material";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -57,10 +58,20 @@ export type TabsConfig = { type: "tabs"; tabs: { name: string; content: Generato
 
 type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
 
+export type StatusMapping = Record<
+    string,
+    {
+        color: SvgIconTypeMap["props"]["color"];
+        primaryText: string;
+        secondaryText?: string;
+    }
+>;
+
 export type GridColumnConfig<T> = (
     | { type: "text" }
     | { type: "number" }
     | { type: "boolean" }
+    | { type: "status"; statusMapping: StatusMapping }
     | { type: "date" }
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }

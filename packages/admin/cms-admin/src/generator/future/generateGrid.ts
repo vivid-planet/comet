@@ -246,6 +246,28 @@ export function generateGrid(
             renderCell = `(params) => {
                     return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
                 }`;
+        } else if (column.type == "status") {
+            const valueToProps = Object.entries(column.statusMapping)
+                .map(([key, value]) => {
+                    return `"${key}": {
+                        icon: <StateFilled color="${value.color}" />,
+                        primaryText: intl.formatMessage({ id: "${instanceGqlType}.${name}.${key}", defaultMessage: "${value.primaryText}" }),
+                        ${
+                            value.secondaryText
+                                ? `secondaryText: intl.formatMessage({ id: "${instanceGqlType}.${name}.${key}.secondaryText", defaultMessage: "${value.secondaryText}" }),`
+                                : ""
+                        }
+                    },`;
+                })
+                .join(" ");
+
+            renderCell = `(params) => {
+                const valueToProps: Record<string, Partial<GridCellContentProps>> = {${valueToProps}};
+
+                return (
+                    <GridCellContent {...valueToProps[params.row.${name}.toString()]} />
+                );
+            }`;
         } else if (type == "staticSelect") {
             if (column.values) {
                 throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
@@ -326,6 +348,8 @@ export function generateGrid(
         DataGridToolbar,
         filterByFragment,
         GridFilterButton,
+        GridCellContent,
+        GridCellContentProps,
         GridColDef,
         muiGridFilterToGql,
         muiGridSortToGql,
@@ -337,7 +361,7 @@ export function generateGrid(
         useDataGridRemote,
         usePersistentColumnState,
     } from "@comet/admin";
-    import { Add as AddIcon, Edit } from "@comet/admin-icons";
+    import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
     import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";

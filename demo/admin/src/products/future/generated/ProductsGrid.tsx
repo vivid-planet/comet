@@ -5,6 +5,8 @@ import {
     CrudContextMenu,
     DataGridToolbar,
     filterByFragment,
+    GridCellContent,
+    GridCellContentProps,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
@@ -16,6 +18,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
@@ -99,7 +102,26 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
-        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
+        {
+            field: "inStock",
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            renderCell: (params) => {
+                const valueToProps: Record<string, Partial<GridCellContentProps>> = {
+                    true: {
+                        icon: <StateFilled color="success" />,
+                        primaryText: intl.formatMessage({ id: "product.inStock.true", defaultMessage: "In Stock" }),
+                    },
+                    false: {
+                        icon: <StateFilled color="error" />,
+                        primaryText: intl.formatMessage({ id: "product.inStock.false", defaultMessage: "Out of Stock" }),
+                    },
+                };
+
+                return <GridCellContent {...valueToProps[params.row.inStock.toString()]} />;
+            },
+            flex: 1,
+            minWidth: 140,
+        },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
         {
             field: "description",
