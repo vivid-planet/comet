@@ -68,4 +68,43 @@ storiesOf("stories/components/FileSelect", module)
                 readOnly
             />
         );
+    })
+    .add("Grid with preview", () => {
+        const value: FileSelectItem[] = [
+            {
+                name: "Filename.xyz",
+                size: 4.3 * 1024 * 1024, // 4.3 MB
+            },
+            {
+                name: "Another file.png",
+                size: 568 * 1024, // 568 KB
+            },
+            {
+                name: "And another file.png",
+                size: 5.6 * 1024 * 1024, // 5.6 MB
+            },
+            {
+                name: "Yet another file.pdf",
+                size: 8.2 * 1024 * 1024, // 8.2 MB
+            },
+            {
+                name: "And again another file.jpg",
+                size: 3.4 * 1024 * 1024, // 3.4 MB
+            },
+            {
+                name: "One last file.png",
+                size: 1.2 * 1024 * 1024, // 1.2 MB
+            },
+        ];
+
+        return (
+            <FileSelect
+                onDownload={(file) => {
+                    // Handle download
+                }}
+                files={value}
+                readOnly
+                showFilesAsPreviewGrid
+            />
+        );
     });

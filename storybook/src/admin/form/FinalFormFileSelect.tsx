@@ -1,5 +1,5 @@
 import { Field, FinalFormFileSelect } from "@comet/admin";
-import { Card, CardContent, Grid } from "@mui/material";
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -13,7 +13,7 @@ type FormValues = {
 
 function Story() {
     return (
-        <div style={{ width: 800 }}>
+        <Box maxWidth={1600}>
             <Form<FormValues>
                 onSubmit={(values) => {
                     //
@@ -63,12 +63,66 @@ function Story() {
                                     </CardContent>
                                 </Card>
                             </Grid>
+                            <Grid item xs={12}>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <Typography variant="h4" sx={{ mb: 4 }}>
+                                            Vertical form layout
+                                        </Typography>
+                                        <Field
+                                            name="vertical"
+                                            label="File Select"
+                                            component={FinalFormFileSelect}
+                                            multiple
+                                            fullWidth
+                                            helperText="Selected files will also be shown in the read-only field below."
+                                        />
+                                        <Field
+                                            name="vertical"
+                                            label="File Select - ReadOnly Grid"
+                                            component={FinalFormFileSelect}
+                                            showFilesAsPreviewGrid
+                                            readOnly
+                                            multiple
+                                            fullWidth
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <Typography variant="h4" sx={{ mb: 4 }}>
+                                            Horizontal form layout
+                                        </Typography>
+                                        <Field
+                                            name="horizontal"
+                                            label="File Select"
+                                            component={FinalFormFileSelect}
+                                            multiple
+                                            fullWidth
+                                            variant="horizontal"
+                                            helperText="Selected files will also be shown in the read-only field below."
+                                        />
+                                        <Field
+                                            variant="horizontal"
+                                            name="horizontal"
+                                            label="File Select - ReadOnly Grid"
+                                            component={FinalFormFileSelect}
+                                            showFilesAsPreviewGrid
+                                            readOnly
+                                            multiple
+                                            fullWidth
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
                         </Grid>
                         <pre>{JSON.stringify(values, null, 2)}</pre>
                     </form>
                 )}
             />
-        </div>
+        </Box>
     );
 }
 
