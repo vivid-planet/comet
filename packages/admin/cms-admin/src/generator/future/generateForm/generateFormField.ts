@@ -109,15 +109,15 @@ export function generateFormField({
         }
         formValueToGqlInputCode = `${name}: ${assignment},`;
 
-        let initializationLineAssignment = `String(data.${instanceGqlType}.${name})`;
+        let initializationAssignment = `String(data.${instanceGqlType}.${name})`;
         if (!required) {
-            initializationLineAssignment = `data.${instanceGqlType}.${name} ? ${initializationLineAssignment} : undefined`;
+            initializationAssignment = `data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`;
         }
         formValuesConfig.push({
             omitFromFragmentType: name,
-            typeLines: [`${name}${!required ? `?` : ``}: string;`],
-            initializationLines: [`${name}: ${initializationLineAssignment}`],
-            defaultInitializationLines: [],
+            typeCode: [`${name}${!required ? `?` : ``}: string;`],
+            initializationCode: [`${name}: ${initializationAssignment}`],
+            defaultInitializationCode: [],
         });
     } else if (config.type == "boolean") {
         code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
@@ -136,9 +136,9 @@ export function generateFormField({
             )}
         </Field>`;
         formValuesConfig.push({
-            typeLines: [],
-            initializationLines: [],
-            defaultInitializationLines: [`${name}: false`],
+            typeCode: [],
+            initializationCode: [],
+            defaultInitializationCode: [`${name}: false`],
         });
     } else if (config.type == "date") {
         code = `
@@ -160,9 +160,9 @@ export function generateFormField({
                 ${validateCode}
             />`;
         formValuesConfig.push({
-            typeLines: [],
-            initializationLines: [`${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`],
-            defaultInitializationLines: [],
+            typeCode: [],
+            initializationCode: [`${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`],
+            defaultInitializationCode: [],
         });
     } else if (config.type == "block") {
         code = `<Field name="${name}" isEqual={isEqual}>
@@ -170,9 +170,9 @@ export function generateFormField({
         </Field>`;
         formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${name}),`;
         formValuesConfig.push({
-            typeLines: [`${name}: BlockState<typeof rootBlocks.${name}>;`],
-            initializationLines: [`${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`],
-            defaultInitializationLines: [`${name}: rootBlocks.${name}.defaultValues()`],
+            typeCode: [`${name}: BlockState<typeof rootBlocks.${name}>;`],
+            initializationCode: [`${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`],
+            defaultInitializationCode: [`${name}: rootBlocks.${name}.defaultValues()`],
         });
     } else if (config.type == "staticSelect") {
         if (config.values) {

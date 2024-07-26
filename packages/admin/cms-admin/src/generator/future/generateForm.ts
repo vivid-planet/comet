@@ -243,7 +243,7 @@ export function generateForm(
     } ${
         formValuesConfig.length > 0
             ? `& {
-                ${formValuesConfig.map((config) => config.typeLines.join("\n")).join("\n")}
+                ${formValuesConfig.map((config) => config.typeCode.join("\n")).join("\n")}
             }`
             : ""
     };
@@ -272,14 +272,14 @@ export function generateForm(
                 ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
             ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
-            ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.initializationLines) ? acc : []), []).join(",\n")}
+            ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.initializationCode) ? acc : []), []).join(",\n")}
         }
         : {
-            ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.defaultInitializationLines) ? acc : []), []).join(",\n")}
+            ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.defaultInitializationCode) ? acc : []), []).join(",\n")}
         }
     , [data]);`
                 : `const initialValues = {
-                ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.defaultInitializationLines) ? acc : []), []).join(",\n")}
+                ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.defaultInitializationCode) ? acc : []), []).join(",\n")}
             };`
         }
     

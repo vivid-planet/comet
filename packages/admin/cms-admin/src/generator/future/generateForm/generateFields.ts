@@ -12,9 +12,9 @@ export type GenerateFieldsReturn = GeneratorReturn & {
     formValueToGqlInputCode: string;
     formValuesConfig: {
         omitFromFragmentType?: string;
-        typeLines: string[];
-        initializationLines: string[];
-        defaultInitializationLines: string[];
+        typeCode: string[];
+        initializationCode: string[];
+        defaultInitializationCode: string[];
     }[];
 };
 
