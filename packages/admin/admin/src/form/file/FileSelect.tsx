@@ -45,7 +45,7 @@ type OwnerState = {
 export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>> = {
     files: FileSelectItem<AdditionalValidFileValues>[];
     onDrop?: DropzoneOptions["onDrop"];
-    onRemove?: (file: FileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
+    onRemove?: (file: ValidFileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
     onDownload?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => void;
     getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string;
     disabled?: boolean;
@@ -148,7 +148,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                                                 : undefined
                                         }
                                         downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
-                                        onClickDelete={readOnly || !onRemove ? undefined : () => onRemove(file)}
+                                        onClickDelete={readOnly || !onRemove || "loading" in file ? undefined : () => onRemove(file)}
                                         filePreview={layout === "grid"}
                                         {...slotProps?.fileListItem}
                                     />
