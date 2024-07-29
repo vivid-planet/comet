@@ -30,6 +30,10 @@ You can remove them **if you don't use them in your project**:
 -   `@azure/storage-blob`
 -   `pg-error-constants`
 
+### Upgrade `@mikro-orm/core`, `@mikro-orm/migrations`, and `@mikro-orm/postgresql`
+
+The minimum supported version for these packages is now v5.8.4.
+
 ### Provide `strategyName` in createStaticCredentialsBasicStrategy
 
 Make sure to use a meaningful strategy name as this name can be used to identify the user when using this strategy more than once. Do not forget to add the strategy to the App Guard.
@@ -416,6 +420,64 @@ export class SvgImageFileFixtureService {
 }
 ```
 
+### Rename `defaultDamAcceptedMimetypes` to `damDefaultAcceptedMimetypes`
+
+```diff
+- defaultDamAcceptedMimetypes
++ damDefaultAcceptedMimetypes
+```
+
+### Replace `additionalMimeTypes` and `overrideAcceptedMimeTypes` in `DamModule#damConfig` with `acceptedMimeTypes`
+
+Instead of using `overrideAcceptedMimeTypes`, you can now override mime types like this:
+
+```ts
+DamModule.register({
+    damConfig: {
+        acceptedMimeTypes: ["something-mimetype"],
+    },
+});
+```
+
+Instead of using `additionalMimeTypes`, you can add additional mime types like this:
+
+```ts
+DamModule.register({
+    damConfig: {
+        acceptedMimeTypes: [...damDefaultAcceptedMimetypes, "something-else"],
+    },
+});
+```
+
+### Rename `DateFilter` to `DateTimeFilter`
+
+1. Change import
+
+```diff
+- import { DateFilter } from "@comet/cms-api";
++ import { DateTimeFilter } from "@comet/cms-api";
+```
+
+2. Re-run API Generator.
+
+### Import `YouTubeVideoBlock` from `@comet/cms-api` package
+
+```diff
+- import { YouTubeVideoBlock } from "@comet/blocks-api";
++ import { YouTubeVideoBlock } from "@comet/cms-api";
+```
+
+### Replace `graphql-type-json` with `graphql-scalars`
+
+1. Install graphql-scalars: `npm install graphql-scalars`
+2. Uninstall graphql-type-json: `npm install graphql-type-json`
+3. Update imports:
+
+    ```diff
+    - import { GraphQLJSONObject } from "graphql-type-json";
+    + import { GraphQLJSONObject } from "graphql-scalars";
+    ```
+
 ## Admin
 
 ### Remove `axios` dependency
@@ -423,36 +485,7 @@ export class SvgImageFileFixtureService {
 `axios` used to be a peer dependency of Comet.
 It's no longer required, so you can remove `axios` **if you don't use it in your project**.
 
-### Rearrange components in `App.tsx`
-
--   `ErrorDialogHandler` must be beneath `MuiThemeProvider` and `IntlProvider`
--   `CurrentUserProvider` must be beneath or parallel to `ErrorDialogHandler`
-
-The resulting order should look something like this:
-
-```tsx
-// ...
-<IntlProvider locale="en" messages={getMessages()}>
-// ...
-    <MuiThemeProvider theme={theme}>
-    // ...
-        <ErrorDialogHandler />
-        <CurrentUserProvider>
-        // ...
-```
-
-### Rename `previewUrl` prop of `SiteConfig`
-
-The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
-
-```diff
-- previewUrl = `${siteConfig.previewUrl}/page`;
-+ previewUrl = `${siteConfig.blockPreviewBaseUrl}/page`;
-```
-
-### @comet/admin
-
-#### Remove the `@mui/styles` package
+### Remove the `@mui/styles` package
 
 The legacy `@mui/styles` package was removed in favor of `@mui/material/styles`.
 You must remove `@mui/styles` from your project too:
@@ -560,62 +593,90 @@ This has multiple implications:
 
 </details>
 
-#### Change the structure of `MasterMenuData`
+### Rearrange components in `App.tsx`
 
-You must add a `type` to all items. There are four types available:
+-   `ErrorDialogHandler` must be beneath `MuiThemeProvider` and `IntlProvider`
+-   `CurrentUserProvider` must be beneath or parallel to `ErrorDialogHandler`
 
--   `route`
+The resulting order should look something like this:
 
-    ```diff
-    {
-    +   type: "route",
-        primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
-        icon: <DashboardIcon />,
-        route: {
-            path: "/dashboard",
-            component: Dashboard,
+```tsx
+// ...
+<IntlProvider locale="en" messages={getMessages()}>
+// ...
+    <MuiThemeProvider theme={theme}>
+    // ...
+        <ErrorDialogHandler />
+        <CurrentUserProvider>
+        // ...
+```
+
+### Rename `previewUrl` prop of `SiteConfig`
+
+The `previewUrl` prop of `SiteConfig` was renamed to `blockPreviewBaseUrl`.
+
+```diff
+- previewUrl = `${siteConfig.previewUrl}/page`;
++ previewUrl = `${siteConfig.blockPreviewBaseUrl}/page`;
+```
+
+### Change the structure of `MasterMenuData`
+
+-   You must add an `icon` to all top level menu items
+-   You must add a `type` to all items. There are four types available:
+
+    -   `route`
+
+        ```diff
+        {
+        +   type: "route",
+            primary: <FormattedMessage id="menu.dashboard" defaultMessage="Dashboard" />,
+            icon: <DashboardIcon />,
+            route: {
+                path: "/dashboard",
+                component: Dashboard,
+            },
         },
-    },
-    ```
+        ```
 
--   `externalLink`
+    -   `externalLink`
 
-    ```diff
-    {
-    +   type: "externalLink",
-        primary: <FormattedMessage id="menu.cometDxp" defaultMessage="COMET DXP" />,
-        icon: <Snips />,
-        href: "https://comet-dxp.com",
-    },
-    ```
+        ```diff
+        {
+        +   type: "externalLink",
+            primary: <FormattedMessage id="menu.cometDxp" defaultMessage="COMET DXP" />,
+            icon: <Snips />,
+            href: "https://comet-dxp.com",
+        },
+        ```
 
--   `collapsible`
+    -   `collapsible`
 
-    ```diff
-    {
-    +   type: "collapsible",
-        primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
-        icon: <Data />,
-    -   submenu: [
-    +   items: [
-            // ...
-        ],
-    },
-    ```
+        ```diff
+        {
+        +   type: "collapsible",
+            primary: <FormattedMessage id="menu.structuredContent" defaultMessage="Structured Content" />,
+            icon: <Data />,
+        -   submenu: [
+        +   items: [
+                // ...
+            ],
+        },
+        ```
 
--   `group` (new)
+    -   `group` (new)
 
-    ```diff
-    {
-    +  type: "group",
-    +  title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
-    +  items: [
-    +      // ...
-    +  ]
-    },
-    ```
+        ```diff
+        {
+        +  type: "group",
+        +  title: <FormattedMessage id="menu.products" defaultMessage="Products" />,
+        +  items: [
+        +      // ...
+        +  ]
+        },
+        ```
 
-#### New Content Scope Picker
+### New Content Scope Picker
 
 The content scope controls were changed to display all available combinations in a single select. This requires a few changes:
 
@@ -668,7 +729,7 @@ The content scope controls were changed to display all available combinations in
     + import { ContentScopeControls } from "@comet/cms-admin";
     ```
 
-#### New Toolbar
+### New Toolbar
 
 The Toolbar was reworked. Now there are three Toolbar components:
 
@@ -812,6 +873,79 @@ Following steps are necessary to correctly use the new Toolbar:
     }
     ```
 
+### Remove `EditPageLayout`
+
+You can completely remove `EditPageLayout` from your application.
+
+Instead, use `MainContent` to wrap all your page content except the `Toolbar`.
+If needed, wrap `MainContent` and `Toolbar` in a fragment.
+
+Example:
+
+```diff
+- <EditPageLayout>
++ <>
+      <Toolbar>
+          // ...
+      </Toolbar>
+-     <div>
++     <MainContent>
+          // ...
+-     </div>
++     </MainContent>
+- </EditPageLayout>
++ </>
+```
+
+### Replace `additionalMimeTypes` and `overrideAcceptedMimeTypes` in `DamConfigProvider` with `acceptedMimeTypes`
+
+Instead of using `overrideAcceptedMimeTypes`, you can now override mime types like this:
+
+```ts
+<DamConfigProvider
+    value={{
+        acceptedMimeTypes: ["something-mimetype"],
+    }}
+>
+    {/* ... */}
+</DamConfigProvider>
+```
+
+Instead of using `additionalMimeTypes`, you can add additional mime types like this:
+
+```ts
+<DamConfigProvider
+    value={{
+        acceptedMimeTypes: [...damDefaultAcceptedMimetypes, "something-else"],
+    }}
+>
+    {/* ... */}
+</DamConfigProvider>
+```
+
+**Note:** The accepted mime types must be identical to the ones passed to `DamModule#damConfig` in the API
+
+### Import `YouTubeVideoBlock` from `@comet/cms-admin` package
+
+```diff
+- import { YouTubeVideoBlock } from "@comet/blocks-admin";
++ import { YouTubeVideoBlock } from "@comet/cms-admin";
+```
+
+### Remove `aspectRatio` from `YouTubeVideoBlock`
+
+Previously, the `YouTubeVideoBlock` had a built-in aspect ratio select.
+This proved to be too inflexible and was removed.
+
+Instead, the aspect ratio should be defined in the application, e.g. in a surrounding `MediaBlock`.
+
+### Remove `SplitButton` and `FinalFormSaveSplitButton`
+
+We decided to retire the SplitButton pattern.
+Therefore, `SplitButton` and `FinalFormSaveSplitButton` are deprecated and should be removed from the project.
+
+Use a regular `SaveButton` or `FinalFormSaveButton` instead.
+
 ### @comet/admin-theme
 
 #### `Chip` theme rework
@@ -928,7 +1062,7 @@ The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
 Instead, implement your own `InternalLinkBlock`.
 This is needed for more flexibility, e.g., support for internationalized routing.
 
-### Add `legacyBevavior` to all link block usages
+### Add `legacyBehavior` to all link block usages
 
 All link blocks in `@comet/cms-site` now render a child `<a>` tag by default to align with the new behavior of the Next `Link` component, which is used by `InternalLinkBlock`.
 For existing projects, add the `legacyBehavior` prop to all library link block usages to use the old behavior, where the `<a>` tag is defined in the application. For example:
@@ -974,12 +1108,12 @@ New projects shouldn't use the legacy behavior. Instead, add support to pass the
 
 :::
 
-### Add `aspectRatio` to `PixelImageBlock` and `Image`
+### Add `aspectRatio` to `PixelImageBlock`, `Image` and `YouTubeVideoBlock`
 
 Previously, there was a default aspect ratio of `16x9`.
 This has repeatedly led to incorrectly displayed images.
 
-Now `aspectRatio` is required and must be added to `PixelImageBlock` and `Image`.
+Now `aspectRatio` is required and must be added to `PixelImageBlock`, `Image` and `YouTubeVideoBlock`.
 **Consider which aspect ratio should be used.**
 
 Example:
@@ -991,6 +1125,39 @@ Example:
 +  aspectRatio="16x9"
  />
 ```
+
+### Remove `layout` prop from `PixelImageBlock`
+
+Remove the `layout` prop from the block as it can lead to errors with the default implementation (`layout="responsive"` is not compatible with the new `fill` prop).
+
+-   `layout={"responsive" | "inherit"}` can safely be removed
+
+    ```diff
+    <PixelImageBlock
+        data={block.props}
+        aspectRatio={aspectRatio}
+    -   layout={"responsive"}   // line is marked as deprecated, but "responsive" must be removed
+        {...imageProps}
+    />
+    ```
+
+-   `layout={"fill"}` can be replaced with `fill={true}`
+
+    ```diff
+    <PixelImageBlock
+        data={block.props}
+        aspectRatio={aspectRatio}
+    -   layout={"fill"}
+    +   fill
+        {...imageProps}
+    />
+    ```
+
+**Notes:**
+
+The `PixelImageBlock` is usually wrapped in a `DamImageBlock` in the application. The `layout` prop should be removed from it as well.
+
+You can use the newly added `fill` prop of the `next/image` component by embedding the `PixelImageBlock` in a parent element that assigns the `position` style. See the [docs](https://nextjs.org/docs/pages/api-reference/components/image#fill) for more information.
 
 ### Switch to Next.js Preview Mode
 
@@ -1093,19 +1260,26 @@ const SitePreviewApiHandler: NextApiHandler = async (req, res) => {
 export default SitePreviewApiHandler;
 ```
 
-### TODO: GraphQL fetch client
+### Implement `previewImage` for `YouTubeVideoBlock` and `DamVideoBlock`
 
-// TODO ?
+`YouTubeVideoBlock` and `DamVideoBlock` now support a preview image.
+If you are not using the `YouTubeVideoBlock` and `DamVideoBlock` provided by `@comet/cms-site`, you should
 
-plenty-cougars-warn.md
+-   either switch to the `@comet/cms-site` implementation
+-   or implement the preview image in your project
 
-### TODO: New technique for blocks to load additional data at page level
-
-// TODO ?
-
-selfish-dolls-beg.md
+Otherwise, the admin interface will confuse users.
 
 ## ESLint
+
+### Ban icon imports from `@mui/icons-material`
+
+Icons used in Comet DXP applications should match the Comet CI.
+Use icons from `@comet/admin-icons` instead.
+
+### react/jsx-no-useless-fragment
+
+Unnecessary fragments in JSX are now banned.
 
 ### @typescript-eslint/prefer-enum-initializers
 
