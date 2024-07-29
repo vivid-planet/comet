@@ -41,7 +41,6 @@ const getDefaultPageInput = (): PageInput => {
 @Console()
 export class FixturesConsole {
     constructor(
-        // @ts-expect-error Updating to nestjs/common 10 will fix this error (see: https://github.com/nestjs/mongoose/issues/1717#issuecomment-1473733362 and https://github.com/microsoft/TypeScript/issues/52435)
         @Inject(CONFIG) private readonly config: Config,
         private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly pageTreeService: PageTreeService,
