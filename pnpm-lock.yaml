@@ -1,10 +1,14 @@
 lockfileVersion: '6.0'
 
+<<<<<<< HEAD
 settings:
   autoInstallPeers: false
   excludeLinksFromLockfile: false
 
 packageExtensionsChecksum: cfb3ebbbf168734e7f829c20311c9380
+=======
+packageExtensionsChecksum: 07c62bb6298917068ec023bd0d796a41
+>>>>>>> main
 
 importers:
 
@@ -954,6 +958,9 @@ importers:
       '@docusaurus/theme-live-codeblock':
         specifier: 2.4.1
         version: 2.4.1(@docusaurus/types@2.4.1)(react-dom@17.0.2)(react-live@2.4.1)(react@17.0.2)(typescript@4.9.4)
+      '@docusaurus/theme-mermaid':
+        specifier: 2.4.1
+        version: 2.4.1(react-dom@17.0.2)(react@17.0.2)(typescript@4.9.4)
       '@emotion/react':
         specifier: ^11.5.0
         version: 11.9.3(@babel/core@7.22.11)(@types/react@17.0.53)(react@17.0.2)
@@ -1070,7 +1077,11 @@ importers:
   packages/admin/admin:
     dependencies:
       '@comet/admin-icons':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../admin-icons
       '@comet/admin-theme':
         specifier: workspace:^7.0.0-beta.6
@@ -1128,10 +1139,17 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1293,10 +1311,17 @@ importers:
   packages/admin/admin-color-picker:
     dependencies:
       '@comet/admin':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin
       '@comet/admin-icons':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin
+      '@comet/admin-icons':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../admin-icons
       clsx:
         specifier: ^1.1.1
@@ -1318,10 +1343,17 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1369,10 +1401,17 @@ importers:
   packages/admin/admin-date-time:
     dependencies:
       '@comet/admin':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin
       '@comet/admin-icons':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin
+      '@comet/admin-icons':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1394,10 +1433,17 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1451,10 +1497,17 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1508,10 +1561,17 @@ importers:
   packages/admin/admin-react-select:
     dependencies:
       '@comet/admin':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin
       '@comet/admin-icons':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin
+      '@comet/admin-icons':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../admin-icons
       classnames:
         specifier: ^2.2.6
@@ -1524,10 +1584,17 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1575,10 +1642,17 @@ importers:
   packages/admin/admin-rte:
     dependencies:
       '@comet/admin':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin
       '@comet/admin-icons':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin
+      '@comet/admin-icons':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../admin-icons
       detect-browser:
         specifier: ^5.2.1
@@ -1603,10 +1677,17 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1684,7 +1765,11 @@ importers:
   packages/admin/admin-theme:
     dependencies:
       '@comet/admin-icons':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^5.4.1
@@ -1697,10 +1782,17 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^5.0.0
@@ -1742,10 +1834,17 @@ importers:
   packages/admin/blocks-admin:
     dependencies:
       '@comet/admin':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin
       '@comet/admin-icons':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin
+      '@comet/admin-icons':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../admin-icons
       '@mui/lab':
         specifier: ^5.0.0-alpha.76
@@ -1776,6 +1875,7 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/cli':
@@ -1783,6 +1883,15 @@ importers:
         version: link:../../cli
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/cli':
+        specifier: workspace:^6.17.1
+        version: link:../../cli
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -1872,6 +1981,7 @@ importers:
   packages/admin/cms-admin:
     dependencies:
       '@comet/admin':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin
       '@comet/admin-date-time':
@@ -1888,6 +1998,24 @@ importers:
         version: link:../admin-theme
       '@comet/blocks-admin':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin
+      '@comet/admin-date-time':
+        specifier: workspace:^6.17.1
+        version: link:../admin-date-time
+      '@comet/admin-icons':
+        specifier: workspace:^6.17.1
+        version: link:../admin-icons
+      '@comet/admin-rte':
+        specifier: workspace:^6.17.1
+        version: link:../admin-rte
+      '@comet/admin-theme':
+        specifier: workspace:^6.17.1
+        version: link:../admin-theme
+      '@comet/blocks-admin':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../blocks-admin
       '@graphql-tools/graphql-file-loader':
         specifier: ^7.5.17
@@ -2011,6 +2139,7 @@ importers:
         specifier: ^7.20.12
         version: 7.20.12
       '@comet/admin-babel-preset':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../admin-babel-preset
       '@comet/cli':
@@ -2018,6 +2147,15 @@ importers:
         version: link:../../cli
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../admin-babel-preset
+      '@comet/cli':
+        specifier: workspace:^6.17.1
+        version: link:../../cli
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
@@ -2195,7 +2333,11 @@ importers:
         version: 3.0.2
     devDependencies:
       '@comet/eslint-config':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@nestjs/common':
         specifier: ^9.0.0
@@ -2258,7 +2400,11 @@ importers:
         specifier: ^12.23.0
         version: 12.23.0
       '@comet/blocks-api':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../blocks-api
       '@fast-csv/parse':
         specifier: ^4.3.6
@@ -2397,7 +2543,11 @@ importers:
         specifier: ^3.47.0
         version: 3.254.0
       '@comet/eslint-config':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@golevelup/ts-jest':
         specifier: ^0.4.0
@@ -2530,7 +2680,11 @@ importers:
         version: 2.8.3
     devDependencies:
       '@comet/eslint-config':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../eslint-config
       '@types/node':
         specifier: ^18.0.0
@@ -2557,7 +2711,11 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       '@comet/eslint-plugin':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../eslint-plugin
       '@next/eslint-plugin-next':
         specifier: ^12.0.0
@@ -2658,10 +2816,17 @@ importers:
         version: 6.0.1(react@18.2.0)
     devDependencies:
       '@comet/cli':
+<<<<<<< HEAD
         specifier: workspace:^7.0.0-beta.6
         version: link:../../cli
       '@comet/eslint-config':
         specifier: workspace:^7.0.0-beta.6
+=======
+        specifier: workspace:^6.17.1
+        version: link:../../cli
+      '@comet/eslint-config':
+        specifier: workspace:^6.17.1
+>>>>>>> main
         version: link:../../eslint-config
       '@gitbeaker/node':
         specifier: ^34.0.0
@@ -4315,7 +4480,7 @@ packages:
       '@babel/helpers': 7.20.13
       '@babel/parser': 7.20.13
       '@babel/template': 7.20.7
-      '@babel/traverse': 7.20.13
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@babel/types': 7.20.7
       convert-source-map: 1.9.0
       debug: 4.3.4(supports-color@9.3.1)
@@ -4592,9 +4757,15 @@ packages:
       '@babel/helper-simple-access': 7.20.2
       '@babel/helper-split-export-declaration': 7.18.6
       '@babel/helper-validator-identifier': 7.19.1
+<<<<<<< HEAD
       '@babel/template': 7.22.5
       '@babel/traverse': 7.22.11
       '@babel/types': 7.22.11
+=======
+      '@babel/template': 7.20.7
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/types': 7.20.7
+>>>>>>> main
     transitivePeerDependencies:
       - supports-color
 
@@ -4770,9 +4941,15 @@ packages:
     resolution: {integrity: sha512-nzJ0DWCL3gB5RCXbUO3KIMMsBY2Eqbx8mBpKGE/02PgyRQFcPQLbkQ1vyy596mZLaP+dAfD+R4ckASzNVmW3jg==}
     engines: {node: '>=6.9.0'}
     dependencies:
+<<<<<<< HEAD
       '@babel/template': 7.22.5
       '@babel/traverse': 7.22.11
       '@babel/types': 7.22.11
+=======
+      '@babel/template': 7.20.7
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
+      '@babel/types': 7.20.7
+>>>>>>> main
     transitivePeerDependencies:
       - supports-color
 
@@ -6797,19 +6974,34 @@ packages:
       '@babel/parser': 7.22.14
       '@babel/types': 7.22.11
 
+<<<<<<< HEAD
   /@babel/traverse@7.20.13:
     resolution: {integrity: sha512-kMJXfF0T6DIS9E8cgdLCSAL+cuCK+YEZHWiLK0SXpTo8YRj5lpJu3CDNKiIBCne4m9hhTIqUg6SYTAI39tAiVQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/code-frame': 7.22.13
       '@babel/generator': 7.22.10
+=======
+  /@babel/traverse@7.20.13(supports-color@5.5.0):
+    resolution: {integrity: sha512-kMJXfF0T6DIS9E8cgdLCSAL+cuCK+YEZHWiLK0SXpTo8YRj5lpJu3CDNKiIBCne4m9hhTIqUg6SYTAI39tAiVQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      '@babel/code-frame': 7.18.6
+      '@babel/generator': 7.20.7
+>>>>>>> main
       '@babel/helper-environment-visitor': 7.18.9
       '@babel/helper-function-name': 7.19.0
       '@babel/helper-hoist-variables': 7.18.6
       '@babel/helper-split-export-declaration': 7.18.6
+<<<<<<< HEAD
       '@babel/parser': 7.22.14
       '@babel/types': 7.22.11
       debug: 4.3.4(supports-color@9.3.1)
+=======
+      '@babel/parser': 7.20.13
+      '@babel/types': 7.20.7
+      debug: 4.3.4(supports-color@5.5.0)
+>>>>>>> main
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -6853,6 +7045,10 @@ packages:
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  /@braintree/sanitize-url@6.0.4:
+    resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
+    dev: false
 
   /@calm/eslint-plugin-react-intl@1.4.1:
     resolution: {integrity: sha512-J3Tj03JwlV6CPENBqEt64M+Z+k49cNcHUBRYY67Wx9l960NOKhqlRCPUrE85zRqOXqO0cYUrcgrvb0wHAWMpKA==}
@@ -7137,7 +7333,7 @@ packages:
       '@babel/preset-typescript': 7.18.6(@babel/core@7.22.11)
       '@babel/runtime': 7.20.13
       '@babel/runtime-corejs3': 7.22.6
-      '@babel/traverse': 7.20.13
+      '@babel/traverse': 7.20.13(supports-color@5.5.0)
       '@docusaurus/cssnano-preset': 2.4.1
       '@docusaurus/logger': 2.4.1
       '@docusaurus/mdx-loader': 2.4.1(@docusaurus/types@2.4.1)(react-dom@17.0.2)(react@17.0.2)
@@ -7750,6 +7946,41 @@ packages:
       tslib: 2.4.1
     transitivePeerDependencies:
       - '@docusaurus/types'
+      - '@parcel/css'
+      - '@swc/core'
+      - '@swc/css'
+      - bufferutil
+      - csso
+      - debug
+      - esbuild
+      - eslint
+      - lightningcss
+      - supports-color
+      - typescript
+      - uglify-js
+      - utf-8-validate
+      - vue-template-compiler
+      - webpack-cli
+    dev: false
+
+  /@docusaurus/theme-mermaid@2.4.1(react-dom@17.0.2)(react@17.0.2)(typescript@4.9.4):
+    resolution: {integrity: sha512-cM0ImKIqZfjmlaC+uAjep39kNBvb1bjz429QBHGs32maob4+UnRzVPPpCUCltyPVb4xjG5h1Tyq4pHzhtIikqA==}
+    engines: {node: '>=16.14'}
+    peerDependencies:
+      react: ^16.8.4 || ^17.0.0
+      react-dom: ^16.8.4 || ^17.0.0
+    dependencies:
+      '@docusaurus/core': 2.4.1(@docusaurus/types@2.4.1)(react-dom@17.0.2)(react@17.0.2)(typescript@4.9.4)
+      '@docusaurus/module-type-aliases': 2.4.1(react-dom@17.0.2)(react@17.0.2)
+      '@docusaurus/theme-common': 2.4.1(@docusaurus/types@2.4.1)(react-dom@17.0.2)(react@17.0.2)(typescript@4.9.4)
+      '@docusaurus/types': 2.4.1(react-dom@17.0.2)(react@17.0.2)
+      '@docusaurus/utils-validation': 2.4.1(@docusaurus/types@2.4.1)
+      '@mdx-js/react': 1.6.22(react@17.0.2)
+      mermaid: 9.4.3
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+      tslib: 2.6.3
+    transitivePeerDependencies:
       - '@parcel/css'
       - '@swc/core'
       - '@swc/css'
@@ -16222,6 +16453,9 @@ packages:
 
   /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
     dependencies:
       ajv: 8.12.0
 
@@ -18767,6 +19001,18 @@ packages:
       object-assign: 4.1.1
       vary: 1.1.2
 
+  /cose-base@1.0.3:
+    resolution: {integrity: sha512-s9whTXInMSgAp/NVXVNuVxVKzGH2qck3aQlVHxDCdAEPgtMKwc4Wq6/QKhgdEdgbLSi9rBTAcPoRa6JpiG4ksg==}
+    dependencies:
+      layout-base: 1.0.2
+    dev: false
+
+  /cose-base@2.2.0:
+    resolution: {integrity: sha512-AzlgcsCbUMymkADOJtQm3wO9S3ltPfYOFD5033keQn9NJzIbtnZj+UdBJe7DYml/8TdbtHJW3j58SOnKhWY/5g==}
+    dependencies:
+      layout-base: 2.0.1
+    dev: false
+
   /cosmiconfig-toml-loader@1.0.0:
     resolution: {integrity: sha512-H/2gurFWVi7xXvCyvsWRLCMekl4tITJcX0QEsDMpzxtuxDyM59xLatYNg4s/k9AA/HdtCYfj2su8mgA0GSDLDA==}
     dependencies:
@@ -19364,6 +19610,284 @@ packages:
     resolution: {integrity: sha512-NJGVKPS81XejHcLhaLJS7plab0fK3slPh11mESeeDq2W4ZI5kUKK/LRRdVDvjJseojbPB7ZwjnyOybg3Igea/A==}
     dev: false
 
+  /cytoscape-cose-bilkent@4.1.0(cytoscape@3.30.1):
+    resolution: {integrity: sha512-wgQlVIUJF13Quxiv5e1gstZ08rnZj2XaLHGoFMYXz7SkNfCDOOteKBE6SYRfA9WxxI/iBc3ajfDoc6hb/MRAHQ==}
+    peerDependencies:
+      cytoscape: ^3.2.0
+    dependencies:
+      cose-base: 1.0.3
+      cytoscape: 3.30.1
+    dev: false
+
+  /cytoscape-fcose@2.2.0(cytoscape@3.30.1):
+    resolution: {integrity: sha512-ki1/VuRIHFCzxWNrsshHYPs6L7TvLu3DL+TyIGEsRcvVERmxokbf5Gdk7mFxZnTdiGtnA4cfSmjZJMviqSuZrQ==}
+    peerDependencies:
+      cytoscape: ^3.2.0
+    dependencies:
+      cose-base: 2.2.0
+      cytoscape: 3.30.1
+    dev: false
+
+  /cytoscape@3.30.1:
+    resolution: {integrity: sha512-TRJc3HbBPkHd50u9YfJh2FxD1lDLZ+JXnJoyBn5LkncoeuT7fapO/Hq/Ed8TdFclaKshzInge2i30bg7VKeoPQ==}
+    engines: {node: '>=0.10'}
+    dev: false
+
+  /d3-array@3.2.4:
+    resolution: {integrity: sha512-tdQAmyA18i4J7wprpYq8ClcxZy3SC31QMeByyCFyRt7BVHdREQZ5lpzoe5mFEYZUWe+oq8HBvk9JjpibyEV4Jg==}
+    engines: {node: '>=12'}
+    dependencies:
+      internmap: 2.0.3
+    dev: false
+
+  /d3-axis@3.0.0:
+    resolution: {integrity: sha512-IH5tgjV4jE/GhHkRV0HiVYPDtvfjHQlQfJHs0usq7M30XcSBvOotpmH1IgkcXsO/5gEQZD43B//fc7SRT5S+xw==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-brush@3.0.0:
+    resolution: {integrity: sha512-ALnjWlVYkXsVIGlOsuWH1+3udkYFI48Ljihfnh8FZPF2QS9o+PzGLBslO0PjzVoHLZ2KCVgAM8NVkXPJB2aNnQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-dispatch: 3.0.1
+      d3-drag: 3.0.0
+      d3-interpolate: 3.0.1
+      d3-selection: 3.0.0
+      d3-transition: 3.0.1(d3-selection@3.0.0)
+    dev: false
+
+  /d3-chord@3.0.1:
+    resolution: {integrity: sha512-VE5S6TNa+j8msksl7HwjxMHDM2yNK3XCkusIlpX5kwauBfXuyLAtNg9jCp/iHH61tgI4sb6R/EIMWCqEIdjT/g==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-path: 3.1.0
+    dev: false
+
+  /d3-color@3.1.0:
+    resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-contour@4.0.2:
+    resolution: {integrity: sha512-4EzFTRIikzs47RGmdxbeUvLWtGedDUNkTcmzoeyg4sP/dvCexO47AaQL7VKy/gul85TOxw+IBgA8US2xwbToNA==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-array: 3.2.4
+    dev: false
+
+  /d3-delaunay@6.0.4:
+    resolution: {integrity: sha512-mdjtIZ1XLAM8bm/hx3WwjfHt6Sggek7qH043O8KEjDXN40xi3vx/6pYSVTwLjEgiXQTbvaouWKynLBiUZ6SK6A==}
+    engines: {node: '>=12'}
+    dependencies:
+      delaunator: 5.0.1
+    dev: false
+
+  /d3-dispatch@3.0.1:
+    resolution: {integrity: sha512-rzUyPU/S7rwUflMyLc1ETDeBj0NRuHKKAcvukozwhshr6g6c5d8zh4c2gQjY2bZ0dXeGLWc1PF174P2tVvKhfg==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-drag@3.0.0:
+    resolution: {integrity: sha512-pWbUJLdETVA8lQNJecMxoXfH6x+mO2UQo8rSmZ+QqxcbyA3hfeprFgIT//HW2nlHChWeIIMwS2Fq+gEARkhTkg==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-dispatch: 3.0.1
+      d3-selection: 3.0.0
+    dev: false
+
+  /d3-dsv@3.0.1:
+    resolution: {integrity: sha512-UG6OvdI5afDIFP9w4G0mNq50dSOsXHJaRE8arAS5o9ApWnIElp8GZw1Dun8vP8OyHOZ/QJUKUJwxiiCCnUwm+Q==}
+    engines: {node: '>=12'}
+    hasBin: true
+    dependencies:
+      commander: 7.2.0
+      iconv-lite: 0.6.3
+      rw: 1.3.3
+    dev: false
+
+  /d3-ease@3.0.1:
+    resolution: {integrity: sha512-wR/XK3D3XcLIZwpbvQwQ5fK+8Ykds1ip7A2Txe0yxncXSdq1L9skcG7blcedkOX+ZcgxGAmLX1FrRGbADwzi0w==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-fetch@3.0.1:
+    resolution: {integrity: sha512-kpkQIM20n3oLVBKGg6oHrUchHM3xODkTzjMoj7aWQFq5QEM+R6E4WkzT5+tojDY7yjez8KgCBRoj4aEr99Fdqw==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-dsv: 3.0.1
+    dev: false
+
+  /d3-force@3.0.0:
+    resolution: {integrity: sha512-zxV/SsA+U4yte8051P4ECydjD/S+qeYtnaIyAs9tgHCqfguma/aAQDjo85A9Z6EKhBirHRJHXIgJUlffT4wdLg==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-dispatch: 3.0.1
+      d3-quadtree: 3.0.1
+      d3-timer: 3.0.1
+    dev: false
+
+  /d3-format@3.1.0:
+    resolution: {integrity: sha512-YyUI6AEuY/Wpt8KWLgZHsIU86atmikuoOmCfommt0LYHiQSPjvX2AcFc38PX0CBpr2RCyZhjex+NS/LPOv6YqA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-geo@3.1.1:
+    resolution: {integrity: sha512-637ln3gXKXOwhalDzinUgY83KzNWZRKbYubaG+fGVuc/dxO64RRljtCTnf5ecMyE1RIdtqpkVcq0IbtU2S8j2Q==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-array: 3.2.4
+    dev: false
+
+  /d3-hierarchy@3.1.2:
+    resolution: {integrity: sha512-FX/9frcub54beBdugHjDCdikxThEqjnR93Qt7PvQTOHxyiNCAlvMrHhclk3cD5VeAaq9fxmfRp+CnWw9rEMBuA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-interpolate@3.0.1:
+    resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-color: 3.1.0
+    dev: false
+
+  /d3-path@3.1.0:
+    resolution: {integrity: sha512-p3KP5HCf/bvjBSSKuXid6Zqijx7wIfNW+J/maPs+iwR35at5JCbLUT0LzF1cnjbCHWhqzQTIN2Jpe8pRebIEFQ==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-polygon@3.0.1:
+    resolution: {integrity: sha512-3vbA7vXYwfe1SYhED++fPUQlWSYTTGmFmQiany/gdbiWgU/iEyQzyymwL9SkJjFFuCS4902BSzewVGsHHmHtXg==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-quadtree@3.0.1:
+    resolution: {integrity: sha512-04xDrxQTDTCFwP5H6hRhsRcb9xxv2RzkcsygFzmkSIOJy3PeRJP7sNk3VRIbKXcog561P9oU0/rVH6vDROAgUw==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-random@3.0.1:
+    resolution: {integrity: sha512-FXMe9GfxTxqd5D6jFsQ+DJ8BJS4E/fT5mqqdjovykEB2oFbTMDVdg1MGFxfQW+FBOGoB++k8swBrgwSHT1cUXQ==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-scale-chromatic@3.1.0:
+    resolution: {integrity: sha512-A3s5PWiZ9YCXFye1o246KoscMWqf8BsD9eRiJ3He7C9OBaxKhAd5TFCdEx/7VbKtxxTsu//1mMJFrEt572cEyQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-color: 3.1.0
+      d3-interpolate: 3.0.1
+    dev: false
+
+  /d3-scale@4.0.2:
+    resolution: {integrity: sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-array: 3.2.4
+      d3-format: 3.1.0
+      d3-interpolate: 3.0.1
+      d3-time: 3.1.0
+      d3-time-format: 4.1.0
+    dev: false
+
+  /d3-selection@3.0.0:
+    resolution: {integrity: sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-shape@3.2.0:
+    resolution: {integrity: sha512-SaLBuwGm3MOViRq2ABk3eLoxwZELpH6zhl3FbAoJ7Vm1gofKx6El1Ib5z23NUEhF9AsGl7y+dzLe5Cw2AArGTA==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-path: 3.1.0
+    dev: false
+
+  /d3-time-format@4.1.0:
+    resolution: {integrity: sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-time: 3.1.0
+    dev: false
+
+  /d3-time@3.1.0:
+    resolution: {integrity: sha512-VqKjzBLejbSMT4IgbmVgDjpkYrNWUYJnbCGo874u7MMKIWsILRX+OpX/gTk8MqjpT1A/c6HY2dCA77ZN0lkQ2Q==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-array: 3.2.4
+    dev: false
+
+  /d3-timer@3.0.1:
+    resolution: {integrity: sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-transition@3.0.1(d3-selection@3.0.0):
+    resolution: {integrity: sha512-ApKvfjsSR6tg06xrL434C0WydLr7JewBB3V+/39RMHsaXTOG0zmt/OAXeng5M5LBm0ojmxJrpomQVZ1aPvBL4w==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      d3-selection: 2 - 3
+    dependencies:
+      d3-color: 3.1.0
+      d3-dispatch: 3.0.1
+      d3-ease: 3.0.1
+      d3-interpolate: 3.0.1
+      d3-selection: 3.0.0
+      d3-timer: 3.0.1
+    dev: false
+
+  /d3-zoom@3.0.0:
+    resolution: {integrity: sha512-b8AmV3kfQaqWAuacbPuNbL6vahnOJflOhexLzMMNLga62+/nh0JzvJ0aO/5a5MVgUFGS7Hu1P9P03o3fJkDCyw==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-dispatch: 3.0.1
+      d3-drag: 3.0.0
+      d3-interpolate: 3.0.1
+      d3-selection: 3.0.0
+      d3-transition: 3.0.1(d3-selection@3.0.0)
+    dev: false
+
+  /d3@7.9.0:
+    resolution: {integrity: sha512-e1U46jVP+w7Iut8Jt8ri1YsPOvFpg46k+K8TpCb0P+zjCkjkPnV7WzfDJzMHy1LnA+wj5pLT1wjO901gLXeEhA==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-array: 3.2.4
+      d3-axis: 3.0.0
+      d3-brush: 3.0.0
+      d3-chord: 3.0.1
+      d3-color: 3.1.0
+      d3-contour: 4.0.2
+      d3-delaunay: 6.0.4
+      d3-dispatch: 3.0.1
+      d3-drag: 3.0.0
+      d3-dsv: 3.0.1
+      d3-ease: 3.0.1
+      d3-fetch: 3.0.1
+      d3-force: 3.0.0
+      d3-format: 3.1.0
+      d3-geo: 3.1.1
+      d3-hierarchy: 3.1.2
+      d3-interpolate: 3.0.1
+      d3-path: 3.1.0
+      d3-polygon: 3.0.1
+      d3-quadtree: 3.0.1
+      d3-random: 3.0.1
+      d3-scale: 4.0.2
+      d3-scale-chromatic: 3.1.0
+      d3-selection: 3.0.0
+      d3-shape: 3.2.0
+      d3-time: 3.1.0
+      d3-time-format: 4.1.0
+      d3-timer: 3.0.1
+      d3-transition: 3.0.1(d3-selection@3.0.0)
+      d3-zoom: 3.0.0
+    dev: false
+
+  /dagre-d3-es@7.0.9:
+    resolution: {integrity: sha512-rYR4QfVmy+sR44IBDvVtcAmOReGBvRCWDpO2QjYwqgh9yijw6eSHBqaPG/LIOEy7aBsniLvtMW6pg19qJhq60w==}
+    dependencies:
+      d3: 7.9.0
+      lodash-es: 4.17.21
+    dev: false
+
   /damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
     dev: false
@@ -19638,6 +20162,12 @@ packages:
       slash: 3.0.0
     dev: false
 
+  /delaunator@5.0.1:
+    resolution: {integrity: sha512-8nvh+XBe96aCESrGOqMp/84b13H9cdKbG5P2ejQCh4d4sK9RL4371qou9drQjMhvnPmhWl5hnmqbEE0fXr9Xnw==}
+    dependencies:
+      robust-predicates: 3.0.2
+    dev: false
+
   /delay@5.0.0:
     resolution: {integrity: sha512-ReEBKkIfe4ya47wlPYf/gu5ib6yUG0/Aez0JQZQz94kiWtRQvZIQbTiehsnwHvLSWJnQdhVeqYue7Id1dKr0qw==}
     engines: {node: '>=10'}
@@ -19900,6 +20430,10 @@ packages:
     engines: {node: '>= 4'}
     dependencies:
       domelementtype: 2.3.0
+    dev: false
+
+  /dompurify@2.4.3:
+    resolution: {integrity: sha512-q6QaLcakcRjebxjg8/+NP+h0rPfatOgOzc46Fst9VAA3jF2ApfKBNKMzdP4DYTqtUMXSCd5pRS/8Po/OmoCHZQ==}
     dev: false
 
   /domutils@1.5.1:
@@ -20202,6 +20736,10 @@ packages:
 
   /electron-to-chromium@1.4.455:
     resolution: {integrity: sha512-8tgdX0Odl24LtmLwxotpJCVjIndN559AvaOtd67u+2mo+IDsgsTF580NB+uuDCqsHw8yFg53l5+imFV9Fw3cbA==}
+
+  /elkjs@0.8.2:
+    resolution: {integrity: sha512-L6uRgvZTH+4OF5NE/MBbzQx/WYpru1xCBE9respNj6qznEewGUIfhzmm7horWWxbNO2M0WckQypGctR8lH79xQ==}
+    dev: false
 
   /elliptic@6.5.4:
     resolution: {integrity: sha512-iLhC6ULemrljPZb+QutR5TQGB+pdW6KGD5RSegS+8sorOZT+rdQFbsQFJgvN3eRqNALqJer4oQ16YvJHlU8hzQ==}
@@ -23296,7 +23834,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       safer-buffer: 2.1.2
-    dev: true
 
   /icss-utils@4.1.1:
     resolution: {integrity: sha512-4aFq7wvWyMHKgxsH8QQtGpvbASCf+eM3wPRLI6R+MgAnTCZ6STYsRvttLvRWK0Nfif5piF394St3HeJDaljGPA==}
@@ -23516,6 +24053,11 @@ packages:
       es-errors: 1.3.0
       hasown: 2.0.2
       side-channel: 1.0.6
+
+  /internmap@2.0.3:
+    resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
+    engines: {node: '>=12'}
+    dev: false
 
   /interpret@1.4.0:
     resolution: {integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==}
@@ -25113,6 +25655,10 @@ packages:
     dependencies:
       json-buffer: 3.0.1
 
+  /khroma@2.1.0:
+    resolution: {integrity: sha512-Ls993zuzfayK269Svk9hzpeGUKob/sIgZzyHYdjQoAdQetRKpOLj+k/QQQ/6Qi0Yz65mlROrfd+Ev+1+7dz9Kw==}
+    dev: false
+
   /kill-port@2.0.1:
     resolution: {integrity: sha512-e0SVOV5jFo0mx8r7bS29maVWp17qGqLBZ5ricNSajON6//kmb7qqqNnml4twNE8Dtj97UQD+gNFOaipS/q1zzQ==}
     hasBin: true
@@ -25219,6 +25765,14 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       package-json: 6.5.0
+    dev: false
+
+  /layout-base@1.0.2:
+    resolution: {integrity: sha512-8h2oVEZNktL4BH2JCOI90iD1yXwL6iNW7KcCKT2QZgQJR2vbqDsldCTPRU9NifTCqHZci57XvQQ15YTu+sTYPg==}
+    dev: false
+
+  /layout-base@2.0.1:
+    resolution: {integrity: sha512-dp3s92+uNI1hWIpPGH3jK2kxE2lMjdXdr+DH8ynZHpd6PUlH6x6cbuXnoMmiNumznqaNO31xu9e79F0uuZ0JFg==}
     dev: false
 
   /lazy-universal-dotenv@3.0.1:
@@ -25407,6 +25961,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+
+  /lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.assignin@4.2.0:
     resolution: {integrity: sha512-yX/rx6d/UTVh7sSVWVSIMjfnz95evAgDFdb1ZozC35I9mSFCkmzptOzevxjgbQUsc78NR44LVHWjsoMQXy9FDg==}
@@ -25956,6 +26514,27 @@ packages:
   /merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
+
+  /mermaid@9.4.3:
+    resolution: {integrity: sha512-TLkQEtqhRSuEHSE34lh5bCa94KATCyluAXmFnNI2PRZwOpXFeqiJWwZl+d2CcemE1RS6QbbueSSq9QIg8Uxcyw==}
+    dependencies:
+      '@braintree/sanitize-url': 6.0.4
+      cytoscape: 3.30.1
+      cytoscape-cose-bilkent: 4.1.0(cytoscape@3.30.1)
+      cytoscape-fcose: 2.2.0(cytoscape@3.30.1)
+      d3: 7.9.0
+      dagre-d3-es: 7.0.9
+      dayjs: 1.11.7
+      dompurify: 2.4.3
+      elkjs: 0.8.2
+      khroma: 2.1.0
+      lodash-es: 4.17.21
+      non-layered-tidy-tree-layout: 2.0.2
+      stylis: 4.1.3
+      ts-dedent: 2.2.0
+      uuid: 9.0.0
+      web-worker: 1.3.0
+    dev: false
 
   /meros@1.1.4(@types/node@18.15.3):
     resolution: {integrity: sha512-E9ZXfK9iQfG9s73ars9qvvvbSIkJZF5yOo9j4tcwM5tN8mUKfj/EKN5PzOr3ZH0y5wL7dLAHw3RVEfpQV9Q7VQ==}
@@ -26624,6 +27203,10 @@ packages:
 
   /node-releases@2.0.8:
     resolution: {integrity: sha512-dFSmB8fFHEH/s81Xi+Y/15DQY6VHW81nXRj86EMSL3lmuTmK1e+aT4wrFCkTbm+gSwkw4KpX+rT/pMM2c1mF+A==}
+
+  /non-layered-tidy-tree-layout@2.0.2:
+    resolution: {integrity: sha512-gkXMxRzUH+PB0ax9dUN0yYF0S25BqeAYqhgMaLUFmpXLEk7Fcu8f4emJuOAY0V8kjDICxROIKsTAKsV/v355xw==}
+    dev: false
 
   /normalize-package-data@2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
@@ -30268,6 +30851,10 @@ packages:
       inherits: 2.0.4
     dev: false
 
+  /robust-predicates@3.0.2:
+    resolution: {integrity: sha512-IXgzBWvWQwE6PrDI05OvmXUIruQTcoMDzRsOd5CDvHCVLcLHMTSYvOK5Cm46kWqlV3yAbuSpBZdJ5oP5OUoStg==}
+    dev: false
+
   /rollup@4.13.0:
     resolution: {integrity: sha512-3YegKemjoQnYKmsBlOHfMLVPPA5xLkQ8MHLLSw/fBrFaVkEayL51DilPpNNLq1exr98F2B1TzrV0FUlN3gWRPg==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
@@ -30324,6 +30911,10 @@ packages:
     resolution: {integrity: sha512-ntymy489o0/QQplUDnpYAYUsO50K9SBrIVaKCWDOJzYJts0f9WH9RFJkyagebkw5+y1oi00R7ynNW/d12GBumg==}
     dependencies:
       aproba: 1.2.0
+    dev: false
+
+  /rw@1.3.3:
+    resolution: {integrity: sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ==}
     dev: false
 
   /rxjs@6.6.7:
@@ -33346,6 +33937,10 @@ packages:
     engines: {node: '>= 14'}
     dev: true
 
+  /web-worker@1.3.0:
+    resolution: {integrity: sha512-BSR9wyRsy/KOValMgd5kMyr3JzpdeoR9KVId8u5GVlTTAtNChlsE4yTxeY7zMdNSyOmoKBv8NH2qeRY9Tg+IaA==}
+    dev: false
+
   /webcrypto-core@1.7.5:
     resolution: {integrity: sha512-gaExY2/3EHQlRNNNVSrbG2Cg94Rutl7fAaKILS1w8ZDhGxdFOaw6EbCfHIxPy9vt/xwp5o0VQAx9aySPF6hU1A==}
     dependencies:
@@ -34151,3 +34746,7 @@ packages:
   /zwitch@1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: false
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false

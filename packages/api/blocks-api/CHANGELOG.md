@@ -1,5 +1,6 @@
 # @comet/blocks-api
 
+<<<<<<< HEAD
 ## 7.0.0-beta.6
 
 ## 7.0.0-beta.5
@@ -100,6 +101,11 @@
 
     -   Admin: `axios`
     -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+=======
+## 6.17.1
+
+## 6.17.0
+>>>>>>> main
 
 ## 6.16.0
 

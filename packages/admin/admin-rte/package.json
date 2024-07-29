@@ -1,6 +1,10 @@
 {
     "name": "@comet/admin-rte",
+<<<<<<< HEAD
     "version": "7.0.0-beta.6",
+=======
+    "version": "6.17.1",
+>>>>>>> main
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -28,8 +32,13 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
+<<<<<<< HEAD
         "@comet/admin": "workspace:^7.0.0-beta.6",
         "@comet/admin-icons": "workspace:^7.0.0-beta.6",
+=======
+        "@comet/admin": "workspace:^6.17.1",
+        "@comet/admin-icons": "workspace:^6.17.1",
+>>>>>>> main
         "detect-browser": "^5.2.1",
         "draft-js-export-html": "^1.4.1",
         "draft-js-import-html": "^1.4.1",
@@ -39,8 +48,13 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
+<<<<<<< HEAD
         "@comet/admin-babel-preset": "workspace:^7.0.0-beta.6",
         "@comet/eslint-config": "workspace:^7.0.0-beta.6",
+=======
+        "@comet/admin-babel-preset": "workspace:^6.17.1",
+        "@comet/eslint-config": "workspace:^6.17.1",
+>>>>>>> main
         "@mui/material": "^5.0.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^12.0.0",

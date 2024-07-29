@@ -1,5 +1,6 @@
 # @comet/admin-rte
 
+<<<<<<< HEAD
 ## 7.0.0-beta.6
 
 ### Patch Changes
@@ -195,6 +196,24 @@
 -   Updated dependencies [92eae2ba9]
     -   @comet/admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+=======
+## 6.17.1
+
+### Patch Changes
+
+-   @comet/admin@6.17.1
+-   @comet/admin-icons@6.17.1
+
+## 6.17.0
+
+### Patch Changes
+
+-   Updated dependencies [536e95c02]
+-   Updated dependencies [7ecc30eba]
+-   Updated dependencies [ec4685bf3]
+    -   @comet/admin@6.17.0
+    -   @comet/admin-icons@6.17.0
+>>>>>>> main
 
 ## 6.16.0
 
