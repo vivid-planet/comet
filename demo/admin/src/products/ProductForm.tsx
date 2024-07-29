@@ -18,7 +18,7 @@ import {
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
-    FinalFormFileUpload,
+    FileUploadField,
     GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -319,17 +319,15 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
-                        <Field
+                        <FileUploadField
                             label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
                             name="priceList"
-                            component={FinalFormFileUpload}
                             maxFileSize={1024 * 1024 * 4} // 4 MB
                             fullWidth
                         />
-                        <Field
+                        <FileUploadField
                             label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
                             name="datasheets"
-                            component={FinalFormFileUpload}
                             multiple
                             maxFileSize={1024 * 1024 * 4} // 4 MB
                             fullWidth
