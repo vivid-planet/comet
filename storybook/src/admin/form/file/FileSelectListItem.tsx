@@ -5,15 +5,8 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 
 storiesOf("@comet/admin/form/File", module)
-    // .addDecorator((story) => (
-    //     <Card sx={{ maxWidth: 440 }}>
-    //         <CardContent>
-    //             <Stack spacing={4}>{story()}</Stack>
-    //         </CardContent>
-    //     </Card>
-    // ))
     .addDecorator((story) => (
-        <Card sx={{ maxWidth: 282 }}>
+        <Card sx={{ maxWidth: 300 }}>
             <CardContent>
                 <Stack spacing={4}>{story()}</Stack>
             </CardContent>
