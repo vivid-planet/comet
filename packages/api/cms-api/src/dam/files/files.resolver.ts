@@ -12,8 +12,6 @@ import { PaginatedResponseFactory } from "../../common/pagination/paginated-resp
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
@@ -22,12 +20,12 @@ import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
+import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { FileUploadService } from "./file-upload.service";
 import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
-import { slugifyFilename } from "./files.utils";
+import { createFileUploadInputFromUrl, slugifyFilename } from "./files.utils";
 
 export function createFilesResolver({
     File,
@@ -63,9 +61,7 @@ export function createFilesResolver({
             private readonly filesService: FilesService,
             @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
-            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
             @Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService,
-            private readonly fileUploadService: FileUploadService,
         ) {}
 
         @Query(() => PaginatedDamFiles)
@@ -94,10 +90,7 @@ export function createFilesResolver({
 
         @Mutation(() => File)
         @AffectedEntity(File)
-        async updateDamFile(
-            @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
-        ): Promise<FileInterface> {
+        async updateDamFile(@Args({ type: () => UpdateDamFileArgs }) { id, input }: UpdateDamFileArgs): Promise<FileInterface> {
             return this.filesService.updateById(id, input);
         }
 
@@ -108,7 +101,7 @@ export function createFilesResolver({
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
         ): Promise<FileInterface> {
-            const file = await this.fileUploadService.createFileUploadInputFromUrl(url);
+            const file = await createFileUploadInputFromUrl(url);
             const validationResult = await this.fileValidationService.validateFile(file);
             if (validationResult !== undefined) {
                 throw new CometValidationException(validationResult);

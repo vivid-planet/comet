@@ -5,6 +5,7 @@ import {
     BlocksTransformerService,
     DamImageBlock,
     extractGraphqlFields,
+    gqlArgsToMikroOrmQuery,
     RequiredPermission,
     RootBlockDataScalar,
 } from "@comet/cms-api";
@@ -12,7 +13,7 @@ import { FindOptions, Reference } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
-import { PublicUpload } from "@src/../../../packages/api/cms-api/lib/public-upload/entities/public-upload.entity.js";
+import { FileUpload } from "@src/../../../packages/api/cms-api/lib/file-uploads/entities/file-upload.entity.js";
 import { GraphQLResolveInfo } from "graphql";
 
 import { Manufacturer } from "../entities/manufacturer.entity";
@@ -26,18 +27,16 @@ import { ProductVariant } from "../entities/product-variant.entity";
 import { PaginatedProducts } from "./dto/paginated-products";
 import { ProductInput, ProductUpdateInput } from "./dto/product.input";
 import { ProductsArgs } from "./dto/products.args";
-import { ProductsService } from "./products.service";
 
 @Resolver(() => Product)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductResolver {
     constructor(
         private readonly entityManager: EntityManager,
-        private readonly productsService: ProductsService,
         @InjectRepository(Product) private readonly repository: EntityRepository<Product>,
         @InjectRepository(ProductCategory) private readonly productCategoryRepository: EntityRepository<ProductCategory>,
         @InjectRepository(Manufacturer) private readonly manufacturerRepository: EntityRepository<Manufacturer>,
-        @InjectRepository(PublicUpload) private readonly publicUploadRepository: EntityRepository<PublicUpload>,
+        @InjectRepository(FileUpload) private readonly fileUploadRepository: EntityRepository<FileUpload>,
         @InjectRepository(ProductStatistics) private readonly productStatisticsRepository: EntityRepository<ProductStatistics>,
         @InjectRepository(ProductColor) private readonly productColorRepository: EntityRepository<ProductColor>,
         @InjectRepository(ProductToTag) private readonly productToTagRepository: EntityRepository<ProductToTag>,
@@ -64,7 +63,7 @@ export class ProductResolver {
         @Args() { status, search, filter, sort, offset, limit }: ProductsArgs,
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedProducts> {
-        const where = this.productsService.getFindCondition({ search, filter });
+        const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
         where.status = { $in: status };
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
@@ -131,7 +130,7 @@ export class ProductResolver {
 
             category: categoryInput ? Reference.create(await this.productCategoryRepository.findOneOrFail(categoryInput)) : undefined,
             manufacturer: manufacturerInput ? Reference.create(await this.manufacturerRepository.findOneOrFail(manufacturerInput)) : undefined,
-            priceList: priceListInput ? Reference.create(await this.publicUploadRepository.findOneOrFail(priceListInput)) : undefined,
+            priceList: priceListInput ? Reference.create(await this.fileUploadRepository.findOneOrFail(priceListInput)) : undefined,
             image: imageInput.transformToBlockData(),
         });
         if (colorsInput) {
@@ -166,7 +165,7 @@ export class ProductResolver {
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
         if (datasheetsInput) {
-            const datasheets = await this.publicUploadRepository.find({ id: datasheetsInput });
+            const datasheets = await this.fileUploadRepository.find({ id: datasheetsInput });
             if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
@@ -240,7 +239,7 @@ export class ProductResolver {
             product.tags.set(tags.map((tag) => Reference.create(tag)));
         }
         if (datasheetsInput) {
-            const datasheets = await this.publicUploadRepository.find({ id: datasheetsInput });
+            const datasheets = await this.fileUploadRepository.find({ id: datasheetsInput });
             if (datasheets.length != datasheetsInput.length) throw new Error("Couldn't find all datasheets that were passed as input");
             await product.datasheets.loadItems();
             product.datasheets.set(datasheets.map((datasheet) => Reference.create(datasheet)));
@@ -262,7 +261,7 @@ export class ProductResolver {
                 : undefined;
         }
         if (priceListInput !== undefined) {
-            product.priceList = priceListInput ? Reference.create(await this.publicUploadRepository.findOneOrFail(priceListInput)) : undefined;
+            product.priceList = priceListInput ? Reference.create(await this.fileUploadRepository.findOneOrFail(priceListInput)) : undefined;
         }
 
         if (imageInput) {
@@ -293,8 +292,8 @@ export class ProductResolver {
         return product.manufacturer?.load();
     }
 
-    @ResolveField(() => PublicUpload, { nullable: true })
-    async priceList(@Parent() product: Product): Promise<PublicUpload | undefined> {
+    @ResolveField(() => FileUpload, { nullable: true })
+    async priceList(@Parent() product: Product): Promise<FileUpload | undefined> {
         return product.priceList?.load();
     }
 
@@ -318,8 +317,8 @@ export class ProductResolver {
         return product.tags.loadItems();
     }
 
-    @ResolveField(() => [PublicUpload])
-    async datasheets(@Parent() product: Product): Promise<PublicUpload[]> {
+    @ResolveField(() => [FileUpload])
+    async datasheets(@Parent() product: Product): Promise<FileUpload[]> {
         return product.datasheets.loadItems();
     }
 

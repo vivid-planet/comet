@@ -8,6 +8,7 @@ import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-tr
 import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
 import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
+import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
@@ -17,7 +18,6 @@ import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
-import { FileUploadService } from "./files/file-upload.service";
 import { FileValidationService } from "./files/file-validation.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
@@ -125,11 +125,11 @@ export class DamModule {
                 FileImagesResolver,
                 CalculateDominantImageColor,
                 FileValidationService,
-                FileUploadService,
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
                 DamVideoBlockTransformerService,
                 DamFileDownloadLinkBlockTransformerService,
+                HasValidFilenameConstraint,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
             exports: [
@@ -139,7 +139,6 @@ export class DamModule {
                 ImagesService,
                 ScaledImagesCacheService,
                 damConfigProvider,
-                FileUploadService,
                 PixelImageBlockTransformerService,
                 SvgImageBlockTransformerService,
                 DamVideoBlockTransformerService,

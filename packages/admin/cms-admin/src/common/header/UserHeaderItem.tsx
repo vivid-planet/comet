@@ -70,13 +70,14 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        endIcon={<Logout />}
+                        startIcon={<Logout />}
                         onClick={async () => {
                             const result = await signOut();
                             if (result.data) {
                                 location.href = result.data.currentUserSignOut;
                             }
                         }}
+                        sx={{ justifyContent: "center" }}
                     >
                         <FormattedMessage id="comet.logout" defaultMessage="Logout" />
                     </Button>

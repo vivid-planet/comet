@@ -10,7 +10,7 @@ API Generator: Replace graphql-type-json with graphql-scalars for JSON columns
 2. Uninstall graphql-type-json: `npm install graphql-type-json`
 3. Update imports:
 
-   ```diff
-   - import { GraphQLJSONObject } from "graphql-type-json";
-   + import { GraphQLJSONObject } from "graphql-scalars";
-   ```
+    ```diff
+    - import { GraphQLJSONObject } from "graphql-type-json";
+    + import { GraphQLJSONObject } from "graphql-scalars";
+    ```

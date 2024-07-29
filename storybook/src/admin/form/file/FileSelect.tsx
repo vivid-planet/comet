@@ -1,141 +1,99 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
-import { Box, Grid, Typography } from "@mui/material";
-import { boolean } from "@storybook/addon-knobs";
+import { Card, CardContent, Stack } from "@mui/material";
+import { boolean, select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
-type StoryProps = {
-    hasExistingFiles?: boolean;
-};
+const getLayout = () => select("Layout", { List: "list", Grid: "grid" }, "list");
 
-const dummyFiles: FileSelectItem[] = [
-    { name: "lorem ipsum.png", size: 3e5 },
-    {
-        name: "This is a file with a really long name to test truncating in the file list.jpeg",
-        size: 6e6,
-    },
-    {
-        name: "failed.png",
-        error: true,
-    },
-];
+storiesOf("@comet/admin/form/File", module)
+    .addDecorator((story) => (
+        <Card sx={{ maxWidth: getLayout() === "grid" ? 960 : 440 }}>
+            <CardContent>
+                <Stack spacing={4}>{story()}</Stack>
+            </CardContent>
+        </Card>
+    ))
+    .add("FileSelect", () => {
+        const exampleFiles: Record<string, FileSelectItem> = {
+            "fileName.xyz": {
+                name: "Filename.xyz",
+                size: 4.3 * 1024 * 1024, // 4.3 MB
+            },
+            "anotherFile.png": {
+                name: "Another file.png",
+                size: 568 * 1024, // 568 KB
+            },
+            "fileNumberThree.jpg": {
+                name: "File number three.jpg",
+                size: 1.8 * 1024 * 1024, // 1.8 MB
+            },
+            "fileUploading.jpg": {
+                name: "File that is uploading.jpg",
+                loading: true,
+            },
+            "fileTooLarge.png": {
+                name: "Failed to upload.png",
+                size: 200 * 1024 * 1024, // 200 MB
+                error: "The file is too large",
+            },
+        };
 
-const dummyFileDownload = (file: any) => {
-    alert(`Pretend "${file.name}" was just downloaded.`);
-};
+        const filesMapping = {
+            "No files": [] as FileSelectItem[],
+            "One valid file": [exampleFiles["fileName.xyz"]],
+            "Three valid files": [exampleFiles["fileName.xyz"], exampleFiles["anotherFile.png"], exampleFiles["fileNumberThree.jpg"]],
+            "Four files (one too large)": [
+                exampleFiles["fileName.xyz"],
+                exampleFiles["anotherFile.png"],
+                exampleFiles["fileNumberThree.jpg"],
+                exampleFiles["fileTooLarge.png"],
+            ],
+            "Four files (one uploading)": [
+                exampleFiles["fileName.xyz"],
+                exampleFiles["anotherFile.png"],
+                exampleFiles["fileNumberThree.jpg"],
+                exampleFiles["fileUploading.jpg"],
+            ],
+        };
 
-const SingleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
-    const [file, setFile] = React.useState<FileSelectItem | undefined>(hasExistingFiles ? dummyFiles[0] : undefined);
-    const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const noBackground = boolean("No Background", false);
+        const disabled = boolean("Disabled", false);
+        const readOnly = boolean("ReadOnly", false);
+        const multiple = boolean("Multiple", false);
+        const hasError = boolean("Has Error", false);
+        const hasMaxFileSize = boolean("Limit file size (5 MB)", false);
+        const hasMaxFiles = boolean("Max number of files (4)", false);
+        const onlyAllowImages = boolean("Only allow images", false);
+        const filesSelection = select(
+            "Existing files",
+            ["No files", "One valid file", "Three valid files", "Four files (one too large)", "Four files (one uploading)"],
+            "No files",
+        );
 
-    return (
-        <Box padding={4} sx={{ backgroundColor: noBackground ? "transparent" : "white" }}>
-            <Typography variant="h6" gutterBottom>
-                Single File Select
-            </Typography>
+        return (
             <FileSelect
                 onDrop={(acceptedFiles, rejectedFiles) => {
-                    const tooManyFilesWereDropped = rejectedFiles.some((rejection) =>
-                        rejection.errors.some((error) => error.code === "too-many-files"),
-                    );
-
-                    setTooManyFilesSelected(tooManyFilesWereDropped);
-
-                    if (!tooManyFilesWereDropped) {
-                        if (acceptedFiles.length > 0) {
-                            setFile({
-                                name: acceptedFiles[0].name,
-                                size: acceptedFiles[0].size,
-                            });
-                        }
-                        if (rejectedFiles.length > 0) {
-                            setFile({
-                                name: rejectedFiles[0].file.name,
-                                error: true,
-                            });
-                        }
-                    }
+                    console.log(acceptedFiles, rejectedFiles);
                 }}
                 onRemove={() => {
-                    setFile(undefined);
+                    console.log("Removing file");
                 }}
-                onDownload={dummyFileDownload}
-                maxFileSize={1024 * 1024 * 5} // 5 MB
-                files={file ? [file] : []}
-                error={tooManyFilesSelected ? "Selection was canceled. You can only select one file." : undefined}
-            />
-        </Box>
-    );
-};
-
-const MultipleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
-    const [files, setFiles] = React.useState<FileSelectItem[]>(hasExistingFiles ? dummyFiles : []);
-    const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const noBackground = boolean("No Background", false);
-    const maxNumberOfFiles = 4;
-
-    return (
-        <Box padding={4} sx={{ backgroundColor: noBackground ? "transparent" : "white" }}>
-            <Typography variant="h6" gutterBottom>
-                Multiple File Select
-            </Typography>
-            <FileSelect
-                onDrop={(acceptedFiles, rejectedFiles) => {
-                    const tooManyFilesWereDropped = rejectedFiles.some((rejection) =>
-                        rejection.errors.some((error) => error.code === "too-many-files"),
-                    );
-
-                    setTooManyFilesSelected(tooManyFilesWereDropped);
-
-                    if (!tooManyFilesWereDropped) {
-                        setFiles((existingFiles) => {
-                            return [
-                                ...existingFiles,
-                                ...acceptedFiles.map((file) => ({
-                                    name: file.name,
-                                    size: file.size,
-                                })),
-                                ...rejectedFiles.map((file) => ({
-                                    name: file.file.name,
-                                    error: true,
-                                })),
-                            ];
-                        });
-                    }
+                onDownload={() => {
+                    console.log("Downloading file");
                 }}
-                onRemove={(fileToRemove) => setFiles(files.filter((file) => file.name !== fileToRemove.name))}
-                onDownload={dummyFileDownload}
-                files={files}
-                maxFiles={maxNumberOfFiles}
-                maxFileSize={1024 * 1024 * 5} // 5 MB
-                error={
-                    tooManyFilesSelected
-                        ? `Selection was canceled. You can only select a maximum of ${maxNumberOfFiles} files, please reduce your selection.`
+                layout={getLayout()}
+                files={filesMapping[filesSelection]}
+                disabled={disabled}
+                readOnly={readOnly}
+                multiple={multiple}
+                maxFileSize={
+                    hasMaxFileSize
+                        ? 5 * 1024 * 1024 // 5 MB
                         : undefined
                 }
+                maxFiles={hasMaxFiles ? 4 : undefined}
+                error={hasError ? "An error occurred" : undefined}
+                accept={onlyAllowImages ? { "image/*": [] } : undefined}
             />
-        </Box>
-    );
-};
-
-storiesOf("@comet/admin/form/File", module).add("File Select", () => {
-    return (
-        <div>
-            <Grid container spacing={4}>
-                <Grid item xs={6}>
-                    <SingleFileSelectStory />
-                </Grid>
-                <Grid item xs={6}>
-                    <MultipleFileSelectStory />
-                </Grid>
-                <Grid item xs={6}>
-                    <SingleFileSelectStory hasExistingFiles />
-                </Grid>
-                <Grid item xs={6}>
-                    <MultipleFileSelectStory hasExistingFiles />
-                </Grid>
-            </Grid>
-        </div>
-    );
-});
+        );
+    });

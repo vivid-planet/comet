@@ -43,23 +43,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-  name: String
-  secondaryInformation: String
-}
-
-type PaginatedDependencies {
-  nodes: [Dependency!]!
-  totalCount: Int!
-}
-
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -105,6 +88,23 @@ type DamFileLicense {
 enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
+}
+
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+  name: String
+  secondaryInformation: String
+}
+
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
 }
 
 type BuildTemplate {
@@ -177,7 +177,7 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type PublicUpload {
+type FileUpload {
   id: ID!
   name: String!
   size: Int!
@@ -464,16 +464,6 @@ type ManufacturerCountry {
   used: Float!
 }
 
-type PaginatedManufacturers {
-  nodes: [Manufacturer!]!
-  totalCount: Int!
-}
-
-type PaginatedManufacturerCountries {
-  nodes: [ManufacturerCountry!]!
-  totalCount: Int!
-}
-
 type ProductCategory {
   id: ID!
   title: String!
@@ -552,8 +542,8 @@ type Product {
   statistics: ProductStatistics
   createdAt: DateTime!
   updatedAt: DateTime!
-  priceList: PublicUpload
-  datasheets: [PublicUpload!]!
+  priceList: FileUpload
+  datasheets: [FileUpload!]!
   category: ProductCategory
   manufacturer: Manufacturer
   colors: [ProductColor!]!
@@ -573,6 +563,16 @@ enum ProductType {
   Cap
   Shirt
   Tie
+}
+
+type PaginatedManufacturers {
+  nodes: [Manufacturer!]!
+  totalCount: Int!
+}
+
+type PaginatedManufacturerCountries {
+  nodes: [ManufacturerCountry!]!
+  totalCount: Int!
 }
 
 type PaginatedProducts {
@@ -927,6 +927,7 @@ input NewsCategoryEnumFilter {
 
 input OneToManyFilter {
   contains: ID
+  search: String
 }
 
 input NewsSort {
@@ -1002,6 +1003,7 @@ input ManyToOneFilter {
 
 input ManyToManyFilter {
   contains: ID
+  search: String
 }
 
 input ProductSort {

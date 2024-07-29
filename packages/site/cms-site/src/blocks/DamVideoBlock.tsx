@@ -12,6 +12,7 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
     renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
+    fill?: boolean;
 }
 
 export const DamVideoBlock = withPreview(
@@ -20,6 +21,7 @@ export const DamVideoBlock = withPreview(
         aspectRatio = "16x9",
         previewImageSizes,
         renderPreviewImage,
+        fill,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} />;
@@ -32,13 +34,20 @@ export const DamVideoBlock = withPreview(
             <>
                 {hasPreviewImage && showPreviewImage ? (
                     renderPreviewImage ? (
-                        renderPreviewImage({ onPlay: () => setShowPreviewImage(false), image: previewImage, aspectRatio, sizes: previewImageSizes })
+                        renderPreviewImage({
+                            onPlay: () => setShowPreviewImage(false),
+                            image: previewImage,
+                            aspectRatio,
+                            sizes: previewImageSizes,
+                            fill: fill,
+                        })
                     ) : (
                         <VideoPreviewImage
                             onPlay={() => setShowPreviewImage(false)}
                             image={previewImage}
                             aspectRatio={aspectRatio}
                             sizes={previewImageSizes}
+                            fill={fill}
                         />
                     )
                 ) : (
@@ -49,6 +58,7 @@ export const DamVideoBlock = withPreview(
                         playsInline
                         muted={autoplay}
                         $aspectRatio={aspectRatio.replace("x", " / ")}
+                        $fill={fill}
                     >
                         <source src={damFile.fileUrl} type={damFile.mimetype} />
                     </Video>
@@ -59,12 +69,16 @@ export const DamVideoBlock = withPreview(
     { label: "Video" },
 );
 
-const Video = styled.video<{ $aspectRatio: string }>`
+const Video = styled.video<{ $aspectRatio: string; $fill?: boolean }>`
     width: 100%;
     object-fit: cover;
 
-    ${({ $aspectRatio }) =>
-        css`
-            aspect-ratio: ${$aspectRatio};
-        `}
+    ${({ $aspectRatio, $fill }) =>
+        $fill
+            ? css`
+                  height: 100%;
+              `
+            : css`
+                  aspect-ratio: ${$aspectRatio};
+              `}
 `;

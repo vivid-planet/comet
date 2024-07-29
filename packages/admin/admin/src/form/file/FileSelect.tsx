@@ -3,7 +3,7 @@ import { ComponentsOverrides, FormHelperText, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { Accept, DropzoneOptions } from "react-dropzone";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { Alert } from "../../alert/Alert";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -15,6 +15,8 @@ import { getFilesInfoText } from "./getFilesInfoText";
 
 export type FileSelectClassKey =
     | "root"
+    | "listLayout"
+    | "gridLayout"
     | "maxFilesReachedInfo"
     | "dropzone"
     | "fileList"
@@ -22,6 +24,8 @@ export type FileSelectClassKey =
     | "error"
     | "errorMessage"
     | "filesInfoText";
+
+type Layout = "list" | "grid";
 
 type ThemeProps = ThemedComponentBaseProps<{
     root: "div";
@@ -34,18 +38,24 @@ type ThemeProps = ThemedComponentBaseProps<{
     filesInfoText: typeof FormHelperText;
 }>;
 
+type OwnerState = {
+    layout: Layout;
+};
+
 export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>> = {
     files: FileSelectItem<AdditionalValidFileValues>[];
-    onDrop: DropzoneOptions["onDrop"];
-    onRemove: (file: FileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
+    onDrop?: DropzoneOptions["onDrop"];
+    onRemove?: (file: FileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
     onDownload?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => void;
     getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string;
     disabled?: boolean;
+    readOnly?: boolean;
     accept?: Accept;
     maxFileSize?: number;
     maxFiles?: number;
     multiple?: boolean;
     error?: React.ReactNode;
+    layout?: Layout;
     iconMapping?: {
         error?: React.ReactNode;
     };
@@ -54,6 +64,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
 export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>(inProps: FileSelectProps<AdditionalValidFileValues>) => {
     const {
         slotProps,
+        readOnly,
         disabled,
         accept,
         maxFileSize,
@@ -66,6 +77,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
         getDownloadUrl,
         files,
         error,
+        layout = "list",
         ...restProps
     } = useThemeProps({
         props: inProps,
@@ -73,6 +85,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
     });
 
     const { error: errorIcon = <ErrorIcon color="error" /> } = iconMapping;
+    const intl = useIntl();
 
     const multiple = passedMultiple || (typeof passedMaxFiles !== "undefined" && passedMaxFiles > 1);
     const maxFiles = typeof passedMaxFiles === "undefined" ? (multiple ? undefined : 1) : passedMaxFiles;
@@ -81,54 +94,78 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
     const maxAmountOfFilesSelected = typeof maxFiles !== "undefined" && multiple && numberOfValidFiles >= maxFiles;
     const maxNumberOfFilesToBeAdded = maxFiles ? maxFiles - numberOfValidFiles : undefined;
     const filesInfoText = getFilesInfoText(maxFiles, maxFileSize);
+    const showFileList = files.length > 0 || readOnly;
+
+    const ownerState: OwnerState = {
+        layout,
+    };
 
     return (
-        <Root {...slotProps?.root} {...restProps}>
-            {maxAmountOfFilesSelected ? (
-                <MaxFilesReachedInfo
-                    title={<FormattedMessage id="comet.fileSelect.maximumReached" defaultMessage="Maximum reached" />}
-                    severity="info"
-                    {...slotProps?.maxFilesReachedInfo}
-                >
-                    <FormattedMessage
-                        id="comet.fileSelect.maximumFilesAmount"
-                        defaultMessage="The maximum number of uploads has been reached. Please delete files from the list before uploading new files."
-                    />
-                </MaxFilesReachedInfo>
-            ) : (
-                <Dropzone
-                    disabled={disabled}
-                    hasError={Boolean(error)}
-                    onDrop={onDrop}
-                    accept={accept}
-                    multiple={multiple}
-                    maxSize={maxFileSize === null ? undefined : maxFileSize}
-                    maxFiles={maxNumberOfFilesToBeAdded}
-                    {...slotProps?.dropzone}
-                />
-            )}
-            {files.length > 0 && (
-                <FileList {...slotProps?.fileList}>
-                    {files.map((file, index) => {
-                        const isValidFile = !("error" in file) && !("loading" in file);
-
-                        return (
-                            <FileListItem
-                                key={index}
-                                file={file}
-                                onClickDownload={
-                                    isValidFile && onDownload
-                                        ? () => {
-                                              onDownload(file);
-                                          }
-                                        : undefined
-                                }
-                                downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
-                                onClickDelete={() => onRemove(file)}
-                                {...slotProps?.fileListItem}
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            {!readOnly && (
+                <>
+                    {maxAmountOfFilesSelected ? (
+                        <MaxFilesReachedInfo
+                            title={<FormattedMessage id="comet.fileSelect.maximumReached" defaultMessage="Maximum reached" />}
+                            severity="info"
+                            {...slotProps?.maxFilesReachedInfo}
+                        >
+                            <FormattedMessage
+                                id="comet.fileSelect.maximumFilesAmount"
+                                defaultMessage="The maximum number of uploads has been reached. Please delete files from the list before uploading new files."
                             />
-                        );
-                    })}
+                        </MaxFilesReachedInfo>
+                    ) : (
+                        <Dropzone
+                            disabled={disabled}
+                            hasError={Boolean(error)}
+                            onDrop={onDrop}
+                            accept={accept}
+                            multiple={multiple}
+                            maxSize={maxFileSize === null ? undefined : maxFileSize}
+                            maxFiles={maxNumberOfFilesToBeAdded}
+                            {...slotProps?.dropzone}
+                        />
+                    )}
+                </>
+            )}
+            {showFileList && (
+                <FileList ownerState={ownerState} {...slotProps?.fileList}>
+                    {files.length > 0 ? (
+                        <>
+                            {files.map((file, index) => {
+                                const isValidFile = !("error" in file) && !("loading" in file);
+
+                                return (
+                                    <FileListItem
+                                        key={index}
+                                        file={file}
+                                        onClickDownload={
+                                            isValidFile && onDownload
+                                                ? () => {
+                                                      onDownload(file);
+                                                  }
+                                                : undefined
+                                        }
+                                        downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
+                                        onClickDelete={readOnly || !onRemove ? undefined : () => onRemove(file)}
+                                        filePreview={layout === "grid"}
+                                        {...slotProps?.fileListItem}
+                                    />
+                                );
+                            })}
+                        </>
+                    ) : (
+                        <FileListItem
+                            file={{
+                                name: intl.formatMessage({
+                                    id: "comet.fileSelect.noAttachments",
+                                    defaultMessage: "There are no attachments",
+                                }),
+                            }}
+                            {...slotProps?.fileListItem}
+                        />
+                    )}
                 </FileList>
             )}
             {Boolean(error) && (
@@ -139,14 +176,15 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                     </ErrorMessage>
                 </Error>
             )}
-            {Boolean(filesInfoText) && <FilesInfoText {...slotProps?.filesInfoText}>{filesInfoText}</FilesInfoText>}
+            {Boolean(filesInfoText && !readOnly) && <FilesInfoText {...slotProps?.filesInfoText}>{filesInfoText}</FilesInfoText>}
         </Root>
     );
 };
 
-const Root = createComponentSlot("div")<FileSelectClassKey>({
+const Root = createComponentSlot("div")<FileSelectClassKey, OwnerState>({
     componentName: "FileSelect",
     slotName: "root",
+    classesResolver: ({ layout }) => [layout === "list" && "listLayout", layout === "grid" && "gridLayout"],
 })(css`
     display: flex;
     flex-direction: column;
@@ -159,12 +197,29 @@ const Dropzone = createComponentSlot(FileDropzone)<FileSelectClassKey>({
     slotName: "dropzone",
 })();
 
-const FileList = createComponentSlot("div")<FileSelectClassKey>({
+const FileList = createComponentSlot("div")<FileSelectClassKey, OwnerState>({
     componentName: "FileSelect",
     slotName: "fileList",
-})(css`
-    width: 100%;
-`);
+})(
+    ({ theme, ownerState }) => css`
+        width: 100%;
+
+        ${ownerState.layout === "grid" &&
+        css`
+            display: grid;
+            gap: ${theme.spacing(2)};
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+            ${theme.breakpoints.up("md")} {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+                .CometAdminFormFieldContainer-horizontal & {
+                    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                }
+            }
+        `}
+    `,
+);
 
 const FileListItem = createComponentSlot(FileSelectListItem)<FileSelectClassKey>({
     componentName: "FileSelect",

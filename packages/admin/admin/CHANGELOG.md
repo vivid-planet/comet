@@ -1,5 +1,34 @@
 # @comet/admin
 
+## 7.0.0-beta.6
+
+### Minor Changes
+
+-   119714999: Automatically set `fullWidth` for `FieldContainer` with `variant="horizontal"`
+
+    Horizontal fields are automatically responsive:
+    If they are less than 600px wide, the layout automatically changes to vertical.
+    For this to work correctly, the fields must be `fullWidth`.
+    Therefore, `fullWidth` is now `true` by default for horizontal fields.
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.6
+-   @comet/admin-theme@7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+### Minor Changes
+
+-   569ad0463: Deprecate `SplitButton`, `FinalFormSaveSplitButton` and `SplitButtonContext` and remove all uses of these components in our libraries
+
+    The reason is that we decided to retire the SplitButton pattern.
+
+### Patch Changes
+
+-   @comet/admin-icons@7.0.0-beta.5
+-   @comet/admin-theme@7.0.0-beta.5
+
 ## 7.0.0-beta.4
 
 ### Minor Changes
@@ -387,6 +416,44 @@
 -   Updated dependencies [33ba50719]
     -   @comet/admin-theme@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.17.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.17.1
+
+## 6.17.0
+
+### Minor Changes
+
+-   7ecc30eba: Add `color` prop to `CometLogo`
+
+    It now supports a colored and a white version of the logo.
+
+### Patch Changes
+
+-   536e95c02: Fix error dialog to show GraphQL errors again
+
+    Previously, GraphQL errors without an http status code didn't trigger an error dialog anymore.
+
+-   ec4685bf3: Prevent unintended `width: 100%` on nested `InputBase` components inside `FieldContainer` and `Field` components
+
+    `FieldContainer` (and therefore `Field`) needs to set the with of the `InputBase` it wraps to 100%.
+    This also caused deeply nested `InputBase` components, e.g., inside a `Dialog`, to get this `width` and break the styling of these components, as they are not intended to be styled by `FieldContainer`.
+
+    -   @comet/admin-icons@6.17.0
+
+## 6.16.0
+
+### Minor Changes
+
+-   fb0fe2539: Add `FinalFormNumberInput` and `NumberField` as optimised fields for number inputs in FinalForms
+
+### Patch Changes
+
+-   747fe32cc: Fix incorrect router prompt in `TableLocalChanges` when there are no changes
+    -   @comet/admin-icons@6.16.0
 
 ## 6.15.1
 

@@ -108,19 +108,14 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         label={<FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType" defaultMessage="Open file" />}
                     >
                         {(props) => (
-                            <>
-                                <FinalFormSelect {...props}>
-                                    <MenuItem value="Download">
-                                        <FormattedMessage
-                                            id="comet.blocks.damFileDownloadLink.openFileType.download"
-                                            defaultMessage="as a download"
-                                        />
-                                    </MenuItem>
-                                    <MenuItem value="NewTab">
-                                        <FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
-                                    </MenuItem>
-                                </FinalFormSelect>
-                            </>
+                            <FinalFormSelect {...props}>
+                                <MenuItem value="Download">
+                                    <FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />
+                                </MenuItem>
+                                <MenuItem value="NewTab">
+                                    <FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
+                                </MenuItem>
+                            </FinalFormSelect>
                         )}
                     </Field>
                 </AdminComponentPaper>

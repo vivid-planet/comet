@@ -3,7 +3,7 @@ title: Core Concepts
 sidebar_position: 3
 ---
 
-On this page, you'll learn the core concepts of COMET DXP. These concepts represent the essential building blocks when developing COMET DXP applications. List the status of all processes:
+On this page, you'll learn the core concepts of COMET DXP. These concepts represent the essential building blocks when developing COMET DXP applications.
 
 ## Page Tree
 

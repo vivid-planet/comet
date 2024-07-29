@@ -1,5 +1,5 @@
 import { FileSelectListItem } from "@comet/admin";
-import { Card, CardContent } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -64,5 +64,68 @@ storiesOf("stories/components/FileSelectListItem", module)
                     }}
                 />
             </>
+        );
+    })
+    .add("Preview", () => {
+        return (
+            <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
+                <FileSelectListItem
+                    file={{
+                        loading: true,
+                    }}
+                    filePreview
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.zip",
+                        size: 4.3 * 1024 * 1024, // 4.3 MB
+                    }}
+                    onClickDownload={() => {
+                        // Handle download
+                    }}
+                    onClickDelete={() => {
+                        // Handle delete
+                    }}
+                    filePreview
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.jpg",
+                        size: 4.3 * 1024 * 1024, // 4.3 MB
+                    }}
+                    onClickDownload={() => {
+                        // Handle download
+                    }}
+                    onClickDelete={() => {
+                        // Handle delete
+                    }}
+                    filePreview="https://picsum.photos/528/528"
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "File that is uploading.jpg",
+                        loading: true,
+                    }}
+                    filePreview
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.xyz",
+                        error: true,
+                    }}
+                    filePreview
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.xyz",
+                        size: 200 * 1024 * 1024, // 200 MB
+                        error: "File too large",
+                    }}
+                    onClickDelete={() => {
+                        // Handle delete
+                    }}
+                    filePreview
+                />
+            </Box>
         );
     });

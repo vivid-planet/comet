@@ -8,7 +8,7 @@ import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
-    fragment FinalFormFileUpload on PublicUpload {
+    fragment FinalFormFileUpload on FileUpload {
         id
         name
         size
@@ -89,7 +89,7 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({
                 for (const file of acceptedFiles) {
                     const formData = new FormData();
                     formData.append("file", file);
-                    const response = await fetch(`${apiUrl}/public-upload/files/upload`, {
+                    const response = await fetch(`${apiUrl}/file-uploads/upload`, {
                         method: "POST",
                         body: formData,
                     });
@@ -134,7 +134,7 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({
                     setFailedUploads((existingFiles) => existingFiles.filter((failedFile) => failedFile.name !== fileToRemove.name));
                 }
             }}
-            getDownloadUrl={(file) => `${apiUrl}/public-upload/files/download/${file.id}`}
+            getDownloadUrl={(file) => `${apiUrl}/file-uploads/download/${file.id}`}
             files={files}
             multiple={multiple}
             maxFiles={maxFiles}

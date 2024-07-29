@@ -39,23 +39,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-  name: String
-  secondaryInformation: String
-}
-
-type PaginatedDependencies {
-  nodes: [Dependency!]!
-  totalCount: Int!
-}
-
 type ImageCropArea {
   focalPoint: FocalPoint!
   width: Float
@@ -101,6 +84,23 @@ type DamFileLicense {
 enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
+}
+
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+  name: String
+  secondaryInformation: String
+}
+
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
 }
 
 type BuildTemplate {
@@ -173,7 +173,7 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type PublicUpload {
+type FileUpload {
   id: ID!
   name: String!
   size: Int!
@@ -375,7 +375,8 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
-  publicUploadForTypesGenerationDoNotUse: PublicUpload!
+  fileUploadForTypesGenerationDoNotUse: FileUpload!
+  azureAiTranslate(input: AzureAiTranslationInput!): String!
 }
 
 input RedirectScopeInput {
@@ -502,6 +503,11 @@ enum UserSortField {
   name
   email
   status
+}
+
+input AzureAiTranslationInput {
+  text: String!
+  targetLanguage: String!
 }
 
 type Mutation {

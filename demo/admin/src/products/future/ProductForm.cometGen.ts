@@ -7,20 +7,39 @@ export const ProductForm: FormConfig<GQLProduct> = {
     fragmentName: "ProductFormDetails", // configurable as it must be unique across project
     fields: [
         {
-            type: "text",
-            name: "title",
-            label: "Titel", // default is generated from name (camelCaseToHumanReadable)
-            required: true, // default is inferred from gql schema
-            validate: { name: "validateTitle", import: "./validateTitle" },
+            type: "fieldSet",
+            name: "mainData",
+            title: "Main Data",
+            supportText: "Product: {title}",
+            collapsible: false,
+            initiallyExpanded: true,
+            fields: [
+                {
+                    type: "text",
+                    name: "title",
+                    label: "Titel", // default is generated from name (camelCaseToHumanReadable)
+                    required: true, // default is inferred from gql schema
+                    validate: { name: "validateTitle", import: "./validateTitle" },
+                },
+                { type: "text", name: "slug" },
+                { type: "date", name: "createdAt", label: "Created", readOnly: true },
+                { type: "text", name: "description", label: "Description", multiline: true },
+                { type: "staticSelect", name: "type", label: "Type", required: true /*, values: from gql schema (TODO overridable)*/ },
+                { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+            ],
         },
-        { type: "text", name: "slug" },
-        { type: "date", name: "createdAt", label: "Created", readOnly: true },
-        { type: "text", name: "description", label: "Description", multiline: true },
-        { type: "staticSelect", name: "type", label: "Type", required: true /*, values: from gql schema (TODO overridable)*/ },
-        { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
-        { type: "boolean", name: "inStock" },
-        { type: "date", name: "availableSince" },
-        { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
+        {
+            type: "fieldSet",
+            name: "additionalData",
+            title: "Additional Data",
+            collapsible: true,
+            initiallyExpanded: false,
+            fields: [
+                { type: "boolean", name: "inStock" },
+                { type: "date", name: "availableSince" },
+                { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
+            ],
+        },
     ],
 };
 

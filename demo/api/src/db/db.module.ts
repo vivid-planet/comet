@@ -3,7 +3,7 @@ import { Module } from "@nestjs/common";
 import { FixturesModule } from "@src/db/fixtures/fixtures.module";
 
 import { MigrateConsole } from "./migrate.console";
-import ormConfig from "./ormconfig";
+import { ormConfig } from "./ormconfig";
 
 @Module({
     imports: [MikroOrmModule.forRoot({ ormConfig }), FixturesModule],

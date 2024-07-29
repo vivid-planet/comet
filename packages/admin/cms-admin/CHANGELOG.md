@@ -1,5 +1,35 @@
 # @comet/cms-admin
 
+## 7.0.0-beta.6
+
+### Patch Changes
+
+-   Updated dependencies [119714999]
+    -   @comet/admin@7.0.0-beta.6
+    -   @comet/admin-date-time@7.0.0-beta.6
+    -   @comet/admin-icons@7.0.0-beta.6
+    -   @comet/admin-rte@7.0.0-beta.6
+    -   @comet/admin-theme@7.0.0-beta.6
+    -   @comet/blocks-admin@7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+### Minor Changes
+
+-   569ad0463: Deprecate `SplitButton`, `FinalFormSaveSplitButton` and `SplitButtonContext` and remove all uses of these components in our libraries
+
+    The reason is that we decided to retire the SplitButton pattern.
+
+### Patch Changes
+
+-   Updated dependencies [569ad0463]
+    -   @comet/admin@7.0.0-beta.5
+    -   @comet/admin-date-time@7.0.0-beta.5
+    -   @comet/admin-icons@7.0.0-beta.5
+    -   @comet/admin-rte@7.0.0-beta.5
+    -   @comet/admin-theme@7.0.0-beta.5
+    -   @comet/blocks-admin@7.0.0-beta.5
+
 ## 7.0.0-beta.4
 
 ### Major Changes
@@ -595,6 +625,104 @@
     -   @comet/admin-rte@7.0.0-beta.0
     -   @comet/blocks-admin@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
+
+## 6.17.1
+
+### Patch Changes
+
+-   @comet/admin@6.17.1
+-   @comet/admin-date-time@6.17.1
+-   @comet/admin-icons@6.17.1
+-   @comet/admin-rte@6.17.1
+-   @comet/admin-theme@6.17.1
+-   @comet/blocks-admin@6.17.1
+
+## 6.17.0
+
+### Minor Changes
+
+-   9ddf65554: Require a file extension when changing the filename in the DAM
+
+    Previously, files in the DAM could be renamed without restrictions.
+    Files could have invalid extensions (for their mimetype) or no extension at all.
+    This theoretically made the following attack possible:
+
+    1. Creating a dangerous .exe file locally
+    2. Renaming it to .jpg locally
+    3. Uploading the file as a .jpg
+    4. Renaming it to .exe in the DAM
+    5. The file is now downloaded as .exe
+
+    Now, filenames must always have an extension that matches their mimetype.
+    This is enforced in the admin and API.
+    Existing files without an extension are automatically assigned an extension via a DB migration.
+
+### Patch Changes
+
+-   987fe9adf: Fix `DocumentInterface.updateMutation` type
+
+    The type for the `input` variable needs to be `DocumentOutput`, not `DocumentInput`.
+
+-   Updated dependencies [536e95c02]
+-   Updated dependencies [7ecc30eba]
+-   Updated dependencies [ec4685bf3]
+    -   @comet/admin@6.17.0
+    -   @comet/admin-date-time@6.17.0
+    -   @comet/admin-icons@6.17.0
+    -   @comet/admin-rte@6.17.0
+    -   @comet/admin-theme@6.17.0
+    -   @comet/blocks-admin@6.17.0
+
+## 6.16.0
+
+### Minor Changes
+
+-   5e830f8d9: Add an [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) implementation of the content translation feature
+
+    To use it, do the following:
+
+    **API:**
+
+    ```diff
+    // app.module.ts
+    export class AppModule {
+        static forRoot(config: Config): DynamicModule {
+            return {
+                imports: [
+                    // ...
+    +               AzureAiTranslatorModule.register({
+    +                   endpoint: envVars.AZURE_AI_TRANSLATOR_ENDPOINT,
+    +                   key: envVars.AZURE_AI_TRANSLATOR_KEY,
+    +                   region: envVars.AZURE_AI_TRANSLATOR_REGION,
+    +               }),
+                ],
+            };
+        }
+    }
+    ```
+
+    Users need the `translation` permission to use the translation feature.
+
+    **Admin:**
+
+    Wrap the section where you want to use the content translation with the `AzureAiTranslatorProvider` provider:
+
+    ```tsx
+    <AzureAiTranslatorProvider enabled={true}>{/*  ...  */}</AzureAiTranslatorProvider>
+    ```
+
+    Note: `AzureAiTranslatorProvider` automatically checks for the `translation` permission. The translation button is only shown for users with this permission.
+
+### Patch Changes
+
+-   Updated dependencies [fb0fe2539]
+-   Updated dependencies [747fe32cc]
+    -   @comet/admin@6.16.0
+    -   @comet/admin-date-time@6.16.0
+    -   @comet/admin-icons@6.16.0
+    -   @comet/admin-rte@6.16.0
+    -   @comet/admin-theme@6.16.0
+    -   @comet/blocks-admin@6.16.0
 
 ## 6.15.1
 
