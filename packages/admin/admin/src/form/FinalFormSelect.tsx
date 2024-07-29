@@ -60,6 +60,7 @@ export const FinalFormSelect = <T,>({
         onChange,
         onFocus,
         onBlur,
+        required,
     };
 
     if (children) {
