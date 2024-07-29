@@ -41,9 +41,29 @@ services:
             - ${JAEGER_OLTP_PORT}:4318 #OLTP over HTTP
         environment:
             COLLECTOR_OTLP_ENABLED: "true"
+    redis:
+        image: redis:7
+        command: redis-server --maxmemory 256M --maxmemory-policy allkeys-lru --loglevel warning --requirepass ${REDIS_PASSWORD}
+        ports:
+            - ${REDIS_PORT}:6379
+        networks:
+            - redis
+
+    redis-sentinel:
+        image: bitnami/redis-sentinel
+        environment:
+            REDIS_MASTER_HOST: 127.0.0.1
+            REDIS_SENTINEL_PASSWORD: ${REDIS_PASSWORD}
+            REDIS_MASTER_PASSWORD: ${REDIS_PASSWORD}
+        ports:
+            - ${REDIS_SENTINEL_PORT}:26379
+        networks:
+            - redis
 
 networks:
     postgres:
+        driver: bridge
+    redis:
         driver: bridge
 
 volumes:
