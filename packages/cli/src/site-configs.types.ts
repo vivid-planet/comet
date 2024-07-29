@@ -9,9 +9,9 @@ export type BaseSiteConfig = {
     preloginEnabled?: boolean;
     public?: Record<string, unknown>;
 };
-export type ExtractPrivateSiteConfig<S extends BaseSiteConfig> = S & {
+export type ExtractPrivateSiteConfig<S extends BaseSiteConfig> = Omit<S, "public"> & {
     url: string;
-};
-export type ExtractPublicSiteConfig<S extends BaseSiteConfig> = Pick<S, "name" | "domains" | "preloginEnabled" | "public"> & {
+} & S["public"];
+export type ExtractPublicSiteConfig<S extends BaseSiteConfig> = Pick<S, "name" | "domains" | "preloginEnabled"> & {
     url: string;
-};
+} & S["public"];
