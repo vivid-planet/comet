@@ -8,10 +8,13 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormCheckbox,
+    FinalFormInput,
     FinalFormSelect,
     FinalFormSubmitEvent,
+    FinalFormSwitch,
     Loading,
     MainContent,
+    messages,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -45,7 +48,13 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = GQLProductFormDetailsFragment & {
+type FormValues = Omit<GQLProductFormDetailsFragment, "dimensions"> & {
+    useDimensions: boolean;
+    dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
+        width: string;
+        height: string;
+        depth: string;
+    };
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -70,6 +79,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filterByFragment<GQLProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
+                      useDimensions: !!data.product.dimensions,
+                      dimensions: data.product.dimensions
+                          ? {
+                                width: String(data.product.dimensions.width),
+                                height: String(data.product.dimensions.height),
+                                depth: String(data.product.dimensions.depth),
+                            }
+                          : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -91,11 +108,19 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ useDimensions, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
             category: formValues.category?.id,
+            dimensions:
+                useDimensions && formValues.dimensions
+                    ? {
+                          width: parseFloat(formValues.dimensions.width),
+                          height: parseFloat(formValues.dimensions.height),
+                          depth: parseFloat(formValues.dimensions.depth),
+                      }
+                    : null,
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
@@ -239,6 +264,56 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 }}
                                 getOptionLabel={(option) => option.title}
                             />
+                            <Field
+                                fullWidth
+                                name="useDimensions"
+                                type="checkbox"
+                                label={<FormattedMessage id="product.dimensions.useDimensions" defaultMessage="Configure dimensions" />}
+                            >
+                                {(props) => (
+                                    <FormControlLabel
+                                        control={<FinalFormSwitch {...props} />}
+                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
+                                    />
+                                )}
+                            </Field>
+                            <Field name="useDimensions" subscription={{ value: true }}>
+                                {({ input: { value } }) =>
+                                    value ? (
+                                        <>
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.width"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
+                                            />
+
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.height"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
+                                            />
+
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.depth"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
+                                            />
+                                        </>
+                                    ) : null
+                                }
+                            </Field>
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>

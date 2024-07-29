@@ -29,6 +29,7 @@ export function generateForm(
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
+    const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
     const props: Prop[] = [];
@@ -41,7 +42,9 @@ export function generateForm(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formFields = config.fields.reduce<FormFieldConfig<any>[]>((acc, field) => {
-        if (isFormLayoutConfig(field)) {
+        if (field.type === "fieldSet") {
+            acc.push(...field.fields.filter(isFormFieldConfig));
+        } else if (isFormLayoutConfig(field)) {
             acc.push(...field.fields);
         } else if (isFormFieldConfig(field)) {
             acc.push(field);
@@ -99,7 +102,9 @@ export function generateForm(
         gqlIntrospection,
         baseOutputFilename,
         fields: config.fields,
+        fragmentName,
         formConfig: config,
+        gqlType: config.gqlType,
     });
     for (const name in generatedFields.gqlDocuments) {
         gqlDocuments[name] = generatedFields.gqlDocuments[name];
@@ -110,7 +115,6 @@ export function generateForm(
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
 
-    const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
         fragment ${fragmentName} on ${gqlType} {
             ${formFragmentFields.join("\n")}
@@ -308,7 +312,14 @@ export function generateForm(
                 : ""
         }
     
-        const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
+        const handleSubmit = async (${
+            formValuesConfig.filter((config) => !!config.omitFromGqlInput).length
+                ? `{ ${formValuesConfig
+                      .filter((config) => !!config.omitFromGqlInput)
+                      .map((config) => config.omitFromGqlInput)
+                      .join(", ")}, ...formValues }`
+                : `formValues`
+        }: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
             ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
             const output = {
                 ...formValues,

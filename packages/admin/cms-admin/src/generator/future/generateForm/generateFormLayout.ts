@@ -1,4 +1,4 @@
-import { IntrospectionQuery } from "graphql";
+import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 import { FormConfig, FormLayoutConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
@@ -8,17 +8,24 @@ export function generateFormLayout({
     gqlIntrospection,
     baseOutputFilename,
     config,
+    fragmentName,
     formConfig,
+    gqlType,
+    namePrefix,
 }: {
     gqlIntrospection: IntrospectionQuery;
     baseOutputFilename: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormLayoutConfig<any>;
+    fragmentName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
+    gqlType: string;
+    namePrefix?: string;
 }): GenerateFieldsReturn {
-    const gqlType = formConfig.gqlType;
-    const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
+    const rootGqlType = formConfig.gqlType;
+    const formattedMessageRootId = rootGqlType[0].toLowerCase() + rootGqlType.substring(1);
+    const dataRootName = rootGqlType[0].toLowerCase() + rootGqlType.substring(1); // TODO should probably be deteced via query
 
     let code = "";
     let hooksCode = "";
@@ -29,7 +36,15 @@ export function generateFormLayout({
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
 
     if (config.type === "fieldSet") {
-        const generatedFields = generateFields({ gqlIntrospection, baseOutputFilename, fields: config.fields, formConfig });
+        const generatedFields = generateFields({
+            gqlIntrospection,
+            baseOutputFilename,
+            fields: config.fields,
+            fragmentName,
+            formConfig,
+            gqlType,
+            namePrefix,
+        });
         hooksCode += generatedFields.hooksCode;
         formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
         formFragmentFields.push(...generatedFields.formFragmentFields);
@@ -48,13 +63,13 @@ export function generateFormLayout({
         <FieldSet
             ${config.collapsible ? `collapsible` : ``}
             ${config.initiallyExpanded ? `initiallyExpanded` : ``}
-            title={<FormattedMessage id="${instanceGqlType}.${config.name}.title" defaultMessage="${config.title}" />}
+            title={<FormattedMessage id="${formattedMessageRootId}.${config.name}.title" defaultMessage="${config.title}" />}
             ${
                 config.supportText
                     ? `supportText={
                         ${supportPlaceholder ? `mode === "edit" && (<FormSpy subscription={{ values: true }}>{({ values }) => (` : ``}
                         <FormattedMessage
-                            id="${instanceGqlType}.${config.name}.supportText"
+                            id="${formattedMessageRootId}.${config.name}.supportText"
                             defaultMessage="${config.supportText}"
                             ${supportPlaceholder ? `values={{ ...values }}` : ``}
                         />
@@ -65,6 +80,95 @@ export function generateFormLayout({
         >
             ${generatedFields.code}
         </FieldSet>`;
+    } else if (config.type === "conditionalFields") {
+        const name = String(config.name);
+
+        const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
+            | IntrospectionObjectType
+            | undefined;
+        if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
+
+        const introspectionField = introspectionObject.fields.find((field) => field.name === name);
+        if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+        if (introspectionField.type.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
+
+        const generatedFields = generateFields({
+            gqlIntrospection,
+            baseOutputFilename,
+            fields: config.fields,
+            fragmentName,
+            formConfig,
+            gqlType: introspectionField.type.name,
+            namePrefix: name,
+        });
+        hooksCode += generatedFields.hooksCode;
+        formFragmentFields.push(`${name} { ${generatedFields.formFragmentFields.join(" ")} }`);
+        for (const name in generatedFields.gqlDocuments) {
+            gqlDocuments[name] = generatedFields.gqlDocuments[name];
+        }
+        imports.push(...generatedFields.imports);
+
+        const wrappingFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
+            omitFromFragmentType: name,
+            omitFromGqlInput: `use${name[0].toUpperCase() + name.substring(1)}`,
+            typeCode: `use${name[0].toUpperCase() + name.substring(1)}: boolean;`,
+            initializationCode: `use${name[0].toUpperCase() + name.substring(1)}: !!data.${dataRootName}.${name}`,
+        };
+        const subfieldsFormValuesTypeCode = generatedFields.formValuesConfig
+            .filter((config) => !!config.omitFromFragmentType)
+            .map((config) => `"${config.omitFromFragmentType}"`);
+        if (subfieldsFormValuesTypeCode.length) {
+            wrappingFormValuesConfig.typeCode = `${wrappingFormValuesConfig.typeCode}
+                ${name}: Omit<NonNullable<GQL${fragmentName}Fragment["${name}"]>, ${subfieldsFormValuesTypeCode.join(" | ")}> & {
+                    ${generatedFields.formValuesConfig.map((config) => config.typeCode).join("\n")}
+                };`;
+        }
+        const subfieldsFormValuesInitCode = generatedFields.formValuesConfig
+            .filter((config) => !!config.initializationCode)
+            .map((config) => config.initializationCode);
+        if (subfieldsFormValuesInitCode.length) {
+            wrappingFormValuesConfig.initializationCode = `${wrappingFormValuesConfig.initializationCode},
+                ${name}: data.${dataRootName}.${name} ? { ${subfieldsFormValuesInitCode.join(", ")}} : undefined    `;
+        }
+        const subfieldsFormValuesDefaultInitCode = generatedFields.formValuesConfig
+            .filter((config) => !!config.defaultInitializationCode)
+            .map((config) => config.defaultInitializationCode);
+        if (subfieldsFormValuesDefaultInitCode.length) {
+            wrappingFormValuesConfig.defaultInitializationCode = `${name}: { ${subfieldsFormValuesDefaultInitCode.join(", ")}}`;
+        }
+        formValuesConfig.push(wrappingFormValuesConfig);
+
+        imports.push({ name: "FinalFormSwitch", importPath: "@comet/admin" });
+        imports.push({ name: "messages", importPath: "@comet/admin" });
+        imports.push({ name: "FormControlLabel", importPath: "@mui/material" });
+
+        formValueToGqlInputCode += `${String(config.name)}: use${
+            String(config.name)[0].toUpperCase() + String(config.name).substring(1)
+        } && formValues.${String(config.name)} ? {${generatedFields.formValueToGqlInputCode}} : null,`;
+        code = `<Field
+                    fullWidth
+                    name="use${String(config.name)[0].toUpperCase() + String(config.name).substring(1)}"
+                    type="checkbox"
+                    label={<FormattedMessage id="${formattedMessageRootId}.${String(config.name)}.use${
+            String(config.name)[0].toUpperCase() + String(config.name).substring(1)
+        }" defaultMessage="${config.checkboxLabel}" />}
+                >
+                    {(props) => (
+                        <FormControlLabel
+                            control={<FinalFormSwitch {...props} />}
+                            label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
+                        />
+                    )}
+                </Field>
+                 <Field name="use${String(config.name)[0].toUpperCase() + String(config.name).substring(1)}" subscription={{ value: true }}>
+                    {({ input: { value } }) =>
+                        value ? (
+                            <>
+                                ${generatedFields.code}
+                            </>
+                            ) : null
+                    }
+                </Field>`;
     } else {
         throw new Error(`Unsupported type`);
     }
