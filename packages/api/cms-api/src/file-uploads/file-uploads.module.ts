@@ -6,7 +6,7 @@ import { FileValidationService } from "../dam/files/file-validation.service";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG, FILE_UPLOADS_FILE_VALIDATION_SERVICE } from "./file-uploads.constants";
-import { FileUploadsController } from "./file-uploads.controller";
+import { createFileUploadsController } from "./file-uploads.controller";
 import { FileUploadsService } from "./file-uploads.service";
 
 @Global()
@@ -29,7 +29,7 @@ export class FileUploadsModule {
             module: FileUploadsModule,
             imports: [MikroOrmModule.forFeature([FileUpload]), BlobStorageModule],
             providers: [fileUploadsConfigProvider, FileUploadsService, fileUploadsFileValidatorProvider],
-            controllers: [FileUploadsController],
+            controllers: [createFileUploadsController(options.upload ?? { public: false })],
             exports: [FileUploadsService],
         };
     }
