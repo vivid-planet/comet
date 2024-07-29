@@ -8,6 +8,7 @@ import { CdnGuard, ExceptionInterceptor, ValidationExceptionFactory } from "@com
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
+import * as Sentry from "@sentry/node";
 import { AppModule } from "@src/app.module";
 import { useContainer } from "class-validator";
 import compression from "compression";
@@ -20,6 +21,10 @@ async function bootstrap(): Promise<void> {
     const config = createConfig(process.env);
     const appModule = AppModule.forRoot(config);
     const app = await NestFactory.create<NestExpressApplication>(appModule);
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+    app.use(Sentry.Handlers.errorHandler());
 
     // class-validator should use Nest for dependency injection.
     // See https://github.com/nestjs/nest/issues/528,

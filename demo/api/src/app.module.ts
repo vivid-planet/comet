@@ -14,6 +14,7 @@ import {
     KubernetesModule,
     PageTreeModule,
     RedirectsModule,
+    SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
@@ -168,6 +169,7 @@ export class AppModule {
                         return true;
                     },
                 }),
+                ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
             ],
         };
     }
