@@ -100,7 +100,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
         filePreviewError: filePreviewErrorIcon = <FileNotMenu fontSize="inherit" color="inherit" />,
     } = iconMapping;
 
-    const getFilePreviewContent = React.useCallback(() => {
+    const getFilePreviewContent = () => {
         if ("loading" in file) {
             return filePreviewLoadingIcon;
         }
@@ -114,7 +114,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
         }
 
         return filePreviewGenericFileIcon;
-    }, [file, filePreview, filePreviewGenericFileIcon, filePreviewLoadingIcon, filePreviewErrorIcon]);
+    };
 
     const ownerState: OwnerState = {
         hasFilePreview: Boolean(filePreview),
