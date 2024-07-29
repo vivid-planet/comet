@@ -385,7 +385,7 @@ This requires the following changes:
 ### Make file uploads upload endpoint public
 
 The `/file-uploads/upload` endpoint now requires the `fileUploads` permission by default.
-If necessary (e.g., a file upload in the site), make the endpoint public:
+**If necessary** (e.g., a file upload in the site), make the endpoint public:
 
 ```diff
 FileUploadsModule.register({
@@ -477,6 +477,15 @@ DamModule.register({
     - import { GraphQLJSONObject } from "graphql-type-json";
     + import { GraphQLJSONObject } from "graphql-scalars";
     ```
+
+### Change arguments of `filtersToMikroOrmQuery`
+
+The second argument (`applyFilter` callback) was moved into an options object:
+
+```diff
+- filtersToMikroOrmQuery(f, (acc, filterValue, filterKey) => {}),
++ filtersToMikroOrmQuery(f, { applyFilter: (acc, filterValue, filterKey) => {} }),
+```
 
 ## Admin
 
@@ -578,6 +587,7 @@ This has multiple implications:
 -   `AppHeaderButton`: Remove class keys `disabled` and `focusVisible` (use the `:disabled` or `:focus` selectors instead)
 -   `AppHeaderButton`: Rename the `inner` class key to `content`
 -   `AppHeaderDropdown`: Remove the `popoverPaper` class key
+-   `AppHeaderDropdown`: Replace `popoverProps` with `slotProps.popover`
 -   `AppHeaderDropdown`: Rename the `popoverRoot` class key to `popover`
 -   `ClearInputButton`: Remove the `disabled` class key (use the `:disabled` selector instead)
 -   `CopyToClipboardButton`: Remove `components` prop. Use `copyIcon` and `successIcon` instead
