@@ -1,6 +1,5 @@
 # @comet/admin
 
-<<<<<<< HEAD
 ## 7.0.0-beta.6
 
 ### Minor Changes
@@ -417,7 +416,7 @@
 -   Updated dependencies [33ba50719]
     -   @comet/admin-theme@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
-=======
+
 ## 6.17.1
 
 ### Patch Changes
@@ -444,7 +443,6 @@
     This also caused deeply nested `InputBase` components, e.g., inside a `Dialog`, to get this `width` and break the styling of these components, as they are not intended to be styled by `FieldContainer`.
 
     -   @comet/admin-icons@6.17.0
->>>>>>> main
 
 ## 6.16.0
 

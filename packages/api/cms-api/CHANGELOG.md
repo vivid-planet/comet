@@ -1,6 +1,5 @@
 # @comet/cms-api
 
-<<<<<<< HEAD
 ## 7.0.0-beta.6
 
 ### Patch Changes
@@ -357,7 +356,7 @@
 -   Updated dependencies [e15927594]
 -   Updated dependencies [ebf597120]
     -   @comet/blocks-api@7.0.0-beta.0
-=======
+
 ## 6.17.1
 
 ### Patch Changes
@@ -400,7 +399,6 @@
 
 -   5a9c49ab5: CronJobModule: Fix job creation if resulting name exceeds 63 characters
     -   @comet/blocks-api@6.17.0
->>>>>>> main
 
 ## 6.16.0
 
