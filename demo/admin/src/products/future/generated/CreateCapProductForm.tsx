@@ -108,7 +108,6 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                             fullWidth
                             name="category"
                             label={<FormattedMessage id="product.category" defaultMessage="Category" />}
-                            displayEmpty
                             loadOptions={async () => {
                                 const { data } = await client.query<GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables>({
                                     query: gql`

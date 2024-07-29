@@ -5,7 +5,6 @@ import { FormattedMessage } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
-import { messages } from "../messages";
 
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionLabel?: (option: T) => string;
@@ -29,7 +28,7 @@ export const FinalFormSelect = <T,>({
     },
     getOptionValue = (option: T) => {
         if (typeof option === "object" && option !== null) {
-            if ((option as any).id || (option as any).id === "") return String((option as any).id);
+            if ((option as any).id) return String((option as any).id);
             if ((option as any).value) return String((option as any).value);
             return JSON.stringify(option);
         } else {
@@ -65,12 +64,7 @@ export const FinalFormSelect = <T,>({
 
     if (children) {
         return (
-            <Select {...selectProps} value={value} displayEmpty={!required}>
-                {!required && !multiple && (
-                    <MenuItem value="">
-                        <FormattedMessage {...messages.pleaseSelect} />
-                    </MenuItem>
-                )}
+            <Select {...selectProps} value={value}>
                 {children}
             </Select>
         );
@@ -91,32 +85,17 @@ export const FinalFormSelect = <T,>({
             }
             onChange={(event) => {
                 const value = event.target.value;
-
-                if (Array.isArray(value)) {
-                    onChange(value.map((v) => options.find((i) => getOptionValue(i) == v)));
-                    return;
-                }
-
-                const newValue = options.find((i) => getOptionValue(i) == value);
-
-                if (newValue && getOptionValue(newValue) === "") {
-                    onChange(undefined);
-                } else {
-                    onChange(newValue);
-                }
+                onChange(
+                    Array.isArray(value)
+                        ? value.map((v) => options.find((i) => getOptionValue(i) == v))
+                        : options.find((i) => getOptionValue(i) == value),
+                );
             }}
             value={Array.isArray(value) ? value.map((i) => getOptionValue(i)) : getOptionValue(value)}
-            displayEmpty={!required}
         >
             {loading && (
                 <MenuItem value="" disabled>
                     <FormattedMessage id="common.loading" defaultMessage="Loading ..." />
-                </MenuItem>
-            )}
-
-            {!required && !multiple && (
-                <MenuItem value="">
-                    <FormattedMessage {...messages.pleaseSelect} />
                 </MenuItem>
             )}
 

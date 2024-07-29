@@ -220,7 +220,6 @@ export function generateFormField(
                 fullWidth
                 name="${name}"
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
-                ${!required ? "displayEmpty" : ""}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName} {
