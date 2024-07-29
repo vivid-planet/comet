@@ -12,8 +12,10 @@ import {
 import { FindOptions, Reference } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { ParseUUIDPipe } from "@nestjs/common";
 import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
+import { GraphQLUUID } from "graphql-scalars";
 
 import { Manufacturer } from "../entities/manufacturer.entity";
 import { Product } from "../entities/product.entity";
@@ -45,6 +47,26 @@ export class ProductResolver {
     @Query(() => Product)
     @AffectedEntity(Product)
     async product(@Args("id", { type: () => ID }) id: string): Promise<Product> {
+        const product = await this.repository.findOneOrFail(id);
+        return product;
+    }
+
+    @Query(() => Product)
+    @AffectedEntity(Product)
+    async productById1(
+        @Args("id", { type: () => ID }, ParseUUIDPipe)
+        id: string,
+    ): Promise<Product> {
+        const product = await this.repository.findOneOrFail(id);
+        return product;
+    }
+
+    @Query(() => Product)
+    @AffectedEntity(Product)
+    async productById2(
+        @Args("id", { type: () => GraphQLUUID })
+        id: string,
+    ): Promise<Product> {
         const product = await this.repository.findOneOrFail(id);
         return product;
     }
