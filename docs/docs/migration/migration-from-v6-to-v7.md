@@ -378,6 +378,20 @@ This requires the following changes:
 -   Change all usages of the `PublicUploadsService` to `FileUploadsService`.
 -   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/files-uploads/upload`.
 
+### Make file uploads upload endpoint public
+
+The `/file-uploads/upload` endpoint now requires the `fileUploads` permission by default.
+If necessary (e.g., a file upload in the site), make the endpoint public:
+
+```diff
+FileUploadsModule.register({
+    /* ... */,
++   upload: {
++       public: true,
++   },
+}),
+```
+
 ### Remove usages of `download` or `FileUploadService`
 
 Use `createFileUploadInputFromUrl` instead:
