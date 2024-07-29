@@ -10,14 +10,14 @@ import { v4 as uuid } from "uuid";
 import { CometValidationException } from "../common/errors/validation.exception";
 import { FileValidationService } from "../dam/files/file-validation.service";
 import { removeMulterTempFile } from "../dam/files/files.utils";
-import { PUBLIC_UPLOAD_FILE_VALIDATION_SERVICE } from "./public-upload.constants";
+import { FILE_UPLOADS_FILE_VALIDATION_SERVICE } from "./file-uploads.constants";
 
-export function PublicUploadFileInterceptor(fieldName: string): Type<NestInterceptor> {
+export function FileUploadsFileInterceptor(fieldName: string): Type<NestInterceptor> {
     @Injectable()
     class Interceptor implements NestInterceptor {
         fileInterceptor: NestInterceptor;
 
-        constructor(@Inject(PUBLIC_UPLOAD_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService) {
+        constructor(@Inject(FILE_UPLOADS_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService) {
             const multerOptions: MulterOptions = {
                 storage: multer.diskStorage({
                     destination: function (req, file, cb) {

@@ -10,9 +10,9 @@ import {
     CronJobsModule,
     DamModule,
     DependenciesModule,
+    FileUploadsModule,
     KubernetesModule,
     PageTreeModule,
-    PublicUploadModule,
     RedirectsModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
@@ -136,9 +136,9 @@ export class AppModule {
                     File: DamFile,
                     Folder: DamFolder,
                 }),
-                PublicUploadModule.register({
-                    maxFileSize: config.publicUploads.maxFileSize,
-                    directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
+                FileUploadsModule.register({
+                    maxFileSize: config.fileUploads.maxFileSize,
+                    directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
                     acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
                 }),
                 ...(config.contentGeneration

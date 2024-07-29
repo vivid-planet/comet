@@ -339,6 +339,69 @@ import { NewsResolver } from "./generated/news.resolver";
 export class NewsModule {}
 ```
 
+### Rename public uploads
+
+The `PublicUploadModule` was renamed to `FileUploadsModule`.
+
+:::warning
+
+The public uploads module was unintentionally added to the Starter. If you don't use the feature in your application, remove the module instead.
+
+:::
+
+This requires the following changes:
+
+-   In `comet-config.json` rename `publicUploads` to `fileUploads`.
+
+    ```diff
+    {
+    -   "publicUploads": {
+    +   "fileUploads": {
+            "maxFileSize": 15
+        }
+    }
+    ```
+
+-   In `app.module.ts` change the import from `PublicUploadModule` to `FileUploadsModule`.
+
+    ```diff
+    - PublicUploadModule.register({
+    + FileUploadsModule.register({
+    -    maxFileSize: config.publicUploads.maxFileSize,
+    -    directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
+    +    maxFileSize: config.fileUploads.maxFileSize,
+    +    directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
+    })
+    ```
+
+-   Change all usages of the `PublicUpload` entity to `FileUpload`.
+-   Change all usages of the `PublicUploadsService` to `FileUploadsService`.
+-   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/files-uploads/upload`.
+
+### Remove usages of `download` or `FileUploadService`
+
+Use `createFileUploadInputFromUrl` instead:
+
+```diff
+- import { FileUploadService } from "@comet/cms-api";
++ import { createFileUploadInputFromUrl } from "@comet/cms-api";
+
+@Injectable()
+export class SvgImageFileFixtureService {
+    constructor(
+        private readonly filesService: FilesService,
+-       private readonly fileUploadService: FileUploadService,
+    ) {}
+
+    async generateImage(scope: DamScope): Promise<FileInterface> {
+-       const file = await this.fileUploadService.createFileUploadInputFromUrl(
++       const file = await createFileUploadInputFromUrl(
+            path.resolve(`./src/db/fixtures/generators/images/comet-logo-claim.svg`),
+        );
+    }
+}
+```
+
 ## Admin
 
 ### Remove `axios` dependency
