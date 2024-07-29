@@ -104,7 +104,7 @@ storiesOf("stories/components/FileSelect", module)
                 }}
                 files={value}
                 readOnly
-                showFilesAsPreviewGrid
+                layout="grid"
             />
         );
     });

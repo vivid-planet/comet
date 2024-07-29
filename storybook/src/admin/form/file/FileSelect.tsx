@@ -4,9 +4,11 @@ import { boolean, select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
+const getLayout = () => select("Layout", { List: "list", Grid: "grid" }, "list");
+
 storiesOf("@comet/admin/form/File", module)
     .addDecorator((story) => (
-        <Card sx={{ maxWidth: 440 }}>
+        <Card sx={{ maxWidth: getLayout() === "grid" ? 960 : 440 }}>
             <CardContent>
                 <Stack spacing={4}>{story()}</Stack>
             </CardContent>
@@ -79,6 +81,7 @@ storiesOf("@comet/admin/form/File", module)
                 onDownload={() => {
                     console.log("Downloading file");
                 }}
+                layout={getLayout()}
                 files={filesMapping[filesSelection]}
                 disabled={disabled}
                 readOnly={readOnly}

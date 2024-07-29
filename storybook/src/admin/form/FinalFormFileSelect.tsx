@@ -81,7 +81,7 @@ function Story() {
                                             name="vertical"
                                             label="File Select - ReadOnly Grid"
                                             component={FinalFormFileSelect}
-                                            showFilesAsPreviewGrid
+                                            layout="grid"
                                             readOnly
                                             multiple
                                             fullWidth
@@ -109,7 +109,7 @@ function Story() {
                                             name="horizontal"
                                             label="File Select - ReadOnly Grid"
                                             component={FinalFormFileSelect}
-                                            showFilesAsPreviewGrid
+                                            layout="grid"
                                             readOnly
                                             multiple
                                             fullWidth
