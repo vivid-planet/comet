@@ -5,6 +5,7 @@ import { GraphQLJSONObject } from "graphql-type-json";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
+import { AvailableContentScope } from "./dto/available-content-scope";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
@@ -15,7 +16,7 @@ import { UserPermissionsService } from "./user-permissions.service";
 export class UserContentScopesResolver {
     constructor(
         @InjectRepository(UserContentScopes) private readonly repository: EntityRepository<UserContentScopes>,
-        private readonly userService: UserPermissionsService,
+        private readonly service: UserPermissionsService,
     ) {}
 
     @Mutation(() => Boolean)
@@ -24,7 +25,7 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("input", { type: () => UserContentScopesInput }) { contentScopes }: UserContentScopesInput,
     ): Promise<boolean> {
-        await this.userService.checkContentScopes(contentScopes);
+        await this.service.checkContentScopes(contentScopes);
         let entity = await this.repository.findOne({ userId });
         if (entity) {
             entity = this.repository.assign(entity, { userId, contentScopes });
@@ -40,14 +41,15 @@ export class UserContentScopesResolver {
         @Args("userId", { type: () => String }) userId: string,
         @Args("skipManual", { type: () => Boolean, nullable: true }) skipManual = false,
     ): Promise<ContentScope[]> {
-        return this.userService.normalizeContentScopes(
-            await this.userService.getContentScopes(await this.userService.getUser(userId), !skipManual),
-            await this.userService.getAvailableContentScopes(),
+        return this.service.normalizeContentScopes(
+            await this.service.getContentScopes(await this.service.getUser(userId), !skipManual),
+            await this.service.getAvailableContentScopes(),
         );
     }
 
-    @Query(() => [GraphQLJSONObject])
-    async userPermissionsAvailableContentScopes(): Promise<ContentScope[]> {
-        return this.userService.getAvailableContentScopes();
+    @Query(() => [AvailableContentScope])
+    async userPermissionsAvailableContentScopes(): Promise<AvailableContentScope[]> {
+        const scopes = await this.service.getAvailableContentScopes();
+        return scopes.map((contentScope) => ({ contentScope, label: this.service.getLabelForContentScope(contentScope) }));
     }
 }
