@@ -1,14 +1,74 @@
 import { Check, Error, Error as ErrorIcon, Save, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides, Theme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
-import { ClassKeyOfStyles } from "@mui/styles/withStyles";
-import { ClassNameMap } from "@mui/styles/withStyles/withStyles";
+import { Button, ButtonClassKey, buttonGroupClasses, ButtonProps, ComponentsOverrides } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { messages } from "../../../messages";
 import { useSplitButtonContext } from "../split/useSplitButtonContext";
-import { SaveButtonClassKey, styles } from "./SaveButton.styles";
+
+export type SaveButtonClassKey = "saving" | "error" | "success" | "conflict" | ButtonClassKey;
+
+type OwnerState = Pick<SaveButtonProps, "variant" | "color"> & { displayState?: SaveButtonDisplayState };
+
+const Root = createComponentSlot(Button)<SaveButtonClassKey, OwnerState>({
+    componentName: "SaveButton",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [
+            ownerState.displayState === "saving" && "saving",
+            ownerState.displayState === "error" && "error",
+            ownerState.displayState === "success" && "success",
+            ownerState.displayState === "conflict" && "conflict",
+        ];
+    },
+})(
+    ({ ownerState, theme }) => css`
+        ${ownerState.displayState === "saving" &&
+        css`
+            &:disabled {
+                ${ownerState.variant === "contained" &&
+                ownerState.color === "primary" &&
+                css`
+                    color: ${theme.palette.primary.contrastText};
+                    background-color: ${theme.palette.primary.main};
+                `};
+                ${ownerState.variant === "contained" &&
+                ownerState.color === "secondary" &&
+                css`
+                    color: ${theme.palette.secondary.contrastText};
+                    background-color: ${theme.palette.secondary.main};
+                `}
+            }
+        `}
+        ${ownerState.displayState === "error" &&
+        css`
+            &:disabled {
+                color: ${theme.palette.error.contrastText};
+                background-color: ${theme.palette.error.light};
+            }
+        `}
+        ${ownerState.displayState === "success" &&
+        css`
+            &:disabled {
+                color: ${theme.palette.success.contrastText};
+                background-color: ${theme.palette.success.light};
+            }
+        `}
+        ${ownerState.displayState === "conflict" &&
+        css`
+            color: ${theme.palette.error.contrastText};
+            background-color: ${theme.palette.error.main};
+            &:hover {
+                background-color: ${theme.palette.error.dark};
+            }
+            &.${buttonGroupClasses.grouped}:not(:last-child) {
+                border-right-color: ${theme.palette.error.dark};
+            }
+        `}
+    `,
+);
 
 export interface SaveButtonProps extends ButtonProps {
     saving?: boolean;
@@ -27,28 +87,38 @@ export interface SaveButtonProps extends ButtonProps {
 
 export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
 
-const SaveBtn = ({
-    saving = false,
-    hasErrors = false,
-    hasConflict = false,
-    children = <FormattedMessage {...messages.save} />,
-    savingItem = <FormattedMessage id="comet.saveButton.savingItem.title" defaultMessage="Saving" />,
-    successItem = <FormattedMessage id="comet.saveButton.successItem.title" defaultMessage="Successfully Saved" />,
-    errorItem = <FormattedMessage id="comet.saveButton.errorItem.title" defaultMessage="Save Error" />,
-    conflictItem = <FormattedMessage {...messages.saveConflict} />,
-    saveIcon = <Save />,
-    savingIcon = <ThreeDotSaving />,
-    successIcon = <Check />,
-    errorIcon = <Error />,
-    conflictIcon = <ErrorIcon />,
-    variant = "contained",
-    color = "primary",
-    classes,
-    disabled,
-    ...restProps
-}: SaveButtonProps & WithStyles<typeof styles>) => {
+export function SaveButton(inProps: SaveButtonProps) {
+    const {
+        saving = false,
+        hasErrors = false,
+        hasConflict = false,
+        children = <FormattedMessage {...messages.save} />,
+        savingItem = <FormattedMessage id="comet.saveButton.savingItem.title" defaultMessage="Saving" />,
+        successItem = <FormattedMessage id="comet.saveButton.successItem.title" defaultMessage="Successfully Saved" />,
+        errorItem = <FormattedMessage id="comet.saveButton.errorItem.title" defaultMessage="Save Error" />,
+        conflictItem = <FormattedMessage {...messages.saveConflict} />,
+        saveIcon = <Save />,
+        savingIcon = <ThreeDotSaving />,
+        successIcon = <Check />,
+        errorIcon = <Error />,
+        conflictIcon = <ErrorIcon />,
+        variant = "contained",
+        color = "primary",
+        disabled,
+        ...restProps
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminSaveButton",
+    });
+
     const [displayState, setDisplayState] = React.useState<SaveButtonDisplayState>("idle");
     const saveSplitButton = useSplitButtonContext();
+
+    const ownerState: OwnerState = {
+        displayState: displayState,
+        variant,
+        color,
+    };
 
     const resolveIconForDisplayState = (displayState: SaveButtonDisplayState): React.ReactNode => {
         if (displayState === "saving") {
@@ -120,9 +190,9 @@ const SaveBtn = ({
     }, [displayState, saveSplitButton]);
 
     return (
-        <Button
+        <Root
+            ownerState={ownerState}
             {...restProps}
-            classes={resolveClassForDisplayState(displayState, classes)}
             startIcon={resolveIconForDisplayState(displayState)}
             variant={variant}
             color={color}
@@ -133,31 +203,9 @@ const SaveBtn = ({
             {displayState === "success" && successItem}
             {displayState === "error" && errorItem}
             {displayState === "conflict" && conflictItem}
-        </Button>
+        </Root>
     );
-};
-
-const resolveClassForDisplayState = (
-    displayState: SaveButtonDisplayState,
-    classes: ClassNameMap<ClassKeyOfStyles<SaveButtonClassKey>>,
-): ClassNameMap<ClassKeyOfStyles<ButtonClassKey>> => {
-    const { success, saving, error, ...buttonClasses } = classes;
-
-    if (displayState === "success") {
-        buttonClasses.root += ` ${classes.success}`;
-    } else if (displayState === "saving") {
-        buttonClasses.root += ` ${classes.saving}`;
-    } else if (displayState === "error") {
-        buttonClasses.root += ` ${classes.error}`;
-    } else if (displayState === "conflict") {
-        buttonClasses.root += ` ${classes.conflict}`;
-    }
-
-    return buttonClasses;
-};
-
-export const SaveButton = withStyles(styles, { name: "CometAdminSaveButton" })(SaveBtn);
-
+}
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
         CometAdminSaveButton: SaveButtonClassKey;
@@ -169,7 +217,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminSaveButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminSaveButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminSaveButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminSaveButton"];
         };
     }

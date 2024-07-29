@@ -1,37 +1,66 @@
-import { BlockContext, BlockDataInterface, isBlockDataInterface } from "@comet/blocks-api";
+import {
+    BlockContext,
+    BlockDataInterface,
+    BlockTransformerServiceInterface,
+    isBlockDataInterface,
+    TraversableTransformResponse,
+} from "@comet/blocks-api";
+import { Scope, Type } from "@nestjs/common";
+import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
+import { ContextId, ModuleRef } from "@nestjs/core";
 import opentelemetry from "@opentelemetry/api";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function transformToPlain(block: BlockDataInterface, dependencies: any, ctx: BlockContext): Promise<any> {
-    return tracer.startActiveSpan("BlockTransformer", (span) => {
-        const traverse = createAsyncTraverse("transformToPlain", [dependencies, ctx], isBlockDataInterface);
-        const ret = traverse(block);
+export async function transformToPlain(
+    block: BlockDataInterface,
+    blockContext: BlockContext,
+    moduleRef: ModuleRef,
+    contextId: ContextId,
+): Promise<unknown> {
+    return tracer.startActiveSpan("BlockTransformer", async (span) => {
+        async function traverse(json: unknown): Promise<unknown> {
+            if (Array.isArray(json)) {
+                return Promise.all(json.map(traverse));
+            } else if (typeof json === "object" && json !== null) {
+                let entries: [string, unknown][];
+
+                if (isBlockDataInterface(json)) {
+                    const transformResponse = await json.transformToPlain(blockContext);
+
+                    if (isBlockTransformerService(transformResponse)) {
+                        let service: BlockTransformerServiceInterface;
+
+                        if (moduleRef.introspect(transformResponse).scope === Scope.DEFAULT) {
+                            service = moduleRef.get(transformResponse, { strict: false });
+                        } else {
+                            service = await moduleRef.resolve(transformResponse, contextId, { strict: false });
+                        }
+
+                        entries = Object.entries(await service.transformToPlain(json, blockContext));
+                    } else {
+                        entries = Object.entries(transformResponse);
+                    }
+                } else {
+                    entries = Object.entries(json);
+                }
+
+                return Object.fromEntries(await Promise.all(entries.map(async ([key, value]: [string, unknown]) => [key, await traverse(value)])));
+            } else {
+                // Keep literal as it is
+                return json;
+            }
+        }
+
+        const result = await traverse(block);
         span.end();
-        return ret;
+        return result;
     });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createAsyncTraverse(methodName: string, argsArray: any[], isTargetObject: (obj: any) => boolean = () => true) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return async function traverse(jsonObj: any): Promise<any> {
-        if (Array.isArray(jsonObj)) {
-            return Promise.all(jsonObj.map(traverse));
-        } else if (jsonObj !== null && typeof jsonObj === "object") {
-            const entries = Object.entries(
-                isTargetObject(jsonObj) && typeof jsonObj[methodName] === "function" ? await jsonObj[methodName](...argsArray) : jsonObj,
-            );
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const mappedEntries = entries.map(async ([k, i]: [string, any]) => {
-                return [k, await traverse(i)];
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            }) as any;
-            return Object.fromEntries(await Promise.all(mappedEntries));
-        } else {
-            // keep literal as it is
-            return jsonObj;
-        }
-    };
+function isBlockTransformerService(
+    transformResponse: Type<BlockTransformerServiceInterface> | TraversableTransformResponse,
+): transformResponse is Type<BlockTransformerServiceInterface> {
+    return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
 }

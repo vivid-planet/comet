@@ -29,7 +29,6 @@ function Story() {
                 <Form
                     initialValues={{
                         multipleFlavours: [],
-                        multipleFlavoursClearable: [],
                     }}
                     onSubmit={() => {
                         //
@@ -62,18 +61,6 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="flavorClearable" label="Clearable Flavor" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect {...props} fullWidth clearable>
-                                                {options.map((option: Option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
-
                                     <Field name="flavorRequired" label="Required Flavor" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props} fullWidth required>
@@ -86,9 +73,9 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="flavorDisabled" label="Disabled Flavor" fullWidth>
+                                    <Field name="flavorDisabled" label="Disabled Flavor" fullWidth disabled>
                                         {(props) => (
-                                            <FinalFormSelect {...props} fullWidth disabled>
+                                            <FinalFormSelect {...props} fullWidth>
                                                 {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}
@@ -126,18 +113,6 @@ function Story() {
                                     <Field name="multipleFlavours" label="Multiple Flavours" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props} multiple>
-                                                {options.map((option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
-
-                                    <Field name="multipleFlavoursClearable" label="Multiple Flavours Clearable" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect {...props} multiple clearable>
                                                 {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}

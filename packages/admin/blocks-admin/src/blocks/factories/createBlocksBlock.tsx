@@ -653,7 +653,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                                                     }}
                                                                     visibilityButton={
                                                                         <IconButton onClick={() => toggleVisible(data.key)} size="small">
-                                                                            {data.visible ? <Visible color="secondary" /> : <Invisible />}
+                                                                            {data.visible ? <Visible color="success" /> : <Invisible />}
                                                                         </IconButton>
                                                                     }
                                                                     onAddNewBlock={handleAddBlockClick}

@@ -204,14 +204,14 @@ export async function writeCrudGrid(
     const out = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
+        DataGridToolbar,
+        GridColDef,
         GridFilterButton,
         MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
-        Toolbar,
         ToolbarActions,
-        ToolbarAutomaticTitleItem,
         ToolbarFillSpace,
         ToolbarItem,
         useBufferedRowCount,
@@ -221,7 +221,7 @@ export async function writeCrudGrid(
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
-    import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${classNamePlural}GridQuery,
@@ -285,8 +285,7 @@ export async function writeCrudGrid(
 
     function ${classNamePlural}GridToolbar() {
         return (
-            <Toolbar>
-                <ToolbarAutomaticTitleItem />
+            <DataGridToolbar>
                 ${
                     hasSearch
                         ? `<ToolbarItem>
@@ -311,7 +310,7 @@ export async function writeCrudGrid(
                 </ToolbarActions>`
                         : ""
                 }
-            </Toolbar>
+            </DataGridToolbar>
         );
     }
     
@@ -422,7 +421,7 @@ export async function writeCrudGrid(
         const rows = data?.${gridQuery}.nodes ?? [];
     
         return (
-            <MainContent fullHeight disablePadding>
+            <MainContent fullHeight>
                 <DataGridPro
                     {...dataGridProps}
                     disableSelectionOnClick

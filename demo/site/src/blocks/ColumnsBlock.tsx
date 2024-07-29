@@ -1,3 +1,4 @@
+"use client";
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
 import * as React from "react";
@@ -12,7 +13,7 @@ const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
     richtext: (props) => <RichTextBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />,
-    image: (props) => <DamImageBlock data={props} />,
+    image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
 };
 
 const ColumnsContentBlock = withPreview(

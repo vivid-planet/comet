@@ -53,6 +53,7 @@ export class UserPermissionsService {
                     ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
                 ]
                     .flatMap((p) => p.meta.requiredPermission)
+                    .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
                     .filter((p) => p !== DisablePermissionCheck)
                     .sort(),
             ),
@@ -66,7 +67,6 @@ export class UserPermissionsService {
             id: idToken.sub,
             name: idToken.name,
             email: idToken.email,
-            language: idToken.locale || idToken.language,
         };
     }
 

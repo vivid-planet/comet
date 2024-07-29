@@ -7,7 +7,8 @@
     },
     "license": "BSD-2-Clause",
     "scripts": {
-        "build:storybook": "pnpm recursive --filter '@comet/admin*' --filter '@comet/eslint-plugin' run build && pnpm --filter comet-storybook run build-storybook",
+        "create-site-configs-env": "npx @comet/cli inject-site-configs -i .env.site-configs.tpl -o .env.site-configs -d",
+        "build:storybook": "pnpm recursive --filter '@comet/*admin*' --filter '@comet/eslint-plugin' --filter '@comet/cli' run build && pnpm --filter comet-storybook run build-storybook",
         "build:packages": "pnpm recursive --filter '@comet/*' run build",
         "build:docs": "pnpm recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
         "clean": "pnpm recursive run clean",
@@ -34,6 +35,7 @@
         "publish": "pnpm run build:packages && $npm_execpath changeset publish"
     },
     "devDependencies": {
+        "@comet/cli": "workspace:*",
         "@comet/dev-process-manager": "^2.5.1",
         "@comet/eslint-plugin": "workspace:*",
         "@formatjs/cli": "^6.0.0",
@@ -46,7 +48,7 @@
         "typescript": "^4.2.2",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@8.2.0",
+    "packageManager": "pnpm@8.15.5",
     "engines": {
         "node": "18",
         "pnpm": "8"
@@ -59,6 +61,21 @@
             "@docusaurus/theme-live-codeblock": {
                 "peerDependencies": {
                     "react-live": "^2.4.1"
+                }
+            },
+            "next@14": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
+                }
+            },
+            "styled-components": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
+                }
+            },
+            "react-intl": {
+                "peerDependencies": {
+                    "@types/react": "*"
                 }
             }
         }

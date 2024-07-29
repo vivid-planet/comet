@@ -12,8 +12,8 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  language: String!
   permissions: [CurrentUserPermission!]!
+  permissionsForScope(scope: JSONObject!): [String!]!
 }
 
 type UserPermission {
@@ -38,23 +38,6 @@ enum UserPermissionSource {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-type Dependency {
-  rootId: String!
-  rootGraphqlObjectType: String!
-  rootColumnName: String!
-  jsonPath: String!
-  visible: Boolean!
-  targetGraphqlObjectType: String!
-  targetId: String!
-  name: String
-  secondaryInformation: String
-}
-
-type PaginatedDependencies {
-  nodes: [Dependency!]!
-  totalCount: Int!
-}
 
 type ImageCropArea {
   focalPoint: FocalPoint!
@@ -101,6 +84,23 @@ type DamFileLicense {
 enum LicenseType {
   ROYALTY_FREE
   RIGHTS_MANAGED
+}
+
+type Dependency {
+  rootId: String!
+  rootGraphqlObjectType: String!
+  rootColumnName: String!
+  jsonPath: String!
+  visible: Boolean!
+  targetGraphqlObjectType: String!
+  targetId: String!
+  name: String
+  secondaryInformation: String
+}
+
+type PaginatedDependencies {
+  nodes: [Dependency!]!
+  totalCount: Int!
 }
 
 type BuildTemplate {
@@ -177,7 +177,6 @@ type User {
   id: String!
   name: String!
   email: String!
-  language: String!
 }
 
 type PaginatedUserList {
@@ -382,8 +381,8 @@ input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
   active: BooleanFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [RedirectFilter!]
   or: [RedirectFilter!]
 }
@@ -400,7 +399,7 @@ input BooleanFilter {
   equal: Boolean
 }
 
-input DateFilter {
+input DateTimeFilter {
   equal: DateTime
   lowerThan: DateTime
   greaterThan: DateTime
@@ -480,7 +479,6 @@ input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  language: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -494,7 +492,6 @@ enum UserSortField {
   name
   email
   status
-  language
 }
 
 input AzureAiTranslationInput {

@@ -68,6 +68,24 @@ export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithText
     title: string;
 }
 
+@Entity()
+export class TestEntityWithNullablePropWithInitializer extends BaseEntity<TestEntityWithNullablePropWithInitializer, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @Property({ type: "text", nullable: true })
+    title?: string = undefined;
+}
+
+@Entity()
+export class TestEntityWithNullablePropWithoutInitializer extends BaseEntity<TestEntityWithNullablePropWithoutInitializer, "id"> {
+    @PrimaryKey({ type: "uuid" })
+    id: string = uuid();
+
+    @Property({ type: "text", nullable: true })
+    title?: string;
+}
+
 describe("GenerateCrudInput", () => {
     describe("string input class", () => {
         it("should be a valid generated ts file", async () => {
@@ -271,6 +289,96 @@ describe("GenerateCrudInput", () => {
                 expect(decorators).toContain("Field");
                 expect(decorators).toContain("IsString");
                 expect(decorators).toContain("IsNotEmpty");
+            }
+
+            orm.close();
+        });
+    });
+
+    describe("nullable props input class with initializer", () => {
+        it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityWithNullablePropWithInitializer],
+            });
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname },
+                orm.em.getMetadata().get("TestEntityWithNullablePropWithInitializer"),
+            );
+            const lintedOutput = await lintSource(out[0].content);
+            //console.log(lintedOutput);
+            const source = parseSource(lintedOutput);
+
+            const classes = source.getClasses();
+            expect(classes.length).toBe(2);
+
+            const cls = classes[0];
+            const structure = cls.getStructure();
+
+            expect(structure.properties?.length).toBe(1);
+            {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const prop = structure.properties![0];
+                expect(prop.name).toBe("title");
+                expect(prop.type).toBe("string");
+
+                const decorators = prop.decorators?.map((i) => i.name);
+                expect(decorators).toContain("Field");
+                expect(decorators).toContain("IsString");
+                expect(decorators).toContain("IsNullable");
+
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const fieldDecorator = prop.decorators!.find((i) => i.name === "Field")!;
+                const fieldDecoratorArguments = fieldDecorator.arguments as string[];
+                expect(fieldDecoratorArguments[0]).toContain("nullable: true");
+                expect(fieldDecoratorArguments[0]).toContain("defaultValue: null");
+            }
+
+            orm.close();
+        });
+    });
+
+    describe("nullable props input class without initializer", () => {
+        it("should be a valid generated ts file", async () => {
+            LazyMetadataStorage.load();
+            const orm = await MikroORM.init({
+                type: "postgresql",
+                dbName: "test-db",
+                entities: [TestEntityWithNullablePropWithoutInitializer],
+            });
+            const out = await generateCrudInput(
+                { targetDirectory: __dirname },
+                orm.em.getMetadata().get("TestEntityWithNullablePropWithoutInitializer"),
+            );
+            const lintedOutput = await lintSource(out[0].content);
+            //console.log(lintedOutput);
+            const source = parseSource(lintedOutput);
+
+            const classes = source.getClasses();
+            expect(classes.length).toBe(2);
+
+            const cls = classes[0];
+            const structure = cls.getStructure();
+
+            expect(structure.properties?.length).toBe(1);
+            {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const prop = structure.properties![0];
+                expect(prop.name).toBe("title");
+                expect(prop.type).toBe("string");
+
+                const decorators = prop.decorators?.map((i) => i.name);
+                expect(decorators).toContain("Field");
+                expect(decorators).toContain("IsString");
+                expect(decorators).toContain("IsNullable");
+
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const fieldDecorator = prop.decorators!.find((i) => i.name === "Field")!;
+                const fieldDecoratorArguments = fieldDecorator.arguments as string[];
+                expect(fieldDecoratorArguments[0]).toContain("nullable: true");
+                expect(fieldDecoratorArguments[0]).toContain("defaultValue: null");
             }
 
             orm.close();

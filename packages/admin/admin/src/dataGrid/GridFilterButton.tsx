@@ -12,7 +12,14 @@ export function GridFilterButton() {
         apiRef.current.showFilterPanel();
     }, [apiRef]);
     return (
-        <Button startIcon={<Filter />} variant="text" color="info" onClick={handleFilterClick}>
+        <Button
+            startIcon={<Filter />}
+            variant="outlined"
+            onClick={handleFilterClick}
+            sx={{
+                borderColor: (theme) => theme.palette.grey[100],
+            }}
+        >
             <FormattedMessage {...messages.filter} />
         </Button>
     );

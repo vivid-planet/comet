@@ -1,6 +1,5 @@
 import {
     AnnotationBlockMeta,
-    BlockContext,
     BlockData,
     BlockField,
     BlockIndexData,
@@ -9,54 +8,26 @@ import {
     BlockMetaFieldKind,
     createBlock,
     inputToData,
-    TraversableTransformResponse,
 } from "@comet/blocks-api";
 import { IsEnum, IsUUID } from "class-validator";
-import { FilesService } from "src/dam/files/files.service";
 
 import { IsUndefinable } from "../../common/validators/is-undefinable";
-import { FILE_ENTITY } from "../../dam/files/entities/file.entity";
+import { FILE_ENTITY } from "../files/entities/file.entity";
+import { DamFileDownloadLinkBlockTransformerService } from "./dam-file-download-link-block-transformer.service";
 
 export enum OpenFileTypeMethod {
     NewTab = "NewTab",
     Download = "Download",
 }
 
-class DamFileDownloadLinkBlockData extends BlockData {
+export class DamFileDownloadLinkBlockData extends BlockData {
     fileId?: string;
 
     @BlockField({ type: "enum", enum: OpenFileTypeMethod })
     openFileType: OpenFileTypeMethod;
 
-    async transformToPlain(
-        { filesService }: { filesService: FilesService },
-        { previewDamUrls }: BlockContext,
-    ): Promise<TraversableTransformResponse> {
-        const ret: TraversableTransformResponse = {
-            openFileType: this.openFileType,
-        };
-
-        if (this.fileId === undefined) {
-            return ret;
-        }
-
-        const file = await filesService.findOneById(this.fileId);
-
-        if (file && this.openFileType === "NewTab") {
-            ret.file = {
-                id: file.id,
-                name: file.name,
-                fileUrl: await filesService.createFileUrl(file, previewDamUrls),
-            };
-        } else if (file && this.openFileType === "Download") {
-            ret.file = {
-                id: file.id,
-                name: file.name,
-                fileUrl: await filesService.createFileDownloadUrl(file, previewDamUrls),
-            };
-        }
-
-        return ret;
+    async transformToPlain() {
+        return DamFileDownloadLinkBlockTransformerService;
     }
 
     indexData(): BlockIndexData {

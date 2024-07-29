@@ -12,7 +12,7 @@ const fallbackLibraryBlocks: { [key: string]: string } = {
     PixelImageBlock: "@comet/cms-admin",
     SpaceBlock: "@comet/blocks-admin",
     SvgImageBlock: "@comet/cms-admin",
-    YouTubeVideoBlock: "@comet/blocks-admin",
+    YouTubeVideoBlock: "@comet/cms-admin",
 };
 
 export function findRootBlocks({ entityName, ...generatorOptions }: CrudGeneratorConfig, schema: IntrospectionQuery) {

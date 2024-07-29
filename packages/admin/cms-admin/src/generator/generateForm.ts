@@ -88,8 +88,8 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     \`
     
     export const update${entityName}Mutation = gql\`
-        mutation Update${entityName}($id: ID!, $input: ${entityName}UpdateInput!, $lastUpdatedAt: DateTime) {
-            update${entityName}(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+        mutation Update${entityName}($id: ID!, $input: ${entityName}UpdateInput!) {
+            update${entityName}(id: $id, input: $input) {
                 id
                 updatedAt
                 ...${entityName}Form
@@ -118,7 +118,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         filterByFragment,
         FinalForm,
         FinalFormInput,
-        FinalFormSaveSplitButton,
+        FinalFormSaveButton,
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
@@ -137,7 +137,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import { DateField } from "@comet/admin-date-time";
     import { ArrowLeft } from "@comet/admin-icons";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { EditPageLayout, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
+    import { ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
     import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";
@@ -245,7 +245,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                 }
                 await client.mutate<GQLUpdate${entityName}Mutation, GQLUpdate${entityName}MutationVariables>({
                     mutation: update${entityName}Mutation,
-                    variables: { id, input: output, lastUpdatedAt: data?.${instanceEntityName}?.updatedAt },
+                    variables: { id, input: output },
                 });
             } else {
                 const { data: mutationResponse } = await client.mutate<GQLCreate${entityName}Mutation, GQLCreate${entityName}MutationVariables>({
@@ -277,9 +277,9 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                 initialValues={initialValues}
             >
                 {({ values }) => (
-                    <EditPageLayout>
+                    <>
                         {saveConflict.dialogs}
-                        <Toolbar>
+                        <Toolbar scopeIndicator={<ContentScopeIndicator ${!hasScope ? "global" : ""} />}>
                             <ToolbarItem>
                                 <IconButton onClick={stackApi?.goBack}>
                                     <ArrowLeft />
@@ -292,13 +292,13 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
                             </ToolbarTitleItem>
                             <ToolbarFillSpace />
                             <ToolbarActions>
-                                <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
+                                <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
                             </ToolbarActions>
                         </Toolbar>
                         <MainContent>
                             ${formFields.map((field) => generateField(generatorConfig, field, schema)).join("\n")}
                         </MainContent>
-                    </EditPageLayout>
+                    </>
                 )}
             </FinalForm>
         );
@@ -327,6 +327,7 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
         if (!enumType) throw new Error(`Enum type not found`);
         const values = enumType.enumValues.map((i) => i.name);
         return `<Field
+            variant="horizontal"
             fullWidth
             name="${field.name}"
             label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}>
@@ -343,7 +344,7 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
             }
         </Field>`;
     } else if (type.kind === "SCALAR" && type.name === "Boolean") {
-        return `<Field name="${field.name}" label="" type="checkbox" fullWidth>
+        return `<Field name="${field.name}" label="" type="checkbox" variant="horizontal" fullWidth>
                 {(props) => (
                     <FormControlLabel
                         label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}
@@ -352,12 +353,12 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
                 )}
             </Field>`;
     } else if (type.kind === "SCALAR" && type.name === "String") {
-        return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+        return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} variant="horizontal" fullWidth name="${
             field.name
         }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
     } else if (type.kind === "SCALAR" && type.name === "DateTime") {
         //TODO DateTime vs Date
-        return `<DateField ${field.type.kind === "NON_NULL" ? "required" : ""} fullWidth name="${
+        return `<DateField ${field.type.kind === "NON_NULL" ? "required" : ""} variant="horizontal" fullWidth name="${
             field.name
         }"  label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}"/>} />`;
     } else {
@@ -376,6 +377,7 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
             return "";
         }
         return `<Field ${field.type.kind === "NON_NULL" ? "required" : ""}
+                    variant="horizontal"
                     fullWidth
                     name="${field.name}"
                     component={${component}}

@@ -1,4 +1,4 @@
-import { ComponentNameToClassKey, ThemeOptions } from "@mui/material";
+import { Breakpoints, ComponentNameToClassKey, ThemeOptions } from "@mui/material";
 import { Components, Palette } from "@mui/material/styles";
 import { Typography } from "@mui/material/styles/createTypography";
 import { Shadows } from "@mui/material/styles/shadows";
@@ -10,6 +10,7 @@ import { getMuiAlert } from "./MuiAlert";
 import { getMuiAlertTitle } from "./MuiAlertTitle";
 import { getMuiAppBar } from "./MuiAppBar";
 import { getMuiAutocomplete } from "./MuiAutocomplete";
+import { getMuiBadge } from "./MuiBadge";
 import { getMuiButton } from "./MuiButton";
 import { getMuiButtonGroup } from "./MuiButtonGroup";
 import { getMuiCardContent } from "./MuiCardContent";
@@ -54,6 +55,7 @@ type ThemeData = {
     spacing: Spacing;
     zIndex: ZIndex;
     shadows: Shadows;
+    breakpoints: Breakpoints;
 };
 
 export type GetMuiComponentTheme<ClassesName extends keyof ComponentNameToClassKey> = (
@@ -68,6 +70,7 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiAlertTitle: getMuiAlertTitle(components.MuiAlertTitle, themeData),
     MuiAppBar: getMuiAppBar(components.MuiAppBar, themeData),
     MuiAutocomplete: getMuiAutocomplete(components.MuiAutocomplete, themeData),
+    MuiBadge: getMuiBadge(components.MuiBadge, themeData),
     MuiButton: getMuiButton(components.MuiButton, themeData),
     MuiButtonGroup: getMuiButtonGroup(components.MuiButtonGroup, themeData),
     MuiCardContent: getMuiCardContent(components.MuiCardContent, themeData),

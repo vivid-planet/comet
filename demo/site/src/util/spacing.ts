@@ -1,5 +1,5 @@
 import { Breakpoint, ThemeBreakpoints } from "@src/theme";
-import { css, DefaultTheme, ThemedCssFunction } from "styled-components";
+import { css } from "styled-components";
 
 type SpacingValueOptions =
     | "none"
@@ -192,11 +192,8 @@ const spacingValues: SpacingValues = {
     s1000: 120,
 };
 
-export const getResponsiveSpacing = (
-    property: string,
-    value: SpacingValueOptions,
-    negativeValue?: boolean,
-): ReturnType<ThemedCssFunction<DefaultTheme>> => {
+export const getResponsiveSpacing = (property: string, value: SpacingValueOptions, negativeValue?: boolean) => {
+    //): ReturnType<ThemedCssFunction<DefaultTheme>> => {
     const spacingValueForBreakpoint: SpacingValuesForBreakpoints | number = spacingValues[value];
 
     if (typeof spacingValueForBreakpoint === "number") {

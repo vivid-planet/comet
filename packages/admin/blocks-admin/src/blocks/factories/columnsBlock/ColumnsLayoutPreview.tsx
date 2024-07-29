@@ -35,5 +35,5 @@ const RootContent = styled(ColumnsLayoutPreviewSpacing)`
 `;
 
 export function ColumnsLayoutPreviewContent({ width }: ItemProps): React.ReactElement<ItemProps> {
-    return <RootContent width={width}>{width > 3 ? <Typography variant="h6">{width}</Typography> : null}</RootContent>;
+    return <RootContent width={width}>{width > 3 ? <Typography variant="subtitle1">{width}</Typography> : null}</RootContent>;
 }

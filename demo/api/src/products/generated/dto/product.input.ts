@@ -4,13 +4,13 @@ import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 import { DamImageBlock, IsNullable, IsSlug, PartialType, RootBlockInputScalar } from "@comet/cms-api";
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 
-import { ProductDimensions, ProductDiscounts } from "../../entities/product.entity";
+import { ProductDimensions, ProductDiscounts, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
+import { ProductNestedProductColorInput } from "./product-nested-product-color.input";
 import { ProductNestedProductStatisticsInput } from "./product-nested-product-statistics.input";
 import { ProductNestedProductToTagInput } from "./product-nested-product-to-tag.input";
-import { ProductNestedProductVariantInput } from "./product-nested-product-variant.input";
 
 @InputType()
 export class ProductInput {
@@ -18,6 +18,11 @@ export class ProductInput {
     @IsString()
     @Field()
     title: string;
+
+    @IsNotEmpty()
+    @IsEnum(ProductStatus)
+    @Field(() => ProductStatus, { defaultValue: ProductStatus.Unpublished })
+    status: ProductStatus;
 
     @IsNotEmpty()
     @IsString()
@@ -35,15 +40,24 @@ export class ProductInput {
     @Field(() => ProductType)
     type: ProductType;
 
+    @IsEnum(ProductType, { each: true })
+    @Field(() => [ProductType], { defaultValue: [] })
+    additionalTypes: ProductType[];
+
     @IsNullable()
     @IsNumber()
-    @Field({ nullable: true })
+    @Field({ nullable: true, defaultValue: null })
     price?: number;
 
     @IsNotEmpty()
     @IsBoolean()
     @Field({ defaultValue: true })
     inStock: boolean;
+
+    @IsNullable()
+    @IsDate()
+    @Field({ nullable: true, defaultValue: null })
+    availableSince?: Date;
 
     @IsNotEmpty()
     @Field(() => RootBlockInputScalar(DamImageBlock))
@@ -76,10 +90,10 @@ export class ProductInput {
     @ValidateNested()
     statistics?: ProductNestedProductStatisticsInput;
 
-    @Field(() => [ProductNestedProductVariantInput], { defaultValue: [] })
+    @Field(() => [ProductNestedProductColorInput], { defaultValue: [] })
     @IsArray()
-    @Type(() => ProductNestedProductVariantInput)
-    variants: ProductNestedProductVariantInput[];
+    @Type(() => ProductNestedProductColorInput)
+    colors: ProductNestedProductColorInput[];
 
     @IsNullable()
     @Field(() => ID, { nullable: true, defaultValue: null })
@@ -95,6 +109,11 @@ export class ProductInput {
     @IsArray()
     @Type(() => ProductNestedProductToTagInput)
     tagsWithStatus: ProductNestedProductToTagInput[];
+
+    @IsNullable()
+    @Field(() => ID, { nullable: true, defaultValue: null })
+    @IsUUID()
+    manufacturer?: string;
 }
 
 @InputType()

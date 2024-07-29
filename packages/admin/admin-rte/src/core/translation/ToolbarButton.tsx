@@ -4,7 +4,7 @@ import { EditorState } from "draft-js";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import ControlButton from "../Controls/ControlButton";
+import { ControlButton } from "../Controls/ControlButton";
 import { IControlProps } from "../types";
 import { EditorStateTranslationDialog } from "./EditorStateTranslationDialog";
 import { htmlToState } from "./htmlToState";

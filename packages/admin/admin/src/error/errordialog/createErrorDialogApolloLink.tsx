@@ -7,7 +7,7 @@ import { ErrorType } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
 import { ErrorScope, errorScopeForOperationContext } from "./ErrorScope";
 
-export const createErrorDialogApolloLink = () => {
+export const createErrorDialogApolloLink = (config?: { signInUrl?: string }) => {
     return onError(({ graphQLErrors, networkError, operation }) => {
         const errorScope = errorScopeForOperationContext(operation.getContext());
 
@@ -20,7 +20,6 @@ export const createErrorDialogApolloLink = () => {
         let httpStatus: string | undefined;
 
         if (graphQLErrors) {
-            error = graphQLErrors.map(({ message }) => message);
             if (graphQLErrors.some((e) => e.message === "UNAUTHENTICATED")) {
                 errorType = "unauthenticated"; // Error is triggered by Comet Guard
             } else if (graphQLErrors.some((e) => e.extensions.response?.statusCode === StatusCodes.UNAUTHORIZED)) {

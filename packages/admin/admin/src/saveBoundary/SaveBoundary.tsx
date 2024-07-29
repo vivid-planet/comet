@@ -41,6 +41,8 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
     const saveStates = React.useRef<Record<string, SavableProps>>({});
     const intl = useIntl();
 
+    const subRoutePath = props.subRoutePath ?? "./save";
+
     const save = React.useCallback(async (): Promise<SaveActionSuccess> => {
         setHasErrors(false);
         setSaving(true);
@@ -65,6 +67,12 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
             setSaving(false);
         }
     }, [onAfterSave]);
+
+    const reset = React.useCallback(() => {
+        for (const savable of Object.values(saveStates.current)) {
+            savable.doReset?.();
+        }
+    }, []);
 
     const onSaveStatesChanged = React.useCallback(() => {
         const hasChanges = Object.values(saveStates.current).some((saveState) => saveState.hasChanges);
@@ -95,7 +103,8 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
                 return true;
             }}
             saveAction={save}
-            subRoutePath={props.subRoutePath}
+            resetAction={reset}
+            subRoutePath={subRoutePath}
         >
             <SavableContext.Provider
                 value={{
@@ -121,17 +130,18 @@ export function SaveBoundary({ onAfterSave, ...props }: SaveBoundaryProps) {
 export interface SavableProps {
     hasChanges: boolean;
     doSave: () => Promise<SaveActionSuccess> | SaveActionSuccess;
+    doReset?: () => void;
 }
 
-export function Savable({ doSave, hasChanges }: SavableProps) {
+export function Savable({ doSave, doReset, hasChanges }: SavableProps) {
     const id = useConstant<string>(() => uuid());
     const saveBoundaryApi = useSaveBoundaryApi();
     if (!saveBoundaryApi) throw new Error("Savable must be inside SaveBoundary");
     React.useEffect(() => {
-        saveBoundaryApi.register(id, { doSave, hasChanges });
+        saveBoundaryApi.register(id, { doSave, doReset, hasChanges });
         return function cleanup() {
             saveBoundaryApi.unregister(id);
         };
-    }, [id, doSave, hasChanges, saveBoundaryApi]);
+    }, [id, doSave, doReset, hasChanges, saveBoundaryApi]);
     return null;
 }

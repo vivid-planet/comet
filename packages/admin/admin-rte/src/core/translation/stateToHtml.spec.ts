@@ -8,6 +8,15 @@ function trimHtml(html: string) {
     return html.replace(/\s|\n/g, "");
 }
 
+// TODO Remove mock once we've updated the test setup to support ESM modules
+jest.mock("../BlockElement", () => {
+    return {
+        BlockElement: () => {
+            return null;
+        },
+    };
+});
+
 describe("stateToHtml", () => {
     const options = {
         customInlineStyles: { HIGHLIGHT: { label: "Highlight!", style: { backgroundColor: "yellow" } } },

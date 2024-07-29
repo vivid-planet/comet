@@ -6,7 +6,7 @@ import {
     Field,
     filterByFragment,
     FinalForm,
-    FinalFormSaveSplitButton,
+    FinalFormSaveButton,
     FinalFormSelect,
     FinalFormSubmitEvent,
     Loading,
@@ -24,7 +24,7 @@ import {
 import { DateField } from "@comet/admin-date-time";
 import { ArrowLeft } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { ContentScopeIndicator, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
@@ -116,7 +116,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
             }
             await client.mutate<GQLUpdateNewsMutation, GQLUpdateNewsMutationVariables>({
                 mutation: updateNewsMutation,
-                variables: { id, input: output, lastUpdatedAt: data?.news?.updatedAt },
+                variables: { id, input: output },
             });
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateNewsMutation, GQLCreateNewsMutationVariables>({
@@ -143,9 +143,9 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
     return (
         <FinalForm<FormValues> apiRef={formApiRef} onSubmit={handleSubmit} mode={mode} initialValues={initialValues}>
             {({ values }) => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                         <ToolbarItem>
                             <IconButton onClick={stackApi?.goBack}>
                                 <ArrowLeft />
@@ -156,14 +156,49 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <FinalFormSaveSplitButton hasConflict={saveConflict.hasConflict} />
+                            <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <TextField required fullWidth name="slug" label={<FormattedMessage id="news.slug" defaultMessage="Slug" />} />
-                        <TextField required fullWidth name="title" label={<FormattedMessage id="news.title" defaultMessage="Title" />} />
-                        <DateField required fullWidth name="date" label={<FormattedMessage id="news.date" defaultMessage="Date" />} />
-                        <Field fullWidth name="category" label={<FormattedMessage id="news.category" defaultMessage="Category" />}>
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="slug"
+                            label={<FormattedMessage id="news.slug" defaultMessage="Slug" />}
+                        />
+                        <TextField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="title"
+                            label={<FormattedMessage id="news.title" defaultMessage="Title" />}
+                        />
+                        <Field variant="horizontal" fullWidth name="status" label={<FormattedMessage id="news.status" defaultMessage="Status" />}>
+                            {(props) => (
+                                <FinalFormSelect {...props}>
+                                    <MenuItem value="Active">
+                                        <FormattedMessage id="news.status.active" defaultMessage="Active" />
+                                    </MenuItem>
+                                    <MenuItem value="Deleted">
+                                        <FormattedMessage id="news.status.deleted" defaultMessage="Deleted" />
+                                    </MenuItem>
+                                </FinalFormSelect>
+                            )}
+                        </Field>
+                        <DateField
+                            required
+                            variant="horizontal"
+                            fullWidth
+                            name="date"
+                            label={<FormattedMessage id="news.date" defaultMessage="Date" />}
+                        />
+                        <Field
+                            variant="horizontal"
+                            fullWidth
+                            name="category"
+                            label={<FormattedMessage id="news.category" defaultMessage="Category" />}
+                        >
                             {(props) => (
                                 <FinalFormSelect {...props}>
                                     <MenuItem value="Events">
@@ -185,7 +220,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
                             {createFinalFormBlock(rootBlocks.content)}
                         </Field>
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );

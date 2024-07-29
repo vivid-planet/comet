@@ -85,7 +85,7 @@ export const FocalPointHandle = styled("button")<FocalPointHandleProps>`
                 width: 18px;
                 height: 18px;
                 margin: 3px;
-                background-color: ${theme.palette.secondary.main};
+                background-color: ${theme.palette.success.main};
                 border: 2px solid ${theme.palette.common.white};
             `}
     }

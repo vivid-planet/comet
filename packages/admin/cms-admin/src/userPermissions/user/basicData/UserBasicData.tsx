@@ -17,7 +17,6 @@ export const UserBasicData: React.FC<{
                     id
                     name
                     email
-                    language
                 }
             }
         `,
@@ -63,13 +62,6 @@ export const UserBasicData: React.FC<{
                         component={FinalFormInput}
                         disabled={true}
                         label={<FormattedMessage id="comet.userPermissions.name" defaultMessage="Name" />}
-                    />
-                    <Field
-                        variant="horizontal"
-                        name="language"
-                        component={FinalFormInput}
-                        disabled={true}
-                        label={<FormattedMessage id="comet.userPermissions.language" defaultMessage="Language" />}
                     />
                 </FinalForm>
             </CardContent>

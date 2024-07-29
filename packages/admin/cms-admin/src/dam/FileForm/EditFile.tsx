@@ -1,46 +1,38 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import {
     FinalForm,
+    FinalFormSaveButton,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
-    messages,
     RouterTab,
     RouterTabs,
-    SaveButton,
-    SplitButton,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
-    useStackApi,
 } from "@comet/admin";
 import { Card, CardContent, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
+import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
+import { useDamScope } from "../config/useDamScope";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
-import {
-    GQLDamFileDetailFragment,
-    GQLDamFileDetailQuery,
-    GQLDamFileDetailQueryVariables,
-    GQLUpdateFileMutation,
-    GQLUpdateFileMutationVariables,
-} from "./EditFile.gql.generated";
+import { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
 import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
@@ -120,15 +112,12 @@ interface EditFileInnerProps {
 const EditFileInner = ({ file, id }: EditFileInnerProps) => {
     const dependencyMap = useDependenciesConfig();
     const intl = useIntl();
-    const stackApi = useStackApi();
     const damConfig = useDamConfig();
-
-    const [updateDamFile, { loading: saving, error: hasSaveErrors }] = useMutation<GQLUpdateFileMutation, GQLUpdateFileMutationVariables>(
-        updateDamFileMutation,
-    );
+    const scope = useDamScope();
+    const apolloClient = useApolloClient();
 
     const onSubmit = React.useCallback(
-        (values: EditFileFormValues) => {
+        async (values: EditFileFormValues) => {
             let cropArea: GQLImageCropAreaInput;
 
             if (values.focalPoint === "SMART") {
@@ -149,7 +138,8 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 };
             }
 
-            return updateDamFile({
+            await apolloClient.mutate({
+                mutation: updateDamFileMutation,
                 variables: {
                     id,
                     input: {
@@ -165,7 +155,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 },
             });
         },
-        [file.folder?.id, id, updateDamFile],
+        [apolloClient, file.folder?.id, id],
     );
 
     const initialBlockListWidth = 100 / 3;
@@ -196,9 +186,9 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
             }}
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
         >
-            {({ pristine, hasValidationErrors, submitting, handleSubmit }) => (
+            {() => (
                 <>
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator scope={scope} />}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
                         {damConfig.enableLicenseFeature &&
@@ -214,35 +204,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                             )}
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editFileSave">
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={saving}
-                                    hasErrors={hasSaveErrors != null}
-                                    type="button"
-                                    onClick={async () => {
-                                        await handleSubmit();
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.save} />
-                                </SaveButton>
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={saving}
-                                    hasErrors={hasSaveErrors != null}
-                                    onClick={async () => {
-                                        const submitResult = await handleSubmit();
-                                        const error = submitResult?.[FORM_ERROR];
-                                        if (!error) {
-                                            stackApi?.goBack();
-                                        }
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.saveAndGoBack} />
-                                </SaveButton>
-                            </SplitButton>
+                            <FinalFormSaveButton />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>

@@ -14,7 +14,6 @@ import {
 import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -160,7 +159,6 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
         const [open, setOpen] = React.useState(false);
         const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
         const context = useCmsBlockContext();
-        const classes = useStyles();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
@@ -189,7 +187,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                 {state.damFile?.image ? (
                     <>
                         <AdminComponentPaper disablePadding>
-                            <ButtonBase component="div" onClick={() => setOpen(true)} classes={{ root: classes.contentRoot }}>
+                            <ContentRoot component="div" onClick={() => setOpen(true)}>
                                 <Grid container alignItems="center" spacing={3}>
                                     <Grid item>{previewUrl && <PreviewImage src={previewUrl} width="70" height="70" />}</Grid>
                                     <Grid item xs>
@@ -211,7 +209,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                         </IconButton>
                                     </Grid>
                                 </Grid>
-                            </ButtonBase>
+                            </ContentRoot>
                             <Divider />
                             <AdminComponentButton startIcon={<Delete />} onClick={() => updateState({ damFile: undefined, cropArea: undefined })}>
                                 <FormattedMessage id="comet.blocks.image.empty" defaultMessage="Empty" />
@@ -294,16 +292,11 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     },
 };
 
-const useStyles = makeStyles((theme) => ({
-    contentRoot: {
-        padding: theme.spacing(3),
-        width: "100%",
-        textAlign: "left",
-    },
-    emptyButtonRoot: {
-        padding: theme.spacing(4),
-    },
-}));
+const ContentRoot = styled(ButtonBase)`
+    padding: ${({ theme }) => theme.spacing(3)};
+    width: 100%;
+    text-align: left;
+` as typeof ButtonBase;
 
 const PreviewImage = styled("img")`
     object-fit: cover;
