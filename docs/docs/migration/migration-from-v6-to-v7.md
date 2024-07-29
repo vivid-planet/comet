@@ -1256,18 +1256,6 @@ If you are not using the `YouTubeVideoBlock` and `DamVideoBlock` provided by `@c
 
 Otherwise, the admin interface will confuse users.
 
-### TODO: GraphQL fetch client
-
-// TODO ?
-
-plenty-cougars-warn.md
-
-### TODO: New technique for blocks to load additional data at page level
-
-// TODO ?
-
-selfish-dolls-beg.md
-
 ## ESLint
 
 ### Ban icon imports from `@mui/icons-material`
