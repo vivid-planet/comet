@@ -1,5 +1,6 @@
 ---
+"@comet/cms-admin": minor
 "@comet/cms-api": minor
 ---
 
-API: Add date filter
+CRUD Generator: Add support for date-only fields
