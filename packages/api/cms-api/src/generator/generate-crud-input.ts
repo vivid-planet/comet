@@ -132,7 +132,8 @@ export async function generateCrudInput(
         } else if (prop.type === "DateType") {
             // ISO Date without time
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const defaultValue =
+                prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsDate()");
             decorators.push(`@Field(() => GraphQLDate, ${fieldOptions})`);
