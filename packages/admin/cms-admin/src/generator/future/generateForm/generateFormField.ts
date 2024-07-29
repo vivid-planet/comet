@@ -43,7 +43,7 @@ export function generateFormField({
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
     const imports: Imports = [];
-    const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
+    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
@@ -113,12 +113,13 @@ export function generateFormField({
         if (!required) {
             initializationAssignment = `data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`;
         }
-        formValuesConfig.push({
-            omitFromFragmentType: name,
-            typeCode: [`${name}${!required ? `?` : ``}: string;`],
-            initializationCode: [`${name}: ${initializationAssignment}`],
-            defaultInitializationCode: [],
-        });
+        formValuesConfig = [
+            {
+                omitFromFragmentType: name,
+                typeCode: `${name}${!required ? `?` : ``}: string;`,
+                initializationCode: `${name}: ${initializationAssignment}`,
+            },
+        ];
     } else if (config.type == "boolean") {
         code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
@@ -135,11 +136,11 @@ export function generateFormField({
                 />
             )}
         </Field>`;
-        formValuesConfig.push({
-            typeCode: [],
-            initializationCode: [],
-            defaultInitializationCode: [`${name}: false`],
-        });
+        formValuesConfig = [
+            {
+                defaultInitializationCode: `${name}: false`,
+            },
+        ];
     } else if (config.type == "date") {
         code = `
             <Field
@@ -159,21 +160,23 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
-        formValuesConfig.push({
-            typeCode: [],
-            initializationCode: [`${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`],
-            defaultInitializationCode: [],
-        });
+        formValuesConfig = [
+            {
+                initializationCode: `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
+            },
+        ];
     } else if (config.type == "block") {
         code = `<Field name="${name}" isEqual={isEqual}>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${name}),`;
-        formValuesConfig.push({
-            typeCode: [`${name}: BlockState<typeof rootBlocks.${name}>;`],
-            initializationCode: [`${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`],
-            defaultInitializationCode: [`${name}: rootBlocks.${name}.defaultValues()`],
-        });
+        formValuesConfig = [
+            {
+                typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
+                initializationCode: `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
+                defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+            },
+        ];
     } else if (config.type == "staticSelect") {
         if (config.values) {
             throw new Error("custom values for staticSelect is not yet supported"); // TODO add support

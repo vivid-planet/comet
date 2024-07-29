@@ -232,18 +232,17 @@ export function generateForm(
     type FormValues = ${
         formValuesConfig.filter((config) => !!config.omitFromFragmentType).length > 0
             ? `Omit<GQL${fragmentName}Fragment, ${formValuesConfig
-                  .reduce<string[]>((acc, config) => {
-                      if (config.omitFromFragmentType) {
-                          acc.push(`"${config.omitFromFragmentType}"`);
-                      }
-                      return acc;
-                  }, [])
+                  .filter((config) => !!config.omitFromFragmentType)
+                  .map((config) => `"${config.omitFromFragmentType}"`)
                   .join(" | ")}>`
             : `GQL${fragmentName}Fragment`
     } ${
         formValuesConfig.length > 0
             ? `& {
-                ${formValuesConfig.map((config) => config.typeCode.join("\n")).join("\n")}
+                ${formValuesConfig
+                    .filter((config) => !!config.typeCode)
+                    .map((config) => config.typeCode)
+                    .join("\n")}
             }`
             : ""
     };
@@ -272,14 +271,23 @@ export function generateForm(
                 ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
             ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
-            ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.initializationCode) ? acc : []), []).join(",\n")}
+            ${formValuesConfig
+                .filter((config) => !!config.initializationCode)
+                .map((config) => config.initializationCode)
+                .join(",\n")}
         }
         : {
-            ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.defaultInitializationCode) ? acc : []), []).join(",\n")}
+            ${formValuesConfig
+                .filter((config) => !!config.defaultInitializationCode)
+                .map((config) => config.defaultInitializationCode)
+                .join(",\n")}
         }
     , [data]);`
                 : `const initialValues = {
-                ${formValuesConfig.reduce<string[]>((acc, config) => (acc.push(...config.defaultInitializationCode) ? acc : []), []).join(",\n")}
+                ${formValuesConfig
+                    .filter((config) => !!config.defaultInitializationCode)
+                    .map((config) => config.defaultInitializationCode)
+                    .join(",\n")}
             };`
         }
     
