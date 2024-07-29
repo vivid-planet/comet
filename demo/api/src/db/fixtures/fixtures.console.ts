@@ -1,4 +1,4 @@
-import { BlobStorageBackendService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -49,6 +49,7 @@ export class FixturesConsole {
         @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
         private readonly publicUploadsFixtureService: PublicUploadsFixtureService,
+        private readonly dependenciesService: DependenciesService,
     ) {}
 
     @Command({
@@ -276,6 +277,8 @@ export class FixturesConsole {
         }
 
         await this.publicUploadsFixtureService.generatePublicUploads();
+
+        await this.dependenciesService.createViews();
 
         await this.orm.em.flush();
     }
