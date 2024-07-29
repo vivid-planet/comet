@@ -1,6 +1,5 @@
 import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
-import { format } from "date-fns";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { BUILDER_LABEL } from "../builds/builds.constants";
@@ -74,7 +73,7 @@ export class CronJobsResolver {
             }
         }
 
-        const job = await this.kubernetesService.createJobFromCronJob(cronJob, { name: `${name}-man-${format(new Date(), "yyyy-MM-dd-HH-mm-ss")}` });
+        const job = await this.kubernetesService.createJobFromCronJob(cronJob, { name: this.jobsService.createJobNameFromCronJobForManualRun(name) });
         return this.jobsService.convertKuberneteJobToJobObjectType(job);
     }
 
