@@ -1,5 +1,12 @@
 # @comet/blocks-admin
 
+## 6.17.1
+
+### Patch Changes
+
+-   @comet/admin@6.17.1
+-   @comet/admin-icons@6.17.1
+
 ## 6.17.0
 
 ### Patch Changes
