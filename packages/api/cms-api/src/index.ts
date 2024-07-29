@@ -51,6 +51,7 @@ export { BooleanFilter } from "./common/filter/boolean.filter";
 export { DateFilter } from "./common/filter/date.filter";
 export { createEnumFilter } from "./common/filter/enum.filter.factory";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
+export { ManyToOneIntFilter } from "./common/filter/many-to-one-int.filter";
 export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { StringFilter } from "./common/filter/string.filter";
