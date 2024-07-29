@@ -34,7 +34,12 @@ export function isMasterMenuItemAnchor(item: MasterMenuItem): item is MasterMenu
 
 export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     const isAllowed = useUserPermissionCheck();
-    const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
+    const checkPermission = (item: MasterMenuItem): boolean => {
+        if (isMasterMenuItemAnchor(item)) return true;
+        if (item.requiredPermission) return isAllowed(item.requiredPermission);
+        if (item.submenu) return item.submenu.some(checkPermission);
+        return true;
+    };
 
     const mapFn = (item: MasterMenuItem): MenuItem => {
         if (isMasterMenuItemAnchor(item)) {
