@@ -1,48 +1,37 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
+import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 import { Observable, tap } from "rxjs";
 
-type SentryInterceptorShouldReport = (exception: unknown) => boolean;
-
-export type SentryInterceptorOptions = {
-    shouldReport?: SentryInterceptorShouldReport;
-};
-
-type Sentry = typeof import("@sentry/node");
+import { SENTRY_CONFIG } from "./sentry.constants";
+import { SentryConfig } from "./sentry.module";
 
 @Injectable()
 export class SentryInterceptor implements NestInterceptor {
-    shouldReport: SentryInterceptorShouldReport;
-    sentry: Sentry;
-
-    constructor({ shouldReport }: SentryInterceptorOptions, sentry: Sentry) {
-        this.sentry = sentry;
-        this.shouldReport = (error: unknown) => {
-            if (shouldReport) {
-                return shouldReport(error);
-            }
-
-            return true;
-        };
-    }
+    constructor(@Optional() @Inject(SENTRY_CONFIG) private readonly config?: SentryConfig) {}
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
         return next.handle().pipe(
             tap({
-                error: (error) => {
-                    if (this.shouldReport(error)) {
-                        this.configureSentryScopeBasedOnContext(context);
+                error: async (error) => {
+                    const shouldReport = this.config?.shouldReportException?.(error) ?? true;
 
-                        this.sentry.captureException(error);
+                    if (shouldReport) {
+                        const Sentry = await import("@sentry/node");
+
+                        await this.configureSentryScopeBasedOnContext(context);
+
+                        Sentry.captureException(error);
                     }
                 },
             }),
         );
     }
 
-    private configureSentryScopeBasedOnContext(context: ExecutionContext) {
+    private async configureSentryScopeBasedOnContext(context: ExecutionContext) {
+        const Sentry = await import("@sentry/node");
+
         const type = context.getType<GqlContextType>();
-        const scope = this.sentry.getCurrentScope();
+        const scope = Sentry.getCurrentScope();
 
         if (type === "http") {
             const request = context.switchToHttp().getRequest();

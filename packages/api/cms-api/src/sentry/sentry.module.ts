@@ -1,25 +1,31 @@
 import { DynamicModule, Module } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 
-import { SentryInterceptor, SentryInterceptorOptions } from "./sentry.intercepor";
+import { SENTRY_CONFIG } from "./sentry.constants";
+import { SentryInterceptor } from "./sentry.intercepor";
 
 type SentryNodeOptions = Omit<import("@sentry/node").NodeOptions, "dsn" | "environment"> & {
     dsn: string;
     environment: string;
 };
 
-type Options = SentryNodeOptions & SentryInterceptorOptions;
+type Options = SentryNodeOptions & SentryConfig;
 
-@Module({})
+export type SentryConfig = {
+    shouldReportException?: (exception: unknown) => boolean;
+};
+
+@Module({
+    providers: [
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: SentryInterceptor,
+        },
+    ],
+})
 export class SentryModule {
-    static async forRootAsync(options: Options): Promise<DynamicModule> {
+    static async forRootAsync({ shouldReportException, ...options }: Options): Promise<DynamicModule> {
         const Sentry = await import("@sentry/node");
-
-        if (!Sentry) {
-            return {
-                module: SentryModule,
-            };
-        }
 
         const integrations = options.integrations ?? [new Sentry.Integrations.Http({ tracing: true })];
 
@@ -32,8 +38,8 @@ export class SentryModule {
             module: SentryModule,
             providers: [
                 {
-                    provide: APP_INTERCEPTOR,
-                    useFactory: () => new SentryInterceptor(options, Sentry),
+                    provide: SENTRY_CONFIG,
+                    useValue: { shouldReportException },
                 },
             ],
         };
