@@ -9,7 +9,7 @@ import { Alert } from "../../alert/Alert";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { FileDropzone } from "./FileDropzone";
-import { FileSelectItem, ValidFileSelectItem } from "./fileSelectItemTypes";
+import { ErrorFileSelectItem, FileSelectItem, ValidFileSelectItem } from "./fileSelectItemTypes";
 import { FileSelectListItem } from "./FileSelectListItem";
 import { getFilesInfoText } from "./getFilesInfoText";
 
@@ -45,8 +45,8 @@ type OwnerState = {
 export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>> = {
     files: FileSelectItem<AdditionalValidFileValues>[];
     onDrop?: DropzoneOptions["onDrop"];
-    onRemove?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
-    onDownload?: (file: FileSelectItem<AdditionalValidFileValues>) => void;
+    onRemove?: (file: ValidFileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
+    onDownload?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => void;
     getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string;
     disabled?: boolean;
     readOnly?: boolean;
@@ -148,7 +148,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                                                 : undefined
                                         }
                                         downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
-                                        onClickDelete={readOnly || !onRemove ? undefined : () => onRemove(file)}
+                                        onClickDelete={readOnly || !onRemove || "loading" in file ? undefined : () => onRemove(file)}
                                         filePreview={layout === "grid"}
                                         {...slotProps?.fileListItem}
                                     />
