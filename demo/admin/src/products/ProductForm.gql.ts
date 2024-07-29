@@ -30,8 +30,8 @@ export const productFormFragment = gql`
 `;
 
 export const productQuery = gql`
-    query Product($id: ID!) {
-        product(id: $id) {
+    query Product($id: UUID!) {
+        productById2(id: $id) {
             id
             updatedAt
             ...ProductFormManual

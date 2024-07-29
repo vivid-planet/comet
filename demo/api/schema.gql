@@ -759,6 +759,8 @@ type Query {
   kubernetesJob(name: String!): KubernetesJob!
   kubernetesJobLogs(name: String!): String!
   product(id: ID!): Product!
+  productById1(id: ID!): Product!
+  productById2(id: UUID!): Product!
   productBySlug(slug: String!): Product
   products(offset: Int! = 0, limit: Int! = 25, status: [ProductStatus!]! = [Published, Unpublished], search: String, filter: ProductFilter, sort: [ProductSort!]): PaginatedProducts!
   productCategory(id: ID!): ProductCategory!
@@ -932,6 +934,11 @@ enum NewsSortField {
   createdAt
   updatedAt
 }
+
+"""
+A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
+"""
+scalar UUID
 
 input ProductFilter {
   title: StringFilter
