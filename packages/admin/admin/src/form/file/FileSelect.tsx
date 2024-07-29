@@ -15,6 +15,8 @@ import { getFilesInfoText } from "./getFilesInfoText";
 
 export type FileSelectClassKey =
     | "root"
+    | "listLayout"
+    | "gridLayout"
     | "maxFilesReachedInfo"
     | "dropzone"
     | "fileList"
@@ -22,6 +24,8 @@ export type FileSelectClassKey =
     | "error"
     | "errorMessage"
     | "filesInfoText";
+
+type Layout = "list" | "grid";
 
 type ThemeProps = ThemedComponentBaseProps<{
     root: "div";
@@ -33,6 +37,10 @@ type ThemeProps = ThemedComponentBaseProps<{
     errorMessage: typeof Typography;
     filesInfoText: typeof FormHelperText;
 }>;
+
+type OwnerState = {
+    layout: Layout;
+};
 
 export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>> = {
     files: FileSelectItem<AdditionalValidFileValues>[];
@@ -47,6 +55,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     maxFiles?: number;
     multiple?: boolean;
     error?: React.ReactNode;
+    layout?: Layout;
     iconMapping?: {
         error?: React.ReactNode;
     };
@@ -68,6 +77,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
         getDownloadUrl,
         files,
         error,
+        layout = "list",
         ...restProps
     } = useThemeProps({
         props: inProps,
@@ -86,8 +96,12 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
     const filesInfoText = getFilesInfoText(maxFiles, maxFileSize);
     const showFileList = files.length > 0 || readOnly;
 
+    const ownerState: OwnerState = {
+        layout,
+    };
+
     return (
-        <Root {...slotProps?.root} {...restProps}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!readOnly && (
                 <>
                     {maxAmountOfFilesSelected ? (
@@ -116,7 +130,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                 </>
             )}
             {showFileList && (
-                <FileList {...slotProps?.fileList}>
+                <FileList ownerState={ownerState} {...slotProps?.fileList}>
                     {files.length > 0 ? (
                         <>
                             {files.map((file, index) => {
@@ -135,6 +149,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                                         }
                                         downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
                                         onClickDelete={readOnly || !onRemove ? undefined : () => onRemove(file)}
+                                        filePreview={layout === "grid"}
                                         {...slotProps?.fileListItem}
                                     />
                                 );
@@ -166,9 +181,10 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
     );
 };
 
-const Root = createComponentSlot("div")<FileSelectClassKey>({
+const Root = createComponentSlot("div")<FileSelectClassKey, OwnerState>({
     componentName: "FileSelect",
     slotName: "root",
+    classesResolver: ({ layout }) => [layout === "list" && "listLayout", layout === "grid" && "gridLayout"],
 })(css`
     display: flex;
     flex-direction: column;
@@ -181,12 +197,29 @@ const Dropzone = createComponentSlot(FileDropzone)<FileSelectClassKey>({
     slotName: "dropzone",
 })();
 
-const FileList = createComponentSlot("div")<FileSelectClassKey>({
+const FileList = createComponentSlot("div")<FileSelectClassKey, OwnerState>({
     componentName: "FileSelect",
     slotName: "fileList",
-})(css`
-    width: 100%;
-`);
+})(
+    ({ theme, ownerState }) => css`
+        width: 100%;
+
+        ${ownerState.layout === "grid" &&
+        css`
+            display: grid;
+            gap: ${theme.spacing(2)};
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+            ${theme.breakpoints.up("md")} {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+                .CometAdminFormFieldContainer-horizontal & {
+                    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                }
+            }
+        `}
+    `,
+);
 
 const FileListItem = createComponentSlot(FileSelectListItem)<FileSelectClassKey>({
     componentName: "FileSelect",
