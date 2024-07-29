@@ -6,7 +6,7 @@ import React from "react";
 
 storiesOf("@comet/admin/form/File", module)
     .addDecorator((story) => (
-        <Card sx={{ maxWidth: 440 }}>
+        <Card sx={{ maxWidth: 300 }}>
             <CardContent>
                 <Stack spacing={4}>{story()}</Stack>
             </CardContent>
@@ -27,9 +27,16 @@ storiesOf("@comet/admin/form/File", module)
             Skeleton: { loading: true },
         };
 
+        const filePreviewOptions = {
+            None: undefined,
+            "Generic Preview": true,
+            "Image Preview": "https://picsum.photos/756/756",
+        };
+
         const downloadMethods = ["No download", "Download function", "Download URL"];
 
         const selectedFile = select("File Item", fileItems, fileItems["Valid File"]);
+        const showFilePreview = select("File Preview", filePreviewOptions, filePreviewOptions.None);
         const downloadMethod = select("Can be downloaded", downloadMethods, downloadMethods[0]);
         const canBeDeleted = boolean("Can Be Deleted", true);
         const disabled = boolean("Disabled", false);
@@ -40,6 +47,7 @@ storiesOf("@comet/admin/form/File", module)
                 onClickDownload={downloadMethod === "Download function" ? () => alert("Downloading file") : undefined}
                 downloadUrl={downloadMethod === "Download URL" ? "https://example.com" : undefined}
                 onClickDelete={canBeDeleted ? () => alert("Delete") : undefined}
+                filePreview={showFilePreview}
                 disabled={disabled}
             />
         );
