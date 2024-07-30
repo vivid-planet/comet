@@ -10,6 +10,12 @@ export type GenerateFieldsReturn = GeneratorReturn & {
     hooksCode: string;
     formFragmentFields: string[];
     formValueToGqlInputCode: string;
+    formValuesConfig: {
+        omitFromFragmentType?: string;
+        typeCode?: string;
+        initializationCode?: string;
+        defaultInitializationCode?: string;
+    }[];
 };
 
 export function generateFields({
@@ -30,6 +36,7 @@ export function generateFields({
     let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
     const imports: Imports = [];
+    const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
 
     const code = fields
         .map((field) => {
@@ -49,6 +56,7 @@ export function generateFields({
             hooksCode += generated.hooksCode;
             formValueToGqlInputCode += generated.formValueToGqlInputCode;
             formFragmentFields.push(...generated.formFragmentFields);
+            formValuesConfig.push(...generated.formValuesConfig);
             return generated.code;
         })
         .join("\n");
@@ -60,5 +68,6 @@ export function generateFields({
         formFragmentFields,
         gqlDocuments,
         imports,
+        formValuesConfig,
     };
 }
