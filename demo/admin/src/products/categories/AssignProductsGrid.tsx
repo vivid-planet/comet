@@ -9,7 +9,7 @@ import {
 } from "@src/products/categories/AssignProductsGrid.generated";
 import { ProductsSelectGrid } from "@src/products/categories/ProductsSelectGrid";
 import isEqual from "lodash.isequal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 const setProductCategoryMutation = gql`
@@ -43,12 +43,14 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
             variables: { id: productCategoryId },
         },
     );
-    const initialValues = data?.products.nodes ? data.products.nodes.map((product) => product.id).sort() : [];
+
+    const initialValues = useMemo(() => {
+        return data?.products.nodes ? data.products.nodes.map((product) => product.id).sort() : [];
+    }, [data]);
     const [values, setValues] = useState<string[]>(initialValues);
     useEffect(() => {
         setValues(initialValues);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data?.products.nodes]);
+    }, [initialValues]);
 
     if (error) return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
     if (loading) return <CircularProgress />;
