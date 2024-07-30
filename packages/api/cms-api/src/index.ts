@@ -28,6 +28,7 @@ export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
+export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
 export { BuildsModule } from "./builds/builds.module";
 export { BuildsResolver } from "./builds/builds.resolver";
@@ -48,7 +49,7 @@ export { createEnumFilter } from "./common/filter/enum.filter.factory";
 export { createEnumsFilter } from "./common/filter/enums.filter.factory";
 export { ManyToManyFilter } from "./common/filter/many-to-many.filter";
 export { ManyToOneFilter } from "./common/filter/many-to-one.filter";
-export { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
+export { filtersToMikroOrmQuery, gqlArgsToMikroOrmQuery, searchToMikroOrmQuery } from "./common/filter/mikro-orm";
 export { NumberFilter } from "./common/filter/number.filter";
 export { OneToManyFilter } from "./common/filter/one-to-many.filter";
 export { StringFilter } from "./common/filter/string.filter";
@@ -74,9 +75,9 @@ export { ContentGenerationServiceInterface } from "./content-generation/content-
 export { CronJobsModule } from "./cron-jobs/cron-jobs.module";
 export { DamFileDownloadLinkBlock } from "./dam/blocks/dam-file-download-link.block";
 export { DamImageBlock } from "./dam/blocks/dam-image.block";
-export { DamVideoBlock } from "./dam/blocks/dam-video.block";
 export { PixelImageBlock } from "./dam/blocks/pixel-image.block";
 export { SvgImageBlock } from "./dam/blocks/svg-image.block";
+export { DamVideoBlock } from "./dam/blocks/video/dam-video.block";
 export { ScaledImagesCacheService } from "./dam/cache/scaled-images-cache.service";
 export { FocalPoint } from "./dam/common/enums/focal-point.enum";
 export { CometImageResolutionException } from "./dam/common/errors/image-resolution.exception";
@@ -91,9 +92,8 @@ export { createFileEntity, FileInterface } from "./dam/files/entities/file.entit
 export { DamFileImage } from "./dam/files/entities/file-image.entity";
 export { createFolderEntity, FolderInterface } from "./dam/files/entities/folder.entity";
 export { FileImagesResolver } from "./dam/files/file-image.resolver";
-export { download, FileUploadService } from "./dam/files/file-upload.service";
 export { FilesService } from "./dam/files/files.service";
-export { slugifyFilename } from "./dam/files/files.utils";
+export { createFileUploadInputFromUrl, slugifyFilename } from "./dam/files/files.utils";
 export { FoldersService } from "./dam/files/folders.service";
 export { ImageInterface } from "./dam/images/dto/image.interface";
 export { HashImageParams, ImageParams } from "./dam/images/dto/image.params";
@@ -117,6 +117,9 @@ export { Dependency } from "./dependencies/dto/dependency";
 export { DocumentInterface } from "./document/dto/document-interface";
 export { SaveDocument } from "./document/dto/save-document";
 export { validateNotModified } from "./document/validateNotModified";
+export { FileUpload } from "./file-uploads/entities/file-upload.entity";
+export { FileUploadsModule } from "./file-uploads/file-uploads.module";
+export { FileUploadsService } from "./file-uploads/file-uploads.service";
 export {
     CrudField,
     CrudFieldOptions,
@@ -151,14 +154,12 @@ export { PageTreeNodeDocumentEntityScopeService } from "./page-tree/page-tree-no
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
-export { PublicUpload } from "./public-upload/entities/public-upload.entity";
-export { PublicUploadModule } from "./public-upload/public-upload.module";
-export { PublicUploadsService } from "./public-upload/public-uploads.service";
 export { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects/redirects.enum";
 export { RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";
+export { AzureAiTranslatorModule } from "./translation/azure-ai-translator.module";
 export { AbstractAccessControlService } from "./user-permissions/access-control.service";
 export { AffectedEntity, AffectedEntityMeta, AffectedEntityOptions } from "./user-permissions/decorators/affected-entity.decorator";
 export { RequiredPermission } from "./user-permissions/decorators/required-permission.decorator";

@@ -1,6 +1,5 @@
 import { createSpaceBlock } from "@comet/blocks-api";
 
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum Spacing {
     d150 = "d150",
     d200 = "d200",
@@ -13,6 +12,5 @@ export enum Spacing {
     d550 = "d550",
     d600 = "d600",
 }
-/* eslint-enable @typescript-eslint/naming-convention */
 
 export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");

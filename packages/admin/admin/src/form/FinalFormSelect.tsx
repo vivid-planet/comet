@@ -10,7 +10,7 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
     children?: React.ReactNode;
-    clearable?: boolean;
+    required?: boolean;
 }
 
 export const FinalFormSelect = <T,>({
@@ -36,7 +36,7 @@ export const FinalFormSelect = <T,>({
         }
     },
     children,
-    clearable,
+    required,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
@@ -44,7 +44,7 @@ export const FinalFormSelect = <T,>({
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
-    const endAdornment = clearable ? (
+    const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
             hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
@@ -60,6 +60,7 @@ export const FinalFormSelect = <T,>({
         onChange,
         onFocus,
         onBlur,
+        required,
     };
 
     if (children) {

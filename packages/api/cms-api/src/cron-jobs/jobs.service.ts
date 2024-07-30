@@ -1,5 +1,6 @@
 import { V1Job } from "@kubernetes/client-node";
 import { Injectable } from "@nestjs/common";
+import { format } from "date-fns";
 
 import { LABEL_ANNOTATION } from "../kubernetes/kubernetes.constants";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
@@ -18,5 +19,18 @@ export class JobsService {
             completionTime: job.status?.completionTime,
             status: this.kubernetesService.getStatusForKubernetesJob(job),
         };
+    }
+
+    createJobNameFromCronJobForManualRun(cronJobName: string): string {
+        let suffix = `man-${format(new Date(), "yyyy-MM-dd-HH-mm-ss")}`;
+
+        // Kubernetes Job name length must be less than or equal to 63 characters
+        const excessLength = cronJobName.length + suffix.length - 62;
+        if (excessLength > 0) {
+            // shorten suffix to fit the 63 character limit, use last characters because they are more unique
+            suffix = suffix.slice(excessLength);
+        }
+
+        return `${cronJobName}-${suffix}`;
     }
 }

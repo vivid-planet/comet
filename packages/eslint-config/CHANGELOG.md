@@ -1,5 +1,27 @@
 # @comet/eslint-config
 
+## 7.0.0-beta.6
+
+### Major Changes
+
+-   2e20a8684: nextjs/react: Enable `react/jsx-no-useless-fragment` rule
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0-beta.4
+
 ## 7.0.0-beta.3
 
 ### Major Changes
@@ -93,6 +115,40 @@
 ### Patch Changes
 
 -   @comet/eslint-plugin@7.0.0-beta.0
+
+## 6.17.1
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.17.1
+
+## 6.17.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.17.0
+
+## 6.16.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.16.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   6cb850567: Fix Prettier peer dependency
+
+    The dependency range was incorrectly set to `>= 2`. Change to `^2.0.0` since Prettier v3 isn't supported at the moment.
+
+    -   @comet/eslint-plugin@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@6.15.0
 
 ## 6.14.1
 

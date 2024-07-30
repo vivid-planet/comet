@@ -26,12 +26,12 @@ export const BaseTranslationDialog = <T,>(props: TranslationDialogBaseProps<T>) 
             <DialogContent>
                 <Grid container columnSpacing={4} rowSpacing={2} columns={2} alignItems="center">
                     <Grid item xs={1}>
-                        <Typography variant="h6">
+                        <Typography variant="subtitle2">
                             <FormattedMessage id="comet.translator.original" defaultMessage="Original" />
                         </Typography>
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography variant="h6">
+                        <Typography variant="subtitle2">
                             <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
                         </Typography>
                     </Grid>

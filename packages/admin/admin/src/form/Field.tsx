@@ -70,7 +70,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 if (typeof children !== "function") {
                     throw new Error(`Warning: Must specify either a render function as children, or a component prop to ${name}`);
                 }
-                return children({ input, meta, disabled });
+                return children({ input, meta, disabled, required });
             }
         }
         return (

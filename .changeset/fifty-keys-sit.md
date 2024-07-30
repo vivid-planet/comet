@@ -10,7 +10,7 @@ The new `ContentScopeIndicator` has the logic for displaying the current scope b
 
 Usage:
 
-- Per default, the `ContentScopeIndicator` displays the current `ContentScope`
-- Pass a scope object via the `scope` prop if your page has a custom scope
-- Pass the `global` prop if your page has no scope
-- Pass `children` if you want to render completely custom content
+-   Per default, the `ContentScopeIndicator` displays the current `ContentScope`
+-   Pass a scope object via the `scope` prop if your page has a custom scope
+-   Pass the `global` prop if your page has no scope
+-   Pass `children` if you want to render completely custom content

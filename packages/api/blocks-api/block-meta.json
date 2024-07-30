@@ -42,52 +42,5 @@
                 "nullable": false
             }
         ]
-    },
-    {
-        "name": "YouTubeVideo",
-        "fields": [
-            {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "autoplay",
-                "kind": "Boolean",
-                "nullable": true
-            },
-            {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
-            },
-            {
-                "name": "loop",
-                "kind": "Boolean",
-                "nullable": true
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "autoplay",
-                "kind": "Boolean",
-                "nullable": true
-            },
-            {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
-            },
-            {
-                "name": "loop",
-                "kind": "Boolean",
-                "nullable": true
-            }
-        ]
     }
 ]

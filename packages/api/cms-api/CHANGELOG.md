@@ -1,5 +1,69 @@
 # @comet/cms-api
 
+## 7.0.0-beta.6
+
+### Patch Changes
+
+-   @comet/blocks-api@7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+### Patch Changes
+
+-   @comet/blocks-api@7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+-   3ea123f68: Increase minimum supported version of `@mikro-orm/core`, `@mikro-orm/migrations`, and `@mikro-orm/postgresql` to v5.8.4
+
+### Minor Changes
+
+-   bfa94b74b: API Generator: Generate field resolver for root blocks
+
+    This allows skipping the `@Field` annotation for root blocks in the entity and it doesn't need the field middleware anymore.
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
+### Patch Changes
+
+-   Updated dependencies [b7560e3a7]
+    -   @comet/blocks-api@7.0.0-beta.4
+
 ## 7.0.0-beta.3
 
 ### Major Changes
@@ -292,6 +356,115 @@
 -   Updated dependencies [e15927594]
 -   Updated dependencies [ebf597120]
     -   @comet/blocks-api@7.0.0-beta.0
+
+## 6.17.1
+
+### Patch Changes
+
+-   76ca3bf98: Remove index signature from `ContentScope` interface
+
+    This allows using scope DTOs without index signature in `@ScopedEntity()`.
+
+    -   @comet/blocks-api@6.17.1
+
+## 6.17.0
+
+### Minor Changes
+
+-   9ddf65554: Require a file extension when changing the filename in the DAM
+
+    Previously, files in the DAM could be renamed without restrictions.
+    Files could have invalid extensions (for their mimetype) or no extension at all.
+    This theoretically made the following attack possible:
+
+    1. Creating a dangerous .exe file locally
+    2. Renaming it to .jpg locally
+    3. Uploading the file as a .jpg
+    4. Renaming it to .exe in the DAM
+    5. The file is now downloaded as .exe
+
+    Now, filenames must always have an extension that matches their mimetype.
+    This is enforced in the admin and API.
+    Existing files without an extension are automatically assigned an extension via a DB migration.
+
+-   9ddf65554: Loosen the filename slugification rules
+
+    When uploading a file to the DAM, the filename is automatically slugified.
+    Previously, the slugification used pretty strict rules without a good reason.
+
+    Now, the rules were loosened allowing uppercase characters and most special characters.
+    Also, slugify now uses the locale `en` instead of `de` for special character replacements.
+
+### Patch Changes
+
+-   5a9c49ab5: CronJobModule: Fix job creation if resulting name exceeds 63 characters
+    -   @comet/blocks-api@6.17.0
+
+## 6.16.0
+
+### Minor Changes
+
+-   5e830f8d9: Add an [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) implementation of the content translation feature
+
+    To use it, do the following:
+
+    **API:**
+
+    ```diff
+    // app.module.ts
+    export class AppModule {
+        static forRoot(config: Config): DynamicModule {
+            return {
+                imports: [
+                    // ...
+    +               AzureAiTranslatorModule.register({
+    +                   endpoint: envVars.AZURE_AI_TRANSLATOR_ENDPOINT,
+    +                   key: envVars.AZURE_AI_TRANSLATOR_KEY,
+    +                   region: envVars.AZURE_AI_TRANSLATOR_REGION,
+    +               }),
+                ],
+    ```
+
+    Users need the `translation` permission to use the translation feature.
+
+    **Admin:**
+
+    Wrap the section where you want to use the content translation with the `AzureAiTranslatorProvider` provider:
+
+    ```tsx
+    <AzureAiTranslatorProvider enabled={true}>{/*  ...  */}</AzureAiTranslatorProvider>
+    ```
+
+    Note: `AzureAiTranslatorProvider` automatically checks for the `translation` permission. The translation button is only shown for users with this permission.
+
+### Patch Changes
+
+-   f7d405dfa: Fix the duplicate filename check in `FilesService#updateByEntity`
+
+    Previously, we checked the existing file name (`entity.name`) for the check instead of the new name (`input.name`). This never resulted in an error.
+
+    -   @comet/blocks-api@6.16.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/blocks-api@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   9b29afd87: Add missing `@RequiredPermission` to `createZip` route
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [c7f5637bd]
+    -   @comet/blocks-api@6.15.0
 
 ## 6.14.1
 

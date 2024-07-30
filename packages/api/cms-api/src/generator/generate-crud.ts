@@ -8,7 +8,8 @@ import { generateCrudInput } from "./generate-crud-input";
 import { buildNameVariants, classNameToInstanceName } from "./utils/build-name-variants";
 import { integerTypes } from "./utils/constants";
 import { generateImportsCode, Imports } from "./utils/generate-imports-code";
-import { findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
+import { getCrudSearchFieldsFromMetadata } from "./utils/search-fields-from-metadata";
+import { findBlockImportPath, findBlockName, findEnumImportPath, findEnumName, morphTsProperty } from "./utils/ts-morph-helper";
 import { GeneratedFile } from "./utils/write-generated-files";
 
 // TODO move into own file
@@ -28,27 +29,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         return false;
     });
 
-    const crudSearchPropNames = metadata.props
-        .filter((prop) => prop.name != "status")
-        .filter((prop) => hasFieldFeature(metadata.class, prop.name, "search") && !prop.name.startsWith("scope_"))
-        .reduce((acc, prop) => {
-            if (prop.type === "string" || prop.type === "text") {
-                acc.push(prop.name);
-            } else if (prop.reference == "m:1") {
-                if (!prop.targetMeta) {
-                    throw new Error(`reference ${prop.name} has no targetMeta`);
-                }
-                prop.targetMeta.props
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    .filter((innerProp) => hasFieldFeature(prop.targetMeta!.class, innerProp.name, "search") && !innerProp.name.startsWith("scope_"))
-                    .forEach((innerProp) => {
-                        if (innerProp.type === "string" || innerProp.type === "text") {
-                            acc.push(`${prop.name}.${innerProp.name}`);
-                        }
-                    });
-            }
-            return acc;
-        }, [] as string[]);
+    const crudSearchPropNames = getCrudSearchFieldsFromMetadata(metadata);
     const hasSearchArg = crudSearchPropNames.length > 0;
 
     let statusProp = metadata.props.find((prop) => prop.name == "status");
@@ -306,8 +287,6 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
     import { Type } from "class-transformer";
     import { IsEnum } from "class-validator";
 
-    /* eslint-disable @typescript-eslint/naming-convention */
-    // TODO: Replace with PascalCase
     export enum ${classNameSingular}SortField {
         ${crudSortProps
             .map((prop) => {
@@ -315,7 +294,6 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
             })
             .join("\n")}
     }
-    /* eslint-enable @typescript-eslint/naming-convention */
     registerEnumType(${classNameSingular}SortField, {
         name: "${classNameSingular}SortField",
     });
@@ -473,12 +451,11 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
 
 function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
-    const { hasSearchArg, hasFilterArg, hasPositionProp, positionGroupProps, crudSearchPropNames } = buildOptions(metadata);
+    const { hasPositionProp, positionGroupProps } = buildOptions(metadata);
 
     const positionGroupType = positionGroupProps.length ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${prop.type}`).join(",")} }` : false;
 
-    const serviceOut = `import { filtersToMikroOrmQuery, searchToMikroOrmQuery } from "@comet/cms-api";
-    import { FilterQuery, ObjectQuery } from "@mikro-orm/core";
+    const serviceOut = `import { FilterQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
@@ -502,38 +479,6 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                     private readonly entityManager: EntityManager,
                     @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
                 ) {}`
-                : ""
-        }
-
-        ${
-            hasSearchArg || hasFilterArg
-                ? `
-        getFindCondition(options: { ${hasSearchArg ? "search?: string, " : ""}${
-                      hasFilterArg ? `filter?: ${classNameSingular}Filter, ` : ""
-                  } }): ObjectQuery<${metadata.className}> {
-            const andFilters = [];
-            ${
-                hasSearchArg
-                    ? `
-            if (options.search) {
-                andFilters.push(searchToMikroOrmQuery(options.search, [${crudSearchPropNames.map((propName) => `"${propName}", `).join("")}]));
-            }
-            `
-                    : ""
-            }
-            ${
-                hasFilterArg
-                    ? `
-            if (options.filter) {
-                andFilters.push(filtersToMikroOrmQuery(options.filter));
-            }
-            `
-                    : ""
-            }
-
-            return andFilters.length > 0 ? { $and: andFilters } : {};
-        }
-        `
                 : ""
         }
 
@@ -584,7 +529,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
 
                 ${
                     positionGroupProps.length
-                        ? `getPositionGroupCondition(data: ${positionGroupType}): FilterQuery<ProductCategory> {
+                        ? `getPositionGroupCondition(data: ${positionGroupType}): FilterQuery<${metadata.className}> {
                     return {
                         scope: data.scope,
                     };
@@ -818,20 +763,26 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
 
     const imports: Imports = [];
 
-    const { imports: fieldImports, code, hasOutputRelations } = generateRelationsFieldResolver({ generatorOptions, metadata });
+    const {
+        imports: fieldImports,
+        code,
+        hasOutputRelations,
+        needsBlocksTransformer,
+    } = generateRelationsFieldResolver({ generatorOptions, metadata });
     if (!hasOutputRelations) return null;
     imports.push(...fieldImports);
 
     imports.push(generateEntityImport(metadata, generatorOptions.targetDirectory));
 
     return `
-    import { RequiredPermission } from "@comet/cms-api";
+    import { RequiredPermission, RootBlockDataScalar, BlocksTransformerService } from "@comet/cms-api";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
+        ${needsBlocksTransformer ? `constructor(private readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
     }
     `;
@@ -862,6 +813,10 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         }
     }
 
+    const resolveFieldBlockProps = metadata.props.filter((prop) => {
+        return hasFieldFeature(metadata.class, prop.name, "resolveField") && prop.type === "RootBlockType";
+    });
+
     const hasOutputRelations =
         outputRelationManyToOneProps.length > 0 ||
         outputRelationOneToManyProps.length > 0 ||
@@ -873,6 +828,12 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
     for (const prop of [...relationManyToOneProps, ...relationOneToManyProps, ...relationManyToManyProps, ...relationOneToOneProps]) {
         if (!prop.targetMeta) throw new Error(`Relation ${prop.name} has targetMeta not set`);
         imports.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+    }
+
+    for (const prop of resolveFieldBlockProps) {
+        const blockName = findBlockName(prop.name, metadata);
+        const importPath = findBlockImportPath(blockName, `${generatorOptions.targetDirectory}`, metadata);
+        imports.push({ name: blockName, importPath });
     }
 
     const code = `
@@ -920,12 +881,24 @@ function generateRelationsFieldResolver({ generatorOptions, metadata }: { genera
         )
         .join("\n")}
 
+        ${resolveFieldBlockProps
+            .map(
+                (prop) => `
+        @ResolveField(() => RootBlockDataScalar(${findBlockName(prop.name, metadata)}))
+        async ${prop.name}(@Parent() ${instanceNameSingular}: ${metadata.className}): Promise<object> {
+            return this.blocksTransformer.transformToPlain(${instanceNameSingular}.${prop.name});
+        }
+        `,
+            )
+            .join("\n")}
+
     `.trim();
 
     return {
         code,
         imports,
         hasOutputRelations,
+        needsBlocksTransformer: resolveFieldBlockProps.length > 0,
     };
 }
 
@@ -983,6 +956,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         imports: relationsFieldResolverImports,
         code: relationsFieldResolverCode,
         hasOutputRelations,
+        needsBlocksTransformer,
     } = generateRelationsFieldResolver({
         generatorOptions,
         metadata,
@@ -1012,14 +986,22 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
     }
 
+    imports.push({ name: "extractGraphqlFields", importPath: "@comet/cms-api" });
+    imports.push({ name: "SortDirection", importPath: "@comet/cms-api" });
+    imports.push({ name: "RequiredPermission", importPath: "@comet/cms-api" });
+    imports.push({ name: "AffectedEntity", importPath: "@comet/cms-api" });
+    imports.push({ name: "validateNotModified", importPath: "@comet/cms-api" });
+    imports.push({ name: "RootBlockDataScalar", importPath: "@comet/cms-api" });
+    imports.push({ name: "BlocksTransformerService", importPath: "@comet/cms-api" });
+    imports.push({ name: "gqlArgsToMikroOrmQuery", importPath: "@comet/cms-api" });
+
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
     import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/core";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
-    import { extractGraphqlFields, SortDirection, RequiredPermission, AffectedEntity, validateNotModified } from "@comet/cms-api";
     import { GraphQLResolveInfo } from "graphql";
 
-    import { ${classNamePlural}Service } from "./${fileNamePlural}.service";
+    ${hasPositionProp ? `import { ${classNamePlural}Service } from "./${fileNamePlural}.service";` : ``}
     import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
     import { ${argsClassName} } from "./dto/${argsFileName}";
@@ -1029,12 +1011,13 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
-            private readonly entityManager: EntityManager,
-            private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,
+            private readonly entityManager: EntityManager,${
+                hasPositionProp ? `private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
+            }
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
             ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
-                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>`)
-                .join(", ")}
+                .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
+                .join("")}${needsBlocksTransformer ? `private readonly blocksTransformer: BlocksTransformerService,` : ""}
         ) {}
 
         @Query(() => ${metadata.className})
@@ -1090,7 +1073,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         ): Promise<Paginated${classNamePlural}> {
             const where${
                 hasSearchArg || hasFilterArg
-                    ? ` = this.${instanceNamePlural}Service.getFindCondition({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} });`
+                    ? ` = gqlArgsToMikroOrmQuery({ ${hasSearchArg ? `search, ` : ""}${hasFilterArg ? `filter, ` : ""} }, this.repository);`
                     : `: ObjectQuery<${metadata.className}> = {}`
             }
             ${hasStatusFilter ? `where.status = { $in: status };` : ""}
@@ -1285,7 +1268,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
     const generatedFiles: GeneratedFile[] = [];
 
     const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
-    const { hasFilterArg, hasSortArg, argsFileName } = buildOptions(metadata);
+    const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp } = buildOptions(metadata);
     if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
@@ -1313,11 +1296,13 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
             content: generateArgsDto({ generatorOptions, metadata }),
             type: "args",
         });
-        generatedFiles.push({
-            name: `${fileNamePlural}.service.ts`,
-            content: generateService({ generatorOptions, metadata }),
-            type: "service",
-        });
+        if (hasPositionProp) {
+            generatedFiles.push({
+                name: `${fileNamePlural}.service.ts`,
+                content: generateService({ generatorOptions, metadata }),
+                type: "service",
+            });
+        }
         generatedFiles.push({
             name: `${fileNameSingular}.resolver.ts`,
             content: generateResolver({ generatorOptions, metadata }),

@@ -1,8 +1,8 @@
 import { IntrospectionQuery } from "graphql";
 
+import { generateFields } from "./generateForm/generateFields";
 import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
-import { generateFormField } from "./generateFormField";
-import { FormConfig, FormFieldConfig, GeneratorReturn } from "./generator";
+import { FormConfig, FormFieldConfig, GeneratorReturn, isFormFieldConfig, isFormLayoutConfig } from "./generator";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 import { isFieldOptional } from "./utils/isFieldOptional";
@@ -40,6 +40,16 @@ export function generateForm(
 
     const createMutationType = addMode && findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formFields = config.fields.reduce<FormFieldConfig<any>[]>((acc, field) => {
+        if (isFormLayoutConfig(field)) {
+            acc.push(...field.fields);
+        } else if (isFormFieldConfig(field)) {
+            acc.push(field);
+        }
+        return acc;
+    }, []);
+
     const gqlArgs: ReturnType<typeof getForwardedGqlArgs>["gqlArgs"] = [];
     if (createMutationType) {
         const {
@@ -47,7 +57,7 @@ export function generateForm(
             props: forwardedGqlArgsProps,
             gqlArgs: forwardedGqlArgs,
         } = getForwardedGqlArgs({
-            fields: config.fields,
+            fields: formFields,
             gqlOperation: createMutationType,
             gqlIntrospection,
         });
@@ -66,7 +76,7 @@ export function generateForm(
 
     const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
-    const rootBlockFields = config.fields
+    const rootBlockFields = formFields
         .filter((field) => field.type == "block")
         .map((field) => {
             // map is for ts to infer block type correctly
@@ -80,10 +90,10 @@ export function generateForm(
         });
     });
 
-    const numberFields = config.fields.filter((field) => field.type == "number");
-    const booleanFields = config.fields.filter((field) => field.type == "boolean");
-    const dateFields = config.fields.filter((field) => field.type == "date");
-    const readOnlyFields = config.fields.filter((field) => field.readOnly);
+    const numberFields = formFields.filter((field) => field.type == "number");
+    const booleanFields = formFields.filter((field) => field.type == "boolean");
+    const dateFields = formFields.filter((field) => field.type == "date");
+    const readOnlyFields = formFields.filter((field) => field.readOnly);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isOptional = (fieldConfig: FormFieldConfig<any>) => {
@@ -92,21 +102,20 @@ export function generateForm(
 
     let hooksCode = "";
     let formValueToGqlInputCode = "";
-
     const formFragmentFields: string[] = [];
-    const fieldsCode = config.fields
-        .map((field) => {
-            const generated = generateFormField({ gqlIntrospection }, field, config);
-            for (const name in generated.gqlDocuments) {
-                gqlDocuments[name] = generated.gqlDocuments[name];
-            }
-            imports.push(...generated.imports);
-            hooksCode += generated.hooksCode;
-            formValueToGqlInputCode += generated.formValueToGqlInputCode;
-            formFragmentFields.push(generated.formFragmentField);
-            return generated.code;
-        })
-        .join("\n");
+    const { code: fieldsCode, ...generatedFields } = generateFields({
+        gqlIntrospection,
+        baseOutputFilename,
+        fields: config.fields,
+        formConfig: config,
+    });
+    for (const name in generatedFields.gqlDocuments) {
+        gqlDocuments[name] = generatedFields.gqlDocuments[name];
+    }
+    imports.push(...generatedFields.imports);
+    hooksCode += generatedFields.hooksCode;
+    formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
+    formFragmentFields.push(...generatedFields.formFragmentFields);
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
@@ -192,8 +201,9 @@ export function generateForm(
         });
     }
 
-    const code = `import { useApolloClient, useQuery } from "@apollo/client";
+    const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
+        AsyncSelectField,
         Field,
         filterByFragment,
         FinalForm,
@@ -389,12 +399,12 @@ export function generateForm(
                 subscription={{}}
             >
                 {() => (
-                    <>
+                    ${editMode ? `<>` : ``}
                         ${editMode ? `{saveConflict.dialogs}` : ``}
                         <MainContent>
                             ${fieldsCode}
                         </MainContent>
-                    </>
+                    ${editMode ? `</>` : ``}
                 )}
             </FinalForm>
         );

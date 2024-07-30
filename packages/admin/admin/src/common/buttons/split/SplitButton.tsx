@@ -17,8 +17,14 @@ import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBasePr
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
 
+/**
+ * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
+ */
 export type SplitButtonClassKey = "root" | "activeButton" | "popover" | "menuList" | "menuItem";
 
+/**
+ * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
+ */
 export interface SplitButtonProps
     extends ButtonGroupProps<any>,
         ThemedComponentBaseProps<{
@@ -67,6 +73,9 @@ const MenuItem = createComponentSlot(MuiMenuItem)<SplitButtonClassKey>({
 })();
 
 // Based on https://v4.mui.com/components/button-group/#split-button
+/**
+ * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
+ */
 export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
     const {
         selectIcon = <ChevronDown />,

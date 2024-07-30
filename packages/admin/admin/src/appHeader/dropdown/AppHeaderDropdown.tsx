@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
-import { ComponentsOverrides, Popover as MuiPopover, PopoverProps, Theme } from "@mui/material";
+import { ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
@@ -19,7 +19,6 @@ export interface AppHeaderDropdownProps
     children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
     buttonChildren?: React.ReactNode;
     dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
-    popoverProps?: Partial<PopoverProps>;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
 }
@@ -46,7 +45,6 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
         children,
         buttonChildren,
         dropdownArrow = (isOpen: boolean) => (isOpen ? <ChevronUp /> : <ChevronDown />),
-        popoverProps,
         open,
         onOpenChange,
         slotProps,
@@ -83,7 +81,6 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
                 {buttonChildren}
             </Button>
             <Popover
-                {...slotProps?.popover}
                 open={_open}
                 anchorEl={rootRef.current}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -95,7 +92,7 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
                         minWidth: itemWidth,
                     },
                 }}
-                {...popoverProps}
+                {...slotProps?.popover}
             >
                 {typeof children === "function" ? children(() => _onOpenChange(false)) : children}
             </Popover>
