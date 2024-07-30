@@ -45,7 +45,7 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
     );
 
     const initialValues = useMemo(() => {
-        return data?.products.nodes ? data.products.nodes.map((product) => product.id).sort() : [];
+        return data?.products.nodes ? data.products.nodes.map((product) => product.id) : [];
     }, [data]);
     const [values, setValues] = useState<string[]>(initialValues);
     useEffect(() => {
@@ -66,7 +66,7 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
                     });
                     return true;
                 }}
-                hasChanges={!isEqual(initialValues, values)}
+                hasChanges={!isEqual(initialValues.sort(), values.sort())}
                 doReset={() => {
                     setValues(initialValues);
                 }}
@@ -74,7 +74,7 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
             <ProductsSelectGrid
                 value={values}
                 onChange={(productIds) => {
-                    setValues(productIds.sort());
+                    setValues(productIds);
                 }}
             />
         </>
