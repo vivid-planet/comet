@@ -20,7 +20,7 @@ import {
 import { StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -153,14 +153,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
             filterOperators: [
                 {
-                    value: "contains",
+                    label: "Search",
+                    value: "search",
                     getApplyFilterFn: (filterItem) => {
                         throw new Error("not implemented, we filter server side");
                     },
-                    InputComponent: GridFilterInputSingleSelect,
+                    InputComponent: GridFilterInputValue,
                 },
             ],
-            valueOptions: relationsData?.productTags.nodes.map((i) => ({ value: i.id, label: i.title })),
         },
         {
             field: "inStock",
