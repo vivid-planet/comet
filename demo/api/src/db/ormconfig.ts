@@ -2,7 +2,7 @@ import { createMigrationsList, createOrmConfig } from "@comet/cms-api";
 import { EntityCaseNamingStrategy } from "@mikro-orm/core";
 import path from "path";
 
-const config = createOrmConfig({
+export const ormConfig = createOrmConfig({
     type: "postgresql",
     host: process.env.POSTGRESQL_HOST,
     port: Number(process.env.POSTGRESQL_PORT),
@@ -22,8 +22,7 @@ const config = createOrmConfig({
         path: "./src/db/migrations",
         migrationsList: createMigrationsList(path.resolve(__dirname, "migrations")),
         disableForeignKeys: false,
+        dropTables: false,
         snapshot: false,
     },
 });
-
-export default config;

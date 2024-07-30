@@ -417,6 +417,33 @@
     -   @comet/admin-theme@7.0.0-beta.0
     -   @comet/admin-icons@7.0.0-beta.0
 
+## 6.17.1
+
+### Patch Changes
+
+-   @comet/admin-icons@6.17.1
+
+## 6.17.0
+
+### Minor Changes
+
+-   7ecc30eba: Add `color` prop to `CometLogo`
+
+    It now supports a colored and a white version of the logo.
+
+### Patch Changes
+
+-   536e95c02: Fix error dialog to show GraphQL errors again
+
+    Previously, GraphQL errors without an http status code didn't trigger an error dialog anymore.
+
+-   ec4685bf3: Prevent unintended `width: 100%` on nested `InputBase` components inside `FieldContainer` and `Field` components
+
+    `FieldContainer` (and therefore `Field`) needs to set the with of the `InputBase` it wraps to 100%.
+    This also caused deeply nested `InputBase` components, e.g., inside a `Dialog`, to get this `width` and break the styling of these components, as they are not intended to be styled by `FieldContainer`.
+
+    -   @comet/admin-icons@6.17.0
+
 ## 6.16.0
 
 ### Minor Changes

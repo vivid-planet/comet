@@ -80,7 +80,8 @@ export async function generateCrudInput(
             continue;
         } else if (prop.enum) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const defaultValue =
+                prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             const enumName = findEnumName(prop.name, metadata);
             const importPath = findEnumImportPath(enumName, `${generatorOptions.targetDirectory}/dto`, metadata);
@@ -103,7 +104,8 @@ export async function generateCrudInput(
             type = `${enumName}[]`;
         } else if (prop.type === "string" || prop.type === "text") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const defaultValue =
+                prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsString()");
             if (prop.name.startsWith("scope_")) {
@@ -116,7 +118,8 @@ export async function generateCrudInput(
             type = "string";
         } else if (prop.type === "DecimalType" || prop.type == "BigIntType" || prop.type === "number") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const defaultValue =
+                prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             if (integerTypes.includes(prop.columnTypes[0])) {
                 decorators.push("@IsInt()");
@@ -128,14 +131,16 @@ export async function generateCrudInput(
             type = "number";
         } else if (prop.type === "DateType" || prop.type === "Date") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const defaultValue =
+                prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsDate()");
             decorators.push(`@Field(${fieldOptions})`);
             type = "Date";
         } else if (prop.type === "BooleanType" || prop.type === "boolean") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValue = prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer;
+            const defaultValue =
+                prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined) ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: prop.nullable ? "true" : undefined, defaultValue });
             decorators.push("@IsBoolean()");
             decorators.push(`@Field(${fieldOptions})`);
@@ -153,7 +158,7 @@ export async function generateCrudInput(
             type = "BlockInputInterface";
         } else if (prop.reference == "m:1") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null");
+            const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined);
             const fieldOptions = tsCodeRecordToString({
                 nullable: prop.nullable ? "true" : undefined,
                 defaultValue: defaultValueNull ? "null" : undefined,
@@ -290,7 +295,11 @@ export async function generateCrudInput(
             if (tsType.isArray()) {
                 const initializer = tsProp.getInitializer()?.getText();
                 const defaultValue =
-                    prop.nullable && (initializer == "undefined" || initializer == "null") ? "null" : initializer == "[]" ? "[]" : undefined;
+                    prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined)
+                        ? "null"
+                        : initializer == "[]"
+                        ? "[]"
+                        : undefined;
                 const fieldOptions = tsCodeRecordToString({
                     nullable: prop.nullable ? "true" : undefined,
                     defaultValue: defaultValue,
@@ -330,7 +339,7 @@ export async function generateCrudInput(
             }
         } else if (prop.type == "uuid") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
-            const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null");
+            const defaultValueNull = prop.nullable && (initializer == "undefined" || initializer == "null" || initializer === undefined);
             const fieldOptions = tsCodeRecordToString({
                 nullable: prop.nullable ? "true" : undefined,
                 defaultValue: defaultValueNull ? "null" : undefined,
