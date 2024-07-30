@@ -1066,6 +1066,20 @@ You must upgrade
 -   React to v18 (Migration Guide: [17 -> 18](https://react.dev/blog/2022/03/08/react-18-upgrade-guide))
 -   Styled Components to v6 (Migration Guide: [5 -> 6](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6))
 
+Make sure to upgrade to Next 14.2.0 or later.
+Enable `optimizePackageImports` for `@comet/cms-site` in `next.config.js`:
+
+```diff
+const nextConfig = {
+    /* ... */
++   experimental: {
++       optimizePackageImports: ["@comet/cms-site"],
++   },
+};
+
+module.exports = withBundleAnalyzer(nextConfig);
+```
+
 ### Add a custom `InternalLinkBlock`
 
 The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
