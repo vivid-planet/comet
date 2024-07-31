@@ -13,6 +13,10 @@ export const productFormFragment = gql`
             id
             title
         }
+        manufacturer {
+            id
+            name
+        }
         inStock
         availableSince
         image

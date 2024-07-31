@@ -22,6 +22,14 @@ export type GenerateFieldsReturn = GeneratorReturn & {
     };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function findFieldByName(name: string, fields: FormConfig<any>["fields"]): FormConfig<any>["fields"][0] | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return fields.reduce<FormConfig<any>["fields"][0] | undefined>((acc, field) => {
+        return acc ? acc : field.name === name ? field : isFormLayoutConfig(field) ? findFieldByName(name, field.fields) : undefined;
+    }, undefined);
+}
+
 export function generateFields({
     gqlIntrospection,
     baseOutputFilename,

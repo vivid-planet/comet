@@ -22,7 +22,12 @@ export type FormFieldConfig<T> = (
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
-    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
+    | {
+          type: "asyncSelect";
+          rootQuery: string;
+          labelField?: string;
+          filterField?: { name: string; filterMapping: string };
+      }
     | { type: "block"; block: ImportReference }
 ) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
