@@ -3,11 +3,10 @@ import {
     AsyncSelectField,
     AutocompleteField,
     CheckboxField,
-    Field,
     FieldContainer,
     FieldSet,
-    FinalFormRadio,
     NumberField,
+    RadioField,
     SearchField,
     SelectField,
     SwitchField,
@@ -16,7 +15,7 @@ import {
 } from "@comet/admin";
 import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
-import { Box, Button, FormControlLabel, Link, MenuItem } from "@mui/material";
+import { Box, Button, Link, MenuItem } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -121,32 +120,16 @@ function Story() {
                             </FieldContainer>
                             <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
                             <FieldContainer label="Radio" variant={fieldVariant} fullWidth>
-                                <Field name="radio" type="radio" value="option-one">
-                                    {(props) => <FormControlLabel label="Option One" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radio" type="radio" value="option-two">
-                                    {(props) => <FormControlLabel label="Option Two" control={<FinalFormRadio {...props} />} />}
-                                </Field>
+                                <RadioField name="radio" label="Option One" value="option-one" />
+                                <RadioField name="radio" label="Option Two" value="option-two" />
                             </FieldContainer>
                             <FieldContainer label="Radio (many options)" variant={fieldVariant} fullWidth>
-                                <Field name="radioManyOptions" type="radio" value="option-one">
-                                    {(props) => <FormControlLabel label="Option One" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-two">
-                                    {(props) => <FormControlLabel label="Option Two" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-three">
-                                    {(props) => <FormControlLabel label="Option Three" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-four">
-                                    {(props) => <FormControlLabel label="Option Four" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-five">
-                                    {(props) => <FormControlLabel label="Option Five" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-six">
-                                    {(props) => <FormControlLabel label="Option Six" control={<FinalFormRadio {...props} />} />}
-                                </Field>
+                                <RadioField name="radioManyOptions" label="Option One" value="option-one" />
+                                <RadioField name="radioManyOptions" label="Option Two" value="option-two" />
+                                <RadioField name="radioManyOptions" label="Option Three" value="option-three" />
+                                <RadioField name="radioManyOptions" label="Option Four" value="option-four" />
+                                <RadioField name="radioManyOptions" label="Option Five" value="option-five" />
+                                <RadioField name="radioManyOptions" label="Option Six" value="option-six" />
                             </FieldContainer>
                         </FieldSet>
                         <FieldSet title="Date and Time" supportText="@comet/admin-date-time">
