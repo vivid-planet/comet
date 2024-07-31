@@ -239,7 +239,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
     return (
         <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...slotProps?.root} {...restProps}>
             <>
-                {label && (
+                {(label || (variant === "horizontal" && !forceVertical)) && (
                     <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
                         {label}
                     </Label>
