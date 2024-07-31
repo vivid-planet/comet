@@ -1,5 +1,188 @@
 # @comet/blocks-admin
 
+## 7.0.0
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+-   92eae2ba9: Change the method of overriding the styling of Admin components
+
+    -   Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
+    -   Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
+    -   Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
+    -   The `# @comet/blocks-admin syntax in the theme's `styleOverrides` is no longer supported, see: https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion
+
+    ```diff
+     const theme = createCometTheme({
+         components: {
+             CometAdminMyComponent: {
+                 styleOverrides: {
+    -                root: {
+    -                    "&$hasShadow": {
+    -                        boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+    -                    },
+    -                    "& $header": {
+    -                        backgroundColor: "lime",
+    -                    },
+    -                },
+    +                hasShadow: {
+    +                    boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+    +                },
+    +                header: {
+    +                    backgroundColor: "lime",
+    +                },
+                 },
+             },
+         },
+     });
+    ```
+
+    -   Overriding a component's styles using `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
+
+    ```diff
+    -import { withStyles } from "@mui/styles";
+    -
+    -const StyledMyComponent = withStyles({
+    -    root: {
+    -        backgroundColor: "lime",
+    -    },
+    -    header: {
+    -        backgroundColor: "fuchsia",
+    -    },
+    -})(MyComponent);
+    -
+    -// ...
+    -
+    -<StyledMyComponent title="Hello World" />;
+    +<MyComponent
+    +    title="Hello World"
+    +    sx={{
+    +        backgroundColor: "lime",
+    +    }}
+    +    slotProps={{
+    +        header: {
+    +            sx: {
+    +                backgroundColor: "fuchsia",
+    +            },
+    +        },
+    +    }}
+    +/>
+    ```
+
+    -   The module augmentation for the `DefaultTheme` type from `@mui/styles/defaultTheme` is no longer needed and needs to be removed from the admins theme file, usually located in `admin/src/theme.ts`:
+
+    ```diff
+    -declare module "@mui/styles/defaultTheme" {
+    -    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    -    export interface DefaultTheme extends Theme {}
+    -}
+    ```
+
+    -   Class-keys originating from MUI components have been removed from Comet Admin components, causing certain class-names and `styleOverrides` to no longer be applied.
+        The components `root` class-key is not affected. Other class-keys will retain the class-names and `styleOverrides` from the underlying MUI component.
+        For example, in `ClearInputAdornment` (when used with `position="end"`) the class-name `CometAdminClearInputAdornment-positionEnd` and the `styleOverrides` for `CometAdminClearInputAdornment.positionEnd` will no longer be applied.
+        The component will retain the class-names `MuiInputAdornment-positionEnd`, `MuiInputAdornment-root`, and `CometAdminClearInputAdornment-root`.
+        Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
+
+        This affects the following components:
+
+        -   `AppHeader`
+        -   `AppHeaderMenuButton`
+        -   `ClearInputAdornment`
+        -   `Tooltip`
+        -   `CancelButton`
+        -   `DeleteButton`
+        -   `OkayButton`
+        -   `SaveButton`
+        -   `StackBackButton`
+        -   `DatePicker`
+        -   `DateRangePicker`
+        -   `TimePicker`
+
+    -   For more details, see MUI's migration guide: https://mui.com/material-ui/migration/v5-style-changes/#mui-styles
+
+### Patch Changes
+
+-   Updated dependencies [05ce68ec0]
+-   Updated dependencies [949356e84]
+-   Updated dependencies [51a0861d8]
+-   Updated dependencies [dc8bb6a99]
+-   Updated dependencies [54f775497]
+-   Updated dependencies [73140014f]
+-   Updated dependencies [9a4530b06]
+-   Updated dependencies [dc8bb6a99]
+-   Updated dependencies [e3efdfcc3]
+-   Updated dependencies [02d33e230]
+-   Updated dependencies [a0bd09afa]
+-   Updated dependencies [8cc51b368]
+-   Updated dependencies [c46146cb3]
+-   Updated dependencies [6054fdcab]
+-   Updated dependencies [d0869ac82]
+-   Updated dependencies [9a4530b06]
+-   Updated dependencies [47ec528a4]
+-   Updated dependencies [956111ab2]
+-   Updated dependencies [19eaee4ca]
+-   Updated dependencies [758c65656]
+-   Updated dependencies [9a4530b06]
+-   Updated dependencies [04ed68cc9]
+-   Updated dependencies [61b2acfb2]
+-   Updated dependencies [0263a45fa]
+-   Updated dependencies [4ca4830f3]
+-   Updated dependencies [3397ec1b6]
+-   Updated dependencies [20b2bafd8]
+-   Updated dependencies [51a0861d8]
+-   Updated dependencies [9c4b7c974]
+-   Updated dependencies [b5753e612]
+-   Updated dependencies [2a7bc765c]
+-   Updated dependencies [774977311]
+-   Updated dependencies [27efe7bd8]
+-   Updated dependencies [f8114cd39]
+-   Updated dependencies [569ad0463]
+-   Updated dependencies [b87c3c292]
+-   Updated dependencies [170720b0c]
+-   Updated dependencies [f06f4bea6]
+-   Updated dependencies [119714999]
+-   Updated dependencies [2a7bc765c]
+-   Updated dependencies [d2e64d1ec]
+-   Updated dependencies [241249bd4]
+-   Updated dependencies [be4e6392d]
+-   Updated dependencies [a53545438]
+-   Updated dependencies [1a1d83156]
+-   Updated dependencies [a2f278bbd]
+-   Updated dependencies [66330e4e6]
+-   Updated dependencies [b0249e3bc]
+-   Updated dependencies [92eae2ba9]
+    -   @comet/admin@7.0.0
+    -   @comet/admin-icons@7.0.0
+
 ## 7.0.0-beta.6
 
 ### Patch Changes
