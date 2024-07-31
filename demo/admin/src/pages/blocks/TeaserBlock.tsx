@@ -36,6 +36,7 @@ const TeaserBlock = createCompositeBlock(
     },
     (block) => {
         block.category = BlockCategory.Teaser;
+        block.scope = [{ domain: "main" }, { language: "de" }];
         return block;
     },
 );

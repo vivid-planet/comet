@@ -38,6 +38,8 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { useContentScope } from "../../contentScope/Provider";
+
 // Using {} instead of Record<string, never> because never and unknown are incompatible.
 // eslint-disable-next-line @typescript-eslint/ban-types
 type DefaultAdditionalItemFields = {};
@@ -300,6 +302,9 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
+            const { scope } = useContentScope();
+            const filteredSupportedBlocks = filterSupportedBlocks(supportedBlocks, scope);
+
             const toggleVisible = React.useCallback(
                 (blockKey: string) => {
                     updateState((prevState) => ({
@@ -458,7 +463,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 [updateState],
             );
 
-            const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(supportedBlocks) });
+            const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(filteredSupportedBlocks) });
 
             const pasteBlock = async (insertAt: number) => {
                 const response = await getClipboardContent();
@@ -741,7 +746,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                             <AddBlockDrawer
                                                 open={showAddBlockDrawer}
                                                 onClose={handleCloseAddBlockDrawer}
-                                                blocks={supportedBlocks}
+                                                blocks={filteredSupportedBlocks}
                                                 onAddNewBlock={(type, addAndEdit) => {
                                                     const key = addNewBlock(type, beforeIndex);
 
@@ -834,6 +839,27 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         },
     };
     return BlocksBlock;
+}
+
+export function filterSupportedBlocks(
+    supportedBlocks: Record<string, BlockInterface>,
+    scope: Record<string, string>,
+): Record<string, BlockInterface> {
+    const filteredSupportedBlocks: Record<string, BlockInterface> = {};
+
+    for (const [key, block] of Object.entries(supportedBlocks)) {
+        if (block.scope) {
+            const blockScopes = Array.isArray(block.scope) ? block.scope : [block.scope];
+
+            if (blockScopes.some((blockScope) => Object.entries(blockScope).every(([key, value]) => scope[key] === value))) {
+                filteredSupportedBlocks[key] = block;
+            }
+        } else {
+            filteredSupportedBlocks[key] = block;
+        }
+    }
+
+    return filteredSupportedBlocks;
 }
 
 const BlockListHeader = styled("div")`

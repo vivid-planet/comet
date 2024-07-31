@@ -113,6 +113,8 @@ export interface BlockInterface<
     name: string;
     displayName: React.ReactNode;
     category: BlockCategory | CustomBlockCategory;
+    // TODO better type?
+    scope?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 export interface RootBlockInterface<
