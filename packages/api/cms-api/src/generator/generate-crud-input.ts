@@ -71,8 +71,9 @@ export async function generateCrudInput(
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
         let isOptional = prop.nullable;
+        const isPositionField = definedDecorators.map((decorator) => decorator.getName()).includes("CrudPositionField");
 
-        if (prop.name != "position") {
+        if (!isPositionField) {
             if (!prop.nullable) {
                 decorators.push("@IsNotEmpty()");
             } else {
@@ -82,7 +83,7 @@ export async function generateCrudInput(
         if (["id", "createdAt", "updatedAt", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
-        } else if (prop.name == "position") {
+        } else if (isPositionField) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = initializer == "undefined" || initializer == "null" ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });
