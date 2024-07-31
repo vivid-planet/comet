@@ -2,6 +2,6 @@
 "@comet/cms-admin": minor
 ---
 
-Admin Generator: Add `initialSortProp` option in `GridConfig`
+Admin Generator (Future): Add support for passing an initial sort to grids
 
-Setting `initialSortProp` allows to pass an initial sort to the generated Grid.
+Setting the `initialSortProp` option allows to pass an initial sort to the generated Grid.
