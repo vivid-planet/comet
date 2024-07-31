@@ -2,4 +2,6 @@
 "@comet/cms-api": minor
 ---
 
-Add support for position field in api-generator
+API Generator: Add support for position field
+
+- Use @CrudPositionField to decorate the entity field holding the position. This should be an integer number field >= 1.
