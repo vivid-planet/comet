@@ -146,7 +146,7 @@ export function ProductsGrid() {
             field: "tags",
             headerName: "Tags",
             flex: 1,
-            minWidth: 150,
+            minWidth: 140,
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
             filterOperators: [
                 {

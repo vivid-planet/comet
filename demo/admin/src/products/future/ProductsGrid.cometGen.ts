@@ -9,7 +9,17 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     toolbarActionProp: true,
     rowActionProp: true,
     columns: [
-        { type: "boolean", name: "inStock", headerName: "In stock", width: 90 },
+        {
+            type: "status",
+            name: "inStock",
+            headerName: "In Stock",
+            flex: 1,
+            minWidth: 140,
+            statusMapping: {
+                true: { color: "success", primaryText: "In Stock" },
+                false: { color: "error", primaryText: "Out of Stock" },
+            },
+        },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
         { type: "text", name: "description", headerName: "Description" },
         { type: "number", name: "price", headerName: "Price", maxWidth: 150 },
