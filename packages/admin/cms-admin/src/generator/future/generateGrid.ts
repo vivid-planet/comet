@@ -57,7 +57,6 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
         }
         return acc;
     }, []);
-    //TODO where my prop? all done?
     return {
         gridPropsTypeCode: `type Props = {
             ${uniqueProps
