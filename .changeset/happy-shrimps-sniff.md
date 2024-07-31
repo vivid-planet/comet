@@ -17,8 +17,12 @@ app.use(Sentry.Handlers.errorHandler());
 ```ts
 // app.module.ts
 
-SentryModule.forRoot({
+SentryModule.forRootAsync({
     dsn: "sentry_dsn_url",
-    enviroment: "dev",
+    environment: "dev",
+    shouldReportException: (exception) => {
+        // Custom logic to determine if the exception should be reported
+        return true;
+    },
 }),
 ```
