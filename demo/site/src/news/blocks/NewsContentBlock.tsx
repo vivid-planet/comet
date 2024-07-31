@@ -4,7 +4,6 @@ import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import { HeadlineBlock } from "@src/blocks/HeadlineBlock";
 import RichTextBlock from "@src/blocks/RichTextBlock";
 import { TextImageBlock } from "@src/blocks/TextImageBlock";
-import { handleErrorBoundaryBlockError } from "@src/util/handleErrorBoundaryBlockError";
 import * as React from "react";
 
 const supportedBlocks: SupportedBlocks = {
@@ -15,5 +14,5 @@ const supportedBlocks: SupportedBlocks = {
 };
 
 export const NewsContentBlock: React.FC<PropsWithData<NewsContentBlockData>> = ({ data }) => {
-    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} onError={handleErrorBoundaryBlockError} />;
+    return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
 };

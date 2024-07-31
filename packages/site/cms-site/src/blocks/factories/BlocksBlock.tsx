@@ -1,9 +1,9 @@
 "use client";
 import * as React from "react";
-import { ErrorInfo } from "react";
 
+import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
+import { useErrorHandler } from "../../errorHandler/ErrorHandlerProvider";
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
-import { ErrorBoundary } from "../helpers/ErrorBoundary";
 import { SupportedBlocks } from "./types";
 
 interface Props {
@@ -11,10 +11,11 @@ interface Props {
     data: {
         blocks: Array<{ key: string; type: string; visible: boolean; props: unknown }>;
     };
-    onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }, onError }: Props) => {
+export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks } }: Props) => {
+    const { onError } = useErrorHandler();
+
     if (blocks.length === 0) {
         return <PreviewSkeleton hasContent={false} />;
     }
@@ -37,7 +38,7 @@ export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }
                 }
                 return (
                     <React.Fragment key={block.key}>
-                        <ErrorBoundary onError={onError}>{blockFunction(block.props)}</ErrorBoundary>
+                        <ErrorHandlerBoundary onError={onError}>{blockFunction(block.props)}</ErrorHandlerBoundary>
                     </React.Fragment>
                 );
             })}

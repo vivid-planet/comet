@@ -1,16 +1,16 @@
 "use client";
 
-import React, { ErrorInfo, PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 
 type Props = {
-    onError?: (error: Error, errorInfo: ErrorInfo) => void;
+    onError?: (error: Error) => void;
 };
 
 type State = {
     hasError: boolean;
 };
 
-export class ErrorBoundary extends React.Component<PropsWithChildren<Props>, State> {
+export class ErrorHandlerBoundary extends React.Component<PropsWithChildren<Props>, State> {
     constructor(props: Props) {
         super(props);
         this.state = { hasError: false };
@@ -21,11 +21,11 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<Props>, Sta
         return { hasError: true };
     }
 
-    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error(error, errorInfo);
+    componentDidCatch(error: Error) {
+        console.error(error);
 
         if (this.props.onError) {
-            this.props.onError(error, errorInfo);
+            this.props.onError(error);
         }
     }
 

@@ -1,7 +1,7 @@
 import * as React from "react";
-import { ErrorInfo } from "react";
 
-import { ErrorBoundary } from "../helpers/ErrorBoundary";
+import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
+import { useErrorHandler } from "../../errorHandler/ErrorHandlerProvider";
 import { SupportedBlocks } from "./types";
 
 interface Props {
@@ -15,10 +15,11 @@ interface Props {
     supportedBlocks: SupportedBlocks;
     children?: React.ReactNode;
     className?: string;
-    onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children, className, onError }) => {
+export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children, className }) => {
+    const { onError } = useErrorHandler();
+
     if (!block) {
         return null;
     }
@@ -38,18 +39,6 @@ export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps 
     }
 
     return (
-        <ErrorBoundary
-            onError={(error, errorInfo) => {
-                if (onError) {
-                    onError(error, errorInfo);
-                } else {
-                    if (process.env.NODE_ENV === "development") {
-                        throw error;
-                    }
-                }
-            }}
-        >
-            {blockFunction({ ...block.props, ...additionalProps, children, className })}
-        </ErrorBoundary>
+        <ErrorHandlerBoundary onError={onError}>{blockFunction({ ...block.props, ...additionalProps, children, className })}</ErrorHandlerBoundary>
     );
 };
