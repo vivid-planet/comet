@@ -19,7 +19,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -104,10 +104,27 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
 
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
-        { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
+        {
+            field: "name",
+            renderHeader: () => (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    <Typography fontWeight={400} fontSize={14}>
+                        {intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" })}
+                    </Typography>
+                </div>
+            ),
+            flex: 1,
+            minWidth: 150,
+        },
         {
             field: "createdAt",
-            headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
+            renderHeader: () => (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    <Typography fontWeight={400} fontSize={14}>
+                        {intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" })}
+                    </Typography>
+                </div>
+            ),
             type: "date",
             valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             flex: 1,
