@@ -1,6 +1,7 @@
 import { GridColDef } from "@comet/admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { GridSortDirection } from "@mui/x-data-grid";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -66,6 +67,7 @@ export type GridColumnConfig<T> = (
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T> } & DataGridSettings;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
@@ -81,6 +83,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     toolbar?: boolean;
     toolbarActionProp?: boolean;
     rowActionProp?: boolean;
+    initialSort?: Array<{ field: string; sort: GridSortDirection }>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
