@@ -276,6 +276,7 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                tooltipMessage: column.tooltipMessage,
             };
         }
 
@@ -292,6 +293,7 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            tooltipMessage: column.tooltipMessage,
         };
     });
 
@@ -333,13 +335,14 @@ export function generateGrid(
         ToolbarActions,
         ToolbarFillSpace,
         ToolbarItem,
+        Tooltip,
         useBufferedRowCount,
         useDataGridRemote,
         usePersistentColumnState,
     } from "@comet/admin";
-    import { Add as AddIcon, Edit } from "@comet/admin-icons";
+    import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton } from "@mui/material";
+    import { Alert, Button, Box, IconButton, Typography } from "@mui/material";
     import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -477,9 +480,27 @@ export function generateGrid(
                 .map((column) => {
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
-                        headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
+                        renderHeader: `() => (
+                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                        <Typography fontWeight={400} fontSize={14}>
+                                            {intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
                             column.headerName || camelCaseToHumanReadable(column.name)
-                        }" })`,
+                        }" })}
+                                        </Typography>
+                                        ${
+                                            column.tooltipMessage
+                                                ? `<Tooltip
+                                            trigger="hover"
+                                          title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${column.tooltipMessage}" />}
+                                        >
+                                            <IconButton>
+                                              <Info />
+                                            </IconButton>
+                                        </Tooltip>`
+                                                : ""
+                                        }
+                                    </div>
+                                )`,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: !filterFields.includes(column.name) ? `false` : undefined,
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,

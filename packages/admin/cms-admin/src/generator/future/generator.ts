@@ -65,7 +65,8 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T> } & DataGridSettings;
+) & { name: UsableFields<T>; tooltipMessage?: string } & DataGridSettings;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
