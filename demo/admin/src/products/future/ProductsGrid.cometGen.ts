@@ -8,10 +8,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     filterProp: true,
     toolbarActionProp: true,
     rowActionProp: true,
-    initialSort: [
-        { field: "inStock", sort: "desc" },
-        { field: "price", sort: "asc" },
-    ],
+    initialSortProp: true,
     columns: [
         { type: "boolean", name: "inStock", headerName: "In stock", width: 90 },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },

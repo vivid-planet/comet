@@ -57,6 +57,7 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
         }
         return acc;
     }, []);
+    //TODO where my prop? all done?
     return {
         gridPropsTypeCode: `type Props = {
             ${uniqueProps
@@ -318,6 +319,14 @@ export function generateGrid(
         });
     }
 
+    if (config.initialSortProp) {
+        props.push({
+            name: "initialSort",
+            type: `Array<{ field: string; sort: GridSortDirection }>`,
+            optional: true,
+        });
+    }
+
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
@@ -340,7 +349,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridRenderCellParams, GridSortDirection, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -469,15 +478,9 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(${
-            config.initialSort
-                ? `{ initialSort: [${config.initialSort
-                      .map((item) => {
-                          return `{field: "${item.field}", sort: "${item.sort}"}`;
-                      })
-                      .join(",\n")} ] }`
-                : ""
-        }), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+          const dataGridProps = { ...useDataGridRemote(${
+              config.initialSortProp ? `{ initialSort: initialSort }` : ""
+          }), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [

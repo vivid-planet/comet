@@ -17,7 +17,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridRenderCellParams, GridSortDirection, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -91,20 +91,13 @@ type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
+    initialSort?: Array<{ field: string; sort: GridSortDirection }>;
 };
 
-export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React.ReactElement {
+export function ProductsGrid({ filter, toolbarAction, rowAction, initialSort }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = {
-        ...useDataGridRemote({
-            initialSort: [
-                { field: "inStock", sort: "desc" },
-                { field: "price", sort: "asc" },
-            ],
-        }),
-        ...usePersistentColumnState("ProductsGrid"),
-    };
+    const dataGridProps = { ...useDataGridRemote({ initialSort: initialSort }), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
