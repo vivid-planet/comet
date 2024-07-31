@@ -16,6 +16,7 @@ storiesOf("stories/components/Toolbar/Feedback Button", module)
                 <ToolbarFillSpace />
                 <ToolbarActions>
                     <FeedbackButton
+                        feedbackStateControl="onClickPromise"
                         color="primary"
                         variant="contained"
                         onClick={async () => new Promise((resolve) => setTimeout(resolve, 2000))}

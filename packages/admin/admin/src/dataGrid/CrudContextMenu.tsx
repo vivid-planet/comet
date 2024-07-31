@@ -34,6 +34,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
                     <FormattedMessage {...messages.no} />
                 </Button>
                 <FeedbackButton
+                    feedbackStateControl="onClickPromise"
                     startIcon={<DeleteIcon />}
                     onClick={onDelete}
                     color="primary"
