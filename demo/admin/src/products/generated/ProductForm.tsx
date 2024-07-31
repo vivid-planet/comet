@@ -223,11 +223,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 />
                             )}
                         </Field>
+
                         <DateField
                             variant="horizontal"
                             fullWidth
-                            name="availableSince"
-                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                            name="lastCheckedAt"
+                            label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last Checked At" />}
                         />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}

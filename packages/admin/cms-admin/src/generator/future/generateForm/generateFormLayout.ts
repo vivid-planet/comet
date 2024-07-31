@@ -26,6 +26,7 @@ export function generateFormLayout({
     const formFragmentFields: string[] = [];
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
+    const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
 
     if (config.type === "fieldSet") {
         const generatedFields = generateFields({ gqlIntrospection, baseOutputFilename, fields: config.fields, formConfig });
@@ -36,6 +37,7 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        formValuesConfig.push(...generatedFields.formValuesConfig);
 
         imports.push({ name: "FieldSet", importPath: "@comet/admin" });
         const supportPlaceholder = config.supportText?.includes("{");
@@ -73,5 +75,6 @@ export function generateFormLayout({
         formFragmentFields,
         gqlDocuments,
         imports,
+        formValuesConfig,
     };
 }

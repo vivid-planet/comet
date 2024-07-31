@@ -2,6 +2,8 @@
     "extends": "../../tsconfig.core.json",
     "compilerOptions": {
         "target": "ES2015",
+        "module": "ESNext",
+        "moduleResolution": "Node",
         "noImplicitAny": true,
         "jsx": "react",
         "noEmitOnError": true,
