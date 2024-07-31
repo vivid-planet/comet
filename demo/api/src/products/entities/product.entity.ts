@@ -18,6 +18,7 @@ import {
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
+import { GraphQLDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
@@ -121,8 +122,12 @@ export class Product extends BaseEntity<Product, "id"> {
     soldCount?: number;
 
     @Property({ type: types.date, nullable: true })
+    @Field(() => GraphQLDate, { nullable: true })
+    availableSince?: Date = undefined; // use string in MikroORM v6 (https://mikro-orm.io/docs/upgrading-v5-to-v6#changes-in-date-property-mapping)
+
+    @Property({ nullable: true })
     @Field({ nullable: true })
-    availableSince?: Date = undefined;
+    lastCheckedAt?: Date = undefined;
 
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @RootBlock(DamImageBlock)

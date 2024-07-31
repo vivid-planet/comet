@@ -47,6 +47,7 @@ const productsFragment = gql`
         inStock
         soldCount
         availableSince
+        lastCheckedAt
         createdAt
         updatedAt
         image
@@ -135,6 +136,13 @@ export function ProductsGrid(): React.ReactElement {
         {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
+            type: "date",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
+        {
+            field: "lastCheckedAt",
+            headerName: intl.formatMessage({ id: "product.lastCheckedAt", defaultMessage: "Last Checked At" }),
             type: "dateTime",
             valueGetter: ({ value }) => value && new Date(value),
             width: 150,
@@ -187,6 +195,7 @@ export function ProductsGrid(): React.ReactElement {
                                     price: row.price,
                                     inStock: row.inStock,
                                     availableSince: row.availableSince,
+                                    lastCheckedAt: row.lastCheckedAt,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
                                 };
                             }}

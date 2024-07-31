@@ -525,7 +525,8 @@ type Product {
   price: Float
   inStock: Boolean!
   soldCount: Int
-  availableSince: DateTime
+  availableSince: Date
+  lastCheckedAt: DateTime
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
@@ -552,6 +553,11 @@ enum ProductType {
   Shirt
   Tie
 }
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
 
 type PaginatedManufacturers {
   nodes: [Manufacturer!]!
@@ -943,7 +949,8 @@ input ProductFilter {
   price: NumberFilter
   inStock: BooleanFilter
   soldCount: NumberFilter
-  availableSince: DateTimeFilter
+  availableSince: DateFilter
+  lastCheckedAt: DateTimeFilter
   colors: OneToManyFilter
   variants: OneToManyFilter
   category: ManyToOneFilter
@@ -981,6 +988,15 @@ input NumberFilter {
   notEqual: Float
 }
 
+input DateFilter {
+  equal: Date
+  lowerThan: Date
+  greaterThan: Date
+  lowerThanEqual: Date
+  greaterThanEqual: Date
+  notEqual: Date
+}
+
 input ManyToOneFilter {
   isAnyOf: [ID!]
   equal: ID
@@ -1008,6 +1024,7 @@ enum ProductSortField {
   inStock
   soldCount
   availableSince
+  lastCheckedAt
   category
   createdAt
   updatedAt
@@ -1363,7 +1380,8 @@ input ProductInput {
   additionalTypes: [ProductType!]! = []
   price: Float = null
   inStock: Boolean! = true
-  availableSince: DateTime = null
+  availableSince: Date = null
+  lastCheckedAt: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
@@ -1399,7 +1417,8 @@ input ProductUpdateInput {
   additionalTypes: [ProductType!]
   price: Float
   inStock: Boolean
-  availableSince: DateTime
+  availableSince: Date
+  lastCheckedAt: DateTime
   image: DamImageBlockInput
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]
