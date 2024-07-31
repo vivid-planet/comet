@@ -47,6 +47,7 @@ export function generateFormField({
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
+    let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
 
     let validateCode = "";
     if (config.validate) {
@@ -288,5 +289,6 @@ export function generateFormField({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

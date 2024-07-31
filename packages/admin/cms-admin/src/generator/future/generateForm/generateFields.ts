@@ -16,6 +16,10 @@ export type GenerateFieldsReturn = GeneratorReturn & {
         initializationCode?: string;
         defaultInitializationCode?: string;
     }[];
+    finalFormConfig?: {
+        subscription?: { values: boolean };
+        renderProps?: { values?: boolean; form?: boolean };
+    };
 };
 
 export function generateFields({
@@ -37,6 +41,7 @@ export function generateFields({
     const formFragmentFields: string[] = [];
     const imports: Imports = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
+    const finalFormConfig = { subscription: { values: false }, renderProps: { values: false, form: false } };
 
     const code = fields
         .map((field) => {
@@ -57,6 +62,11 @@ export function generateFields({
             formValueToGqlInputCode += generated.formValueToGqlInputCode;
             formFragmentFields.push(...generated.formFragmentFields);
             formValuesConfig.push(...generated.formValuesConfig);
+
+            finalFormConfig.subscription.values = finalFormConfig.subscription.values || !!generated.finalFormConfig?.subscription?.values;
+            finalFormConfig.renderProps.values = finalFormConfig.renderProps.values || !!generated.finalFormConfig?.renderProps?.values;
+            finalFormConfig.renderProps.form = finalFormConfig.renderProps.form || !!generated.finalFormConfig?.renderProps?.form;
+
             return generated.code;
         })
         .join("\n");
@@ -69,5 +79,6 @@ export function generateFields({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

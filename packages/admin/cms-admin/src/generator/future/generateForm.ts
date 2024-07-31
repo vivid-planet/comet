@@ -194,6 +194,12 @@ export function generateForm(
         });
     }
 
+    const finalFormSubscription = [...(generatedFields.finalFormConfig?.subscription?.values ? ["values"] : [])];
+    const finalFormRenderProps = [
+        ...(generatedFields.finalFormConfig?.renderProps?.values ? ["values"] : []),
+        ...(generatedFields.finalFormConfig?.renderProps?.form ? ["form"] : []),
+    ];
+
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
         AsyncSelectField,
@@ -382,9 +388,9 @@ export function generateForm(
                 mode=${mode == "all" ? `{mode}` : editMode ? `"edit"` : `"add"`}
                 initialValues={initialValues}
                 initialValuesEqual={isEqual} //required to compare block data correctly
-                subscription={{}}
+                subscription={{ ${finalFormSubscription.length ? finalFormSubscription.map((field) => `${field}: true`).join(", ") : ``} }}
             >
-                {() => (
+                {(${finalFormRenderProps.length ? `{${finalFormRenderProps.join(", ")}}` : ``}) => (
                     ${editMode ? `<>` : ``}
                         ${editMode ? `{saveConflict.dialogs}` : ``}
                         <MainContent>
