@@ -2439,7 +2439,7 @@ importers:
         specifier: ^9.0.0
         version: 9.2.1(@nestjs/common@9.2.1)(@nestjs/core@9.2.1)(@nestjs/platform-express@9.2.1)
       '@sentry/node':
-        specifier: ^7.118.0
+        specifier: ^7.0.0
         version: 7.118.0
       '@types/express':
         specifier: ^4.0.0
