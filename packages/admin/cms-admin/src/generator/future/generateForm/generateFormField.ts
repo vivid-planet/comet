@@ -79,7 +79,7 @@ export function generateFormField({
             variant="horizontal"
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            label={${fieldLabel}}
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
@@ -97,7 +97,7 @@ export function generateFormField({
                 name="${name}"
                 component={FinalFormInput}
                 type="number"
-                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                label={${fieldLabel}}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
@@ -132,7 +132,7 @@ export function generateFormField({
         code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
-                    label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                    label={${fieldLabel}}
                     control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
                     ${
                         config.helperText
@@ -161,7 +161,7 @@ export function generateFormField({
                 fullWidth
                 name="${name}"
                 component={FinalFormDatePicker}
-                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                label={${fieldLabel}}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
@@ -236,7 +236,7 @@ export function generateFormField({
             variant="horizontal"
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
+            label={${fieldLabel}}>
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
@@ -306,7 +306,7 @@ export function generateFormField({
                 variant="horizontal"
                 fullWidth
                 name="${name}"
-                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                label={${fieldLabel}}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName} {
