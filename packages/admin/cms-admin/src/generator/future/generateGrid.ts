@@ -480,27 +480,32 @@ export function generateGrid(
                 .map((column) => {
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
-                        renderHeader: `() => (
+                        renderHeader: column.tooltipMessage
+                            ? `() => (
                                     <Box style={{ display: "flex", alignItems: "center" }}>
                                         <Typography fontWeight={400} fontSize={14}>
                                             {intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
-                            column.headerName || camelCaseToHumanReadable(column.name)
-                        }" })}
+                                  column.headerName || camelCaseToHumanReadable(column.name)
+                              }" })}
                                         </Typography>
-                                        ${
-                                            column.tooltipMessage
-                                                ? `<Tooltip
+                                        <Tooltip
                                             trigger="hover"
-                                          title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${column.tooltipMessage}" />}
+                                            title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
+                                  column.tooltipMessage
+                              }" />}
                                         >
                                             <IconButton>
                                               <Info />
                                             </IconButton>
-                                        </Tooltip>`
-                                                : ""
-                                        }
+                                        </Tooltip>
                                     </Box>
-                                )`,
+                                )`
+                            : undefined,
+                        headerName: !column.tooltipMessage
+                            ? `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
+                                  column.headerName || camelCaseToHumanReadable(column.name)
+                              }" })`
+                            : undefined,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: !filterFields.includes(column.name) ? `false` : undefined,
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
