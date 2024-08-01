@@ -380,7 +380,7 @@ This requires the following changes:
 
 -   Change all usages of the `PublicUpload` entity to `FileUpload`.
 -   Change all usages of the `PublicUploadsService` to `FileUploadsService`.
--   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/files-uploads/upload`.
+-   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/file-uploads/upload`.
 
 ### Make file uploads upload endpoint public
 
