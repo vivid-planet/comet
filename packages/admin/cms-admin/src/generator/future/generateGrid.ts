@@ -343,7 +343,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton, Typography } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -483,11 +483,13 @@ export function generateGrid(
                         renderHeader: column.tooltipMessage
                             ? `() => (
                                     <Box style={{ display: "flex", alignItems: "center" }}>
-                                        <Typography fontWeight={400} fontSize={14}>
+                                        <GridColumnHeaderTitle label="${column.headerName || camelCaseToHumanReadable(column.name)}" columnWidth="${
+                                  column.width ?? 150
+                              }">
                                             {intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
                                   column.headerName || camelCaseToHumanReadable(column.name)
                               }" })}
-                                        </Typography>
+                                        </GridColumnHeaderTitle>
                                         <Tooltip
                                             trigger="hover"
                                             title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
