@@ -19,8 +19,8 @@ import {
 } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { Box } from "@mui/material";
+import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -102,56 +102,25 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
-        {
-            field: "inStock",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" })}
-                    </Typography>
-                </div>
-            ),
-            type: "boolean",
-            width: 90,
-        },
-        {
-            field: "title",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "product.title", defaultMessage: "Titel" })}
-                    </Typography>
-                </div>
-            ),
-            flex: 1,
-            maxWidth: 250,
-            minWidth: 200,
-        },
+        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
+        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
         {
             field: "description",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "product.description", defaultMessage: "Description" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
             flex: 1,
             minWidth: 150,
         },
         {
             field: "price",
             renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
+                <Box style={{ display: "flex", alignItems: "center" }}>
+                    <GridColumnHeaderTitle label="Price" columnWidth={150}>
                         {intl.formatMessage({ id: "product.price", defaultMessage: "Price" })}
-                    </Typography>
+                    </GridColumnHeaderTitle>
                     <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
-                        <IconButton>
-                            <Info />
-                        </IconButton>
+                        <Info sx={{ margin: 1 }} />
                     </Tooltip>
-                </div>
+                </Box>
             ),
             type: "number",
             flex: 1,
@@ -160,13 +129,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
         },
         {
             field: "type",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "product.type", defaultMessage: "Type" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
             valueOptions: [
                 { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "Cap" }) },
@@ -179,26 +142,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
         },
         {
             field: "availableSince",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
             valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
             width: 140,
         },
         {
             field: "createdAt",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
             valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             width: 170,

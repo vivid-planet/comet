@@ -19,8 +19,8 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { Box, Button, IconButton } from "@mui/material";
+import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -110,39 +110,16 @@ export function ManufacturersGrid(): React.ReactElement {
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
         {
             field: "id",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "manufacturer.id", defaultMessage: "ID" }),
             filterable: false,
             sortable: false,
             flex: 1,
             minWidth: 150,
         },
-        {
-            field: "name",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" })}
-                    </Typography>
-                </div>
-            ),
-            flex: 1,
-            minWidth: 150,
-        },
+        { field: "name", headerName: intl.formatMessage({ id: "manufacturer.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
             field: "address_street",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" }),
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.street,
@@ -151,13 +128,7 @@ export function ManufacturersGrid(): React.ReactElement {
         },
         {
             field: "address_streetNumber",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Street number" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "manufacturer.address.streetNumber", defaultMessage: "Street number" }),
             type: "number",
             filterable: false,
             sortable: false,
@@ -168,10 +139,10 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "address_alternativeAddress_street",
             renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
+                <Box style={{ display: "flex", alignItems: "center" }}>
+                    <GridColumnHeaderTitle label="Alt-Street" columnWidth={150}>
                         {intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })}
-                    </Typography>
+                    </GridColumnHeaderTitle>
                     <Tooltip
                         trigger="hover"
                         title={
@@ -181,11 +152,9 @@ export function ManufacturersGrid(): React.ReactElement {
                             />
                         }
                     >
-                        <IconButton>
-                            <Info />
-                        </IconButton>
+                        <Info sx={{ margin: 1 }} />
                     </Tooltip>
-                </div>
+                </Box>
             ),
             filterable: false,
             sortable: false,
@@ -196,10 +165,10 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "address_alternativeAddress_streetNumber",
             renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
+                <Box style={{ display: "flex", alignItems: "center" }}>
+                    <GridColumnHeaderTitle label="Alt-Street number" columnWidth={150}>
                         {intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" })}
-                    </Typography>
+                    </GridColumnHeaderTitle>
                     <Tooltip
                         trigger="hover"
                         title={
@@ -209,11 +178,9 @@ export function ManufacturersGrid(): React.ReactElement {
                             />
                         }
                     >
-                        <IconButton>
-                            <Info />
-                        </IconButton>
+                        <Info sx={{ margin: 1 }} />
                     </Tooltip>
-                </div>
+                </Box>
             ),
             type: "number",
             filterable: false,
@@ -224,26 +191,14 @@ export function ManufacturersGrid(): React.ReactElement {
         },
         {
             field: "addressAsEmbeddable_street",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Street 2" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Street 2" }),
             valueGetter: ({ row }) => row.addressAsEmbeddable?.street,
             flex: 1,
             minWidth: 150,
         },
         {
             field: "addressAsEmbeddable_streetNumber",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
             type: "number",
             valueGetter: ({ row }) => row.addressAsEmbeddable?.streetNumber,
             flex: 1,
@@ -251,29 +206,17 @@ export function ManufacturersGrid(): React.ReactElement {
         },
         {
             field: "addressAsEmbeddable_alternativeAddress_street",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.street", defaultMessage: "Alt-Street 2" })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.street", defaultMessage: "Alt-Street 2" }),
             valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.street,
             flex: 1,
             minWidth: 150,
         },
         {
             field: "addressAsEmbeddable_alternativeAddress_streetNumber",
-            renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({
-                            id: "manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber",
-                            defaultMessage: "Alt-Street number 2",
-                        })}
-                    </Typography>
-                </div>
-            ),
+            headerName: intl.formatMessage({
+                id: "manufacturer.addressAsEmbeddable.alternativeAddress.streetNumber",
+                defaultMessage: "Alt-Street number 2",
+            }),
             type: "number",
             valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
             flex: 1,
