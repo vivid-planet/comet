@@ -80,7 +80,7 @@ export function generateFormLayout({
         >
             ${generatedFields.code}
         </FieldSet>`;
-    } else if (config.type === "conditionalFields") {
+    } else if (config.type === "optionalFields") {
         const name = String(config.name);
 
         const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
@@ -91,7 +91,7 @@ export function generateFormLayout({
         const introspectionField = introspectionObject.fields.find((field) => field.name === name);
         if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
         if (introspectionField.type.kind === "NON_NULL") {
-            throw new Error(`field ${name} in gql introspection type ${gqlType} must not be required to be usable with conditionalFields`);
+            throw new Error(`field ${name} in gql introspection type ${gqlType} must not be required to be usable with optionalFields`);
         }
         if (introspectionField.type.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
 
