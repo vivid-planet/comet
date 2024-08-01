@@ -483,9 +483,9 @@ export function generateGrid(
                         renderHeader: column.tooltipMessage
                             ? `() => (
                                     <Box style={{ display: "flex", alignItems: "center" }}>
-                                        <GridColumnHeaderTitle label="${column.headerName || camelCaseToHumanReadable(column.name)}" columnWidth="${
+                                        <GridColumnHeaderTitle label="${column.headerName || camelCaseToHumanReadable(column.name)}" columnWidth={${
                                   column.width ?? 150
-                              }">
+                              }}>
                                             {intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
                                   column.headerName || camelCaseToHumanReadable(column.name)
                               }" })}
