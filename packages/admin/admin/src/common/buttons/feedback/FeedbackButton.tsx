@@ -56,8 +56,8 @@ export interface FeedbackButtonProps extends FeedbackButtonPropsBase {
 export interface FeedbackButtonPropsPromise extends FeedbackButtonPropsBase {
     feedbackStateControl: "onClickPromise";
     onClick: () => Promise<void>;
-    hasErrors?: undefined;
-    loading?: undefined;
+    hasErrors?: never;
+    loading?: never;
 }
 
 type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "error";
