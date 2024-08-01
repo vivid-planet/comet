@@ -496,9 +496,7 @@ export function generateGrid(
                                   column.tooltipMessage
                               }" />}
                                         >
-                                            <IconButton>
-                                              <Info />
-                                            </IconButton>
+                                            <Info sx={{ margin: 1 }} />
                                         </Tooltip>
                                     </Box>
                                 )`
