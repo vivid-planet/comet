@@ -481,7 +481,7 @@ export function generateGrid(
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         renderHeader: `() => (
-                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                    <Box style={{ display: "flex", alignItems: "center" }}>
                                         <Typography fontWeight={400} fontSize={14}>
                                             {intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
                             column.headerName || camelCaseToHumanReadable(column.name)
@@ -499,7 +499,7 @@ export function generateGrid(
                                         </Tooltip>`
                                                 : ""
                                         }
-                                    </div>
+                                    </Box>
                                 )`,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: !filterFields.includes(column.name) ? `false` : undefined,
