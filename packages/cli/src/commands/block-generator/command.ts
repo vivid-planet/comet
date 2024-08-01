@@ -12,9 +12,12 @@ export type FileCreationData = {
 };
 
 const writeFile = async (data: FileCreationData, logMessage: string) => {
+    const packagePath = "../../demo/admin"; // TODO: Use the correct config depending on the package the file is created in (admin, api, site)
+
     const eslint = new ESLint({
-        cwd: process.cwd(),
+        cwd: `${process.cwd()}/${packagePath}`,
         fix: true,
+        overrideConfigFile: `${packagePath}/.eslintrc.json`,
     });
 
     const lintResult = await eslint.lintText(data.content, {

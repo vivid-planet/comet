@@ -7,7 +7,7 @@ export const createBlockAdmin = (blockConfig: BlockConfig): FileCreationData => 
     const pascalCaseName = getPascalCaseName(blockConfig.name);
 
     return {
-        filePath: `../admin/src/common/blocks/${pascalCaseName}Block.tsx`,
+        filePath: `../../demo/admin/src/common/blocks/${pascalCaseName}Block.tsx`,
         content: `import { BlockCategory, createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
 import { FormattedMessage } from "react-intl";
 import React from "react";

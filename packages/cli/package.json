@@ -17,6 +17,7 @@
         "lib/*"
     ],
     "scripts": {
+        "block-generator": "ts-node src/index.ts block-generator",
         "build": "$npm_execpath run clean && tsc",
         "clean": "rimraf lib",
         "dev": "tsc --watch",

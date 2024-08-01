@@ -6,7 +6,7 @@ import { BlockConfig } from "./getBlockConfig";
 import { getCamelCaseName, getPascalCaseName } from "./util";
 
 export const addAdminBlockToPageContent = (config: BlockConfig): FileCreationData => {
-    const pageContentFile = "../admin/src/pages/PageContentBlock.tsx";
+    const pageContentFile = "../../demo/admin/src/pages/PageContentBlock.tsx";
 
     const fileExists = fs.existsSync(pageContentFile);
 
