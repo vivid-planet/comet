@@ -31,24 +31,41 @@ const Tooltip = createComponentSlot(CometTooltip)<FeedbackButtonClassKey>({
     slotName: "tooltip",
 })();
 
-export interface FeedbackButtonProps
+type FeedbackStateControl = "props" | "onClickPromise";
+
+export interface FeedbackButtonPropsBase
     extends ThemedComponentBaseProps<{
             root: typeof LoadingButton;
             tooltip: typeof CometTooltip;
         }>,
-        LoadingButtonProps {
-    loading?: boolean;
-    hasErrors?: boolean;
+        Omit<LoadingButtonProps, "loading"> {
+    feedbackStateControl?: FeedbackStateControl;
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
     tooltipSuccessMessage?: React.ReactNode;
     tooltipErrorMessage?: React.ReactNode;
 }
 
+export interface FeedbackButtonProps extends FeedbackButtonPropsBase {
+    feedbackStateControl: "props";
+    onClick?: () => void;
+    hasErrors?: boolean;
+    loading?: boolean;
+}
+
+export interface FeedbackButtonPropsPromise extends FeedbackButtonPropsBase {
+    feedbackStateControl: "onClickPromise";
+    onClick: () => Promise<void>;
+    hasErrors?: never;
+    loading?: never;
+}
+
 type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "error";
 
-export function FeedbackButton(inProps: FeedbackButtonProps) {
+export function FeedbackButton(inProps: FeedbackButtonProps | FeedbackButtonPropsPromise) {
     const {
+        onClick,
+        feedbackStateControl = "props",
         loading,
         hasErrors,
         children,
@@ -61,7 +78,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         tooltipSuccessMessage = <FormattedMessage id="comet.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
         tooltipErrorMessage = <FormattedMessage id="comet.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
         slotProps,
-
         ...restProps
     } = useThemeProps({
         props: inProps,
@@ -71,20 +87,40 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
     const [displayState, setDisplayState] = React.useState<FeedbackButtonDisplayState>("idle");
 
     const ownerState: OwnerState = {
-        displayState: displayState,
+        displayState,
     };
 
     const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState) => {
-        if (displayState === "success") {
-            return "success";
-        } else if (displayState === "error") {
-            return "error";
-        } else {
-            return "neutral";
+        switch (displayState) {
+            case "error":
+                return "error";
+            case "success":
+                return "success";
+            default:
+                return "neutral";
         }
     };
 
+    const handleOnClick =
+        feedbackStateControl === "onClickPromise" && onClick
+            ? async () => {
+                  try {
+                      setDisplayState("loading");
+                      await onClick();
+                      setDisplayState("success");
+                  } catch (_) {
+                      setDisplayState("error");
+                  } finally {
+                      setTimeout(() => {
+                          setDisplayState("idle");
+                      }, 3000);
+                  }
+              }
+            : undefined;
+
     React.useEffect(() => {
+        if (feedbackStateControl === "onClickPromise") return;
+
         let timeoutId: number | undefined;
         let timeoutDuration: number | undefined;
         let newDisplayState: FeedbackButtonDisplayState;
@@ -92,8 +128,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         if (displayState === "idle" && loading) {
             setDisplayState("loading");
         } else if (displayState === "loading" && hasErrors) {
-            timeoutDuration = 500;
-            newDisplayState = "loading";
+            timeoutDuration = 0;
+            newDisplayState = "error";
         } else if (displayState === "loading" && !loading && !hasErrors) {
             timeoutDuration = 500;
             newDisplayState = "success";
@@ -115,27 +151,28 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
                 window.clearTimeout(timeoutId);
             }
         };
-    }, [displayState, loading, hasErrors]);
+    }, [displayState, loading, hasErrors, feedbackStateControl]);
 
     const tooltip = (
         <Tooltip
-            title={displayState === "error" ? tooltipErrorMessage : tooltipSuccessMessage}
+            title={displayState === "error" ? tooltipErrorMessage : displayState === "success" ? tooltipSuccessMessage : ""}
             open={displayState === "error" || displayState === "success"}
             placement={endIcon && !startIcon ? "top-end" : "top-start"}
             variant={resolveTooltipForDisplayState(displayState)}
             {...slotProps?.tooltip}
         >
-            <span>{startIcon ? startIcon : endIcon}</span>
+            <span>{startIcon || endIcon}</span>
         </Tooltip>
     );
 
     return (
         <Root
+            onClick={handleOnClick}
             ownerState={ownerState}
-            loading={loading}
+            loading={loading !== undefined ? loading : displayState === "loading"}
             variant={variant}
             color={color}
-            disabled={disabled || displayState === "loading"}
+            disabled={disabled || loading || displayState === "loading"}
             loadingPosition={startIcon ? "start" : "end"}
             loadingIndicator={<ThreeDotSaving />}
             startIcon={startIcon && tooltip}
@@ -154,7 +191,7 @@ declare module "@mui/material/styles" {
     }
 
     interface ComponentsPropsList {
-        CometAdminFeedbackButton: FeedbackButtonProps;
+        CometAdminFeedbackButton: FeedbackButtonPropsBase;
     }
 
     interface Components {
