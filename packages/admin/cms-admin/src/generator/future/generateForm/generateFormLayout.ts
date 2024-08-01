@@ -110,9 +110,9 @@ export function generateFormLayout({
 
         const wrappingFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
             omitFromFragmentType: name,
-            omitFromGqlInput: `use${name[0].toUpperCase() + name.substring(1)}`,
-            typeCode: `use${name[0].toUpperCase() + name.substring(1)}: boolean;`,
-            initializationCode: `use${name[0].toUpperCase() + name.substring(1)}: !!data.${dataRootName}.${name}`,
+            omitFromGqlInput: `${name}Enabled`,
+            typeCode: `${name}Enabled: boolean;`,
+            initializationCode: `${name}Enabled: !!data.${dataRootName}.${name}`,
         };
         const subfieldsFormValuesTypeCode = generatedFields.formValuesConfig
             .filter((config) => !!config.omitFromFragmentType)
@@ -142,16 +142,16 @@ export function generateFormLayout({
         imports.push({ name: "messages", importPath: "@comet/admin" });
         imports.push({ name: "FormControlLabel", importPath: "@mui/material" });
 
-        formValueToGqlInputCode += `${String(config.name)}: use${
-            String(config.name)[0].toUpperCase() + String(config.name).substring(1)
-        } && formValues.${String(config.name)} ? {${generatedFields.formValueToGqlInputCode}} : null,`;
+        formValueToGqlInputCode += `${String(config.name)}: ${String(config.name)}Enabled && formValues.${String(config.name)} ? {${
+            generatedFields.formValueToGqlInputCode
+        }} : null,`;
         code = `<Field
                     fullWidth
-                    name="use${String(config.name)[0].toUpperCase() + String(config.name).substring(1)}"
+                    name="${String(config.name)}Enabled"
                     type="checkbox"
-                    label={<FormattedMessage id="${formattedMessageRootId}.${String(config.name)}.use${
-            String(config.name)[0].toUpperCase() + String(config.name).substring(1)
-        }" defaultMessage="${config.checkboxLabel}" />}
+                    label={<FormattedMessage id="${formattedMessageRootId}.${String(config.name)}.${String(config.name)}Enabled" defaultMessage="${
+            config.checkboxLabel
+        }" />}
                 >
                     {(props) => (
                         <FormControlLabel
@@ -160,7 +160,7 @@ export function generateFormLayout({
                         />
                     )}
                 </Field>
-                 <Field name="use${String(config.name)[0].toUpperCase() + String(config.name).substring(1)}" subscription={{ value: true }}>
+                 <Field name="${String(config.name)}Enabled" subscription={{ value: true }}>
                     {({ input: { value } }) =>
                         value ? (
                             <>

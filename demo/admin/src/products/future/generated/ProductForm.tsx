@@ -49,7 +49,7 @@ const rootBlocks = {
 };
 
 type FormValues = Omit<GQLProductFormDetailsFragment, "dimensions"> & {
-    useDimensions: boolean;
+    dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
@@ -79,7 +79,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filterByFragment<GQLProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
-                      useDimensions: !!data.product.dimensions,
+                      dimensionsEnabled: !!data.product.dimensions,
                       dimensions: data.product.dimensions
                           ? {
                                 width: String(data.product.dimensions.width),
@@ -108,13 +108,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async ({ useDimensions, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
             category: formValues.category?.id,
             dimensions:
-                useDimensions && formValues.dimensions
+                dimensionsEnabled && formValues.dimensions
                     ? {
                           width: parseFloat(formValues.dimensions.width),
                           height: parseFloat(formValues.dimensions.height),
@@ -266,9 +266,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             />
                             <Field
                                 fullWidth
-                                name="useDimensions"
+                                name="dimensionsEnabled"
                                 type="checkbox"
-                                label={<FormattedMessage id="product.dimensions.useDimensions" defaultMessage="Configure dimensions" />}
+                                label={<FormattedMessage id="product.dimensions.dimensionsEnabled" defaultMessage="Configure dimensions" />}
                             >
                                 {(props) => (
                                     <FormControlLabel
@@ -277,7 +277,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     />
                                 )}
                             </Field>
-                            <Field name="useDimensions" subscription={{ value: true }}>
+                            <Field name="dimensionsEnabled" subscription={{ value: true }}>
                                 {({ input: { value } }) =>
                                     value ? (
                                         <>
