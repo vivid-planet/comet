@@ -213,7 +213,7 @@ export class FixturesConsole {
         console.log("links generated");
 
         console.log("generate many images test page");
-        await this.manyImagesTestPageFixtureService.execute();
+        // await this.manyImagesTestPageFixtureService.execute();
         console.log("many images test page created");
 
         console.log("generate lorem ispum fixtures");

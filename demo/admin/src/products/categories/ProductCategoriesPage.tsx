@@ -91,7 +91,12 @@ const ProductCategoriesPage: React.FC = () => {
                                                 }
                                                 filter={{ category: { equal: selectedId } }}
                                             />
-                                            <SaveBoundary onAfterSave={() => setIsOpen(false)}>
+                                            <SaveBoundary
+                                                onAfterSave={() => {
+                                                    console.log("HIER");
+                                                    setIsOpen(false);
+                                                }}
+                                            >
                                                 <Dialog open={isOpen} onClose={handleCloseDialog} fullWidth maxWidth="xl">
                                                     <DialogTitle>
                                                         <FormattedMessage
