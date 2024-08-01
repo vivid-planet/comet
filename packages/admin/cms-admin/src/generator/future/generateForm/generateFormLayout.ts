@@ -90,6 +90,9 @@ export function generateFormLayout({
 
         const introspectionField = introspectionObject.fields.find((field) => field.name === name);
         if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+        if (introspectionField.type.kind === "NON_NULL") {
+            throw new Error(`field ${name} in gql introspection type ${gqlType} must not be required to be usable with conditionalFields`);
+        }
         if (introspectionField.type.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
 
         const generatedFields = generateFields({
