@@ -62,7 +62,11 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "filter") &&
             !prop.name.startsWith("scope_") &&
-            prop.name != "position" &&
+            (prop.targetMeta
+                ? morphTsProperty(prop.name, prop.targetMeta)
+                      .getDecorators()
+                      .find((decorator) => decorator.getName() == "CrudPositionField")
+                : undefined) === undefined &&
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "text" ||
