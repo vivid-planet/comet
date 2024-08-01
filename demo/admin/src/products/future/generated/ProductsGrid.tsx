@@ -97,7 +97,7 @@ type Props = {
 export function ProductsGrid({ filter, toolbarAction, rowAction, initialSort }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote({ initialSort: initialSort }), ...usePersistentColumnState("ProductsGrid") };
+    const dataGridProps = { ...useDataGridRemote({ initialSort }), ...usePersistentColumnState("ProductsGrid") };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
