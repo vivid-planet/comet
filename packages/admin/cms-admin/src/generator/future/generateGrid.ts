@@ -478,7 +478,7 @@ export function generateGrid(
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
           const dataGridProps = { ...useDataGridRemote(${
-              config.initialSortProp ? `{ initialSort: initialSort }` : ""
+              config.initialSortProp ? `{ initialSort }` : ""
           }), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
