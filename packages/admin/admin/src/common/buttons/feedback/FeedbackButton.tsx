@@ -39,7 +39,7 @@ export interface FeedbackButtonPropsBase
             tooltip: typeof CometTooltip;
         }>,
         Omit<LoadingButtonProps, "loading"> {
-    feedbackStateControl: FeedbackStateControl;
+    feedbackStateControl?: FeedbackStateControl;
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
     tooltipSuccessMessage?: React.ReactNode;
