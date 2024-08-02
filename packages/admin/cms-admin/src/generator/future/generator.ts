@@ -35,8 +35,8 @@ export type FormLayoutConfig<T> = {
     name: string;
     title: string;
     supportText?: string; // can contain field-placeholder
-    collapsible: boolean; // default true
-    initiallyExpanded: boolean; // default false
+    collapsible?: boolean; // default true
+    initiallyExpanded?: boolean; // default false
     fields: FormFieldConfig<T>[];
 };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
