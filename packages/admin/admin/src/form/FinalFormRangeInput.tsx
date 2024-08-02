@@ -2,6 +2,7 @@ import { FormControl, InputBase, Slider, SliderProps } from "@mui/material";
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -62,6 +63,7 @@ export interface FinalFormRangeInputProps
     max: number;
     startAdornment?: React.ReactNode;
     endAdornment?: React.ReactNode;
+    separator?: React.ReactNode;
     sliderProps?: Omit<SliderProps, "min" | "max">;
 }
 
@@ -69,9 +71,10 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
     const {
         min,
         max,
-        sliderProps,
         startAdornment,
         endAdornment,
+        separator = <FormattedMessage id="comet.rangeInput.separator" defaultMessage="to" />,
+        sliderProps,
         input: { name, onChange, value: fieldValue },
         slotProps,
         ...restProps
@@ -124,7 +127,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
                         />
                     </FormControl>
                 </InputFieldContainer>
-                <InputFieldsSeparatorContainer {...slotProps?.inputFieldsSeparatorContainer}>-</InputFieldsSeparatorContainer>
+                <InputFieldsSeparatorContainer {...slotProps?.inputFieldsSeparatorContainer}>{separator}</InputFieldsSeparatorContainer>
                 <InputFieldContainer {...slotProps?.inputFieldContainer}>
                     <FormControl fullWidth>
                         <InputBase
