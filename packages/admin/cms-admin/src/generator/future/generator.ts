@@ -21,7 +21,7 @@ export type FormFieldConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
+    | { type: "staticSelect"; values?: string[]; inputType?: "select" | "radio" }
     | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
 ) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };

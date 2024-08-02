@@ -181,12 +181,35 @@ export function generateFormField({
         if (config.values) {
             throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
         }
-        const enumType = gqlIntrospection.__schema.types.find(
-            (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
-        ) as IntrospectionEnumType | undefined;
-        if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
-        const values = enumType.enumValues.map((i) => i.name);
-        code = `<Field
+
+        if (config.inputType === "radio") {
+            const enumType = gqlIntrospection.__schema.types.find(
+                (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
+            ) as IntrospectionEnumType | undefined;
+            if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+            const values = enumType.enumValues.map((i) => i.name);
+            code = `<FieldContainer
+                ${required ? "required" : ""}
+                variant="horizontal"
+                fullWidth
+                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
+                    ${values
+                        .map((value, index) => {
+                            const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
+                            const label = `<FormattedMessage id="${id}" defaultMessage="${camelCaseToHumanReadable(value)}" />`;
+                            return `<Field name="${name}.${index}" value="${value}" type="radio" variant="horizontal">
+                                        {(props) => <FormControlLabel label={${label}} control={<FinalFormRadio {...props} />} />}
+                                    </Field>`;
+                        })
+                        .join("\n")}
+                    </FieldContainer>`;
+        } else {
+            const enumType = gqlIntrospection.__schema.types.find(
+                (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
+            ) as IntrospectionEnumType | undefined;
+            if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+            const values = enumType.enumValues.map((i) => i.name);
+            code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
             fullWidth
@@ -210,6 +233,7 @@ export function generateFormField({
                 </FinalFormSelect>
             }
         </Field>`;
+        }
     } else if (config.type == "asyncSelect") {
         if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
         const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
