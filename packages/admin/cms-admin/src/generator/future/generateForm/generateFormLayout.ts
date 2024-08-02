@@ -116,7 +116,7 @@ export function generateFormLayout({
 
         const wrappingFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
             omitFromFragmentType: name,
-            omitFromGqlInput: `${name}Enabled`,
+            destructFromFormValues: `${name}Enabled`,
             typeCode: `${name}Enabled: boolean;`,
             initializationCode: `${name}Enabled: !!data.${dataRootName}.${name}`,
         };

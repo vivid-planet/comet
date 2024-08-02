@@ -12,7 +12,7 @@ export type GenerateFieldsReturn = GeneratorReturn & {
     formValueToGqlInputCode: string;
     formValuesConfig: {
         omitFromFragmentType?: string;
-        omitFromGqlInput?: string;
+        destructFromFormValues?: string; // equals omitting from formValues copied directly to mutation-input
         typeCode?: string;
         initializationCode?: string;
         defaultInitializationCode?: string;

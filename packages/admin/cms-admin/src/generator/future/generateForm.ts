@@ -313,10 +313,10 @@ export function generateForm(
         }
     
         const handleSubmit = async (${
-            formValuesConfig.filter((config) => !!config.omitFromGqlInput).length
+            formValuesConfig.filter((config) => !!config.destructFromFormValues).length
                 ? `{ ${formValuesConfig
-                      .filter((config) => !!config.omitFromGqlInput)
-                      .map((config) => config.omitFromGqlInput)
+                      .filter((config) => !!config.destructFromFormValues)
+                      .map((config) => config.destructFromFormValues)
                       .join(", ")}, ...formValues }`
                 : `formValues`
         }: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
