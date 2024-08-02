@@ -65,6 +65,7 @@ const DialogContent = styled(MuiDialogContent)`
     display: grid;
     grid-template-columns: auto 320px;
     padding: 0;
+    padding-left: 40px;
 `;
 
 export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings, damFileId }: Props): React.ReactElement {

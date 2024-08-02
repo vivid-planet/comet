@@ -4,7 +4,6 @@ import { styled } from "@mui/material/styles";
 import { GQLFocalPoint } from "../../graphql.generated";
 
 export const ImageContainer = styled("div")`
-    padding-left: 40px;
     .ReactCrop__crop-selection {
         border: 2px solid ${({ theme }) => theme.palette.primary.main};
     }
