@@ -6,7 +6,7 @@ import { BlockConfig } from "./getBlockConfig";
 import { getCamelCaseName, getPascalCaseName } from "./util";
 
 export const addAdminBlockToPageContent = (config: BlockConfig): FileCreationData => {
-    const pageContentFile = "../../demo/admin/src/pages/PageContentBlock.tsx";
+    const pageContentFile = "./admin/src/documents/pages/blocks/PageContentBlock.tsx"; // TODO: Should we look for this file dynamically?
 
     const fileExists = fs.existsSync(pageContentFile);
 
@@ -24,7 +24,7 @@ export const addAdminBlockToPageContent = (config: BlockConfig): FileCreationDat
 
     const importDeclaration = j.importDeclaration(
         [j.importSpecifier(j.identifier(valueToAddToSupportedBlocks))],
-        j.literal(`../common/blocks/${getPascalCaseName(config.name)}Block`),
+        j.literal(`@src/common/blocks/${getPascalCaseName(config.name)}Block`),
     );
 
     const firstImport = root.find(j.ImportDeclaration).at(0);
@@ -61,6 +61,7 @@ export const addAdminBlockToPageContent = (config: BlockConfig): FileCreationDat
 
     return {
         filePath: pageContentFile,
+        package: "admin",
         content: root.toSource(),
     };
 };

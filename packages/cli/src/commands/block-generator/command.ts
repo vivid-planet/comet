@@ -9,32 +9,38 @@ import { BlockConfig, getBlockConfig } from "./getBlockConfig";
 
 export type FileCreationData = {
     filePath: string;
+    package: "admin" | "api" | "site";
     content: string;
 };
 
 const writeFile = async (data: FileCreationData, logMessage: string) => {
-    const packagePath = "../../demo/admin"; // TODO: Use the correct config depending on the package the file is created in (admin, api, site)
+    const fullFilePath = `./${data.filePath}`;
 
     const eslint = new ESLint({
-        cwd: `${process.cwd()}/${packagePath}`,
+        cwd: `${process.cwd()}/${data.package}`,
         fix: true,
-        overrideConfigFile: `${packagePath}/.eslintrc.json`,
     });
 
     const lintResult = await eslint.lintText(data.content, {
-        filePath: data.filePath,
+        filePath: fullFilePath,
     });
 
     const output = lintResult[0] && lintResult[0].output ? lintResult[0].output : lintResult[0].source;
 
     // eslint-disable-next-line no-console
-    console.log(`> ${logMessage} (${data.filePath})`);
-    fs.writeFileSync(data.filePath, output ?? data.content);
+    console.log(`> ${logMessage} (${fullFilePath})`);
+    fs.writeFileSync(fullFilePath, output ?? data.content);
 };
 
 type Options = {
     exampleTeaserBlock: boolean;
 };
+
+/*
+## Run command from project root ##
+~/dev/comet-core/block-generator/packages/cli/bin/comet.js block-generator
+~/dev/comet-core/block-generator/packages/cli/bin/comet.js block-generator --example-teaser-block
+*/
 
 export const blockGeneratorCommand = new Command("block-generator")
     .description("generate a block (POC)")
