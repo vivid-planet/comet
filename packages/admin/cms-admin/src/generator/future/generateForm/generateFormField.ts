@@ -23,6 +23,10 @@ export function generateFormField({
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
     const name = String(config.name);
+    let gqlFieldName = name;
+    if (config.type === "asyncSelect" && config.gqlFieldName) {
+        gqlFieldName = String(config.gqlFieldName);
+    }
     const label = config.label ?? camelCaseToHumanReadable(name);
 
     const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
@@ -30,11 +34,11 @@ export function generateFormField({
         | undefined;
     if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
 
-    const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-    if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+    const introspectionField = introspectionObject.fields.find((field) => field.name === gqlFieldName);
+    if (!introspectionField) throw new Error(`didn't find field ${gqlFieldName} in gql introspection type ${gqlType}`);
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
-    const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
+    const required = !isFieldOptional({ config, gqlFieldName, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
 
@@ -107,7 +111,7 @@ export function generateFormField({
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
         let assignment = `parseFloat(formValues.${String(name)})`;
-        if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
+        if (isFieldOptional({ config, gqlFieldName, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
             assignment = `formValues.${name} ? ${assignment} : null`;
         }
         formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
@@ -266,7 +270,8 @@ export function generateFormField({
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
 
-        formFragmentField = `${name} { id ${labelField} }`;
+        formFragmentField = `${name}${config.gqlFieldName ? `: ${String(config.gqlFieldName)}` : ``} { id ${labelField} }`;
+
         formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
         imports.push({
             name: `GQL${queryName}Query`,

@@ -16,15 +16,22 @@ type ImportReference = {
 };
 
 export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
+    | { type: "text"; name: keyof T; multiline?: boolean }
+    | { type: "number"; name: keyof T }
+    | { type: "boolean"; name: keyof T }
+    | { type: "date"; name: keyof T }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
-    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
-    | { type: "block"; block: ImportReference }
-) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string> }
+    | {
+          type: "asyncSelect";
+          name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect
+          gqlFieldName?: keyof T;
+          rootQuery: string;
+          labelField?: string;
+      }
+    | { type: "block"; name: keyof T; block: ImportReference }
+) & { label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
