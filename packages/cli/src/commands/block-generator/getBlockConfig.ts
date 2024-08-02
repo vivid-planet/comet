@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import { input, select } from "@inquirer/prompts";
 
+import { nonEmptyInputValidation } from "./util";
+
 type ChildBlockConfig = {
     name: string;
     type: "block";
@@ -36,7 +38,9 @@ const selectBlock = (): Promise<string> => {
 
 const addExistingCompositeBlockChild = async (): Promise<CompositeBlockChild> => {
     return {
-        name: startStringUpperCase(await input({ message: 'Name of child Block (e.g. "Title"' })),
+        name: startStringUpperCase(
+            await input({ message: 'Name of child Block (e.g. "Title"', validate: nonEmptyInputValidation("Name cannot be empty") }),
+        ),
         type: "block",
         block: await selectBlock(),
     };
@@ -44,7 +48,7 @@ const addExistingCompositeBlockChild = async (): Promise<CompositeBlockChild> =>
 
 const addTextFieldChild = async (): Promise<CompositeBlockChild> => {
     return {
-        name: startStringUpperCase(await input({ message: "Name of child textField" })),
+        name: startStringUpperCase(await input({ message: "Name of child textField", validate: nonEmptyInputValidation("Name cannot be empty") })),
         type: "textfield",
     };
 };
@@ -105,7 +109,10 @@ const createCompositeBlockConfig = async (blockName: string): Promise<BlockConfi
 };
 
 export const getBlockConfig = async (): Promise<BlockConfig> => {
-    const blockName = await input({ message: 'Pretty block name (e.g. "My Special Teaser")' });
+    const blockName = await input({
+        message: 'Block name (e.g. "My Special Teaser")',
+        validate: nonEmptyInputValidation("Block name cannot be empty"),
+    });
     const blockType = await select<BlockType>({
         message: "Block type",
         choices: [

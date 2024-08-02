@@ -5,3 +5,5 @@ export const getCamelCaseName = (name: string) => {
 export const getPascalCaseName = (name: string) => {
     return getCamelCaseName(name).replace(/^./, (str) => str.toUpperCase());
 };
+
+export const nonEmptyInputValidation = (errorMessage: string) => (value: string) => value.trim() !== "" || errorMessage;
