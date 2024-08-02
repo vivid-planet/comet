@@ -145,7 +145,6 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                         minRows={3}
                                         fullWidth
                                         disabled={licenseType === "NO_LICENSE"}
-                                        validate={requiredValidator}
                                         shouldShowError={() => true}
                                     />
                                     <Field
@@ -154,7 +153,6 @@ export const FileSettingsFields = ({ isImage, folderId }: SettingsFormProps): Re
                                         component={FinalFormInput}
                                         fullWidth
                                         disabled={licenseType === "NO_LICENSE"}
-                                        validate={requiredValidator}
                                         shouldShowError={() => true}
                                     />
                                     <FieldContainer
