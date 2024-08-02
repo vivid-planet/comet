@@ -17,8 +17,8 @@ export type GenerateFieldsReturn = GeneratorReturn & {
         defaultInitializationCode?: string;
     }[];
     finalFormConfig?: {
-        subscription?: { values: boolean };
-        renderProps?: { values?: boolean; form?: boolean };
+        subscription?: { values?: true };
+        renderProps?: { values?: true; form?: true };
     };
 };
 
@@ -49,7 +49,7 @@ export function generateFields({
     const formFragmentFields: string[] = [];
     const imports: Imports = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
-    const finalFormConfig = { subscription: { values: false }, renderProps: { values: false, form: false } };
+    const finalFormConfig = { subscription: {}, renderProps: {} };
 
     const code = fields
         .map((field) => {
@@ -71,9 +71,8 @@ export function generateFields({
             formFragmentFields.push(...generated.formFragmentFields);
             formValuesConfig.push(...generated.formValuesConfig);
 
-            finalFormConfig.subscription.values = finalFormConfig.subscription.values || !!generated.finalFormConfig?.subscription?.values;
-            finalFormConfig.renderProps.values = finalFormConfig.renderProps.values || !!generated.finalFormConfig?.renderProps?.values;
-            finalFormConfig.renderProps.form = finalFormConfig.renderProps.form || !!generated.finalFormConfig?.renderProps?.form;
+            finalFormConfig.subscription = { ...finalFormConfig.subscription, ...generated.finalFormConfig?.subscription };
+            finalFormConfig.renderProps = { ...finalFormConfig.renderProps, ...generated.finalFormConfig?.renderProps };
 
             return generated.code;
         })

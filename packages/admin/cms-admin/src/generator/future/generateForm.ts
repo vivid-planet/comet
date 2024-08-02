@@ -194,11 +194,8 @@ export function generateForm(
         });
     }
 
-    const finalFormSubscription = [...(generatedFields.finalFormConfig?.subscription?.values ? ["values"] : [])];
-    const finalFormRenderProps = [
-        ...(generatedFields.finalFormConfig?.renderProps?.values ? ["values"] : []),
-        ...(generatedFields.finalFormConfig?.renderProps?.form ? ["form"] : []),
-    ];
+    const finalFormSubscription = Object.keys(generatedFields.finalFormConfig?.subscription ?? {});
+    const finalFormRenderProps = Object.keys(generatedFields.finalFormConfig?.renderProps ?? {});
 
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
