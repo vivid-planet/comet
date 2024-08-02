@@ -1,6 +1,7 @@
 import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 import { FormConfig, FormLayoutConfig } from "../generator";
+import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
 import { generateFields, GenerateFieldsReturn } from "./generateFields";
 
@@ -95,6 +96,8 @@ export function generateFormLayout({
         }
         if (introspectionField.type.kind !== "OBJECT") throw new Error(`field ${name} in gql introspection type ${gqlType} has to be OBJECT`);
 
+        const checkboxLabel = config.checkboxLabel ?? `Enable ${camelCaseToHumanReadable(String(config.name))}`;
+
         const generatedFields = generateFields({
             gqlIntrospection,
             baseOutputFilename,
@@ -152,9 +155,9 @@ export function generateFormLayout({
                     fullWidth
                     name="${String(config.name)}Enabled"
                     type="checkbox"
-                    label={<FormattedMessage id="${formattedMessageRootId}.${String(config.name)}.${String(config.name)}Enabled" defaultMessage="${
-            config.checkboxLabel
-        }" />}
+                    label={<FormattedMessage id="${formattedMessageRootId}.${String(config.name)}.${String(
+            config.name,
+        )}Enabled" defaultMessage="${checkboxLabel}" />}
                 >
                     {(props) => (
                         <FormControlLabel

@@ -33,7 +33,7 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
 type OptionalFieldsConfig<T> = {
     type: "optionalFields";
     name: keyof T; // object name containing fields
-    checkboxLabel: string;
+    checkboxLabel?: string;
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     fields: FormFieldConfig<any>[];
 };
