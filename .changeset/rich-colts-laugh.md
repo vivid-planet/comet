@@ -1,5 +1,5 @@
 ---
-"@comet/cms-site": major
+"@comet/cms-site": minor
 ---
 
 Add `ErrorHandlerProvider`
