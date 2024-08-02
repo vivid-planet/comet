@@ -4,11 +4,12 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
     Field,
+    FieldContainer,
     FieldSet,
     filterByFragment,
     FinalForm,
     FinalFormCheckbox,
-    FinalFormSelect,
+    FinalFormRadio,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
@@ -21,7 +22,7 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
+import { FormControlLabel, InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -196,27 +197,37 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="description"
                                 label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                             />
-                            <Field
+                            <FieldContainer
                                 required
                                 variant="horizontal"
                                 fullWidth
-                                name="type"
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
                             >
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Cap">
-                                            <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
-                                        </MenuItem>
-                                        <MenuItem value="Shirt">
-                                            <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
-                                        </MenuItem>
-                                        <MenuItem value="Tie">
-                                            <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
-                                        </MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                                <Field name="type.0" value="Cap" type="radio" variant="horizontal">
+                                    {(props) => (
+                                        <FormControlLabel
+                                            label={<FormattedMessage id="product.type.cap" defaultMessage="Cap" />}
+                                            control={<FinalFormRadio {...props} />}
+                                        />
+                                    )}
+                                </Field>
+                                <Field name="type.1" value="Shirt" type="radio" variant="horizontal">
+                                    {(props) => (
+                                        <FormControlLabel
+                                            label={<FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />}
+                                            control={<FinalFormRadio {...props} />}
+                                        />
+                                    )}
+                                </Field>
+                                <Field name="type.2" value="Tie" type="radio" variant="horizontal">
+                                    {(props) => (
+                                        <FormControlLabel
+                                            label={<FormattedMessage id="product.type.tie" defaultMessage="Tie" />}
+                                            control={<FinalFormRadio {...props} />}
+                                        />
+                                    )}
+                                </Field>
+                            </FieldContainer>
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth
