@@ -7,6 +7,7 @@ import {
     FieldContainer,
     FieldSet,
     FinalFormRadio,
+    FinalFormRangeInput,
     NumberField,
     SearchField,
     SelectField,
@@ -148,6 +149,27 @@ function Story() {
                                     {(props) => <FormControlLabel label="Option Six" control={<FinalFormRadio {...props} />} />}
                                 </Field>
                             </FieldContainer>
+                        </FieldSet>
+                        <FieldSet title="Number Range">
+                            <Field
+                                name="numberRange"
+                                label="Range Input"
+                                component={FinalFormRangeInput}
+                                min={-100}
+                                max={100}
+                                variant={fieldVariant}
+                                fullWidth
+                            />
+                            <Field
+                                name="numberRangeWithoutSlider"
+                                label="Without Slider"
+                                component={FinalFormRangeInput}
+                                min={100}
+                                max={1000}
+                                disableSlider
+                                variant={fieldVariant}
+                                fullWidth
+                            />
                         </FieldSet>
                         <FieldSet title="Date and Time" supportText="@comet/admin-date-time">
                             <DateField name="date" label="Date" variant={fieldVariant} fullWidth />
