@@ -23,11 +23,7 @@ const Root = createComponentSlot("div")<FinalFormRangeInputClassKey, OwnerState>
     componentName: "FinalFormRangeInput",
     slotName: "root",
     classesResolver: ({ disableSlider }) => [disableSlider && "disableSlider"],
-})(css`
-    box-sizing: border-box;
-    padding: 0 20px;
-    width: 100%;
-`);
+})();
 
 const InputsWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey, OwnerState>({
     componentName: "FinalFormRangeInput",
@@ -48,15 +44,23 @@ const InputsWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey, Ow
 const InputFieldsSeparatorContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
     slotName: "inputFieldsSeparatorContainer",
-})(css`
-    text-align: center;
-    min-width: 20%;
-`);
+})(
+    ({ theme }) => css`
+        text-align: center;
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+    `,
+);
 
 const SliderWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
     slotName: "sliderWrapper",
-})();
+})(
+    ({ theme }) => css`
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+    `,
+);
 
 const InputFieldContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
