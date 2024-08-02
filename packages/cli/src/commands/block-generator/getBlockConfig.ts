@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { input, select } from "@inquirer/prompts";
 
-import { nonEmptyInputValidation } from "./util";
+import { getFilesContainingFunctionCall, nonEmptyInputValidation } from "./util";
 
 type ChildBlockConfig = {
     name: string;
@@ -22,6 +22,7 @@ export type BlockConfig = {
     name: string;
     type: BlockType;
     children: Array<CompositeBlockChild>;
+    targetBlockPath?: string;
 };
 
 const blockList = ["RichTextBlock", "DamImageBlock"]; // TODO: Dynamically get all blocks in project
@@ -57,7 +58,7 @@ const startStringUpperCase = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-const createCompositeBlockConfig = async (blockName: string): Promise<BlockConfig> => {
+const createCompositeBlockConfig = async (blockName: string, targetBlockPath: string | null): Promise<BlockConfig> => {
     const upperCaseBlockName = startStringUpperCase(blockName);
     const childBlocks: Array<CompositeBlockChild> = [];
 
@@ -104,8 +105,45 @@ const createCompositeBlockConfig = async (blockName: string): Promise<BlockConfi
     return {
         type: "composite",
         name: upperCaseBlockName,
+        targetBlockPath,
         children: childBlocks,
     };
+};
+
+type TargetBlockChioce = {
+    name: string;
+    value: string | null;
+};
+
+const getTargetBlock = async (): Promise<TargetBlockChioce[]> => {
+    const targetBlockFiles = getFilesContainingFunctionCall("admin", "createBlocksBlock");
+
+    targetBlockFiles.sort((a, b) => {
+        if (a.getBaseNameWithoutExtension() === "PageContentBlock") {
+            return -1;
+        }
+
+        if (b.getBaseNameWithoutExtension() === "PageContentBlock") {
+            return 1;
+        }
+
+        return 0;
+    });
+
+    return [
+        ...targetBlockFiles.map((file) => {
+            const filePath = file.getFilePath().replace(`${process.cwd()}/`, "");
+
+            return {
+                name: `🟦 ${file.getBaseNameWithoutExtension()} (${filePath})`,
+                value: filePath,
+            };
+        }),
+        {
+            name: "⛔️ Skip (block will not be added to a blocks-block)",
+            value: null,
+        },
+    ];
 };
 
 export const getBlockConfig = async (): Promise<BlockConfig> => {
@@ -113,6 +151,12 @@ export const getBlockConfig = async (): Promise<BlockConfig> => {
         message: 'Block name (e.g. "My Special Teaser")',
         validate: nonEmptyInputValidation("Block name cannot be empty"),
     });
+
+    const targetBlock = await select<string | null>({
+        message: "TargetBlock",
+        choices: await getTargetBlock(),
+    });
+
     const blockType = await select<BlockType>({
         message: "Block type",
         choices: [
@@ -128,7 +172,7 @@ export const getBlockConfig = async (): Promise<BlockConfig> => {
     });
 
     if (blockType === "composite") {
-        return createCompositeBlockConfig(blockName);
+        return createCompositeBlockConfig(blockName, targetBlock);
     }
 
     throw new Error("Not implemented yet");

@@ -5,9 +5,8 @@ import { FileCreationData } from "./command";
 import { BlockConfig } from "./getBlockConfig";
 import { getCamelCaseName, getPascalCaseName } from "./util";
 
-export const addAdminBlockToPageContent = (config: BlockConfig): FileCreationData => {
-    const pageContentFile = "./admin/src/documents/pages/blocks/PageContentBlock.tsx"; // TODO: Should we look for this file dynamically?
-
+export const addAdminBlockToTarget = (config: BlockConfig): FileCreationData => {
+    const pageContentFile = `${config.targetBlockPath}`;
     const fileExists = fs.existsSync(pageContentFile);
 
     if (!fileExists) {
@@ -34,9 +33,7 @@ export const addAdminBlockToPageContent = (config: BlockConfig): FileCreationDat
         root.get().node.program.body.unshift(importDeclaration);
     }
 
-    root.find(j.VariableDeclarator, {
-        id: { name: "PageContentBlock" },
-    }).forEach((path) => {
+    root.find(j.VariableDeclarator).forEach((path) => {
         j(path)
             .find(j.CallExpression, {
                 callee: {

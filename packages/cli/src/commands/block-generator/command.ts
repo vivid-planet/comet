@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { ESLint } from "eslint";
 import fs from "fs";
 
-import { addAdminBlockToPageContent } from "./addAdminBlockToPageContent";
+import { addAdminBlockToTarget } from "./addAdminBlockToTarget";
 import { createBlockAdmin } from "./createAdminBlock";
 import { exampleTeaserBlockConfig } from "./exampleBlockConfigs";
 import { BlockConfig, getBlockConfig } from "./getBlockConfig";
@@ -60,6 +60,8 @@ export const blockGeneratorCommand = new Command("block-generator")
         const adminBlockFile = createBlockAdmin(config);
         await writeFile(adminBlockFile, "Creating admin file");
 
-        const adminPageContentFile = addAdminBlockToPageContent(config);
-        await writeFile(adminPageContentFile, "Updating PageContentBlock");
+        if (config.targetBlockPath) {
+            const adminPageContentFile = addAdminBlockToTarget(config);
+            await writeFile(adminPageContentFile, "Updating target file");
+        }
     });
