@@ -26,8 +26,10 @@ export type FormFieldConfig<T> = (
           type: "asyncSelect";
           name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect
           gqlFieldName?: keyof T;
+          initQueryIdPath?: string; // if gqlField-object does not have an id-field, or it's required to use any other field, e.g. asyncSelect is used for filtering; dot-separated
+          initQueryLabelPath?: string; // if label is not on first level of gqlField-object; dot-separated
           rootQuery: string;
-          labelField?: string;
+          labelField?: string; // should be the field used as option-label of the rootQuery
           filterField?: { name: string; gqlVarName: string; gqlVarType: "rootProp" | "filter" };
       }
     | { type: "block"; name: keyof T; block: ImportReference }
