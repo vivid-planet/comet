@@ -16,7 +16,7 @@ export const exampleTeaserBlockConfig: BlockConfig = {
         {
             name: "Image",
             type: "block",
-            block: "DamImage",
+            block: "DamImageBlock",
         },
     ],
 };
