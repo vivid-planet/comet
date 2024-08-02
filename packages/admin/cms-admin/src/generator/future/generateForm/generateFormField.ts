@@ -194,10 +194,10 @@ export function generateFormField({
                 fullWidth
                 label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
                     ${values
-                        .map((value, index) => {
+                        .map((value) => {
                             const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
                             const label = `<FormattedMessage id="${id}" defaultMessage="${camelCaseToHumanReadable(value)}" />`;
-                            return `<Field name="${name}.${index}" value="${value}" type="radio" variant="horizontal">
+                            return `<Field name="${name}" value="${value}" type="radio" variant="horizontal">
                                         {(props) => <FormControlLabel label={${label}} control={<FinalFormRadio {...props} />} />}
                                     </Field>`;
                         })

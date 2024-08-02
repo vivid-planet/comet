@@ -203,7 +203,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 fullWidth
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
                             >
-                                <Field name="type.0" value="Cap" type="radio" variant="horizontal">
+                                <Field name="type" value="Cap" type="radio" variant="horizontal">
                                     {(props) => (
                                         <FormControlLabel
                                             label={<FormattedMessage id="product.type.cap" defaultMessage="Cap" />}
@@ -211,7 +211,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                         />
                                     )}
                                 </Field>
-                                <Field name="type.1" value="Shirt" type="radio" variant="horizontal">
+                                <Field name="type" value="Shirt" type="radio" variant="horizontal">
                                     {(props) => (
                                         <FormControlLabel
                                             label={<FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />}
@@ -219,7 +219,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                         />
                                     )}
                                 </Field>
-                                <Field name="type.2" value="Tie" type="radio" variant="horizontal">
+                                <Field name="type" value="Tie" type="radio" variant="horizontal">
                                     {(props) => (
                                         <FormControlLabel
                                             label={<FormattedMessage id="product.type.tie" defaultMessage="Tie" />}
