@@ -3,7 +3,7 @@ title: Sentry Module
 sidebar_position: 16
 ---
 
-SentryModule is a NestJS module that integrates Sentry for error tracking. To use the Module, import it into your application's root module and call the `forRootAsync` method. For more detailed configurations and advanced usage please visit [Sentry](https://docs.sentry.io/platforms/javascript/guides/node/configuration/).
+SentryModule is a NestJS module that integrates Sentry for error tracking. To use the module, import it into your application's root module and call the `forRootAsync` method. For more detailed configurations and advanced usage please visit [Sentry](https://docs.sentry.io/platforms/javascript/guides/node/configuration/).
 
 ```ts
 // app.module.ts
@@ -22,26 +22,26 @@ SentryModule is a NestJS module that integrates Sentry for error tracking. To us
 export class AppModule {}
 ```
 
-In your main file, add Sentry handlers to capture requests and errors.
+In your main file, add Sentry handlers to capture requests and errors:
 
-```ts
-// main.ts
-import { NestFactory } from "@nestjs/core";
-import { NestExpressApplication } from "@nestjs/platform-express";
-import * as Sentry from "@sentry/node";
-import { AppModule } from "@src/app.module";
-import { createConfig } from "@src/config/config";
+```diff
+  // main.ts
+  import { NestFactory } from "@nestjs/core";
+  import { NestExpressApplication } from "@nestjs/platform-express";
++ import * as Sentry from "@sentry/node";
+  import { AppModule } from "@src/app.module";
+  import { createConfig } from "@src/config/config";
 
-async function bootstrap() {
-    const config = createConfig(process.env);
-    const appModule = AppModule.forRoot(config);
-    const app = await NestFactory.create<NestExpressApplication>(appModule);
+  async function bootstrap() {
+      const config = createConfig(process.env);
+      const appModule = AppModule.forRoot(config);
+      const app = await NestFactory.create<NestExpressApplication>(appModule);
 
-    app.use(Sentry.Handlers.requestHandler());
-    app.use(Sentry.Handlers.tracingHandler());
-    app.use(Sentry.Handlers.errorHandler());
++     app.use(Sentry.Handlers.requestHandler());
++     app.use(Sentry.Handlers.tracingHandler());
++     app.use(Sentry.Handlers.errorHandler());
 
-    await app.listen(3000);
-}
-bootstrap();
+      await app.listen(3000);
+  }
+  bootstrap();
 ```
