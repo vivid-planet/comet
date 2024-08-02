@@ -287,11 +287,18 @@ export function generateFormField({
                                 }
                             }
                         }\`${
-                            filterField && rootQueryFilterType
-                                ? `, variables: { filter: { ${config.filterField?.filterMapping.replace(
-                                      /{value}/,
-                                      `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`,
-                                  )} } }`
+                            filterField && rootQueryFilterType && config.filterField
+                                ? `, variables: { ${(config.filterField?.gqlVarType === "filter"
+                                      ? `filter: { gqlVarName: { equal: valuesVar } }`
+                                      : `gqlVarName: valuesVar`
+                                  )
+                                      .replace(`gqlVarName`, config.filterField.gqlVarName)
+                                      .replace(
+                                          `valuesVar`,
+                                          `values.${
+                                              filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
+                                          }`,
+                                      )} }`
                                 : ``
                         }
                     });

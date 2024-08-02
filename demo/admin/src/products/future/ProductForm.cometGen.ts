@@ -41,7 +41,8 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     rootQuery: "manufacturers",
                     filterField: {
                         name: "type",
-                        filterMapping: `addressAsEmbeddable_country: { equal: {value} }`,
+                        gqlVarType: "filter",
+                        gqlVarName: "addressAsEmbeddable_country",
                     },
                 },
                 { type: "boolean", name: "inStock" },
