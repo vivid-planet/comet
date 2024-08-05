@@ -1,5 +1,16 @@
 import { gql } from "@apollo/client";
-import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import {
+    CustomAction,
+    Loading,
+    MainContent,
+    messages,
+    RouterPrompt,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useStackApi,
+} from "@comet/admin";
 import { ArrowLeft, Preview, Status } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -14,7 +25,7 @@ import {
     useCmsBlockContext,
     useSiteConfig,
 } from "@comet/cms-admin";
-import { Button, IconButton, styled } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -165,9 +176,9 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                     previewState={previewState}
                     previewApi={previewApi}
                     actions={
-                        <StatusButton>
+                        <CustomAction>
                             <Status />
-                        </StatusButton>
+                        </CustomAction>
                     }
                 >
                     {[
@@ -214,11 +225,3 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
         </AzureAiTranslatorProvider>
     );
 };
-
-const StatusButton = styled(IconButton)`
-    width: 50px;
-    height: 50px;
-    border-radius: 0;
-    color: ${({ theme }) => theme.palette.common.white};
-    border-left: 1px solid #2e3440;
-`;
