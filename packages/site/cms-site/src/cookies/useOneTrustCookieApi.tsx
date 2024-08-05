@@ -1,6 +1,7 @@
+"use client";
 import React from "react";
 
-import { CookieApi } from "./CookieApi";
+import { CookieApiHook } from "./CookieApiContext";
 
 type OneTrustOnConsentChangedEvent = {
     detail: string[];
@@ -46,7 +47,7 @@ const isWindowWithOneTrust = (window: Window): window is WindowWithOneTrust => {
     return "OneTrust" in window;
 };
 
-export const useOneTrustCookieApi: CookieApi = () => {
+export const useOneTrustCookieApi: CookieApiHook = () => {
     const [consentedCookies, setConsentedCookies] = React.useState<string[]>([]);
 
     React.useEffect(() => {

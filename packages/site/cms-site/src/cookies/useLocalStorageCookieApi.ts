@@ -1,20 +1,21 @@
+"use client";
 import React from "react";
 import { useLocalStorage } from "usehooks-ts";
 
-import { CookieApi } from "./CookieApi";
+import { CookieApi, CookieApiHook } from "./CookieApiContext";
 
 const localStorageCookieApiKey = "comet-dev-cookie-api-consented-cookies";
 
 declare global {
     interface Window {
-        cometLocalStorageCookieApi: ReturnType<CookieApi>;
+        cometLocalStorageCookieApi: CookieApi;
     }
 }
 
 /**
  * Only for use in development environment.
  */
-export const useLocalStorageCookieApi: CookieApi = () => {
+export const useLocalStorageCookieApi: CookieApiHook = () => {
     const [consentedCookies, setConsentedCookies] = useLocalStorage<string[]>(localStorageCookieApiKey, []);
     const [simulateLoadingCookieProvider, setSimulateLoadingCookieProvider] = React.useState(true);
 

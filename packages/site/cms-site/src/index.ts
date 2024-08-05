@@ -17,7 +17,7 @@ export type { PropsWithData } from "./blocks/PropsWithData";
 export { hasRichTextBlockContent } from "./blocks/RichTextBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
-export { CookieApi } from "./cookies/CookieApi";
+export { CookieApi, CookieApiProvider, useCookieApi } from "./cookies/CookieApiContext";
 export { CookieSafe } from "./cookies/CookieSafe";
 export { useCookieBotCookieApi } from "./cookies/useCookieBotCookieApi";
 export { useLocalStorageCookieApi } from "./cookies/useLocalStorageCookieApi";

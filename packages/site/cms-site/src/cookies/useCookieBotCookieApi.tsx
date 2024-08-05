@@ -1,6 +1,7 @@
+"use client";
 import React from "react";
 
-import { CookieApi } from "./CookieApi";
+import { CookieApiHook } from "./CookieApiContext";
 
 type WindowWithCookiebot = Window & {
     Cookiebot: {
@@ -14,7 +15,7 @@ const isWindowWithCookiebot = (window: Window): window is WindowWithCookiebot =>
     return "Cookiebot" in window;
 };
 
-export const useCookieBotCookieApi: CookieApi = () => {
+export const useCookieBotCookieApi: CookieApiHook = () => {
     const [consentedCookies, setConsentedCookies] = React.useState<string[]>([]);
 
     React.useEffect(() => {

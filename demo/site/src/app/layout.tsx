@@ -1,4 +1,4 @@
-import { SitePreviewProvider } from "@comet/cms-site";
+import { CookieApiProvider, SitePreviewProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@comet/cms-site";
 import StyledComponentsRegistry from "@src/util/StyledComponentsRegistry";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -18,9 +18,11 @@ export default function RootLayout({
     return (
         <html>
             <body className={inter.className}>
-                <StyledComponentsRegistry>
-                    {draftMode().isEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}
-                </StyledComponentsRegistry>
+                <CookieApiProvider useCookieApi={process.env.NODE_ENV === "development" ? useLocalStorageCookieApi : useProductionCookieApi}>
+                    <StyledComponentsRegistry>
+                        {draftMode().isEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}
+                    </StyledComponentsRegistry>
+                </CookieApiProvider>
             </body>
         </html>
     );

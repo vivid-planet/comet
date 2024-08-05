@@ -1,13 +1,11 @@
-import { useCookieApi } from "@src/util/cookies";
+import { useCookieApi } from "@comet/cms-site";
 import styled from "styled-components";
-
-import { Typography } from "./Typography";
 
 export const CookieFallback = () => {
     const { openCookieSettings } = useCookieApi();
     return (
         <Root>
-            <Typography variant="paragraph350">Cookies need to be accepted to view this content.</Typography>
+            <h4>Cookies need to be accepted to view this content.</h4>
             <button onClick={() => openCookieSettings()}>Open Cookie Settings</button>
         </Root>
     );
