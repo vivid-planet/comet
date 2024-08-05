@@ -16,7 +16,10 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { type: "staticSelect", name: "type", maxWidth: 150 /*, values: from gql schema (TODO overridable)*/ },
         { type: "date", name: "availableSince", width: 140 },
         { type: "dateTime", name: "createdAt", width: 170 },
+        {
+            type: "actions",
+            width: 116,
+            component: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
+        },
     ],
-    actionsWidth: 116,
-    actionsComponent: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
 };
