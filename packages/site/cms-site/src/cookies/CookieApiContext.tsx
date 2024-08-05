@@ -22,7 +22,6 @@ export const CookieApiProvider = ({ useCookieApi, children }: CookieApiProviderP
 export const useCookieApi: CookieApiHook = () => {
     const cookieApi = React.useContext(CookieApiContext);
     if (!cookieApi) {
-        console.error("###", { cookieApi });
         throw new Error("Can only be used inside CookieApiProvider.");
     }
     return cookieApi;
