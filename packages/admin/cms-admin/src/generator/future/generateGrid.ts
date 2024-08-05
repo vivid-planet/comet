@@ -20,17 +20,11 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
-function tsCodeRecordToString(object: TsCodeRecordToStringObject, removeBrackets = false) {
-    const stringWithoutBrackets = Object.entries(object)
+function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
+    return `{${Object.entries(object)
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
-        .join("\n");
-
-    if (removeBrackets) {
-        return stringWithoutBrackets;
-    }
-
-    return `{${stringWithoutBrackets}}`;
+        .join("\n")}}`;
 }
 
 function findQueryType(queryName: string, schema: IntrospectionQuery) {
@@ -517,34 +511,29 @@ export function generateGrid(
                 .join(",\n")},
                 ${
                     showActionsColumn
-                        ? `{
-                        ${tsCodeRecordToString(
-                            {
-                                field: '"actions"',
-                                headerName: '""',
-                                sortable: "false",
-                                filterable: "false",
-                                type: '"actions"',
-                                align: '"right"',
-                                width: config.actionsWidth,
-                            },
-                            true,
-                        )}
-                        renderCell: (params) => {
+                        ? tsCodeRecordToString({
+                              field: '"actions"',
+                              headerName: '""',
+                              sortable: "false",
+                              filterable: "false",
+                              type: '"actions"',
+                              align: '"right"',
+                              width: config.actionsWidth,
+                              renderCell: `(params) => {
                             return (
                                 <>
                                 ${config.actionsComponent?.name ? `<${config.actionsComponent.name} params={params} />` : ""}${
-                              allowEditing
-                                  ? forwardRowAction
-                                      ? `{rowAction && rowAction(params)}`
-                                      : `
+                                  allowEditing
+                                      ? forwardRowAction
+                                          ? `{rowAction && rowAction(params)}`
+                                          : `
                                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                                             <Edit color="primary" />
                                         </IconButton>`
-                                  : ""
-                          }${
-                              allowCopyPaste || allowDeleting
-                                  ? `
+                                      : ""
+                              }${
+                                  allowCopyPaste || allowDeleting
+                                      ? `
                                         <CrudContextMenu
                                             ${
                                                 allowCopyPaste
@@ -600,12 +589,12 @@ export function generateGrid(
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
                                         />
                                     `
-                                  : ""
-                          }
+                                      : ""
+                              }
                                 </>
                             );
-                        },
-                    },`
+                                }`,
+                          })
                         : ""
                 }
         ];
