@@ -85,8 +85,8 @@ export function ProductsGrid() {
                     row.type,
                     row.category?.title,
                     row.inStock
-                        ? intl.formatMessage({ id: "comet.products.product.inStock", defaultMessage: "In Stock" })
-                        : intl.formatMessage({ id: "comet.products.product.outOfStock", defaultMessage: "Out of Stock" }),
+                        ? intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" })
+                        : intl.formatMessage({ id: "product.outOfStock", defaultMessage: "Out of Stock" }),
                 ];
                 return <GridCellContent primaryText={row.title} secondaryText={secondaryValues.filter(Boolean).join(" • ")} />;
             },

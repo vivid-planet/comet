@@ -104,11 +104,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     const getOverviewPrimaryText: GetCombinationTextFunction = ({ title }) => title;
     const getOverviewSecondaryText: GetCombinationTextFunction = (row, intl) =>
         [
+            typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
             row.type,
-            row.price,
+            row.category?.title,
             row.inStock
-                ? intl.formatMessage({ id: "product.available", defaultMessage: "Available" })
-                : intl.formatMessage({ id: "product.notAvailable", defaultMessage: "Not available" }),
+                ? intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" })
+                : intl.formatMessage({ id: "product.outOfStock", defaultMessage: "Out of Stock" }),
         ]
             .filter(Boolean)
             .join(" • ");
