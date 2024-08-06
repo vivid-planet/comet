@@ -99,7 +99,15 @@ export function generateGrid(
     const imports: Imports = [];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({ columns: config.columns.filter((column) => column.name !== "id") }); // exclude id because it's always required
+    const fieldList = generateGqlFieldList({
+        columns: config.columns.filter((column) => {
+            return (
+                column.name !== "id" && // exclude id because it's always required
+                column.type !== "combination" // exclude combination columns because they use muilple fields insetad of simply the columns name
+                // TODO: We need a way to include fields used in combination columns
+            );
+        }),
+    });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
@@ -474,14 +482,15 @@ export function generateGrid(
             : ""
     }
 
-    ${gridPropsTypeCode}
     ${
         combinationColumns.length
             ? `
         type GetCombinationTextFunction = (row: GQL${fragmentName}Fragment, intl: IntlShape) => string | undefined;
-    `
+        `
             : ""
     }
+
+    ${gridPropsTypeCode}
 
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
