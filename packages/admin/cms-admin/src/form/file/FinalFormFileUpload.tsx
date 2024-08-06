@@ -134,7 +134,6 @@ export const FinalFormFileUpload = <MaxFiles extends number | undefined>({
                     setFailedUploads((existingFiles) => existingFiles.filter((failedFile) => failedFile.name !== fileToRemove.name));
                 }
             }}
-            getDownloadUrl={(file) => `${apiUrl}/file-uploads/download/${file.id}`}
             files={files}
             multiple={multiple}
             maxFiles={maxFiles}

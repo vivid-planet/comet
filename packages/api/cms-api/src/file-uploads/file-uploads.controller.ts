@@ -1,13 +1,11 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Controller, forwardRef, Get, Inject, NotFoundException, Param, Post, Res, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { Response } from "express";
+import { Controller, forwardRef, Inject, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
 import rimraf from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { FileUploadInput } from "../dam/files/dto/file-upload.input";
-import { createHashedPath } from "../dam/files/files.utils";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
@@ -40,31 +38,6 @@ export function createFileUploadsController(options: { public: boolean }): Type<
             });
 
             return fileUpload;
-        }
-
-        @Get("download/:id")
-        @RequiredPermission(["fileUploads"], { skipScopeCheck: true })
-        async downloadFileById(@Param("id") id: string, @Res() res: Response): Promise<void> {
-            const file = await this.fileUploadsRepository.findOne(id);
-
-            if (!file) {
-                throw new NotFoundException();
-            }
-
-            const filePath = createHashedPath(file.contentHash);
-            const fileExists = await this.blobStorageBackendService.fileExists(this.config.directory, filePath);
-
-            if (!fileExists) {
-                throw new NotFoundException();
-            }
-
-            res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
-            res.setHeader("Content-Type", file.mimetype);
-            res.setHeader("Last-Modified", file.updatedAt?.toUTCString());
-            res.setHeader("Content-Length", file.size.toString());
-
-            const stream = await this.blobStorageBackendService.getFile(this.config.directory, filePath);
-            stream.pipe(res);
         }
     }
 
