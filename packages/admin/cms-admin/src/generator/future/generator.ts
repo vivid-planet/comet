@@ -63,7 +63,7 @@ export type GridCombinationColumnConfig<T> = {
     name: string;
     getPrimaryText: (row: T, intl: IntlShape) => string;
     getSecondaryText?: (row: T, intl: IntlShape) => string;
-};
+} & DataGridSettings;
 
 export type GridColumnConfig<T> = (
     | { type: "text" }
@@ -75,12 +75,13 @@ export type GridColumnConfig<T> = (
     | { type: "block"; block: ImportReference }
     | GridCombinationColumnConfig<T>
 ) & { name: UsableFields<T> } & DataGridSettings;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
-    columns: GridColumnConfig<T>[];
+    columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<T>>;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
