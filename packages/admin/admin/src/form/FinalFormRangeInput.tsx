@@ -113,6 +113,19 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
         setInternalMaxInput(fieldValue.max);
     }, [fieldValue]);
 
+    const updateMinMaxValues = () => {
+        const internalMinValue = typeof internalMinInput === "undefined" ? min : internalMinInput;
+        const internalMaxValue = typeof internalMaxInput === "undefined" ? max : internalMaxInput;
+
+        const minValue = Math.min(internalMinValue, internalMaxValue);
+        const maxValue = Math.max(internalMinValue, internalMaxValue);
+
+        onChange({
+            min: Math.max(minValue, min),
+            max: Math.min(maxValue, max),
+        });
+    };
+
     return (
         <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <InputsWrapper ownerState={ownerState} {...slotProps?.inputsWrapper}>
@@ -129,16 +142,12 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
                             endAdornment={endAdornment}
                             onBlur={() => {
                                 if (internalMinInput !== undefined) {
-                                    const minFieldValue = Math.min(internalMinInput ? internalMinInput : min, fieldValue.max ? fieldValue.max : max);
-                                    onChange({
-                                        min: minFieldValue < min ? min : minFieldValue,
-                                        max: internalMaxInput === undefined ? max : internalMaxInput,
-                                    });
+                                    updateMinMaxValues();
                                 } else {
                                     onChange(undefined);
                                 }
                             }}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            onChange={(e) => {
                                 if (e.target.value === "") {
                                     setInternalMinInput(undefined);
                                 } else {
@@ -162,16 +171,12 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
                                 if (internalMaxInput !== undefined) {
-                                    const maxFieldValue = Math.max(fieldValue.min ? fieldValue.min : min, internalMaxInput ? internalMaxInput : max);
-                                    onChange({
-                                        min: internalMinInput === undefined ? min : internalMinInput,
-                                        max: maxFieldValue > max ? max : maxFieldValue,
-                                    });
+                                    updateMinMaxValues();
                                 } else {
                                     onChange(undefined);
                                 }
                             }}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            onChange={(e) => {
                                 if (e.target.value === "") {
                                     setInternalMaxInput(undefined);
                                 } else {
