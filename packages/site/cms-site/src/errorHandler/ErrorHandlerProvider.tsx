@@ -3,8 +3,12 @@
 import * as React from "react";
 
 export const ErrorHandlerContext = React.createContext<{ onError: (error: Error) => void }>({
-    onError: () => {
-        // empty default function
+    onError: (error) => {
+        if (process.env.NODE_ENV === "development") {
+            throw error;
+        } else {
+            // Here the application should log the error to an error tracking service
+        }
     },
 });
 
