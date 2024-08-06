@@ -1,9 +1,9 @@
-name: Release
+name: Release (v6)
 
 on:
     push:
         branches:
-            - main
+            - v6.x.x
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -43,7 +43,8 @@ jobs:
               uses: dotansimha/changesets-action@cbc5ff3569ae9861100a48b290f4e9c1b94e45b5
               with:
                   version: pnpm run version
-                  publish: pnpm run publish
+                  publish: pnpm run publish --tag=stable-v6
+                  title: "Version Packages (v6)"
                   createGithubReleases: aggregate
                   githubReleaseName: "${{ env.PUBLISHED_VERSION }}"
                   githubTagName: "v${{ env.PUBLISHED_VERSION }}"
