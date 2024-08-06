@@ -1,16 +1,27 @@
 import { Field, FieldProps } from "@comet/admin";
 import React from "react";
 
-import { FinalFormFileUpload, FinalFormFileUploadProps } from "./FinalFormFileUpload";
+import { FinalFormFileUpload } from "./FinalFormFileUpload";
 import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
-export type FileUploadFieldProps<MaxFiles> = (MaxFiles extends 1
-    ? { maxFiles?: MaxFiles } & FieldProps<GQLFinalFormFileUploadFragment, HTMLInputElement>
-    : { maxFiles?: MaxFiles } & FieldProps<GQLFinalFormFileUploadFragment[], HTMLInputElement>) &
-    Partial<FinalFormFileUploadProps<MaxFiles>>;
+type SingleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment, HTMLInputElement> & {
+    multiple?: false;
+    maxFiles?: 1;
+};
 
-type FieldValue<MaxFiles extends number | undefined> = MaxFiles extends 1 ? GQLFinalFormFileUploadFragment : GQLFinalFormFileUploadFragment[];
+type MultipleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment[], HTMLInputElement> & {
+    multiple: true;
+    maxFiles?: number;
+};
 
-export const FileUploadField = <MaxFiles extends number | undefined>({ name, ...restProps }: FileUploadFieldProps<MaxFiles>) => {
-    return <Field<FieldValue<MaxFiles>> component={FinalFormFileUpload} name={name} {...restProps} />;
+export type FileUploadFieldProps<Multiple extends boolean | undefined> = Multiple extends true ? MultipleFileUploadProps : SingleFileUploadProps;
+
+export const FileUploadField = <Multiple extends boolean | undefined>({ name, ...restProps }: FileUploadFieldProps<Multiple>) => {
+    return (
+        <Field<Multiple extends true ? GQLFinalFormFileUploadFragment[] : GQLFinalFormFileUploadFragment>
+            component={FinalFormFileUpload}
+            name={name}
+            {...restProps}
+        />
+    );
 };

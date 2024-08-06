@@ -25,16 +25,26 @@ type SuccessfulApiResponse = {
     contentHash: string;
 };
 
-export type FinalFormFileUploadProps<MaxFiles> = (MaxFiles extends 1
-    ? { maxFiles?: MaxFiles } & FieldRenderProps<GQLFinalFormFileUploadFragment, HTMLInputElement>
-    : { maxFiles?: MaxFiles } & FieldRenderProps<GQLFinalFormFileUploadFragment[], HTMLInputElement>) &
+type FinalFormFileUploadSingleFileProps = FieldRenderProps<GQLFinalFormFileUploadFragment, HTMLInputElement> & {
+    multiple?: false;
+    maxFiles?: 1;
+};
+
+type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<GQLFinalFormFileUploadFragment[], HTMLInputElement> & {
+    multiple: true;
+    maxFiles?: number;
+};
+
+export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Multiple extends true
+    ? FinalFormFileUploadMultipleFilesProps
+    : FinalFormFileUploadSingleFileProps) &
     Partial<FileSelectProps<GQLFinalFormFileUploadFragment>>;
 
-export const FinalFormFileUpload = <MaxFiles extends number | undefined>({
+export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
     maxFiles,
     ...restProps
-}: FinalFormFileUploadProps<MaxFiles>) => {
+}: FinalFormFileUploadProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
     const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
     const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
