@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
-import { useErrorHandler } from "../../errorHandler/ErrorHandlerProvider";
 import { SupportedBlocks } from "./types";
 
 interface Props {
@@ -18,8 +17,6 @@ interface Props {
 }
 
 export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children, className }) => {
-    const { onError } = useErrorHandler();
-
     if (!block) {
         return null;
     }
@@ -38,7 +35,5 @@ export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps 
         return null;
     }
 
-    return (
-        <ErrorHandlerBoundary onError={onError}>{blockFunction({ ...block.props, ...additionalProps, children, className })}</ErrorHandlerBoundary>
-    );
+    return <ErrorHandlerBoundary>{blockFunction({ ...block.props, ...additionalProps, children, className })}</ErrorHandlerBoundary>;
 };

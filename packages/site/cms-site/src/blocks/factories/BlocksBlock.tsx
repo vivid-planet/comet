@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
-import { useErrorHandler } from "../../errorHandler/ErrorHandlerProvider";
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
 import { SupportedBlocks } from "./types";
 
@@ -13,8 +12,6 @@ interface Props {
 }
 
 export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks } }: Props) => {
-    const { onError } = useErrorHandler();
-
     if (blocks.length === 0) {
         return <PreviewSkeleton hasContent={false} />;
     }
@@ -37,7 +34,7 @@ export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }
                 }
                 return (
                     <React.Fragment key={block.key}>
-                        <ErrorHandlerBoundary onError={onError}>{blockFunction(block.props)}</ErrorHandlerBoundary>
+                        <ErrorHandlerBoundary>{blockFunction(block.props)}</ErrorHandlerBoundary>
                     </React.Fragment>
                 );
             })}
