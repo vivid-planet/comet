@@ -7,26 +7,43 @@ import { FormattedMessage } from "react-intl";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type FinalFormRangeInputClassKey = "root" | "inputsWrapper" | "inputFieldsSeparatorContainer" | "sliderWrapper" | "inputFieldContainer";
+export type FinalFormRangeInputClassKey =
+    | "root"
+    | "disableSlider"
+    | "inputsWrapper"
+    | "inputFieldsSeparatorContainer"
+    | "sliderWrapper"
+    | "inputFieldContainer";
 
-const Root = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+type OwnerState = {
+    disableSlider: boolean;
+};
+
+const Root = createComponentSlot("div")<FinalFormRangeInputClassKey, OwnerState>({
     componentName: "FinalFormRangeInput",
     slotName: "root",
+    classesResolver: ({ disableSlider }) => [disableSlider && "disableSlider"],
 })(css`
     box-sizing: border-box;
     padding: 0 20px;
     width: 100%;
 `);
 
-const InputsWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+const InputsWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey, OwnerState>({
     componentName: "FinalFormRangeInput",
     slotName: "inputsWrapper",
-})(css`
-    justify-content: space-between;
-    margin-bottom: 15px;
-    align-items: center;
-    display: flex;
-`);
+})(
+    ({ theme, ownerState }) => css`
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+
+        ${!ownerState.disableSlider &&
+        css`
+            margin-bottom: ${theme.spacing(3)};
+        `}
+    `,
+);
 
 const InputFieldsSeparatorContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
     componentName: "FinalFormRangeInput",
@@ -64,6 +81,7 @@ export interface FinalFormRangeInputProps
     startAdornment?: React.ReactNode;
     endAdornment?: React.ReactNode;
     separator?: React.ReactNode;
+    disableSlider?: boolean;
     sliderProps?: Omit<SliderProps, "min" | "max">;
 }
 
@@ -74,6 +92,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
         startAdornment,
         endAdornment,
         separator = <FormattedMessage id="comet.rangeInput.separator" defaultMessage="to" />,
+        disableSlider,
         sliderProps,
         input: { name, onChange, value: fieldValue },
         slotProps,
@@ -87,14 +106,16 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
         onChange({ min: newValue[0], max: newValue[1] });
     };
 
+    const ownerState: OwnerState = { disableSlider: Boolean(disableSlider) };
+
     React.useEffect(() => {
         setInternalMinInput(fieldValue.min);
         setInternalMaxInput(fieldValue.max);
     }, [fieldValue]);
 
     return (
-        <Root {...slotProps?.root} {...restProps}>
-            <InputsWrapper {...slotProps?.inputsWrapper}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            <InputsWrapper ownerState={ownerState} {...slotProps?.inputsWrapper}>
                 <InputFieldContainer {...slotProps?.inputFieldContainer}>
                     <FormControl fullWidth>
                         <InputBase
@@ -161,15 +182,17 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
                     </FormControl>
                 </InputFieldContainer>
             </InputsWrapper>
-            <SliderWrapper {...slotProps?.sliderWrapper}>
-                <Slider
-                    min={min}
-                    max={max}
-                    value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
-                    onChange={handleSliderChange}
-                    {...sliderProps}
-                />
-            </SliderWrapper>
+            {!disableSlider && (
+                <SliderWrapper {...slotProps?.sliderWrapper}>
+                    <Slider
+                        min={min}
+                        max={max}
+                        value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
+                        onChange={handleSliderChange}
+                        {...sliderProps}
+                    />
+                </SliderWrapper>
+            )}
         </Root>
     );
 }
