@@ -474,17 +474,19 @@ export function generateGrid(
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
+        
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
+                    const defaultMinWidth = 150;
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         renderHeader: column.tooltipMessage
                             ? `() => (
                                     <Box style={{ display: "flex", alignItems: "center" }}>
                                         <GridColumnHeaderTitle label="${column.headerName || camelCaseToHumanReadable(column.name)}" columnWidth={${
-                                  column.width ?? 150
+                                  column.width ?? defaultMinWidth
                               }}>
                                             {intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
                                   column.headerName || camelCaseToHumanReadable(column.name)
@@ -517,7 +519,6 @@ export function generateGrid(
                     };
 
                     if (typeof column.width === "undefined") {
-                        const defaultMinWidth = 150;
                         columnDefinition.flex = 1;
                         columnDefinition.maxWidth = column.maxWidth;
 
