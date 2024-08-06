@@ -28,7 +28,8 @@ import { ErrorHandlerProvider } from "@comet/cms-site";
 import { PropsWithChildren } from "react";
 
 export function ErrorHandler({ children }: PropsWithChildren) {
-    function onError(error: Error) {
+    function onError(error: Error, errorInfo: ErrorInfo) {
+        console.error("Error caught by error handler", error, errorInfo.componentStack);
         if (process.env.NODE_ENV === "development") {
             throw error;
         } else {

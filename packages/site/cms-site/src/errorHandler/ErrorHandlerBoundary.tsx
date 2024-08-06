@@ -1,22 +1,22 @@
 "use client";
 
-import React, { PropsWithChildren } from "react";
+import React, { ErrorInfo, PropsWithChildren } from "react";
 
 import { ErrorReporter } from "./ErrorReporter";
 
 type State = {
     error?: Error;
+    errorInfo?: ErrorInfo;
 };
 
 export class ErrorHandlerBoundary extends React.Component<PropsWithChildren, State> {
-    static getDerivedStateFromError(error: Error) {
-        // Update state so the next render will show nothing instead of the broken block
-        return { error };
+    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+        this.setState({ error, errorInfo });
     }
 
     render() {
-        if (this.state?.error) {
-            return <ErrorReporter error={this.state.error} />;
+        if (this.state?.error && this.state?.errorInfo) {
+            return <ErrorReporter error={this.state.error} errorInfo={this.state.errorInfo} />;
         }
 
         return this.props.children;
