@@ -590,8 +590,8 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4
       dotenv-cli:
-        specifier: ^4.0.0
-        version: 4.1.1
+        specifier: ^7.0.0
+        version: 7.4.2
       eslint:
         specifier: ^8.0.0
         version: 8.32.0
@@ -9579,7 +9579,7 @@ packages:
       '@types/jsonwebtoken': 9.0.1
       chalk: 4.1.2
       debug: 4.3.4(supports-color@9.3.1)
-      dotenv: 16.0.3
+      dotenv: 16.4.5
       graphql: 15.8.0
       graphql-request: 5.1.0(graphql@15.8.0)
       http-proxy-agent: 5.0.0
