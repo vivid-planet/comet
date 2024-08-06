@@ -364,8 +364,6 @@ export function generateGrid(
     import * as React from "react";
     import { FormattedMessage, useIntl, IntlShape } from "react-intl";
     import { ${exportName} as GridConfig } from "../${baseOutputFilename}.cometGen";
-    // TODO: Import this from \`@comet/admin\`
-    import { CellText } from "../CellText";
     ${generateImportsCode(imports)}
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
