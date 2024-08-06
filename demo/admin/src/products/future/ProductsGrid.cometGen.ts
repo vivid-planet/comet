@@ -19,7 +19,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
                 [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
                     row.type,
-                    row.category?.title,
+                    // row.category?.title, // TODO: Make this work somehow, `category { id title }` is missing in the fragment
                     row.inStock
                         ? intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" })
                         : intl.formatMessage({ id: "product.outOfStock", defaultMessage: "Out of Stock" }),
