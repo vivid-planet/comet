@@ -17,6 +17,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { useTheme } from "@mui/material";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
@@ -141,7 +142,34 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             maxWidth: 150,
             minWidth: 150,
         },
-        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
+        {
+            field: "inStock",
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            type: "singleSelect",
+            valueOptions: [
+                { value: "true", label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }) },
+                { value: "false", label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }) },
+            ],
+            renderCell: ({ row }) => {
+                const valueLabels: Record<string, React.ReactNode> = {
+                    true: (
+                        <GridCellContent
+                            primaryText={intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" })}
+                            icon={<StateFilledIcon color="success" />}
+                        />
+                    ),
+                    false: (
+                        <GridCellContent
+                            primaryText={intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" })}
+                            icon={<StateFilledIcon color="error" />}
+                        />
+                    ),
+                };
+                return row.inStock.toString() in valueLabels ? valueLabels[row.inStock.toString()] : row.inStock.toString();
+            },
+            flex: 1,
+            minWidth: 80,
+        },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
@@ -151,16 +179,13 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                 { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
                 { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
             ],
-            renderCell: ({ row, colDef }) => {
-                if (colDef.valueOptions && Array.isArray(colDef.valueOptions)) {
-                    const selectedOption = colDef.valueOptions.find((option) => typeof option === "object" && option.value === row.type);
-
-                    if (selectedOption && typeof selectedOption === "object") {
-                        return selectedOption.label;
-                    }
-                }
-
-                return row.type;
+            renderCell: ({ row }) => {
+                const valueLabels: Record<string, React.ReactNode> = {
+                    Cap: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                    Shirt: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                    Tie: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                };
+                return row.type.toString() in valueLabels ? valueLabels[row.type.toString()] : row.type.toString();
             },
             flex: 1,
             maxWidth: 150,
