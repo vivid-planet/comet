@@ -27,7 +27,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "staticSelect", name: "type", label: "Type", required: true /*, values: from gql schema (TODO overridable)*/ },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
                 {
-                    type: "optionalFields",
+                    type: "optionalNestedFields",
                     name: "dimensions",
                     checkboxLabel: "Configure dimensions",
                     fields: [
