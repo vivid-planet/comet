@@ -182,12 +182,13 @@ export function generateFormField({
             throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
         }
 
+        const enumType = gqlIntrospection.__schema.types.find(
+            (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
+        ) as IntrospectionEnumType | undefined;
+        if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+        const values = enumType.enumValues.map((i) => i.name);
+
         if (config.inputType === "radio") {
-            const enumType = gqlIntrospection.__schema.types.find(
-                (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
-            ) as IntrospectionEnumType | undefined;
-            if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
-            const values = enumType.enumValues.map((i) => i.name);
             code = `<FieldContainer
                 ${required ? "required" : ""}
                 variant="horizontal"
@@ -204,11 +205,6 @@ export function generateFormField({
                         .join("\n")}
                     </FieldContainer>`;
         } else {
-            const enumType = gqlIntrospection.__schema.types.find(
-                (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
-            ) as IntrospectionEnumType | undefined;
-            if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
-            const values = enumType.enumValues.map((i) => i.name);
             code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
