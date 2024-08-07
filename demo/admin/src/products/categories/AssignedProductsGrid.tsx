@@ -1,8 +1,9 @@
+import { useApolloClient } from "@apollo/client";
 import { CancelButton, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { AssignProductsGrid } from "@src/products/categories/AssignProductsGrid";
-import { ProductsGrid } from "@src/products/ProductsGrid";
+import { ProductsGrid, productsQuery } from "@src/products/ProductsGrid";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -11,9 +12,15 @@ type Props = {
 };
 
 export function AssignedProductsGrid({ productCategoryId }: Props): React.ReactElement {
+    const client = useApolloClient();
     const [isOpen, setIsOpen] = React.useState(false);
-    const handleCloseDialog = () => {
+    const refetchProductsGrid = async () => {
+        await client.refetchQueries({ include: [productsQuery] });
+    };
+
+    const handleCloseDialog = async () => {
         setIsOpen(false);
+        await refetchProductsGrid();
     };
     return (
         <>
@@ -27,8 +34,9 @@ export function AssignedProductsGrid({ productCategoryId }: Props): React.ReactE
                 filter={{ category: { equal: productCategoryId } }}
             />
             <SaveBoundary
-                onAfterSave={() => {
+                onAfterSave={async () => {
                     setIsOpen(false);
+                    await refetchProductsGrid();
                 }}
             >
                 <Dialog open={isOpen} onClose={handleCloseDialog} fullWidth maxWidth="xl">
