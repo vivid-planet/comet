@@ -111,8 +111,8 @@ export function buildOptions(metadata: EntityMetadata<any>) {
     if (positionProps.length > 1) throw new Error(`CrudPositionField-Decorator is only allowed once per entity, please check ${metadata.className}.`);
     const hasPositionProp = !!positionProps.length;
     const positionGroupPropNames: string[] = hasPositionProp
-        ? Reflect.getMetadata(`data:crudPositionField`, metadata.class, positionProps[0].name).positionGroupFields ?? [
-              ...(scopeProp ? [scopeProp.name] : []), // if there is a scope prop it's effecting position-group, if not groupFields should be used
+        ? Reflect.getMetadata(`data:crudPositionField`, metadata.class, positionProps[0].name).groupByFields ?? [
+              ...(scopeProp ? [scopeProp.name] : []), // if there is a scope prop it's effecting position-group, if not groupByFields should be used
           ]
         : [];
     const positionGroupProps = hasPositionProp ? metadata.props.filter((prop) => positionGroupPropNames.includes(prop.name)) : [];

@@ -73,11 +73,11 @@ export function hasFieldFeature(metadataClass: any, propName: string, option: ke
 }
 
 export interface CrudPositionFieldOptions {
-    positionGroupFields?: string[];
+    groupByFields?: string[];
 }
-export function CrudPositionField({ positionGroupFields }: CrudPositionFieldOptions = {}): PropertyDecorator {
+export function CrudPositionField({ groupByFields }: CrudPositionFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudPositionField`, { positionGroupFields }, target.constructor, propertyKey);
+        Reflect.defineMetadata(`data:crudPositionField`, { groupByFields: groupByFields }, target.constructor, propertyKey);
     };
 }
