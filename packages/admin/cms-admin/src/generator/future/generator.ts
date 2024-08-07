@@ -1,6 +1,7 @@
 import { GridColDef } from "@comet/admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { IconProps } from "@mui/material";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -57,13 +58,25 @@ export type TabsConfig = { type: "tabs"; tabs: { name: string; content: Generato
 
 type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
 
+type IconKey = string; // TODO: Use `IconName` type from `@comet/admin-icons` after merged: https://github.com/vivid-planet/comet/pull/2421
+
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconKey;
+};
+
+export type StaticSelectLabelCellContent = {
+    primaryText?: string;
+    secondaryText?: string;
+    icon?: IconKey | IconObject | ImportReference;
+};
+
 export type GridColumnConfig<T> = (
     | { type: "text" }
     | { type: "number" }
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T> } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
