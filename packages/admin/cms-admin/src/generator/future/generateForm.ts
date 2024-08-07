@@ -42,10 +42,13 @@ export function generateForm(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formFields = config.fields.reduce<FormFieldConfig<any>[]>((acc, field) => {
-        if (field.type === "fieldSet") {
-            acc.push(...field.fields.filter(isFormFieldConfig));
-        } else if (isFormLayoutConfig(field)) {
-            acc.push(...field.fields);
+        if (isFormLayoutConfig(field)) {
+            // using forEach instead of acc.push(...field.fields.filter(isFormFieldConfig)) because typescript can't handle mixed typing
+            field.fields.forEach((nestedFieldConfig) => {
+                if (isFormFieldConfig(nestedFieldConfig)) {
+                    acc.push(nestedFieldConfig);
+                }
+            });
         } else if (isFormFieldConfig(field)) {
             acc.push(field);
         }
