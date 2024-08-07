@@ -342,7 +342,7 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton, Typography } from "@mui/material";
+    import { Alert, Button, IconButton, Typography } from "@mui/material";
     import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -484,7 +484,7 @@ export function generateGrid(
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         renderHeader: column.tooltipMessage
                             ? `() => (
-                                    <Box style={{ display: "flex", alignItems: "center" }}>
+                                    <>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
                                   column.name
                               }",   defaultMessage: "${column.headerName || camelCaseToHumanReadable(column.name)}"})} columnWidth= {${
@@ -503,7 +503,7 @@ export function generateGrid(
                                         >
                                             <Info sx={{ margin: 1 }} />
                                         </Tooltip>
-                                    </Box>
+                                    </ >
                                 )`
                             : undefined,
                         headerName: !column.tooltipMessage

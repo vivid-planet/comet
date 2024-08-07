@@ -19,7 +19,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Box, Button, IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -139,7 +139,7 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "address_alternativeAddress_street",
             renderHeader: () => (
-                <Box style={{ display: "flex", alignItems: "center" }}>
+                <>
                     <GridColumnHeaderTitle
                         label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })}
                         columnWidth={150}
@@ -157,7 +157,7 @@ export function ManufacturersGrid(): React.ReactElement {
                     >
                         <Info sx={{ margin: 1 }} />
                     </Tooltip>
-                </Box>
+                </>
             ),
             filterable: false,
             sortable: false,
@@ -168,7 +168,7 @@ export function ManufacturersGrid(): React.ReactElement {
         {
             field: "address_alternativeAddress_streetNumber",
             renderHeader: () => (
-                <Box style={{ display: "flex", alignItems: "center" }}>
+                <>
                     <GridColumnHeaderTitle
                         label={intl.formatMessage({
                             id: "manufacturer.address.alternativeAddress.streetNumber",
@@ -189,7 +189,7 @@ export function ManufacturersGrid(): React.ReactElement {
                     >
                         <Info sx={{ margin: 1 }} />
                     </Tooltip>
-                </Box>
+                </>
             ),
             type: "number",
             filterable: false,

@@ -19,7 +19,6 @@ import {
 } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Box } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
@@ -113,14 +112,14 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
         {
             field: "price",
             renderHeader: () => (
-                <Box style={{ display: "flex", alignItems: "center" }}>
+                <>
                     <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150}>
                         {intl.formatMessage({ id: "product.price", defaultMessage: "Price" })}
                     </GridColumnHeaderTitle>
                     <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
                         <Info sx={{ margin: 1 }} />
                     </Tooltip>
-                </Box>
+                </>
             ),
             type: "number",
             flex: 1,
