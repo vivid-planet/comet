@@ -503,7 +503,7 @@ export function generateGrid(
                                         >
                                             <Info sx={{ margin: 1 }} />
                                         </Tooltip>
-                                    </ >
+                                    </>
                                 )`
                             : undefined,
                         headerName: !column.tooltipMessage
