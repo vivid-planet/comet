@@ -64,7 +64,7 @@ const rootBlocks = {
 
 // Set types for FinalFormFileUpload manually, as they cannot be generated from the fragment in `@comet/cms-admin`
 type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment;
+    priceList: GQLFinalFormFileUploadFragment | null;
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 

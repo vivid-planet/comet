@@ -53,14 +53,12 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment;
+    priceList: GQLFinalFormFileUploadFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
+type FormValues = ProductFormDetailsFragment & {
     image: BlockState<typeof rootBlocks.image>;
-    priceList: GQLFinalFormFileUploadFragment;
-    datasheets: GQLFinalFormFileUploadFragment[];
 };
 
 interface FormProps {

@@ -210,12 +210,6 @@ export function generateFormField({
             formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
         }
         formFragmentField = `${name} { ...FinalFormFileUpload }`;
-        formValuesConfig = [
-            {
-                omitFromFragmentType: name,
-                typeCode: `${name}: GQLFinalFormFileUploadFragment${multiple ? "[]" : ""};`,
-            },
-        ];
     } else if (config.type == "staticSelect") {
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,

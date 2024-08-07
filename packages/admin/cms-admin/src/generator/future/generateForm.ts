@@ -213,7 +213,7 @@ export function generateForm(
                     ) {
                         return `${String(field.name)}: GQLFinalFormFileUploadFragment[];`;
                     }
-                    return `${String(field.name)}: GQLFinalFormFileUploadFragment;`;
+                    return `${String(field.name)}: GQLFinalFormFileUploadFragment | null;`;
                 })
                 .join("\n")}
         }`;
@@ -261,11 +261,11 @@ export function generateForm(
 
     type FormValues = ${
         formValuesConfig.filter((config) => !!config.omitFromFragmentType).length > 0
-            ? `Omit<GQL${fragmentName}Fragment, ${formValuesConfig
+            ? `Omit<${filterByFragmentType}, ${formValuesConfig
                   .filter((config) => !!config.omitFromFragmentType)
                   .map((config) => `"${config.omitFromFragmentType}"`)
                   .join(" | ")}>`
-            : `GQL${fragmentName}Fragment`
+            : `${filterByFragmentType}`
     } ${
         formValuesConfig.length > 0
             ? `& {
