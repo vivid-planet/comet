@@ -10,7 +10,6 @@ export function generateFormField({
     gqlIntrospection,
     baseOutputFilename,
     config,
-    formFragmentName,
     formConfig,
     gqlType,
     namePrefix,
