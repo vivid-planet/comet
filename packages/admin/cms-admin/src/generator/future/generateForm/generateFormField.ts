@@ -195,12 +195,6 @@ export function generateFormField({
             formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
         }
         formFragmentField = `${name} { ...FinalFormFileUpload }`;
-        formValuesConfig = [
-            {
-                omitFromFragmentType: name,
-                typeCode: `${name}: GQLFinalFormFileUploadFragment${multiple ? "[]" : ""};`,
-            },
-        ];
     } else if (config.type == "staticSelect") {
         if (config.values) {
             throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
