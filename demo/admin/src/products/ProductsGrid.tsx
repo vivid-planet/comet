@@ -225,6 +225,7 @@ export function ProductsGrid() {
                         </IconButton>
                         <CrudContextMenu
                             onPaste={async ({ input }) => {
+                                console.log(input);
                                 await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                                     mutation: createProductMutation,
                                     variables: {

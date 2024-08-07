@@ -1,8 +1,7 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useLazyQuery, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     DataGridToolbar,
-    filterByFragment,
     GridColDef,
     GridFilterButton,
     MainContent,
@@ -20,8 +19,8 @@ import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
-    GQLCreateManufacturerMutation,
-    GQLCreateManufacturerMutationVariables,
+    GQLCopyPasteManufacturerMutation,
+    GQLCopyPasteManufacturerMutationVariables,
     GQLDeleteManufacturerMutation,
     GQLDeleteManufacturerMutationVariables,
     GQLManufacturersListQuery,
@@ -57,6 +56,9 @@ export function ManufacturersGrid() {
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
     const intl = useIntl();
+
+    const [lazyQuery, { data: lazyData2 }] = useLazyQuery(manufacturerQuery);
+    const [copyId, setCopyId] = React.useState<string>();
 
     const columns: GridColDef<GridValues>[] = [
         {
@@ -135,17 +137,76 @@ export function ManufacturersGrid() {
                             <Edit color="primary" />
                         </IconButton>
                         <CrudContextMenu
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateManufacturerMutation, GQLCreateManufacturerMutationVariables>({
-                                    mutation: createManufacturerMutation,
-                                    variables: {
-                                        input: {
-                                            name: input.name,
-                                            address: input.address,
-                                            addressAsEmbeddable: input.addressAsEmbeddable,
+                            // onPaste={async ({ input }) => { // <- variant 2
+                            onPaste={async () => {
+                                // <- variant 1
+
+                                //variant 1
+                                // const lazyData = await lazyQuery({ variables: { id: copyId } });
+
+                                // console.log(copyId);
+                                // console.log("lazyData in paste", lazyData);
+
+                                // TODO correct input data format. typename is in there, but should be removed.
+                                // const data: GQLManufacturerInput = lazyData.data.manufacturer;
+                                // const name = data.name;
+                                // const address = data.address as GQLAddressInput;
+                                // const addressAsEmbeddable = data.addressAsEmbeddable as GQLAddressAsEmbeddableInput;
+
+                                // console.log(name);
+                                // console.log(address);
+                                // console.log(addressAsEmbeddable);
+
+                                // await client.mutate<GQLCopyPasteManufacturerMutation, GQLCopyPasteManufacturerMutationVariables>({
+                                //     mutation: copyPasteManufacturerMutation,
+                                //     variables: {
+                                //         input: {
+                                //             name: data.name,
+                                //             address: data.address,
+                                //             addressAsEmbeddable: data.addressAsEmbeddable,
+                                //         },
+                                //     },
+                                // });
+
+                                //variant 2
+
+                                // await client.mutate<GQLCopyPasteManufacturerMutation, GQLCopyPasteManufacturerMutationVariables>({
+                                //     mutation: copyPasteManufacturerMutation,
+                                //     variables: {
+                                //         input: {
+                                //             name: input.createManufacturer.name,
+                                //             address: data.address,
+                                //             addressAsEmbeddable: data.addressAsEmbeddable,
+                                //         },
+                                //     },
+                                // });
+
+                                //variant 4
+                                console.log(lazyData2);
+
+                                if (lazyData2) {
+                                    await client.mutate<GQLCopyPasteManufacturerMutation, GQLCopyPasteManufacturerMutationVariables>({
+                                        mutation: copyPasteManufacturerMutation,
+                                        variables: {
+                                            input: {
+                                                name: lazyData2.name,
+                                                address: lazyData2.address,
+                                                addressAsEmbeddable: lazyData2.addressAsEmbeddable,
+                                            },
                                         },
-                                    },
-                                });
+                                    });
+                                }
+
+                                // await client.mutate<GQLCopyPasteManufacturerMutation, GQLCopyPasteManufacturerMutationVariables>({
+                                //     mutation: copyPasteManufacturerMutation,
+                                //     variables: {
+                                //         input: {
+                                //             name: input.data.name,
+                                //             address: input.data.address,
+                                //             addressAsEmbeddable: input.data.addressAsEmbeddable,
+                                //         },
+                                //     },
+                                // });
                             }}
                             onDelete={async () => {
                                 await client.mutate<GQLDeleteManufacturerMutation, GQLDeleteManufacturerMutationVariables>({
@@ -154,8 +215,31 @@ export function ManufacturersGrid() {
                                 });
                             }}
                             refetchQueries={["ManufacturersList"]}
-                            copyData={() => {
-                                return filterByFragment(manufacturersFragment, params.row);
+                            copyData={async () => {
+                                //variant 1
+                                // setCopyId(params.row.id);
+                                // return;
+
+                                //variant 2
+                                // const data = await lazyQuery({
+                                //     variables: {
+                                //         offset: dataGridProps.page * dataGridProps.pageSize,
+                                //         limit: dataGridProps.pageSize,
+                                //         filter: { name: { equal: params.row.name } }, // Id does not exist in filter, name is used for testing
+                                //     },
+                                // }); // load all data of entity
+                                //
+                                // return data.data;
+
+                                //variant 3
+                                // return params.row.id;
+
+                                // variant 4
+                                await lazyQuery({ variables: { id: params.row.id } });
+                                return lazyData2; // is undefined here...
+
+                                //original
+                                // return filterByFragment(manufacturersFragment, params.row);
                             }}
                         />
                     </>
@@ -237,6 +321,17 @@ const manufacturersQuery = gql`
     ${manufacturersFragment}
 `;
 
+const manufacturerQuery = gql`
+    query Manufacturer($id: ID!) {
+        manufacturer(id: $id) {
+            id
+            ...ManufacturersListManual
+        }
+    }
+
+    ${manufacturersFragment}
+`;
+
 const deleteManufacturerMutation = gql`
     mutation DeleteManufacturer($id: ID!) {
         deleteManufacturer(id: $id)
@@ -245,6 +340,14 @@ const deleteManufacturerMutation = gql`
 
 const createManufacturerMutation = gql`
     mutation CreateManufacturer($input: ManufacturerInput!) {
+        createManufacturer(input: $input) {
+            id
+        }
+    }
+`;
+
+const copyPasteManufacturerMutation = gql`
+    mutation CopyPasteManufacturer($input: ManufacturerInput!) {
         createManufacturer(input: $input) {
             id
         }
