@@ -29,7 +29,7 @@ export function generateForm(
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
-    const fragmentName = config.fragmentName ?? `${gqlType}Form`;
+    const formFragmentName = config.fragmentName ?? `${gqlType}Form`;
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
     const props: Prop[] = [];
@@ -102,7 +102,7 @@ export function generateForm(
         gqlIntrospection,
         baseOutputFilename,
         fields: config.fields,
-        fragmentName,
+        formFragmentName,
         formConfig: config,
         gqlType: config.gqlType,
     });
@@ -116,7 +116,7 @@ export function generateForm(
     formValuesConfig.push(...generatedFields.formValuesConfig);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} {
+        fragment ${formFragmentName} on ${gqlType} {
             ${formFragmentFields.join("\n")}
         }
     `;
@@ -127,7 +127,7 @@ export function generateForm(
                 ${instanceGqlType}(id: $id) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
@@ -158,7 +158,7 @@ export function generateForm(
         }input: $input) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
@@ -171,7 +171,7 @@ export function generateForm(
                 update${gqlType}(id: $id, input: $input) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
@@ -235,11 +235,11 @@ export function generateForm(
 
     type FormValues = ${
         formValuesConfig.filter((config) => !!config.omitFromFragmentType).length > 0
-            ? `Omit<GQL${fragmentName}Fragment, ${formValuesConfig
+            ? `Omit<GQL${formFragmentName}Fragment, ${formValuesConfig
                   .filter((config) => !!config.omitFromFragmentType)
                   .map((config) => `"${config.omitFromFragmentType}"`)
                   .join(" | ")}>`
-            : `GQL${fragmentName}Fragment`
+            : `GQL${formFragmentName}Fragment`
     } ${
         formValuesConfig.length > 0
             ? `& {
@@ -274,7 +274,7 @@ export function generateForm(
             editMode
                 ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
-            ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
+            ...filterByFragment<GQL${formFragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${formValuesConfig
                 .filter((config) => !!config.initializationCode)
                 .map((config) => config.initializationCode)

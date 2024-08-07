@@ -10,7 +10,7 @@ export function generateFormField({
     gqlIntrospection,
     baseOutputFilename,
     config,
-    fragmentName,
+    formFragmentName,
     formConfig,
     gqlType,
     namePrefix,
@@ -19,7 +19,7 @@ export function generateFormField({
     baseOutputFilename: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormFieldConfig<any>;
-    fragmentName: string;
+    formFragmentName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
     gqlType: string;

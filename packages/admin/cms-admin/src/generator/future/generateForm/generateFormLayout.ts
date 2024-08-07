@@ -9,7 +9,7 @@ export function generateFormLayout({
     gqlIntrospection,
     baseOutputFilename,
     config,
-    fragmentName,
+    formFragmentName,
     formConfig,
     gqlType,
     namePrefix,
@@ -18,7 +18,7 @@ export function generateFormLayout({
     baseOutputFilename: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormLayoutConfig<any>;
-    fragmentName: string;
+    formFragmentName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
     gqlType: string;
@@ -41,7 +41,7 @@ export function generateFormLayout({
             gqlIntrospection,
             baseOutputFilename,
             fields: config.fields,
-            fragmentName,
+            formFragmentName,
             formConfig,
             gqlType,
             namePrefix,
@@ -102,7 +102,7 @@ export function generateFormLayout({
             gqlIntrospection,
             baseOutputFilename,
             fields: config.fields,
-            fragmentName,
+            formFragmentName,
             formConfig,
             gqlType: introspectionField.type.name,
             namePrefix: name,
@@ -125,7 +125,7 @@ export function generateFormLayout({
             .map((config) => `"${config.omitFromFragmentType}"`);
         if (subfieldsFormValuesTypeCode.length) {
             wrappingFormValuesConfig.typeCode = `${wrappingFormValuesConfig.typeCode}
-                ${name}: Omit<NonNullable<GQL${fragmentName}Fragment["${name}"]>, ${subfieldsFormValuesTypeCode.join(" | ")}> & {
+                ${name}: Omit<NonNullable<GQL${formFragmentName}Fragment["${name}"]>, ${subfieldsFormValuesTypeCode.join(" | ")}> & {
                     ${generatedFields.formValuesConfig.map((config) => config.typeCode).join("\n")}
                 };`;
         }
