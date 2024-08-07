@@ -245,5 +245,13 @@ module.exports = {
             group: ["demo-site-pages", "demo"],
             waitOn: ["tcp:$API_PORT"],
         },
+        {
+            name: "docs",
+            script: "pnpm --filter comet-docs start",
+        },
+        {
+            name: "storybook",
+            script: "pnpm --filter comet-storybook run storybook",
+        },
     ],
 };
