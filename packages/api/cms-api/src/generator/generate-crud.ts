@@ -58,15 +58,19 @@ export function buildOptions(metadata: EntityMetadata<any>) {
     }
     const hasStatusFilter = statusProp && statusActiveItems && statusActiveItems.length != statusProp.items?.length; //if all items are active ones, no need for status filter
 
+    const positionField = metadata.props.find(
+        (prop) =>
+            !!metadata.definedProperties[prop.name] &&
+            morphTsProperty(prop.name, metadata)
+                .getDecorators()
+                .find((decorator) => decorator.getName() == "CrudPositionField") !== undefined,
+    );
+
     const crudFilterProps = metadata.props.filter(
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "filter") &&
             !prop.name.startsWith("scope_") &&
-            (prop.targetMeta
-                ? morphTsProperty(prop.name, prop.targetMeta)
-                      .getDecorators()
-                      .find((decorator) => decorator.getName() == "CrudPositionField")
-                : undefined) === undefined &&
+            (!positionField || prop.name !== positionField.name) &&
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "text" ||
