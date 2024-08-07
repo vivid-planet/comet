@@ -65,6 +65,8 @@ export function generateFormField({
         validateCode = `validate={${config.validate.name}}`;
     }
 
+    const fieldLabel = `<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />`;
+
     let code = "";
     let formValueToGqlInputCode = "";
     let formFragmentField = name;
@@ -190,6 +192,28 @@ export function generateFormField({
                     initializationCode: `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
                     defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
                 },
+            },
+        ];
+    } else if (config.type === "file") {
+        const multiple = config.multiple || (typeof config.maxFiles === "number" && config.maxFiles > 1);
+        code = `<FileUploadField name="${name}" label={${fieldLabel}}
+            ${config.multiple ? "multiple" : ""}
+            ${config.maxFiles ? `maxFiles={${config.maxFiles}}` : ""}
+            ${config.maxFileSize ? `maxFileSize={${config.maxFileSize}}` : ""}
+            ${config.readOnly ? `readOnly` : ""}
+            ${config.layout ? `layout="${config.layout}"` : ""}
+            ${config.accept ? `accept="${config.accept}"` : ""}
+        />`;
+        if (multiple) {
+            formValueToGqlInputCode = `${name}: formValues.${name}?.map(({ id }) => id),`;
+        } else {
+            formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+        }
+        formFragmentField = `${name} { ...FinalFormFileUpload }`;
+        formValuesConfig = [
+            {
+                omitFromFragmentType: name,
+                typeCode: `${name}: GQLFinalFormFileUploadFragment${multiple ? "[]" : ""};`,
             },
         ];
     } else if (config.type == "staticSelect") {
