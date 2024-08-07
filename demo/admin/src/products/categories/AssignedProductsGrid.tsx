@@ -25,7 +25,7 @@ export function AssignedProductsGrid({ productCategoryId }: Props): React.ReactE
     return (
         <>
             <ProductsGrid
-                // TODO refresh ProductsGrid after saving assign-products
+                hideCrudContextMenu={true}
                 toolbarAction={
                     <Button startIcon={<AddIcon />} onClick={() => setIsOpen(true)} variant="contained" color="primary">
                         <FormattedMessage id="products.editProductCategory.assignProducts" defaultMessage="Assign Products" />

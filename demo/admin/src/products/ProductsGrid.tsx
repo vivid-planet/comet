@@ -64,9 +64,10 @@ type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLProductsListManualFragment, any>) => React.ReactNode;
+    hideCrudContextMenu?: boolean;
 };
 
-export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
+export function ProductsGrid({ filter, toolbarAction, rowAction, hideCrudContextMenu }: Props) {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
@@ -217,40 +218,42 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
                     <>
                         <ProductsGridPreviewAction product={params.row} />
                         {rowAction && rowAction(params)}
-                        <CrudContextMenu
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
-                                    mutation: createProductMutation,
-                                    variables: {
-                                        input: {
-                                            description: input.description,
-                                            image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
-                                            inStock: input.inStock,
-                                            price: input.price,
-                                            slug: input.slug,
-                                            title: input.title,
-                                            type: input.type,
-                                            category: input.category?.id,
-                                            tags: input.tags.map((tag) => tag.id),
-                                            colors: input.colors,
-                                            articleNumbers: input.articleNumbers,
-                                            discounts: input.discounts,
-                                            statistics: { views: 0 },
+                        {hideCrudContextMenu && (
+                            <CrudContextMenu
+                                onPaste={async ({ input }) => {
+                                    await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+                                        mutation: createProductMutation,
+                                        variables: {
+                                            input: {
+                                                description: input.description,
+                                                image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
+                                                inStock: input.inStock,
+                                                price: input.price,
+                                                slug: input.slug,
+                                                title: input.title,
+                                                type: input.type,
+                                                category: input.category?.id,
+                                                tags: input.tags.map((tag) => tag.id),
+                                                colors: input.colors,
+                                                articleNumbers: input.articleNumbers,
+                                                discounts: input.discounts,
+                                                statistics: { views: 0 },
+                                            },
                                         },
-                                    },
-                                });
-                            }}
-                            onDelete={async () => {
-                                await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
-                                    mutation: deleteProductMutation,
-                                    variables: { id: params.row.id },
-                                });
-                            }}
-                            refetchQueries={["ProductsList"]}
-                            copyData={() => {
-                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
-                            }}
-                        />
+                                    });
+                                }}
+                                onDelete={async () => {
+                                    await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
+                                        mutation: deleteProductMutation,
+                                        variables: { id: params.row.id },
+                                    });
+                                }}
+                                refetchQueries={["ProductsList"]}
+                                copyData={() => {
+                                    return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
+                                }}
+                            />
+                        )}
                     </>
                 );
             },
