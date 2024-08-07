@@ -140,7 +140,10 @@ export function ManufacturersGrid(): React.ReactElement {
             field: "address_alternativeAddress_street",
             renderHeader: () => (
                 <Box style={{ display: "flex", alignItems: "center" }}>
-                    <GridColumnHeaderTitle label="Alt-Street" columnWidth={150}>
+                    <GridColumnHeaderTitle
+                        label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })}
+                        columnWidth={150}
+                    >
                         {intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })}
                     </GridColumnHeaderTitle>
                     <Tooltip
@@ -166,7 +169,13 @@ export function ManufacturersGrid(): React.ReactElement {
             field: "address_alternativeAddress_streetNumber",
             renderHeader: () => (
                 <Box style={{ display: "flex", alignItems: "center" }}>
-                    <GridColumnHeaderTitle label="Alt-Street number" columnWidth={150}>
+                    <GridColumnHeaderTitle
+                        label={intl.formatMessage({
+                            id: "manufacturer.address.alternativeAddress.streetNumber",
+                            defaultMessage: "Alt-Street number",
+                        })}
+                        columnWidth={150}
+                    >
                         {intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" })}
                     </GridColumnHeaderTitle>
                     <Tooltip
