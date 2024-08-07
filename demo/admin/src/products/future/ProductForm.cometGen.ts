@@ -37,10 +37,20 @@ export const ProductForm: FormConfig<GQLProduct> = {
             fields: [
                 {
                     type: "asyncSelect",
+                    virtual: true,
+                    name: "manufacturerCountry",
+                    gqlFieldName: "manufacturer",
+                    initQueryIdPath: "addressAsEmbeddable.country",
+                    initQueryLabelPath: "addressAsEmbeddable.country",
+                    rootQuery: "manufacturerCountries",
+                    labelField: "label",
+                },
+                {
+                    type: "asyncSelect",
                     name: "manufacturer",
                     rootQuery: "manufacturers",
                     filterField: {
-                        name: "type",
+                        name: "manufacturerCountry",
                         gqlVarType: "filter",
                         gqlVarName: "addressAsEmbeddable_country",
                     },
