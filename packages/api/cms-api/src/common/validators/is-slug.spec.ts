@@ -14,5 +14,9 @@ describe("IsSlug", () => {
             const validator = new IsSlugConstraint();
             expect(await validator.validate("comät")).toBe(false);
         });
+        it("should not allow url encoded characters", async () => {
+            const validator = new IsSlugConstraint();
+            expect(await validator.validate("slug%2F2")).toBeFalsy();
+        });
     });
 });
