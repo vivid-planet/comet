@@ -2,7 +2,7 @@
 "@comet/admin": minor
 ---
 
-Add `RadioGroupField` component to make it easier to create radio fields in final forms
+Add `RadioGroupField` component to make it easier to create radio group fields in forms
 
 You can now do:
 
