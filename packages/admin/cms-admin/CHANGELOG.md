@@ -1,5 +1,55 @@
 # @comet/cms-admin
 
+## 7.1.0
+
+### Minor Changes
+
+-   7410aae83: Add new `FileUploadField` component for uploading files in forms using the `FileUploadsModule`
+-   9a8098488: Rework `EditImageDialog`
+
+    Changes
+
+    -   Increase image size
+    -   Add hover effects for focal points
+    -   Add "Open in DAM" button
+
+        Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+        ```diff
+        // App.tsx
+
+        <DependenciesConfigProvider
+            entityDependencyMap={{
+        +       DamFile: createDamFileDependency(),
+                // ...
+            }}
+        >
+        ```
+
+-   91b154b06: Make the details and creator/author fields optional when using the DAM license feature
+
+### Patch Changes
+
+-   bbb753600: Fix false positives in `resolveHasSaveConflict` check
+
+    The check occasionally failed due to rounding errors.
+    This is fixed by rounding to full seconds before checking.
+
+-   Updated dependencies [04844d39e]
+-   Updated dependencies [2253a1d00]
+-   Updated dependencies [dfc4a7fff]
+-   Updated dependencies [39ab15616]
+-   Updated dependencies [99a1f0ae6]
+-   Updated dependencies [edf14d066]
+-   Updated dependencies [2b68513be]
+-   Updated dependencies [c050f2242]
+    -   @comet/admin-theme@7.1.0
+    -   @comet/admin@7.1.0
+    -   @comet/blocks-admin@7.1.0
+    -   @comet/admin-date-time@7.1.0
+    -   @comet/admin-icons@7.1.0
+    -   @comet/admin-rte@7.1.0
+
 ## 7.0.0
 
 ### Major Changes
