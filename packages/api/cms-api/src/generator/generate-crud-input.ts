@@ -70,14 +70,30 @@ export async function generateCrudInput(
         const fieldName = prop.name;
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
-        if (!prop.nullable) {
-            decorators.push("@IsNotEmpty()");
-        } else {
-            decorators.push("@IsNullable()");
+        let isOptional = prop.nullable;
+        const isPositionField = definedDecorators.map((decorator) => decorator.getName()).includes("CrudPositionField");
+
+        if (!isPositionField) {
+            if (!prop.nullable) {
+                decorators.push("@IsNotEmpty()");
+            } else {
+                decorators.push("@IsNullable()");
+            }
         }
         if (["id", "createdAt", "updatedAt", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
+        } else if (isPositionField) {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = initializer == "undefined" || initializer == "null" ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });
+            isOptional = true;
+            decorators.push(`@IsOptional()`);
+            decorators.push(`@Min(1)`);
+            decorators.push("@IsInt()");
+            decorators.push(`@Field(() => Int, ${fieldOptions})`);
+
+            type = "number";
         } else if (prop.enum) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue =
@@ -390,14 +406,14 @@ export async function generateCrudInput(
         }
 
         fieldsOut += `${decorators.join("\n")}
-    ${fieldName}${prop.nullable ? "?" : ""}: ${type};
+    ${fieldName}${isOptional ? "?" : ""}: ${type};
     
     `;
     }
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt, Min } from "class-validator";
 import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
