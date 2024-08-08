@@ -314,11 +314,11 @@ export function generateFormField({
                     ...{
                         omitFromFragmentType: name,
                         typeCode: `${name}?: { id: string, ${labelField}: string };`,
-                        initializationCode: `${name}: data.${instanceGqlType}.${String(config.name)} ? {
-                                id: data.${instanceGqlType}.${String(config.name)}?.id${
+                        initializationCode: `${name}: data.${dataRootName}.${String(config.name)} ? {
+                                id: data.${dataRootName}.${String(config.name)}?.id${
                             initQueryIdPath.split(".").length > 1 ? initQueryIdPath.substring(initQueryIdPath.indexOf(".")) : ``
                         },
-                                ${labelField}: data.${instanceGqlType}.${String(config.name)}?.${labelField}${
+                                ${labelField}: data.${dataRootName}.${String(config.name)}?.${labelField}${
                             initQueryLabelPath.split(".").length > 1 ? initQueryLabelPath.substring(initQueryLabelPath.indexOf(".")) : ``
                         }
                             } : undefined`,
