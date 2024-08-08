@@ -13,17 +13,15 @@ import faker from "faker";
 
 import { generateImageBlock } from "./blocks/image.generator";
 import { generateSeoBlock } from "./blocks/seo.generator";
+import { ImageFileFixtureService } from "./image-file-fixture.service";
 import { SvgImageFileFixtureService } from "./svg-image-file-fixture.service";
-import { UnsplashImageFileFixtureService } from "./unsplash-image-file-fixture.service";
-
-const IMAGES_NUMBER = 10;
 
 @Injectable()
 export class ManyImagesTestPageFixtureService {
     constructor(
         private readonly pageTreeService: PageTreeService,
         @InjectRepository(Page) private readonly pagesRespository: EntityRepository<Page>,
-        private readonly unsplashImageFileFixtureService: UnsplashImageFileFixtureService,
+        private readonly imageFileFixtureService: ImageFileFixtureService,
         private readonly svgImageFileFixtureService: SvgImageFileFixtureService,
     ) {}
 
@@ -57,9 +55,9 @@ export class ManyImagesTestPageFixtureService {
         await this.pageTreeService.updateNodeVisibility(manyImagesTestPageTreeNode.id, PageTreeNodeVisibility.Published);
 
         const imageBlocks: ReturnType<typeof generateImageBlock>[] = [];
-        for (let index = 0; index < IMAGES_NUMBER; index++) {
-            const imageFile = await this.unsplashImageFileFixtureService.generateImage(damScope);
-            imageBlocks.push(generateImageBlock(imageFile));
+        const imageFiles = await this.imageFileFixtureService.uploadImagesFromSrc(damScope);
+        for (const image of imageFiles) {
+            imageBlocks.push(generateImageBlock(image));
         }
         const svgFile = await this.svgImageFileFixtureService.generateImage(damScope);
         imageBlocks.push(generateImageBlock(svgFile));
