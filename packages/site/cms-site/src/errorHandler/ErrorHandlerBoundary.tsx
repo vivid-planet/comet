@@ -1,24 +1,10 @@
-"use client";
+import React, { PropsWithChildren } from "react";
 
-import React, { ErrorInfo, PropsWithChildren } from "react";
+import { ErrorHandlerBoundaryInternal } from "./ErrorHandlerBoundaryInternal";
+import { useErrorHandler } from "./ErrorHandlerProvider";
 
-import { ErrorReporter } from "./ErrorReporter";
+export function ErrorHandlerBoundary({ children }: PropsWithChildren) {
+    const { onError } = useErrorHandler();
 
-type State = {
-    error?: Error;
-    errorInfo?: ErrorInfo;
-};
-
-export class ErrorHandlerBoundary extends React.Component<PropsWithChildren, State> {
-    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        this.setState({ error, errorInfo });
-    }
-
-    render() {
-        if (this.state?.error && this.state?.errorInfo) {
-            return <ErrorReporter error={this.state.error} errorInfo={this.state.errorInfo} />;
-        }
-
-        return this.props.children;
-    }
+    return <ErrorHandlerBoundaryInternal onError={onError}>{children}</ErrorHandlerBoundaryInternal>;
 }
