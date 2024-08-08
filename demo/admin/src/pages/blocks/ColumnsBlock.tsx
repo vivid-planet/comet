@@ -8,6 +8,7 @@ import {
 } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
+import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -19,6 +20,7 @@ const ColumnsContentBlock = createBlocksBlock({
         richtext: RichTextBlock,
         headline: HeadlineBlock,
         image: DamImageBlock,
+        linkList: LinkListBlock,
     },
 });
 
