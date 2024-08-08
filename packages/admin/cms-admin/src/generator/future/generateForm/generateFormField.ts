@@ -2,9 +2,10 @@ import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectTy
 
 import { FormConfig, FormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
-import { GenerateFieldsReturn } from "./generateFields";
+import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
 
 export function generateFormField({
     gqlIntrospection,
@@ -54,6 +55,7 @@ export function generateFormField({
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
+    let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
 
     let validateCode = "";
     if (config.validate) {
@@ -255,8 +257,17 @@ export function generateFormField({
 
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
+        const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
+        const rootQueryFilterType = rootQueryType.args.find((arg) => arg.name === "filter");
 
         formFragmentField = `${name} { id ${labelField} }`;
+
+        const filterField = config.filterField?.name ? findFieldByName(config.filterField.name, formConfig.fields) : undefined;
+        if (filterField) {
+            imports.push({ name: "OnChangeField", importPath: "@comet/admin" });
+            finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
+        }
+
         formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
         imports.push({
             name: `GQL${queryName}Query`,
@@ -275,19 +286,48 @@ export function generateFormField({
                 label={<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
-                        query: gql\`query ${queryName} {
-                            ${rootQuery} {
+                        query: gql\`query ${queryName}${
+            filterField && rootQueryFilterType && rootQueryFilterType.type.kind === "INPUT_OBJECT"
+                ? `($filter: ${rootQueryFilterType.type.name})`
+                : ``
+        } {
+                            ${rootQuery}${filterField && rootQueryFilterType ? `(filter: $filter)` : ``} {
                                 nodes {
                                     id
                                     ${labelField}
                                 }
                             }
-                        }\`
+                        }\`${
+                            filterField && rootQueryFilterType && config.filterField
+                                ? `, variables: { ${(config.filterField?.gqlVarType === "filter"
+                                      ? `filter: { gqlVarName: { equal: valuesVar } }`
+                                      : `gqlVarName: valuesVar`
+                                  )
+                                      .replace(`gqlVarName`, config.filterField.gqlVarName)
+                                      .replace(
+                                          `valuesVar`,
+                                          `values.${
+                                              filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
+                                          }`,
+                                      )} }`
+                                : ``
+                        }
                     });
                     return data.${rootQuery}.nodes;
                 }}
                 getOptionLabel={(option) => option.${labelField}}
-            />`;
+                ${filterField ? `disabled={!values?.${String(filterField.name)}}` : ``}
+            />${
+                filterField
+                    ? `<OnChangeField name="${String(filterField.name)}">
+                            {(value, previousValue) => {
+                                if (value.id !== previousValue.id) {
+                                    form.change("${String(config.name)}", undefined);
+                                }
+                            }}
+                        </OnChangeField>`
+                    : ``
+            }`;
     } else {
         throw new Error(`Unsupported type`);
     }
@@ -299,5 +339,6 @@ export function generateFormField({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

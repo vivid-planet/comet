@@ -13,10 +13,16 @@ export const productFormFragment = gql`
             id
             title
         }
+<<<<<<< HEAD
         dimensions {
             width
             height
             depth
+=======
+        manufacturer {
+            id
+            name
+>>>>>>> admin-gen-configurable_dependent-async-select-referencing
         }
         inStock
         availableSince

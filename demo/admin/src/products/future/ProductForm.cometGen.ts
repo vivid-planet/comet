@@ -45,6 +45,16 @@ export const ProductForm: FormConfig<GQLProduct> = {
             collapsible: true,
             initiallyExpanded: false,
             fields: [
+                {
+                    type: "asyncSelect",
+                    name: "manufacturer",
+                    rootQuery: "manufacturers",
+                    filterField: {
+                        name: "type",
+                        gqlVarType: "filter",
+                        gqlVarName: "addressAsEmbeddable_country",
+                    },
+                },
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince" },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },

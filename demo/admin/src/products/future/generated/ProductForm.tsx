@@ -14,7 +14,11 @@ import {
     FinalFormSwitch,
     Loading,
     MainContent,
+<<<<<<< HEAD
     messages,
+=======
+    OnChangeField,
+>>>>>>> admin-gen-configurable_dependent-async-select-referencing
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -32,7 +36,12 @@ import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import {
+    GQLManufacturersSelectQuery,
+    GQLManufacturersSelectQueryVariables,
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+} from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -113,6 +122,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         const output = {
             ...formValues,
             category: formValues.category?.id,
+<<<<<<< HEAD
             dimensions:
                 dimensionsEnabled && formValues.dimensions
                     ? {
@@ -121,6 +131,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                           depth: parseFloat(formValues.dimensions.depth),
                       }
                     : null,
+=======
+            manufacturer: formValues.manufacturer?.id,
+>>>>>>> admin-gen-configurable_dependent-async-select-referencing
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {
@@ -159,9 +172,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{}}
+            subscription={{ values: true }}
         >
-            {() => (
+            {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
                     <MainContent>
@@ -317,6 +330,37 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
+                                name="manufacturer"
+                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
+                                        query: gql`
+                                            query ManufacturersSelect($filter: ManufacturerFilter) {
+                                                manufacturers(filter: $filter) {
+                                                    nodes {
+                                                        id
+                                                        name
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } },
+                                    });
+                                    return data.manufacturers.nodes;
+                                }}
+                                getOptionLabel={(option) => option.name}
+                                disabled={!values?.type}
+                            />
+                            <OnChangeField name="type">
+                                {(value, previousValue) => {
+                                    if (value.id !== previousValue.id) {
+                                        form.change("manufacturer", undefined);
+                                    }
+                                }}
+                            </OnChangeField>
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel
