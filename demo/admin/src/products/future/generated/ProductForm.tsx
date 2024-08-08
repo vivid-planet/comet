@@ -14,11 +14,8 @@ import {
     FinalFormSwitch,
     Loading,
     MainContent,
-<<<<<<< HEAD
     messages,
-=======
     OnChangeField,
->>>>>>> admin-gen-configurable_dependent-async-select-referencing
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -59,18 +56,14 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-<<<<<<< HEAD
-type FormValues = Omit<GQLProductFormDetailsFragment, "dimensions"> & {
+type FormValues = Omit<GQLProductFormDetailsFragment, "dimensions" | "manufacturerCountry"> & {
     dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
         depth: string;
     };
-=======
-type FormValues = Omit<GQLProductFormDetailsFragment, "manufacturerCountry"> & {
     manufacturerCountry?: { id: string; label: string };
->>>>>>> admin-gen-configurable_async-select-graphql-alias
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -95,19 +88,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filterByFragment<GQLProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
-<<<<<<< HEAD
                       dimensionsEnabled: !!data.product.dimensions,
                       dimensions: data.product.dimensions
                           ? {
                                 width: String(data.product.dimensions.width),
                                 height: String(data.product.dimensions.height),
                                 depth: String(data.product.dimensions.depth),
-=======
+                            }
+                          : undefined,
                       manufacturerCountry: data.product.manufacturerCountry
                           ? {
                                 id: data.product.manufacturerCountry?.id.country,
                                 label: data.product.manufacturerCountry?.label.country,
->>>>>>> admin-gen-configurable_async-select-graphql-alias
                             }
                           : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
@@ -131,16 +123,15 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-<<<<<<< HEAD
-    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
-=======
-    const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
->>>>>>> admin-gen-configurable_async-select-graphql-alias
+    const handleSubmit = async (
+        { dimensionsEnabled, manufacturerCountry, ...formValues }: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
             category: formValues.category?.id,
-<<<<<<< HEAD
             dimensions:
                 dimensionsEnabled && formValues.dimensions
                     ? {
@@ -149,9 +140,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                           depth: parseFloat(formValues.dimensions.depth),
                       }
                     : null,
-=======
             manufacturer: formValues.manufacturer?.id,
->>>>>>> admin-gen-configurable_dependent-async-select-referencing
             image: rootBlocks.image.state2Output(formValues.image),
         };
         if (mode === "edit") {

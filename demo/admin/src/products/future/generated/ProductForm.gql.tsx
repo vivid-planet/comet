@@ -13,14 +13,11 @@ export const productFormFragment = gql`
             id
             title
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
         dimensions {
             width
             height
             depth
-=======
-=======
+        }
         manufacturerCountry: manufacturer {
             id: addressAsEmbeddable {
                 country
@@ -29,11 +26,9 @@ export const productFormFragment = gql`
                 country
             }
         }
->>>>>>> admin-gen-configurable_async-select-graphql-alias
         manufacturer {
             id
             name
->>>>>>> admin-gen-configurable_dependent-async-select-referencing
         }
         inStock
         availableSince
