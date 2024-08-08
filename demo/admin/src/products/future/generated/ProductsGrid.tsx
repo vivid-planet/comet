@@ -5,6 +5,7 @@ import {
     CrudContextMenu,
     DataGridToolbar,
     filterByFragment,
+    GridCellText,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
@@ -20,7 +21,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { IntlShape, useIntl } from "react-intl";
 
 import {
     GQLCreateProductMutation,
@@ -86,6 +87,8 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNod
     );
 }
 
+type GetCombinationTextFunction = (row: GQLProductsGridFutureFragment, intl: IntlShape) => string | undefined;
+
 type Props = {
     filter?: GQLProductFilter;
     toolbarAction?: React.ReactNode;
@@ -98,8 +101,30 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
 
+    const getOverviewPrimaryText: GetCombinationTextFunction = ({ title }) => title;
+    const getOverviewSecondaryText: GetCombinationTextFunction = (row, intl) =>
+        [
+            typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
+            row.type,
+            // row.category?.title, // TODO: Make this work somehow, `category { id title }` is missing in the fragment
+            row.inStock
+                ? intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" })
+                : intl.formatMessage({ id: "product.outOfStock", defaultMessage: "Out of Stock" }),
+        ]
+            .filter(Boolean)
+            .join(" • ");
+
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
+        {
+            field: "overview",
+            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => <GridCellText primary={getOverviewPrimaryText(row, intl)} secondary={getOverviewSecondaryText(row, intl)} />,
+            flex: 1,
+            minWidth: 150,
+        },
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
         {
             field: "description",

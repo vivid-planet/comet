@@ -45,6 +45,7 @@ export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
+export { GridCellText, GridCellTextClassKey, GridCellTextProps } from "./dataGrid/GridCellText";
 export { GridColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";

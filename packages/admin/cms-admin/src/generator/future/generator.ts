@@ -4,6 +4,7 @@ import { loadSchema } from "@graphql-tools/load";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
+import { IntlShape } from "react-intl";
 
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
@@ -57,6 +58,13 @@ export type TabsConfig = { type: "tabs"; tabs: { name: string; content: Generato
 
 type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
 
+export type GridCombinationColumnConfig<T> = {
+    type: "combination";
+    name: string;
+    getPrimaryText: (row: T, intl: IntlShape) => string;
+    getSecondaryText?: (row: T, intl: IntlShape) => string;
+} & DataGridSettings;
+
 export type GridColumnConfig<T> = (
     | { type: "text" }
     | { type: "number" }
@@ -65,13 +73,15 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
+    | GridCombinationColumnConfig<T>
 ) & { name: UsableFields<T> } & DataGridSettings;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
-    columns: GridColumnConfig<T>[];
+    columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<T>>;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;

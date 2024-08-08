@@ -12,7 +12,7 @@ import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { GeneratorReturn, GridConfig } from "./generator";
+import { GeneratorReturn, GridCombinationColumnConfig, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findRootBlocks } from "./utils/findRootBlocks";
@@ -75,6 +75,10 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
     };
 }
 
+function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export function generateGrid(
     {
         exportName,
@@ -95,7 +99,15 @@ export function generateGrid(
     const imports: Imports = [];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({ columns: config.columns.filter((column) => column.name !== "id") }); // exclude id because it's always required
+    const fieldList = generateGqlFieldList({
+        columns: config.columns.filter((column) => {
+            return (
+                column.name !== "id" && // exclude id because it's always required
+                column.type !== "combination" // exclude combination columns because they use muilple fields insetad of simply the columns name
+                // TODO: We need a way to include fields used in combination columns
+            );
+        }),
+    });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
@@ -144,6 +156,8 @@ export function generateGrid(
     } = getForwardedGqlArgs([gridQueryType, ...(createMutationType ? [createMutationType] : [])]);
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
+
+    const combinationColumns = config.columns.filter((column): column is GridCombinationColumnConfig<unknown> => column.type === "combination");
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
     const hasFilter = !!filterArg;
@@ -292,6 +306,8 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            getPrimaryText: column.type === "combination" ? column.getPrimaryText : undefined,
+            getSecondaryText: column.type === "combination" ? column.getSecondaryText : undefined,
         };
     });
 
@@ -327,6 +343,8 @@ export function generateGrid(
         filterByFragment,
         GridFilterButton,
         GridColDef,
+        GridCellText,
+        MainContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
@@ -352,9 +370,9 @@ export function generateGrid(
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
     import * as React from "react";
-    import { FormattedMessage, useIntl } from "react-intl";
+    import { FormattedMessage, useIntl, IntlShape } from "react-intl";
+    import { ${exportName} as GridConfig } from "../${baseOutputFilename}.cometGen";
     ${generateImportsCode(imports)}
-
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
@@ -464,6 +482,14 @@ export function generateGrid(
             : ""
     }
 
+    ${
+        combinationColumns.length
+            ? `
+        type GetCombinationTextFunction = (row: GQL${fragmentName}Fragment, intl: IntlShape) => string | undefined;
+        `
+            : ""
+    }
+
     ${gridPropsTypeCode}
 
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
@@ -472,9 +498,38 @@ export function generateGrid(
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
+        ${combinationColumns
+            .map((column) => {
+                const columnNameUpperCase = capitalizeFirstLetter(column.name);
+                const hasSecondaryText = column.getSecondaryText;
+
+                const primaryFunctionString = `const get${columnNameUpperCase}PrimaryText: GetCombinationTextFunction = ${column.getPrimaryText.toString()};`;
+                const secondaryFunctionString = `const get${columnNameUpperCase}SecondaryText: GetCombinationTextFunction = ${
+                    column.getSecondaryText?.toString() ?? "() => undefined"
+                };`;
+
+                return [primaryFunctionString, hasSecondaryText && secondaryFunctionString].filter(Boolean).join("");
+            })
+            .join("")}
+
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
+                    let renderCell = column.renderCell;
+
+                    if (column.type === "combination") {
+                        const columnNameUpperCase = capitalizeFirstLetter(column.name);
+                        const hasSecondaryText = Boolean((column as GridCombinationColumnConfig<unknown>).getSecondaryText);
+                        const secondaryProp = hasSecondaryText ? `secondary={get${columnNameUpperCase}SecondaryText(row, intl)}` : "";
+
+                        renderCell = `({ row }) => (
+                            <GridCellText
+                                primary={get${columnNameUpperCase}PrimaryText(row, intl)}
+                                ${secondaryProp}
+                            />
+                        )`;
+                    }
+
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
@@ -485,7 +540,7 @@ export function generateGrid(
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueOptions: column.valueOptions,
-                        renderCell: column.renderCell,
+                        renderCell,
                         width: column.width,
                         flex: column.flex,
                     };
