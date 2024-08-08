@@ -43,7 +43,10 @@ export function generateFormField({
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
     const imports: Imports = [];
-    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
+    const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
+        destructFromFormValues: config.virtual ? name : undefined,
+    };
+    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig];
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
@@ -107,7 +110,7 @@ export function generateFormField({
         if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
             assignment = `formValues.${name} ? ${assignment} : null`;
         }
-        formValueToGqlInputCode = `${name}: ${assignment},`;
+        formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
 
         let initializationAssignment = `String(data.${instanceGqlType}.${name})`;
         if (!required) {
@@ -115,9 +118,12 @@ export function generateFormField({
         }
         formValuesConfig = [
             {
-                omitFromFragmentType: name,
-                typeCode: `${name}${!required ? `?` : ``}: string;`,
-                initializationCode: `${name}: ${initializationAssignment}`,
+                ...defaultFormValuesConfig,
+                ...{
+                    omitFromFragmentType: name,
+                    typeCode: `${name}${!required ? `?` : ``}: string;`,
+                    initializationCode: `${name}: ${initializationAssignment}`,
+                },
             },
         ];
     } else if (config.type == "boolean") {
@@ -138,7 +144,10 @@ export function generateFormField({
         </Field>`;
         formValuesConfig = [
             {
-                defaultInitializationCode: `${name}: false`,
+                ...defaultFormValuesConfig,
+                ...{
+                    defaultInitializationCode: `${name}: false`,
+                },
             },
         ];
     } else if (config.type == "date") {
@@ -162,19 +171,25 @@ export function generateFormField({
             />`;
         formValuesConfig = [
             {
-                initializationCode: `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
+                ...defaultFormValuesConfig,
+                ...{
+                    initializationCode: `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
+                },
             },
         ];
     } else if (config.type == "block") {
         code = `<Field name="${name}" isEqual={isEqual}>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
-        formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${name}),`;
+        formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${name}),` : ``;
         formValuesConfig = [
             {
-                typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
-                initializationCode: `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
-                defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+                ...defaultFormValuesConfig,
+                ...{
+                    typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
+                    initializationCode: `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
+                    defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+                },
             },
         ];
     } else if (config.type == "staticSelect") {
@@ -246,7 +261,7 @@ export function generateFormField({
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
 
         formFragmentField = `${name} { id ${labelField} }`;
-        formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+        formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
         imports.push({
             name: `GQL${queryName}Query`,
             importPath: `./${baseOutputFilename}.generated`,
