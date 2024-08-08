@@ -11,6 +11,7 @@ export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
+export { createBlocksBlock } from "./blocks/factories/createBlocksBlock";
 export { EditImageDialog } from "./blocks/image/EditImageDialog";
 export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
