@@ -62,7 +62,7 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
                     await client.mutate<GQLSetProductCategoryMutation, GQLSetProductCategoryMutationVariables>({
                         mutation: setProductCategoryMutation,
                         variables: { id: productCategoryId, input: values },
-                        refetchQueries: ["GetProductIdsForProductCategory"],
+                        update: (cache, result) => cache.evict({ fieldName: "products" }),
                     });
                     return true;
                 }}
