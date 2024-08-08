@@ -3,12 +3,12 @@ import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-d
 
 import { IStackSwitchApi, useStackSwitchApi } from "./Switch";
 
-interface StackLinkProps extends Omit<RouterLinkProps, "to"> {
+type StackLinkProps = {
     pageName: string;
     payload: string;
     subUrl?: string;
     switchApi?: IStackSwitchApi;
-}
+} & Omit<RouterLinkProps, "to">;
 
 export const StackLink = React.forwardRef<HTMLAnchorElement, StackLinkProps>(
     ({ switchApi: externalSwitchApi, payload, pageName, subUrl, children, ...props }, ref) => {
