@@ -45,6 +45,10 @@ export function ProductsPage(): React.ReactElement {
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                     <MainContent fullHeight>
                         <ProductsGrid
+                            initialSort={[
+                                { field: "inStock", sort: "desc" },
+                                { field: "price", sort: "asc" },
+                            ]}
                             toolbarAction={
                                 <Button
                                     startIcon={<AddIcon />}
