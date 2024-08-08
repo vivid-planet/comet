@@ -31,6 +31,12 @@ export function generateFormField({
 
     const name = String(config.name);
     const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
+
+    let gqlFieldName = name;
+    if (config.type === "asyncSelect" && config.gqlFieldName) {
+        gqlFieldName = String(config.gqlFieldName);
+    }
+
     const label = config.label ?? camelCaseToHumanReadable(name);
 
     const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
@@ -38,11 +44,11 @@ export function generateFormField({
         | undefined;
     if (!introspectionObject) throw new Error(`didn't find object ${gqlType} in gql introspection`);
 
-    const introspectionField = introspectionObject.fields.find((field) => field.name === name);
-    if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
+    const introspectionField = introspectionObject.fields.find((field) => field.name === gqlFieldName);
+    if (!introspectionField) throw new Error(`didn't find field ${gqlFieldName} in gql introspection type ${gqlType}`);
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
-    const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
+    const required = !isFieldOptional({ config, gqlFieldName, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
 
@@ -118,7 +124,7 @@ export function generateFormField({
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
         let assignment = `parseFloat(formValues.${nameWithPrefix})`;
-        if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
+        if (isFieldOptional({ config, gqlFieldName, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
             assignment = `formValues.${nameWithPrefix} ? ${assignment} : null`;
         }
         formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
@@ -275,12 +281,50 @@ export function generateFormField({
         const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
         const rootQueryFilterType = rootQueryType.args.find((arg) => arg.name === "filter");
 
-        formFragmentField = `${name} { id ${labelField} }`;
-
         const filterField = config.filterField?.name ? findFieldByName(config.filterField.name, formConfig.fields) : undefined;
         if (filterField) {
             imports.push({ name: "OnChangeField", importPath: "@comet/admin" });
             finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
+        }
+
+        const initQueryIdPath = config.initQueryIdPath ?? `id`;
+        const initQueryIdSelection = config.initQueryIdPath
+            ? `id: ${config.initQueryIdPath
+                  .split(".")
+                  .reverse()
+                  .reduce((acc, part) => `${part}${acc ? ` { ${acc} }` : ``}`, ``)}`
+            : `id`;
+        const initQueryLabelPath = config.initQueryLabelPath ?? labelField ?? ``;
+        const initQueryLabelSelection = config.initQueryLabelPath
+            ? `${labelField}: ${config.initQueryLabelPath
+                  .split(".")
+                  .reverse()
+                  .reduce((acc, part) => `${part}${acc ? ` { ${acc} }` : ``}`, ``)}`
+            : labelField;
+
+        formFragmentField = `${name}${
+            config.gqlFieldName ? `: ${String(config.gqlFieldName)}` : ``
+        } { ${initQueryIdSelection} ${initQueryLabelSelection} }`;
+
+        if (initQueryIdPath.indexOf(".") !== -1 || initQueryLabelPath.indexOf(".") !== -1) {
+            // fetched nested values for id or label, formValues needs to be adjusted for asyncSelect to work
+            formValuesConfig = [
+                {
+                    ...defaultFormValuesConfig,
+                    ...{
+                        omitFromFragmentType: name,
+                        typeCode: `${name}?: { id: string, ${labelField}: string };`,
+                        initializationCode: `${name}: data.${instanceGqlType}.${String(config.name)} ? {
+                                id: data.${instanceGqlType}.${String(config.name)}?.id${
+                            initQueryIdPath.split(".").length > 1 ? initQueryIdPath.substring(initQueryIdPath.indexOf(".")) : ``
+                        },
+                                ${labelField}: data.${instanceGqlType}.${String(config.name)}?.${labelField}${
+                            initQueryLabelPath.split(".").length > 1 ? initQueryLabelPath.substring(initQueryLabelPath.indexOf(".")) : ``
+                        }
+                            } : undefined`,
+                    },
+                },
+            ];
         }
 
         formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;

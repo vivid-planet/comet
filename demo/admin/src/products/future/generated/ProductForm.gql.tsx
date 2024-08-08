@@ -14,11 +14,22 @@ export const productFormFragment = gql`
             title
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         dimensions {
             width
             height
             depth
 =======
+=======
+        manufacturerCountry: manufacturer {
+            id: addressAsEmbeddable {
+                country
+            }
+            label: addressAsEmbeddable {
+                country
+            }
+        }
+>>>>>>> admin-gen-configurable_async-select-graphql-alias
         manufacturer {
             id
             name

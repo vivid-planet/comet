@@ -16,20 +16,25 @@ type ImportReference = {
 };
 
 export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
+    | { type: "text"; name: keyof T; multiline?: boolean }
+    | { type: "number"; name: keyof T }
+    | { type: "boolean"; name: keyof T }
+    | { type: "date"; name: keyof T }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
+    | { type: "staticSelect"; name: keyof T; values?: string[] }
     | {
           type: "asyncSelect";
+          name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect
+          gqlFieldName?: keyof T;
+          initQueryIdPath?: string; // if gqlField-object does not have an id-field, or it's required to use any other field, e.g. asyncSelect is used for filtering; dot-separated
+          initQueryLabelPath?: string; // if label is not on first level of gqlField-object; dot-separated
           rootQuery: string;
-          labelField?: string;
+          labelField?: string; // should be the field used as option-label of the rootQuery
           filterField?: { name: string; gqlVarName: string; gqlVarType: "rootProp" | "filter" };
       }
-    | { type: "block"; block: ImportReference }
-) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+    | { type: "block"; name: keyof T; block: ImportReference }
+) & { label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);

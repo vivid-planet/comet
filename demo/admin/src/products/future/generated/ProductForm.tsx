@@ -37,6 +37,8 @@ import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
 import {
+    GQLManufacturerCountriesSelectQuery,
+    GQLManufacturerCountriesSelectQueryVariables,
     GQLManufacturersSelectQuery,
     GQLManufacturersSelectQueryVariables,
     GQLProductCategoriesSelectQuery,
@@ -57,6 +59,7 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
+<<<<<<< HEAD
 type FormValues = Omit<GQLProductFormDetailsFragment, "dimensions"> & {
     dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
@@ -64,6 +67,10 @@ type FormValues = Omit<GQLProductFormDetailsFragment, "dimensions"> & {
         height: string;
         depth: string;
     };
+=======
+type FormValues = Omit<GQLProductFormDetailsFragment, "manufacturerCountry"> & {
+    manufacturerCountry?: { id: string; label: string };
+>>>>>>> admin-gen-configurable_async-select-graphql-alias
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -88,12 +95,19 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filterByFragment<GQLProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
+<<<<<<< HEAD
                       dimensionsEnabled: !!data.product.dimensions,
                       dimensions: data.product.dimensions
                           ? {
                                 width: String(data.product.dimensions.width),
                                 height: String(data.product.dimensions.height),
                                 depth: String(data.product.dimensions.depth),
+=======
+                      manufacturerCountry: data.product.manufacturerCountry
+                          ? {
+                                id: data.product.manufacturerCountry?.id.country,
+                                label: data.product.manufacturerCountry?.label.country,
+>>>>>>> admin-gen-configurable_async-select-graphql-alias
                             }
                           : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
@@ -117,7 +131,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
+<<<<<<< HEAD
     const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+=======
+    const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+>>>>>>> admin-gen-configurable_async-select-graphql-alias
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
@@ -333,6 +351,31 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth
+                                name="manufacturerCountry"
+                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<
+                                        GQLManufacturerCountriesSelectQuery,
+                                        GQLManufacturerCountriesSelectQueryVariables
+                                    >({
+                                        query: gql`
+                                            query ManufacturerCountriesSelect {
+                                                manufacturerCountries {
+                                                    nodes {
+                                                        id
+                                                        label
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                    });
+                                    return data.manufacturerCountries.nodes;
+                                }}
+                                getOptionLabel={(option) => option.label}
+                            />
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
                                 name="manufacturer"
                                 label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                                 loadOptions={async () => {
@@ -347,14 +390,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                                 }
                                             }
                                         `,
-                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } },
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.manufacturerCountry?.id } } },
                                     });
                                     return data.manufacturers.nodes;
                                 }}
                                 getOptionLabel={(option) => option.name}
-                                disabled={!values?.type}
+                                disabled={!values?.manufacturerCountry}
                             />
-                            <OnChangeField name="type">
+                            <OnChangeField name="manufacturerCountry">
                                 {(value, previousValue) => {
                                     if (value.id !== previousValue.id) {
                                         form.change("manufacturer", undefined);

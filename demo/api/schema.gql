@@ -461,6 +461,7 @@ type Manufacturer {
 
 type ManufacturerCountry {
   id: String!
+  label: String!
   used: Float!
 }
 
