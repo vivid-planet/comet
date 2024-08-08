@@ -212,7 +212,6 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                                         minRows={3}
                                         fullWidth
                                         disabled={licenseType === "NO_LICENSE"}
-                                        validate={requiredValidator}
                                         shouldShowError={() => true}
                                     />
                                     <Field
@@ -221,7 +220,6 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                                         component={FinalFormInput}
                                         fullWidth
                                         disabled={licenseType === "NO_LICENSE"}
-                                        validate={requiredValidator}
                                         shouldShowError={() => true}
                                     />
                                     <FieldContainer

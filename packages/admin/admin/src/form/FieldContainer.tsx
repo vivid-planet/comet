@@ -85,7 +85,6 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
         css`
             display: flex;
             flex-direction: row;
-            align-items: center;
             max-width: 944px;
             gap: ${theme.spacing(4)};
         `}
@@ -130,6 +129,7 @@ const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>
             flex-shrink: 0;
             flex-grow: 0;
             margin-bottom: 0;
+            margin-top: ${theme.spacing(2)};
         `}
 
         ${ownerState.disabled &&
@@ -163,6 +163,16 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
         !ownerState.forceVertical &&
         css`
             flex-grow: 1;
+        `}
+
+        ${ownerState.variant === "horizontal" &&
+        !ownerState.forceVertical &&
+        css`
+            min-height: 40px;
+
+            > .CometAdminFormFieldContainer-root {
+                margin-bottom: 0;
+            }
         `}
 
         & > [class*="${inputBaseClasses.root}"] {
@@ -239,7 +249,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
     return (
         <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...slotProps?.root} {...restProps}>
             <>
-                {label && (
+                {(label || (variant === "horizontal" && !forceVertical)) && (
                     <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
                         {label}
                     </Label>

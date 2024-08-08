@@ -196,7 +196,7 @@ module.exports = {
         //group demo api
         {
             name: "demo-docker",
-            script: "node docker-compose.js",
+            script: "docker compose up",
             group: ["demo-api", "demo"],
         },
         {
@@ -244,6 +244,14 @@ module.exports = {
             script: "pnpm --filter comet-demo-site-pages run generate-block-types:watch",
             group: ["demo-site-pages", "demo"],
             waitOn: ["tcp:$API_PORT"],
+        },
+        {
+            name: "docs",
+            script: "pnpm --filter comet-docs start",
+        },
+        {
+            name: "storybook",
+            script: "pnpm --filter comet-storybook run storybook",
         },
     ],
 };

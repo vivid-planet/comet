@@ -72,6 +72,9 @@ export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootB
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
+export { FileUploadField, FileUploadFieldProps } from "./form/file/FileUploadField";
+export { FinalFormFileUpload, finalFormFileUploadFragment, FinalFormFileUploadProps } from "./form/file/FinalFormFileUpload";
+export { GQLFinalFormFileUploadFragment } from "./form/file/FinalFormFileUpload.generated";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
 export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";

@@ -1,5 +1,17 @@
-import { BlockData, BlockField, BlockIndexData, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
+import {
+    AnnotationBlockMeta,
+    BlockData,
+    BlockField,
+    BlockIndexData,
+    BlockInput,
+    BlockMetaField,
+    BlockMetaFieldKind,
+    createBlock,
+    inputToData,
+} from "@comet/blocks-api";
 import { IsOptional, IsUUID } from "class-validator";
+
+import { NewsLinkBlockTransformerService } from "./news-link-block-transformer.service";
 
 class NewsLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
@@ -19,6 +31,56 @@ class NewsLinkBlockData extends BlockData {
             ],
         };
     }
+
+    async transformToPlain() {
+        return NewsLinkBlockTransformerService;
+    }
+}
+
+class Meta extends AnnotationBlockMeta {
+    get fields(): BlockMetaField[] {
+        return [
+            ...super.fields,
+            {
+                name: "news",
+                kind: BlockMetaFieldKind.NestedObject,
+                nullable: true,
+                object: {
+                    fields: [
+                        {
+                            name: "id",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: false,
+                        },
+                        {
+                            name: "slug",
+                            kind: BlockMetaFieldKind.String,
+                            nullable: false,
+                        },
+                        {
+                            name: "scope",
+                            kind: BlockMetaFieldKind.NestedObject,
+                            nullable: false,
+                            object: {
+                                fields: [
+                                    {
+                                        name: "domain",
+                                        kind: BlockMetaFieldKind.String,
+                                        nullable: false,
+                                    },
+                                    {
+                                        name: "language",
+                                        kind: BlockMetaFieldKind.String,
+                                        nullable: false,
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            },
+        ];
+    }
 }
 
 class NewsLinkBlockInput extends BlockInput {
@@ -32,6 +94,6 @@ class NewsLinkBlockInput extends BlockInput {
     }
 }
 
-const NewsLinkBlock = createBlock(NewsLinkBlockData, NewsLinkBlockInput, "NewsLink");
+const NewsLinkBlock = createBlock(NewsLinkBlockData, NewsLinkBlockInput, { name: "NewsLink", blockMeta: new Meta(NewsLinkBlockData) });
 
-export { NewsLinkBlock };
+export { NewsLinkBlock, NewsLinkBlockData };

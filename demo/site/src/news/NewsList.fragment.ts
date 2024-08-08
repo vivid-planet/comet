@@ -8,6 +8,9 @@ export const newsListFragment = gql`
             slug
             image
             createdAt
+            scope {
+                language
+            }
         }
     }
 `;

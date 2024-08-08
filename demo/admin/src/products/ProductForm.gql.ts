@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { finalFormFileUploadFragment } from "@comet/cms-admin";
 
 export const productFormFragment = gql`
     fragment ProductFormManual on Product {
@@ -9,6 +10,12 @@ export const productFormFragment = gql`
         additionalTypes
         inStock
         image
+        priceList {
+            ...FinalFormFileUpload
+        }
+        datasheets {
+            ...FinalFormFileUpload
+        }
         manufacturerCountry: manufacturer {
             addressAsEmbeddable {
                 country
@@ -27,6 +34,7 @@ export const productFormFragment = gql`
             title
         }
     }
+    ${finalFormFileUploadFragment}
 `;
 
 export const productQuery = gql`
