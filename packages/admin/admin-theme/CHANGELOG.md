@@ -1,5 +1,15 @@
 # @comet/admin-theme
 
+## 7.1.0
+
+### Minor Changes
+
+-   04844d39e: Adjust the alignment and spacing of the label, the input, and child fields inside `FieldContainer` and `Field`
+
+### Patch Changes
+
+-   @comet/admin-icons@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

@@ -1,5 +1,19 @@
 # @comet/admin-date-time
 
+## 7.1.0
+
+### Patch Changes
+
+-   Updated dependencies [04844d39e]
+-   Updated dependencies [dfc4a7fff]
+-   Updated dependencies [39ab15616]
+-   Updated dependencies [99a1f0ae6]
+-   Updated dependencies [edf14d066]
+-   Updated dependencies [2b68513be]
+-   Updated dependencies [c050f2242]
+    -   @comet/admin@7.1.0
+    -   @comet/admin-icons@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

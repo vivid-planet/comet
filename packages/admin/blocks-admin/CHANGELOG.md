@@ -1,5 +1,20 @@
 # @comet/blocks-admin
 
+## 7.1.0
+
+### Patch Changes
+
+-   2253a1d00: createListBlock: Don't show the minimum visible blocks tooltip when the option isn't used
+-   Updated dependencies [04844d39e]
+-   Updated dependencies [dfc4a7fff]
+-   Updated dependencies [39ab15616]
+-   Updated dependencies [99a1f0ae6]
+-   Updated dependencies [edf14d066]
+-   Updated dependencies [2b68513be]
+-   Updated dependencies [c050f2242]
+    -   @comet/admin@7.1.0
+    -   @comet/admin-icons@7.1.0
+
 ## 7.0.0
 
 ### Major Changes
