@@ -453,8 +453,6 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
             const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(supportedBlocks) });
 
             const pasteBlock = async (insertAt: number) => {
-                console.log("pasteBlock createBlocksBlock");
-
                 const response = await getClipboardContent();
 
                 if (!response.canPaste) {
@@ -473,10 +471,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                         }
 
                         const block = blockForType(type);
-
-                        console.log("old state ", clipboardBlock.state);
                         const newBlockState = block?.replaceKeys(clipboardBlock.state) ?? clipboardBlock.state;
-                        console.log("new state ", newBlockState);
 
                         return {
                             key: uuid(),
