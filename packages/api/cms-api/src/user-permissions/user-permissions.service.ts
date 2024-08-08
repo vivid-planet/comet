@@ -21,6 +21,7 @@ import {
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
 } from "./user-permissions.types";
+import { sortContentScopeKeysAlphabetically } from "./utils/sort-content-scope-keys-alphabetically";
 
 @Injectable()
 export class UserPermissionsService {
@@ -38,7 +39,7 @@ export class UserPermissionsService {
             if (typeof this.options.availableContentScopes === "function") {
                 return this.options.availableContentScopes();
             }
-            return this.options.availableContentScopes;
+            return this.options.availableContentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
         }
         return [];
     }
@@ -142,7 +143,7 @@ export class UserPermissionsService {
             }
         }
 
-        return contentScopes;
+        return contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
     }
 
     normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
