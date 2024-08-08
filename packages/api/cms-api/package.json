@@ -96,6 +96,7 @@
         "@nestjs/graphql": "^10.0.0",
         "@nestjs/platform-express": "^9.0.0",
         "@nestjs/testing": "^9.0.0",
+        "@sentry/node": "^7.0.0",
         "@types/express": "^4.0.0",
         "@types/jest": "^29.5.0",
         "@types/jsonwebtoken": "^8.5.9",
@@ -136,10 +137,16 @@
         "@nestjs/core": "^9.0.0",
         "@nestjs/graphql": "^10.0.0",
         "@nestjs/platform-express": "^9.0.0",
+        "@sentry/node": "^7.0.0",
         "express": "^4.0.0",
         "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
         "nestjs-console": "^8.0.0",
         "rxjs": "^7.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@sentry/node": {
+            "optional": true
+        }
     },
     "publishConfig": {
         "access": "public",
