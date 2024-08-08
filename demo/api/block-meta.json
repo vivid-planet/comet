@@ -113,8 +113,7 @@
                                 "space": "Space",
                                 "richtext": "RichText",
                                 "headline": "Headline",
-                                "image": "DamImage",
-                                "linkList": "LinkList"
+                                "image": "DamImage"
                             },
                             "nullable": false
                         }
@@ -151,8 +150,7 @@
                                 "space": "Space",
                                 "richtext": "RichText",
                                 "headline": "Headline",
-                                "image": "DamImage",
-                                "linkList": "LinkList"
+                                "image": "DamImage"
                             },
                             "nullable": false
                         }
