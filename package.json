@@ -28,8 +28,8 @@
         "lint:root": "$npm_execpath prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}'",
         "lint:eslint": "pnpm recursive run lint:eslint",
         "lint:tsc": "pnpm recursive run lint:tsc",
-        "storybook": "pnpm --filter comet-storybook run storybook",
-        "docs": "pnpm --filter ./docs run start",
+        "storybook": "dev-pm start storybook",
+        "docs": "dev-pm start docs",
         "test": "pnpm recursive run test",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
         "publish": "pnpm run build:packages && $npm_execpath changeset publish"

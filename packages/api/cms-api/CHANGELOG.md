@@ -209,7 +209,7 @@
     -   Use `FileUploadsModule` instead of `PublicUploadModule`
     -   Use `FileUpload` instead of `PublicUpload`
     -   Use `FileUploadsService` instead of `PublicUploadsService`
-    -   Change the upload URL from `/public-upload/files/upload` to `/files-uploads/upload`
+    -   Change the upload URL from `/public-upload/files/upload` to `/file-uploads/upload`
 
 -   17c7f79a2: Secure file uploads upload endpoint by default
 

@@ -26,9 +26,11 @@ storiesOf("stories/components/FileSelectListItem", module)
                         size: 4.3 * 1024 * 1024, // 4.3 MB
                     }}
                     onClickDownload={() => {
+                        console.log("Downloading file");
                         // Handle download
                     }}
                     onClickDelete={() => {
+                        console.log("Deleting file");
                         // Handle delete
                     }}
                 />
@@ -57,6 +59,7 @@ storiesOf("stories/components/FileSelectListItem", module)
                         error: "File too large",
                     }}
                     onClickDelete={() => {
+                        console.log("Deleting file");
                         // Handle delete
                     }}
                 />

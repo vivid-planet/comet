@@ -16,7 +16,14 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import {
+    DamImageBlock,
+    FileUploadField,
+    GQLFinalFormFileUploadFragment,
+    queryUpdatedAt,
+    resolveHasSaveConflict,
+    useFormSaveConflict,
+} from "@comet/cms-admin";
 import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import {
@@ -55,7 +62,13 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormManualFragment, "image" | "manufacturerCountry"> & {
+// Set types for FinalFormFileUpload manually, as they cannot be generated from the fragment in `@comet/cms-admin`
+type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" | "datasheets"> & {
+    priceList: GQLFinalFormFileUploadFragment | null;
+    datasheets: Array<GQLFinalFormFileUploadFragment>;
+};
+
+type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry"> & {
     image: BlockState<typeof rootBlocks.image>;
     manufacturerCountry?: { id: string };
 };
@@ -72,7 +85,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     );
 
     const initialValues: Partial<FormValues> = React.useMemo<Partial<FormValues>>(() => {
-        const filteredData = data ? filterByFragment<GQLProductFormManualFragment>(productFormFragment, data.product) : undefined;
+        const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
         if (!filteredData) {
             return {
                 image: rootBlocks.image.defaultValues(),
@@ -105,6 +118,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
     const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
+
         const output = {
             ...formValues,
             image: rootBlocks.image.state2Output(formValues.image),
@@ -114,8 +128,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             articleNumbers: [],
             discounts: [],
             statistics: { views: 0 },
+            priceList: formValues.priceList ? formValues.priceList.id : null,
+            datasheets: formValues.datasheets?.map(({ id }) => id),
             manufacturer: formValues.manufacturer?.id,
         };
+
         if (mode === "edit") {
             if (!id) throw new Error();
             await client.mutate<GQLUpdateProductMutation, GQLUpdateProductMutationVariables>({
@@ -159,6 +176,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                     <MainContent>
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
+
                         <TextAreaField
                             required
                             fullWidth
@@ -301,6 +319,19 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>
+                        <FileUploadField
+                            label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
+                            name="priceList"
+                            maxFileSize={1024 * 1024 * 4} // 4 MB
+                            fullWidth
+                        />
+                        <FileUploadField
+                            label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                            name="datasheets"
+                            multiple
+                            maxFileSize={1024 * 1024 * 4} // 4 MB
+                            fullWidth
+                        />
                     </MainContent>
                 </>
             )}

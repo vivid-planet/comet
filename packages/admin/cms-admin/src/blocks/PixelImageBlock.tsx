@@ -248,6 +248,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
                                     height: state.damFile.image.height,
                                     size: state.damFile.size,
                                 }}
+                                damFileId={state.damFile.id}
                                 initialValues={{
                                     useInheritedDamSettings: state.cropArea === undefined,
                                     cropArea: state.cropArea ?? state.damFile.image.cropArea,
