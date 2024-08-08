@@ -1,6 +1,7 @@
 import { IntrospectionQuery } from "graphql";
 
 import { FormConfig, FormLayoutConfig } from "../generator";
+import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
 import { generateFields, GenerateFieldsReturn } from "./generateFields";
 
@@ -29,6 +30,8 @@ export function generateFormLayout({
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
 
     if (config.type === "fieldSet") {
+        const title = config.title ?? camelCaseToHumanReadable(config.name);
+
         const generatedFields = generateFields({ gqlIntrospection, baseOutputFilename, fields: config.fields, formConfig });
         hooksCode += generatedFields.hooksCode;
         formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
@@ -46,9 +49,9 @@ export function generateFormLayout({
         }
         code = `
         <FieldSet
-            ${config.collapsible ? `collapsible` : ``}
+            ${config.collapsible === undefined || config.collapsible ? `collapsible` : ``}
             ${config.initiallyExpanded ? `initiallyExpanded` : ``}
-            title={<FormattedMessage id="${instanceGqlType}.${config.name}.title" defaultMessage="${config.title}" />}
+            title={<FormattedMessage id="${instanceGqlType}.${config.name}.title" defaultMessage="${title}" />}
             ${
                 config.supportText
                     ? `supportText={
