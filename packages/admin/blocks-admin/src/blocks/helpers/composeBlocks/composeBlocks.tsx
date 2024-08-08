@@ -214,6 +214,19 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return dependencyPath;
             },
+            replaceKeysWithNewUUIDs: (state) => {
+                const copiedBlocks = applyToCompositeBlocks(
+                    compositeBlocks,
+                    ([block, options], attr) => {
+                        const extractedData = extractData([block, options], attr, state);
+
+                        return block.replaceKeysWithNewUUIDs(extractedData);
+                    },
+                    { flatten: true },
+                );
+
+                return { ...state, ...copiedBlocks };
+            },
         },
         api: {
             adminComponentProps,

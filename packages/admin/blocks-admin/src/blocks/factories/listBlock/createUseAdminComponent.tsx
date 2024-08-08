@@ -199,14 +199,16 @@ export function createUseAdminComponent<T extends BlockInterface>({
                 const clipboardVisibleBlocks = content.filter((block) => block.visible).length;
                 const canAddVisibleBlock = maxVisibleBlocks ? totalVisibleBlocks + clipboardVisibleBlocks <= maxVisibleBlocks : true;
 
-                const newBlocks: ListBlockItem<T>[] = content.map((block) => {
+                const newBlocks: ListBlockItem<T>[] = content.map((clipboardBlock) => {
+                    const newBlockState = block.replaceKeysWithNewUUIDs(clipboardBlock.state);
+
                     return {
                         key: uuid(),
-                        visible: canAddVisibleBlock ? block.visible : false,
-                        props: block.state,
+                        visible: canAddVisibleBlock ? clipboardBlock.visible : false,
+                        props: newBlockState,
                         selected: false,
                         slideIn: true,
-                        ...block.additionalFields,
+                        ...clipboardBlock.additionalFields,
                     };
                 });
 
