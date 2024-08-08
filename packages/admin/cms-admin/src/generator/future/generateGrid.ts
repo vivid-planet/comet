@@ -366,7 +366,7 @@ export function generateGrid(
         }
     \`;
 
-    const ${instanceGqlTypePlural}Query = gql\`
+    ${config.exportQuery ? `export ` : ``}const ${instanceGqlTypePlural}Query = gql\`
         query ${gqlTypePlural}Grid(${[
         ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
         ...[`$offset: Int!`, `$limit: Int!`],

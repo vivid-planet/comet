@@ -71,6 +71,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
+    exportQuery?: boolean; // to refetch from outside
     columns: GridColumnConfig<T>[];
     add?: boolean;
     edit?: boolean;
