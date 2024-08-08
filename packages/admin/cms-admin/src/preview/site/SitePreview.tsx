@@ -20,6 +20,7 @@ import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLin
 interface Props extends RouteComponentProps {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
     logo?: React.ReactNode;
+    actions?: React.ReactNode;
 }
 
 function useSearchState<ParseFunction extends (value: string | undefined) => ReturnType<ParseFunction>>(
@@ -41,7 +42,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     );
     return [value, setValue];
 }
-function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
+function SitePreview({ resolvePath, actions, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
     const { scope } = useContentScope();
 
     //initialPath: path the preview is intialized with; WITHOUT resolvePath called, might be not the path actually used in site
@@ -158,6 +159,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                     </Grid>
                     <Grid item>
                         <VisibilityToggle showOnlyVisible={showOnlyVisible} onChange={handleShowOnlyVisibleChange} />
+                        {actions}
                     </Grid>
                 </Grid>
             </ActionsContainer>

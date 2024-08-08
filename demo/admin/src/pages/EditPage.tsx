@@ -1,6 +1,17 @@
 import { gql } from "@apollo/client";
-import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
-import { ArrowLeft, Preview } from "@comet/admin-icons";
+import {
+    CustomAction,
+    Loading,
+    MainContent,
+    messages,
+    RouterPrompt,
+    Toolbar,
+    ToolbarActions,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useStackApi,
+} from "@comet/admin";
+import { ArrowLeft, Preview, Status } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
     AzureAiTranslatorProvider,
@@ -160,7 +171,16 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </ToolbarActions>
             </Toolbar>
             <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewUrl={`${siteConfig.blockPreviewBaseUrl}/page`} previewState={previewState} previewApi={previewApi}>
+                <BlockPreviewWithTabs
+                    previewUrl={`${siteConfig.blockPreviewBaseUrl}/page`}
+                    previewState={previewState}
+                    previewApi={previewApi}
+                    actions={
+                        <CustomAction>
+                            <Status />
+                        </CustomAction>
+                    }
+                >
                     {[
                         {
                             key: "content",
