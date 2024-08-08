@@ -200,7 +200,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
                 const canAddVisibleBlock = maxVisibleBlocks ? totalVisibleBlocks + clipboardVisibleBlocks <= maxVisibleBlocks : true;
 
                 const newBlocks: ListBlockItem<T>[] = content.map((clipboardBlock) => {
-                    const newBlockState = block.replaceKeys(clipboardBlock.state);
+                    const newBlockState = block.replaceKeysWithNewUUIDs(clipboardBlock.state);
 
                     return {
                         key: uuid(),

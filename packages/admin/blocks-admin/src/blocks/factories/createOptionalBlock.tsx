@@ -170,10 +170,10 @@ export function createOptionalBlock<T extends BlockInterface>(
             return block && visible ? decoratedBlock.previewContent(block, ctx) : [];
         },
 
-        replaceKeys: (state) => {
+        replaceKeysWithNewUUIDs: (state) => {
             return {
                 ...state,
-                block: state.block ? decoratedBlock.replaceKeys(state.block) : undefined,
+                block: state.block ? decoratedBlock.replaceKeysWithNewUUIDs(state.block) : undefined,
             };
         },
     };

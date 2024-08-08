@@ -465,7 +465,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
             }
         },
 
-        replaceKeys: (state) => {
+        replaceKeysWithNewUUIDs: (state) => {
             const newState: OneOfBlockState = { ...state, attachedBlocks: [] };
 
             for (const c of state.attachedBlocks) {
@@ -476,7 +476,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
 
                 newState.attachedBlocks.push({
                     ...c,
-                    props: block.replaceKeys(c.props),
+                    props: block.replaceKeysWithNewUUIDs(c.props),
                 });
             }
 

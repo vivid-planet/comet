@@ -471,7 +471,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                         }
 
                         const block = blockForType(type);
-                        const newBlockState = block?.replaceKeys(clipboardBlock.state) ?? clipboardBlock.state;
+                        const newBlockState = block?.replaceKeysWithNewUUIDs(clipboardBlock.state) ?? clipboardBlock.state;
 
                         return {
                             key: uuid(),
@@ -828,7 +828,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
             return `${blockItem.key}/blocks/${childPath}`;
         },
 
-        replaceKeys: (state) => {
+        replaceKeysWithNewUUIDs: (state) => {
             const newState: BlocksBlockState<AdditionalItemFields> = { blocks: [] };
 
             for (const child of state.blocks) {
@@ -837,7 +837,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                     throw new Error(`No Block found for type ${child.type}`);
                 }
 
-                newState.blocks.push({ ...child, props: block.replaceKeys(child.props), key: uuid() });
+                newState.blocks.push({ ...child, props: block.replaceKeysWithNewUUIDs(child.props), key: uuid() });
             }
 
             return newState;

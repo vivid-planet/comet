@@ -525,13 +525,13 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             return `${blockItem.key}/edit/${childPath}`;
         },
 
-        replaceKeys: (state) => {
+        replaceKeysWithNewUUIDs: (state) => {
             const newState: ListBlockState<T, AdditionalItemFields> = { ...state, blocks: [] };
 
             for (const child of state.blocks) {
                 newState.blocks.push({
                     ...child,
-                    props: block.replaceKeys(child.props),
+                    props: block.replaceKeysWithNewUUIDs(child.props),
                     key: uuid(),
                 });
             }

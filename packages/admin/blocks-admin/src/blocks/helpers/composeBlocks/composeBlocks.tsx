@@ -214,13 +214,13 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return dependencyPath;
             },
-            replaceKeys: (state) => {
+            replaceKeysWithNewUUIDs: (state) => {
                 const copiedBlocks = applyToCompositeBlocks(
                     compositeBlocks,
                     ([block, options], attr) => {
                         const extractedData = extractData([block, options], attr, state);
 
-                        return block.replaceKeys(extractedData);
+                        return block.replaceKeysWithNewUUIDs(extractedData);
                     },
                     { flatten: true },
                 );

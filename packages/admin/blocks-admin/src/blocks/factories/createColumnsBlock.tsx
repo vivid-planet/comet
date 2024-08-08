@@ -461,13 +461,13 @@ export function createColumnsBlock<T extends BlockInterface>({
             const childPath = contentBlock.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
         },
-        replaceKeys: (state) => {
+        replaceKeysWithNewUUIDs: (state) => {
             const newState: ColumnsBlockState<T> = { ...state, columns: [] };
 
             for (const column of state.columns) {
                 newState.columns.push({
                     ...column,
-                    props: contentBlock.replaceKeys(column.props),
+                    props: contentBlock.replaceKeysWithNewUUIDs(column.props),
                     key: uuid(),
                 });
             }
