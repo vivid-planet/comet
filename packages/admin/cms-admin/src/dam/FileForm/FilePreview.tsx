@@ -32,7 +32,7 @@ const ActionsContainer = styled("div")`
 `;
 
 const ActionButton = styled(Button)`
-    color: ${({ theme }) => theme.palette.primary.contrastText};
+    color: white;
 `;
 
 const FileWrapper = styled(Paper)`
