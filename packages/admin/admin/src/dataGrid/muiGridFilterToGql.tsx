@@ -46,7 +46,7 @@ type GqlFilter = {
     or?: GqlFilter[] | null;
 };
 
-function convertValueByType(value: string, type?: string) {
+function convertValueByType(value: any, type?: string) {
     if (type === "number") {
         return parseFloat(value);
     } else if (type === "boolean") {
