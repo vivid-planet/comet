@@ -1,7 +1,8 @@
 import { ApolloClient } from "@apollo/client";
 
 import { GQLPageTreeNodeVisibility } from "../../graphql.generated";
-import { GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables, updatePageVisibilityMutation } from "../pageTree/PageVisibility";
+import { updatePageVisibilityMutation } from "../pageTree/PageVisibility";
+import { GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables } from "../pageTree/PageVisibility.generated";
 import { GQLPageTreePageFragment } from "../pageTree/usePageTree";
 
 export const pageTreeBatchUpdateVisibility = async (
