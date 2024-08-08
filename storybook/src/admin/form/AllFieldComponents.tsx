@@ -6,9 +6,9 @@ import {
     Field,
     FieldContainer,
     FieldSet,
-    FinalFormRadio,
     FinalFormRangeInput,
     NumberField,
+    RadioGroupField,
     SearchField,
     SelectField,
     SwitchField,
@@ -17,7 +17,7 @@ import {
 } from "@comet/admin";
 import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
-import { Box, Button, FormControlLabel, Link, MenuItem } from "@mui/material";
+import { Box, Button, Link, MenuItem } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -95,6 +95,7 @@ function Story() {
                                 fullWidth
                             />
                         </FieldSet>
+
                         <FieldSet title="Field-Components with Field-Container">
                             <CheckboxField name="singleCheckbox" fieldLabel="Single Checkbox" variant={fieldVariant} fullWidth />
                             <CheckboxField
@@ -121,34 +122,78 @@ function Story() {
                                 <CheckboxField name="checkboxList" label="Checkbox five" value="checkbox-five" />
                             </FieldContainer>
                             <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
-                            <FieldContainer label="Radio" variant={fieldVariant} fullWidth>
-                                <Field name="radio" type="radio" value="option-one">
-                                    {(props) => <FormControlLabel label="Option One" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radio" type="radio" value="option-two">
-                                    {(props) => <FormControlLabel label="Option Two" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                            </FieldContainer>
-                            <FieldContainer label="Radio (many options)" variant={fieldVariant} fullWidth>
-                                <Field name="radioManyOptions" type="radio" value="option-one">
-                                    {(props) => <FormControlLabel label="Option One" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-two">
-                                    {(props) => <FormControlLabel label="Option Two" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-three">
-                                    {(props) => <FormControlLabel label="Option Three" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-four">
-                                    {(props) => <FormControlLabel label="Option Four" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-five">
-                                    {(props) => <FormControlLabel label="Option Five" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-six">
-                                    {(props) => <FormControlLabel label="Option Six" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                            </FieldContainer>
+                        </FieldSet>
+                        <FieldSet title="Radio Groups">
+                            <RadioGroupField
+                                label="Required"
+                                name="radio"
+                                variant={fieldVariant}
+                                fullWidth
+                                required
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                ]}
+                            />
+                            <RadioGroupField
+                                label="Many Options"
+                                name="radioGroupManyOptions"
+                                variant={fieldVariant}
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                    {
+                                        label: "Option Three",
+                                        value: "option-three",
+                                    },
+                                    {
+                                        label: "Option Four",
+                                        value: "option-four",
+                                    },
+                                    {
+                                        label: "Option Five",
+                                        value: "option-five",
+                                    },
+                                    {
+                                        label: "Option Six",
+                                        value: "option-six",
+                                    },
+                                ]}
+                            />
+                            <RadioGroupField
+                                label="Column Layout"
+                                name="radioGroupFullWidthOptions"
+                                variant={fieldVariant}
+                                layout="column"
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                    {
+                                        label: "Option Three",
+                                        value: "option-three",
+                                    },
+                                ]}
+                            />
                         </FieldSet>
                         <FieldSet title="Number Range">
                             <Field
