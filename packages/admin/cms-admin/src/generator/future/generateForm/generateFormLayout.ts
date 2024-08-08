@@ -38,6 +38,8 @@ export function generateFormLayout({
     const finalFormConfig = { subscription: {}, renderProps: {} };
 
     if (config.type === "fieldSet") {
+        const title = config.title ?? camelCaseToHumanReadable(config.name);
+
         const generatedFields = generateFields({
             gqlIntrospection,
             baseOutputFilename,
@@ -66,9 +68,9 @@ export function generateFormLayout({
         }
         code = `
         <FieldSet
-            ${config.collapsible ? `collapsible` : ``}
+            ${config.collapsible === undefined || config.collapsible ? `collapsible` : ``}
             ${config.initiallyExpanded ? `initiallyExpanded` : ``}
-            title={<FormattedMessage id="${formattedMessageRootId}.${config.name}.title" defaultMessage="${config.title}" />}
+            title={<FormattedMessage id="${formattedMessageRootId}.${config.name}.title" defaultMessage="${title}" />}
             ${
                 config.supportText
                     ? `supportText={

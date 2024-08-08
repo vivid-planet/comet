@@ -46,10 +46,10 @@ export type FormLayoutConfig<T> =
     | {
           type: "fieldSet";
           name: string;
-          title: string;
+          title?: string;
           supportText?: string; // can contain field-placeholder
-          collapsible: boolean; // default true
-          initiallyExpanded: boolean; // default false
+          collapsible?: boolean; // default true
+          initiallyExpanded?: boolean; // default false
           fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T>)[];
       }
     | OptionalNestedFieldsConfig<T>;
