@@ -4,11 +4,13 @@
 
 Add `ErrorHandlerProvider`
 
-An `ErrorBoundary` was put around each block in the `BlocksBlock`, `OneOfBlock` and `ListBlock` to prevent the whole page from crashing in SSR applications. Instead of crashing the whole page, the broken block is hidden in the production build. In local development, the block still throws an error. Since a broken block is invisible on built applications, the application should take care of reporting the error (for example, to an error handling tool like Sentry).
+Each block in `BlocksBlock`, `OneOfBlock` and `ListBlock` is wrapped with an error boundary to prevent the whole page from crashing when a single block throws an error.
+In production, the broken block is hidden. The application should take care of reporting the error to an error tracking service (e.g., Sentry). In local development, the error is re-thrown.
 
-**ErrorHandler should be added in layout.ts :**
+Add an `ErrorHandler` to the root layout:
 
 ```tsx
+// In src/app/layout.tsx
 <html>
     <body className={inter.className}>
         {/* Other Providers */}
@@ -17,9 +19,9 @@ An `ErrorBoundary` was put around each block in the `BlocksBlock`, `OneOfBlock` 
 </html>
 ```
 
-The ErrorHandler receives the errors in the application and can report the error in production mode.
+The `ErrorHandler` receives the errors in the application and can report them to the error tracking service.
 
-**ErrorHandler**
+**Example ErrorHandler**
 
 ```tsx
 "use client";
@@ -33,7 +35,7 @@ export function ErrorHandler({ children }: PropsWithChildren) {
         if (process.env.NODE_ENV === "development") {
             throw error;
         } else {
-            // Log the error to an error tracking service
+            // Report the error to the error tracking service
         }
     }
 
