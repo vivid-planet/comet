@@ -464,6 +464,24 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                 return displayName;
             }
         },
+
+        replaceKeys: (state) => {
+            const newState: OneOfBlockState = { ...state, attachedBlocks: [] };
+
+            for (const c of state.attachedBlocks) {
+                const block = blockForType(c.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${c.type}`); // for TS
+                }
+
+                newState.attachedBlocks.push({
+                    ...c,
+                    props: block.replaceKeys(c.props),
+                });
+            }
+
+            return newState;
+        },
     };
     return OneOfBlock;
 };

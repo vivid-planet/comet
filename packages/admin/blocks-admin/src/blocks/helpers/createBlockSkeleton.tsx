@@ -44,6 +44,7 @@ function common<InputApi, State, OutputApi>(): Omit<
         previewContent: () => [],
         replaceDependenciesInOutput: (output) => output,
         resolveDependencyPath: () => "",
+        replaceKeys: (state) => state,
     };
 }
 

@@ -186,6 +186,8 @@ export function createUseAdminComponent<T extends BlockInterface>({
             [cannotPasteBlockError],
         );
         const pasteBlock = async (insertAt: number) => {
+            console.log("pasteBlock createUseAdminComponent");
+
             const response = await getClipboardContent();
 
             if (!response.canPaste) {
@@ -199,14 +201,18 @@ export function createUseAdminComponent<T extends BlockInterface>({
                 const clipboardVisibleBlocks = content.filter((block) => block.visible).length;
                 const canAddVisibleBlock = maxVisibleBlocks ? totalVisibleBlocks + clipboardVisibleBlocks <= maxVisibleBlocks : true;
 
-                const newBlocks: ListBlockItem<T>[] = content.map((block) => {
+                const newBlocks: ListBlockItem<T>[] = content.map((clipboardBlock) => {
+                    console.log("old state ", clipboardBlock.state);
+                    const newBlockState = block.replaceKeys(clipboardBlock.state);
+                    console.log("new state ", newBlockState);
+
                     return {
                         key: uuid(),
-                        visible: canAddVisibleBlock ? block.visible : false,
-                        props: block.state,
+                        visible: canAddVisibleBlock ? clipboardBlock.visible : false,
+                        props: newBlockState,
                         selected: false,
                         slideIn: true,
-                        ...block.additionalFields,
+                        ...clipboardBlock.additionalFields,
                     };
                 });
 

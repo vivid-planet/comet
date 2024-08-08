@@ -214,6 +214,19 @@ export function composeBlocks<C extends CompositeBlocksConfig>(compositeBlocks: 
 
                 return dependencyPath;
             },
+            replaceKeys: (state) => {
+                const copiedBlocks = applyToCompositeBlocks(
+                    compositeBlocks,
+                    ([block, options], attr) => {
+                        const extractedData = extractData([block, options], attr, state);
+
+                        return block.replaceKeys(extractedData);
+                    },
+                    { flatten: true },
+                );
+
+                return { ...state, ...copiedBlocks };
+            },
         },
         api: {
             adminComponentProps,

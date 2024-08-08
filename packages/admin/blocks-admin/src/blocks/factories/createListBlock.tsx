@@ -524,6 +524,20 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
             const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
         },
+
+        replaceKeys: (state) => {
+            const newState: ListBlockState<T, AdditionalItemFields> = { ...state, blocks: [] };
+
+            for (const child of state.blocks) {
+                newState.blocks.push({
+                    ...child,
+                    props: block.replaceKeys(child.props),
+                    key: uuid(),
+                });
+            }
+
+            return newState;
+        },
     };
     return BlockListBlock;
 }

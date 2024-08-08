@@ -169,6 +169,13 @@ export function createOptionalBlock<T extends BlockInterface>(
         previewContent: ({ block, visible }, ctx) => {
             return block && visible ? decoratedBlock.previewContent(block, ctx) : [];
         },
+
+        replaceKeys: (state) => {
+            return {
+                ...state,
+                block: state.block ? decoratedBlock.replaceKeys(state.block) : undefined,
+            };
+        },
     };
     return OptionalBlock;
 }

@@ -453,6 +453,8 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
             const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: Object.values(supportedBlocks) });
 
             const pasteBlock = async (insertAt: number) => {
+                console.log("pasteBlock createBlocksBlock");
+
                 const response = await getClipboardContent();
 
                 if (!response.canPaste) {
@@ -463,22 +465,28 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 const { content } = response;
 
                 updateState((prevState) => {
-                    const newBlocks: BlocksBlockItem<BlockInterface, AdditionalItemFields>[] = content.map((block) => {
-                        const type = typeForBlock(block);
+                    const newBlocks: BlocksBlockItem<BlockInterface, AdditionalItemFields>[] = content.map((clipboardBlock) => {
+                        const type = typeForBlock(clipboardBlock);
 
                         if (!type) {
-                            throw new Error(`No type found for block "${block.name}"`);
+                            throw new Error(`No type found for block "${clipboardBlock.name}"`);
                         }
+
+                        const block = blockForType(type);
+
+                        console.log("old state ", clipboardBlock.state);
+                        const newBlockState = block?.replaceKeys(clipboardBlock.state) ?? clipboardBlock.state;
+                        console.log("new state ", newBlockState);
 
                         return {
                             key: uuid(),
                             type,
                             selected: false,
-                            visible: block.visible,
-                            props: block.state,
+                            visible: clipboardBlock.visible,
+                            props: newBlockState,
                             slideIn: true,
                             // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
-                            ...(block.additionalFields as AdditionalItemFields),
+                            ...(clipboardBlock.additionalFields as AdditionalItemFields),
                         };
                     });
 
@@ -823,6 +831,21 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
             const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/blocks/${childPath}`;
+        },
+
+        replaceKeys: (state) => {
+            const newState: BlocksBlockState<AdditionalItemFields> = { blocks: [] };
+
+            for (const child of state.blocks) {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`);
+                }
+
+                newState.blocks.push({ ...child, props: block.replaceKeys(child.props), key: uuid() });
+            }
+
+            return newState;
         },
     };
     return BlocksBlock;
