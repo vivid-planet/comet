@@ -13,5 +13,5 @@ export function ErrorHandler({ children }: PropsWithChildren) {
         }
     }
 
-    return <ErrorHandlerProvider value={{ onError }}>{children}</ErrorHandlerProvider>;
+    return <ErrorHandlerProvider onError={onError}>{children}</ErrorHandlerProvider>;
 }

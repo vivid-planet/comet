@@ -2,7 +2,11 @@
 
 import * as React from "react";
 
-export const ErrorHandlerContext = React.createContext<{ onError: (error: Error, errorInfo: React.ErrorInfo) => void }>({
+interface Props {
+    onError: (error: Error, errorInfo: React.ErrorInfo) => void;
+}
+
+export const ErrorHandlerContext = React.createContext<Props>({
     onError: (error, errorInfo) => {
         if (process.env.NODE_ENV === "development") {
             console.error("Error caught by error handler", error, errorInfo.componentStack);
@@ -13,7 +17,9 @@ export const ErrorHandlerContext = React.createContext<{ onError: (error: Error,
     },
 });
 
-export const ErrorHandlerProvider = ErrorHandlerContext.Provider;
+export function ErrorHandlerProvider({ children, onError }: React.PropsWithChildren<Props>) {
+    return <ErrorHandlerContext.Provider value={{ onError }}>{children}</ErrorHandlerContext.Provider>;
+}
 
 export const useErrorHandler = () => {
     return React.useContext(ErrorHandlerContext);
