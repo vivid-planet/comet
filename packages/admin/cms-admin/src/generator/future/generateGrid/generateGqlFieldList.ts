@@ -1,6 +1,6 @@
 import objectPath from "object-path";
 
-import { GridColumnConfig } from "../generator";
+import { ActionsGridColumnConfig, GridColumnConfig } from "../generator";
 
 type FieldsObjectType = { [key: string]: FieldsObjectType | boolean | string };
 const recursiveStringify = (obj: FieldsObjectType): string => {
@@ -21,9 +21,11 @@ const recursiveStringify = (obj: FieldsObjectType): string => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function generateGqlFieldList({ columns }: { columns: GridColumnConfig<any>[] }) {
+export function generateGqlFieldList({ columns }: { columns: Array<GridColumnConfig<any> | ActionsGridColumnConfig> }) {
     const fieldsObject: FieldsObjectType = columns.reduce<FieldsObjectType>((acc, field) => {
-        objectPath.set(acc, field.name, true);
+        if (field.type !== "actions") {
+            objectPath.set(acc, field.name, true);
+        }
         return acc;
     }, {});
     return recursiveStringify(fieldsObject);
