@@ -335,7 +335,7 @@ export function createColumnsBlock<T extends BlockInterface>({
                                                                         visibilityButton={
                                                                             <IconButton onClick={() => toggleVisible(column.key)} size="small">
                                                                                 {column.visible ? (
-                                                                                    <Visible color="secondary" />
+                                                                                    <Visible color="success" />
                                                                                 ) : (
                                                                                     <Invisible color="action" />
                                                                                 )}
