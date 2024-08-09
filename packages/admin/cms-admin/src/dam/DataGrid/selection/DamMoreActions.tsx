@@ -1,6 +1,6 @@
-import { MoreActionsDivider, MoreActionsGroup, MoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
+import { MoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
-import { ListItemIcon, ListItemText, MenuItem, Slide, Snackbar } from "@mui/material";
+import { Slide, Snackbar } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { SlideProps } from "@mui/material/Slide/Slide";
 import * as React from "react";
@@ -31,9 +31,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
     const folderInputRef = React.useRef<HTMLInputElement>(null);
 
     const selectionSize = selectionMap.size;
-    const itemsSelected = !!selectionSize;
     const selectionMapValues = Array.from(selectionMap.values());
-    const lengthOfSelectedFiles = selectionMapValues.filter((value) => value === "file").length;
     const onlyFoldersSelected = selectionMapValues.every((value) => value === "folder");
 
     const handleDownloadClick = () => {
@@ -72,124 +70,63 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
     return (
         <>
             <MoreActionsMenu
+                overallItems={[
+                    {
+                        type: "action",
+                        label: <FormattedMessage id="comet.dam.moreActions.uploadFolder" defaultMessage="Upload folder" />,
+                        onClick: () => folderInputRef.current?.click(),
+                        startAdornment: <Upload />,
+                    },
+                    {
+                        type: "action",
+                        label: <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />,
+                        onClick: () => editDialogApi.openAddDialog(folderId),
+                        startAdornment: <AddFolderIcon />,
+                    },
+                ]}
+                selectiveItems={[
+                    !onlyFoldersSelected
+                        ? {
+                              type: "action",
+                              label: <FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />,
+                              onClick: handleDownloadClick,
+                              startAdornment: <Download />,
+                          }
+                        : null,
+                    {
+                        type: "action",
+                        label: <FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />,
+                        onClick: moveSelected,
+                        startAdornment: <Move />,
+                    },
+                    {
+                        type: "action",
+                        label: <FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />,
+                        onClick: archiveSelected,
+                        startAdornment: <Archive />,
+                    },
+                    {
+                        type: "divider",
+                    },
+                    {
+                        type: "action",
+                        label: <FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />,
+                        onClick: restoreSelected,
+                        startAdornment: <Restore />,
+                    },
+                    {
+                        type: "action",
+                        label: <FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />,
+                        onClick: deleteSelected,
+                        startAdornment: <Delete />,
+                    },
+                ]} // filter out null values
                 selectionSize={selectionSize}
                 menuProps={{
                     transformOrigin,
                     anchorOrigin,
                 }}
-            >
-                {({ handleClose, selectedItemsChip: SelectedItemsChip }) => (
-                    <>
-                        <MoreActionsGroup
-                            groupTitle={<FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />}
-                        >
-                            <MenuItem
-                                disabled={itemsSelected}
-                                onClick={() => {
-                                    folderInputRef.current?.click();
-                                    handleClose();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Upload />
-                                </ListItemIcon>
-                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.uploadFolder" defaultMessage="Upload folder" />} />
-                            </MenuItem>
-
-                            <MenuItem
-                                disabled={itemsSelected}
-                                onClick={() => {
-                                    editDialogApi.openAddDialog(folderId);
-                                    handleClose();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <AddFolderIcon />
-                                </ListItemIcon>
-                                <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
-                            </MenuItem>
-                        </MoreActionsGroup>
-
-                        <MoreActionsDivider />
-
-                        <MoreActionsGroup
-                            groupTitle={<FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />}
-                        >
-                            {!onlyFoldersSelected && (
-                                <>
-                                    <MenuItem
-                                        onClick={() => {
-                                            handleDownloadClick();
-                                            handleClose();
-                                        }}
-                                    >
-                                        <ListItemIcon>
-                                            <Download />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primary={<FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />}
-                                        />
-                                        <SelectedItemsChip label={lengthOfSelectedFiles} />
-                                    </MenuItem>
-                                    <MoreActionsDivider />
-                                </>
-                            )}
-                            <MenuItem
-                                disabled={!itemsSelected}
-                                onClick={() => {
-                                    moveSelected();
-                                    handleClose();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Move />
-                                </ListItemIcon>
-                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />} />
-                                <SelectedItemsChip label={selectionSize} />
-                            </MenuItem>
-                            <MenuItem
-                                disabled={!itemsSelected}
-                                onClick={() => {
-                                    archiveSelected();
-                                    handleClose();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Archive />
-                                </ListItemIcon>
-                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />} />
-                                <SelectedItemsChip label={selectionSize} />
-                            </MenuItem>
-                            <MenuItem
-                                disabled={!itemsSelected}
-                                onClick={() => {
-                                    restoreSelected();
-                                    handleClose();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Restore />
-                                </ListItemIcon>
-                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />} />
-                                <SelectedItemsChip label={selectionSize} />
-                            </MenuItem>
-                            <MenuItem
-                                disabled={!itemsSelected}
-                                onClick={() => {
-                                    deleteSelected();
-                                    handleClose();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Delete />
-                                </ListItemIcon>
-                                <ListItemText primary={<FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />} />
-                                <SelectedItemsChip label={selectionSize} />
-                            </MenuItem>
-                        </MoreActionsGroup>
-                    </>
-                )}
-            </MoreActionsMenu>
+            />
 
             {/* the directory property is needed for the folder upload to work but not known to eslint */}
             {/* eslint-disable-next-line react/no-unknown-property */}

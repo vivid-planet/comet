@@ -1,11 +1,27 @@
 import { MoreVertical } from "@comet/admin-icons";
-import { Box, Button, Chip, ChipProps, Divider, DividerProps, Menu, MenuList, MenuListProps, MenuProps, Typography } from "@mui/material";
+import {
+    Button,
+    Chip,
+    ChipProps,
+    Divider,
+    DividerProps,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    MenuList,
+    MenuListProps,
+    MenuProps,
+    Typography,
+    TypographyProps,
+} from "@mui/material";
+import { Maybe } from "graphql/jsutils/Maybe";
 import * as React from "react";
 import { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
-export function MoreActionsDivider(props: DividerProps) {
-    return <Divider sx={{ margin: "8px 0", borderColor: (theme) => theme.palette.grey[50] }} {...props} />;
+function MoreActionsDivider(props: DividerProps) {
+    return <Divider sx={{ margin: "8px 10px", borderColor: (theme) => theme.palette.grey[50] }} {...props} />;
 }
 
 interface MoreActionsGroupProps {
@@ -14,10 +30,10 @@ interface MoreActionsGroupProps {
     typographyProps?: React.ComponentProps<typeof Typography>;
 }
 
-export function MoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<MoreActionsGroupProps>) {
+function MoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<MoreActionsGroupProps>) {
     return (
         <>
-            <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" mt={4} px={1} {...typographyProps}>
+            <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" pt="20px" px="15px" {...typographyProps}>
                 {groupTitle}
             </Typography>
             <MenuList {...menuListProps}>{children}</MenuList>
@@ -25,12 +41,26 @@ export function MoreActionsGroup({ groupTitle, children, menuListProps, typograp
     );
 }
 
-interface MoreActionsMenuProps {
+export interface ActionItem extends React.ComponentProps<typeof MenuItem> {
+    type: "action";
+    label: React.ReactNode;
+    startAdornment?: React.ReactNode;
+}
+
+export interface DividerItem extends React.ComponentProps<typeof Divider> {
+    type: "divider";
+}
+
+type MoreActionsItem = ActionItem | DividerItem;
+
+export interface MoreActionsMenuProps {
     selectionSize?: number;
     buttonProps?: React.ComponentProps<typeof Button>;
     menuProps?: Partial<MenuProps>;
     chipProps?: Partial<ChipProps>;
-    children?: (props: { handleClose: () => void; selectedItemsChip: React.ComponentType<Partial<ChipProps>> }) => React.ReactNode;
+    groupTypographyProps?: Partial<TypographyProps>;
+    overallItems?: Maybe<MoreActionsItem>[];
+    selectiveItems?: Maybe<MoreActionsItem>[];
 }
 
 function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
@@ -45,16 +75,20 @@ function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
     );
 }
 
-export function MoreActionsMenu({ children, buttonProps, menuProps, chipProps, selectionSize }: MoreActionsMenuProps) {
+export function MoreActionsMenu({
+    overallItems,
+    selectiveItems,
+    buttonProps,
+    menuProps,
+    chipProps,
+    groupTypographyProps,
+    selectionSize,
+}: MoreActionsMenuProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const handleClose = () => setAnchorEl(null);
 
     return (
         <>
@@ -70,19 +104,88 @@ export function MoreActionsMenu({ children, buttonProps, menuProps, chipProps, s
                 }}
             >
                 <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
-                {!!selectionSize && selectionSize > 0 && <SelectedItemsChip {...chipProps} label={selectionSize} />}
+                {!!selectionSize && <SelectedItemsChip {...chipProps} label={selectionSize} />}
             </Button>
             <Menu
                 keepMounted={false}
+                PaperProps={{ sx: { minWidth: 220 } }}
+                open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
                 {...menuProps}
-                open={Boolean(anchorEl)}
                 onClose={(event, reason) => {
                     handleClose();
                     menuProps?.onClose?.(event, reason);
                 }}
             >
-                <Box px={2}>{children?.({ handleClose, selectedItemsChip: SelectedItemsChip })}</Box>
+                {!!overallItems?.length && (
+                    <MoreActionsGroup
+                        groupTitle={<FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />}
+                        typographyProps={groupTypographyProps}
+                        menuListProps={menuProps?.MenuListProps}
+                    >
+                        {overallItems.map((item, index) => {
+                            if (!item) return null;
+                            const { type } = item;
+                            if (type === "action") {
+                                const { label, startAdornment, onClick, ...rest } = item;
+
+                                return (
+                                    <MenuItem
+                                        key={index}
+                                        disabled={!!selectionSize}
+                                        {...rest}
+                                        onClick={(e) => {
+                                            onClick?.(e);
+                                            handleClose();
+                                        }}
+                                    >
+                                        {!!startAdornment && <ListItemIcon>{startAdornment}</ListItemIcon>}
+                                        <ListItemText primary={label} />
+                                    </MenuItem>
+                                );
+                            } else if (type === "divider") {
+                                return <MoreActionsDivider {...item} key={index} />;
+                            }
+                        })}
+                    </MoreActionsGroup>
+                )}
+
+                {!!overallItems?.length && !!selectiveItems?.length && <MoreActionsDivider />}
+
+                {!!selectiveItems?.length && (
+                    <MoreActionsGroup
+                        groupTitle={<FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />}
+                        typographyProps={groupTypographyProps}
+                        menuListProps={menuProps?.MenuListProps}
+                    >
+                        {selectiveItems.map((item, index) => {
+                            if (!item) return;
+
+                            const { type } = item;
+                            if (type === "action") {
+                                const { label, startAdornment, onClick, ...rest } = item;
+
+                                return (
+                                    <MenuItem
+                                        key={index}
+                                        disabled={!selectionSize}
+                                        {...rest}
+                                        onClick={(e) => {
+                                            onClick?.(e);
+                                            handleClose();
+                                        }}
+                                    >
+                                        {!!startAdornment && <ListItemIcon>{startAdornment}</ListItemIcon>}
+                                        <ListItemText primary={label} />
+                                        {!!selectionSize && <SelectedItemsChip {...chipProps} label={selectionSize} />}
+                                    </MenuItem>
+                                );
+                            } else if (item.type === "divider") {
+                                return <MoreActionsDivider {...item} key={index} />;
+                            }
+                        })}
+                    </MoreActionsGroup>
+                )}
             </Menu>
         </>
     );
