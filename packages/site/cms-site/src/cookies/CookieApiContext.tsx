@@ -11,10 +11,10 @@ export type CookieApiHook = () => CookieApi;
 const CookieApiContext = React.createContext<CookieApi | undefined>(undefined);
 
 type CookieApiProviderProps = React.PropsWithChildren<{
-    useCookieApi: CookieApiHook;
+    api: CookieApiHook;
 }>;
 
-export const CookieApiProvider = ({ useCookieApi, children }: CookieApiProviderProps) => {
+export const CookieApiProvider = ({ api: useCookieApi, children }: CookieApiProviderProps) => {
     const api = useCookieApi();
     return <CookieApiContext.Provider value={api}>{children}</CookieApiContext.Provider>;
 };

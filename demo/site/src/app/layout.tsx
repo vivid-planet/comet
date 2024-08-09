@@ -18,7 +18,7 @@ export default function RootLayout({
     return (
         <html>
             <body className={inter.className}>
-                <CookieApiProvider useCookieApi={process.env.NODE_ENV === "development" ? useLocalStorageCookieApi : useProductionCookieApi}>
+                <CookieApiProvider api={process.env.NODE_ENV === "development" ? useLocalStorageCookieApi : useProductionCookieApi}>
                     <StyledComponentsRegistry>
                         {draftMode().isEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}
                     </StyledComponentsRegistry>
