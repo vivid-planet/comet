@@ -11,24 +11,16 @@ type Props = React.PropsWithChildren<{
 }>;
 
 export const CookieSafe = ({ consented, fallback, loading, children }: Props) => {
-    const [isBeingRenderedOnClient, setIsBeingRenderedOnClient] = React.useState(false);
-    const { cookieProviderLoaded } = useCookieApi();
+    const { cookiePlatformLoaded } = useCookieApi();
     const { previewType } = usePreview();
     const isInPreview = previewType !== "NoPreview";
 
-    React.useEffect(() => {
-        // TODO: figure out if this is resolved with the loading/cookieProviderLoaded stuff.
-        // TODO: Find a better alternative to this workaround.
-        // This is to prevent broken/missing styles/html, possibly caused during rehydration, due to a mismatch between server- and client-html.
-        setIsBeingRenderedOnClient(true);
-    }, []);
-
-    if (!isBeingRenderedOnClient || !cookieProviderLoaded) {
-        return <>{loading}</>;
+    if ((cookiePlatformLoaded && consented) || isInPreview) {
+        return <>{children}</>;
     }
 
-    if (consented || isInPreview) {
-        return <>{children}</>;
+    if (!cookiePlatformLoaded) {
+        return <>{loading}</>;
     }
 
     return <>{fallback}</>;

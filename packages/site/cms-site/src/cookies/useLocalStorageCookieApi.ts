@@ -17,21 +17,7 @@ declare global {
  */
 export const useLocalStorageCookieApi: CookieApiHook = () => {
     const [consentedCookies, setConsentedCookies] = useLocalStorage<string[]>(localStorageCookieApiKey, []);
-    const [simulateLoadingCookieProvider, setSimulateLoadingCookieProvider] = React.useState(true);
-
-    React.useEffect(() => {
-        const storedCookies = window.localStorage.getItem(localStorageCookieApiKey);
-        const cookiesList = JSON.parse(storedCookies ?? "[]");
-        logCookieUpdate(cookiesList);
-
-        const simulateLoadingTimeout = setTimeout(() => {
-            setSimulateLoadingCookieProvider(false);
-        }, 1000);
-
-        return () => {
-            clearTimeout(simulateLoadingTimeout);
-        };
-    }, []);
+    const [cookiePlatformLoaded, setCookiePlatformLoaded] = React.useState(false);
 
     const openCookieSettings = React.useCallback(() => {
         const cookies = prompt('Define consented cookies (separated by ","):', consentedCookies.join(",")) ?? "";
@@ -41,16 +27,27 @@ export const useLocalStorageCookieApi: CookieApiHook = () => {
     }, [consentedCookies, setConsentedCookies]);
 
     React.useEffect(() => {
-        window.cometLocalStorageCookieApi = {
-            cookieProviderLoaded: !simulateLoadingCookieProvider,
-            consentedCookies,
-            openCookieSettings: openCookieSettings,
+        const storedCookies = window.localStorage.getItem(localStorageCookieApiKey);
+        const cookiesList = JSON.parse(storedCookies ?? "[]");
+        logCookieUpdate(cookiesList);
+
+        const simulateLoadingTimeout = setTimeout(() => {
+            setCookiePlatformLoaded(true);
+            window.cometLocalStorageCookieApi = {
+                cookiePlatformLoaded: true,
+                consentedCookies,
+                openCookieSettings: openCookieSettings,
+            };
+        }, 1000);
+
+        return () => {
+            clearTimeout(simulateLoadingTimeout);
         };
-    }, [simulateLoadingCookieProvider, consentedCookies, openCookieSettings]);
+    }, [consentedCookies, openCookieSettings]);
 
     return {
-        cookieProviderLoaded: !simulateLoadingCookieProvider,
-        consentedCookies: simulateLoadingCookieProvider ? [] : consentedCookies,
+        cookiePlatformLoaded,
+        consentedCookies,
         openCookieSettings,
     };
 };
