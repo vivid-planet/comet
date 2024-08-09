@@ -102,7 +102,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
-        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
+        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, minWidth: 200, maxWidth: 250 },
         {
             field: "description",
             headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
@@ -121,8 +121,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             ),
             type: "number",
             flex: 1,
-            maxWidth: 150,
             minWidth: 150,
+            maxWidth: 150,
         },
         {
             field: "type",
@@ -134,8 +134,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                 { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
             ],
             flex: 1,
-            maxWidth: 150,
             minWidth: 150,
+            maxWidth: 150,
         },
         {
             field: "availableSince",

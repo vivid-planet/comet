@@ -480,6 +480,26 @@ export function generateGrid(
             ${gridColumnFields
                 .map((column) => {
                     const defaultMinWidth = 150;
+                    const defaultColumnFlex = 1;
+                    let minWidth;
+                    let maxWidth;
+                    let tooltipColumnWidth = column.width;
+
+                    if (typeof column.width === "undefined") {
+                        maxWidth = column.maxWidth;
+
+                        if (
+                            typeof column.minWidth === "undefined" &&
+                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
+                        ) {
+                            minWidth = defaultMinWidth;
+                            tooltipColumnWidth = defaultMinWidth;
+                        } else if (typeof column.minWidth !== "undefined") {
+                            minWidth = column.minWidth;
+                            tooltipColumnWidth = column.minWidth;
+                        }
+                    }
+
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         renderHeader: column.tooltipMessage
@@ -487,9 +507,9 @@ export function generateGrid(
                                     <>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
                                   column.name
-                              }",   defaultMessage: "${column.headerName || camelCaseToHumanReadable(column.name)}"})} columnWidth= {${
-                                  column.width ?? defaultMinWidth
-                              }}
+                              }",   defaultMessage: "${
+                                  column.headerName || camelCaseToHumanReadable(column.name)
+                              }"})} columnWidth= {${tooltipColumnWidth}}
                               />
                                         <Tooltip
                                             trigger="hover"
@@ -518,17 +538,9 @@ export function generateGrid(
                     };
 
                     if (typeof column.width === "undefined") {
-                        columnDefinition.flex = 1;
-                        columnDefinition.maxWidth = column.maxWidth;
-
-                        if (
-                            typeof column.minWidth === "undefined" &&
-                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
-                        ) {
-                            columnDefinition.minWidth = defaultMinWidth;
-                        } else if (typeof column.minWidth !== "undefined") {
-                            columnDefinition.minWidth = column.minWidth;
-                        }
+                        columnDefinition.flex = defaultColumnFlex;
+                        columnDefinition.minWidth = minWidth;
+                        columnDefinition.maxWidth = maxWidth;
                     }
 
                     return tsCodeRecordToString(columnDefinition);
