@@ -56,6 +56,7 @@ import {
 
 interface FormProps {
     id?: string;
+    manufacturerCountry?: string;
 }
 
 const rootBlocks = {
@@ -73,7 +74,7 @@ type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry
     manufacturerCountry?: { id: string };
 };
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id, manufacturerCountry }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -97,13 +98,15 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         return {
             ...filteredData,
             image: rootBlocks.image.input2State(filteredData.image),
-            manufacturerCountry: filteredData.manufacturerCountry
+            manufacturerCountry: manufacturerCountry
+                ? { id: manufacturerCountry }
+                : filteredData.manufacturerCountry
                 ? {
                       id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
                   }
                 : undefined,
         };
-    }, [data]);
+    }, [data, manufacturerCountry]);
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -183,28 +186,30 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <AsyncSelectField
-                            name="manufacturerCountry"
-                            loadOptions={async () => {
-                                const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
-                                    query: gql`
-                                        query ManufacturerCountries {
-                                            manufacturerCountries {
-                                                nodes {
-                                                    id
-                                                    used
+                        {!manufacturerCountry && (
+                            <AsyncSelectField
+                                name="manufacturerCountry"
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
+                                        query: gql`
+                                            query ManufacturerCountries {
+                                                manufacturerCountries {
+                                                    nodes {
+                                                        id
+                                                        used
+                                                    }
                                                 }
                                             }
-                                        }
-                                    `,
-                                });
+                                        `,
+                                    });
 
-                                return data.manufacturerCountries.nodes;
-                            }}
-                            getOptionLabel={(option) => option.id}
-                            label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
-                            fullWidth
-                        />
+                                    return data.manufacturerCountries.nodes;
+                                }}
+                                getOptionLabel={(option) => option.id}
+                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
+                                fullWidth
+                            />
+                        )}
                         <AsyncSelectField
                             name="manufacturer"
                             loadOptions={async () => {
