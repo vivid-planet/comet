@@ -106,9 +106,6 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                         startAdornment: <Archive />,
                     },
                     {
-                        type: "divider",
-                    },
-                    {
                         type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />,
                         onClick: restoreSelected,
