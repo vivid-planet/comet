@@ -250,13 +250,13 @@ export function generateForm(
     };
 
     ${formPropsTypeCode}
-    
+
     export function ${exportName}(${formPropsParamsCode}): React.ReactElement {
         const client = useApolloClient();
         ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
         ${addMode ? `const stackSwitchApi = useStackSwitchApi();` : ""}
-    
+
         ${
             editMode
                 ? `
@@ -267,7 +267,7 @@ export function generateForm(
         `
                 : ""
         }
-    
+
         ${
             editMode
                 ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
@@ -292,7 +292,7 @@ export function generateForm(
                     .join(",\n")}
             };`
         }
-    
+
         ${
             editMode
                 ? `
@@ -309,7 +309,7 @@ export function generateForm(
         `
                 : ""
         }
-    
+
         const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
             ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
             const output = {
@@ -366,7 +366,7 @@ export function generateForm(
         };
 
         ${hooksCode}
-    
+
         ${
             editMode
                 ? ` if (error) throw error;
@@ -376,7 +376,7 @@ export function generateForm(
                     }`
                 : ``
         }
-    
+
         return (
             <FinalForm<FormValues>
                 apiRef={formApiRef}
