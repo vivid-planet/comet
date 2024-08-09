@@ -52,6 +52,7 @@ window.cometLocalStorageCookieApi.consentedCookies;
 
 The `<CookieSafe />` component should wrap content that loads third-party cookies.
 If the required cookies have not been consented to, a fallback component is rendered instead of the children.
+While the cookie platform has not been initialized, a loading component is rendered.
 
 ```tsx
 import { CookieSafe, useCookieApi } from "@comet/cms-site";
@@ -63,6 +64,7 @@ export const CookieSafeExternalContent = () => {
     return (
         <CookieSafe
             consented={consentedCookies.includes(cookieIds.thirdParty)}
+            loading={<CookieLoading />}
             fallback={<CookieFallback />}
         >
             <ComponentThatLoadsExternalContent />
@@ -89,6 +91,16 @@ export const CookieFallback = () => {
 };
 ```
 
+### Loading component
+
+The loading component should be a placeholder for when it is unclear if the necessary cookies have been consented to.
+
+```tsx
+export const CookieLoading = () => {
+    return <p>Loading...</p>;
+};
+```
+
 ## Configuration
 
 ### Wrap your application with the `CookieProvider` component
@@ -111,7 +123,7 @@ return (
     <html>
         <body>
             <CookieApiProvider
-                useCookieApi={
+                api={
                     process.env.NODE_ENV === "development"
                         ? useLocalStorageCookieApi
                         : useProductionCookieApi
