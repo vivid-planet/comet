@@ -490,11 +490,7 @@ export function generateGrid(
                               }",   defaultMessage: "${column.headerName || camelCaseToHumanReadable(column.name)}"})} columnWidth= {${
                                   column.width ?? defaultMinWidth
                               }}
-                              >
-                                            {intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
-                                  column.headerName || camelCaseToHumanReadable(column.name)
-                              }" })}
-                                        </GridColumnHeaderTitle>
+                              />
                                         <Tooltip
                                             trigger="hover"
                                             title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${

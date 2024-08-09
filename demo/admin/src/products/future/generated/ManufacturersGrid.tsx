@@ -143,9 +143,7 @@ export function ManufacturersGrid(): React.ReactElement {
                     <GridColumnHeaderTitle
                         label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })}
                         columnWidth={150}
-                    >
-                        {intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })}
-                    </GridColumnHeaderTitle>
+                    />
                     <Tooltip
                         trigger="hover"
                         title={
@@ -175,9 +173,7 @@ export function ManufacturersGrid(): React.ReactElement {
                             defaultMessage: "Alt-Street number",
                         })}
                         columnWidth={150}
-                    >
-                        {intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" })}
-                    </GridColumnHeaderTitle>
+                    />
                     <Tooltip
                         trigger="hover"
                         title={

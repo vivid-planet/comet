@@ -113,9 +113,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             field: "price",
             renderHeader: () => (
                 <>
-                    <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150}>
-                        {intl.formatMessage({ id: "product.price", defaultMessage: "Price" })}
-                    </GridColumnHeaderTitle>
+                    <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150} />
                     <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
                         <Info sx={{ margin: 1 }} />
                     </Tooltip>
