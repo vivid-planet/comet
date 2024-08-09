@@ -98,13 +98,12 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
         return {
             ...filteredData,
             image: rootBlocks.image.input2State(filteredData.image),
-            manufacturerCountry: manufacturerCountry
-                ? { id: manufacturerCountry }
-                : filteredData.manufacturerCountry
-                ? {
-                      id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
-                  }
-                : undefined,
+            manufacturerCountry:
+                !manufacturerCountry && filteredData.manufacturerCountry
+                    ? {
+                          id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
+                      }
+                    : undefined,
         };
     }, [data, manufacturerCountry]);
 
@@ -119,6 +118,7 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
         },
     });
 
+    // if field was not virtual it would not require destructuring manufacturerCountry here
     const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
 
@@ -133,6 +133,7 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
             statistics: { views: 0 },
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
+            // if field was not virtual: manufacturerCountry: manufacturerCountry ?? formValues.manufacturerCountry.id,
             manufacturer: formValues.manufacturer?.id,
         };
 
@@ -171,7 +172,7 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{ values: true }} // values required because disable and loadOptions of manufacturer-select depends on values
+            subscription={{ values: !manufacturerCountry }} // values required because disable and loadOptions of manufacturer-select depends on values
         >
             {({ values, form }) => (
                 <>
@@ -227,7 +228,7 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
                                     variables: {
                                         filter: {
                                             addressAsEmbeddable_country: {
-                                                equal: values.manufacturerCountry?.id,
+                                                equal: manufacturerCountry ?? values.manufacturerCountry?.id,
                                             },
                                         },
                                     },
@@ -238,15 +239,17 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
                             getOptionLabel={(option) => option.name}
                             label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                             fullWidth
-                            disabled={!values?.manufacturerCountry}
+                            disabled={!manufacturerCountry && !values?.manufacturerCountry}
                         />
-                        <OnChangeField name="manufacturerCountry">
-                            {(value, previousValue) => {
-                                if (value.id !== previousValue.id) {
-                                    form.change("manufacturer", undefined);
-                                }
-                            }}
-                        </OnChangeField>
+                        {!manufacturerCountry && (
+                            <OnChangeField name="manufacturerCountry">
+                                {(value, previousValue) => {
+                                    if (value.id !== previousValue.id) {
+                                        form.change("manufacturer", undefined);
+                                    }
+                                }}
+                            </OnChangeField>
+                        )}
                         <SelectField name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />} required fullWidth>
                             <MenuItem value="Cap">
                                 <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
