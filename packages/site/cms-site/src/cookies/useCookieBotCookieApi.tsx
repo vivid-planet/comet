@@ -34,6 +34,7 @@ export const useCookieBotCookieApi: CookieApiHook = () => {
     }, []);
 
     return {
+        cookieProviderLoaded: isWindowWithCookiebot(window),
         consentedCookies,
         openCookieSettings: () => {
             if (isWindowWithCookiebot(window)) {

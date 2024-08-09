@@ -42,12 +42,14 @@ export const useLocalStorageCookieApi: CookieApiHook = () => {
 
     React.useEffect(() => {
         window.cometLocalStorageCookieApi = {
+            cookieProviderLoaded: !simulateLoadingCookieProvider,
             consentedCookies,
             openCookieSettings: openCookieSettings,
         };
-    }, [consentedCookies, openCookieSettings]);
+    }, [simulateLoadingCookieProvider, consentedCookies, openCookieSettings]);
 
     return {
+        cookieProviderLoaded: !simulateLoadingCookieProvider,
         consentedCookies: simulateLoadingCookieProvider ? [] : consentedCookies,
         openCookieSettings,
     };

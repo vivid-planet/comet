@@ -85,6 +85,7 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
     }, []);
 
     return {
+        cookieProviderLoaded: isWindowWithOneTrust(window),
         consentedCookies,
         openCookieSettings: () => {
             if (isWindowWithOneTrust(window)) {

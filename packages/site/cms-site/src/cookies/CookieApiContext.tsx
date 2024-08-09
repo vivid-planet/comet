@@ -2,6 +2,7 @@
 import React from "react";
 
 export type CookieApi = {
+    cookieProviderLoaded: boolean;
     consentedCookies: string[];
     openCookieSettings: () => void;
 };
