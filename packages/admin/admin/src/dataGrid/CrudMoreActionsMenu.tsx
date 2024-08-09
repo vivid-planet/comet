@@ -108,7 +108,7 @@ export function CrudMoreActionsMenu({
             </Button>
             <Menu
                 keepMounted={false}
-                PaperProps={{ sx: { minWidth: 220 } }}
+                PaperProps={{ sx: { minWidth: 220, borderRadius: "4px" } }}
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
                 {...menuProps}
