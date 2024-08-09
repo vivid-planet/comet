@@ -47,10 +47,10 @@ export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
+export { ActionItem, CrudMoreActionsMenu, CrudMoreActionsMenuProps, DividerItem } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
-export { ActionItem, DividerItem, MoreActionsMenu, MoreActionsMenuProps } from "./dataGrid/MoreActionsMenu";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";

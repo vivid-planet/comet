@@ -1,4 +1,4 @@
-import { MoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
+import { CrudMoreActionsMenu, useEditDialog, useSnackbarApi } from "@comet/admin";
 import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, Upload } from "@comet/admin-icons";
 import { Slide, Snackbar } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
@@ -69,7 +69,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
 
     return (
         <>
-            <MoreActionsMenu
+            <CrudMoreActionsMenu
                 overallItems={[
                     {
                         type: "action",

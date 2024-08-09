@@ -20,17 +20,17 @@ import * as React from "react";
 import { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
-function MoreActionsDivider(props: DividerProps) {
+function CrudMoreActionsDivider(props: DividerProps) {
     return <Divider sx={{ margin: "8px 10px", borderColor: (theme) => theme.palette.grey[50] }} {...props} />;
 }
 
-interface MoreActionsGroupProps {
+interface CrudMoreActionsGroupProps {
     groupTitle: React.ReactNode;
     menuListProps?: MenuListProps;
     typographyProps?: React.ComponentProps<typeof Typography>;
 }
 
-function MoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<MoreActionsGroupProps>) {
+function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
     return (
         <>
             <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" pt="20px" px="15px" {...typographyProps}>
@@ -51,16 +51,16 @@ export interface DividerItem extends React.ComponentProps<typeof Divider> {
     type: "divider";
 }
 
-type MoreActionsItem = ActionItem | DividerItem;
+type CrudMoreActionsItem = ActionItem | DividerItem;
 
-export interface MoreActionsMenuProps {
+export interface CrudMoreActionsMenuProps {
     selectionSize?: number;
     buttonProps?: React.ComponentProps<typeof Button>;
     menuProps?: Partial<MenuProps>;
     chipProps?: Partial<ChipProps>;
     groupTypographyProps?: Partial<TypographyProps>;
-    overallItems?: Maybe<MoreActionsItem>[];
-    selectiveItems?: Maybe<MoreActionsItem>[];
+    overallItems?: Maybe<CrudMoreActionsItem>[];
+    selectiveItems?: Maybe<CrudMoreActionsItem>[];
 }
 
 function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
@@ -75,7 +75,7 @@ function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
     );
 }
 
-export function MoreActionsMenu({
+export function CrudMoreActionsMenu({
     overallItems,
     selectiveItems,
     buttonProps,
@@ -83,7 +83,7 @@ export function MoreActionsMenu({
     chipProps,
     groupTypographyProps,
     selectionSize,
-}: MoreActionsMenuProps) {
+}: CrudMoreActionsMenuProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
@@ -118,7 +118,7 @@ export function MoreActionsMenu({
                 }}
             >
                 {!!overallItems?.length && (
-                    <MoreActionsGroup
+                    <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />}
                         typographyProps={groupTypographyProps}
                         menuListProps={menuProps?.MenuListProps}
@@ -144,16 +144,16 @@ export function MoreActionsMenu({
                                     </MenuItem>
                                 );
                             } else if (type === "divider") {
-                                return <MoreActionsDivider {...item} key={index} />;
+                                return <CrudMoreActionsDivider {...item} key={index} />;
                             }
                         })}
-                    </MoreActionsGroup>
+                    </CrudMoreActionsGroup>
                 )}
 
-                {!!overallItems?.length && !!selectiveItems?.length && <MoreActionsDivider />}
+                {!!overallItems?.length && !!selectiveItems?.length && <CrudMoreActionsDivider />}
 
                 {!!selectiveItems?.length && (
-                    <MoreActionsGroup
+                    <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />}
                         typographyProps={groupTypographyProps}
                         menuListProps={menuProps?.MenuListProps}
@@ -181,10 +181,10 @@ export function MoreActionsMenu({
                                     </MenuItem>
                                 );
                             } else if (item.type === "divider") {
-                                return <MoreActionsDivider {...item} key={index} />;
+                                return <CrudMoreActionsDivider {...item} key={index} />;
                             }
                         })}
-                    </MoreActionsGroup>
+                    </CrudMoreActionsGroup>
                 )}
             </Menu>
         </>
