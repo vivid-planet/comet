@@ -1,6 +1,6 @@
 import { IconButton, styled } from "@mui/material";
 
-export const CustomAction: React.FC = styled(IconButton)`
+export const PreviewToolbarButton: React.FC = styled(IconButton)`
     width: 50px;
     height: 50px;
     border-radius: 0;

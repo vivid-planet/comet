@@ -101,6 +101,7 @@ export { BlockPreviewWithTabs } from "./preview/block/BlockPreviewWithTabs";
 export { SplitPreview } from "./preview/block/SplitPreview";
 export type { BlockPreviewApi } from "./preview/block/useBlockPreview";
 export { useBlockPreview } from "./preview/block/useBlockPreview";
+export { PreviewToolbarButton } from "./preview/common/PreviewToolbarButton";
 export { openPreviewWindow, openSitePreviewWindow } from "./preview/openSitePreviewWindow";
 export { SitePreview } from "./preview/site/SitePreview";
 export { createRedirectsPage } from "./redirects/createRedirectsPage";
