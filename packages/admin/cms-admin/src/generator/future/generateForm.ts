@@ -90,7 +90,7 @@ export function generateForm(
     });
 
     const readOnlyFields = formFields.filter((field) => field.readOnly);
-    const fileFields = formFields.filter((field) => field.type == "file");
+    const fileFields = formFields.filter((field) => field.type == "fileUpload");
 
     let hooksCode = "";
     let formValueToGqlInputCode = "";
