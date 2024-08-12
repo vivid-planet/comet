@@ -1,16 +1,5 @@
 import { gql } from "@apollo/client";
-import {
-    CustomAction,
-    Loading,
-    MainContent,
-    messages,
-    RouterPrompt,
-    Toolbar,
-    ToolbarActions,
-    ToolbarFillSpace,
-    ToolbarItem,
-    useStackApi,
-} from "@comet/admin";
+import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview, Status } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -21,6 +10,7 @@ import {
     DependencyList,
     openSitePreviewWindow,
     PageName,
+    PreviewToolbarButton,
     useBlockPreview,
     useCmsBlockContext,
     useSiteConfig,
@@ -176,9 +166,9 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                     previewState={previewState}
                     previewApi={previewApi}
                     actions={
-                        <CustomAction>
+                        <PreviewToolbarButton>
                             <Status />
-                        </CustomAction>
+                        </PreviewToolbarButton>
                     }
                 >
                     {[
