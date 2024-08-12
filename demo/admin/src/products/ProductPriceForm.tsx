@@ -1,9 +1,8 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, FinalFormSubmitEvent, MainContent, useFormApiRef } from "@comet/admin";
-import { EditPageLayout, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, MainContent, useFormApiRef } from "@comet/admin";
+import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
-import { filter } from "graphql-anywhere";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -22,10 +21,10 @@ interface FormProps {
 }
 
 type FormValues = Omit<GQLProductPriceFormFragment, "price"> & {
-    price: string;
+    price?: string;
 };
 
-function ProductPriceForm({ id }: FormProps): React.ReactElement {
+export function ProductPriceForm({ id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
 
@@ -35,8 +34,8 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
 
     const initialValues: Partial<FormValues> = data?.product
         ? {
-              ...filter<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
-              price: String(data.product.price),
+              ...filterByFragment<GQLProductPriceFormFragment>(productPriceFormFragment, data.product),
+              price: data.product.price ? String(data.product.price) : undefined,
           }
         : {};
 
@@ -55,11 +54,11 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
-            price: parseFloat(formValues.price),
+            price: formValues.price ? parseFloat(formValues.price) : null,
         };
         await client.mutate<GQLProductPriceFormUpdateProductMutation, GQLProductPriceFormUpdateProductMutationVariables>({
             mutation: updateProductPriceFormMutation,
-            variables: { id, input: output, lastUpdatedAt: data?.product.updatedAt },
+            variables: { id, input: output },
         });
     };
 
@@ -84,7 +83,7 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <EditPageLayout>
+                <>
                     {saveConflict.dialogs}
                     <MainContent>
                         <Field
@@ -95,10 +94,8 @@ function ProductPriceForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.price" defaultMessage="Price" />}
                         />
                     </MainContent>
-                </EditPageLayout>
+                </>
             )}
         </FinalForm>
     );
 }
-
-export default ProductPriceForm;

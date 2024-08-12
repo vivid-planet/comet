@@ -1,5 +1,4 @@
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
 import { Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import * as React from "react";
@@ -45,10 +44,10 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                             )}
                             <Grid item>
                                 <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage!()} size="large">
-                                    <KeyboardArrowLeft />
+                                    <ChevronLeft />
                                 </IconButton>
                                 <IconButton disabled={!pagingInfo.fetchNextPage} onClick={() => pagingInfo.fetchNextPage!()} size="large">
-                                    <KeyboardArrowRight />
+                                    <ChevronRight />
                                 </IconButton>
                             </Grid>
                         </Grid>

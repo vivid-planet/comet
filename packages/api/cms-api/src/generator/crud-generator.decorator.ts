@@ -4,6 +4,7 @@ export interface CrudGeneratorOptions {
     create?: boolean;
     update?: boolean;
     delete?: boolean;
+    list?: boolean;
 }
 
 export function CrudGenerator({
@@ -12,10 +13,15 @@ export function CrudGenerator({
     create = true,
     update = true,
     delete: deleteMutation = true,
+    list = true,
 }: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return function (target: Function) {
-        Reflect.defineMetadata(`data:crudGeneratorOptions`, { targetDirectory, requiredPermission, create, update, delete: deleteMutation }, target);
+        Reflect.defineMetadata(
+            `data:crudGeneratorOptions`,
+            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list },
+            target,
+        );
     };
 }
 
@@ -33,6 +39,7 @@ export function CrudSingleGenerator(options: CrudSingleGeneratorOptions): ClassD
 
 export interface CrudFieldOptions {
     resolveField?: boolean; //only for relations, for others customize using @Field
+    dedicatedResolverArg?: boolean; //only for ManyToOne relations
     search?: boolean;
     filter?: boolean;
     sort?: boolean;
@@ -41,6 +48,7 @@ export interface CrudFieldOptions {
 
 export function CrudField({
     resolveField = true,
+    dedicatedResolverArg = false,
     search = true,
     filter = true,
     sort = true,
@@ -48,12 +56,18 @@ export function CrudField({
 }: CrudFieldOptions = {}): PropertyDecorator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudField`, { resolveField, search, filter, sort, input }, target.constructor, propertyKey);
+        Reflect.defineMetadata(
+            `data:crudField`,
+            { resolveField, dedicatedResolverArg, search, filter, sort, input },
+            target.constructor,
+            propertyKey,
+        );
     };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hasFieldFeature(metadataClass: any, propName: string, option: keyof CrudFieldOptions): boolean {
     const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
-    return crudField[option] ?? true;
+    const defaultValue = option == "dedicatedResolverArg" ? false : true;
+    return crudField[option] ?? defaultValue;
 }

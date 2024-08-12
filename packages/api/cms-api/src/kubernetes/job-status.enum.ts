@@ -6,5 +6,4 @@ export enum KubernetesJobStatus {
     "succeeded" = "succeeded",
     "failed" = "failed",
 }
-
 registerEnumType(KubernetesJobStatus, { name: "KubernetesJobStatus" });

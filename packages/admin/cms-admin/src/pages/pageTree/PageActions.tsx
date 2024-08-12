@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
-import { Add, Delete, Domain, Edit, Preview, Settings } from "@comet/admin-icons";
+import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -31,7 +31,8 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
     const client = useApolloClient();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-    const isEditable = !!(page.visibility !== "Archived" && documentTypes[page.documentType].editComponent);
+    const documentType = documentTypes[page.documentType];
+    const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
 
     const handleDeleteClick = async () => {
         const subTree = subTreeFromNode(page, tree);
@@ -75,10 +76,11 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
                     </RowActionsItem>,
                     <RowActionsItem
                         key="preview"
-                        icon={<Preview />}
+                        icon={documentType.hasNoSitePreview ? <PreviewUnavailable /> : <Preview />}
                         onClick={() => {
                             openSitePreviewWindow(page.path, contentScopeMatch.url);
                         }}
+                        disabled={documentType.hasNoSitePreview}
                     >
                         <FormattedMessage id="comet.pages.pages.page.openPreview" defaultMessage="Open preview" />
                     </RowActionsItem>,

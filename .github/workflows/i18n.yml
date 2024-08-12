@@ -25,9 +25,7 @@ jobs:
                   token: ${{ secrets.VIVID_PLANET_BOT_TOKEN }}
                   path: "demo/admin/lang/comet-lang"
 
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 8
+            - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 18.x
               uses: actions/setup-node@v3

@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, OneToOne, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/core";
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
 import { Product } from "./product.entity";
@@ -14,7 +14,7 @@ export class ProductStatistics extends BaseEntity<ProductStatistics, "id"> {
     id: string = uuid();
 
     @Property()
-    @Field()
+    @Field(() => Int)
     views: number;
 
     @OneToOne(() => Product, { mappedBy: "statistics", orphanRemoval: true })

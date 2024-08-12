@@ -1,7 +1,4 @@
-import "@fontsource/roboto/100.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
+import "@fontsource-variable/roboto-flex/full.css";
 import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 import "@src/polyfills";
@@ -10,6 +7,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
+    ContentScopeInterface,
     createDamFileDependency,
     createHttpClient,
     CurrentUserProvider,
@@ -27,10 +25,10 @@ import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { createConfig } from "@src/config";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
-import theme from "@src/theme";
+import { theme } from "@src/theme";
+import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import * as React from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd-multi-backend";
 import * as ReactDOM from "react-dom";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router-dom";
@@ -64,37 +62,42 @@ class App extends React.Component {
     public render(): JSX.Element {
         return (
             <ApolloProvider client={apolloClient}>
-                <CurrentUserProvider>
-                    <SitesConfigProvider
+                <SitesConfigProvider
+                    value={{
+                        configs: config.sitesConfig,
+                        resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+                    }}
+                >
+                    <DamConfigProvider
                         value={{
-                            configs: config.sitesConfig,
-                            resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+                            scopeParts: ["domain"],
+                            additionalToolbarItems: <ImportFromUnsplash />,
+                            importSources: {
+                                unsplash: {
+                                    label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                                },
+                            },
+                            contentGeneration: {
+                                generateAltText: true,
+                                generateImageTitle: true,
+                            },
                         }}
                     >
-                        <DamConfigProvider
-                            value={{
-                                scopeParts: ["domain"],
-                                additionalToolbarItems: <ImportFromUnsplash />,
-                                importSources: {
-                                    unsplash: {
-                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
-                                    },
-                                },
+                        <DependenciesConfigProvider
+                            entityDependencyMap={{
+                                Page,
+                                Link,
+                                News: NewsDependency,
+                                DamFile: createDamFileDependency(),
                             }}
                         >
-                            <DependenciesConfigProvider
-                                entityDependencyMap={{
-                                    Page,
-                                    Link,
-                                    News: NewsDependency,
-                                    DamFile: createDamFileDependency(),
-                                }}
-                            >
-                                <IntlProvider locale="en" messages={getMessages()}>
-                                    <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
-                                        <MuiThemeProvider theme={theme}>
+                            <IntlProvider locale="en" messages={getMessages()}>
+                                <LocaleProvider resolveLocaleForScope={(scope: ContentScope) => scope.domain}>
+                                    <MuiThemeProvider theme={theme}>
+                                        <ErrorDialogHandler />
+                                        <CurrentUserProvider>
                                             <RouterBrowserRouter>
-                                                <DndProvider backend={HTML5Backend}>
+                                                <DndProvider options={HTML5toTouch}>
                                                     <SnackbarProvider>
                                                         <CmsBlockContextProvider
                                                             damConfig={{
@@ -116,7 +119,14 @@ class App extends React.Component {
                                                                             {/* @TODO: add preview to contentScope once site is capable of contentScope */}
                                                                             <Route
                                                                                 path={`${match.path}/preview`}
-                                                                                render={(props) => <SitePreview {...props} />}
+                                                                                render={(props) => (
+                                                                                    <SitePreview
+                                                                                        resolvePath={(path: string, scope: ContentScopeInterface) => {
+                                                                                            return `/${scope.language}${path}`;
+                                                                                        }}
+                                                                                        {...props}
+                                                                                    />
+                                                                                )}
                                                                             />
                                                                             <Route
                                                                                 render={() => (
@@ -131,19 +141,18 @@ class App extends React.Component {
                                                                         </Switch>
                                                                     )}
                                                                 </ContentScopeProvider>
-                                                                <ErrorDialogHandler />
                                                             </React.Fragment>
                                                         </CmsBlockContextProvider>
                                                     </SnackbarProvider>
                                                 </DndProvider>
                                             </RouterBrowserRouter>
-                                        </MuiThemeProvider>
-                                    </LocaleProvider>
-                                </IntlProvider>
-                            </DependenciesConfigProvider>
-                        </DamConfigProvider>
-                    </SitesConfigProvider>
-                </CurrentUserProvider>
+                                        </CurrentUserProvider>
+                                    </MuiThemeProvider>
+                                </LocaleProvider>
+                            </IntlProvider>
+                        </DependenciesConfigProvider>
+                    </DamConfigProvider>
+                </SitesConfigProvider>
             </ApolloProvider>
         );
     }

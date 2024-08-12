@@ -24,6 +24,11 @@ export class AccessLogInterceptor implements NestInterceptor {
         if (requestType === "graphql") {
             const graphqlExecutionContext = GqlExecutionContext.create(context);
             const graphqlContext = graphqlExecutionContext.getContext();
+            const gqlInfo = graphqlExecutionContext.getInfo<GraphQLResolveInfo>();
+
+            if (this.isResolvingGraphQLField(gqlInfo)) {
+                return next.handle();
+            }
 
             if (
                 this.config &&
@@ -41,7 +46,6 @@ export class AccessLogInterceptor implements NestInterceptor {
             this.pushUserToRequestData(graphqlContext.req.user, requestData);
 
             const gqlArgs = { ...graphqlExecutionContext.getArgs() };
-            const gqlInfo = graphqlExecutionContext.getInfo<GraphQLResolveInfo>();
 
             if (gqlInfo.operation.operation === "mutation") {
                 delete gqlArgs["input"];
@@ -88,5 +92,10 @@ export class AccessLogInterceptor implements NestInterceptor {
         if (user) {
             requestData.push(this.config && this.config.userToLog ? this.config.userToLog(user) : `user: ${user.id}`);
         }
+    }
+
+    private isResolvingGraphQLField(gqlInfo: GraphQLResolveInfo): boolean {
+        const parentType = gqlInfo.parentType.name;
+        return parentType !== "Query" && parentType !== "Mutation";
     }
 }

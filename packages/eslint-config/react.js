@@ -25,6 +25,7 @@ module.exports = {
         "react/display-name": "off",
         "react/prop-types": "off",
         "react/jsx-curly-brace-presence": "error",
+        "react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
         "no-restricted-imports": [
             "error",
             {
@@ -35,9 +36,28 @@ module.exports = {
                         message: "Please use styled from @mui/material/styles instead.",
                     },
                     {
+                        name: "@mui/icons-material",
+                        message: "Please use @comet/admin-icons instead",
+                    },
+                    {
                         name: "@mui/material",
                         importNames: ["Alert"],
                         message: "Please use Alert from @comet/admin instead",
+                    },
+                    {
+                        name: "@mui/x-data-grid",
+                        importNames: ["GridColDef"],
+                        message: "Please use GridColDef from @comet/admin instead",
+                    },
+                    {
+                        name: "@mui/x-data-grid-pro",
+                        importNames: ["GridColDef"],
+                        message: "Please use GridColDef from @comet/admin instead",
+                    },
+                    {
+                        name: "@mui/x-data-grid-premium",
+                        importNames: ["GridColDef"],
+                        message: "Please use GridColDef from @comet/admin instead",
                     },
                 ],
             },

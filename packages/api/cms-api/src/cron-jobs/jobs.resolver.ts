@@ -1,8 +1,9 @@
-import { Inject } from "@nestjs/common";
+import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
 import { GetCurrentUser } from "../auth/decorators/get-current-user.decorator";
 import { KubernetesService } from "../kubernetes/kubernetes.service";
+import { PreventLocalInvocationGuard } from "../kubernetes/prevent-local-invocation.guard";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../user-permissions/user-permissions.constants";
@@ -12,6 +13,7 @@ import { JobsService } from "./jobs.service";
 
 @Resolver(() => Job)
 @RequiredPermission(["cronJobs"], { skipScopeCheck: true })
+@UseGuards(PreventLocalInvocationGuard)
 export class JobsResolver {
     constructor(
         private readonly kubernetesService: KubernetesService,
@@ -21,10 +23,6 @@ export class JobsResolver {
 
     @Query(() => [Job])
     async kubernetesJobs(@Args("cronJobName") cronJobName: string, @GetCurrentUser() user: CurrentUser): Promise<Job[]> {
-        if (this.kubernetesService.localMode) {
-            throw Error("Not available in local mode!");
-        }
-
         const cronJob = await this.kubernetesService.getCronJob(cronJobName);
         const contentScope = this.kubernetesService.getContentScope(cronJob);
         if (contentScope && !this.accessControlService.isAllowed(user, "cronJobs", contentScope)) {
@@ -33,5 +31,27 @@ export class JobsResolver {
 
         const jobs = await this.kubernetesService.getAllJobsForCronJob(cronJobName);
         return jobs.map((job) => this.jobsService.convertKuberneteJobToJobObjectType(job));
+    }
+
+    @Query(() => Job)
+    async kubernetesJob(@Args("name") jobName: string, @GetCurrentUser() user: CurrentUser): Promise<Job> {
+        const job = await this.kubernetesService.getJob(jobName);
+        const contentScope = this.kubernetesService.getContentScope(job);
+        if (contentScope && !this.accessControlService.isAllowed(user, "cronJobs", contentScope)) {
+            throw new Error("Access denied");
+        }
+
+        return this.jobsService.convertKuberneteJobToJobObjectType(job);
+    }
+
+    @Query(() => String)
+    async kubernetesJobLogs(@Args("name") jobName: string, @GetCurrentUser() user: CurrentUser): Promise<string> {
+        const job = await this.kubernetesService.getJob(jobName);
+        const contentScope = this.kubernetesService.getContentScope(job);
+        if (contentScope && !this.accessControlService.isAllowed(user, "cronJobs", contentScope)) {
+            throw new Error("Access denied");
+        }
+
+        return this.kubernetesService.getJobLogs(job);
     }
 }

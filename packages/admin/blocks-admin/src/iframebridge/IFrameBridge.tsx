@@ -5,8 +5,10 @@ import {
     AdminMessage,
     AdminMessageType,
     IAdminBlockMessage,
+    IAdminContentScopeMessage,
     IAdminHoverComponentMessage,
     IAdminSelectComponentMessage,
+    IAdminShowOnlyVisibleMessage,
     IFrameMessage,
     IFrameMessageType,
 } from "./IFrameMessage";
@@ -15,6 +17,9 @@ export interface IFrameBridgeContext {
     iFrameRef: React.Ref<HTMLIFrameElement>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendBlockState: (blockState: any) => void; // TODO: only PageBlock is supported currently
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    sendContentScope(contentScope: any): void;
+    sendShowOnlyVisible: (showOnlyVisible: boolean) => void;
     iFrameReady: boolean;
     hoveredSiteRoute: string | null;
     sendSelectComponent: (adminRoute: string) => void;
@@ -26,12 +31,18 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     sendBlockState: () => {
         // empty
     },
+    sendShowOnlyVisible: () => {
+        // empty
+    },
     iFrameReady: false,
     hoveredSiteRoute: null,
     sendSelectComponent: () => {
         // empty
     },
     sendHoverComponent: () => {
+        // empty
+    },
+    sendContentScope: () => {
         // empty
     },
 });
@@ -121,12 +132,28 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
                                 };
                                 sendMessage(message);
                             },
+                            sendShowOnlyVisible: (showOnlyVisible: boolean) => {
+                                const message: IAdminShowOnlyVisibleMessage = {
+                                    cometType: AdminMessageType.ShowOnlyVisible,
+                                    data: {
+                                        showOnlyVisible,
+                                    },
+                                };
+                                sendMessage(message);
+                            },
                             iFrameRef,
                             iFrameReady,
                             sendSelectComponent,
                             hoveredSiteRoute: hoveredSiteRoute,
                             sendHoverComponent: (adminRoute) => {
                                 const message: IAdminHoverComponentMessage = { cometType: AdminMessageType.HoverComponent, data: { adminRoute } };
+                                sendMessage(message);
+                            },
+                            sendContentScope: (contentScope) => {
+                                const message: IAdminContentScopeMessage = {
+                                    cometType: AdminMessageType.ContentScope,
+                                    data: { contentScope },
+                                };
                                 sendMessage(message);
                             },
                         }}

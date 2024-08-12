@@ -2,8 +2,13 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 
-import { BlobStorageModule, defaultDamAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { BlobStorageModule, damDefaultAcceptedMimetypes, DependentsResolverFactory } from "..";
+import { DamFileDownloadLinkBlockTransformerService } from "./blocks/dam-file-download-link-block-transformer.service";
+import { PixelImageBlockTransformerService } from "./blocks/pixel-image-block-transformer.service";
+import { SvgImageBlockTransformerService } from "./blocks/svg-image-block-transformer.service";
+import { DamVideoBlockTransformerService } from "./blocks/video/dam-video-block-transformer.service";
 import { ScaledImagesCacheService } from "./cache/scaled-images-cache.service";
+import { HasValidFilenameConstraint } from "./common/decorators/has-valid-filename.decorator";
 import { DamConfig } from "./dam.config";
 import { DAM_CONFIG, DAM_FILE_VALIDATION_SERVICE, IMGPROXY_CONFIG } from "./dam.constants";
 import { createDamItemsResolver } from "./files/dam-items.resolver";
@@ -13,7 +18,6 @@ import { DamFileImage } from "./files/entities/file-image.entity";
 import { createFolderEntity, FolderInterface } from "./files/entities/folder.entity";
 import { FileImagesResolver } from "./files/file-image.resolver";
 import { FileLicensesResolver } from "./files/file-licenses.resolver";
-import { FileUploadService } from "./files/file-upload.service";
 import { FileValidationService } from "./files/file-validation.service";
 import { createFilesController } from "./files/files.controller";
 import { createFilesResolver } from "./files/files.resolver";
@@ -68,12 +72,12 @@ export class DamModule {
             provide: DAM_FILE_VALIDATION_SERVICE,
             useValue: new FileValidationService({
                 maxFileSize: damConfig.maxFileSize,
-                acceptedMimeTypes: [...defaultDamAcceptedMimetypes, ...(damConfig.additionalMimeTypes ?? [])],
+                acceptedMimeTypes: damConfig.acceptedMimeTypes ?? damDefaultAcceptedMimetypes,
             }),
         };
 
         const DamItemsResolver = createDamItemsResolver({ File, Folder, Scope });
-        const FilesResolver = createFilesResolver({ File, Scope });
+        const FilesResolver = createFilesResolver({ File, Folder, Scope });
         const FileDependentsResolver = DependentsResolverFactory.create(File);
         const FoldersResolver = createFoldersResolver({ Folder, Scope });
 
@@ -121,10 +125,24 @@ export class DamModule {
                 FileImagesResolver,
                 CalculateDominantImageColor,
                 FileValidationService,
-                FileUploadService,
+                PixelImageBlockTransformerService,
+                SvgImageBlockTransformerService,
+                DamVideoBlockTransformerService,
+                DamFileDownloadLinkBlockTransformerService,
+                HasValidFilenameConstraint,
             ],
             controllers: [createFilesController({ Scope }), FoldersController, ImagesController],
-            exports: [ImgproxyService, FilesService, FoldersService, ImagesService, ScaledImagesCacheService, damConfigProvider, FileUploadService],
+            exports: [
+                ImgproxyService,
+                FilesService,
+                FoldersService,
+                ImagesService,
+                ScaledImagesCacheService,
+                damConfigProvider,
+                PixelImageBlockTransformerService,
+                SvgImageBlockTransformerService,
+                DamVideoBlockTransformerService,
+            ],
         };
     }
 }

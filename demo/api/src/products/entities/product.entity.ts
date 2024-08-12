@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -15,15 +15,26 @@ import {
     Ref,
     types,
 } from "@mikro-orm/core";
-import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";
+import { GraphQLDate } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
 
 import { ProductCategory } from "./product-category.entity";
+import { ProductColor } from "./product-color.entity";
 import { ProductStatistics } from "./product-statistics.entity";
 import { ProductTag } from "./product-tag.entity";
+import { ProductToTag } from "./product-to-tag.entity";
 import { ProductType } from "./product-type.enum";
 import { ProductVariant } from "./product-variant.entity";
+
+export enum ProductStatus {
+    Published = "Published",
+    Unpublished = "Unpublished",
+    Deleted = "Deleted",
+}
+registerEnumType(ProductStatus, { name: "ProductStatus" });
 
 @ObjectType()
 @InputType("ProductDiscountsInput")
@@ -55,10 +66,10 @@ export class ProductDimensions {
 
 @ObjectType()
 @Entity()
-@RootBlockEntity<Product>({ isVisible: (product) => product.visible })
+@RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class Product extends BaseEntity<Product, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt";
+    [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
@@ -74,9 +85,9 @@ export class Product extends BaseEntity<Product, "id"> {
     })
     title: string;
 
-    @Property()
-    @Field()
-    visible: boolean;
+    @Enum({ items: () => ProductStatus })
+    @Field(() => ProductStatus)
+    status: ProductStatus = ProductStatus.Unpublished;
 
     @Property()
     @Field()
@@ -90,9 +101,13 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field(() => ProductType)
     type: ProductType;
 
+    @Field(() => [ProductType])
+    @Enum({ items: () => ProductType, array: true })
+    additionalTypes: ProductType[] = [];
+
     @Property({ type: types.decimal, nullable: true })
     @Field({ nullable: true })
-    price?: number;
+    price?: number = undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-inferrable-types
     @Property({ type: types.boolean })
@@ -100,14 +115,21 @@ export class Product extends BaseEntity<Product, "id"> {
     inStock: boolean = true;
 
     @Property({ type: types.decimal, nullable: true })
-    @Field()
+    @Field(() => Int, { nullable: true })
     @CrudField({
         input: false,
     })
     soldCount?: number;
 
+    @Property({ type: types.date, nullable: true })
+    @Field(() => GraphQLDate, { nullable: true })
+    availableSince?: Date = undefined; // use string in MikroORM v6 (https://mikro-orm.io/docs/upgrading-v5-to-v6#changes-in-date-property-mapping)
+
+    @Property({ nullable: true })
+    @Field({ nullable: true })
+    lastCheckedAt?: Date = undefined;
+
     @Property({ customType: new RootBlockType(DamImageBlock) })
-    @Field(() => RootBlockDataScalar(DamImageBlock))
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
 
@@ -127,13 +149,23 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field(() => ProductStatistics, { nullable: true })
     statistics?: Ref<ProductStatistics> = undefined;
 
-    @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
+    @OneToMany(() => ProductColor, (variant) => variant.product, { orphanRemoval: true })
     @CrudField({
         resolveField: true, //default is true
         //search: true, //not yet implemented
         //filter: true, //not yet implemented
         //sort: true, //not yet implemented
         input: true, //default is true
+    })
+    colors = new Collection<ProductColor>(this);
+
+    @OneToMany(() => ProductVariant, (variant) => variant.product, { orphanRemoval: true })
+    @CrudField({
+        resolveField: true, //default is true
+        //search: true, //not yet implemented
+        //filter: true, //not yet implemented
+        //sort: true, //not yet implemented
+        input: false, //default is true, disabled here because it is edited using it's own crud api
     })
     variants = new Collection<ProductVariant>(this);
 
@@ -157,6 +189,9 @@ export class Product extends BaseEntity<Product, "id"> {
     })
     tags = new Collection<ProductTag>(this);
 
+    @OneToMany(() => ProductToTag, (productToTag) => productToTag.product, { orphanRemoval: true })
+    tagsWithStatus = new Collection<ProductToTag>(this);
+
     @Property()
     @Field()
     createdAt: Date = new Date();
@@ -164,4 +199,15 @@ export class Product extends BaseEntity<Product, "id"> {
     @Property({ onUpdate: () => new Date() })
     @Field()
     updatedAt: Date = new Date();
+
+    @ManyToOne(() => Manufacturer, { nullable: true, index: true, ref: true })
+    manufacturer?: Ref<Manufacturer> = undefined;
+
+    @ManyToOne(() => FileUpload, { nullable: true, ref: true })
+    @Field(() => FileUpload, { nullable: true })
+    priceList?: Ref<FileUpload> = undefined;
+
+    @ManyToMany(() => FileUpload)
+    @Field(() => [FileUpload])
+    datasheets = new Collection<FileUpload>(this);
 }

@@ -11,7 +11,19 @@ import {
     TextAreaField,
     TextField,
 } from "@comet/admin";
-import { Add, FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointSoutheast, FocusPointSouthwest, Snips } from "@comet/admin-icons";
+import {
+    Add,
+    FocusPointCenter,
+    FocusPointEast,
+    FocusPointNorth,
+    FocusPointNortheast,
+    FocusPointNorthwest,
+    FocusPointSouth,
+    FocusPointSoutheast,
+    FocusPointSouthwest,
+    FocusPointWest,
+    Snips,
+} from "@comet/admin-icons";
 import {
     AdminComponentButton,
     AdminComponentNestedButton,
@@ -30,7 +42,6 @@ import {
     resolveNewState,
 } from "@comet/blocks-admin";
 import { DamImageBlock, FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
-import { FormatAlignCenter, VerticalAlignBottom, VerticalAlignCenter } from "@mui/icons-material";
 import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@mui/material";
 import * as React from "react";
 
@@ -107,7 +118,7 @@ export function ComponentDemo(): React.ReactElement {
 
                         <AdminComponentSectionGroup title="Grouped Section Headline">
                             <AdminComponentSection>
-                                <Typography variant="h6">Label</Typography>
+                                <Typography variant="subtitle1">Label</Typography>
                             </AdminComponentSection>
 
                             <AdminComponentSection>
@@ -139,7 +150,15 @@ export function ComponentDemo(): React.ReactElement {
 
                             <TextField name="text" label="Input with label" fullWidth />
 
+                            <TextField name="textDisabled" label="Input disabled" placeholder="Input" fullWidth disabled />
+
                             <SelectField name="select" label="Select with label" fullWidth>
+                                <MenuItem value="Option 1">Option 1</MenuItem>
+                                <MenuItem value="Option 2">Option 2</MenuItem>
+                                <MenuItem value="Option 3">Option 3</MenuItem>
+                            </SelectField>
+
+                            <SelectField name="selectDisabled" label="SelectField disabled" fullWidth disabled>
                                 <MenuItem value="Option 1">Option 1</MenuItem>
                                 <MenuItem value="Option 2">Option 2</MenuItem>
                                 <MenuItem value="Option 3">Option 3</MenuItem>
@@ -199,16 +218,22 @@ export function ComponentDemo(): React.ReactElement {
                                 <Field name="single-choice" type="radio" value="Option 3" fullWidth>
                                     {(props) => <FormControlLabel label="Option 3" control={<FinalFormRadio {...props} />} />}
                                 </Field>
+                                <Field name="single-choice" type="radio" value="Option 4 disabled" fullWidth disabled>
+                                    {(props) => <FormControlLabel label="Option 4 disabled" control={<FinalFormRadio {...props} />} />}
+                                </Field>
                             </FieldContainer>
                             <FieldContainer label="Multiple choice">
                                 <CheckboxField name="multiple-choice-1" label="Option 1" fullWidth />
                                 <CheckboxField name="multiple-choice-2" label="Option 2" fullWidth />
                                 <CheckboxField name="multiple-choice-3" label="Option 3" fullWidth />
+                                <CheckboxField name="multiple-choice-4-disabled" label="Option 4 disabled" fullWidth disabled />
                             </FieldContainer>
 
                             <SwitchField name="switch" fieldLabel="Switch with label" />
 
                             <SwitchField name="switch" label="Switch with inline label" />
+
+                            <SwitchField name="switch" fieldLabel="Switch disabled" disabled />
 
                             <Field
                                 name="button-group-row"
@@ -230,13 +255,13 @@ export function ComponentDemo(): React.ReactElement {
                                 component={FinalFormToggleButtonGroup}
                                 options={[
                                     { value: "topLeft", icon: <FocusPointNorthwest /> },
-                                    { value: "topMiddle", icon: <VerticalAlignCenter /> },
+                                    { value: "topMiddle", icon: <FocusPointNorth /> },
                                     { value: "topRight", icon: <FocusPointNortheast /> },
-                                    { value: "middleLeft", icon: <VerticalAlignBottom /> },
+                                    { value: "middleLeft", icon: <FocusPointWest /> },
                                     { value: "center", icon: <FocusPointCenter /> },
-                                    { value: "middleRight", icon: <VerticalAlignBottom /> },
+                                    { value: "middleRight", icon: <FocusPointEast /> },
                                     { value: "bottomLeft", icon: <FocusPointSouthwest /> },
-                                    { value: "bottomMiddle", icon: <FormatAlignCenter /> },
+                                    { value: "bottomMiddle", icon: <FocusPointSouth /> },
                                     { value: "bottomRight", icon: <FocusPointSoutheast /> },
                                 ]}
                                 optionsPerRow={3}
@@ -332,6 +357,7 @@ export function ComponentDemo(): React.ReactElement {
                                         <MenuItem value="10%">10%</MenuItem>
                                         <MenuItem value="20%">20%</MenuItem>
                                     </SelectField>
+
                                     <SwitchField name="shadow" fieldLabel="Shadow" />
                                 </BlocksFinalForm>
                             </AdminComponentPaper>

@@ -49,39 +49,48 @@ export class ContentScopeService {
     private async getContentScopesFromEntity(affectedEntity: AffectedEntityMeta, args: Record<string, string>): Promise<ContentScope[][]> {
         const contentScopes: ContentScope[][] = [];
         if (affectedEntity.options.idArg) {
-            if (!args[affectedEntity.options.idArg]) throw new Error(`${affectedEntity.options.idArg} arg not found`);
-            const repo = this.orm.em.getRepository<{ scope?: ContentScope }>(affectedEntity.entity);
-            const id = args[affectedEntity.options.idArg];
-            const ids = Array.isArray(id) ? id : [id];
-            for (const id of ids) {
-                const row = await repo.findOneOrFail(id);
-                if (row.scope) {
-                    contentScopes.push([row.scope as ContentScope]);
-                } else {
-                    const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [affectedEntity.entity]);
-                    if (!scoped) throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
-                    let scopes;
-                    if (this.isService(scoped)) {
-                        const service = this.moduleRef.get(scoped, { strict: false });
-                        scopes = await service.getEntityScope(row);
+            if (!args[affectedEntity.options.idArg] && !affectedEntity.options.nullable) {
+                throw new Error(`${affectedEntity.options.idArg} arg not found`);
+            }
+
+            if (args[affectedEntity.options.idArg]) {
+                const repo = this.orm.em.getRepository<{ scope?: ContentScope }>(affectedEntity.entity);
+                const id = args[affectedEntity.options.idArg];
+                const ids = Array.isArray(id) ? id : [id];
+                for (const id of ids) {
+                    const row = await repo.findOneOrFail(id);
+                    if (row.scope) {
+                        contentScopes.push([row.scope as ContentScope]);
                     } else {
-                        scopes = await scoped(row);
+                        const scoped = this.reflector.getAllAndOverride<ScopedEntityMeta>("scopedEntity", [affectedEntity.entity]);
+                        if (!scoped) throw new Error(`Entity ${affectedEntity.entity} is missing @ScopedEntity decorator`);
+                        let scopes;
+                        if (this.isService(scoped)) {
+                            const service = this.moduleRef.get(scoped, { strict: false });
+                            scopes = await service.getEntityScope(row);
+                        } else {
+                            scopes = await scoped(row);
+                        }
+                        if (!scopes) throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
+                        contentScopes.push(Array.isArray(scopes) ? scopes : [scopes]);
                     }
-                    if (!scopes) throw new Error(`@ScopedEntity function for ${affectedEntity.entity} didn't return any scopes`);
-                    contentScopes.push(Array.isArray(scopes) ? scopes : [scopes]);
                 }
             }
-        } else if (affectedEntity.options.pageTreeNodeIdArg && args[affectedEntity.options.pageTreeNodeIdArg]) {
-            if (!args[affectedEntity.options.pageTreeNodeIdArg]) throw new Error(`${affectedEntity.options.pageTreeNodeIdArg} arg not found`);
-            if (this.pageTreeService === undefined) throw new Error("pageTreeNodeIdArg was given but no PageTreeModule is registered");
-            const pageTreeApi = await this.pageTreeService.createReadApi({ visibility: "all" });
-            const id = args[affectedEntity.options.pageTreeNodeIdArg];
-            const ids = Array.isArray(id) ? id : [id];
-            for (const id of ids) {
-                const node = await pageTreeApi.getNode(id);
-                if (!node) throw new Error("Can't find pageTreeNode");
-                if (!node.scope) throw new Error("PageTreeNode doesn't have a scope");
-                contentScopes.push([node.scope as ContentScope]);
+        } else if (affectedEntity.options.pageTreeNodeIdArg) {
+            if (!args[affectedEntity.options.pageTreeNodeIdArg] && !affectedEntity.options.nullable)
+                throw new Error(`${affectedEntity.options.pageTreeNodeIdArg} arg not found`);
+
+            if (args[affectedEntity.options.pageTreeNodeIdArg]) {
+                if (this.pageTreeService === undefined) throw new Error("pageTreeNodeIdArg was given but no PageTreeModule is registered");
+                const pageTreeApi = await this.pageTreeService.createReadApi({ visibility: "all" });
+                const id = args[affectedEntity.options.pageTreeNodeIdArg];
+                const ids = Array.isArray(id) ? id : [id];
+                for (const id of ids) {
+                    const node = await pageTreeApi.getNode(id);
+                    if (!node) throw new Error("Can't find pageTreeNode");
+                    if (!node.scope) throw new Error("PageTreeNode doesn't have a scope");
+                    contentScopes.push([node.scope as ContentScope]);
+                }
             }
         } else {
             // TODO implement something more flexible that supports something like that: @AffectedEntity(Product, ProductEntityLoader)

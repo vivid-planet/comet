@@ -1,30 +1,29 @@
 import { FieldContainer } from "@comet/admin";
 import { ColorPicker, ColorPickerColorPreviewProps } from "@comet/admin-color-picker";
-import { EmojiEmotions, MoodBad, SentimentDissatisfied } from "@mui/icons-material";
+import { StateFilled, StateRing, Warning } from "@comet/admin-icons";
 import { Grid } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 storiesOf("stories/components/Color Picker/Color Picker Customized", module).add("Color Picker Customized", () => {
     const [colorOne, setColorOne] = React.useState<string | undefined>("#00ff00");
-    const [colorTwo, setColorTwo] = React.useState<string | undefined>("rgba(255, 127, 80, 0.75)");
-    const [colorThree, setColorThree] = React.useState<string | undefined>();
+    const [colorTwo, setColorTwo] = React.useState<string | undefined>();
 
     const CustomColorPreview = ({ color }: ColorPickerColorPreviewProps): React.ReactElement => {
-        return <EmojiEmotions htmlColor={color} sx={{ fontSize: 24 }} />;
+        return <StateFilled htmlColor={color} sx={{ fontSize: 24 }} />;
     };
 
     const CustomColorEmptyPreview = (): React.ReactElement => {
-        return <SentimentDissatisfied color="warning" sx={{ fontSize: 24 }} />;
+        return <StateRing color="warning" sx={{ fontSize: 24 }} />;
     };
 
     const CustomColorInvalidPreview = (): React.ReactElement => {
-        return <MoodBad color="error" sx={{ fontSize: 24 }} />;
+        return <Warning color="error" sx={{ fontSize: 24 }} />;
     };
 
     return (
         <Grid container spacing={4} sx={{ pb: 2 }}>
-            <Grid item md={4}>
+            <Grid item md={6}>
                 <FieldContainer label="Without Picker" fullWidth>
                     <ColorPicker
                         fullWidth
@@ -54,17 +53,12 @@ storiesOf("stories/components/Color Picker/Color Picker Customized", module).add
                     />
                 </FieldContainer>
             </Grid>
-            <Grid item md={4}>
-                <FieldContainer label="Clearable" fullWidth>
-                    <ColorPicker fullWidth clearable value={colorTwo} onChange={setColorTwo} colorFormat="rgba" />
-                </FieldContainer>
-            </Grid>
-            <Grid item md={4}>
+            <Grid item md={6}>
                 <FieldContainer label="Custom Color Preview" fullWidth>
                     <ColorPicker
                         fullWidth
-                        value={colorThree}
-                        onChange={setColorThree}
+                        value={colorTwo}
+                        onChange={setColorTwo}
                         components={{
                             ColorPickerColorPreview: CustomColorPreview,
                             ColorPickerInvalidPreview: CustomColorInvalidPreview,

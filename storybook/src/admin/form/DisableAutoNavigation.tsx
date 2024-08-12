@@ -12,7 +12,7 @@ import {
     ToolbarBackButton,
     ToolbarItem,
 } from "@comet/admin";
-import { Edit } from "@mui/icons-material";
+import { Edit } from "@comet/admin-icons";
 import { Box, Card, CardContent, IconButton, Paper, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -100,20 +100,18 @@ const SampleForm: React.FunctionComponent = () => {
 
 function Story() {
     return (
-        <>
-            <Switch>
-                <Stack topLevelTitle="Sample">
-                    <StackSwitch initialPage="table">
-                        <StackPage name="table">
-                            <SampleTable />
-                        </StackPage>
-                        <StackPage name="edit" title="Edit">
-                            <SampleForm />
-                        </StackPage>
-                    </StackSwitch>
-                </Stack>
-            </Switch>
-        </>
+        <Switch>
+            <Stack topLevelTitle="Sample">
+                <StackSwitch initialPage="table">
+                    <StackPage name="table">
+                        <SampleTable />
+                    </StackPage>
+                    <StackPage name="edit" title="Edit">
+                        <SampleForm />
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
+        </Switch>
     );
 }
 

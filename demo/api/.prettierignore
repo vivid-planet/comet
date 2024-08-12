@@ -1,6 +1,2 @@
-package-lock.json
-.gitignore
-*.lock
-*.gql
-*.dist
+dist/
 block-meta.json

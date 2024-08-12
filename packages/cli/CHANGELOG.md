@@ -1,5 +1,53 @@
 # @comet/cli
 
+## 7.0.0
+
+## 7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+## 6.17.1
+
+## 6.17.0
+
+## 6.16.0
+
+## 6.15.1
+
+## 6.15.0
+
+## 6.14.1
+
+## 6.14.0
+
+## 6.13.0
+
+## 6.12.0
+
+## 6.11.0
+
+## 6.10.0
+
+## 6.9.0
+
+## 6.8.0
+
+### Minor Changes
+
+-   360b8b137: Add `--input-file` and `--output-file` options to generate-block-types script for enhanced flexibility.
+
+## 6.7.0
+
 ## 6.6.2
 
 ## 6.6.1

@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-
-require("../lib/index");
+require("ts-node").register();
+require("../lib/comet");

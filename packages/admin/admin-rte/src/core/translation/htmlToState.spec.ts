@@ -8,6 +8,15 @@ import { IRteOptions } from "../Rte";
 import { htmlToState } from "./htmlToState";
 import { stateToHtml } from "./stateToHtml";
 
+// TODO Remove mock once we've updated the test setup to support ESM modules
+jest.mock("../BlockElement", () => {
+    return {
+        BlockElement: () => {
+            return null;
+        },
+    };
+});
+
 describe("htmlToState", () => {
     const options = { customInlineStyles: { HIGHLIGHT: { label: "Highlight!", style: { backgroundColor: "yellow" } } } } as unknown as IRteOptions;
 
@@ -143,6 +152,16 @@ describe("htmlToState", () => {
                 type: "unstyled",
                 depth: 0,
                 inlineStyleRanges: [{ offset: 0, length: 30, style: "HIGHLIGHT" }],
+                entityRanges: [],
+                data: {},
+            },
+            // Custom Block Style
+            {
+                key: "7l334",
+                text: "A rte text with custom block styling",
+                type: "header-custom-green",
+                depth: 0,
+                inlineStyleRanges: [],
                 entityRanges: [],
                 data: {},
             },

@@ -1,6 +1,8 @@
 import { useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    filterByFragment,
+    GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -15,8 +17,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Box, Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { filter } from "graphql-anywhere";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -83,7 +84,7 @@ const columns: GridColDef<GQLProductsTagsListFragment>[] = [
                         }}
                         refetchQueries={["ProductTagsList"]}
                         copyData={() => {
-                            return filter<GQLProductsTagsListFragment>(productTagsFragment, params.row);
+                            return filterByFragment<GQLProductsTagsListFragment>(productTagsFragment, params.row);
                         }}
                     />
                 </>

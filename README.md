@@ -29,6 +29,9 @@ The following tools need to be installed on your local machine.
 Run the `install.sh` script to install dependencies and setup needed symlinks.
 
 ```bash
+# Optionally set domain to use instead of localhost (add to e.g. ~/.bashrc)
+export DEV_DOMAIN=myname.dev.vivid-planet.cloud # Vivid Planet network
+
 sh install.sh
 ```
 
@@ -132,7 +135,7 @@ Storybook will be available at [http://localhost:26638/](http://localhost:26638/
 pnpm run docs
 ```
 
-The docs will be available at [http://localhost:3000/](http://localhost:3000/)
+The docs will be available at [http://localhost:3300/](http://localhost:3300/)
 
 ### Stop processes
 

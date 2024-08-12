@@ -14,6 +14,7 @@ const isHeightValid = (h: number) => h <= 1000;
 
 const DEFAULT_HEIGHT = 100;
 
+/** @deprecated The `SpaceBlock` is deprecated. It will be removed in the next major version. Use createSpaceBlock instead. */
 export const SpaceBlock: BlockInterface<SpaceBlockData, State, SpaceBlockInput> = {
     ...createBlockSkeleton(),
 

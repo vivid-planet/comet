@@ -1,13 +1,14 @@
 import {
+    AsyncAutocompleteField,
+    AsyncSelectField,
+    AutocompleteField,
     CheckboxField,
     Field,
     FieldContainer,
-    FinalFormCheckbox,
-    FinalFormInput,
-    FinalFormRadio,
-    FinalFormSearchTextField,
-    FinalFormSelect,
-    FinalFormSwitch,
+    FieldSet,
+    FinalFormRangeInput,
+    NumberField,
+    RadioGroupField,
     SearchField,
     SelectField,
     SwitchField,
@@ -16,121 +17,222 @@ import {
 } from "@comet/admin";
 import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
-import { Button, Card, CardContent, CardHeader, FormControlLabel, Grid, Link, MenuItem } from "@mui/material";
+import { Box, Button, Link, MenuItem } from "@mui/material";
+import { select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
 function Story() {
+    const fieldVariant = select(
+        "Field variant",
+        {
+            Horizontal: "horizontal",
+            Vertical: "vertical",
+        },
+        "horizontal",
+    );
+
+    type Option = { value: string; label: string };
+
     const options = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
         { value: "vanilla", label: "Vanilla" },
     ];
 
+    const initalValues = React.useMemo(() => ({ multiSelect: [] }), []);
+
     return (
         <Form
             onSubmit={(values) => {
                 alert(JSON.stringify(values, undefined, 2));
             }}
-            initialValues={{ multiSelect: [] }}
+            initialValues={initalValues}
             render={({ handleSubmit, values }) => (
                 <form onSubmit={handleSubmit}>
-                    <Grid container mb={2} spacing={2}>
-                        <Grid item md={6}>
-                            <Card variant="outlined">
-                                <CardHeader title="Common Field-Components" titleTypographyProps={{ variant: "h3" }} />
-                                <CardContent>
-                                    <TextField name="text" label="Text" fullWidth />
-                                    <TextAreaField name="textarea" label="TextArea" fullWidth />
-                                    <SearchField name="search" label="Search" fullWidth />
-                                    <SelectField name="select" label="Select" fullWidth>
-                                        {options.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </SelectField>
-                                    <CheckboxField
-                                        name="singleCheckboxWithLink"
-                                        label={
-                                            <>
-                                                Single checkbox with a{" "}
-                                                <Link href="https://www.comet-dxp.com" target="_blank">
-                                                    link
-                                                </Link>{" "}
-                                                inside the label.
-                                            </>
-                                        }
-                                        fullWidth
-                                    />
-                                    <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" />
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid item md={6}>
-                            <Card variant="outlined">
-                                <CardHeader title="Special Field-Components" titleTypographyProps={{ variant: "h3" }} />
-                                <CardContent>
-                                    <DateField name="date" label="Date" fullWidth />
-                                    <DateRangeField name="dateRange" label="Date Range" fullWidth />
-                                    <TimeField name="time" label="Time" fullWidth />
-                                    <TimeRangeField name="timeRange" label="Time Range" fullWidth />
-                                    <DateTimeField name="dateTime" label="Date Time" fullWidth />
-                                    <ColorField name="hexColor" label="Color (hex)" fullWidth />
-                                    <ColorField name="rgbaColor" label="Color (rgba)" colorFormat="rgba" fullWidth />
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid item md={6}>
-                            <Card variant="outlined">
-                                <CardHeader title="Field & FinalForm-Components" titleTypographyProps={{ variant: "h3" }} />
-                                <CardContent>
-                                    <Field name="input" label="FinalFormInput" fullWidth component={FinalFormInput} />
-                                    <Field name="search" label="FinalFormSearchTextField" component={FinalFormSearchTextField} />
-                                    <Field
-                                        name="text"
-                                        label="FinalFormInput (multiline)"
-                                        multiline
-                                        rows={3}
-                                        rowsMax={5}
-                                        fullWidth
-                                        component={FinalFormInput}
-                                    />
-                                    <Field name="checkbox" type="checkbox" fullWidth>
-                                        {(props) => <FormControlLabel label="FinalFormCheckbox" control={<FinalFormCheckbox {...props} />} />}
-                                    </Field>
-                                    <FieldContainer label="FinalFormRadio" fullWidth>
-                                        <Field name="radio" type="radio" value="foo">
-                                            {(props) => <FormControlLabel label="Foo" control={<FinalFormRadio {...props} />} />}
-                                        </Field>
-                                        <Field name="radio" type="radio" value="bar">
-                                            {(props) => <FormControlLabel label="Bar" control={<FinalFormRadio {...props} />} />}
-                                        </Field>
-                                    </FieldContainer>
-                                    <Field name="select" label="FinalFormSelect" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect {...props}>
-                                                {options.map((option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
-                                    <Field name="switch" label="FinalFormSwitch" fullWidth>
-                                        {(props) => (
-                                            <FormControlLabel label={values.switch ? "On" : "Off"} control={<FinalFormSwitch {...props} />} />
-                                        )}
-                                    </Field>
-                                    <Button color="primary" variant="contained" onClick={handleSubmit}>
-                                        Submit
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    </Grid>
+                    <Box maxWidth={1024}>
+                        <FieldSet title="Common Field-Components">
+                            <TextField name="text" label="Text" variant={fieldVariant} fullWidth />
+                            <TextAreaField name="textarea" label="TextArea" variant={fieldVariant} fullWidth />
+                            <SearchField name="search" label="Search" variant={fieldVariant} fullWidth />
+                            <SelectField name="select" label="Select" variant={fieldVariant} fullWidth>
+                                {options.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </SelectField>
+                            <NumberField name="number" label="Number" variant={fieldVariant} fullWidth />
+                            <AsyncSelectField
+                                name="asyncSelect"
+                                label="Async Select"
+                                loadOptions={async () => {
+                                    return new Promise<typeof options>((resolve) => setTimeout(() => resolve(options), 1000));
+                                }}
+                                getOptionLabel={(option) => option.label}
+                                variant={fieldVariant}
+                                fullWidth
+                            />
+                            <AutocompleteField
+                                name="autocomplete"
+                                label="Autocomplete"
+                                options={options}
+                                getOptionLabel={(option: Option) => option.label}
+                                isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                                variant={fieldVariant}
+                                fullWidth
+                            />
+                            <AsyncAutocompleteField
+                                name="asyncAutocomplete"
+                                label="Async Autocomplete"
+                                loadOptions={async () => {
+                                    return new Promise<typeof options>((resolve) => setTimeout(() => resolve(options), 1000));
+                                }}
+                                getOptionLabel={(option: Option) => option.label}
+                                isOptionEqualToValue={(option: Option, value: Option) => option.value === value.value}
+                                variant={fieldVariant}
+                                fullWidth
+                            />
+                        </FieldSet>
+
+                        <FieldSet title="Field-Components with Field-Container">
+                            <CheckboxField name="singleCheckbox" fieldLabel="Single Checkbox" variant={fieldVariant} fullWidth />
+                            <CheckboxField
+                                name="checkboxWithAdditionalLabel"
+                                fieldLabel="Checkbox with additional label"
+                                label={
+                                    <>
+                                        This label has a{" "}
+                                        <Link href="https://www.comet-dxp.com" target="_blank">
+                                            link
+                                        </Link>{" "}
+                                        inside of it.
+                                    </>
+                                }
+                                variant={fieldVariant}
+                                fullWidth
+                            />
+                            <CheckboxField name="checkboxWithoutFieldLabel" label="Checkbox without a field label" variant={fieldVariant} fullWidth />
+                            <FieldContainer label="Checkbox list" variant={fieldVariant} fullWidth>
+                                <CheckboxField name="checkboxList" label="Checkbox one" value="checkbox-one" />
+                                <CheckboxField name="checkboxList" label="Checkbox two" value="checkbox-two" />
+                                <CheckboxField name="checkboxList" label="Checkbox three" value="checkbox-three" />
+                                <CheckboxField name="checkboxList" label="Checkbox four" value="checkbox-four" />
+                                <CheckboxField name="checkboxList" label="Checkbox five" value="checkbox-five" />
+                            </FieldContainer>
+                            <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
+                        </FieldSet>
+                        <FieldSet title="Radio Groups">
+                            <RadioGroupField
+                                label="Required"
+                                name="radio"
+                                variant={fieldVariant}
+                                fullWidth
+                                required
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                ]}
+                            />
+                            <RadioGroupField
+                                label="Many Options"
+                                name="radioGroupManyOptions"
+                                variant={fieldVariant}
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                    {
+                                        label: "Option Three",
+                                        value: "option-three",
+                                    },
+                                    {
+                                        label: "Option Four",
+                                        value: "option-four",
+                                    },
+                                    {
+                                        label: "Option Five",
+                                        value: "option-five",
+                                    },
+                                    {
+                                        label: "Option Six",
+                                        value: "option-six",
+                                    },
+                                ]}
+                            />
+                            <RadioGroupField
+                                label="Column Layout"
+                                name="radioGroupFullWidthOptions"
+                                variant={fieldVariant}
+                                layout="column"
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                    {
+                                        label: "Option Three",
+                                        value: "option-three",
+                                    },
+                                ]}
+                            />
+                        </FieldSet>
+                        <FieldSet title="Number Range">
+                            <Field
+                                name="numberRange"
+                                label="Range Input"
+                                component={FinalFormRangeInput}
+                                min={-100}
+                                max={100}
+                                variant={fieldVariant}
+                                fullWidth
+                            />
+                            <Field
+                                name="numberRangeWithoutSlider"
+                                label="Without Slider"
+                                component={FinalFormRangeInput}
+                                min={100}
+                                max={1000}
+                                disableSlider
+                                variant={fieldVariant}
+                                fullWidth
+                            />
+                        </FieldSet>
+                        <FieldSet title="Date and Time" supportText="@comet/admin-date-time">
+                            <DateField name="date" label="Date" variant={fieldVariant} fullWidth />
+                            <DateRangeField name="dateRange" label="Date Range" variant={fieldVariant} fullWidth />
+                            <TimeField name="time" label="Time" variant={fieldVariant} fullWidth />
+                            <TimeRangeField name="timeRange" label="Time Range" variant={fieldVariant} fullWidth />
+                            <DateTimeField name="dateTime" label="Date Time" variant={fieldVariant} fullWidth />
+                        </FieldSet>
+                        <FieldSet title="Color" supportText="@comet/admin-color-picker">
+                            <ColorField name="hexColor" label="Color (hex)" variant={fieldVariant} fullWidth />
+                            <ColorField name="rgbaColor" label="Color (rgba)" colorFormat="rgba" variant={fieldVariant} fullWidth />
+                        </FieldSet>
+                        <div>
+                            <Button color="primary" variant="contained" onClick={handleSubmit}>
+                                Submit
+                            </Button>
+                        </div>
+                    </Box>
                     <pre>{JSON.stringify(values, undefined, 2)}</pre>
                 </form>
             )}
