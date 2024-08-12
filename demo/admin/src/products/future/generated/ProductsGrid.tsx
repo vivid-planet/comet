@@ -124,6 +124,15 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                 { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
                 { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
             ],
+            renderCell: ({ row }) => {
+                const valueOptions = [
+                    { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
+                    { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
+                    { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                ];
+                const selectedOption = valueOptions.find(({ value }) => value === row.type);
+                return selectedOption ? selectedOption.label : row.type;
+            },
             flex: 1,
             maxWidth: 150,
             minWidth: 150,
