@@ -201,7 +201,7 @@ module.exports = {
         },
         {
             name: "demo-api",
-            script: ["pnpm --filter comet-demo-api run db:migrate", "pnpm --filter comet-demo-api run start:dev"].join(" && "),
+            script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/blocks-api", "@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
