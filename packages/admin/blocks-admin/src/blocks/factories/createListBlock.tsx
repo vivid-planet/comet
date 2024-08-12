@@ -375,7 +375,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                                     disabled={!canToggleVisibility}
                                                                                 >
                                                                                     {data.visible ? (
-                                                                                        <Visible color="secondary" />
+                                                                                        <Visible color="success" />
                                                                                     ) : (
                                                                                         <Invisible color="action" />
                                                                                     )}

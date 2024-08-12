@@ -75,6 +75,13 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         cdn: {
             originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
         },
+        sentry:
+            envVars.SENTRY_DSN && envVars.SENTRY_ENVIRONMENT
+                ? {
+                      dsn: envVars.SENTRY_DSN,
+                      environment: envVars.SENTRY_ENVIRONMENT,
+                  }
+                : undefined,
     };
 }
 
