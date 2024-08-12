@@ -55,7 +55,7 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
+type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex"> & { tooltipMessage?: string };
 
 export type GridColumnConfig<T> = (
     | { type: "text" }
@@ -65,7 +65,7 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: string[] }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T>; tooltipMessage?: string } & DataGridSettings;
+) & { name: UsableFields<T> } & DataGridSettings;
 
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
