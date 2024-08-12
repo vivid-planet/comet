@@ -4,15 +4,14 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     AsyncSelectField,
     Field,
-    FieldContainer,
     FieldSet,
     filterByFragment,
     FinalForm,
     FinalFormCheckbox,
-    FinalFormRadio,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
+    RadioGroupField,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -197,37 +196,29 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="description"
                                 label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                             />
-                            <FieldContainer
+
+                            <RadioGroupField
                                 required
-                                variant="horizontal"
+                                layout="column"
                                 fullWidth
+                                name="type"
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
-                            >
-                                <Field name="type" value="Cap" type="radio" variant="horizontal">
-                                    {(props) => (
-                                        <FormControlLabel
-                                            label={<FormattedMessage id="product.type.cap" defaultMessage="Cap" />}
-                                            control={<FinalFormRadio {...props} />}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name="type" value="Shirt" type="radio" variant="horizontal">
-                                    {(props) => (
-                                        <FormControlLabel
-                                            label={<FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />}
-                                            control={<FinalFormRadio {...props} />}
-                                        />
-                                    )}
-                                </Field>
-                                <Field name="type" value="Tie" type="radio" variant="horizontal">
-                                    {(props) => (
-                                        <FormControlLabel
-                                            label={<FormattedMessage id="product.type.tie" defaultMessage="Tie" />}
-                                            control={<FinalFormRadio {...props} />}
-                                        />
-                                    )}
-                                </Field>
-                            </FieldContainer>
+                                options={[
+                                    {
+                                        label: <FormattedMessage id="product.type.cap" defaultMessage="Cap" />,
+                                        value: "Cap",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />,
+                                        value: "Shirt",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.tie" defaultMessage="Tie" />,
+                                        value: "Tie",
+                                    },
+                                ]}
+                            />
+
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth

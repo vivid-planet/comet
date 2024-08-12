@@ -189,21 +189,26 @@ export function generateFormField({
         const values = enumType.enumValues.map((i) => i.name);
 
         if (config.inputType === "radio") {
-            code = `<FieldContainer
-                ${required ? "required" : ""}
-                variant="horizontal"
-                fullWidth
-                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
-                    ${values
-                        .map((value) => {
-                            const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
-                            const label = `<FormattedMessage id="${id}" defaultMessage="${camelCaseToHumanReadable(value)}" />`;
-                            return `<Field name="${name}" value="${value}" type="radio" variant="horizontal">
-                                        {(props) => <FormControlLabel label={${label}} control={<FinalFormRadio {...props} />} />}
-                                    </Field>`;
-                        })
-                        .join("\n")}
-                    </FieldContainer>`;
+            code = `
+            <RadioGroupField
+             ${required ? "required" : ""}
+             layout="column"
+             fullWidth
+             name="${name}"
+             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+             options={[
+                  ${values
+                      .map((value) => {
+                          return `{
+                                label: <FormattedMessage id="${instanceGqlType}.${name}.${
+                              value.charAt(0).toLowerCase() + value.slice(1)
+                          }" defaultMessage="${camelCaseToHumanReadable(value)}" />,
+                                value: "${value}",
+                            }`;
+                      })
+                      .join(",")}
+            ]}/>
+            `;
         } else {
             code = `<Field
             ${required ? "required" : ""}
