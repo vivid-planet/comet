@@ -69,7 +69,7 @@ export function ManufacturersGrid() {
                         trigger="hover"
                         title={<FormattedMessage id="comet.manufacturers.id.info" defaultMessage="The id of the manufacturer" />}
                     >
-                        <Info sx={{ margin: 1 }} />
+                        <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
                 </div>
             ),

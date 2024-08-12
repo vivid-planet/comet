@@ -517,7 +517,7 @@ export function generateGrid(
                                   column.tooltipMessage
                               }" />}
                                         >
-                                            <Info sx={{ margin: 1 }} />
+                                            <Info sx={{ marginLeft: 1 }} />
                                         </Tooltip>
                                     </>
                                 )`

@@ -153,7 +153,7 @@ export function ManufacturersGrid(): React.ReactElement {
                             />
                         }
                     >
-                        <Info sx={{ margin: 1 }} />
+                        <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
                 </>
             ),
@@ -183,7 +183,7 @@ export function ManufacturersGrid(): React.ReactElement {
                             />
                         }
                     >
-                        <Info sx={{ margin: 1 }} />
+                        <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
                 </>
             ),
