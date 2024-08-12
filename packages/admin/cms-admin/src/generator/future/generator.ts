@@ -24,7 +24,7 @@ export type FormFieldConfig<T> = (
     | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
