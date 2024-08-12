@@ -6,8 +6,9 @@ import { FileValidationService } from "../dam/files/file-validation.service";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG, FILE_UPLOADS_FILE_VALIDATION_SERVICE } from "./file-uploads.constants";
-import { createFileUploadsController } from "./file-uploads.controller";
 import { FileUploadsService } from "./file-uploads.service";
+import { FileUploadsDownloadController } from "./file-uploads-download.controller";
+import { createFileUploadsUploadController } from "./file-uploads-upload.controller";
 
 @Global()
 @Module({})
@@ -25,11 +26,19 @@ export class FileUploadsModule {
                 acceptedMimeTypes: options.acceptedMimeTypes,
             }),
         };
+
+        const controllers = [createFileUploadsUploadController(options.upload ?? { public: false })];
+
+        // TODO should we validate the secret more (min length, etc.)?
+        if (options.download?.secret) {
+            controllers.push(FileUploadsDownloadController);
+        }
+
         return {
             module: FileUploadsModule,
             imports: [MikroOrmModule.forFeature([FileUpload]), BlobStorageModule],
             providers: [fileUploadsConfigProvider, FileUploadsService, fileUploadsFileValidatorProvider],
-            controllers: [createFileUploadsController(options.upload ?? { public: false })],
+            controllers,
             exports: [FileUploadsService],
         };
     }

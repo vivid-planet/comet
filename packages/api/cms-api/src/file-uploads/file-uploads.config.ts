@@ -5,4 +5,7 @@ export interface FileUploadsConfig {
     upload?: {
         public: boolean;
     };
+    download?: {
+        secret: string;
+    };
 }
