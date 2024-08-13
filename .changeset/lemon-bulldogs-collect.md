@@ -2,4 +2,4 @@
 "@comet/blocks-admin": minor
 ---
 
-feature: add `maxVisibleBlocks` prop to `createBlocksBlock`
+Add `maxVisibleBlocks` option to `createBlocksBlock`
