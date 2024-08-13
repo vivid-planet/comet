@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
+import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem, ValidFileSelectItem } from "@comet/admin";
 import React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -13,6 +13,7 @@ export const finalFormFileUploadFragment = gql`
         name
         size
         downloadUrl
+        previewUrlTemplate
     }
 `;
 
@@ -25,6 +26,7 @@ type SuccessfulApiResponse = {
     mimetype: string;
     contentHash: string;
     downloadUrl?: string;
+    previewUrlTemplate?: string;
 };
 
 type FailedApiResponse = {
@@ -61,7 +63,14 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     } = useCmsBlockContext();
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
-    const inputValue = React.useMemo(() => (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []), [fieldValue]);
+    const inputValue = React.useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment>[]>(() => {
+        const files = Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : [];
+        return files.map((file) => ({
+            ...file,
+            // TODO should the resize width be configurable?
+            previewUrl: file.previewUrlTemplate ? `${apiUrl}${file.previewUrlTemplate.replace(":resizeWidth", "320")}` : undefined,
+        }));
+    }, [fieldValue, apiUrl]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
@@ -118,6 +127,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             name: jsonResponse.name,
                             size: jsonResponse.size,
                             downloadUrl: jsonResponse.downloadUrl ?? null,
+                            previewUrlTemplate: jsonResponse.previewUrlTemplate ?? null,
                         };
 
                         if (singleFile) {

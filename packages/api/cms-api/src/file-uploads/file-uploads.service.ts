@@ -66,4 +66,12 @@ export class FileUploadsService {
 
         return ["/file-uploads", hash, file.id, timeout].join("/");
     }
+
+    createPreviewUrlTemplate(file: FileUpload): string | undefined {
+        if (!["image/webp", "image/png", "image/jpeg", "image/gif"].includes(file.mimetype)) {
+            return undefined;
+        }
+
+        return `${this.createDownloadUrl(file)}/:resizeWidth`;
+    }
 }

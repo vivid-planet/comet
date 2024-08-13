@@ -11,6 +11,7 @@ FileUploadsModule.register({
   /* ... */,
   download: {
     secret: "your secret",
+    allowedImageSizes: [16, 32, 48, /* your allowed image sizes */]
   },
 })
 ```

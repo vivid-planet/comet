@@ -20,4 +20,13 @@ export class FileUploadsResolver {
 
         return this.fileUploadsService.createDownloadUrl(fileUpload);
     }
+
+    @ResolveField(() => String, { nullable: true })
+    previewUrlTemplate(@Parent() fileUpload: FileUpload): string | null {
+        if (!this.config.download) {
+            return null;
+        }
+
+        return this.fileUploadsService.createPreviewUrlTemplate(fileUpload) ?? null;
+    }
 }

@@ -1,5 +1,5 @@
 import { MikroOrmModule } from "@mikro-orm/nestjs";
-import { DynamicModule, Global, Module } from "@nestjs/common";
+import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 
 import { BlobStorageModule } from "../blob-storage/blob-storage.module";
 import { FileValidationService } from "../dam/files/file-validation.service";
@@ -10,6 +10,7 @@ import { FileUploadsResolver } from "./file-uploads.resolver";
 import { FileUploadsService } from "./file-uploads.service";
 import { createFileUploadsDownloadController } from "./file-uploads-download.controller";
 import { createFileUploadsUploadController } from "./file-uploads-upload.controller";
+import { IsAllowedResizeWidthConstraint } from "./validators/is-allowed-resize-width.validator";
 
 @Global()
 @Module({})
@@ -28,6 +29,7 @@ export class FileUploadsModule {
             }),
         };
 
+        const providers: Provider[] = [fileUploadsConfigProvider, FileUploadsService, fileUploadsFileValidatorProvider, FileUploadsResolver];
         const controllers = [createFileUploadsUploadController(options.upload ?? { public: false })];
 
         if (options.download) {
@@ -37,12 +39,13 @@ export class FileUploadsModule {
 
             const FileUploadsDownloadController = createFileUploadsDownloadController({ public: options.download.public ?? false });
             controllers.push(FileUploadsDownloadController);
+            providers.push(IsAllowedResizeWidthConstraint);
         }
 
         return {
             module: FileUploadsModule,
             imports: [MikroOrmModule.forFeature([FileUpload]), BlobStorageModule],
-            providers: [fileUploadsConfigProvider, FileUploadsService, fileUploadsFileValidatorProvider, FileUploadsResolver],
+            providers,
             controllers,
             exports: [FileUploadsService],
         };

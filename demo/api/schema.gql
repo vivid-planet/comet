@@ -186,6 +186,7 @@ type FileUpload {
   createdAt: DateTime!
   updatedAt: DateTime!
   downloadUrl: String
+  previewUrlTemplate: String
 }
 
 type User {
