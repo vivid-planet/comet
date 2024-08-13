@@ -1,11 +1,11 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Controller, Get, GoneException, Inject, NotFoundException, Param, Res } from "@nestjs/common";
+import { Controller, Get, GoneException, Headers, Inject, NotFoundException, Param, Res } from "@nestjs/common";
 import { Response } from "express";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
-import { createHashedPath } from "../dam/files/files.utils";
+import { calculatePartialRanges, createHashedPath } from "../dam/files/files.utils";
 import { DownloadParams, HashDownloadParams } from "./dto/file-uploads-download.params";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
@@ -24,7 +24,7 @@ export class FileUploadsDownloadController {
     @Get(":hash/:id/:timeout")
     // TODO should this be public or private?
     @DisableCometGuards()
-    async download(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response): Promise<void> {
+    async download(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
         if (!this.isValidHash(hash, params)) {
             throw new NotFoundException();
         }
@@ -46,13 +46,46 @@ export class FileUploadsDownloadController {
             throw new NotFoundException();
         }
 
-        res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
-        res.setHeader("Content-Type", file.mimetype);
-        res.setHeader("Last-Modified", file.updatedAt?.toUTCString());
-        res.setHeader("Content-Length", file.size.toString());
+        const headers = {
+            "content-disposition": `attachment; filename="${file.name}"`,
+            "content-type": file.mimetype,
+            "last-modified": file.updatedAt?.toUTCString(),
+            "content-length": file.size,
+        };
 
-        // TODO add partial content support?
-        const stream = await this.blobStorageBackendService.getFile(this.config.directory, filePath);
+        // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
+        let stream: NodeJS.ReadableStream;
+
+        if (range) {
+            const { start, end, contentLength } = calculatePartialRanges(file.size, range);
+
+            if (start >= file.size || end >= file.size) {
+                res.writeHead(416, {
+                    "content-range": `bytes */${file.size}`,
+                });
+                res.end();
+                return;
+            }
+
+            stream = await this.blobStorageBackendService.getPartialFile(
+                this.config.directory,
+                createHashedPath(file.contentHash),
+                start,
+                contentLength,
+            );
+
+            res.writeHead(206, {
+                ...headers,
+                "accept-ranges": "bytes",
+                "content-range": `bytes ${start}-${end}/${file.size}`,
+                "content-length": contentLength,
+            });
+        } else {
+            stream = await this.blobStorageBackendService.getFile(this.config.directory, createHashedPath(file.contentHash));
+
+            res.writeHead(200, headers);
+        }
+
         stream.pipe(res);
     }
 
