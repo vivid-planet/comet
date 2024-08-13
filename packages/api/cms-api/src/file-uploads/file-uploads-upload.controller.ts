@@ -1,5 +1,5 @@
 import { EntityManager } from "@mikro-orm/postgresql";
-import { Controller, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Controller, Headers, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
 import rimraf from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
@@ -20,7 +20,10 @@ export function createFileUploadsUploadController(options: { public: boolean }):
 
         @Post("upload")
         @UseInterceptors(FileUploadsFileInterceptor("file"))
-        async upload(@UploadedFile() file: FileUploadInput): Promise<FileUploadsUploadResponse> {
+        async upload(
+            @UploadedFile() file: FileUploadInput,
+            @Headers("x-relative-file-upload-urls") relativeUrls: string | undefined,
+        ): Promise<FileUploadsUploadResponse> {
             const fileUpload = await this.fileUploadsService.upload(file);
 
             await this.entityManager.flush();
@@ -31,7 +34,7 @@ export function createFileUploadsUploadController(options: { public: boolean }):
                 }
             });
 
-            const downloadUrl = this.fileUploadsService.createDownloadUrl(fileUpload);
+            const downloadUrl = this.fileUploadsService.createDownloadUrl(fileUpload, { relativeUrls: Boolean(relativeUrls) });
 
             return {
                 ...fileUpload,

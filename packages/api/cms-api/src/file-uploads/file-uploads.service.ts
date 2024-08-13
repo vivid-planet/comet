@@ -57,7 +57,6 @@ export class FileUploadsService {
             throw new Error("File Uploads: Missing download configuration");
         }
 
-        // TODO should we support absolute and relative URLs?
         const baseUrl = `${relativeUrls ? "" : this.config.download.apiUrl}/file-uploads`;
 
         const timeout = addHours(new Date(), 1).getTime();
