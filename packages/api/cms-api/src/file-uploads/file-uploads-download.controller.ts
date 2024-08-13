@@ -46,8 +46,7 @@ export class FileUploadsDownloadController {
             throw new NotFoundException();
         }
 
-        // TODO allow download using Content-Disposition header?
-        // res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
+        res.setHeader("Content-Disposition", `attachment; filename="${file.name}"`);
         res.setHeader("Content-Type", file.mimetype);
         res.setHeader("Last-Modified", file.updatedAt?.toUTCString());
         res.setHeader("Content-Length", file.size.toString());
