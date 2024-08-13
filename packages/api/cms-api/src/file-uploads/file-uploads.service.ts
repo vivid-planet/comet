@@ -53,9 +53,12 @@ export class FileUploadsService {
     }
 
     createDownloadUrl(file: FileUpload, { relativeUrls = false }: { relativeUrls?: boolean } = {}): string {
+        if (!this.config.download) {
+            throw new Error("File Uploads: Missing download configuration");
+        }
+
         // TODO should we support absolute and relative URLs?
-        // TODO how to get the API url?
-        const baseUrl = `${relativeUrls ? "" : "http://localhost:4000"}/file-uploads`;
+        const baseUrl = `${relativeUrls ? "" : this.config.download.apiUrl}/file-uploads`;
 
         const timeout = addHours(new Date(), 1).getTime();
 

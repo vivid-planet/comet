@@ -84,7 +84,10 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
                 : undefined,
         fileUploads: {
             ...cometConfig.fileUploads,
-            download: { secret: envVars.FILE_UPLOADS_DOWNLOAD_SECRET },
+            download: {
+                apiUrl: envVars.API_URL,
+                secret: envVars.FILE_UPLOADS_DOWNLOAD_SECRET,
+            },
         },
     };
 }
