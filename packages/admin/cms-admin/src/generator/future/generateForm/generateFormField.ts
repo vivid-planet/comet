@@ -192,6 +192,7 @@ export function generateFormField({
             code = `
             <RadioGroupField
              ${required ? "required" : ""}
+              variant="horizontal"
              fullWidth
              name="${name}"
              label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
