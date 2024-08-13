@@ -486,6 +486,7 @@ export function generateGrid(
                       .join(",\n")} ] }`
                 : ""
         }), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+        ${hasScope ? `const { scope } = useContentScope();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
