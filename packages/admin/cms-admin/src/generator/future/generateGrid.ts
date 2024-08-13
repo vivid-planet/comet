@@ -477,8 +477,15 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
-        ${hasScope ? `const { scope } = useContentScope();` : ""}
+        const dataGridProps = { ...useDataGridRemote(${
+            config.initialSort
+                ? `{ initialSort: [${config.initialSort
+                      .map((item) => {
+                          return `{field: "${item.field}", sort: "${item.sort}"}`;
+                      })
+                      .join(",\n")} ] }`
+                : ""
+        }), ...usePersistentColumnState("${gqlTypePlural}Grid") };
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
