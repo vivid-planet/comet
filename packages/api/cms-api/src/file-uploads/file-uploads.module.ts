@@ -30,7 +30,7 @@ export class FileUploadsModule {
         const controllers = [createFileUploadsUploadController(options.upload ?? { public: false })];
 
         // TODO should we validate the secret more (min length, etc.)?
-        if (options.download?.secret) {
+        if (options.download) {
             controllers.push(FileUploadsDownloadController);
         }
 

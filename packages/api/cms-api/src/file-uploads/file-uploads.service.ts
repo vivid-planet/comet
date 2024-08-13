@@ -43,8 +43,8 @@ export class FileUploadsService {
     }
 
     createHash(params: DownloadParams): string {
-        if (!this.config.download?.secret) {
-            throw new Error("File Uploads: Missing download secret");
+        if (!this.config.download) {
+            throw new Error("File Uploads: Missing download configuration");
         }
 
         const hash = `file-upload:${params.id}:${params.timeout}`;
