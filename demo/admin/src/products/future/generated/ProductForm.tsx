@@ -199,7 +199,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
 
                             <RadioGroupField
                                 required
-                                layout="column"
                                 fullWidth
                                 name="type"
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
