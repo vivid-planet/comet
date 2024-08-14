@@ -1,4 +1,3 @@
-"use client";
 import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks, YouTubeVideoBlock } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
