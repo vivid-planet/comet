@@ -17,7 +17,7 @@ declare global {
  */
 export const useLocalStorageCookieApi: CookieApiHook = () => {
     const [consentedCookies, setConsentedCookies] = useLocalStorage<string[]>(localStorageCookieApiKey, []);
-    const [cookiePlatformLoaded, setCookiePlatformLoaded] = React.useState(false);
+    const [initialized, setInitialized] = React.useState(false);
 
     const openCookieSettings = React.useCallback(() => {
         const cookies = prompt('Define consented cookies (separated by ","):', consentedCookies.join(",")) ?? "";
@@ -32,9 +32,9 @@ export const useLocalStorageCookieApi: CookieApiHook = () => {
         logCookieUpdate(cookiesList);
 
         const simulateLoadingTimeout = setTimeout(() => {
-            setCookiePlatformLoaded(true);
+            setInitialized(true);
             window.cometLocalStorageCookieApi = {
-                cookiePlatformLoaded: true,
+                initialized: true,
                 consentedCookies,
                 openCookieSettings: openCookieSettings,
             };
@@ -46,7 +46,7 @@ export const useLocalStorageCookieApi: CookieApiHook = () => {
     }, [consentedCookies, openCookieSettings]);
 
     return {
-        cookiePlatformLoaded,
+        initialized,
         consentedCookies,
         openCookieSettings,
     };

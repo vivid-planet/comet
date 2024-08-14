@@ -11,15 +11,15 @@ type Props = React.PropsWithChildren<{
 }>;
 
 export const CookieSafe = ({ consented, fallback, loading, children }: Props) => {
-    const { cookiePlatformLoaded } = useCookieApi();
+    const { initialized } = useCookieApi();
     const { previewType } = usePreview();
     const isInPreview = previewType !== "NoPreview";
 
-    if ((cookiePlatformLoaded && consented) || isInPreview) {
+    if ((initialized && consented) || isInPreview) {
         return <>{children}</>;
     }
 
-    if (!cookiePlatformLoaded) {
+    if (!initialized) {
         return <>{loading}</>;
     }
 

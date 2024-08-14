@@ -49,7 +49,7 @@ const isWindowWithOneTrust = (window: Window): window is WindowWithOneTrust => {
 
 export const useOneTrustCookieApi: CookieApiHook = () => {
     const [consentedCookies, setConsentedCookies] = React.useState<string[]>([]);
-    const [cookiePlatformLoaded, setCookiePlatformLoaded] = React.useState(false);
+    const [initialized, setInitialized] = React.useState(false);
 
     React.useEffect(() => {
         const startListeningForConsentChanges = (oneTrust: OneTrust) => {
@@ -75,7 +75,7 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
 
         const tryToAccessOneTrustInterval = setInterval(() => {
             if (isWindowWithOneTrust(window)) {
-                setCookiePlatformLoaded(true);
+                setInitialized(true);
                 clearInterval(tryToAccessOneTrustInterval);
                 startListeningForConsentChanges(window.OneTrust);
             }
@@ -87,7 +87,7 @@ export const useOneTrustCookieApi: CookieApiHook = () => {
     }, []);
 
     return {
-        cookiePlatformLoaded,
+        initialized,
         consentedCookies,
         openCookieSettings: () => {
             if (isWindowWithOneTrust(window)) {

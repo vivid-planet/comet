@@ -17,12 +17,12 @@ const isWindowWithCookiebot = (window: Window): window is WindowWithCookiebot =>
 
 export const useCookieBotCookieApi: CookieApiHook = () => {
     const [consentedCookies, setConsentedCookies] = React.useState<string[]>([]);
-    const [cookiePlatformLoaded, setCookiePlatformLoaded] = React.useState(false);
+    const [initialized, setInitialized] = React.useState(false);
 
     React.useEffect(() => {
         const handleCookieUpdated = () => {
             if (isWindowWithCookiebot(window)) {
-                setCookiePlatformLoaded(true);
+                setInitialized(true);
                 const consentedList = window.Cookiebot.consent;
                 setConsentedCookies(Object.keys(consentedList).filter((key) => consentedList[key]));
             }
@@ -36,7 +36,7 @@ export const useCookieBotCookieApi: CookieApiHook = () => {
     }, []);
 
     return {
-        cookiePlatformLoaded,
+        initialized,
         consentedCookies,
         openCookieSettings: () => {
             if (isWindowWithCookiebot(window)) {
