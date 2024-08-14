@@ -203,17 +203,16 @@ export function generateForm(
         });
     }
 
-
     const finalFormSubscription = Object.keys(generatedFields.finalFormConfig?.subscription ?? {});
     const finalFormRenderProps = Object.keys(generatedFields.finalFormConfig?.renderProps ?? {});
 
-    let filterByFragmentType = `GQL${fragmentName}Fragment`;
+    let filterByFragmentType = `GQL${formFragmentName}Fragment`;
     let customFilterByFragment = "";
 
     if (fileFields.length > 0) {
         const keysToOverride = fileFields.map((field) => field.name);
 
-        customFilterByFragment = `type ${fragmentName}Fragment = Omit<${filterByFragmentType}, ${keysToOverride
+        customFilterByFragment = `type ${formFragmentName}Fragment = Omit<${filterByFragmentType}, ${keysToOverride
             .map((key) => `"${String(key)}"`)
             .join(" | ")}> & {
             ${fileFields
@@ -229,7 +228,7 @@ export function generateForm(
                 .join("\n")}
         }`;
 
-        filterByFragmentType = `${fragmentName}Fragment`;
+        filterByFragmentType = `${formFragmentName}Fragment`;
     }
 
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";

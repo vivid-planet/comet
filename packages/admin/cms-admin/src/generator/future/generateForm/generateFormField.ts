@@ -251,12 +251,12 @@ export function generateFormField({
               variant="horizontal"
              fullWidth
              name="${name}"
-             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+             label={<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />}
              options={[
                   ${values
                       .map((value) => {
                           return `{
-                                label: <FormattedMessage id="${instanceGqlType}.${name}.${
+                                label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
                               value.value.charAt(0).toLowerCase() + value.value.slice(1)
                           }" defaultMessage="${value.label}" />,
                                 value: "${value.value}",

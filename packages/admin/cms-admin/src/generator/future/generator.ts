@@ -17,12 +17,12 @@ type ImportReference = {
     import: string;
 };
 
-type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1 } & Pick<
+type SingleFileFormFieldConfig = { type: "fileUpload"; name: string; multiple?: false; maxFiles?: 1 } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number } & Pick<
+type MultiFileFormFieldConfig = { type: "fileUpload"; name: string; multiple: true; maxFiles?: number } & Pick<
     Partial<FinalFormFileUploadProps<true>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
