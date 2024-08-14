@@ -1,12 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    DataGridToolbar,
+    GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
-    Toolbar,
-    ToolbarActions,
-    ToolbarAutomaticTitleItem,
     ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
@@ -14,7 +13,7 @@ import {
 import { Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -42,13 +41,6 @@ export const UserGrid: React.FC = () => {
             flex: 1,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
-        },
-        {
-            field: "language",
-            flex: 0.5,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.language", defaultMessage: "Language" }),
-            renderCell: ({ row }) => row.language.toUpperCase(),
         },
         {
             field: "actions",
@@ -82,7 +74,6 @@ export const UserGrid: React.FC = () => {
                 id
                 name
                 email
-                language
             }
         `,
         {
@@ -106,15 +97,14 @@ export const UserGrid: React.FC = () => {
             loading={loading}
             components={{
                 Toolbar: () => (
-                    <Toolbar>
-                        <ToolbarAutomaticTitleItem />
-                        <ToolbarActions>
-                            <ToolbarItem>
-                                <GridToolbarQuickFilter />
-                                <GridFilterButton />
-                            </ToolbarItem>
-                        </ToolbarActions>
-                    </Toolbar>
+                    <DataGridToolbar>
+                        <ToolbarItem>
+                            <GridToolbarQuickFilter />
+                        </ToolbarItem>
+                        <ToolbarItem>
+                            <GridFilterButton />
+                        </ToolbarItem>
+                    </DataGridToolbar>
                 ),
             }}
         />

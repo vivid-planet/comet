@@ -39,7 +39,7 @@ export interface DocumentInterface<
     displayName: React.ReactNode;
     getQuery?: TypedDocumentNode<GQLPageQuery, GQLPageQueryVariables>; // TODO better typing (see createUsePage.tsx)
     editComponent?: React.ComponentType<{ id: string; category: string }>;
-    updateMutation?: TypedDocumentNode<GQLUpdatePageMutation, GQLUpdatePageMutationVariables<DocumentInput>>;
+    updateMutation?: TypedDocumentNode<GQLUpdatePageMutation, GQLUpdatePageMutationVariables<DocumentOutput>>;
     inputToOutput?: (input: DocumentInput) => DocumentOutput;
     menuIcon: (props: SvgIconProps<"svg">) => JSX.Element | null;
     hideInMenuIcon?: (props: SvgIconProps<"svg">) => JSX.Element | null;

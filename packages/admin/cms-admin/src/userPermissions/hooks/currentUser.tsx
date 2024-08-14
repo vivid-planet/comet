@@ -16,7 +16,6 @@ export interface CurrentUserInterface {
     id: string;
     name: string;
     email: string;
-    language: string;
     permissions: GQLCurrentUserPermission[];
     allowedContentScopes: ContentScopeInterface[];
 }
@@ -30,7 +29,6 @@ export const CurrentUserProvider: React.FC<{
                 id
                 name
                 email
-                language
                 permissions {
                     permission
                     contentScopes
@@ -39,7 +37,9 @@ export const CurrentUserProvider: React.FC<{
         }
     `);
 
-    if (error) throw error.message;
+    if (error) {
+        return <>Cannot load user: {error.message}</>;
+    }
 
     if (!data) return <Loading behavior="fillPageHeight" />;
 

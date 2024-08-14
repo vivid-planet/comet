@@ -15,6 +15,9 @@ export interface FormSaveButtonProps {
     hasConflict?: boolean;
 }
 
+/**
+ * @deprecated Use `FinalFormSaveButton` instead as we are retiring the SplitButton pattern.
+ */
 export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", hasConflict = false }: PropsWithChildren<FormSaveButtonProps>) => {
     const stackApi = useStackApi();
     const form = useForm();

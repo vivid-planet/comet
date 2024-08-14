@@ -17,15 +17,13 @@ function Story() {
     const { editorState, setEditorState } = useRteApi();
 
     return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} options={rteOptions} />
-                    </CardContent>
-                </Card>
-            </Box>
-        </>
+        <Box marginBottom={4}>
+            <Card variant="outlined">
+                <CardContent>
+                    <Rte value={editorState} onChange={setEditorState} options={rteOptions} />
+                </CardContent>
+            </Card>
+        </Box>
     );
 }
 

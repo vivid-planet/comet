@@ -210,6 +210,6 @@ test("Form DirtyPrompt for inner Stack", async () => {
 
     await waitFor(() => {
         const dirtyDialog = rendered.queryAllByText("Do you want to save your changes?");
-        expect(dirtyDialog.length).toBe(0);
+        expect(dirtyDialog.length).toBe(2); // 2 because text is shown twice in dialog (title+content)
     });
 });

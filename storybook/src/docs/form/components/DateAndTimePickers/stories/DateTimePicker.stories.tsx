@@ -20,8 +20,8 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <FieldContainer label="Clearable" fullWidth>
-                        <DateTimePicker value={dateTimeTwo} onChange={setDateTimeTwo} clearable />
+                    <FieldContainer label="Required" fullWidth required>
+                        <DateTimePicker value={dateTimeTwo} onChange={setDateTimeTwo} required />
                     </FieldContainer>
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -29,7 +29,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                         <DateTimePicker
                             value={dateTimeThree}
                             onChange={setDateTimeThree}
-                            componentsProps={{
+                            slotProps={{
                                 datePicker: { placeholder: "Date placeholder" },
                                 timePicker: { placeholder: "Time Placeholder" },
                             }}
@@ -41,7 +41,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                         <DateTimePicker
                             value={dateTimeFour}
                             onChange={setDateFour}
-                            componentsProps={{
+                            slotProps={{
                                 datePicker: {
                                     formatDateOptions: {
                                         month: "long",
@@ -72,7 +72,7 @@ storiesOf("stories/form/components/Date & Time Pickers/Date-Time Picker", module
                             <Field name="dateTimeOne" label="Date Picker" fullWidth component={FinalFormDateTimePicker} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Field name="dateTimeTwo" label="Clearable" fullWidth component={FinalFormDateTimePicker} clearable />
+                            <Field name="dateTimeTwo" label="Required" fullWidth required component={FinalFormDateTimePicker} />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Field

@@ -21,6 +21,7 @@ import {
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
 } from "./user-permissions.types";
+import { sortContentScopeKeysAlphabetically } from "./utils/sort-content-scope-keys-alphabetically";
 
 @Injectable()
 export class UserPermissionsService {
@@ -38,7 +39,7 @@ export class UserPermissionsService {
             if (typeof this.options.availableContentScopes === "function") {
                 return this.options.availableContentScopes();
             }
-            return this.options.availableContentScopes;
+            return this.options.availableContentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
         }
         return [];
     }
@@ -53,6 +54,7 @@ export class UserPermissionsService {
                     ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
                 ]
                     .flatMap((p) => p.meta.requiredPermission)
+                    .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
                     .filter((p) => p !== DisablePermissionCheck)
                     .sort(),
             ),
@@ -66,7 +68,6 @@ export class UserPermissionsService {
             id: idToken.sub,
             name: idToken.name,
             email: idToken.email,
-            language: idToken.locale || idToken.language,
         };
     }
 
@@ -142,7 +143,7 @@ export class UserPermissionsService {
             }
         }
 
-        return contentScopes;
+        return contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
     }
 
     normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {

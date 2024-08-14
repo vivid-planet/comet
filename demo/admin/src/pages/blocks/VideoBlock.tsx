@@ -1,5 +1,5 @@
-import { BlockCategory, createOneOfBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/blocks-admin";
-import { DamVideoBlock } from "@comet/cms-admin";
+import { BlockCategory, createOneOfBlock } from "@comet/blocks-admin";
+import { DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-admin";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 

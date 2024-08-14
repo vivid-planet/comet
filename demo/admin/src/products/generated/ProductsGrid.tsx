@@ -3,14 +3,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
+    GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
     ToolbarActions,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -21,7 +21,7 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -39,16 +39,18 @@ const productsFragment = gql`
     fragment ProductsList on Product {
         id
         title
-        visible
+        status
         slug
         description
         type
         price
         inStock
         soldCount
-        image
+        availableSince
+        lastCheckedAt
         createdAt
         updatedAt
+        image
     }
 `;
 
@@ -80,8 +82,7 @@ const createProductMutation = gql`
 
 function ProductsGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -94,7 +95,7 @@ function ProductsGridToolbar() {
                     <FormattedMessage id="product.newProduct" defaultMessage="New Product" />
                 </Button>
             </ToolbarActions>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -105,7 +106,17 @@ export function ProductsGrid(): React.ReactElement {
 
     const columns: GridColDef<GQLProductsListFragment>[] = [
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }), width: 150 },
-        { field: "visible", headerName: intl.formatMessage({ id: "product.visible", defaultMessage: "Visible" }), type: "boolean", width: 150 },
+        {
+            field: "status",
+            headerName: intl.formatMessage({ id: "product.status", defaultMessage: "Status" }),
+            type: "singleSelect",
+            valueOptions: [
+                { value: "Published", label: intl.formatMessage({ id: "product.status.published", defaultMessage: "Published" }) },
+                { value: "Unpublished", label: intl.formatMessage({ id: "product.status.unpublished", defaultMessage: "Unpublished" }) },
+                { value: "Deleted", label: intl.formatMessage({ id: "product.status.deleted", defaultMessage: "Deleted" }) },
+            ],
+            width: 150,
+        },
         { field: "slug", headerName: intl.formatMessage({ id: "product.slug", defaultMessage: "Slug" }), width: 150 },
         { field: "description", headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }), width: 150 },
         {
@@ -123,14 +134,18 @@ export function ProductsGrid(): React.ReactElement {
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }), type: "boolean", width: 150 },
         { field: "soldCount", headerName: intl.formatMessage({ id: "product.soldCount", defaultMessage: "Sold Count" }), type: "number", width: 150 },
         {
-            field: "image",
-            headerName: intl.formatMessage({ id: "product.image", defaultMessage: "Image" }),
-            filterable: false,
-            sortable: false,
+            field: "availableSince",
+            headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
+            type: "date",
+            valueGetter: ({ value }) => value && new Date(value),
             width: 150,
-            renderCell: (params) => {
-                return <BlockPreviewContent block={DamImageBlock} input={params.row.image} />;
-            },
+        },
+        {
+            field: "lastCheckedAt",
+            headerName: intl.formatMessage({ id: "product.lastCheckedAt", defaultMessage: "Last Checked At" }),
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
         },
         {
             field: "createdAt",
@@ -145,6 +160,16 @@ export function ProductsGrid(): React.ReactElement {
             type: "dateTime",
             valueGetter: ({ value }) => value && new Date(value),
             width: 150,
+        },
+        {
+            field: "image",
+            headerName: intl.formatMessage({ id: "product.image", defaultMessage: "Image" }),
+            filterable: false,
+            sortable: false,
+            width: 150,
+            renderCell: (params) => {
+                return <BlockPreviewContent block={DamImageBlock} input={params.row.image} />;
+            },
         },
         {
             field: "actions",
@@ -163,11 +188,14 @@ export function ProductsGrid(): React.ReactElement {
                                 const row = params.row;
                                 return {
                                     title: row.title,
+                                    status: row.status,
                                     slug: row.slug,
                                     description: row.description,
                                     type: row.type,
                                     price: row.price,
                                     inStock: row.inStock,
+                                    availableSince: row.availableSince,
+                                    lastCheckedAt: row.lastCheckedAt,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
                                 };
                             }}
@@ -207,7 +235,7 @@ export function ProductsGrid(): React.ReactElement {
     const rows = data?.products.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick

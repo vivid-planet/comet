@@ -9,4 +9,5 @@ lang/
 .pnp.*
 junit.xml
 .env.local
+.env.site-configs
 **/.idea

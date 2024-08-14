@@ -1,5 +1,220 @@
 # @comet/blocks-api
 
+## 7.0.0
+
+### Major Changes
+
+-   e15927594: Support "real" dependency injection in `BlockData#transformToPlain`
+
+    Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
+    This is now replaced by a technique that allows actual dependency injection.
+
+    **Example**
+
+    ```ts
+    class NewsLinkBlockData extends BlockData {
+        @BlockField({ nullable: true })
+        id?: string;
+
+        transformToPlain() {
+            // Return service that does the transformation
+            return NewsLinkBlockTransformerService;
+        }
+    }
+
+    type TransformResponse = {
+        news?: {
+            id: string;
+            slug: string;
+        };
+    };
+
+    @Injectable()
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
+        // Use dependency injection here
+        constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+
+        async transformToPlain(block: NewsLinkBlockData, context: BlockContext) {
+            if (!block.id) {
+                return {};
+            }
+
+            const news = await this.repository.findOneOrFail(block.id);
+
+            return {
+                news: {
+                    id: news.id,
+                    slug: news.slug,
+                },
+            };
+        }
+    }
+    ```
+
+    Adding this new technique results in a few breaking changes:
+
+    -   Remove dynamic registration of `BlocksModule`
+    -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+    -   Remove `dependencies` from `BlockData#transformToPlain`
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+
+-   ebf597120: Remove unused/unnecessary peer dependencies
+
+    Some dependencies were incorrectly marked as peer dependencies.
+    If you don't use them in your application, you may remove the following dependencies:
+
+    -   Admin: `axios`
+    -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+## 7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+## 7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+### Minor Changes
+
+-   87ef5fa36: YouTubeVideoBlock: Add validation for identifier
+
+    Must be either a valid YouTube URL or video identifier.
+
+## 7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   e15927594: Support "real" dependency injection in `BlockData#transformToPlain`
+
+    Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
+    This is now replaced by a technique that allows actual dependency injection.
+
+    **Example**
+
+    ```ts
+    class NewsLinkBlockData extends BlockData {
+        @BlockField({ nullable: true })
+        id?: string;
+
+        transformToPlain() {
+            // Return service that does the transformation
+            return NewsLinkBlockTransformerService;
+        }
+    }
+
+    type TransformResponse = {
+        news?: {
+            id: string;
+            slug: string;
+        };
+    };
+
+    @Injectable()
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
+        // Use dependency injection here
+        constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+
+        async transformToPlain(block: NewsLinkBlockData, context: BlockContext) {
+            if (!block.id) {
+                return {};
+            }
+
+            const news = await this.repository.findOneOrFail(block.id);
+
+            return {
+                news: {
+                    id: news.id,
+                    slug: news.slug,
+                },
+            };
+        }
+    }
+    ```
+
+    Adding this new technique results in a few breaking changes:
+
+    -   Remove dynamic registration of `BlocksModule`
+    -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+    -   Remove `dependencies` from `BlockData#transformToPlain`
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+
+-   ebf597120: Remove unused/unnecessary peer dependencies
+
+    Some dependencies were incorrectly marked as peer dependencies.
+    If you don't use them in your application, you may remove the following dependencies:
+
+    -   Admin: `axios`
+    -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+
+## 6.17.1
+
+## 6.17.0
+
+## 6.16.0
+
+## 6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   c7f5637bd: Fix validation of `YouTubeVideoBlock`
+
+    Previously, the validation of the `YouTubeVideoBlock` differed between admin and API.
+    The admin allowed YouTube URLs and YouTube video IDs.
+    The API only allowed URLs but blocked video IDs.
+
+    Now, the API validation also accepts URLs and video IDs.
+
+## 6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   87ef5fa36: YouTubeVideoBlock: Add validation for identifier
+
+    Must be either a valid YouTube URL or video identifier.
+
+## 6.13.0
+
 ## 6.12.0
 
 ## 6.11.0

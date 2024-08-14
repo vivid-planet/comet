@@ -1,3 +1,8 @@
+---
+title: Block Index / Dependencies
+sidebar_position: 15
+---
+
 # Block Index / Dependencies
 
 Blocks can have references to entities.

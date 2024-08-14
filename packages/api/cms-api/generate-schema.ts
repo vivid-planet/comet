@@ -1,6 +1,6 @@
 import { createOneOfBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
-import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
+import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
 
@@ -13,11 +13,14 @@ import {
     DependentsResolverFactory,
     DocumentInterface,
     FileImagesResolver,
+    FileUpload,
     InternalLinkBlock,
     PageTreeNodeBase,
     PageTreeNodeCategory,
 } from "./src";
 import { BuildTemplatesResolver } from "./src/builds/build-templates.resolver";
+import { GenerateAltTextResolver } from "./src/content-generation/generate-alt-text.resolver";
+import { GenerateImageTitleResolver } from "./src/content-generation/generate-image-title.resolver";
 import { CronJobsResolver } from "./src/cron-jobs/cron-jobs.resolver";
 import { JobsResolver } from "./src/cron-jobs/jobs.resolver";
 import { createDamItemsResolver } from "./src/dam/files/dam-items.resolver";
@@ -28,6 +31,7 @@ import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
+import { AzureAiTranslatorResolver } from "./src/translation/azure-ai-translator.resolver";
 import { UserResolver } from "./src/user-permissions/user.resolver";
 import { UserContentScopesResolver } from "./src/user-permissions/user-content-scopes.resolver";
 import { UserPermissionResolver } from "./src/user-permissions/user-permission.resolver";
@@ -75,12 +79,21 @@ async function generateSchema(): Promise<void> {
     const File = createFileEntity({ Folder });
     const FileDependentsResolver = DependentsResolverFactory.create(File);
 
+    // Required to force the generation of the FileUpload type in the schema
+    @Resolver(() => FileUpload)
+    class MockFileUploadResolver {
+        @Query(() => FileUpload)
+        fileUploadForTypesGenerationDoNotUse(): void {
+            // Noop
+        }
+    }
+
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
         BuildTemplatesResolver,
         redirectsResolver,
         createDamItemsResolver({ File, Folder }),
-        createFilesResolver({ File }),
+        createFilesResolver({ File, Folder }),
         FileLicensesResolver,
         FileImagesResolver,
         createFoldersResolver({ Folder }),
@@ -94,6 +107,10 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
+        MockFileUploadResolver,
+        AzureAiTranslatorResolver,
+        GenerateAltTextResolver,
+        GenerateImageTitleResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

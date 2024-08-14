@@ -1,27 +1,29 @@
 import {
     AccessLogModule,
+    AzureAiTranslatorModule,
+    AzureOpenAiContentGenerationModule,
     BlobStorageModule,
-    BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES,
     BlocksModule,
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
+    ContentGenerationModule,
     CronJobsModule,
     DamModule,
     DependenciesModule,
-    FilesService,
-    ImagesService,
+    FileUploadsModule,
     KubernetesModule,
     PageTreeModule,
-    PageTreeService,
-    PublicUploadModule,
     RedirectsModule,
+    SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
+import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
 import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
+import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
@@ -59,7 +61,7 @@ export class AppModule {
                 GraphQLModule.forRootAsync<ApolloDriverConfig>({
                     driver: ApolloDriver,
                     imports: [BlocksModule],
-                    useFactory: (dependencies: Record<string, unknown>) => ({
+                    useFactory: (moduleRef: ModuleRef) => ({
                         debug: config.debug,
                         playground: config.debug,
                         autoSchemaFile: "schema.gql",
@@ -78,12 +80,12 @@ export class AppModule {
                             origin: config.corsAllowedOrigins.map((val: string) => new RegExp(val)),
                         },
                         buildSchemaOptions: {
-                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(dependencies)],
+                            fieldMiddleware: [BlocksTransformerMiddlewareFactory.create(moduleRef)],
                         },
                         // See https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
                         fieldResolverEnhancers: ["guards", "interceptors", "filters"] as Enhancer[],
                     }),
-                    inject: [BLOCKS_MODULE_TRANSFORMER_DEPENDENCIES],
+                    inject: [ModuleRef],
                 }),
                 AuthModule,
                 UserPermissionsModule.forRootAsync({
@@ -92,6 +94,7 @@ export class AppModule {
                             { domain: "main", language: "de" },
                             { domain: "main", language: "en" },
                             { domain: "secondary", language: "en" },
+                            { domain: "secondary", language: "de" },
                         ],
                         userService,
                         accessControlService,
@@ -99,19 +102,7 @@ export class AppModule {
                     inject: [UserService, AccessControlService],
                     imports: [AuthModule],
                 }),
-                BlocksModule.forRoot({
-                    imports: [PagesModule],
-                    useFactory: (pageTreeService: PageTreeService, filesService: FilesService, imagesService: ImagesService) => {
-                        return {
-                            transformerDependencies: {
-                                pageTreeService,
-                                filesService,
-                                imagesService,
-                            },
-                        };
-                    },
-                    inject: [PageTreeService, FilesService, ImagesService],
-                }),
+                BlocksModule,
                 DependenciesModule,
                 KubernetesModule.register({
                     helmRelease: config.helmRelease,
@@ -133,12 +124,10 @@ export class AppModule {
                 }),
                 DamModule.register({
                     damConfig: {
-                        filesBaseUrl: `${config.apiUrl}/dam/files`,
-                        imagesBaseUrl: `${config.apiUrl}/dam/images`,
+                        apiUrl: config.apiUrl,
                         secret: config.dam.secret,
                         allowedImageSizes: config.dam.allowedImageSizes,
                         allowedAspectRatios: config.dam.allowedImageAspectRatios,
-                        additionalMimeTypes: config.dam.additionalMimetypes,
                         filesDirectory: `${config.blob.storageDirectoryPrefix}-files`,
                         cacheDirectory: `${config.blob.storageDirectoryPrefix}-cache`,
                         maxFileSize: config.dam.uploadsMaxFileSize,
@@ -148,26 +137,39 @@ export class AppModule {
                     File: DamFile,
                     Folder: DamFolder,
                 }),
-                PublicUploadModule.register({
-                    maxFileSize: config.publicUploads.maxFileSize,
-                    directory: `${config.blob.storageDirectoryPrefix}-public-uploads`,
-                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
+                FileUploadsModule.register({
+                    maxFileSize: config.fileUploads.maxFileSize,
+                    directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
+                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip", "image/png", "image/jpeg", "image/gif"],
+                    upload: {
+                        public: true,
+                    },
                 }),
+                ...(config.contentGeneration
+                    ? [
+                          ContentGenerationModule.register({
+                              Service: ContentGenerationService,
+                              imports: [AzureOpenAiContentGenerationModule.register(config.contentGeneration)],
+                          }),
+                      ]
+                    : []),
                 NewsModule,
                 MenusModule,
                 FooterModule,
                 PredefinedPageModule,
                 CronJobsModule,
                 ProductsModule,
+                ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),
                 AccessLogModule.forRoot({
                     shouldLogRequest: ({ user }) => {
                         // Ignore system user
-                        if (user === true) {
+                        if (user === "system-user") {
                             return false;
                         }
                         return true;
                     },
                 }),
+                ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
             ],
         };
     }
