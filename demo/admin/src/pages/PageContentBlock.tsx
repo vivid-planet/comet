@@ -5,6 +5,7 @@ import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
+import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
 import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
@@ -31,6 +32,7 @@ export const PageContentBlock = createBlocksBlock({
         twoLists: TwoListsBlock,
         media: MediaBlock,
         teaser: TeaserBlock,
+        newsDetail: NewsDetailBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

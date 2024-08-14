@@ -1108,6 +1108,23 @@
         ]
     },
     {
+        "name": "NewsDetail",
+        "fields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "NewsLink",
         "fields": [
             {
@@ -1258,7 +1275,8 @@
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },
@@ -1313,7 +1331,8 @@
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },
