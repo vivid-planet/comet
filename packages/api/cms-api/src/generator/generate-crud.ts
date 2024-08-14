@@ -540,7 +540,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                     positionGroupProps.length
                         ? `getPositionGroupCondition(data: ${positionGroupType}): FilterQuery<${metadata.className}> {
                     return {
-                        scope: data.scope,
+                        ${positionGroupProps.map((field) => `${field.name}: { $eq: data.${field.name} }`).join(",")}
                     };
                 }`
                         : ``
