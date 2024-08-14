@@ -90,7 +90,7 @@ export const VimeoVideoBlock = withPreview(
             </>
         );
     },
-    { label: "Vimeo Video" },
+    { label: "Video" },
 );
 
 const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>`

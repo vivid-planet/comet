@@ -13,7 +13,6 @@ import { MediaBlock } from "./media.block";
 import { TeaserBlock } from "./teaser.block";
 import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./two-lists.block";
-import { VideoBlock } from "./video.block";
 
 const supportedBlocks = {
     space: SpaceBlock,
@@ -21,7 +20,6 @@ const supportedBlocks = {
     headline: HeadlineBlock,
     image: DamImageBlock,
     textImage: TextImageBlock,
-    video: VideoBlock,
     linkList: LinkListBlock,
     fullWidthImage: FullWidthImageBlock,
     columns: ColumnsBlock,
