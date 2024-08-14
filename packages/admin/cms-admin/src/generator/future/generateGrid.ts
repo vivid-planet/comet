@@ -90,14 +90,19 @@ const getLabelData = (messageId: string, label: string | StaticSelectLabelCellCo
         };
     }
 
+    const textLabelParts: string[] = [];
     const gridCellContentProps: Record<string, string> = {};
 
     if (label.primaryText) {
-        gridCellContentProps.primaryText = `intl.formatMessage({ id: "${messageId}.primary", defaultMessage: "${label.primaryText}" })`;
+        const primaryMessageId = `${messageId}.primary`;
+        textLabelParts.push(`intl.formatMessage({ id: "${primaryMessageId}", defaultMessage: "${label.primaryText}" })`);
+        gridCellContentProps.primaryText = `<FormattedMessage id="${primaryMessageId}" defaultMessage="${label.primaryText}" />`;
     }
 
     if (label.secondaryText) {
-        gridCellContentProps.secondaryText = `intl.formatMessage({ id: "${messageId}.secondary", defaultMessage: "${label.secondaryText}" })`;
+        const secondaryMessageId = `${messageId}.secondary`;
+        textLabelParts.push(`intl.formatMessage({ id: "${secondaryMessageId}", defaultMessage: "${label.secondaryText}" })`);
+        gridCellContentProps.secondaryText = `<FormattedMessage id="${secondaryMessageId}" defaultMessage="${label.secondaryText}" />`;
     }
 
     if (typeof label.icon === "string") {
@@ -122,7 +127,7 @@ const getLabelData = (messageId: string, label: string | StaticSelectLabelCellCo
     />`;
 
     return {
-        textLabel: [gridCellContentProps.primaryText, gridCellContentProps.secondaryText].filter(Boolean).join(" + ' ' + "),
+        textLabel: textLabelParts.join(" + ' ' + "),
         gridCellContent,
     };
 };
