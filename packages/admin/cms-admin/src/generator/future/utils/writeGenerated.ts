@@ -11,11 +11,16 @@ export async function writeGenerated(filePath: string, contents: string): Promis
         cwd: process.cwd(),
         fix: true,
     });
-    const lintResult = await eslint.lintText(header + contents, {
-        filePath,
-    });
+    let output: string | undefined;
+    try {
+        const lintResult = await eslint.lintText(header + contents, {
+            filePath,
+        });
+        output = lintResult[0] && lintResult[0].output ? lintResult[0].output : lintResult[0].source;
+    } catch (e) {
+        console.log(e);
+    }
 
-    const output = lintResult[0] && lintResult[0].output ? lintResult[0].output : lintResult[0].source;
     await fs.writeFile(filePath, output ?? contents);
     // eslint-disable-next-line no-console
     console.log(`generated ${filePath}`);
