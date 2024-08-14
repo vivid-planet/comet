@@ -31,6 +31,16 @@ export const ProductForm: FormConfig<GQLProduct> = {
             type: "fieldSet",
             name: "additionalData",
             fields: [
+                {
+                    type: "asyncSelect",
+                    virtual: true,
+                    name: "manufacturerCountry",
+                    gqlFieldName: "manufacturer",
+                    initQueryIdPath: "addressAsEmbeddable.country",
+                    initQueryLabelPath: "addressAsEmbeddable.country",
+                    rootQuery: "manufacturerCountries",
+                    labelField: "label",
+                },
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince" },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },

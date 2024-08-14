@@ -13,6 +13,14 @@ export const productFormFragment = gql`
             id
             title
         }
+        manufacturerCountry: manufacturer {
+            id: addressAsEmbeddable {
+                country
+            }
+            label: addressAsEmbeddable {
+                country
+            }
+        }
         inStock
         availableSince
         image
