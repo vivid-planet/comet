@@ -2,6 +2,7 @@ import { EntityMetadata, EntityRepository, FilterQuery, ObjectQuery } from "@mik
 
 import { getCrudSearchFieldsFromMetadata } from "../../generator/utils/search-fields-from-metadata";
 import { BooleanFilter } from "./boolean.filter";
+import { DateFilter } from "./date.filter";
 import { DateTimeFilter } from "./date-time.filter";
 import { EnumFilterInterface, isEnumFilter } from "./enum.filter.factory";
 import { EnumsFilterInterface, isEnumsFilter } from "./enums.filter.factory";
@@ -15,7 +16,14 @@ function quoteLike(string: string): string {
     return string.replace(/([%_\\])/g, "\\$1");
 }
 export function filterToMikroOrmQuery(
-    filterProperty: StringFilter | NumberFilter | DateTimeFilter | BooleanFilter | EnumFilterInterface<unknown> | EnumsFilterInterface<unknown>,
+    filterProperty:
+        | StringFilter
+        | NumberFilter
+        | DateTimeFilter
+        | DateFilter
+        | BooleanFilter
+        | EnumFilterInterface<unknown>
+        | EnumsFilterInterface<unknown>,
     propertyName: string,
     metadata?: EntityMetadata,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,7 +75,7 @@ export function filterToMikroOrmQuery(
         if (filterProperty.notEqual !== undefined) {
             ret.$ne = filterProperty.notEqual;
         }
-    } else if (filterProperty instanceof DateTimeFilter) {
+    } else if (filterProperty instanceof DateTimeFilter || filterProperty instanceof DateFilter) {
         if (filterProperty.equal !== undefined) {
             ret.$eq = filterProperty.equal;
         }

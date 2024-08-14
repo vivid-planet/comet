@@ -1,5 +1,46 @@
 # @comet/eslint-config
 
+## 7.0.0
+
+### Major Changes
+
+-   45585f4cc: Add the rule `@typescript-eslint/prefer-enum-initializers` to require enum initializers
+
+    ```ts
+    // ✅
+    enum ExampleEnum {
+        One = "One",
+        Two = "Two",
+    }
+    ```
+
+    ```ts
+    // ❌
+    enum ExampleEnum {
+        One,
+        Two,
+    }
+    ```
+
+-   af37ac9d1: nextjs: Enable `react/jsx-curly-brace-presence` rule
+-   7a473ab8d: Prevent `@mui/icons-material` icon imports
+
+    Icons used in Comet DXP applications should match the Comet CI.
+    Use icons from `@comet/admin-icons` instead.
+
+-   2e20a8684: nextjs/react: Enable `react/jsx-no-useless-fragment` rule
+
+### Minor Changes
+
+-   769bd72f0: Use the Next.js Preview Mode for the site preview
+
+    The preview is entered by navigating to an API Route in the site, which has to be executed in a secured environment.
+    In the API Route the current scope is checked (and possibly stored), then the client is redirected to the preview.
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.0.0
+
 ## 7.0.0-beta.6
 
 ### Major Changes

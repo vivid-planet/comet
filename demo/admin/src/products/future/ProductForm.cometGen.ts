@@ -9,7 +9,6 @@ export const ProductForm: FormConfig<GQLProduct> = {
         {
             type: "fieldSet",
             name: "mainData",
-            title: "Main Data",
             supportText: "Product: {title}",
             collapsible: false,
             initiallyExpanded: true,
@@ -24,16 +23,13 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "text", name: "slug" },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
-                { type: "staticSelect", name: "type", label: "Type", required: true /*, values: from gql schema (TODO overridable)*/ },
+                { type: "staticSelect", name: "type", label: "Type", required: true, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
             ],
         },
         {
             type: "fieldSet",
             name: "additionalData",
-            title: "Additional Data",
-            collapsible: true,
-            initiallyExpanded: false,
             fields: [
                 {
                     type: "asyncSelect",

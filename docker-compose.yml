@@ -41,6 +41,7 @@ services:
             - ${JAEGER_OLTP_PORT}:4318 #OLTP over HTTP
         environment:
             COLLECTOR_OTLP_ENABLED: "true"
+            COLLECTOR_OTLP_HTTP_HOST_PORT: 0.0.0.0:4318
 
 networks:
     postgres:

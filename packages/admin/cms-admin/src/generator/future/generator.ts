@@ -21,7 +21,7 @@ export type FormFieldConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | {
           type: "asyncSelect";
           rootQuery: string;
@@ -29,7 +29,7 @@ export type FormFieldConfig<T> = (
           filterField?: { name: string; gqlVarName: string; gqlVarType: "rootProp" | "filter" };
       }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
@@ -38,10 +38,10 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
 export type FormLayoutConfig<T> = {
     type: "fieldSet";
     name: string;
-    title: string;
+    title?: string;
     supportText?: string; // can contain field-placeholder
-    collapsible: boolean; // default true
-    initiallyExpanded: boolean; // default false
+    collapsible?: boolean; // default true
+    initiallyExpanded?: boolean; // default false
     fields: FormFieldConfig<T>[];
 };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -68,7 +68,7 @@ export type GridColumnConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T> } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {

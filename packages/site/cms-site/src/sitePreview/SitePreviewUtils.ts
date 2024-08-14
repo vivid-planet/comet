@@ -1,4 +1,4 @@
-//TODO add import "server-only"; once this file gets correctly tree-shaked out of the client bundle
+import "server-only";
 
 import { jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";

@@ -234,9 +234,6 @@ export function generateGrid(
                     return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
                 }`;
         } else if (type == "staticSelect") {
-            if (column.values) {
-                throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
-            }
             const introspectionField = schemaEntity.fields.find((field) => field.name === name);
             if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
             const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
@@ -245,12 +242,23 @@ export function generateGrid(
                 (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
             ) as IntrospectionEnumType | undefined;
             if (!enumType) throw new Error(`Enum type not found`);
-            const values = enumType.enumValues.map((i) => i.name);
+
+            const values = (column.values ? column.values : enumType.enumValues.map((i) => i.name)).map((value) => {
+                if (typeof value === "string") {
+                    return {
+                        value,
+                        label: camelCaseToHumanReadable(value),
+                    };
+                } else {
+                    return value;
+                }
+            });
+
             const valueOptions = `[${values
                 .map((i) => {
-                    const id = `${instanceGqlType}.${name}.${i.charAt(0).toLowerCase() + i.slice(1)}`;
-                    const label = `intl.formatMessage({ id: "${id}", defaultMessage: "${camelCaseToHumanReadable(i)}" })`;
-                    return `{value: ${JSON.stringify(i)}, label: ${label}}, `;
+                    const id = `${instanceGqlType}.${name}.${i.value.charAt(0).toLowerCase() + i.value.slice(1)}`;
+                    const label = `intl.formatMessage({ id: "${id}", defaultMessage: "${i.label}" })`;
+                    return `{value: ${JSON.stringify(i.value)}, label: ${label}}, `;
                 })
                 .join(" ")}]`;
 
