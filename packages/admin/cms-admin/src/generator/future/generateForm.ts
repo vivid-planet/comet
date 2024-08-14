@@ -1,11 +1,10 @@
 import { IntrospectionQuery } from "graphql";
 
-import { generateFields } from "./generateForm/generateFields";
+import { generateFields, GenerateFieldsReturn } from "./generateForm/generateFields";
 import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
 import { FormConfig, FormFieldConfig, GeneratorReturn, isFormFieldConfig, isFormLayoutConfig } from "./generator";
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
-import { isFieldOptional } from "./utils/isFieldOptional";
 
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
@@ -90,19 +89,12 @@ export function generateForm(
         });
     });
 
-    const numberFields = formFields.filter((field) => field.type == "number");
-    const booleanFields = formFields.filter((field) => field.type == "boolean");
-    const dateFields = formFields.filter((field) => field.type == "date");
     const readOnlyFields = formFields.filter((field) => field.readOnly);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isOptional = (fieldConfig: FormFieldConfig<any>) => {
-        return isFieldOptional({ config: fieldConfig, gqlIntrospection: gqlIntrospection, gqlType: gqlType });
-    };
 
     let hooksCode = "";
     let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
+    const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
     const { code: fieldsCode, ...generatedFields } = generateFields({
         gqlIntrospection,
         baseOutputFilename,
@@ -116,6 +108,7 @@ export function generateForm(
     hooksCode += generatedFields.hooksCode;
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
+    formValuesConfig.push(...generatedFields.formValuesConfig);
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
@@ -237,26 +230,31 @@ export function generateForm(
     }
 
     type FormValues = ${
-        numberFields.length > 0
-            ? `Omit<GQL${fragmentName}Fragment, ${numberFields.map((field) => `"${String(field.name)}"`).join(" | ")}>`
+        formValuesConfig.filter((config) => !!config.omitFromFragmentType).length > 0
+            ? `Omit<GQL${fragmentName}Fragment, ${formValuesConfig
+                  .filter((config) => !!config.omitFromFragmentType)
+                  .map((config) => `"${config.omitFromFragmentType}"`)
+                  .join(" | ")}>`
             : `GQL${fragmentName}Fragment`
     } ${
-        numberFields.length > 0 || rootBlockFields.length > 0
+        formValuesConfig.length > 0
             ? `& {
-        ${numberFields.map((field) => `${String(field.name)}${isOptional(field) ? `?` : ``}: string;`).join("\n")}
-        ${rootBlockFields.map((field) => `${String(field.name)}: BlockState<typeof rootBlocks.${String(field.name)}>;`).join("\n")}
-    }`
+                ${formValuesConfig
+                    .filter((config) => !!config.typeCode)
+                    .map((config) => config.typeCode)
+                    .join("\n")}
+            }`
             : ""
     };
 
     ${formPropsTypeCode}
-    
+
     export function ${exportName}(${formPropsParamsCode}): React.ReactElement {
         const client = useApolloClient();
         ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
         ${addMode ? `const stackSwitchApi = useStackSwitchApi();` : ""}
-    
+
         ${
             editMode
                 ? `
@@ -267,44 +265,32 @@ export function generateForm(
         `
                 : ""
         }
-    
+
         ${
             editMode
                 ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
             ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
-            ${numberFields
-                .map((field) => {
-                    let assignment = `String(data.${instanceGqlType}.${String(field.name)})`;
-                    if (isOptional(field)) {
-                        assignment = `data.${instanceGqlType}.${String(field.name)} ? ${assignment} : undefined`;
-                    }
-                    return `${String(field.name)}: ${assignment},`;
-                })
-                .join("\n")}
-            ${dateFields
-                .map(
-                    (field) =>
-                        `${String(field.name)}: data.${instanceGqlType}.${String(field.name)} ? new Date(data.${instanceGqlType}.${String(
-                            field.name,
-                        )}) : undefined,`,
-                )
-                .join("\n")}
-            ${rootBlockFields
-                .map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.input2State(data.${instanceGqlType}.${String(field.name)}),`)
-                .join("\n")}
+            ${formValuesConfig
+                .filter((config) => !!config.initializationCode)
+                .map((config) => config.initializationCode)
+                .join(",\n")}
         }
         : {
-            ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
-            ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
+            ${formValuesConfig
+                .filter((config) => !!config.defaultInitializationCode)
+                .map((config) => config.defaultInitializationCode)
+                .join(",\n")}
         }
     , [data]);`
                 : `const initialValues = {
-                ${booleanFields.map((field) => `${String(field.name)}: false,`).join("\n")}
-                ${rootBlockFields.map((field) => `${String(field.name)}: rootBlocks.${String(field.name)}.defaultValues(),`).join("\n")}
+                ${formValuesConfig
+                    .filter((config) => !!config.defaultInitializationCode)
+                    .map((config) => config.defaultInitializationCode)
+                    .join(",\n")}
             };`
         }
-    
+
         ${
             editMode
                 ? `
@@ -321,8 +307,15 @@ export function generateForm(
         `
                 : ""
         }
-    
-        const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
+
+        const handleSubmit = async (${
+            formValuesConfig.filter((config) => !!config.destructFromFormValues).length
+                ? `{ ${formValuesConfig
+                      .filter((config) => !!config.destructFromFormValues)
+                      .map((config) => config.destructFromFormValues)
+                      .join(", ")}, ...formValues }`
+                : `formValues`
+        }: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
             ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
             const output = {
                 ...formValues,
@@ -378,7 +371,7 @@ export function generateForm(
         };
 
         ${hooksCode}
-    
+
         ${
             editMode
                 ? ` if (error) throw error;
@@ -388,7 +381,7 @@ export function generateForm(
                     }`
                 : ``
         }
-    
+
         return (
             <FinalForm<FormValues>
                 apiRef={formApiRef}

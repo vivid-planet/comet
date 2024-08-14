@@ -69,7 +69,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             data?.product
                 ? {
                       ...filterByFragment<GQLProductFormDetailsFragment>(productFormFragment, data.product),
-
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
@@ -207,7 +206,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 {(props) => (
                                     <FinalFormSelect {...props}>
                                         <MenuItem value="Cap">
-                                            <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                                            <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />
                                         </MenuItem>
                                         <MenuItem value="Shirt">
                                             <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />

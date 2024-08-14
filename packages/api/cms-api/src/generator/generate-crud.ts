@@ -186,7 +186,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
         }
     });
 
-    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
+    const filterOut = `import { StringFilter, NumberFilter, BooleanFilter, DateFilter, DateTimeFilter, ManyToOneFilter, OneToManyFilter, ManyToManyFilter, createEnumFilter, createEnumsFilter } from "@comet/cms-api";
     import { Field, InputType } from "@nestjs/graphql";
     import { Type } from "class-transformer";
     import { IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -235,7 +235,16 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
                     @Type(() => BooleanFilter)
                     ${prop.name}?: BooleanFilter;
                     `;
-                } else if (prop.type === "DateType" || prop.type === "Date") {
+                } else if (prop.type === "DateType") {
+                    // ISO Date without time
+                    return `@Field(() => DateFilter, { nullable: true })
+                    @ValidateNested()
+                    @IsOptional()
+                    @Type(() => DateFilter)
+                    ${prop.name}?: DateFilter;
+                    `;
+                } else if (prop.type === "Date") {
+                    // DateTime
                     return `@Field(() => DateTimeFilter, { nullable: true })
                     @ValidateNested()
                     @IsOptional()

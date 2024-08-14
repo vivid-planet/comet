@@ -43,6 +43,10 @@ export function generateFormField({
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
     const imports: Imports = [];
+    const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
+        destructFromFormValues: config.virtual ? name : undefined,
+    };
+    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig];
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
@@ -106,7 +110,22 @@ export function generateFormField({
         if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
             assignment = `formValues.${name} ? ${assignment} : null`;
         }
-        formValueToGqlInputCode = `${name}: ${assignment},`;
+        formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
+
+        let initializationAssignment = `String(data.${instanceGqlType}.${name})`;
+        if (!required) {
+            initializationAssignment = `data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`;
+        }
+        formValuesConfig = [
+            {
+                ...defaultFormValuesConfig,
+                ...{
+                    omitFromFragmentType: name,
+                    typeCode: `${name}${!required ? `?` : ``}: string;`,
+                    initializationCode: `${name}: ${initializationAssignment}`,
+                },
+            },
+        ];
     } else if (config.type == "boolean") {
         code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
@@ -123,6 +142,14 @@ export function generateFormField({
                 />
             )}
         </Field>`;
+        formValuesConfig = [
+            {
+                ...defaultFormValuesConfig,
+                ...{
+                    defaultInitializationCode: `${name}: false`,
+                },
+            },
+        ];
     } else if (config.type == "date") {
         code = `
             <Field
@@ -142,20 +169,44 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
+        formValuesConfig = [
+            {
+                ...defaultFormValuesConfig,
+                ...{
+                    initializationCode: `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
+                },
+            },
+        ];
     } else if (config.type == "block") {
         code = `<Field name="${name}" isEqual={isEqual}>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
-        formValueToGqlInputCode = `${name}: rootBlocks.${name}.state2Output(formValues.${name}),`;
+        formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${name}),` : ``;
+        formValuesConfig = [
+            {
+                ...defaultFormValuesConfig,
+                ...{
+                    typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
+                    initializationCode: `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
+                    defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+                },
+            },
+        ];
     } else if (config.type == "staticSelect") {
-        if (config.values) {
-            throw new Error("custom values for staticSelect is not yet supported"); // TODO add support
-        }
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
-        const values = enumType.enumValues.map((i) => i.name);
+        const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
+            if (typeof value === "string") {
+                return {
+                    value,
+                    label: camelCaseToHumanReadable(value),
+                };
+            } else {
+                return value;
+            }
+        });
         code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
@@ -172,9 +223,9 @@ export function generateFormField({
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
                     .map((value) => {
-                        const id = `${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`;
-                        const label = `<FormattedMessage id="${id}" defaultMessage="${camelCaseToHumanReadable(value)}" />`;
-                        return `<MenuItem value="${value}">${label}</MenuItem>`;
+                        const id = `${instanceGqlType}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
+                        const label = `<FormattedMessage id="${id}" defaultMessage="${value.label}" />`;
+                        return `<MenuItem value="${value.value}">${label}</MenuItem>`;
                     })
                     .join("\n")}
                 </FinalFormSelect>
@@ -216,7 +267,7 @@ export function generateFormField({
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
 
         formFragmentField = `${name} { id ${labelField} }`;
-        formValueToGqlInputCode = `${name}: formValues.${name}?.id,`;
+        formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
         imports.push({
             name: `GQL${queryName}Query`,
             importPath: `./${baseOutputFilename}.generated`,
@@ -257,5 +308,6 @@ export function generateFormField({
         formFragmentFields: [formFragmentField],
         gqlDocuments,
         imports,
+        formValuesConfig,
     };
 }
