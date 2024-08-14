@@ -271,6 +271,7 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                tooltipMessage: column.tooltipMessage,
             };
         }
 
@@ -287,6 +288,7 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            tooltipMessage: column.tooltipMessage,
         };
     });
 
@@ -328,14 +330,15 @@ export function generateGrid(
         ToolbarActions,
         ToolbarFillSpace,
         ToolbarItem,
+        Tooltip,
         useBufferedRowCount,
         useDataGridRemote,
         usePersistentColumnState,
     } from "@comet/admin";
-    import { Add as AddIcon, Edit } from "@comet/admin-icons";
+    import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { Alert, Button, IconButton, Typography } from "@mui/material";
+    import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -474,15 +477,59 @@ export function generateGrid(
                 : ""
         }), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
+        
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
+                    const defaultMinWidth = 150;
+                    const defaultColumnFlex = 1;
+                    let minWidth;
+                    let maxWidth;
+                    let tooltipColumnWidth = column.width;
+
+                    if (typeof column.width === "undefined") {
+                        maxWidth = column.maxWidth;
+
+                        if (
+                            typeof column.minWidth === "undefined" &&
+                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
+                        ) {
+                            minWidth = defaultMinWidth;
+                            tooltipColumnWidth = defaultMinWidth;
+                        } else if (typeof column.minWidth !== "undefined") {
+                            minWidth = column.minWidth;
+                            tooltipColumnWidth = column.minWidth;
+                        }
+                    }
+
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
-                        headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
-                            column.headerName || camelCaseToHumanReadable(column.name)
-                        }" })`,
+                        renderHeader: column.tooltipMessage
+                            ? `() => (
+                                    <>
+                                        <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
+                                  column.name
+                              }",   defaultMessage: "${
+                                  column.headerName || camelCaseToHumanReadable(column.name)
+                              }"})} columnWidth= {${tooltipColumnWidth}}
+                              />
+                                        <Tooltip
+                                            trigger="hover"
+                                            title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
+                                  column.tooltipMessage
+                              }" />}
+                                        >
+                                            <Info sx={{ marginLeft: 1 }} />
+                                        </Tooltip>
+                                    </>
+                                )`
+                            : undefined,
+                        headerName: !column.tooltipMessage
+                            ? `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
+                                  column.headerName || camelCaseToHumanReadable(column.name)
+                              }" })`
+                            : undefined,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: !filterFields.includes(column.name) ? `false` : undefined,
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
@@ -494,18 +541,9 @@ export function generateGrid(
                     };
 
                     if (typeof column.width === "undefined") {
-                        const defaultMinWidth = 150;
-                        columnDefinition.flex = 1;
-                        columnDefinition.maxWidth = column.maxWidth;
-
-                        if (
-                            typeof column.minWidth === "undefined" &&
-                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
-                        ) {
-                            columnDefinition.minWidth = defaultMinWidth;
-                        } else if (typeof column.minWidth !== "undefined") {
-                            columnDefinition.minWidth = column.minWidth;
-                        }
+                        columnDefinition.flex = defaultColumnFlex;
+                        columnDefinition.minWidth = minWidth;
+                        columnDefinition.maxWidth = maxWidth;
                     }
 
                     return tsCodeRecordToString(columnDefinition);

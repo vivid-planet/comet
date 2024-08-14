@@ -16,7 +16,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { type: "boolean", name: "inStock", headerName: "In stock", width: 90 },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
         { type: "text", name: "description", headerName: "Description" },
-        { type: "number", name: "price", headerName: "Price", maxWidth: 150 },
+        { type: "number", name: "price", headerName: "Price", maxWidth: 150, tooltipMessage: "Price in EUR"  },
         { type: "staticSelect", name: "type", maxWidth: 150, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
         { type: "date", name: "availableSince", width: 140 },
         { type: "dateTime", name: "createdAt", width: 170 },
