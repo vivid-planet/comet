@@ -309,7 +309,14 @@ export function generateForm(
                 : ""
         }
 
-        const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
+        const handleSubmit = async (${
+            formValuesConfig.filter((config) => !!config.destructFromFormValues).length
+                ? `{ ${formValuesConfig
+                      .filter((config) => !!config.destructFromFormValues)
+                      .map((config) => config.destructFromFormValues)
+                      .join(", ")}, ...formValues }`
+                : `formValues`
+        }: FormValues, form: FormApi<FormValues>${addMode ? `, event: FinalFormSubmitEvent` : ""}) => {
             ${editMode ? `if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");` : ""}
             const output = {
                 ...formValues,

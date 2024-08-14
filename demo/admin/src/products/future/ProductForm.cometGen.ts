@@ -9,7 +9,6 @@ export const ProductForm: FormConfig<GQLProduct> = {
         {
             type: "fieldSet",
             name: "mainData",
-            title: "Main Data",
             supportText: "Product: {title}",
             collapsible: false,
             initiallyExpanded: true,
@@ -30,7 +29,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     label: "Type",
                     required: true,
                     inputType: "radio",
-                    /*, values: from gql schema (TODO overridable)*/
+                    values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
             ],
@@ -38,9 +37,6 @@ export const ProductForm: FormConfig<GQLProduct> = {
         {
             type: "fieldSet",
             name: "additionalData",
-            title: "Additional Data",
-            collapsible: true,
-            initiallyExpanded: false,
             fields: [
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince" },

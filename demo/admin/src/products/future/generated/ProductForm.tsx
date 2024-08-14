@@ -205,7 +205,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
                                 options={[
                                     {
-                                        label: <FormattedMessage id="product.type.cap" defaultMessage="Cap" />,
+                                        label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />,
                                         value: "Cap",
                                     },
                                     {
