@@ -1,5 +1,7 @@
 import {
     MainContent,
+    RouterTab,
+    RouterTabs,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
@@ -12,6 +14,8 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
+import { Box } from "@mui/material";
+import { AssignedProductsGrid } from "@src/products/categories/AssignedProductsGrid";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -45,7 +49,27 @@ const ProductCategoriesPage: React.FC = () => {
                     {(selectedId) => (
                         <SaveBoundary>
                             <FormToolbar />
-                            <ProductCategoryForm id={selectedId} />
+                            <RouterTabs>
+                                <RouterTab
+                                    forceRender={true}
+                                    path=""
+                                    label={intl.formatMessage({ id: "products.editProductCategory.formTab", defaultMessage: "Product category" })}
+                                >
+                                    <ProductCategoryForm id={selectedId} />
+                                </RouterTab>
+                                <RouterTab
+                                    forceRender={true}
+                                    path="/assigned-products"
+                                    label={intl.formatMessage({
+                                        id: "products.editProductCategory.assignedProducts",
+                                        defaultMessage: "Assigned Products",
+                                    })}
+                                >
+                                    <Box sx={{ height: "100vh" }}>
+                                        <AssignedProductsGrid productCategoryId={selectedId} />
+                                    </Box>
+                                </RouterTab>
+                            </RouterTabs>
                         </SaveBoundary>
                     )}
                 </StackPage>
