@@ -278,7 +278,7 @@ export function generateForm(
                   .join(" | ")}>`
             : `${filterByFragmentType}`
     } ${
-        formValuesConfig.length > 0
+        formValuesConfig.filter((config) => !!config.typeCode).length > 0
             ? `& {
                 ${formValuesConfig
                     .filter((config) => !!config.typeCode)
