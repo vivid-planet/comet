@@ -61,8 +61,6 @@ type BlockType = string;
 export interface CreateOneOfBlockOptions<T extends boolean> {
     name: string;
     displayName?: React.ReactNode;
-    labelText?: React.ReactNode;
-    hideLabel?: boolean;
     supportedBlocks: Record<BlockType, BlockInterface>;
     category?: BlockCategory | CustomBlockCategory;
     variant?: "select" | "radio" | "toggle";
@@ -73,8 +71,6 @@ export const createOneOfBlock = <T extends boolean = boolean>({
     supportedBlocks,
     name,
     displayName = "Switch",
-    labelText,
-    hideLabel = false,
     category = BlockCategory.Other,
     variant = "select",
     allowEmpty: passedAllowEmpty,
@@ -354,7 +350,6 @@ export const createOneOfBlock = <T extends boolean = boolean>({
 
             const activeBlock = getActiveBlock(state);
             const selectedBlockType = activeBlock.block ? activeBlock.state.type : "none";
-            const label = labelText ? labelText : <FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />;
 
             return (
                 <SelectPreviewComponent>
@@ -371,7 +366,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field name="blockType" fullWidth label={hideLabel ? null : label}>
+                                            <Field name="blockType" fullWidth>
                                                 {(props) => (
                                                     <FinalFormSelect {...props} fullWidth>
                                                         {options.map((option) => (
@@ -389,7 +384,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "radio" && (
                                     <>
                                         <Box display="flex" flexDirection="column" padding={3}>
-                                            <FieldContainer label={hideLabel ? null : label}>
+                                            <FieldContainer>
                                                 {options.map((option) => (
                                                     <Field key={option.value} name="blockType" type="radio" value={option.value} fullWidth>
                                                         {(props) => <FormControlLabel label={option.label} control={<FinalFormRadio {...props} />} />}
@@ -403,7 +398,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "toggle" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field name="blockType" fullWidth label={hideLabel ? null : label}>
+                                            <Field name="blockType" fullWidth>
                                                 {({ input: { value, onChange } }) => (
                                                     <ToggleButtonGroup
                                                         value={value}
