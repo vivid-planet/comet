@@ -237,7 +237,7 @@ export function generateForm(
                   .join(" | ")}>`
             : `GQL${fragmentName}Fragment`
     } ${
-        formValuesConfig.length > 0
+        formValuesConfig.filter((config) => !!config.typeCode).length > 0
             ? `& {
                 ${formValuesConfig
                     .filter((config) => !!config.typeCode)
