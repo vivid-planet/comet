@@ -325,7 +325,8 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
 
                                                         const showMaxBlocksAllowedMessage = isMaxVisibleBlocksReached && !data.visible;
                                                         const showMinBlocksRequiredMessage =
-                                                            !isMinVisibleBlocksMet || (minVisibleBlocks === totalVisibleBlocks && data.visible);
+                                                            (!!minVisibleBlocks && !isMinVisibleBlocksMet) ||
+                                                            (minVisibleBlocks === totalVisibleBlocks && data.visible);
 
                                                         return (
                                                             <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/edit`}>
@@ -374,7 +375,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                                                                                     disabled={!canToggleVisibility}
                                                                                 >
                                                                                     {data.visible ? (
-                                                                                        <Visible color="secondary" />
+                                                                                        <Visible color="success" />
                                                                                     ) : (
                                                                                         <Invisible color="action" />
                                                                                     )}

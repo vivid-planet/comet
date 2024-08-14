@@ -317,7 +317,7 @@ export function generateForm(
         `
                 : ""
         }
-    
+
         const handleSubmit = async (${
             formValuesConfig.filter((config) => !!config.destructFromFormValues).length
                 ? `{ ${formValuesConfig

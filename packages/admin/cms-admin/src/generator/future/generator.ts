@@ -21,7 +21,7 @@ export type FormFieldConfig<T> = (
     | { type: "boolean"; name: keyof T }
     | { type: "date"; name: keyof T }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; name: keyof T; values?: string[] }
+    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string> }
     | {
           type: "asyncSelect";
           name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect
@@ -82,7 +82,7 @@ export type GridColumnConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T> } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
