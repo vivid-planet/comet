@@ -61,7 +61,6 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         tooltipSuccessMessage = <FormattedMessage id="comet.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
         tooltipErrorMessage = <FormattedMessage id="comet.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
         slotProps,
-
         ...restProps
     } = useThemeProps({
         props: inProps,
@@ -71,16 +70,17 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
     const [displayState, setDisplayState] = React.useState<FeedbackButtonDisplayState>("idle");
 
     const ownerState: OwnerState = {
-        displayState: displayState,
+        displayState,
     };
 
     const resolveTooltipForDisplayState = (displayState: FeedbackButtonDisplayState) => {
-        if (displayState === "success") {
-            return "success";
-        } else if (displayState === "error") {
-            return "error";
-        } else {
-            return "neutral";
+        switch (displayState) {
+            case "error":
+                return "error";
+            case "success":
+                return "success";
+            default:
+                return "neutral";
         }
     };
 
@@ -125,7 +125,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
             variant={resolveTooltipForDisplayState(displayState)}
             {...slotProps?.tooltip}
         >
-            <span>{startIcon ? startIcon : endIcon}</span>
+            <span>{startIcon || endIcon}</span>
         </Tooltip>
     );
 
