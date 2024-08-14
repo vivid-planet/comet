@@ -33,7 +33,7 @@ const ProductCategoriesPage: React.FC = () => {
     const intl = useIntl();
 
     return (
-        <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories" })}>
+        <Stack topLevelTitle={intl.formatMessage({ id: "products.productCategories", defaultMessage: "Product Categories Handmade" })}>
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
