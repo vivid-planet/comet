@@ -21,7 +21,7 @@ export async function writeGenerated(filePath: string, contents: string): Promis
         console.log(e);
     }
 
-    await fs.writeFile(filePath, output ?? contents);
+    await fs.writeFile(filePath, output ?? header + contents);
     // eslint-disable-next-line no-console
     console.log(`generated ${filePath}`);
 }
