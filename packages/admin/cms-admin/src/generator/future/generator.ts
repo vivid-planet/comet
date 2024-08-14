@@ -22,7 +22,7 @@ export type FormFieldConfig<T> = (
     | { type: "boolean"; name: keyof T }
     | { type: "date"; name: keyof T }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string> }
+    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
     | {
           type: "asyncSelect";
           name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect

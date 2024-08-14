@@ -216,6 +216,7 @@ export function generateForm(
         FinalFormSubmitEvent,
         Loading,
         MainContent,
+        RadioGroupField,
         TextAreaField,
         TextField,
         useFormApiRef,

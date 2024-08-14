@@ -214,6 +214,7 @@ export function generateFormField({
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+
         const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
             if (typeof value === "string") {
                 return {
@@ -224,7 +225,30 @@ export function generateFormField({
                 return value;
             }
         });
-        code = `<Field
+
+        if (config.inputType === "radio") {
+            code = `
+            <RadioGroupField
+             ${required ? "required" : ""}
+              variant="horizontal"
+             fullWidth
+             name="${name}"
+             label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+             options={[
+                  ${values
+                      .map((value) => {
+                          return `{
+                                label: <FormattedMessage id="${instanceGqlType}.${name}.${
+                              value.value.charAt(0).toLowerCase() + value.value.slice(1)
+                          }" defaultMessage="${value.label}" />,
+                                value: "${value.value}",
+                            }`;
+                      })
+                      .join(",")}
+            ]}/>
+            `;
+        } else {
+            code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
             fullWidth
@@ -250,6 +274,7 @@ export function generateFormField({
                 </FinalFormSelect>
             }
         </Field>`;
+        }
     } else if (config.type == "asyncSelect") {
         if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
         const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
