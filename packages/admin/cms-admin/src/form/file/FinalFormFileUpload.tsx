@@ -48,11 +48,14 @@ type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<GQLFinalFormFileUp
 export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Multiple extends true
     ? FinalFormFileUploadMultipleFilesProps
     : FinalFormFileUploadSingleFileProps) &
-    Partial<FileSelectProps<GQLFinalFormFileUploadFragment>>;
+    Partial<FileSelectProps<GQLFinalFormFileUploadFragment>> & {
+        previewImageWidth?: number;
+    };
 
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
     maxFiles,
+    previewImageWidth = 320,
     ...restProps
 }: FinalFormFileUploadProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
@@ -67,10 +70,11 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
         const files = Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : [];
         return files.map((file) => ({
             ...file,
-            // TODO should the resize width be configurable?
-            previewUrl: file.previewUrlTemplate ? `${apiUrl}${file.previewUrlTemplate.replace(":resizeWidth", "320")}` : undefined,
+            previewUrl: file.previewUrlTemplate
+                ? `${apiUrl}${file.previewUrlTemplate.replace(":resizeWidth", String(previewImageWidth))}`
+                : undefined,
         }));
-    }, [fieldValue, apiUrl]);
+    }, [fieldValue, apiUrl, previewImageWidth]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
