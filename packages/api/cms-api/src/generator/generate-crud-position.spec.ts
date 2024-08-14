@@ -4,7 +4,6 @@ import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storage
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";
 
-import { CrudPositionField } from "./crud-generator.decorator";
 import { generateCrud } from "./generate-crud";
 import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
@@ -17,7 +16,6 @@ class TestEntityWithPositionField extends BaseEntity<TestEntityWithPositionField
     @Property({ columnType: "integer" })
     @Field(() => Int)
     @Min(1)
-    @CrudPositionField()
     position: number;
 }
 

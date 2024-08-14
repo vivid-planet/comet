@@ -48,7 +48,7 @@ export async function generateCrudInput(
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
-    const { dedicatedResolverArgProps } = buildOptions(metadata);
+    const { dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
 
     const props = metadata.props
         .filter((prop) => {
@@ -71,9 +71,8 @@ export async function generateCrudInput(
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
         let isOptional = prop.nullable;
-        const isPositionField = definedDecorators.map((decorator) => decorator.getName()).includes("CrudPositionField");
 
-        if (!isPositionField) {
+        if (prop.name != "position") {
             if (!prop.nullable) {
                 decorators.push("@IsNotEmpty()");
             } else {
@@ -83,7 +82,7 @@ export async function generateCrudInput(
         if (["id", "createdAt", "updatedAt", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
-        } else if (isPositionField) {
+        } else if (prop.name == "position") {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue = initializer == "undefined" || initializer == "null" ? "null" : initializer;
             const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });

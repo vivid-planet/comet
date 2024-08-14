@@ -5,6 +5,7 @@ export interface CrudGeneratorOptions {
     update?: boolean;
     delete?: boolean;
     list?: boolean;
+    position?: { groupByFields: string[] };
 }
 
 export function CrudGenerator({
@@ -14,12 +15,13 @@ export function CrudGenerator({
     update = true,
     delete: deleteMutation = true,
     list = true,
+    position,
 }: CrudGeneratorOptions): ClassDecorator {
     // eslint-disable-next-line @typescript-eslint/ban-types
     return function (target: Function) {
         Reflect.defineMetadata(
             `data:crudGeneratorOptions`,
-            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list },
+            { targetDirectory, requiredPermission, create, update, delete: deleteMutation, list, position },
             target,
         );
     };
@@ -70,14 +72,4 @@ export function hasFieldFeature(metadataClass: any, propName: string, option: ke
     const crudField = (Reflect.getMetadata(`data:crudField`, metadataClass, propName) ?? {}) as CrudFieldOptions;
     const defaultValue = option == "dedicatedResolverArg" ? false : true;
     return crudField[option] ?? defaultValue;
-}
-
-export interface CrudPositionFieldOptions {
-    groupByFields?: string[];
-}
-export function CrudPositionField({ groupByFields }: CrudPositionFieldOptions = {}): PropertyDecorator {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return function (target: any, propertyKey: string | symbol) {
-        Reflect.defineMetadata(`data:crudPositionField`, { groupByFields: groupByFields }, target.constructor, propertyKey);
-    };
 }

@@ -14,7 +14,7 @@ import { GeneratedFile } from "./utils/write-generated-files";
 
 // TODO move into own file
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function buildOptions(metadata: EntityMetadata<any>) {
+export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
     const dedicatedResolverArgProps = metadata.props.filter((prop) => {
@@ -58,19 +58,11 @@ export function buildOptions(metadata: EntityMetadata<any>) {
     }
     const hasStatusFilter = statusProp && statusActiveItems && statusActiveItems.length != statusProp.items?.length; //if all items are active ones, no need for status filter
 
-    const positionField = metadata.props.find(
-        (prop) =>
-            !!metadata.definedProperties[prop.name] &&
-            morphTsProperty(prop.name, metadata)
-                .getDecorators()
-                .find((decorator) => decorator.getName() == "CrudPositionField") !== undefined,
-    );
-
     const crudFilterProps = metadata.props.filter(
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "filter") &&
             !prop.name.startsWith("scope_") &&
-            (!positionField || prop.name !== positionField.name) &&
+            prop.name != "position" &&
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "text" ||
@@ -111,11 +103,10 @@ export function buildOptions(metadata: EntityMetadata<any>) {
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
 
-    const positionProps = metadata.props.filter((prop) => Reflect.getMetadata(`data:crudPositionField`, metadata.class, prop.name) !== undefined);
-    if (positionProps.length > 1) throw new Error(`CrudPositionField-Decorator is only allowed once per entity, please check ${metadata.className}.`);
-    const hasPositionProp = !!positionProps.length;
+    const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
+
     const positionGroupPropNames: string[] = hasPositionProp
-        ? Reflect.getMetadata(`data:crudPositionField`, metadata.class, positionProps[0].name).groupByFields ?? [
+        ? generatorOptions.position?.groupByFields ?? [
               ...(scopeProp ? [scopeProp.name] : []), // if there is a scope prop it's effecting position-group, if not groupByFields should be used
           ]
         : [];
@@ -155,7 +146,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
 
 function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { crudFilterProps } = buildOptions(metadata);
+    const { crudFilterProps } = buildOptions(metadata, generatorOptions);
 
     let importsOut = "";
     let enumFiltersOut = "";
@@ -298,7 +289,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
 
 function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { crudSortProps } = buildOptions(metadata);
+    const { crudSortProps } = buildOptions(metadata, generatorOptions);
 
     const sortOut = `import { SortDirection } from "@comet/cms-api";
     import { Field, InputType, registerEnumType } from "@nestjs/graphql";
@@ -357,7 +348,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         statusActiveItems,
         hasStatusFilter,
         dedicatedResolverArgProps,
-    } = buildOptions(metadata);
+    } = buildOptions(metadata, generatorOptions);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
@@ -469,7 +460,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
 
 function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
-    const { hasPositionProp, positionGroupProps } = buildOptions(metadata);
+    const { hasPositionProp, positionGroupProps } = buildOptions(metadata, generatorOptions);
 
     const positionGroupType = positionGroupProps.length ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${prop.type}`).join(",")} }` : false;
 
@@ -572,9 +563,10 @@ function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: s
 function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
+    generatorOptions: CrudGeneratorOptions,
 ): { code: string; injectRepositories: EntityMetadata<any>[] } {
     const { instanceNameSingular } = buildNameVariants(metadata);
-    const { blockProps, scopeProp, hasPositionProp, dedicatedResolverArgProps } = buildOptions(metadata);
+    const { blockProps, scopeProp, hasPositionProp, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
 
     const injectRepositories: EntityMetadata<any>[] = [];
 
@@ -697,6 +689,7 @@ ${inputRelationToManyProps
                         .map((prop) => prop.name),
                 },
                 prop.targetMeta,
+                generatorOptions,
             );
             const isAsync = code.includes("await ");
             return `if (${prop.name}Input) {
@@ -740,6 +733,7 @@ ${inputRelationOneToOneProps
                             .map((prop) => prop.name),
                     },
                     prop.targetMeta,
+                    generatorOptions,
                 )}
                 ${options.mode != "create" || prop.nullable ? `}` : "}"}`,
     )
@@ -777,7 +771,7 @@ ${
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { skipScopeCheck } = buildOptions(metadata);
+    const { skipScopeCheck } = buildOptions(metadata, generatorOptions);
 
     const imports: Imports = [];
 
@@ -937,7 +931,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         statusProp,
         hasStatusFilter,
         dedicatedResolverArgProps,
-    } = buildOptions(metadata);
+    } = buildOptions(metadata, generatorOptions);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -954,12 +948,14 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const { code: createInputHandlingCode, injectRepositories: createInputHandlingInjectRepositories } = generateInputHandling(
         { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
         metadata,
+        generatorOptions,
     );
     injectRepositories.push(...createInputHandlingInjectRepositories);
 
     const { code: updateInputHandlingCode, injectRepositories: updateInputHandlingInjectRepositories } = generateInputHandling(
         { mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` },
         metadata,
+        generatorOptions,
     );
     injectRepositories.push(...updateInputHandlingInjectRepositories);
 
@@ -1286,7 +1282,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
     const generatedFiles: GeneratedFile[] = [];
 
     const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
-    const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp } = buildOptions(metadata);
+    const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp } = buildOptions(metadata, generatorOptions);
     if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {

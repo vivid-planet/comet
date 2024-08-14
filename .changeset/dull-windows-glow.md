@@ -4,4 +4,4 @@
 
 API Generator: Add support for position field
 
-Use the `@CrudPositionField()` decorator to decorate the entity field holding the position. This should be an integer number field >= 1.
+Add a field named `position` to enable this feature. This field will hold and update the position. This should be an integer number field >= 1.
