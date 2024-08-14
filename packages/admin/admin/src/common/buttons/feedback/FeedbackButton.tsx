@@ -119,7 +119,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
 
     const tooltip = (
         <Tooltip
-            title={displayState === "error" ? tooltipErrorMessage : tooltipSuccessMessage}
+            title={displayState === "error" ? tooltipErrorMessage : displayState === "success" ? tooltipSuccessMessage : ""}
             open={displayState === "error" || displayState === "success"}
             placement={endIcon && !startIcon ? "top-end" : "top-start"}
             variant={resolveTooltipForDisplayState(displayState)}
@@ -132,10 +132,10 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
     return (
         <Root
             ownerState={ownerState}
-            loading={loading}
+            loading={loading !== undefined ? loading : displayState === "loading"}
             variant={variant}
             color={color}
-            disabled={disabled || displayState === "loading"}
+            disabled={disabled || loading || displayState === "loading"}
             loadingPosition={startIcon ? "start" : "end"}
             loadingIndicator={<ThreeDotSaving />}
             startIcon={startIcon && tooltip}
