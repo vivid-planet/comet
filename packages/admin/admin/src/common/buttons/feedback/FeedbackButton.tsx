@@ -92,8 +92,8 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         if (displayState === "idle" && loading) {
             setDisplayState("loading");
         } else if (displayState === "loading" && hasErrors) {
-            timeoutDuration = 500;
-            newDisplayState = "loading";
+            timeoutDuration = 0;
+            newDisplayState = "error";
         } else if (displayState === "loading" && !loading && !hasErrors) {
             timeoutDuration = 500;
             newDisplayState = "success";
