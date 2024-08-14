@@ -14,14 +14,12 @@ import { RowActionsMenu } from "../rowActions/RowActionsMenu";
 
 interface DeleteDialogProps {
     dialogOpen: boolean;
-    loading?: boolean;
-    hasErrors?: boolean;
-    onDelete: () => void;
+    onDelete: () => Promise<void>;
     onCancel: () => void;
 }
 
 const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
-    const { dialogOpen, loading, hasErrors, onDelete, onCancel } = props;
+    const { dialogOpen, onDelete, onCancel } = props;
 
     return (
         <Dialog open={dialogOpen} onClose={onDelete}>
@@ -38,8 +36,6 @@ const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
                 <FeedbackButton
                     startIcon={<DeleteIcon />}
                     onClick={onDelete}
-                    loading={loading}
-                    hasErrors={hasErrors}
                     color="primary"
                     variant="contained"
                     tooltipErrorMessage={<FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />}
@@ -68,13 +64,9 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     const [copyLoading, setCopyLoading] = React.useState(false);
     const [pasting, setPasting] = React.useState(false);
-    const [deleteLoading, setDeleteLoading] = React.useState(false);
-    const [hasDeleteErrors, setHasDeleteErrors] = React.useState(false);
 
     const handleDeleteClick = async () => {
         if (!onDelete) return;
-        setHasDeleteErrors(false);
-        setDeleteLoading(true);
         try {
             await onDelete({
                 client,
@@ -82,10 +74,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
             if (refetchQueries) await client.refetchQueries({ include: refetchQueries });
             setDeleteDialogOpen(false);
         } catch (_) {
-            setHasDeleteErrors(true);
             throw new Error("Delete failed");
-        } finally {
-            setDeleteLoading(false);
         }
     };
 
@@ -186,13 +175,7 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
                     )}
                 </RowActionsMenu>
             </RowActionsMenu>
-            <DeleteDialog
-                dialogOpen={deleteDialogOpen}
-                hasErrors={hasDeleteErrors}
-                loading={deleteLoading}
-                onCancel={() => setDeleteDialogOpen(false)}
-                onDelete={handleDeleteClick}
-            />
+            <DeleteDialog dialogOpen={deleteDialogOpen} onCancel={() => setDeleteDialogOpen(false)} onDelete={handleDeleteClick} />
         </>
     );
 }
