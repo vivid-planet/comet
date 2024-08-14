@@ -23,7 +23,7 @@ import { useTheme } from "@mui/material";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
@@ -154,13 +154,13 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                 const valueLabels: Record<string, React.ReactNode> = {
                     true: (
                         <GridCellContent
-                            primaryText={intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" })}
+                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
                             icon={<StateFilledIcon color="success" />}
                         />
                     ),
                     false: (
                         <GridCellContent
-                            primaryText={intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" })}
+                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
                             icon={<StateFilledIcon color="error" />}
                         />
                     ),
