@@ -262,11 +262,18 @@ export function generateGrid(
                 })
                 .join(" ")}]`;
 
+            renderCell = `({ row }) => {
+                const valueOptions = ${valueOptions};
+                const selectedOption = valueOptions.find(({ value }) => value === row.${name});
+                return selectedOption ? selectedOption.label : row.${name};
+            }`;
+
             return {
                 name,
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
+                renderCell,
                 width: column.width,
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
