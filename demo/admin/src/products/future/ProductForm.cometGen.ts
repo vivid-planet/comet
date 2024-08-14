@@ -71,6 +71,8 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince" },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
+                { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4 },
+                { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4 },
             ],
         },
     ],
