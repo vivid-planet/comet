@@ -19,7 +19,7 @@ interface DeleteDialogProps {
 }
 
 const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
-    const { dialogOpen, onDelete, onCancel } = props;
+    const { dialogOpen, loading, hasErrors, onDelete, onCancel } = props;
 
     return (
         <Dialog open={dialogOpen} onClose={onDelete}>
@@ -64,9 +64,12 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     const [copyLoading, setCopyLoading] = React.useState(false);
     const [pasting, setPasting] = React.useState(false);
+    const [deleteLoading, setDeleteLoading] = React.useState(false);
+    const [hasDeleteErrors, setHasDeleteErrors] = React.useState(false);
 
     const handleDeleteClick = async () => {
         if (!onDelete) return;
+
         try {
             await onDelete({
                 client,
