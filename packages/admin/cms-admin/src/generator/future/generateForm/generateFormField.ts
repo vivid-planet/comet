@@ -310,17 +310,15 @@ export function generateFormField({
                             }
                         }\`${
                             filterField && rootQueryFilterType && config.filterField
-                                ? `, variables: { ${(config.filterField?.gqlVarType === "filter"
-                                      ? `filter: { gqlVarName: { equal: valuesVar } }`
-                                      : `gqlVarName: valuesVar`
-                                  )
-                                      .replace(`gqlVarName`, config.filterField.gqlVarName)
-                                      .replace(
-                                          `valuesVar`,
-                                          `values.${
-                                              filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
-                                          }`,
-                                      )} }`
+                                ? `, variables: { ${
+                                      config.filterField?.gqlVarType === "filter"
+                                          ? `filter: { ${config.filterField.gqlVarName}: { equal: values.${
+                                                filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
+                                            } } }`
+                                          : `${config.filterField.gqlVarName}: values.${
+                                                filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
+                                            }`
+                                  } }`
                                 : ``
                         }
                     });
