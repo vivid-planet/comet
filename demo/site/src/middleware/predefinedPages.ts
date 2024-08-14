@@ -52,24 +52,24 @@ const graphQLFetch = createGraphQLFetch();
 async function fetchPredefinedPages(scope: { domain: string }) {
     const key = `predefinedPages-${JSON.stringify(scope)}`;
 
-    const pages: Array<{ defaultPath: string; customPath: string }> = [];
+    return memoryCache.wrap(key, async () => {
+        const pages: Array<{ defaultPath: string; customPath: string }> = [];
 
-    for (const language of languages) {
-        const { paginatedPageTreeNodes } = await graphQLFetch<GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables>(predefinedPagesQuery, {
-            scope: { domain: scope.domain, language },
-        });
+        for (const language of languages) {
+            const { paginatedPageTreeNodes } = await graphQLFetch<GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables>(predefinedPagesQuery, {
+                scope: { domain: scope.domain, language },
+            });
 
-        for (const node of paginatedPageTreeNodes.nodes) {
-            if (node.document?.__typename === "PredefinedPage" && node.document.type) {
-                pages.push({
-                    defaultPath: `/${language}${predefinedPagePaths[node.document.type]}`,
-                    customPath: `/${language}${node.path}`,
-                });
+            for (const node of paginatedPageTreeNodes.nodes) {
+                if (node.document?.__typename === "PredefinedPage" && node.document.type) {
+                    pages.push({
+                        defaultPath: `/${language}${predefinedPagePaths[node.document.type]}`,
+                        customPath: `/${language}${node.path}`,
+                    });
+                }
             }
         }
-    }
 
-    return memoryCache.wrap(key, async () => {
         return pages;
     });
 }
