@@ -2,14 +2,14 @@
 "@comet/admin": minor
 ---
 
-Add `CheckboxGroupField` component to make it easier to create checkbox group fields in forms
+Add `CheckboxListField` component to make it easier to create checkbox lists in forms
 
 You can now do:
 
 ```tsx
-<CheckboxGroupField
-    label="Checkbox Group"
-    name="checkboxGroup"
+<CheckboxListField
+    label="Checkbox List"
+    name="checkboxList"
     fullWidth
     options={[
         {
@@ -27,7 +27,7 @@ You can now do:
 instead of:
 
 ```tsx
-<FieldContainer label="Checkbox Group" fullWidth>
+<FieldContainer label="Checkbox List" fullWidth>
     <CheckboxField name="checkboxList" label="Checkbox one" value="checkbox-one" />
     <CheckboxField name="checkboxList" label="Checkbox two" value="checkbox-two" />
 </FieldContainer>

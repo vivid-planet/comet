@@ -3,17 +3,17 @@ import React from "react";
 
 import { Field, FieldProps } from "../Field";
 
-type CheckboxGroupFieldOption<Value extends string> = {
+type CheckboxListFieldOption<Value extends string> = {
     label: React.ReactNode;
     value: Value;
 };
 
-export type CheckboxGroupFieldProps<Value extends string> = FieldProps<[Value], HTMLInputElement> & {
-    options: CheckboxGroupFieldOption<Value>[];
+export type CheckboxListFieldProps<Value extends string> = FieldProps<[Value], HTMLInputElement> & {
+    options: CheckboxListFieldOption<Value>[];
     layout?: "row" | "column";
 };
 
-export const CheckboxGroupField = <Value extends string>({ options, layout = "row", required, ...restProps }: CheckboxGroupFieldProps<Value>) => {
+export const CheckboxListField = <Value extends string>({ options, layout = "row", required, ...restProps }: CheckboxListFieldProps<Value>) => {
     return (
         <Field<[Value]> required={required} {...restProps}>
             {({ input: { value, onBlur, onFocus, onChange, name, ...restInput } }) => (

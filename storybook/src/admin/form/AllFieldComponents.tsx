@@ -3,7 +3,7 @@ import {
     AsyncSelectField,
     AutocompleteField,
     CheckboxField,
-    CheckboxGroupField,
+    CheckboxListField,
     Field,
     FieldSet,
     FinalFormRangeInput,
@@ -122,10 +122,10 @@ function Story() {
                                     fullWidth
                                 />
                             </FormSection>
-                            <FormSection title="Checkbox Groups">
-                                <CheckboxGroupField
+                            <FormSection title="Checkbox Lists">
+                                <CheckboxListField
                                     label="Required"
-                                    name="requiredCheckboxGroup"
+                                    name="requiredCheckboxList"
                                     variant={fieldVariant}
                                     fullWidth
                                     required
@@ -140,9 +140,9 @@ function Story() {
                                         },
                                     ]}
                                 />
-                                <CheckboxGroupField
+                                <CheckboxListField
                                     label="Many Options"
-                                    name="checkboxGroupManyOptions"
+                                    name="checkboxListManyOptions"
                                     variant={fieldVariant}
                                     fullWidth
                                     options={[
@@ -172,9 +172,9 @@ function Story() {
                                         },
                                     ]}
                                 />
-                                <CheckboxGroupField
+                                <CheckboxListField
                                     label="Column Layout"
-                                    name="checkboxGroupColumnLayout"
+                                    name="checkboxListColumnLayout"
                                     variant={fieldVariant}
                                     layout="column"
                                     fullWidth
