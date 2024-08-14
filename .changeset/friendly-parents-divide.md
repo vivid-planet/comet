@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Add Dialog to confirm running a CronJob
+Add dialog to confirm manually starting a cron job

@@ -1,7 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, MainContent, SaveButton, StackLink, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
+import { CancelButton, MainContent, StackLink, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
 import { Play, Time } from "@comet/admin-icons";
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
 import React, { useState } from "react";
@@ -66,17 +66,16 @@ export function CronJobsGrid() {
     const intl = useIntl();
     const client = useApolloClient();
     const stackSwitchApi = useStackSwitchApi();
-    const [isOpen, setIsOpen] = useState(false);
-    const [cronJob, setCronJob] = useState("");
+    const [cronJobToStart, setCronJobToStart] = useState<string>("");
+    const dialogOpen = Boolean(cronJobToStart);
 
     const { data, loading, error } = useQuery<GQLKubernetesCronJobsQuery, GQLKubernetesCronJobsQueryVariables>(cronJobsQuery);
 
     const rows = data?.kubernetesCronJobs ?? [];
 
-    const toggleDialog = () => {
-        setIsOpen((state) => !state);
+    const closeDialog = () => {
+        setCronJobToStart("");
     };
-
     return (
         <MainContent disablePadding fullHeight>
             <DataGrid
@@ -138,8 +137,7 @@ export function CronJobsGrid() {
                                     <Play
                                         color="primary"
                                         onClick={() => {
-                                            setCronJob(row.name);
-                                            toggleDialog();
+                                            setCronJobToStart(row.name);
                                         }}
                                     />
                                 </IconButton>
@@ -151,30 +149,30 @@ export function CronJobsGrid() {
                 disableColumnSelector
                 components={{ Toolbar: CronJobsToolbar }}
             />
-            <Dialog open={isOpen} onClose={toggleDialog}>
-                <div>
-                    <DialogTitle>
-                        <FormattedMessage id="comet.pages.cronjob.dialog.title" defaultMessage="Start CronJob now?" />
-                    </DialogTitle>
-                    <DialogContent>
-                        <FormattedMessage id="comet.pages.cronjob.dialog.content" defaultMessage="Are you sure you want to start the CronJob now?" />
-                    </DialogContent>
-                    <DialogActions>
-                        <CancelButton onClick={toggleDialog} />
+            <Dialog open={dialogOpen} onClose={closeDialog}>
+                <DialogTitle>
+                    <FormattedMessage id="comet.pages.cronjob.dialog.title" defaultMessage="Start cron job now?" />
+                </DialogTitle>
+                <DialogContent>
+                    <FormattedMessage id="comet.pages.cronjob.dialog.content" defaultMessage="Are you sure you want to start the cron job now?" />
+                </DialogContent>
+                <DialogActions>
+                    <CancelButton onClick={closeDialog} />
 
-                        <SaveButton
-                            onClick={async () => {
-                                await client.mutate<GQLTriggerKubernetesCronJobMutation, GQLTriggerKubernetesCronJobMutationVariables>({
-                                    mutation: triggerCronJobMutation,
-                                    variables: { name: cronJob },
-                                });
-                                stackSwitchApi.activatePage("jobs", cronJob);
-                            }}
-                        >
-                            <FormattedMessage id="comet.pages.cronjob.dialog.action" defaultMessage="Start now" />
-                        </SaveButton>
-                    </DialogActions>
-                </div>
+                    <Button
+                        variant="contained"
+                        startIcon={<Play />}
+                        onClick={async () => {
+                            await client.mutate<GQLTriggerKubernetesCronJobMutation, GQLTriggerKubernetesCronJobMutationVariables>({
+                                mutation: triggerCronJobMutation,
+                                variables: { name: cronJobToStart },
+                            });
+                            stackSwitchApi.activatePage("jobs", cronJobToStart);
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.cronjob.dialog.action" defaultMessage="Start now" />
+                    </Button>
+                </DialogActions>
             </Dialog>
         </MainContent>
     );
