@@ -8,20 +8,20 @@ import {
     GridColDef,
     GridColumnsButton,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
-    StackLink,
+    ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
+import { StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
-import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { useTheme } from "@mui/material";
+import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { GQLProductFilter } from "@src/graphql.generated";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -41,7 +41,7 @@ import {
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar() {
+function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -54,16 +54,19 @@ function ProductsGridToolbar() {
             <ToolbarItem>
                 <GridColumnsButton />
             </ToolbarItem>
-            <ToolbarItem>
-                <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="products.newProduct" defaultMessage="New Product" />
-                </Button>
-            </ToolbarItem>
+            <ToolbarItem>{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}</ToolbarItem>
         </DataGridToolbar>
     );
 }
+type Props = {
+    filter?: GQLProductFilter;
+    toolbarAction?: React.ReactNode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rowAction?: (params: GridRenderCellParams<any, GQLProductsListManualFragment, any>) => React.ReactNode;
+    hideCrudContextMenu?: boolean;
+};
 
-export function ProductsGrid() {
+export function ProductsGrid({ filter, toolbarAction, rowAction, hideCrudContextMenu }: Props) {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
     const sortModel = dataGridProps.sortModel;
     const client = useApolloClient();
@@ -220,52 +223,55 @@ export function ProductsGrid() {
                 return (
                     <>
                         <ProductsGridPreviewAction product={params.row} />
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
-                        </IconButton>
-                        <CrudContextMenu
-                            onPaste={async ({ input }) => {
-                                await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
-                                    mutation: createProductMutation,
-                                    variables: {
-                                        input: {
-                                            description: input.description,
-                                            image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
-                                            inStock: input.inStock,
-                                            price: input.price,
-                                            slug: input.slug,
-                                            title: input.title,
-                                            type: input.type,
-                                            category: input.category?.id,
-                                            tags: input.tags.map((tag) => tag.id),
-                                            colors: input.colors,
-                                            articleNumbers: input.articleNumbers,
-                                            discounts: input.discounts,
-                                            statistics: { views: 0 },
+                        {rowAction && rowAction(params)}
+                        {!hideCrudContextMenu && (
+                            <CrudContextMenu
+                                onPaste={async ({ input }) => {
+                                    await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
+                                        mutation: createProductMutation,
+                                        variables: {
+                                            input: {
+                                                description: input.description,
+                                                image: DamImageBlock.state2Output(DamImageBlock.input2State(input.image)),
+                                                inStock: input.inStock,
+                                                price: input.price,
+                                                slug: input.slug,
+                                                title: input.title,
+                                                type: input.type,
+                                                category: input.category?.id,
+                                                tags: input.tags.map((tag) => tag.id),
+                                                colors: input.colors,
+                                                articleNumbers: input.articleNumbers,
+                                                discounts: input.discounts,
+                                                statistics: { views: 0 },
+                                            },
                                         },
-                                    },
-                                });
-                            }}
-                            onDelete={async () => {
-                                await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
-                                    mutation: deleteProductMutation,
-                                    variables: { id: params.row.id },
-                                });
-                            }}
-                            refetchQueries={["ProductsList"]}
-                            copyData={() => {
-                                return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
-                            }}
-                        />
+                                    });
+                                }}
+                                onDelete={async () => {
+                                    await client.mutate<GQLDeleteProductMutation, GQLDeleteProductMutationVariables>({
+                                        mutation: deleteProductMutation,
+                                        variables: { id: params.row.id },
+                                    });
+                                }}
+                                refetchQueries={["ProductsList"]}
+                                copyData={() => {
+                                    return filterByFragment<GQLProductsListManualFragment>(productsFragment, params.row);
+                                }}
+                            />
+                        )}
                     </>
                 );
             },
         },
     ];
 
+    const { filter: gqlFilter, search: gqlSearch } = muiGridFilterToGql(columns, dataGridProps.filterModel);
+
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
-            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+            filter: filter ? { and: [gqlFilter, filter] } : gqlFilter,
+            search: gqlSearch,
             offset: dataGridProps.page * dataGridProps.pageSize,
             limit: dataGridProps.pageSize,
             sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
@@ -275,20 +281,21 @@ export function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            error={error}
+            components={{
+                Toolbar: ProductsGridToolbar,
+            }}
+            componentsProps={{
+                toolbar: { toolbarAction: toolbarAction },
+            }}
+        />
     );
 }
 
