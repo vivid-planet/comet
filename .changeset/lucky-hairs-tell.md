@@ -1,6 +1,6 @@
 ---
-"@comet/blocks-admin": minor
-"@comet/blocks-api": minor
+"@comet/cms-admin": minor
+"@comet/cms-api": minor
 "@comet/cms-site": minor
 ---
 
