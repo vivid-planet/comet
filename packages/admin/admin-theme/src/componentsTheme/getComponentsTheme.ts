@@ -42,6 +42,7 @@ import { getMuiSvgIcon } from "./MuiSvgIcon";
 import { getMuiSwitch } from "./MuiSwitch";
 import { getMuiTab } from "./MuiTab";
 import { getMuiTableCell } from "./MuiTableCell";
+import { getMuiTablePagination } from "./MuiTablePagination";
 import { getMuiTableRow } from "./MuiTableRow";
 import { getMuiTabs } from "./MuiTabs";
 import { getMuiToggleButton } from "./MuiToggleButton";
@@ -108,4 +109,5 @@ export const getComponentsTheme = (components: Components, themeData: ThemeData)
     MuiToggleButtonGroup: getMuiToggleButtonGroup(components.MuiToggleButtonGroup, themeData),
     MuiTooltip: getMuiTooltip(components.MuiTooltip, themeData),
     MuiTypography: getMuiTypography(components.MuiTypography, themeData),
+    MuiTablePagination: getMuiTablePagination(components.MuiTablePagination, themeData),
 });

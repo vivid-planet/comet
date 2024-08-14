@@ -9,7 +9,7 @@ import {
     useSnackbarApi,
 } from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
-import { Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -92,6 +92,7 @@ interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, u
     name: string;
     displayName?: React.ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
+    maxVisibleBlocks?: number;
     additionalItemFields?: {
         [Key in keyof AdditionalItemFields]: BlocksBlockAdditionalItemField<AdditionalItemFields[Key]>;
     };
@@ -107,6 +108,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
     supportedBlocks,
     name,
     displayName = <FormattedMessage id="comet.blocks.blocks.name" defaultMessage="Blocks" />,
+    maxVisibleBlocks,
     additionalItemFields,
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
@@ -308,6 +310,8 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
             const snackbarApi = useSnackbarApi();
 
+            const totalVisibleBlocks = state.blocks.filter((block) => block.visible).length;
+
             React.useEffect(() => {
                 if (state.blocks.some((block) => block.slideIn)) {
                     const timeoutHandle = window.setTimeout(() => {
@@ -409,7 +413,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 const newItem: BlocksBlockItem<BlockInterface, AdditionalItemFields> = {
                     key,
                     type,
-                    visible: true,
+                    visible: maxVisibleBlocks ? totalVisibleBlocks < maxVisibleBlocks : true,
                     selected: false,
                     props: block.defaultValues(),
                     slideIn: true,
@@ -463,6 +467,9 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 const { content } = response;
 
                 updateState((prevState) => {
+                    const clipboardVisibleBlocks = content.filter((block) => block.visible).length;
+                    const canAddVisibleBlock = maxVisibleBlocks ? totalVisibleBlocks + clipboardVisibleBlocks <= maxVisibleBlocks : true;
+
                     const newBlocks: BlocksBlockItem<BlockInterface, AdditionalItemFields>[] = content.map((block) => {
                         const type = typeForBlock(block);
 
@@ -474,7 +481,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                             key: uuid(),
                             type,
                             selected: false,
-                            visible: block.visible,
+                            visible: canAddVisibleBlock ? block.visible : false,
                             props: block.state,
                             slideIn: true,
                             // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
@@ -580,26 +587,31 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                                         )}
                                                         <BlockListHeaderActionContainer>
                                                             <RowActionsMenu>
-                                                                <RowActionsItem
-                                                                    icon={<Visible />}
-                                                                    disabled={selectedCount === 0}
-                                                                    onClick={() => handleToggleVisibilityOfAllSelectedBlocks(true)}
-                                                                >
-                                                                    <FormattedMessage
-                                                                        id="comet.blocks.list.action.visible"
-                                                                        defaultMessage="Make visible"
-                                                                    />
-                                                                </RowActionsItem>
-                                                                <RowActionsItem
-                                                                    icon={<Invisible />}
-                                                                    disabled={selectedCount === 0}
-                                                                    onClick={() => handleToggleVisibilityOfAllSelectedBlocks()}
-                                                                >
-                                                                    <FormattedMessage
-                                                                        id="comet.blocks.list.action.invisible"
-                                                                        defaultMessage="Make invisible"
-                                                                    />
-                                                                </RowActionsItem>
+                                                                {/* Do not show toggle visibility of all selected blocks buttons when maxVisibleBlocks is set */}
+                                                                {!maxVisibleBlocks && (
+                                                                    <>
+                                                                        <RowActionsItem
+                                                                            icon={<Visible />}
+                                                                            disabled={selectedCount === 0}
+                                                                            onClick={() => handleToggleVisibilityOfAllSelectedBlocks(true)}
+                                                                        >
+                                                                            <FormattedMessage
+                                                                                id="comet.blocks.list.action.visible"
+                                                                                defaultMessage="Make visible"
+                                                                            />
+                                                                        </RowActionsItem>
+                                                                        <RowActionsItem
+                                                                            icon={<Invisible />}
+                                                                            disabled={selectedCount === 0}
+                                                                            onClick={() => handleToggleVisibilityOfAllSelectedBlocks()}
+                                                                        >
+                                                                            <FormattedMessage
+                                                                                id="comet.blocks.list.action.invisible"
+                                                                                defaultMessage="Make invisible"
+                                                                            />
+                                                                        </RowActionsItem>
+                                                                    </>
+                                                                )}
                                                                 <Separator />
                                                                 <RowActionsItem
                                                                     icon={<Delete />}
@@ -629,6 +641,11 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                                             return null;
                                                         }
 
+                                                        const isMaxVisibleBlocksReached =
+                                                            !!maxVisibleBlocks && totalVisibleBlocks >= maxVisibleBlocks;
+                                                        const canToggleVisibility = isMaxVisibleBlocksReached ? data.visible : true;
+                                                        const showMaxBlocksAllowedMessage = isMaxVisibleBlocksReached && !data.visible;
+
                                                         return (
                                                             <HoverPreviewComponent key={data.key} componentSlug={`${data.key}/blocks`}>
                                                                 <BlockRow
@@ -652,9 +669,31 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                                                                         });
                                                                     }}
                                                                     visibilityButton={
-                                                                        <IconButton onClick={() => toggleVisible(data.key)} size="small">
-                                                                            {data.visible ? <Visible color="success" /> : <Invisible />}
-                                                                        </IconButton>
+                                                                        <Tooltip
+                                                                            title={
+                                                                                showMaxBlocksAllowedMessage ? (
+                                                                                    <FormattedMessage
+                                                                                        id="comet.blocks.block.maxVisibleBlocks"
+                                                                                        defaultMessage="Max. visible blocks allowed: {maxVisibleBlocks}"
+                                                                                        values={{ maxVisibleBlocks }}
+                                                                                    />
+                                                                                ) : null
+                                                                            }
+                                                                        >
+                                                                            <Box component="span">
+                                                                                <IconButton
+                                                                                    onClick={() => canToggleVisibility && toggleVisible(data.key)}
+                                                                                    size="small"
+                                                                                    disabled={!canToggleVisibility}
+                                                                                >
+                                                                                    {data.visible ? (
+                                                                                        <Visible color="success" />
+                                                                                    ) : (
+                                                                                        <Invisible color="action" />
+                                                                                    )}
+                                                                                </IconButton>
+                                                                            </Box>
+                                                                        </Tooltip>
                                                                     }
                                                                     onAddNewBlock={handleAddBlockClick}
                                                                     onCopyClick={() => {

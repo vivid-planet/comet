@@ -177,6 +177,16 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
+type FileUpload {
+  id: ID!
+  name: String!
+  size: Int!
+  mimetype: String!
+  contentHash: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type User {
   id: String!
   name: String!
@@ -533,6 +543,8 @@ type Product {
   statistics: ProductStatistics
   createdAt: DateTime!
   updatedAt: DateTime!
+  priceList: FileUpload
+  datasheets: [FileUpload!]!
   category: ProductCategory
   manufacturer: Manufacturer
   colors: [ProductColor!]!
@@ -959,6 +971,8 @@ input ProductFilter {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   manufacturer: ManyToOneFilter
+  priceList: ManyToOneFilter
+  datasheets: ManyToManyFilter
   and: [ProductFilter!]
   or: [ProductFilter!]
 }
@@ -1029,6 +1043,7 @@ enum ProductSortField {
   createdAt
   updatedAt
   manufacturer
+  priceList
 }
 
 input ProductCategoryFilter {
@@ -1392,6 +1407,8 @@ input ProductInput {
   tags: [ID!]! = []
   tagsWithStatus: [ProductNestedProductToTagInput!]! = []
   manufacturer: ID = null
+  priceList: ID = null
+  datasheets: [ID!]! = []
 }
 
 input ProductNestedProductStatisticsInput {
@@ -1429,6 +1446,8 @@ input ProductUpdateInput {
   tags: [ID!]
   tagsWithStatus: [ProductNestedProductToTagInput!]
   manufacturer: ID
+  priceList: ID
+  datasheets: [ID!]
 }
 
 input ProductCategoryInput {
