@@ -82,6 +82,7 @@ export { AsyncAutocompleteField, AsyncAutocompleteFieldProps } from "./form/fiel
 export { AsyncSelectField, AsyncSelectFieldProps } from "./form/fields/AsyncSelectField";
 export { AutocompleteField, AutocompleteFieldProps } from "./form/fields/AutocompleteField";
 export { CheckboxField, CheckboxFieldProps } from "./form/fields/CheckboxField";
+export { CheckboxListField, CheckboxListFieldProps } from "./form/fields/CheckboxListField";
 export { NumberField, NumberFieldProps } from "./form/fields/NumberField";
 export { RadioGroupField, RadioGroupFieldProps } from "./form/fields/RadioGroupField";
 export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
