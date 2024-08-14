@@ -9,10 +9,10 @@ import { GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables } from "./pre
 async function getPredefinedPageRedirect(scope: { domain: string }, pathname: string): Promise<string | undefined> {
     const pages = await fetchPredefinedPages(scope);
 
-    const matchingPredefinedPage = pages.find((page) => pathname.startsWith(page.defaultPath));
+    const matchingPredefinedPage = pages.find((page) => pathname.startsWith(page.codePath));
 
     if (matchingPredefinedPage) {
-        return pathname.replace(matchingPredefinedPage.defaultPath, matchingPredefinedPage.customPath);
+        return pathname.replace(matchingPredefinedPage.codePath, matchingPredefinedPage.pageTreeNodePath);
     }
 
     return undefined;
@@ -21,10 +21,10 @@ async function getPredefinedPageRedirect(scope: { domain: string }, pathname: st
 async function getPredefinedPageRewrite(scope: { domain: string }, pathname: string): Promise<string | undefined> {
     const pages = await fetchPredefinedPages(scope);
 
-    const matchingPredefinedPage = pages.find((page) => pathname.startsWith(page.customPath));
+    const matchingPredefinedPage = pages.find((page) => pathname.startsWith(page.pageTreeNodePath));
 
     if (matchingPredefinedPage) {
-        return pathname.replace(matchingPredefinedPage.customPath, matchingPredefinedPage.defaultPath);
+        return pathname.replace(matchingPredefinedPage.pageTreeNodePath, matchingPredefinedPage.codePath);
     }
 
     return undefined;
@@ -53,7 +53,7 @@ async function fetchPredefinedPages(scope: { domain: string }) {
     const key = `predefinedPages-${JSON.stringify(scope)}`;
 
     return memoryCache.wrap(key, async () => {
-        const pages: Array<{ defaultPath: string; customPath: string }> = [];
+        const pages: Array<{ codePath: string; pageTreeNodePath: string }> = [];
 
         for (const language of languages) {
             const { paginatedPageTreeNodes } = await graphQLFetch<GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables>(predefinedPagesQuery, {
@@ -63,8 +63,8 @@ async function fetchPredefinedPages(scope: { domain: string }) {
             for (const node of paginatedPageTreeNodes.nodes) {
                 if (node.document?.__typename === "PredefinedPage" && node.document.type) {
                     pages.push({
-                        defaultPath: `/${language}${predefinedPagePaths[node.document.type]}`,
-                        customPath: `/${language}${node.path}`,
+                        codePath: `/${language}${predefinedPagePaths[node.document.type]}`,
+                        pageTreeNodePath: `/${language}${node.path}`,
                     });
                 }
             }
