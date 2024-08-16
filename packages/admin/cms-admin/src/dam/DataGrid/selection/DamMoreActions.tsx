@@ -113,10 +113,12 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                     },
                 ]} // filter out null values
                 selectionSize={selectionSize}
-                /*menuProps={{
-                    transformOrigin,
-                    anchorOrigin,
-                }}*/
+                slotProps={{
+                    menu: {
+                        transformOrigin,
+                        anchorOrigin,
+                    },
+                }}
             />
 
             {/* the directory property is needed for the folder upload to work but not known to eslint */}

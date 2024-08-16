@@ -18,6 +18,8 @@ import * as React from "react";
 import { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+
 function CrudMoreActionsDivider(props: DividerProps) {
     return <Divider sx={{ margin: "8px 10px", borderColor: (theme) => theme.palette.grey[50] }} {...props} />;
 }
@@ -45,7 +47,10 @@ export interface ActionItem extends React.ComponentProps<typeof MenuItem> {
     divider?: boolean;
 }
 
-export interface CrudMoreActionsMenuProps {
+export interface CrudMoreActionsMenuProps
+    extends ThemedComponentBaseProps<{
+        menu: typeof Menu;
+    }> {
     selectionSize?: number;
     overallActions?: Maybe<ActionItem>[];
     selectiveActions?: Maybe<ActionItem>[];
@@ -63,7 +68,7 @@ function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
     );
 }
 
-export function CrudMoreActionsMenu({ overallActions, selectiveActions, selectionSize }: CrudMoreActionsMenuProps) {
+export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveActions, selectionSize }: CrudMoreActionsMenuProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
@@ -81,7 +86,11 @@ export function CrudMoreActionsMenu({ overallActions, selectiveActions, selectio
                 PaperProps={{ sx: { minWidth: 220, borderRadius: "4px" } }}
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
-                onClose={handleClose}
+                {...slotProps?.menu}
+                onClose={(event, reason) => {
+                    handleClose();
+                    slotProps?.menu?.onClose?.(event, reason);
+                }}
             >
                 {!!overallActions?.length && (
                     <CrudMoreActionsGroup
