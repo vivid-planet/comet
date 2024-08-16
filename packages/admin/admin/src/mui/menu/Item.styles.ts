@@ -1,4 +1,4 @@
-import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses } from "@mui/material";
+import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses, svgIconClasses } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { MenuItemLevel } from "./Item";
@@ -90,7 +90,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                 background-color: ${!ownerState.open ? `${theme.palette.primary.main} !important` : ""};
                 color: ${!ownerState.open ? `${theme.palette.common.white} !important` : ""};
 
-                .${listItemIconClasses.root} {
+                .${listItemIconClasses.root}, .${svgIconClasses.root} {
                     color: ${!ownerState.open ? `${theme.palette.common.white} !important` : ""};
                 }
             }

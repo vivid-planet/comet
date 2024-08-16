@@ -12,7 +12,7 @@ import {
     MenuItemRouterLink,
     useWindowSize,
 } from "@comet/admin";
-import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
+import { CometColor, Dashboard, Settings, Sort } from "@comet/admin-icons";
 import { Badge, Card, CardContent, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -55,7 +55,6 @@ const AppMenu: React.FC = () => {
                     target="_blank"
                     href="https://github.com/vivid-planet/comet"
                     icon={<CometColor />}
-                    secondaryAction={<LinkExternal />}
                 />
             </MenuItemGroup>
         </Menu>
