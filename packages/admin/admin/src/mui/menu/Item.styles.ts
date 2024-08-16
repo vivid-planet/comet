@@ -67,7 +67,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             color: inherit;
         }
 
-        .${listItemTextClasses.primary} {
+        .${listItemTextClasses.primary}, .${listItemTextClasses.secondary} {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -121,6 +121,10 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                 line-height: 20px;
                 margin-left: 10px;
                 font-weight: 450;
+            }
+
+            .${listItemTextClasses.secondary} {
+                margin-left: 10px;
             }
         `}
 
