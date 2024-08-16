@@ -70,59 +70,53 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
     return (
         <>
             <CrudMoreActionsMenu
-                overallItems={[
+                overallActions={[
                     {
-                        type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.uploadFolder" defaultMessage="Upload folder" />,
                         onClick: () => folderInputRef.current?.click(),
                         icon: <Upload />,
                     },
                     {
-                        type: "action",
                         label: <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />,
                         onClick: () => editDialogApi.openAddDialog(folderId),
                         icon: <AddFolderIcon />,
                     },
                 ]}
-                selectiveItems={[
+                selectiveActions={[
                     !onlyFoldersSelected
                         ? {
-                              type: "action",
                               label: <FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />,
                               onClick: handleDownloadClick,
                               icon: <Download />,
                           }
                         : null,
                     {
-                        type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />,
                         onClick: moveSelected,
                         icon: <Move />,
+                        divider: true,
                     },
                     {
-                        type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />,
                         onClick: archiveSelected,
                         icon: <Archive />,
                     },
                     {
-                        type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />,
                         onClick: restoreSelected,
                         icon: <Restore />,
                     },
                     {
-                        type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />,
                         onClick: deleteSelected,
                         icon: <Delete />,
                     },
                 ]} // filter out null values
                 selectionSize={selectionSize}
-                menuProps={{
+                /*menuProps={{
                     transformOrigin,
                     anchorOrigin,
-                }}
+                }}*/
             />
 
             {/* the directory property is needed for the folder upload to work but not known to eslint */}

@@ -40,21 +40,15 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
 }
 
 export interface ActionItem extends React.ComponentProps<typeof MenuItem> {
-    type: "action";
     label: React.ReactNode;
     icon?: React.ReactNode;
+    divider?: boolean;
 }
-
-export interface DividerItem extends React.ComponentProps<typeof Divider> {
-    type: "divider";
-}
-
-type CrudMoreActionsItem = ActionItem | DividerItem;
 
 export interface CrudMoreActionsMenuProps {
     selectionSize?: number;
-    overallItems?: Maybe<CrudMoreActionsItem>[];
-    selectiveItems?: Maybe<CrudMoreActionsItem>[];
+    overallActions?: Maybe<ActionItem>[];
+    selectiveActions?: Maybe<ActionItem>[];
 }
 
 function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
@@ -69,7 +63,7 @@ function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
     );
 }
 
-export function CrudMoreActionsMenu({ overallItems, selectiveItems, selectionSize }: CrudMoreActionsMenuProps) {
+export function CrudMoreActionsMenu({ overallActions, selectiveActions, selectionSize }: CrudMoreActionsMenuProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
@@ -89,17 +83,17 @@ export function CrudMoreActionsMenu({ overallItems, selectiveItems, selectionSiz
                 anchorEl={anchorEl}
                 onClose={handleClose}
             >
-                {!!overallItems?.length && (
+                {!!overallActions?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />}
                     >
-                        {overallItems.map((item, index) => {
+                        {overallActions.map((item, index) => {
                             if (!item) return null;
-                            const { type } = item;
-                            if (type === "action") {
-                                const { label, icon, onClick, ...rest } = item;
 
-                                return (
+                            const { divider, label, icon, onClick, ...rest } = item;
+
+                            return (
+                                <>
                                     <MenuItem
                                         key={index}
                                         disabled={!!selectionSize}
@@ -112,28 +106,26 @@ export function CrudMoreActionsMenu({ overallItems, selectiveItems, selectionSiz
                                         {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                     </MenuItem>
-                                );
-                            } else if (type === "divider") {
-                                return <CrudMoreActionsDivider {...item} key={index} />;
-                            }
+                                    {!!divider && <CrudMoreActionsDivider />}
+                                </>
+                            );
                         })}
                     </CrudMoreActionsGroup>
                 )}
 
-                {!!overallItems?.length && !!selectiveItems?.length && <CrudMoreActionsDivider />}
+                {!!overallActions?.length && !!selectiveActions?.length && <CrudMoreActionsDivider />}
 
-                {!!selectiveItems?.length && (
+                {!!selectiveActions?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />}
                     >
-                        {selectiveItems.map((item, index) => {
+                        {selectiveActions.map((item, index) => {
                             if (!item) return;
 
-                            const { type } = item;
-                            if (type === "action") {
-                                const { label, icon, onClick, ...rest } = item;
+                            const { divider, label, icon, onClick, ...rest } = item;
 
-                                return (
+                            return (
+                                <>
                                     <MenuItem
                                         key={index}
                                         disabled={!selectionSize}
@@ -147,10 +139,9 @@ export function CrudMoreActionsMenu({ overallItems, selectiveItems, selectionSiz
                                         <ListItemText primary={label} />
                                         {!!selectionSize && <SelectedItemsChip label={selectionSize} />}
                                     </MenuItem>
-                                );
-                            } else if (item.type === "divider") {
-                                return <CrudMoreActionsDivider {...item} key={index} />;
-                            }
+                                    {!!divider && <CrudMoreActionsDivider />}
+                                </>
+                            );
                         })}
                     </CrudMoreActionsGroup>
                 )}
