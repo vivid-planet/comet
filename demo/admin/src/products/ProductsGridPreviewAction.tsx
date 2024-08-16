@@ -2,7 +2,7 @@ import { Tooltip } from "@comet/admin";
 import { View } from "@comet/admin-icons";
 import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import { GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
-import React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const ProductsGridPreviewAction = ({ product }: Props) => {
-    const [showDetails, setShowDetails] = React.useState(false);
+    const [showDetails, setShowDetails] = useState(false);
     return (
         <>
             <Tooltip title="View Details">

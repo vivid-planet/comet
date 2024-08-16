@@ -1,7 +1,6 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import { BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
 import { NewsDetailBlockData, NewsDetailBlockInput } from "@src/blocks.generated";
-import * as React from "react";
 
 type State = NewsDetailBlockData;
 
