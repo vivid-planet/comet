@@ -209,9 +209,8 @@ export function generateFormField({
             }
         });
 
-        if (config.inputType === "radio") {
-            code = `
-            <RadioGroupField
+        if ((required && values.length <= 5) || config.inputType === "radio") {
+            code = `<RadioGroupField
              ${required ? "required" : ""}
               variant="horizontal"
              fullWidth
@@ -228,9 +227,8 @@ export function generateFormField({
                             }`;
                       })
                       .join(",")}
-            ]}/>
-            `;
-        } else {
+            ]}/>`;
+        } else if (!required || values.length > 5 || config.inputType === "select") {
             code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
