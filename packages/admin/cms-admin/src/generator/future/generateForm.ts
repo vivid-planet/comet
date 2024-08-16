@@ -218,7 +218,7 @@ export function generateForm(
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";
-    import React from "react";
+    import { useMemo } from "react";
     import { FormattedMessage } from "react-intl";
     ${generateImportsCode(imports)}
     ${
@@ -249,7 +249,7 @@ export function generateForm(
 
     ${formPropsTypeCode}
 
-    export function ${exportName}(${formPropsParamsCode}): React.ReactElement {
+    export function ${exportName}(${formPropsParamsCode}) {
         const client = useApolloClient();
         ${mode == "all" ? `const mode = id ? "edit" : "add";` : ""}
         const formApiRef = useFormApiRef<FormValues>();
@@ -268,7 +268,7 @@ export function generateForm(
 
         ${
             editMode
-                ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
+                ? `const initialValues = useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
             ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${formValuesConfig
