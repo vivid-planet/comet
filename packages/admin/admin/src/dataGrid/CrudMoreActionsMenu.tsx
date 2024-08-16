@@ -44,7 +44,7 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
 export interface ActionItem extends React.ComponentProps<typeof MenuItem> {
     type: "action";
     label: React.ReactNode;
-    startAdornment?: React.ReactNode;
+    icon?: React.ReactNode;
 }
 
 export interface DividerItem extends React.ComponentProps<typeof Divider> {
@@ -127,7 +127,7 @@ export function CrudMoreActionsMenu({
                             if (!item) return null;
                             const { type } = item;
                             if (type === "action") {
-                                const { label, startAdornment, onClick, ...rest } = item;
+                                const { label, icon, onClick, ...rest } = item;
 
                                 return (
                                     <MenuItem
@@ -139,7 +139,7 @@ export function CrudMoreActionsMenu({
                                             handleClose();
                                         }}
                                     >
-                                        {!!startAdornment && <ListItemIcon>{startAdornment}</ListItemIcon>}
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                     </MenuItem>
                                 );
@@ -163,7 +163,7 @@ export function CrudMoreActionsMenu({
 
                             const { type } = item;
                             if (type === "action") {
-                                const { label, startAdornment, onClick, ...rest } = item;
+                                const { label, icon, onClick, ...rest } = item;
 
                                 return (
                                     <MenuItem
@@ -175,7 +175,7 @@ export function CrudMoreActionsMenu({
                                             handleClose();
                                         }}
                                     >
-                                        {!!startAdornment && <ListItemIcon>{startAdornment}</ListItemIcon>}
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                         {!!selectionSize && <SelectedItemsChip {...chipProps} label={selectionSize} />}
                                     </MenuItem>

@@ -75,13 +75,13 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                         type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.uploadFolder" defaultMessage="Upload folder" />,
                         onClick: () => folderInputRef.current?.click(),
-                        startAdornment: <Upload />,
+                        icon: <Upload />,
                     },
                     {
                         type: "action",
                         label: <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />,
                         onClick: () => editDialogApi.openAddDialog(folderId),
-                        startAdornment: <AddFolderIcon />,
+                        icon: <AddFolderIcon />,
                     },
                 ]}
                 selectiveItems={[
@@ -90,32 +90,32 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                               type: "action",
                               label: <FormattedMessage id="comet.dam.moreActions.downloadSelected" defaultMessage="Download" />,
                               onClick: handleDownloadClick,
-                              startAdornment: <Download />,
+                              icon: <Download />,
                           }
                         : null,
                     {
                         type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.moveItems" defaultMessage="Move" />,
                         onClick: moveSelected,
-                        startAdornment: <Move />,
+                        icon: <Move />,
                     },
                     {
                         type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.archiveItems" defaultMessage="Archive" />,
                         onClick: archiveSelected,
-                        startAdornment: <Archive />,
+                        icon: <Archive />,
                     },
                     {
                         type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.restoreItems" defaultMessage="Restore" />,
                         onClick: restoreSelected,
-                        startAdornment: <Restore />,
+                        icon: <Restore />,
                     },
                     {
                         type: "action",
                         label: <FormattedMessage id="comet.dam.moreActions.deleteItems" defaultMessage="Delete" />,
                         onClick: deleteSelected,
-                        startAdornment: <Delete />,
+                        icon: <Delete />,
                     },
                 ]} // filter out null values
                 selectionSize={selectionSize}
