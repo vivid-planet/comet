@@ -1,8 +1,8 @@
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { SupportedBlocks } from "./types";
 
-interface Props {
+interface Props extends PropsWithChildren {
     data: {
         block?: {
             type: string;
@@ -11,11 +11,10 @@ interface Props {
         };
     };
     supportedBlocks: SupportedBlocks;
-    children?: React.ReactNode;
     className?: string;
 }
 
-export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps }, supportedBlocks, children, className }) => {
+export const OneOfBlock = ({ data: { block, ...additionalProps }, supportedBlocks, children, className }: Props) => {
     if (!block) {
         return null;
     }
