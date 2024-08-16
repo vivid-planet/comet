@@ -6,10 +6,10 @@ import {
     BlocksFinalForm,
     BlockState,
     createBlockSkeleton,
+    resolveNewState,
     SelectPreviewComponent,
     useAdminComponentPaper,
 } from "@comet/blocks-admin";
-import { resolveNewState } from "@comet/blocks-admin/lib/blocks/utils";
 import { Box } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
