@@ -52,8 +52,8 @@ const TopBar = createComponentSlot("div")<ToolbarClassKey>({
         display: flex;
         align-items: center;
         gap: ${theme.spacing(2)};
-        padding-left: ${theme.spacing(2)};
-        padding-right: ${theme.spacing(2)};
+        padding-left: ${theme.spacing(4)};
+        padding-right: ${theme.spacing(4)};
     `,
 );
 
