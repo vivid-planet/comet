@@ -74,8 +74,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
             <StackSwitch initialPage="table">
                 <StackPage name="table">
                     <EditDialogApiContext.Provider value={editDialogApi}>
-                        {props.contentScopeIndicator}
-                        <Toolbar>
+                        <Toolbar scopeIndicator={props.contentScopeIndicator}>
                             <ToolbarItem>
                                 <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                             </ToolbarItem>
@@ -103,7 +102,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
                     {(selectedId: string) => {
-                        return <EditFile id={selectedId} />;
+                        return <EditFile id={selectedId} contentScopeIndicator={props.contentScopeIndicator} />;
                     }}
                 </StackPage>
                 <StackPage name="folder" title={data?.damFolder.name}>

@@ -1,32 +1,47 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { Link, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
-import { WithStyles } from "@mui/styles";
-import clsx from "clsx";
+import { css } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbLink } from "./BreadcrumbLink";
-import { styles } from "./StackBreadcrumbs.styles";
+import { StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcrumbs";
 
 interface BreadcrumbsOverflowProps {
     items: BreadcrumbItem[];
     linkText: React.ReactNode;
+    slotProps: StackBreadcrumbsProps["slotProps"];
 }
 
-export const BreadcrumbsOverflow = ({ items, linkText, classes }: BreadcrumbsOverflowProps & WithStyles<typeof styles>): React.ReactElement => {
+const OverflowLink = createComponentSlot(Link)<StackBreadcrumbsClassKey>({
+    componentName: "StackBreadcrumbs",
+    slotName: "overflowLink",
+    classesResolver() {
+        return ["link"];
+    },
+})(
+    ({ theme }) => css`
+        font-size: 13px;
+        line-height: 14px;
+        font-weight: ${theme.typography.fontWeightMedium};
+        color: ${theme.palette.grey[600]};
+        text-decoration-color: currentColor;
+        cursor: pointer;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    `,
+);
+
+export const BreadcrumbsOverflow = ({ items, linkText, slotProps }: BreadcrumbsOverflowProps): React.ReactElement => {
     const [showOverflowMenu, setShowOverflowMenu] = React.useState<boolean>(false);
     const overflowLinkRef = React.useRef<HTMLAnchorElement>(null);
 
     return (
         <>
-            <Link
-                ref={overflowLinkRef}
-                className={clsx(classes.link, classes.overflowLink)}
-                onClick={() => setShowOverflowMenu(true)}
-                variant="body2"
-            >
+            <OverflowLink ref={overflowLinkRef} {...slotProps?.overflowLink} onClick={() => setShowOverflowMenu(true)} variant="body2">
                 {linkText}
-            </Link>
+            </OverflowLink>
             <Menu open={showOverflowMenu} onClose={() => setShowOverflowMenu(false)} anchorEl={overflowLinkRef.current}>
                 {items.map(({ id, url, title }) => (
                     <MenuItem key={id} component={BreadcrumbLink} to={url} onClick={() => setShowOverflowMenu(false)}>

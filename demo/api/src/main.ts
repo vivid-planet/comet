@@ -4,10 +4,11 @@ if (process.env.TRACING_ENABLED) {
     require("./tracing");
 }
 
-import { ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
+import { CdnGuard, ExceptionInterceptor, ValidationExceptionFactory } from "@comet/cms-api";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
+import * as Sentry from "@sentry/node";
 import { AppModule } from "@src/app.module";
 import { useContainer } from "class-validator";
 import compression from "compression";
@@ -20,6 +21,10 @@ async function bootstrap(): Promise<void> {
     const config = createConfig(process.env);
     const appModule = AppModule.forRoot(config);
     const app = await NestFactory.create<NestExpressApplication>(appModule);
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+    app.use(Sentry.Handlers.errorHandler());
 
     // class-validator should use Nest for dependency injection.
     // See https://github.com/nestjs/nest/issues/528,
@@ -56,6 +61,11 @@ async function bootstrap(): Promise<void> {
     app.use(json({ limit: "1mb" })); // increase default limit of 100kb for saving large pages
     app.use(compression());
     app.use(cookieParser());
+
+    // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
+    if (config.cdn.originCheckSecret) {
+        app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));
+    }
 
     const port = config.apiPort;
     await app.listen(port);

@@ -3,10 +3,10 @@ import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
 import { ContentScopeService } from "../content-scope.service";
-import { RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
+import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../user-permissions.constants";
-import { AccessControlServiceInterface, SystemUser } from "../user-permissions.types";
+import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
+import { AccessControlServiceInterface, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
 
 @Injectable()
 export class UserPermissionsGuard implements CanActivate {
@@ -14,24 +14,25 @@ export class UserPermissionsGuard implements CanActivate {
         protected reflector: Reflector,
         private readonly contentScopeService: ContentScopeService,
         @Inject(ACCESS_CONTROL_SERVICE) private readonly accessControlService: AccessControlServiceInterface,
+        @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        if (this.getDecorator(context, "disableGlobalGuard")) return true;
-        if (this.getDecorator(context, "publicApi")) return true;
+        if (this.getDecorator(context, "disableCometGuards")) return true;
 
         const user = this.getUser(context);
         if (!user) return false;
 
         // System user authenticated via basic auth
-        if (user === true) return true;
+        if (typeof user === "string" && this.options.systemUsers?.includes(user)) return true;
 
         const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
         if (!requiredPermission && this.isResolvingGraphQLField(context)) return true;
         if (!requiredPermission) throw new Error(`RequiredPermission decorator is missing in ${location}`);
         const requiredPermissions = requiredPermission.requiredPermission;
+        if (requiredPermissions.includes(DisablePermissionCheck)) return true;
         if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
         if (this.isResolvingGraphQLField(context) || requiredPermission.options?.skipScopeCheck) {
             // At least one permission is required

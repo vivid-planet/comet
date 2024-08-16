@@ -366,11 +366,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field
-                                                name="blockType"
-                                                fullWidth
-                                                label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}
-                                            >
+                                            <Field name="blockType" fullWidth>
                                                 {(props) => (
                                                     <FinalFormSelect {...props} fullWidth>
                                                         {options.map((option) => (
@@ -388,7 +384,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "radio" && (
                                     <>
                                         <Box display="flex" flexDirection="column" padding={3}>
-                                            <FieldContainer label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}>
+                                            <FieldContainer>
                                                 {options.map((option) => (
                                                     <Field key={option.value} name="blockType" type="radio" value={option.value} fullWidth>
                                                         {(props) => <FormControlLabel label={option.label} control={<FinalFormRadio {...props} />} />}
@@ -402,11 +398,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "toggle" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field
-                                                name="blockType"
-                                                fullWidth
-                                                label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}
-                                            >
+                                            <Field name="blockType" fullWidth>
                                                 {({ input: { value, onChange } }) => (
                                                     <ToggleButtonGroup
                                                         value={value}

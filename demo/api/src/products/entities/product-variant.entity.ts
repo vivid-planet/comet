@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, DamImageBlock, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property, Ref } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -9,6 +9,7 @@ import { Product } from "./product.entity";
 @ObjectType()
 @Entity()
 @RootBlockEntity()
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products" })
 export class ProductVariant extends BaseEntity<ProductVariant, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
@@ -21,7 +22,6 @@ export class ProductVariant extends BaseEntity<ProductVariant, "id"> {
     name: string;
 
     @Property({ customType: new RootBlockType(DamImageBlock) })
-    @Field(() => RootBlockDataScalar(DamImageBlock))
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
 
@@ -31,7 +31,8 @@ export class ProductVariant extends BaseEntity<ProductVariant, "id"> {
         // search: true, // not yet supported for nested
         // filter: true, // not yet supported for nested
         // sort: true, // not yet supported for nested
-        // input: true, // not supported for nested, doesn't make sense
+        // input: false, // ignored because product is a root argument for create
+        dedicatedResolverArg: true, //default is false
     })
     product: Ref<Product>;
 

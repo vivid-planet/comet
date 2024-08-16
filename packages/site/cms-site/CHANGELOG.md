@@ -1,5 +1,471 @@
 # @comet/cms-site
 
+## 7.0.0
+
+### Major Changes
+
+-   4f32ad014: Bump styled-components peer dependency to v6
+
+    Follow the official [migration guide](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6) to upgrade.
+
+-   9351b1452: Upgrade to Next 14 and React 18
+
+    Add "use client" directive to components that currently require it (as they use styled-components or a context)
+
+-   15eb9e173: Revise `PixelImageBlock` to correctly use the "new" `next/image` component
+
+    See the [docs](https://nextjs.org/docs/pages/api-reference/components/image-legacy#comparison) for a comparison between the new and the legacy component.
+
+    **Migrate**
+
+    Remove the `layout` prop from the block as it can lead to errors with the default implementation (`layout="responsive"` is not compatible with the new `fill` prop).
+
+    -   `layout={"responsive" | "inherit"}` can safely be removed
+
+        ```diff
+        <PixelImageBlock
+            data={block.props}
+            aspectRatio={aspectRatio}
+        -   layout={"responsive"}   // line is marked as deprecated, but "responsive" must be removed
+            {...imageProps}
+        />
+        ```
+
+    -   `layout={"fill"}` can be replaced with `fill={true}`
+
+        ```diff
+        <PixelImageBlock
+            data={block.props}
+            aspectRatio={aspectRatio}
+        -   layout={"fill"}
+        +   fill
+            {...imageProps}
+        />
+        ```
+
+    Notes:
+
+    The `PixelImageBlock` is usually wrapped in a `DamImageBlock` in the application. The `layout` prop should be removed from it as well.
+
+    You can use the newly added `fill` prop of the `next/image` component by embedding the `PixelImageBlock` in a parent element that assigns the `position` style. See the [docs](https://nextjs.org/docs/pages/api-reference/components/image#fill) for more information.
+
+-   86358bf87: Fix an issue where the block preview could break a block's styling and HTML structure
+
+    This was caused by a `div` added around every block to enable the selection and highlighting of the block in the block preview.
+    The `div` is still present but now uses `display: contents`, so its effect should be minimal.
+
+    Common issues that should now be resolved include:
+
+    -   The image inside, e.g., a `PixelImageBlock`, would not be visible because the image's size depends on the parent `div`'s size.
+    -   Blocks used as children of elements with `display: flex` or `display: grid` could not position themselves correctly.
+
+-   6986cdc82: Require `aspectRatio` prop for `PixelImageBlock` and `Image`
+
+    The `16x9` default aspect ratio has repeatedly led to incorrectly displayed images on the site.
+    Therefore, it has been removed.
+    Instead, consider which aspect ratio to use for each image.
+
+    **Example**
+
+    ```diff
+    <PixelImageBlock
+      data={teaser}
+      layout="fill"
+    + aspectRatio="16x9"
+    />
+    ```
+
+-   ae0142029: Support single host for block preview
+
+    The content scope is passed through the iframe-bridge in the admin and accessible in the site in the IFrameBridgeProvider.
+    Breaking: `previewUrl`-property of `SiteConfig` has changed to `blockPreviewBaseUrl`
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+-   7f1e78448: Remove `next/link` legacy behavior as default behavior
+
+    Previously, Next required the `Link` component to have a child `<a>` tag. To style this tag correctly in the application, none of the library link blocks (`DamFileDownloadLinkBlock`, `ExternalLinkBlock`, `EmailLinkBlock`, `InternalLinkBlock`, and `PhoneLinkBlock`) rendered the tag, but cloned the children with the correct props instead.
+
+    However, since Next v13 the `Link` component no longer requires a child `<a>` tag. Consequently, we don't need to render the tag for the `InternalLinkBlock` (which uses `Link` internally) anymore. In order to style all link blocks correctly, we now render an `<a>` tag for all other link blocks.
+
+    **Upgrade**
+
+    To upgrade, either remove all `<a>` tags from your link block usages, or add the `legacyBehavior` prop to all library link blocks.
+
+-   ba4e509ef: Remove server-only code from client bundle
+
+    Make sure to upgrade to Next 14.2.0 or later.
+    Enable `optimizePackageImports` for `@comet/cms-site` in `next.config.js`:
+
+    ```diff
+    const nextConfig = {
+        /* ... */
+    +   experimental: {
+    +       optimizePackageImports: ["@comet/cms-site"],
+    +   },
+    };
+
+    module.exports = withBundleAnalyzer(nextConfig);
+    ```
+
+### Minor Changes
+
+-   36cdd70f1: Deprecate `InternalLinkBlock` component, instead there should be a copy of this component in the application for flexibility (e.g., support for internationalized routing)
+-   6d56606a8: Store site preview scope in cookie and add `previewParams()` helper to access it
+
+    -   Requires the new `SITE_PREVIEW_SECRET` environment variable that must contain a random secret (not required for local development)
+    -   Requires a Route Handler located at `app/api/site-preview/route.ts`:
+    -   The previewParams() return a promise
+
+        ```ts
+        import { sitePreviewRoute } from "@comet/cms-site";
+        import { createGraphQLFetch } from "@src/util/graphQLClient";
+        import { type NextRequest } from "next/server";
+
+        export const dynamic = "force-dynamic";
+
+        export async function GET(request: NextRequest) {
+            return sitePreviewRoute(request, createGraphQLFetch());
+        }
+        ```
+
+-   4f46b3e3e: Add optional `fill` prop to `YouTubeVideoBlock` and `DamVideoBlock` to support same behavior as in `PixelImageBlock`
+-   a80ab10f3: Add GraphQL fetch client
+
+    -   `createGraphQLFetch`: simple graphql client around fetch, usage: createGraphQLFetch(fetch, url)(gql, variables)
+    -   `type GraphQLFetch = <T, V>(query: string, variables?: V, init?: RequestInit) => Promise<T>`
+    -   `gql` for tagging queries
+    -   `createFetchWithDefaults` fetch decorator that adds default values (eg. headers or next.revalidate)
+    -   `createFetchWithPreviewHeaders` fetch decorator that adds comet preview headers (based on SitePreviewData)
+
+    Example helper in application:
+
+    ```
+    export const graphQLApiUrl = `${typeof window === "undefined" ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`;
+    export function createGraphQLFetch(previewData?: SitePreviewData) {
+        return createGraphQLFetchLibrary(
+            createFetchWithDefaults(createFetchWithPreviewHeaders(fetch, previewData), { next: { revalidate: 15 * 60 } }),
+            graphQLApiUrl,
+        );
+
+    }
+    ```
+
+    Usage example:
+
+    ```
+    const graphqlFetch = createGraphQLFetch(previewData);
+    const data = await graphqlFetch<GQLExampleQuery, GQLExampleQueryVariables>(
+        exampleQuery,
+        {
+            exampleVariable: "foo"
+        }
+    );
+    ```
+
+-   cf9496fdb: Add `legacyPagesRouterSitePreviewApiHandler` helper
+
+    Used to enable the site preview (Preview Mode) for projects which use the Pages Router. This helper is added to ease migrating. New projects should use the App Router instead.
+
+-   fc27014bc: Add new technique for blocks to load additional data at page level when using SSR
+
+    This works both server-side (SSR, SSG) and client-side (block preview).
+
+    New Apis:
+
+    -   `recursivelyLoadBlockData`: used to call loaders for a block data tree
+    -   `BlockLoader`: type of a loader function that is responsible for one block
+    -   `useBlockPreviewFetch`: helper hook for block preview that creates client-side caching graphQLFetch/fetch
+    -   `BlockLoaderDependencies`: interface with dependencies that get passed through recursivelyLoadBlockData into loader functions. Can be extended using module augmentation in application to inject eg. pageTreeNodeId.
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
+-   769bd72f0: Use the Next.js Preview Mode for the site preview
+
+    The preview is entered by navigating to an API Route in the site, which has to be executed in a secured environment.
+    In the API Route the current scope is checked (and possibly stored), then the client is redirected to the preview.
+
+## 7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+### Major Changes
+
+-   7f1e78448: Remove `next/link` legacy behavior as default behavior
+
+    Previously, Next required the `Link` component to have a child `<a>` tag. To style this tag correctly in the application, none of the library link blocks (`DamFileDownloadLinkBlock`, `ExternalLinkBlock`, `EmailLinkBlock`, `InternalLinkBlock`, and `PhoneLinkBlock`) rendered the tag, but cloned the children with the correct props instead.
+
+    However, since Next v13 the `Link` component no longer requires a child `<a>` tag. Consequently, we don't need to render the tag for the `InternalLinkBlock` (which uses `Link` internally) anymore. In order to style all link blocks correctly, we now render an `<a>` tag for all other link blocks.
+
+    **Upgrade**
+
+    To upgrade, either remove all `<a>` tags from your link block usages, or add the `legacyBehavior` prop to all library link blocks.
+
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   15eb9e173: Revise `PixelImageBlock` to correctly use the "new" `next/image` component
+
+    See the [docs](https://nextjs.org/docs/pages/api-reference/components/image-legacy#comparison) for a comparison between the new and the legacy component.
+
+    **Migrate**
+
+    Remove the `layout` prop from the block as it can lead to errors with the default implementation (`layout="responsive"` is not compatible with the new `fill` prop).
+
+    -   `layout={"responsive" | "inherit"}` can safely be removed
+
+        ```diff
+        <PixelImageBlock
+            data={block.props}
+            aspectRatio={aspectRatio}
+        -   layout={"responsive"}   // line is marked as deprecated, but "responsive" must be removed
+            {...imageProps}
+        />
+        ```
+
+    -   `layout={"fill"}` can be replaced with `fill={true}`
+
+        ```diff
+        <PixelImageBlock
+            data={block.props}
+            aspectRatio={aspectRatio}
+        -   layout={"fill"}
+        +   fill
+            {...imageProps}
+        />
+        ```
+
+    Notes:
+
+    The `PixelImageBlock` is usually wrapped in a `DamImageBlock` in the application. The `layout` prop should be removed from it as well.
+
+    You can use the newly added `fill` prop of the `next/image` component by embedding the `PixelImageBlock` in a parent element that assigns the `position` style. See the [docs](https://nextjs.org/docs/pages/api-reference/components/image#fill) for more information.
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+### Minor Changes
+
+-   cf9496fdb: Add `legacyPagesRouterSitePreviewApiHandler` helper
+
+    Used to enable the site preview (Preview Mode) for projects which use the Pages Router. This helper is added to ease migrating. New projects should use the App Router instead.
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
+## 7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   4f32ad014: Bump styled-components peer dependency to v6
+
+    Follow the official [migration guide](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6) to upgrade.
+
+-   9351b1452: Upgrade to Next 14 and React 18
+
+    Add "use client" directive to components that currently require it (as they use styled-components or a context)
+
+-   86358bf87: Fix an issue where the block preview could break a block's styling and HTML structure
+
+    This was caused by a `div` added around every block to enable the selection and highlighting of the block in the block preview.
+    The `div` is still present but now uses `display: contents`, so its effect should be minimal.
+
+    Common issues that should now be resolved include:
+
+    -   The image inside, e.g., a `PixelImageBlock`, would not be visible because the image's size depends on the parent `div`'s size.
+    -   Blocks used as children of elements with `display: flex` or `display: grid` could not position themselves correctly.
+
+-   6986cdc82: Require `aspectRatio` prop for `PixelImageBlock` and `Image`
+
+    The `16x9` default aspect ratio has repeatedly led to incorrectly displayed images on the site.
+    Therefore, it has been removed.
+    Instead, consider which aspect ratio to use for each image.
+
+    **Example**
+
+    ```diff
+    <PixelImageBlock
+      data={teaser}
+      layout="fill"
+    + aspectRatio="16x9"
+    />
+    ```
+
+-   ae0142029: Support single host for block preview
+
+    The content scope is passed through the iframe-bridge in the admin and accessible in the site in the IFrameBridgeProvider.
+    Breaking: `previewUrl`-property of `SiteConfig` has changed to `blockPreviewBaseUrl`
+
+### Minor Changes
+
+-   36cdd70f1: Deprecate `InternalLinkBlock` component, instead there should be a copy of this component in the application for flexibility (e.g., support for internationalized routing)
+-   6d56606a8: Store site preview scope in cookie and add `previewParams()` helper to access it
+
+    -   Requires the new `SITE_PREVIEW_SECRET` environment variable that must contain a random secret (not required for local development)
+    -   Requires a Route Handler located at `app/api/site-preview/route.ts`:
+    -   The previewParams() return a promise
+
+        ```ts
+        import { sitePreviewRoute } from "@comet/cms-site";
+        import { createGraphQLFetch } from "@src/util/graphQLClient";
+        import { type NextRequest } from "next/server";
+
+        export const dynamic = "force-dynamic";
+
+        export async function GET(request: NextRequest) {
+            return sitePreviewRoute(request, createGraphQLFetch());
+        }
+        ```
+
+-   a80ab10f3: Add GraphQL fetch client
+
+    -   `createGraphQLFetch`: simple graphql client around fetch, usage: createGraphQLFetch(fetch, url)(gql, variables)
+    -   `type GraphQLFetch = <T, V>(query: string, variables?: V, init?: RequestInit) => Promise<T>`
+    -   `gql` for tagging queries
+    -   `createFetchWithDefaults` fetch decorator that adds default values (eg. headers or next.revalidate)
+    -   `createFetchWithPreviewHeaders` fetch decorator that adds comet preview headers (based on SitePreviewData)
+
+    Example helper in application:
+
+    ```
+    export const graphQLApiUrl = `${typeof window === "undefined" ? process.env.API_URL_INTERNAL : process.env.NEXT_PUBLIC_API_URL}/graphql`;
+    export function createGraphQLFetch(previewData?: SitePreviewData) {
+        return createGraphQLFetchLibrary(
+            createFetchWithDefaults(createFetchWithPreviewHeaders(fetch, previewData), { next: { revalidate: 15 * 60 } }),
+            graphQLApiUrl,
+        );
+
+    }
+    ```
+
+    Usage example:
+
+    ```
+    const graphqlFetch = createGraphQLFetch(previewData);
+    const data = await graphqlFetch<GQLExampleQuery, GQLExampleQueryVariables>(
+        exampleQuery,
+        {
+            exampleVariable: "foo"
+        }
+    );
+    ```
+
+-   fc27014bc: Add new technique for blocks to load additional data at page level when using SSR
+
+    This works both server-side (SSR, SSG) and client-side (block preview).
+
+    New Apis:
+
+    -   `recursivelyLoadBlockData`: used to call loaders for a block data tree
+    -   `BlockLoader`: type of a loader function that is responsible for one block
+    -   `useBlockPreviewFetch`: helper hook for block preview that creates client-side caching graphQLFetch/fetch
+    -   `BlockLoaderDependencies`: interface with dependencies that get passed through recursivelyLoadBlockData into loader functions. Can be extended using module augmentation in application to inject eg. pageTreeNodeId.
+
+-   769bd72f0: Uses the Next.JS Preview mode for the site preview
+
+    The preview is entered by navigating to an API-Route in the site, which has to be executed in a secured environment.
+    In the API-Routes the current scope is checked (and possibly stored), then the client is redirected to the Preview.
+
+    // TODO Move the following introduction to the migration guide before releasing
+
+    Requires following changes to site:
+
+    -   Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
+    -   Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
+    -   Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
+    -   Remove `createGetUniversalProps`
+        -   Just implement `getStaticProps`/`getServerSideProps` (Preview Mode will SSR automatically)
+        -   Get `previewData` from `context` and use it to configure the GraphQL Client
+    -   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
+    -   Provide a protected environment for the site
+        -   Make sure that a Authorization-Header is present in this environment
+        -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
+        -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
+        -   Use the `path`-part of the return value to redirect to the preview
+
+    Requires following changes to admin
+
+    -   The `SitesConfig` must provide a `sitePreviewApiUrl`
+
+## 6.17.1
+
+## 6.17.0
+
+## 6.16.0
+
+## 6.15.1
+
+## 6.15.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   84a25adeb: Remove `<a>` tag from `DamFileDownloadLinkBlock`
+
+    The block incorrectly added the tag which prevents styling it in the application. The tag has been removed to achieve the same behavior as in the other link blocks, e.g. `ExternalLinkBlock`.
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+
+## 6.13.0
+
+### Minor Changes
+
+-   493cad7e1: Add `DamVideoBlock`
+
+## 6.12.0
+
+### Minor Changes
+
+-   3ee8c7a33: Add a `DamFileDownloadLinkBlock` that can be used to download a file or open it in a new tab
+
+    Also, add new `/dam/files/download/:hash/:fileId/:filename` endpoint for downloading assets.
+
+## 6.11.0
+
 ## 6.10.0
 
 ### Minor Changes

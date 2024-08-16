@@ -5,7 +5,6 @@ import * as React from "react";
 import { AnyObject, Form, FormRenderProps, FormSpy, RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
-import { useEditDialogFormApi } from "./EditDialogFormApiContext";
 import { renderComponent } from "./finalFormRenderComponent";
 import { FinalFormContext, FinalFormContextProvider } from "./form/FinalFormContextProvider";
 import { messages } from "./messages";
@@ -88,6 +87,7 @@ function RouterPromptIf({
                 return true;
             }}
             saveAction={doSave}
+            resetAction={() => formApi.reset()}
             subRoutePath={subRoutePath}
         >
             {children}
@@ -102,7 +102,6 @@ export class FinalFormSubmitEvent extends Event {
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     const { client } = React.useContext(getApolloContext());
     const tableQuery = React.useContext(TableQueryContext);
-    const editDialogFormApi = useEditDialogFormApi();
 
     const { onAfterSubmit, validateWarning } = props;
 
@@ -131,6 +130,10 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         const submit = React.useCallback(
             (event: any) => {
                 event.preventDefault(); //  Prevents from reloading the page with GET-params on submit
+                if (saveBoundaryApi) {
+                    // if we are inside a SaveBoundary, save the whole SaveBoundary
+                    return saveBoundaryApi.save();
+                }
                 if (!formRenderProps.dirty) return;
                 return new Promise<SubmissionErrors | void>((resolve) => {
                     Promise.resolve(formRenderProps.handleSubmit(event)).then(
@@ -147,7 +150,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     );
                 });
             },
-            [formRenderProps],
+            [formRenderProps, saveBoundaryApi],
         );
 
         const currentWarningValidationRound = React.useRef(0);
@@ -184,31 +187,26 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         }, [formRenderProps.values, setFieldData, registeredFields]);
 
         const doSave = React.useCallback(async () => {
-            editDialogFormApi?.onFormStatusChange("saving");
             const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
             if (hasValidationErrors) {
-                editDialogFormApi?.onFormStatusChange("error");
                 return false;
             }
 
             const submissionErrors = await formRenderProps.form.submit();
             if (submissionErrors) {
-                editDialogFormApi?.onFormStatusChange("error");
                 return false;
             }
 
             return true;
         }, [formRenderProps.form]);
-
+        const doReset = React.useCallback(() => {
+            formRenderProps.form.reset();
+        }, [formRenderProps.form]);
         return (
             <FinalFormContextProvider {...formContext}>
                 {saveBoundaryApi && (
                     <FormSpy subscription={{ dirty: true }}>
-                        {(props) => (
-                            <>
-                                <Savable hasChanges={props.dirty} doSave={doSave} />
-                            </>
-                        )}
+                        {(props) => <Savable hasChanges={props.dirty} doSave={doSave} doReset={doReset} />}
                     </FormSpy>
                 )}
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
@@ -235,8 +233,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
     async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
-
-        editDialogFormApi?.onFormStatusChange("saving");
+        if (ret === undefined) return ret;
 
         return Promise.resolve(ret)
             .then((data) => {
@@ -254,21 +251,16 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                     }
 
                     onAfterSubmit?.(values, form);
-                    editDialogFormApi?.onAfterSave?.();
                 });
                 return data;
             })
             .then(
                 (data) => {
                     // for final-form undefined means success, an obj means error
-                    editDialogFormApi?.resetFormStatus();
-
                     form.reset(values);
                     return undefined;
                 },
                 (error) => {
-                    editDialogFormApi?.onFormStatusChange("error");
-
                     if (props.resolveSubmitErrors) {
                         return props.resolveSubmitErrors(error);
                     }

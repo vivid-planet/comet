@@ -1,11 +1,72 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { ComponentsOverrides } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
 import * as React from "react";
 
 import getRteTheme from "../utils/getRteTheme";
 
-export interface IProps {
+export type RteControlButtonClassKey = "root" | "selected" | "renderAsIcon";
+
+type OwnerState = Pick<IProps, "selected" | "Icon">;
+
+const Root = createComponentSlot("button")<RteControlButtonClassKey, OwnerState>({
+    componentName: "RteControlButton",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.selected && "selected", Boolean(ownerState.Icon) && "renderAsIcon"];
+    },
+})(({ ownerState, theme }) => {
+    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
+    return css`
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        height: 24px;
+        background-color: transparent;
+        border: 1px solid transparent;
+        box-sizing: border-box;
+        transition: background-color 200ms, border-color 200ms, color 200ms;
+        font-size: 20px;
+        color: ${rteTheme.colors?.buttonIcon};
+
+        &:hover {
+            background-color: ${rteTheme.colors?.buttonBackgroundHover};
+            border-color: ${rteTheme.colors?.buttonBorderHover};
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+
+            &,
+            &:hover {
+                background-color: transparent;
+                border-color: transparent;
+                color: ${rteTheme.colors?.buttonIconDisabled};
+            }
+        }
+
+        ${ownerState.selected &&
+        css`
+            &:not(:disabled),
+            &:not(:disabled):hover {
+                border-color: ${rteTheme.colors?.buttonBorderHover};
+                background-color: white;
+            }
+        `}
+
+        ${Boolean(ownerState.Icon) &&
+        css`
+            width: 24px;
+        `}
+    `;
+});
+
+export interface IProps
+    extends ThemedComponentBaseProps<{
+        root: "button";
+    }> {
     disabled?: boolean;
     selected?: boolean;
     onButtonClick?: (e: React.MouseEvent) => void;
@@ -16,73 +77,32 @@ export interface IProps {
     Icon?: (props: SvgIconProps) => JSX.Element | null;
 }
 
-function ControlButton({
-    disabled = false,
-    selected = false,
-    onButtonClick,
-    icon,
-    children,
-    Icon: deprecatedIcon,
-    classes,
-}: IProps & WithStyles<typeof styles>) {
+export function ControlButton(inProps: IProps) {
+    const {
+        disabled = false,
+        selected = false,
+        onButtonClick,
+        icon,
+        children,
+        Icon: deprecatedIcon,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminRteControlButton" });
+
     const Icon = icon || deprecatedIcon;
 
-    const rootClasses: string[] = [classes.root];
-    if (selected) rootClasses.push(classes.selected);
-    if (Icon) rootClasses.push(classes.renderAsIcon);
+    const ownerState: OwnerState = {
+        selected,
+        Icon,
+    };
 
     return (
-        <button type="button" className={rootClasses.join(" ")} disabled={disabled} onMouseDown={onButtonClick}>
+        <Root type="button" disabled={disabled} onMouseDown={onButtonClick} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!!Icon && <Icon sx={{ fontSize: 15 }} color="inherit" />}
             {children}
-        </button>
+        </Root>
     );
 }
-
-export type RteControlButtonClassKey = "root" | "selected" | "renderAsIcon";
-
-const styles = (theme: Theme) => {
-    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
-
-    return createStyles<RteControlButtonClassKey, IProps>({
-        root: {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer",
-            height: 24,
-            backgroundColor: "transparent",
-            border: "1px solid transparent",
-            boxSizing: "border-box",
-            transition: "background-color 200ms, border-color 200ms, color 200ms",
-            fontSize: 20,
-            color: rteTheme.colors.buttonIcon,
-            "&:hover": {
-                backgroundColor: rteTheme.colors.buttonBackgroundHover,
-                borderColor: rteTheme.colors.buttonBorderHover,
-            },
-            "&:disabled": {
-                cursor: "not-allowed",
-                "&, &:hover": {
-                    backgroundColor: "transparent",
-                    borderColor: "transparent",
-                    color: rteTheme.colors.buttonIconDisabled,
-                },
-            },
-        },
-        selected: {
-            "&:not(:disabled), &:not(:disabled):hover": {
-                borderColor: rteTheme.colors.buttonBorderHover,
-                backgroundColor: "white",
-            },
-        },
-        renderAsIcon: {
-            width: 24,
-        },
-    });
-};
-
-export default withStyles(styles, { name: "CometAdminRteControlButton" })(ControlButton);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

@@ -10,6 +10,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import * as React from "react";
+import { FormattedMessage } from "react-intl";
 
 const ColumnsContentBlock = createBlocksBlock({
     name: "ColumnsContent",
@@ -48,6 +49,10 @@ const ColumnsBlock = createColumnsBlock({
                     <ColumnsLayoutPreviewContent width={10} />
                 </ColumnsLayoutPreview>
             ),
+            section: {
+                name: "same-width",
+                label: <FormattedMessage id="columnsBlock.layouts.twoColumns.section.sameWidth" defaultMessage="Same width" />,
+            },
         },
         {
             name: "two-columns-12-6",
@@ -62,6 +67,10 @@ const ColumnsBlock = createColumnsBlock({
                     <ColumnsLayoutPreviewSpacing width={2} />
                 </ColumnsLayoutPreview>
             ),
+            section: {
+                name: "different-width",
+                label: <FormattedMessage id="columnsBlock.layouts.twoColumns.section.differentWidth" defaultMessage="Different width" />,
+            },
         },
     ],
     contentBlock: ColumnsContentBlock,

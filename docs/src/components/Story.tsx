@@ -3,6 +3,7 @@ import BrowserOnly from "@docusaurus/BrowserOnly";
 import CodeBlock from "@theme/CodeBlock";
 import type { Props as PlaygroundProps } from "@theme/Playground";
 import React from "react";
+import { IntlProvider } from "react-intl";
 import { transform } from "sucrase";
 
 interface StoryProps extends Omit<PlaygroundProps, "children"> {
@@ -30,23 +31,25 @@ export const Story = ({ path, ...props }: StoryProps) => {
                 const { MuiThemeProvider } = require("@comet/admin");
 
                 return (
-                    <MuiThemeProvider theme={theme}>
-                        <CodeBlock
-                            language="tsx"
-                            live
-                            transformCode={(code) => {
-                                const compiledCode = transform(code, {
-                                    transforms: ["typescript", "jsx"],
-                                    jsxRuntime: "preserve",
-                                }).code;
-                                const codeWithoutImportsAndExports = compiledCode.replace(/import.*\n/g, "").replace(/export.*/g, "");
-                                return codeWithoutImportsAndExports;
-                            }}
-                            {...props}
-                        >
-                            {code}
-                        </CodeBlock>
-                    </MuiThemeProvider>
+                    <IntlProvider locale="en">
+                        <MuiThemeProvider theme={theme}>
+                            <CodeBlock
+                                language="tsx"
+                                live
+                                transformCode={(code) => {
+                                    const compiledCode = transform(code, {
+                                        transforms: ["typescript", "jsx"],
+                                        jsxRuntime: "preserve",
+                                    }).code;
+                                    const codeWithoutImportsAndExports = compiledCode.replace(/import.*\n/g, "").replace(/export.*/g, "");
+                                    return codeWithoutImportsAndExports;
+                                }}
+                                {...props}
+                            >
+                                {code}
+                            </CodeBlock>
+                        </MuiThemeProvider>
+                    </IntlProvider>
                 );
             }}
         </BrowserOnly>

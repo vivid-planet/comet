@@ -34,30 +34,28 @@ function Story() {
     };
     const pagedData = data.slice((pagingApi.current - 1) * pageSize, pagingApi.current * pageSize);
     return (
-        <>
-            <Table
-                data={pagedData}
-                pagingInfo={pagingInfo}
-                totalCount={data.length}
-                columns={[
-                    {
-                        name: "foo1",
-                        header: "Foo1",
-                        sortable: true,
-                    },
-                    {
-                        name: "foo2",
-                        header: "Foo2",
-                        render: (row) => <strong>{row.id}</strong>,
-                        sortable: true,
-                    },
-                    {
-                        name: "bar",
-                        visible: false,
-                    },
-                ]}
-            />
-        </>
+        <Table
+            data={pagedData}
+            pagingInfo={pagingInfo}
+            totalCount={data.length}
+            columns={[
+                {
+                    name: "foo1",
+                    header: "Foo1",
+                    sortable: true,
+                },
+                {
+                    name: "foo2",
+                    header: "Foo2",
+                    render: (row) => <strong>{row.id}</strong>,
+                    sortable: true,
+                },
+                {
+                    name: "bar",
+                    visible: false,
+                },
+            ]}
+        />
     );
 }
 

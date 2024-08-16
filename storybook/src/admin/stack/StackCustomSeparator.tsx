@@ -9,15 +9,13 @@ import { storyRouterDecorator } from "../../story-router.decorator";
 function Page1() {
     const switchApi = React.useContext(StackSwitchApiContext);
     return (
-        <>
-            <button
-                onClick={(e) => {
-                    switchApi.activatePage("page2", "test");
-                }}
-            >
-                activate page2
-            </button>
-        </>
+        <button
+            onClick={(e) => {
+                switchApi.activatePage("page2", "test");
+            }}
+        >
+            activate page2
+        </button>
     );
 }
 

@@ -1,4 +1,4 @@
-import { BlobStorageBackendService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -17,9 +17,9 @@ import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
 
+import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { generateLinks } from "./generators/links.generator";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
-import { PublicUploadsFixtureService } from "./generators/public-uploads-fixture.service";
 
 export interface PageTreeNodesFixtures {
     home?: PageTreeNodeInterface;
@@ -48,7 +48,8 @@ export class FixturesConsole {
         @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
-        private readonly publicUploadsFixtureService: PublicUploadsFixtureService,
+        private readonly fileUploadsFixtureService: FileUploadsFixtureService,
+        private readonly dependenciesService: DependenciesService,
     ) {}
 
     @Command({
@@ -275,7 +276,9 @@ export class FixturesConsole {
             console.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
         }
 
-        await this.publicUploadsFixtureService.generatePublicUploads();
+        await this.fileUploadsFixtureService.generateFileUploads();
+
+        await this.dependenciesService.createViews();
 
         await this.orm.em.flush();
     }

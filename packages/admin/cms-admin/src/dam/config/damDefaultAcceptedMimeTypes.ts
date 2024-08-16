@@ -1,5 +1,5 @@
 // -------- IMPORTANT --------
-// this mimetype list is a duplicate of api/cms-api/src/dam/common/mimeTypes/default-dam-accepted-mimetypes.ts
+// this mimetype list is a duplicate of api/cms-api/src/dam/common/mimeTypes/dam-default-accepted-mimetypes.ts
 // if you change this file, change the api file too
 // -------- IMPORTANT --------
 

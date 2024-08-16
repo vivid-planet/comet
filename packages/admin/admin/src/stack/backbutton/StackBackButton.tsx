@@ -1,35 +1,41 @@
-import { ArrowBack } from "@mui/icons-material";
-import { Button, ButtonProps, ComponentsOverrides, Theme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { ArrowLeft } from "@comet/admin-icons";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
+import { Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
+import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { messages } from "../../messages";
 import { StackApiContext } from "../Api";
-import { StackBackButtonClassKey, styles } from "./StackBackButton.styles";
 
+export type StackBackButtonClassKey = ButtonClassKey;
 export type StackBackButtonProps = ButtonProps;
 
-const StackBackBtn = ({ startIcon = <ArrowBack />, ...restProps }: StackBackButtonProps & WithStyles<typeof styles>): React.ReactElement => {
+const Root = createComponentSlot(Button)<StackBackButtonClassKey>({
+    componentName: "StackBackButton",
+    slotName: "root",
+})();
+
+export function StackBackButton(inProps: StackBackButtonProps) {
+    const { startIcon = <ArrowLeft />, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBackButton" });
+
     return (
         <StackApiContext.Consumer>
             {(stackApi) => {
                 return (
-                    <Button
+                    <Root
                         disabled={stackApi?.breadCrumbs == null || stackApi?.breadCrumbs.length <= 1}
                         onClick={stackApi?.goBack}
                         startIcon={startIcon}
                         {...restProps}
                     >
                         <FormattedMessage {...messages.back} />
-                    </Button>
+                    </Root>
                 );
             }}
         </StackApiContext.Consumer>
     );
-};
-
-export const StackBackButton = withStyles(styles, { name: "CometAdminStackBackButton" })(StackBackBtn);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -42,7 +48,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminStackBackButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminStackBackButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminStackBackButton"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminStackBackButton"];
         };
     }

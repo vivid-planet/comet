@@ -7,6 +7,8 @@ export async function writeGeneratedFile(filePath: string, contents: string): Pr
     // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
     `;
     await fs.mkdir(path.dirname(filePath), { recursive: true });
+    await fs.writeFile(filePath, contents);
+
     const eslint = new ESLint({
         cwd: process.cwd(),
         fix: true,
@@ -16,6 +18,8 @@ export async function writeGeneratedFile(filePath: string, contents: string): Pr
     });
 
     const output = lintResult[0] && lintResult[0].output ? lintResult[0].output : lintResult[0].source;
-    await fs.writeFile(filePath, output ?? contents);
+    if (output) {
+        await fs.writeFile(filePath, output);
+    }
     console.log(`generated ${filePath}`);
 }

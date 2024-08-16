@@ -1,8 +1,8 @@
+"use client";
 import { PageLink } from "@src/header/PageLink";
-import { gql } from "graphql-request";
 import styled from "styled-components";
 
-import { GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.generated";
+import { GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
 
 interface Props {
     data: GQLTopMenuPageTreeNodeFragment[];
@@ -13,12 +13,16 @@ export function TopNavigation({ data }: Props): JSX.Element {
         <TopLevelNavigation>
             {data.map((item) => (
                 <TopLevelLinkContainer key={item.id}>
-                    <PageLink page={item}>{(active) => <Link $active={active}>{item.name}</Link>}</PageLink>
+                    <Link page={item} activeClassName="active">
+                        {item.name}
+                    </Link>
                     {item.childNodes.length > 0 && (
                         <SubLevelNavigation>
                             {item.childNodes.map((node) => (
                                 <li key={node.id}>
-                                    <PageLink page={node}>{(active) => <Link $active={active}>{node.name}</Link>}</PageLink>
+                                    <Link page={node} activeClassName="active">
+                                        {node.name}
+                                    </Link>
                                 </li>
                             ))}
                         </SubLevelNavigation>
@@ -28,20 +32,6 @@ export function TopNavigation({ data }: Props): JSX.Element {
         </TopLevelNavigation>
     );
 }
-
-export const topMenuPageTreeNodeFragment = gql`
-    fragment TopMenuPageTreeNode on PageTreeNode {
-        id
-        name
-        ...PageLink
-
-        childNodes {
-            id
-            name
-            ...PageLink
-        }
-    }
-`;
 
 const TopLevelNavigation = styled.ol`
     display: flex;
@@ -73,13 +63,17 @@ const TopLevelLinkContainer = styled.li`
     }
 `;
 
-const Link = styled.a<{ $active: boolean }>`
+const Link = styled(PageLink)`
     text-decoration: none;
     padding: 5px 10px;
-    color: ${({ $active, theme }) => ($active ? theme.colors.white : theme.colors.n200)};
+    color: ${({ theme }) => theme.colors.n200};
     font-size: 12px;
 
     &:hover {
         text-decoration: underline;
+    }
+
+    &.active {
+        color: ${({ theme }) => theme.colors.white};
     }
 `;

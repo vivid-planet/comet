@@ -1,6 +1,5 @@
 import { ISortInformation, SortDirection } from "@comet/admin";
-import { ChevronDown } from "@comet/admin-icons";
-import { Check } from "@mui/icons-material";
+import { Check, ChevronDown } from "@comet/admin-icons";
 import { List, ListItem, Typography } from "@mui/material";
 import React, { PropsWithChildren } from "react";
 import { FormattedMessage } from "react-intl";

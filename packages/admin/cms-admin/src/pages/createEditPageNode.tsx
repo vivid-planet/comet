@@ -66,6 +66,7 @@ export function createEditPageNode({
                 hideInMenu
                 parentId
                 numberOfDescendants
+                visibility
                 document {
                     ... on DocumentInterface {
                         id
@@ -189,6 +190,8 @@ export function createEditPageNode({
                 }
             }
         };
+
+        const isActivePage = data?.page?.visibility === "Published";
 
         // Use `p-debounce` instead of `use-debounce`
         // because Final Form expects all validate calls to be resolved.
@@ -384,7 +387,11 @@ export function createEditPageNode({
                                                                 </>
                                                             }
                                                         >
-                                                            <Field name="createAutomaticRedirectsOnSlugChange" type="checkbox" initialValue={true}>
+                                                            <Field
+                                                                name="createAutomaticRedirectsOnSlugChange"
+                                                                type="checkbox"
+                                                                initialValue={isActivePage}
+                                                            >
                                                                 {(props) => (
                                                                     <FormControlLabel
                                                                         label={

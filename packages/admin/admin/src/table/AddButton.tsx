@@ -1,4 +1,4 @@
-import AddIcon from "@mui/icons-material/Add";
+import { AddNoCircle } from "@comet/admin-icons";
 import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
@@ -16,7 +16,7 @@ interface IProps {
 export class TableAddButton extends React.Component<IProps> {
     public render() {
         return (
-            <Button onClick={this.handleAddClick} startIcon={<AddIcon />}>
+            <Button onClick={this.handleAddClick} startIcon={<AddNoCircle />}>
                 <FormattedMessage {...messages.add} />
             </Button>
         );

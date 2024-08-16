@@ -1,3 +1,4 @@
+"use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { DemoSpaceBlockData } from "@src/blocks.generated";
 import * as React from "react";

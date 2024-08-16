@@ -3,7 +3,7 @@ title: Cron Jobs
 sidebar_position: 14
 ---
 
-Cron Jobs are defined as console commands. The preferred way to run them is as a [Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/). Advantages of using Kubernetes Cron Jobs:
+Cron Jobs are defined as [console commands](../console-commands/index.md). The preferred way to run them is as a [Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/). Advantages of using Kubernetes Cron Jobs:
 
 -   You can run multiple instances of the API in parallel without additional configuration for Cron Jobs.
 -   Different resources can be used for Cron Jobs and the API.
@@ -27,11 +27,19 @@ NODE_OPTIONS='--max-old-space-size=256' npm run console demo-command
 
 ## Cron Job Module
 
-A `CronJobModule` is available for `@comet/cms-api` which adds GraphQL queries and mutations for interacting with Cron Jobs. A `CronJobsPage` is available for `@comet/cms-admin` to display and manage Cron Jobs.
+If Kubernetes Cron Jobs are used, Comet DXP can help you manage them.
+
+### API
+
+A `CronJobModule` is available for `@comet/cms-api` which adds GraphQL queries and mutations for interacting with Cron Jobs. The `CronJobModule`requires the `KubernetesModule` to be included.
 
 :::caution
 If including the Cron Job module, ensure you have proper access control in place as this module allows interacting with the Kubernetes API.
 :::
+
+### Admin
+
+A `CronJobsPage` is available for `@comet/cms-admin` to display and manage Cron Jobs.
 
 ### Scoping
 

@@ -16,7 +16,8 @@ export class BuildTemplatesService {
     ) {}
 
     async getAllowedBuilderCronJobs(user: CurrentUser): Promise<V1CronJob[]> {
-        return (await this.getAllBuilderCronJobs()).filter((cronJob) => {
+        const builderCronJobs = await this.getAllBuilderCronJobs();
+        return builderCronJobs.filter((cronJob) => {
             return this.accessControlService.isAllowed(user, "builds", this.kubernetesService.getContentScope(cronJob) ?? {});
         });
     }

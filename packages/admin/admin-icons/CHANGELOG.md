@@ -1,5 +1,49 @@
 # @comet/admin-icons
 
+## 7.0.0
+
+## 7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+## 6.17.1
+
+## 6.17.0
+
+## 6.16.0
+
+## 6.15.1
+
+## 6.15.0
+
+### Minor Changes
+
+-   406027806: Add `RteUppercase` icon
+
+## 6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   efccc42a3: Add `YouTube` and `Vimeo` icons
+
+## 6.13.0
+
+## 6.12.0
+
+## 6.11.0
+
 ## 6.10.0
 
 ## 6.9.0
