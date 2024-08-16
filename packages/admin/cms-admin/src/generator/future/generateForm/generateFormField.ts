@@ -210,8 +210,7 @@ export function generateFormField({
         });
 
         if (config.inputType === "radio") {
-            code = `
-            <RadioGroupField
+            code = `<RadioGroupField
              ${required ? "required" : ""}
               variant="horizontal"
              fullWidth
@@ -228,8 +227,7 @@ export function generateFormField({
                             }`;
                       })
                       .join(",")}
-            ]}/>
-            `;
+            ]}/>`;
         } else {
             code = `<Field
             ${required ? "required" : ""}
