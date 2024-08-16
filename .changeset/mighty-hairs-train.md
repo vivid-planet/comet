@@ -9,38 +9,24 @@ This is done to provide a simple api to create a more actions menu for a list of
 **Example:**
 
 ```tsx
-<MoreActionsMenu
+<CrudMoreActionsMenu
     selectionSize={selectionSize}
     overAllItems={[
         {
-            type: "action",
             label: "Export to excel",
-            onClick: () => {
-                handleExportToExcelClick();
-                handleClose();
-            },
+            onClick: handleExportToExcelClick,
         },
     ]}
     selectiveItems={[
         {
-            type: "action",
             label: "move",
-            onClick: () => {
-                handleMoveClick();
-                handleClose();
-            },
+            onClick: handleMoveClick,
             startAdornment: <Move />,
+            divider: true,
         },
         {
-            type: "divider",
-        },
-        {
-            type: "action",
             label: "download",
-            onClick: () => {
-                handleDownloadClick();
-                handleClose();
-            },
+            onClick: handleDownloadClick,
             startAdornment: <Download />,
         },
     ]}
