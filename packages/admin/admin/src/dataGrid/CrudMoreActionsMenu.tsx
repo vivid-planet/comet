@@ -11,9 +11,7 @@ import {
     MenuItem,
     MenuList,
     MenuListProps,
-    MenuProps,
     Typography,
-    TypographyProps,
 } from "@mui/material";
 import { Maybe } from "graphql/jsutils/Maybe";
 import * as React from "react";
@@ -55,10 +53,6 @@ type CrudMoreActionsItem = ActionItem | DividerItem;
 
 export interface CrudMoreActionsMenuProps {
     selectionSize?: number;
-    buttonProps?: React.ComponentProps<typeof Button>;
-    menuProps?: Partial<MenuProps>;
-    chipProps?: Partial<ChipProps>;
-    groupTypographyProps?: Partial<TypographyProps>;
     overallItems?: Maybe<CrudMoreActionsItem>[];
     selectiveItems?: Maybe<CrudMoreActionsItem>[];
 }
@@ -75,15 +69,7 @@ function SelectedItemsChip({ label, ...restProps }: Partial<ChipProps>) {
     );
 }
 
-export function CrudMoreActionsMenu({
-    overallItems,
-    selectiveItems,
-    buttonProps,
-    menuProps,
-    chipProps,
-    groupTypographyProps,
-    selectionSize,
-}: CrudMoreActionsMenuProps) {
+export function CrudMoreActionsMenu({ overallItems, selectiveItems, selectionSize }: CrudMoreActionsMenuProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
@@ -92,36 +78,20 @@ export function CrudMoreActionsMenu({
 
     return (
         <>
-            <Button
-                variant="text"
-                color="inherit"
-                endIcon={<MoreVertical />}
-                sx={{ mx: 2 }}
-                {...buttonProps}
-                onClick={(event) => {
-                    handleClick(event);
-                    buttonProps?.onClick?.(event);
-                }}
-            >
+            <Button variant="text" color="inherit" endIcon={<MoreVertical />} sx={{ mx: 2 }} onClick={handleClick}>
                 <FormattedMessage id="comet.pages.dam.moreActions" defaultMessage="More actions" />
-                {!!selectionSize && <SelectedItemsChip {...chipProps} label={selectionSize} />}
+                {!!selectionSize && <SelectedItemsChip label={selectionSize} />}
             </Button>
             <Menu
                 keepMounted={false}
                 PaperProps={{ sx: { minWidth: 220, borderRadius: "4px" } }}
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
-                {...menuProps}
-                onClose={(event, reason) => {
-                    handleClose();
-                    menuProps?.onClose?.(event, reason);
-                }}
+                onClose={handleClose}
             >
                 {!!overallItems?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />}
-                        typographyProps={groupTypographyProps}
-                        menuListProps={menuProps?.MenuListProps}
                     >
                         {overallItems.map((item, index) => {
                             if (!item) return null;
@@ -155,8 +125,6 @@ export function CrudMoreActionsMenu({
                 {!!selectiveItems?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />}
-                        typographyProps={groupTypographyProps}
-                        menuListProps={menuProps?.MenuListProps}
                     >
                         {selectiveItems.map((item, index) => {
                             if (!item) return;
@@ -177,7 +145,7 @@ export function CrudMoreActionsMenu({
                                     >
                                         {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
-                                        {!!selectionSize && <SelectedItemsChip {...chipProps} label={selectionSize} />}
+                                        {!!selectionSize && <SelectedItemsChip label={selectionSize} />}
                                     </MenuItem>
                                 );
                             } else if (item.type === "divider") {
