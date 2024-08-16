@@ -168,7 +168,7 @@ export function generateGrid(
 
     const forwardToolbarAction = allowAdding && toolbar && config.toolbarActionProp;
     if (forwardToolbarAction) {
-        props.push({ name: "toolbarAction", type: "React.ReactNode", optional: true });
+        props.push({ name: "toolbarAction", type: "ReactNode", optional: true });
     }
 
     const sortArg = gridQueryType.args.find((arg) => arg.name === "sort");
@@ -321,7 +321,7 @@ export function generateGrid(
     if (forwardRowAction) {
         props.push({
             name: "rowAction",
-            type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => React.ReactNode`,
+            type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => ReactNode`,
             optional: true,
         });
     }
@@ -359,7 +359,7 @@ export function generateGrid(
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
-    import * as React from "react";
+    import { ReactNode } from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
 
@@ -437,7 +437,7 @@ export function generateGrid(
 
     ${
         toolbar
-            ? `function ${gqlTypePlural}GridToolbar(${forwardToolbarAction ? `{ toolbarAction }: { toolbarAction?: React.ReactNode }` : ``}) {
+            ? `function ${gqlTypePlural}GridToolbar(${forwardToolbarAction ? `{ toolbarAction }: { toolbarAction?: ReactNode }` : ``}) {
         return (
             <DataGridToolbar>
                 ${
@@ -474,7 +474,7 @@ export function generateGrid(
 
     ${gridPropsTypeCode}
 
-    export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
+    export function ${gqlTypePlural}Grid(${gridPropsParamsCode}) {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
