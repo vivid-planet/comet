@@ -13,7 +13,7 @@ import {
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, Settings, Sort } from "@comet/admin-icons";
-import { Badge, Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
@@ -43,12 +43,7 @@ const AppMenu: React.FC = () => {
                 </MenuCollapsibleItem>
             </MenuItemGroup>
             <MenuItemGroup title="Further Layers">
-                <MenuItemRouterLink
-                    primary="Settings"
-                    secondaryAction={<Badge color="error" badgeContent={2} />}
-                    icon={<Settings />}
-                    to="/settings"
-                />
+                <MenuItemRouterLink primary="Settings" badgeContent={2} icon={<Settings />} to="/settings" />
                 <MenuItemAnchorLink
                     primary="Comet Admin"
                     secondary="View on GitHub"

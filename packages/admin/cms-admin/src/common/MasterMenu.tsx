@@ -25,6 +25,7 @@ type MasterMenuItemRoute = MasterMenuItemBase &
         type: "route";
         route?: RouteProps;
         to?: string;
+        badgeContent?: React.ReactNode;
     };
 
 type MasterMenuItemCollapsible = MasterMenuItemBase &
