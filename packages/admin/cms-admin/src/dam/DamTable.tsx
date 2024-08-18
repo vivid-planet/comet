@@ -21,6 +21,7 @@ import { Button } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { DamScopeProvider } from "./config/DamScopeProvider";
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
 import { ManualDuplicatedFilenamesHandlerContextProvider } from "./DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { FileUploadContextProvider } from "./DataGrid/fileUpload/FileUploadContext";
@@ -38,6 +39,7 @@ import { DamMoreActions } from "./DataGrid/selection/DamMoreActions";
 import { DamSelectionProvider, useDamSelectionApi } from "./DataGrid/selection/DamSelectionContext";
 import { SelectedItemsChip } from "./DataGrid/selection/SelectedItemsChip";
 import EditFile from "./FileForm/EditFile";
+import { SHARED_DAM_SCOPE } from "./helpers/shared-dam-scope";
 
 interface FolderProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
@@ -121,6 +123,11 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                         setSelectedFolderId(selectedId);
                         return <Folder id={selectedId} filterApi={filterApi} {...props} />;
                     }}
+                </StackPage>
+                <StackPage name={SHARED_DAM_SCOPE} title={intl.formatMessage({ id: "comet.pages.dam.shared", defaultMessage: "Shared" })}>
+                    <DamScopeProvider overrideScope={{ domain: SHARED_DAM_SCOPE }}>
+                        <Folder filterApi={filterApi} {...props} />
+                    </DamScopeProvider>
                 </StackPage>
             </StackSwitch>
         </CurrentDamFolderProvider>

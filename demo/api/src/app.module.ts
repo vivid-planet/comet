@@ -17,6 +17,7 @@ import {
     SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
+import { SHARED_DAM_SCOPE } from "@comet/cms-api/lib/dam/files/entities/folder.constants";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
@@ -95,6 +96,7 @@ export class AppModule {
                             { domain: "main", language: "en" },
                             { domain: "secondary", language: "en" },
                             { domain: "secondary", language: "de" },
+                            { domain: SHARED_DAM_SCOPE, language: SHARED_DAM_SCOPE },
                         ],
                         userService,
                         accessControlService,

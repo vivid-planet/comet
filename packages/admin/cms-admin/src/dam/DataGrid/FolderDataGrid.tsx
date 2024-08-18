@@ -5,12 +5,13 @@ import {
     IFilterApi,
     ISelectionApi,
     PrettyBytes,
+    StackLink,
     useDataGridRemote,
     useSnackbarApi,
     useStackSwitchApi,
     useStoredState,
 } from "@comet/admin";
-import { Slide, SlideProps, Snackbar } from "@mui/material";
+import { Link, Slide, SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, GridColumns, GridRowClassNameParams, GridSelectionModel } from "@mui/x-data-grid";
 import * as React from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
@@ -26,6 +27,7 @@ import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
 import { isFile } from "../helpers/isFile";
 import { isFolder } from "../helpers/isFolder";
+import { SHARED_DAM_SCOPE } from "../helpers/shared-dam-scope";
 import { MoveDamItemDialog } from "../MoveDamItemDialog/MoveDamItemDialog";
 import DamContextMenu from "./DamContextMenu";
 import { useDamFileUpload } from "./fileUpload/useDamFileUpload";
@@ -88,6 +90,7 @@ const FolderDataGrid = ({
     const scope = useDamScope();
     const snackbarApi = useSnackbarApi();
     const { importSources } = useDamConfig();
+    const damScope = useDamScope();
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
@@ -342,7 +345,17 @@ const FolderDataGrid = ({
         return "";
     };
 
-    const dataGridColumns: GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment> = [
+    const isSharedFolder = (
+        row: GQLDamFileTableFragment | GQLDamFolderTableFragment | { type: "shared-folder" },
+    ): row is { type: "shared-folder" } => {
+        return "type" in row && row.type === "shared-folder";
+    };
+
+    const isInSharedScope = (damScope: Record<string, unknown>) => {
+        return Object.values(damScope).some((scope) => scope === SHARED_DAM_SCOPE);
+    };
+
+    const dataGridColumns: GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment | { type: "shared-folder"; id: "shared-folder" }> = [
         {
             field: "name",
             headerName: intl.formatMessage({
@@ -351,6 +364,28 @@ const FolderDataGrid = ({
             }),
             flex: 1,
             renderCell: ({ row }) => {
+                if (isSharedFolder(row)) {
+                    return (
+                        <Link
+                            underline="none"
+                            component={StackLink}
+                            pageName={SHARED_DAM_SCOPE}
+                            payload={SHARED_DAM_SCOPE}
+                            onClick={() => {
+                                filterApi.formApi.change("searchText", undefined);
+                            }}
+                            sx={{
+                                width: "100%",
+                                height: "100%",
+                            }}
+                        >
+                            Shared folder
+                        </Link>
+                    );
+
+                    return "Shared folder";
+                }
+
                 return (
                     <DamItemLabelColumn
                         item={row}
@@ -383,6 +418,10 @@ const FolderDataGrid = ({
                 defaultMessage: "Source",
             }),
             renderCell: ({ row }) => {
+                if (isSharedFolder(row)) {
+                    return;
+                }
+
                 if (isFile(row) && row.importSourceType && importSources?.[row.importSourceType]) {
                     return importSources[row.importSourceType].label;
                 }
@@ -402,13 +441,13 @@ const FolderDataGrid = ({
             align: "left",
             minWidth: 140,
             renderCell: ({ row }) => {
-                if (isFile(row) && row.mimetype) {
-                    return row.mimetype;
-                } else if (isFolder(row)) {
+                if (isSharedFolder(row) || isFolder(row)) {
                     return intl.formatMessage({
                         id: "comet.dam.file.fileType.folder",
                         defaultMessage: "Folder",
                     });
+                } else if (isFile(row) && row.mimetype) {
+                    return row.mimetype;
                 }
             },
             sortable: false,
@@ -425,6 +464,10 @@ const FolderDataGrid = ({
             align: "right",
             minWidth: 100,
             renderCell: ({ row }) => {
+                if (isSharedFolder(row)) {
+                    return "";
+                }
+
                 if (isFile(row)) {
                     return <PrettyBytes value={row.size} />;
                 } else {
@@ -452,13 +495,19 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            renderCell: ({ row }) => (
-                <div>
-                    <FormattedDate value={row.createdAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.createdAt} />
-                </div>
-            ),
+            renderCell: ({ row }) => {
+                if (isSharedFolder(row)) {
+                    return "";
+                }
+
+                return (
+                    <div>
+                        <FormattedDate value={row.createdAt} day="2-digit" month="2-digit" year="numeric" />
+                        {", "}
+                        <FormattedTime value={row.createdAt} />
+                    </div>
+                );
+            },
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -472,13 +521,19 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            renderCell: ({ row }) => (
-                <div>
-                    <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.updatedAt} />
-                </div>
-            ),
+            renderCell: ({ row }) => {
+                if (isSharedFolder(row)) {
+                    return "";
+                }
+
+                return (
+                    <div>
+                        <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />
+                        {", "}
+                        <FormattedTime value={row.updatedAt} />
+                    </div>
+                );
+            },
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -488,6 +543,10 @@ const FolderDataGrid = ({
             headerName: "",
             align: "center",
             renderCell: ({ row }) => {
+                if (isSharedFolder(row)) {
+                    return "";
+                }
+
                 return isFile(row) ? (
                     <DamContextMenu file={row} openMoveDialog={openMoveDialog} />
                 ) : (
@@ -514,7 +573,10 @@ const FolderDataGrid = ({
                 <DataGrid
                     {...dataGridProps}
                     rowHeight={58}
-                    rows={dataGridData?.damItemsList.nodes ?? []}
+                    rows={[
+                        ...(isInSharedScope(damScope) ? [] : [{ type: "shared-folder", id: "shared-folder" }]),
+                        ...(dataGridData?.damItemsList.nodes ?? []),
+                    ]}
                     rowCount={dataGridData?.damItemsList.totalCount ?? 0}
                     loading={loading}
                     error={error}
