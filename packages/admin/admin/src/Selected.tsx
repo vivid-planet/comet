@@ -1,7 +1,7 @@
 import { ApolloError, useQuery } from "@apollo/client";
 import { Box, Card, Typography } from "@mui/material";
 import { DocumentNode } from "graphql";
-import * as React from "react";
+import { ComponentType, Fragment, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "./common/Loading";
@@ -12,9 +12,9 @@ interface IProps<Data extends { id: string | number } = { id: string | number }>
     rows?: Array<Data>;
     query?: DocumentNode;
     dataAccessor?: string;
-    children: (data: Data | undefined, options: { selectionMode: "edit" | "add" }) => React.ReactNode;
+    children: (data: Data | undefined, options: { selectionMode: "edit" | "add" }) => ReactNode;
     components?: {
-        error?: React.ComponentType<{ error: ApolloError }>;
+        error?: ComponentType<{ error: ApolloError }>;
     };
 }
 
@@ -63,10 +63,10 @@ export function Selected<Data extends { id: string | number }>(props: IProps<Dat
         return <SelectEdit {...props} />;
     } else {
         return (
-            <React.Fragment>
+            <Fragment>
                 {props.selectionMode === "edit" && row && props.children(row, { selectionMode: "edit" })}
                 {props.selectionMode === "add" && props.children(row, { selectionMode: "add" })}
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

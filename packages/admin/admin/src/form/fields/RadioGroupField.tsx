@@ -1,11 +1,11 @@
 import { FormControlLabel, RadioGroup } from "@mui/material";
 import MuiRadio from "@mui/material/Radio";
-import React from "react";
+import { ReactNode } from "react";
 
 import { Field, FieldProps } from "../../form/Field";
 
 type RadioGroupFieldOption<Value extends string> = {
-    label: React.ReactNode;
+    label: ReactNode;
     value: Value;
 };
 

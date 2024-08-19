@@ -1,6 +1,6 @@
 import { QueryHookOptions, QueryResult, useQuery } from "@apollo/client";
 import { DocumentNode } from "graphql";
-import * as React from "react";
+import { useEffect } from "react";
 
 import { LocalErrorScopeApolloContext } from "../error/errordialog/ErrorScope";
 import { ISelectionApi } from "../SelectionApi";
@@ -60,7 +60,7 @@ export function useTableQuery<TInnerData, TInnerVariables>() {
         };
 
         const { refetch } = ret;
-        React.useEffect(() => {
+        useEffect(() => {
             refetch();
         }, [refetch]);
 
