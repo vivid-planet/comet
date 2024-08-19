@@ -12,4 +12,6 @@ export class User implements UserInterface {
 
     @Field()
     email: string;
+
+    isAdmin?: boolean;
 }

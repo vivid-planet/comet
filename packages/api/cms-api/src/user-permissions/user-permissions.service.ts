@@ -17,6 +17,7 @@ import { User } from "./interfaces/user";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import {
     AccessControlServiceInterface,
+    PermissionForUser,
     UserPermissions,
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
@@ -68,6 +69,7 @@ export class UserPermissionsService {
             id: idToken.sub,
             name: idToken.name,
             email: idToken.email,
+            isAdmin: false,
         };
     }
 
@@ -91,29 +93,38 @@ export class UserPermissionsService {
     }
 
     async getPermissions(user: User): Promise<UserPermission[]> {
+        function createPermission(p: PermissionForUser): UserPermission {
+            const permission = new UserPermission();
+            permission.id = getUuid(JSON.stringify(p));
+            permission.source = UserPermissionSource.BY_RULE;
+            permission.userId = user.id;
+            permission.overrideContentScopes = !!p.contentScopes;
+            permission.assign(p);
+            return permission;
+        }
+
+        let permissions: UserPermission[] = [];
         const availablePermissions = await this.getAvailablePermissions();
-        const permissions = (
-            await this.permissionRepository.find({
-                $and: [{ userId: user.id }, { permission: { $in: availablePermissions } }],
-            })
-        ).map((p) => {
-            p.source = UserPermissionSource.MANUAL;
-            return p;
-        });
-        if (this.accessControlService.getPermissionsForUser) {
-            if (user) {
-                let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
-                if (permissionsByRule === UserPermissions.allPermissions) {
-                    permissionsByRule = availablePermissions.map((permission) => ({ permission }));
-                }
-                for (const p of permissionsByRule) {
-                    const permission = new UserPermission();
-                    permission.id = getUuid(JSON.stringify(p));
-                    permission.source = UserPermissionSource.BY_RULE;
-                    permission.userId = user.id;
-                    permission.overrideContentScopes = !!p.contentScopes;
-                    permission.assign(p);
-                    permissions.push(permission);
+        if ((this.accessControlService.isAdmin && this.accessControlService.isAdmin(user)) || (!this.accessControlService.isAdmin && user.isAdmin)) {
+            permissions = availablePermissions.map((permission) => createPermission({ permission }));
+        } else {
+            permissions = (
+                await this.permissionRepository.find({
+                    $and: [{ userId: user.id }, { permission: { $in: availablePermissions } }],
+                })
+            ).map((p) => {
+                p.source = UserPermissionSource.MANUAL;
+                return p;
+            });
+            if (this.accessControlService.getPermissionsForUser) {
+                if (user) {
+                    let permissionsByRule = await this.accessControlService.getPermissionsForUser(user);
+                    if (permissionsByRule === UserPermissions.allPermissions) {
+                        permissionsByRule = availablePermissions.map((permission) => ({ permission }));
+                    }
+                    for (const p of permissionsByRule) {
+                        permissions.push(createPermission(p));
+                    }
                 }
             }
         }

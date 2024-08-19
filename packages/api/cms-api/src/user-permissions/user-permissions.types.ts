@@ -16,7 +16,7 @@ export type Users = [User[], number];
 
 export type SystemUser = string;
 
-type PermissionForUser = {
+export type PermissionForUser = {
     permission: string;
     contentScopes?: ContentScope[];
 } & Pick<UserPermission, "validFrom" | "validTo" | "reason" | "requestedBy" | "approvedBy">;
@@ -28,6 +28,7 @@ export interface AccessControlServiceInterface {
     isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
     getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
     getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
+    isAdmin?: (user: User) => boolean;
 }
 
 export interface UserPermissionsUserServiceInterface {
