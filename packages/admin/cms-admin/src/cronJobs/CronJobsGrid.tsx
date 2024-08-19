@@ -66,7 +66,7 @@ export function CronJobsGrid() {
     const intl = useIntl();
     const client = useApolloClient();
     const stackSwitchApi = useStackSwitchApi();
-    const [cronJobToStart, setCronJobToStart] = useState<string>("");
+    const [cronJobToStart, setCronJobToStart] = useState<string>();
     const dialogOpen = Boolean(cronJobToStart);
 
     const { data, loading, error } = useQuery<GQLKubernetesCronJobsQuery, GQLKubernetesCronJobsQueryVariables>(cronJobsQuery);
@@ -74,7 +74,7 @@ export function CronJobsGrid() {
     const rows = data?.kubernetesCronJobs ?? [];
 
     const closeDialog = () => {
-        setCronJobToStart("");
+        setCronJobToStart(undefined);
     };
     return (
         <MainContent disablePadding fullHeight>
@@ -154,7 +154,13 @@ export function CronJobsGrid() {
                     <FormattedMessage id="comet.pages.cronjob.dialog.title" defaultMessage="Start cron job now?" />
                 </DialogTitle>
                 <DialogContent>
-                    <FormattedMessage id="comet.pages.cronjob.dialog.content" defaultMessage="Are you sure you want to start the cron job now?" />
+                    <FormattedMessage
+                        id="comet.pages.cronjob.dialog.content"
+                        defaultMessage="Are you sure you want to start the {cronJobName} cron job now?"
+                        values={{
+                            cronJobName: cronJobToStart,
+                        }}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <CancelButton onClick={closeDialog} />
@@ -163,11 +169,13 @@ export function CronJobsGrid() {
                         variant="contained"
                         startIcon={<Play />}
                         onClick={async () => {
-                            await client.mutate<GQLTriggerKubernetesCronJobMutation, GQLTriggerKubernetesCronJobMutationVariables>({
-                                mutation: triggerCronJobMutation,
-                                variables: { name: cronJobToStart },
-                            });
-                            stackSwitchApi.activatePage("jobs", cronJobToStart);
+                            if (cronJobToStart) {
+                                await client.mutate<GQLTriggerKubernetesCronJobMutation, GQLTriggerKubernetesCronJobMutationVariables>({
+                                    mutation: triggerCronJobMutation,
+                                    variables: { name: cronJobToStart },
+                                });
+                                stackSwitchApi.activatePage("jobs", cronJobToStart);
+                            }
                         }}
                     >
                         <FormattedMessage id="comet.pages.cronjob.dialog.action" defaultMessage="Start now" />
