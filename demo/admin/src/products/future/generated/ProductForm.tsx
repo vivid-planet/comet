@@ -196,7 +196,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="description"
                                 label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                             />
-
                             <RadioGroupField
                                 required
                                 variant="horizontal"
@@ -218,7 +217,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     },
                                 ]}
                             />
-
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth
