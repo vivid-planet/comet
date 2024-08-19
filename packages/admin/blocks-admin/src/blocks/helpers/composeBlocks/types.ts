@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { ReactNode } from "react";
+
 import { AnonymousBlockInterface, BlockInputApi, BlockInterface, BlockOutputApi, BlockState, DispatchSetStateAction } from "../../types";
 import { Flatten, KeysMatching } from "./utility-types";
 
@@ -68,12 +70,12 @@ type AdminComponentPropsMapByCompositeBlocks<C extends CompositeBlocks> = {
 
 export type AdminComponentsMap<C extends CompositeBlocksConfig> = AdminComponentsMapByCompositeBlocks<ExtractCompositeBlocks<C>>;
 type AdminComponentsMapByCompositeBlocks<C extends CompositeBlocks> = {
-    [K in keyof C]: React.ReactNode;
+    [K in keyof C]: ReactNode;
 };
 
 export type PreviewMap<C extends CompositeBlocksConfig> = PreviewMapByCompositeBlocks<ExtractCompositeBlocks<C>>;
 type PreviewMapByCompositeBlocks<C extends CompositeBlocks> = {
-    [K in keyof C]: React.ReactNode;
+    [K in keyof C]: ReactNode;
 };
 
 export type ChildBlockCountMap<C extends CompositeBlocksConfig> = ChildBlockCountMapByCompositeBlocks<ExtractCompositeBlocks<C>>;

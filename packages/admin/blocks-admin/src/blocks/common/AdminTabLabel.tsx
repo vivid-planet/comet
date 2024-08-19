@@ -1,11 +1,11 @@
 import { Warning } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { usePromise } from "../../common/usePromise";
 
 export interface AdminTabLabelProps {
-    children: React.ReactNode;
+    children?: ReactNode;
     isValid?: () => Promise<boolean> | boolean;
 }
 
