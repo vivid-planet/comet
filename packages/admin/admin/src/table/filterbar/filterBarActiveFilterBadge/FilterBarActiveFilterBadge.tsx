@@ -1,34 +1,63 @@
-import { ComponentsOverrides, Theme, Typography } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides, Typography } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
-import { FilterBarActiveFilterBadgeClassKey, styles } from "./FilterBarActiveFilterBadge.styles";
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface FilterBarActiveFilterBadgeProps {
+export type FilterBarActiveFilterBadgeClassKey = "hasValueCount";
+
+const HasValueCount = createComponentSlot("div")<FilterBarActiveFilterBadgeClassKey>({
+    componentName: "FilterBarActiveFilterBadge",
+    slotName: "hasValueCount",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        background-color: ${theme.palette.grey[100]};
+        box-sizing: border-box;
+        text-align: center;
+        border-radius: 4px;
+        padding: 4px 5px;
+        margin-top: -4px;
+        margin-bottom: -4px;
+        font-size: 12px;
+    `,
+);
+
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export interface FilterBarActiveFilterBadgeProps
+    extends ThemedComponentBaseProps<{
+        hasValueCount: "div";
+    }> {
     countValue: number;
 }
 
-function FilterBadge({ countValue, classes }: React.PropsWithChildren<FilterBarActiveFilterBadgeProps> & WithStyles<typeof styles>) {
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export function FilterBarActiveFilterBadge(inProps: FilterBarActiveFilterBadgeProps) {
+    const { countValue, slotProps, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminFilterBarActiveFilterBadge",
+    });
     if (countValue > 0) {
         return (
-            <div className={classes.hasValueCount}>
+            <HasValueCount {...slotProps?.hasValueCount} {...restProps}>
                 <Typography variant="inherit" display="block">
                     {countValue}
                 </Typography>
-            </div>
+            </HasValueCount>
         );
     } else {
         return null;
     }
 }
-
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
-export const FilterBarActiveFilterBadge = withStyles(styles, { name: "CometAdminFilterBarActiveFilterBadge" })(FilterBadge);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -41,7 +70,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminFilterBarActiveFilterBadge?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBarActiveFilterBadge"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBarActiveFilterBadge"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBarActiveFilterBadge"];
         };
     }

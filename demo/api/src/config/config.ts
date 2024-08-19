@@ -72,6 +72,16 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
             },
             storageDirectoryPrefix: envVars.BLOB_STORAGE_DIRECTORY_PREFIX,
         },
+        cdn: {
+            originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
+        },
+        sentry:
+            envVars.SENTRY_DSN && envVars.SENTRY_ENVIRONMENT
+                ? {
+                      dsn: envVars.SENTRY_DSN,
+                      environment: envVars.SENTRY_ENVIRONMENT,
+                  }
+                : undefined,
     };
 }
 

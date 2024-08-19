@@ -1,26 +1,34 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { ComponentsOverrides } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
 import * as React from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
+
 export type ToolbarActionsClassKey = "root";
-interface Props {
+interface Props extends ThemedComponentBaseProps {
     children: React.ReactNode;
 }
 
-const styles = () => {
-    return createStyles<ToolbarActionsClassKey, Props>({
-        root: {
-            display: "flex",
-            alignItems: "center",
-        },
-    });
+const Root = createComponentSlot("div")<ToolbarActionsClassKey>({
+    componentName: "ToolbarActions",
+    slotName: "root",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        gap: ${theme.spacing(2)};
+
+        ${theme.breakpoints.up("md")} {
+            gap: ${theme.spacing(4)};
+        }
+    `,
+);
+
+export const ToolbarActions = (inProps: Props) => {
+    const { children, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarActions" });
+    return <Root {...restProps}>{children}</Root>;
 };
-
-function Actions({ children, classes }: Props & WithStyles<typeof styles>): React.ReactElement {
-    return <div className={classes.root}>{children}</div>;
-}
-
-export const ToolbarActions = withStyles(styles, { name: "CometAdminToolbarActions" })(Actions);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

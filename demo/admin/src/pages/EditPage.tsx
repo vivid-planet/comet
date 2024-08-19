@@ -5,9 +5,9 @@ import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
     AzureAiTranslatorProvider,
     BlockPreviewWithTabs,
+    ContentScopeIndicator,
     createUsePage,
     DependencyList,
-    EditPageLayout,
     openSitePreviewWindow,
     PageName,
     useBlockPreview,
@@ -120,7 +120,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
         });
     }
 
-    if (!pageState) return <></>;
+    if (!pageState) return null;
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
@@ -128,82 +128,80 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
 
     return (
         <AzureAiTranslatorProvider showApplyTranslationDialog={true} enabled={true}>
-            <EditPageLayout>
-                {hasChanges && (
-                    <RouterPrompt
-                        message={(location) => {
-                            if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
-                            return intl.formatMessage(messages.saveUnsavedChanges);
+            {hasChanges && (
+                <RouterPrompt
+                    message={(location) => {
+                        if (location.pathname.startsWith(match.url)) return true; //we navigated within our self
+                        return intl.formatMessage(messages.saveUnsavedChanges);
+                    }}
+                    saveAction={handleSaveAction}
+                />
+            )}
+            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
+                <ToolbarItem>
+                    <IconButton onClick={stackApi?.goBack}>
+                        <ArrowLeft />
+                    </IconButton>
+                </ToolbarItem>
+                <PageName pageId={id} />
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <Button
+                        color="info"
+                        startIcon={<Preview />}
+                        disabled={!pageState}
+                        onClick={() => {
+                            openSitePreviewWindow(pageState.path, contentScopeMatch.url);
                         }}
-                        saveAction={handleSaveAction}
-                    />
-                )}
-                <Toolbar>
-                    <ToolbarItem>
-                        <IconButton onClick={stackApi?.goBack}>
-                            <ArrowLeft />
-                        </IconButton>
-                    </ToolbarItem>
-                    <PageName pageId={id} />
-                    <ToolbarFillSpace />
-                    <ToolbarActions>
-                        <Button
-                            color="info"
-                            startIcon={<Preview />}
-                            disabled={!pageState}
-                            onClick={() => {
-                                openSitePreviewWindow(pageState.path, contentScopeMatch.url);
-                            }}
-                        >
-                            <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
-                        </Button>
-                        {pageSaveButton}
-                    </ToolbarActions>
-                </Toolbar>
-                <MainContent disablePaddingBottom>
-                    <BlockPreviewWithTabs previewUrl={`${siteConfig.previewUrl}/admin/page`} previewState={previewState} previewApi={previewApi}>
-                        {[
-                            {
-                                key: "content",
-                                label: (
-                                    <AdminTabLabel isValid={rootBlocksApi.content.isValid}>
-                                        <FormattedMessage {...messages.content} />
-                                    </AdminTabLabel>
-                                ),
-                                content: (
-                                    <AdminComponentRoot title={intl.formatMessage(messages.page)}>{rootBlocksApi.content.adminUI}</AdminComponentRoot>
-                                ),
-                            },
-                            {
-                                key: "config",
-                                label: (
-                                    <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                        <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
-                                    </AdminTabLabel>
-                                ),
-                                content: rootBlocksApi.seo.adminUI,
-                            },
-                            {
-                                key: "dependencies",
-                                label: (
-                                    <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
-                                        <FormattedMessage id="pages.pages.page.edit.dependencies" defaultMessage="Dependencies" />
-                                    </AdminTabLabel>
-                                ),
-                                content: (
-                                    <DependencyList
-                                        query={pageDependenciesQuery}
-                                        variables={{
-                                            id: pageState?.document?.id ?? "",
-                                        }}
-                                    />
-                                ),
-                            },
-                        ]}
-                    </BlockPreviewWithTabs>
-                </MainContent>
-                {dialogs}
-            </EditPageLayout>
+                    >
+                        <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
+                    </Button>
+                    {pageSaveButton}
+                </ToolbarActions>
+            </Toolbar>
+            <MainContent disablePaddingBottom>
+                <BlockPreviewWithTabs previewUrl={`${siteConfig.blockPreviewBaseUrl}/page`} previewState={previewState} previewApi={previewApi}>
+                    {[
+                        {
+                            key: "content",
+                            label: (
+                                <AdminTabLabel isValid={rootBlocksApi.content.isValid}>
+                                    <FormattedMessage {...messages.content} />
+                                </AdminTabLabel>
+                            ),
+                            content: (
+                                <AdminComponentRoot title={intl.formatMessage(messages.page)}>{rootBlocksApi.content.adminUI}</AdminComponentRoot>
+                            ),
+                        },
+                        {
+                            key: "config",
+                            label: (
+                                <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
+                                    <FormattedMessage id="pages.pages.page.edit.config" defaultMessage="Config" />
+                                </AdminTabLabel>
+                            ),
+                            content: rootBlocksApi.seo.adminUI,
+                        },
+                        {
+                            key: "dependencies",
+                            label: (
+                                <AdminTabLabel isValid={rootBlocksApi.seo.isValid}>
+                                    <FormattedMessage id="pages.pages.page.edit.dependencies" defaultMessage="Dependencies" />
+                                </AdminTabLabel>
+                            ),
+                            content: (
+                                <DependencyList
+                                    query={pageDependenciesQuery}
+                                    variables={{
+                                        id: pageState?.document?.id ?? "",
+                                    }}
+                                />
+                            ),
+                        },
+                    ]}
+                </BlockPreviewWithTabs>
+            </MainContent>
+            {dialogs}
         </AzureAiTranslatorProvider>
     );
 };

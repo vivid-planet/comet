@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
 

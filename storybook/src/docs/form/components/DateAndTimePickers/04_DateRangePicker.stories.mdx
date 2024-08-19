@@ -9,12 +9,12 @@ To use the `DateRangePicker` and `FinalFormDateRangePicker` components, install 
 
 ## Value type
 
-The `value` prop and the value returned by `onChange` are objects with `start` and `end` values, each with the type `Date`.
+The `value` prop and the value returned by `onChange` are objects with `start` and `end` values, each as a string in the format `YYYY-MM-DD`.
 
 ```ts
 type DateRange = {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
 };
 ```
 

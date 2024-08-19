@@ -1,9 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
-import { TableDeleteButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { GridColDef, TableDeleteButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Add, Delete, Edit, Info, Reject } from "@comet/admin-icons";
 import { Button, Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
 import React, { useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -55,7 +55,7 @@ export const PermissionGrid: React.FC<{
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.permission", defaultMessage: "Permission" }),
             renderCell: ({ row }) => (
-                <Typography variant="h6">
+                <Typography variant="subtitle2">
                     {permissionLabels && permissionLabels[row.permission]
                         ? permissionLabels[row.permission]
                         : camelCaseToHumanReadable(row.permission)}

@@ -109,11 +109,13 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
                     values={{ errorCount: error.length }}
                 />
             </Typography>
-            <ErrorList>
+            <Typography variant="list">
                 {error.map((error) => (
-                    <ErrorListItem key={error}>{error}</ErrorListItem>
+                    <Typography variant="listItem" key={error}>
+                        {error}
+                    </Typography>
                 ))}
-            </ErrorList>
+            </Typography>
             <Typography gutterBottom>
                 <FormattedMessage
                     id="comet.errorDialog.copyToClipboardInstruction"

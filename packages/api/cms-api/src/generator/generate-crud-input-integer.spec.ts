@@ -80,7 +80,11 @@ describe("GenerateCrudInputInteger", () => {
             for (const prop of structure.properties!) {
                 expect(prop.type).toBe("number");
                 const decorators = prop.decorators?.map((i) => i.name);
-                expect(decorators).toContain("Field");
+                const fieldDecorator = prop.decorators?.find((i) => i.name === "Field");
+                expect(fieldDecorator).not.toBeUndefined();
+                if (cls.getName() === "TestEntityWithIntegerTypesInput") {
+                    expect(fieldDecorator?.arguments).toContain("() => Int");
+                }
                 expect(decorators).toContain("IsNotEmpty");
                 expect(decorators).toContain("IsInt");
                 expect(decorators).not.toContain("IsNumeric");

@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { IsArray, IsBoolean, IsDate, IsObject, IsOptional, IsString, IsUUID } from "class-validator";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { GraphQLJSONObject } from "graphql-scalars";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
 

@@ -1,12 +1,35 @@
+"use client";
 import * as React from "react";
+import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce";
 
 import { AdminMessage, AdminMessageType, IFrameMessage, IFrameMessageType } from "./IFrameMessage";
+import { PreviewOverlay } from "./PreviewOverlay";
+import { getCombinedPositioningOfElements, getRecursiveChildrenOfPreviewElement } from "./utils";
+
+export type PreviewElement = {
+    element: HTMLElement;
+    adminRoute: string;
+    label: string;
+};
+
+export type OverlayElementData = {
+    adminRoute: string;
+    label: string;
+    position: {
+        zIndex: number;
+        top: number;
+        left: number;
+        width: number;
+        height: number;
+    };
+};
 
 export interface IFrameBridgeContext {
     hasBridge: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     block?: any;
+    showOnlyVisible: boolean;
     selectedAdminRoute?: string;
     hoveredAdminRoute?: string;
     sendSelectComponent: (id: string) => void;
@@ -16,11 +39,16 @@ export interface IFrameBridgeContext {
      */
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
+    contentScope: unknown;
+    previewElementsData: OverlayElementData[];
+    addPreviewElement: (element: PreviewElement) => void;
+    removePreviewElement: (element: PreviewElement) => void;
 }
 
 export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     hasBridge: false,
     showOutlines: false,
+    showOnlyVisible: false,
     sendSelectComponent: () => {
         // empty
     },
@@ -30,13 +58,82 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     sendMessage: () => {
         //empty
     },
+    contentScope: undefined,
+    previewElementsData: [],
+    removePreviewElement: () => {
+        // empty
+    },
+    addPreviewElement: () => {
+        // empty
+    },
 });
 
-export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
+export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
     const [block, setBlock] = React.useState<unknown | undefined>(undefined);
+    const [showOnlyVisible, setShowOnlyVisible] = React.useState<boolean>(false);
     const [selectedAdminRoute, setSelectedAdminRoute] = React.useState<string | undefined>(undefined);
     const [hoveredAdminRoute, setHoveredAdminRoute] = React.useState<string | undefined>(undefined);
     const [showOutlines, setShowOutlines] = React.useState<boolean>(false);
+    const [contentScope, setContentScope] = React.useState<unknown>(undefined);
+    const [previewElements, setPreviewElements] = React.useState<PreviewElement[]>([]);
+    const [previewElementsData, setPreviewElementsData] = React.useState<OverlayElementData[]>([]);
+
+    const childrenWrapperRef = React.useRef<HTMLDivElement>(null);
+
+    const recalculatePreviewElementsData = React.useCallback(() => {
+        setPreviewElementsData(
+            previewElements
+                .map((previewElement) => {
+                    const childNodes = getRecursiveChildrenOfPreviewElement(previewElement.element);
+                    const positioning = getCombinedPositioningOfElements(childNodes);
+
+                    return {
+                        adminRoute: previewElement.adminRoute,
+                        label: previewElement.label,
+                        position: {
+                            top: positioning.top,
+                            left: positioning.left,
+                            width: positioning.width,
+                            height: positioning.height,
+                        },
+                    };
+                })
+                .sort((previousElementData, nextElementData) => {
+                    const previousSize = previousElementData.position.width * previousElementData.position.height;
+                    const nextSize = nextElementData.position.width * nextElementData.position.height;
+                    return nextSize - previousSize;
+                })
+                .map((elementData, index) => {
+                    return {
+                        ...elementData,
+                        position: {
+                            ...elementData.position,
+                            zIndex: index + 1,
+                        },
+                    };
+                }),
+        );
+    }, [previewElements]);
+
+    React.useEffect(() => {
+        if (childrenWrapperRef.current) {
+            const mutationObserver = new MutationObserver(() => {
+                recalculatePreviewElementsData();
+            });
+
+            const resizeObserver = new ResizeObserver(() => {
+                recalculatePreviewElementsData();
+            });
+
+            mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true });
+            resizeObserver.observe(childrenWrapperRef.current);
+
+            return () => {
+                mutationObserver.disconnect();
+                resizeObserver.disconnect();
+            };
+        }
+    }, [recalculatePreviewElementsData]);
 
     const sendMessage = (message: IFrameMessage) => {
         window.parent.postMessage(JSON.stringify(message), "*");
@@ -52,6 +149,9 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                 case AdminMessageType.Block:
                     setBlock(message.data.block);
                     break;
+                case AdminMessageType.ShowOnlyVisible:
+                    setShowOnlyVisible(message.data.showOnlyVisible);
+                    break;
                 case AdminMessageType.SelectComponent:
                     setSelectedAdminRoute(
                         message.data.adminRoute.lastIndexOf("#") > 0
@@ -63,6 +163,9 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                     setHoveredAdminRoute(message.data.adminRoute);
                     setShowOutlines(true);
                     debounceDeactivateOutlines();
+                    break;
+                case AdminMessageType.ContentScope:
+                    setContentScope(message.data.contentScope);
                     break;
             }
         },
@@ -96,12 +199,27 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
         };
     }, [onReceiveMessage]);
 
+    const addPreviewElement = React.useCallback(
+        (element: PreviewElement) => {
+            setPreviewElements((prev) => [...prev, element]);
+        },
+        [setPreviewElements],
+    );
+
+    const removePreviewElement = React.useCallback(
+        (element: PreviewElement) => {
+            setPreviewElements((prev) => prev.filter((el) => el.adminRoute !== element.adminRoute));
+        },
+        [setPreviewElements],
+    );
+
     return (
         <IFrameBridgeContext.Provider
             value={{
                 showOutlines,
                 hasBridge: true,
                 block,
+                showOnlyVisible,
                 selectedAdminRoute,
                 hoveredAdminRoute,
                 sendSelectComponent: (adminRoute: string) => {
@@ -112,6 +230,10 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                     sendMessage({ cometType: IFrameMessageType.HoverComponent, data: { route } });
                 },
                 sendMessage,
+                contentScope,
+                previewElementsData,
+                addPreviewElement,
+                removePreviewElement,
             }}
         >
             <div
@@ -120,8 +242,14 @@ export const IFrameBridgeProvider: React.FunctionComponent = ({ children }) => {
                     debounceDeactivateOutlines();
                 }}
             >
-                {children}
+                <PreviewOverlay />
+                <ChildrenWrapper ref={childrenWrapperRef}>{children}</ChildrenWrapper>
             </div>
         </IFrameBridgeContext.Provider>
     );
 };
+
+const ChildrenWrapper = styled.div`
+    position: relative;
+    z-index: 1;
+`;

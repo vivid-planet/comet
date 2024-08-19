@@ -65,6 +65,7 @@ storiesOf("stories/components/Table/Selection Table", module)
             }),
         });
 
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         if (!tableData) return <></>;
 
         return (

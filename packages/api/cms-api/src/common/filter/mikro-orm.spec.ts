@@ -1,5 +1,5 @@
 import { BooleanFilter } from "./boolean.filter";
-import { DateFilter } from "./date.filter";
+import { DateTimeFilter } from "./date-time.filter";
 import { filtersToMikroOrmQuery, filterToMikroOrmQuery, searchToMikroOrmQuery, splitSearchString } from "./mikro-orm";
 import { NumberFilter } from "./number.filter";
 import { StringFilter } from "./string.filter";
@@ -268,12 +268,14 @@ describe("filtersToMikroOrmQuery", () => {
         f.foo = new Equals42();
 
         expect(
-            filtersToMikroOrmQuery(f, (acc, filterValue, filterKey) => {
-                if (filterValue instanceof Equals42) {
-                    acc[filterKey] = 42;
-                } else {
-                    throw new Error("unsupported filter");
-                }
+            filtersToMikroOrmQuery(f, {
+                applyFilter: (acc, filterValue, filterKey) => {
+                    if (filterValue instanceof Equals42) {
+                        acc[filterKey] = 42;
+                    } else {
+                        throw new Error("unsupported filter");
+                    }
+                },
             }),
         ).toStrictEqual({
             foo: 42,
@@ -285,19 +287,21 @@ describe("filtersToMikroOrmQuery", () => {
         f.str = new StringFilter();
         f.str.contains = "abc";
         expect(
-            filtersToMikroOrmQuery(f, (acc, filterValue, filterKey) => {
-                if (filterValue instanceof Equals42) {
-                    acc[filterKey] = 42;
-                } else if (
-                    filterValue instanceof StringFilter ||
-                    filterValue instanceof NumberFilter ||
-                    filterValue instanceof DateFilter ||
-                    filterValue instanceof BooleanFilter
-                ) {
-                    acc[filterKey] = filterToMikroOrmQuery(filterValue, filterKey);
-                } else {
-                    throw new Error("unsupported filter");
-                }
+            filtersToMikroOrmQuery(f, {
+                applyFilter: (acc, filterValue, filterKey) => {
+                    if (filterValue instanceof Equals42) {
+                        acc[filterKey] = 42;
+                    } else if (
+                        filterValue instanceof StringFilter ||
+                        filterValue instanceof NumberFilter ||
+                        filterValue instanceof DateTimeFilter ||
+                        filterValue instanceof BooleanFilter
+                    ) {
+                        acc[filterKey] = filterToMikroOrmQuery(filterValue, filterKey);
+                    } else {
+                        throw new Error("unsupported filter");
+                    }
+                },
             }),
         ).toStrictEqual({
             foo: 42,

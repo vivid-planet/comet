@@ -96,6 +96,10 @@ export class EnvironmentVariables {
     @IsString()
     S3_BUCKET: string;
 
+    @IsString()
+    @ValidateIf(() => process.env.NODE_ENV === "production")
+    CDN_ORIGIN_CHECK_SECRET: string;
+
     @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_KEY || v.AZURE_AI_TRANSLATOR_REGION)
     @IsUrl()
     AZURE_AI_TRANSLATOR_ENDPOINT?: string;
@@ -119,4 +123,12 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL || v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY)
     @IsString()
     AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID?: string;
+
+    @IsOptional()
+    @IsUrl()
+    SENTRY_DSN?: string;
+
+    @ValidateIf((v) => v.SENTRY_DSN)
+    @IsString()
+    SENTRY_ENVIRONMENT?: string;
 }

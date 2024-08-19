@@ -1,5 +1,6 @@
 {
     "name": "comet-storybook",
+    "version": "1.0.0",
     "private": true,
     "license": "BSD-2-Clause",
     "files": [
@@ -8,8 +9,9 @@
     "scripts": {
         "build-storybook": "build-storybook",
         "storybook": "start-storybook -p 26638 --no-version-updates",
-        "lint": "run-p lint:eslint lint:tsc",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit"
     },
     "dependencies": {
@@ -21,13 +23,15 @@
         "@comet/admin-react-select": "workspace:*",
         "@comet/admin-rte": "workspace:*",
         "@comet/admin-theme": "workspace:*",
+        "@comet/blocks-admin": "workspace:*",
+        "@comet/cms-admin": "workspace:*",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
-        "@fontsource/roboto": "^4.2.3",
+        "@fontsource-variable/roboto-flex": "^5.0.14",
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@mui/x-data-grid": "^5.17.6",
+        "@mui/x-data-grid-pro": "^5.17.6",
         "@storybook/addon-actions": "^6.5.16",
         "@storybook/addon-docs": "^6.5.16",
         "@storybook/addon-knobs": "^6.4.0",

@@ -8,11 +8,12 @@ import {
     Menu,
     MenuCollapsibleItem,
     MenuItemAnchorLink,
+    MenuItemGroup,
     MenuItemRouterLink,
     useWindowSize,
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Badge, Card, CardContent, Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
@@ -26,24 +27,37 @@ const AppMenu: React.FC = () => {
 
     return (
         <Menu variant={windowSize.width < permanentMenuMinWidth ? "temporary" : "permanent"}>
-            <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
-            <MenuItemRouterLink primary="Settings" icon={<Settings />} to="/settings" />
-            <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
-                <MenuItemRouterLink primary="Foo1" to="/foo1" />
-                <MenuItemRouterLink primary="Foo2" to="/foo2" />
-            </MenuCollapsibleItem>
-            <MenuCollapsibleItem primary="Even More Items" icon={<Sort />}>
-                <MenuItemRouterLink primary="Foo3" to="/foo3" />
-                <MenuItemRouterLink primary="Foo4" to="/foo4" />
-            </MenuCollapsibleItem>
-            <MenuItemAnchorLink
-                primary="Comet Admin"
-                secondary="View on GitHub"
-                target="_blank"
-                href="https://github.com/vivid-planet/comet"
-                icon={<CometColor />}
-                secondaryAction={<LinkExternal />}
-            />
+            <MenuItemGroup title="Some Group">
+                <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" />
+                <MenuCollapsibleItem primary="More Items" icon={<Sort />}>
+                    <MenuItemRouterLink primary="Foo1" to="/foo1" />
+                    <MenuItemRouterLink primary="Foo2" to="/foo2" />
+                </MenuCollapsibleItem>
+                <MenuCollapsibleItem primary="Even More Items" icon={<Sort />}>
+                    <MenuItemRouterLink primary="Foo3" to="/foo3" />
+                    <MenuItemRouterLink primary="Foo4" to="/foo4" />
+                    <MenuCollapsibleItem primary="Wow there can be even more">
+                        <MenuItemRouterLink primary="Foo5" to="/foo5" />
+                        <MenuItemRouterLink primary="Foo6" to="/foo6" />
+                    </MenuCollapsibleItem>
+                </MenuCollapsibleItem>
+            </MenuItemGroup>
+            <MenuItemGroup title="Further Layers">
+                <MenuItemRouterLink
+                    primary="Settings"
+                    secondaryAction={<Badge color="error" badgeContent={2} />}
+                    icon={<Settings />}
+                    to="/settings"
+                />
+                <MenuItemAnchorLink
+                    primary="Comet Admin"
+                    secondary="View on GitHub"
+                    target="_blank"
+                    href="https://github.com/vivid-planet/comet"
+                    icon={<CometColor />}
+                    secondaryAction={<LinkExternal />}
+                />
+            </MenuItemGroup>
         </Menu>
     );
 };
@@ -79,6 +93,8 @@ export const Story: React.FC = () => (
             <Route path="/foo2" render={() => <Content>Foo 2</Content>} />
             <Route path="/foo3" render={() => <Content>Foo 3</Content>} />
             <Route path="/foo4" render={() => <Content>Foo 4</Content>} />
+            <Route path="/foo5" render={() => <Content>Foo 5</Content>} />
+            <Route path="/foo6" render={() => <Content>Foo 6</Content>} />
         </Switch>
     </MasterLayout>
 );

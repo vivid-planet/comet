@@ -1,7 +1,4 @@
-import "@fontsource/roboto/100.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
+import "@fontsource-variable/roboto-flex/full.css";
 import "material-design-icons/iconfont/material-icons.css";
 import "typeface-open-sans";
 import "@src/polyfills";
@@ -10,6 +7,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
+    ContentScopeInterface,
     createDamFileDependency,
     createHttpClient,
     CurrentUserProvider,
@@ -121,7 +119,14 @@ class App extends React.Component {
                                                                             {/* @TODO: add preview to contentScope once site is capable of contentScope */}
                                                                             <Route
                                                                                 path={`${match.path}/preview`}
-                                                                                render={(props) => <SitePreview {...props} />}
+                                                                                render={(props) => (
+                                                                                    <SitePreview
+                                                                                        resolvePath={(path: string, scope: ContentScopeInterface) => {
+                                                                                            return `/${scope.language}${path}`;
+                                                                                        }}
+                                                                                        {...props}
+                                                                                    />
+                                                                                )}
                                                                             />
                                                                             <Route
                                                                                 render={() => (

@@ -1,6 +1,6 @@
 ---
 title: Migrating from v5 to v6
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Migrating from v5 to v6

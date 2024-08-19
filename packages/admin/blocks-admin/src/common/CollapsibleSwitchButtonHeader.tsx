@@ -1,5 +1,5 @@
 import { Switch, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/material/styles";
 import React, { FunctionComponent } from "react";
 
 interface CollapsibleSwitchButtonHeaderProps {
@@ -7,23 +7,19 @@ interface CollapsibleSwitchButtonHeaderProps {
     title?: React.ReactNode;
 }
 
-const useStyles = makeStyles({
-    header: {
-        flex: 1,
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-});
-
 export const CollapsibleSwitchButtonHeader: FunctionComponent<CollapsibleSwitchButtonHeaderProps> = ({ checked, title }) => {
-    const classes = useStyles();
     return (
-        <div className={classes.header}>
+        <Root>
             <Typography>{title}</Typography>
-
             <Switch checked={checked} />
-        </div>
+        </Root>
     );
 };
+
+const Root = styled("div")`
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;

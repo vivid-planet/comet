@@ -1,6 +1,6 @@
 {
     "name": "@comet/blocks-admin",
-    "version": "6.16.0",
+    "version": "7.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -19,8 +19,9 @@
         "clean": "rimraf lib",
         "generate-block-types": "comet generate-block-types --inputs",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
-        "lint": "$npm_execpath generate-block-types && run-p lint:eslint lint:tsc",
+        "lint": "$npm_execpath generate-block-types && run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "$npm_execpath generate-block-types && run-p start:babel start:types",
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
@@ -29,8 +30,8 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^6.16.0",
-        "@comet/admin-icons": "workspace:^6.16.0",
+        "@comet/admin": "workspace:^7.0.0",
+        "@comet/admin-icons": "workspace:^7.0.0",
         "@mui/lab": "^5.0.0-alpha.76",
         "clipboard-copy": "^4.0.0",
         "clsx": "^1.1.1",
@@ -42,14 +43,13 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^6.16.0",
-        "@comet/cli": "workspace:^6.16.0",
-        "@comet/eslint-config": "workspace:^6.16.0",
+        "@comet/admin-babel-preset": "workspace:^7.0.0",
+        "@comet/cli": "workspace:^7.0.0",
+        "@comet/eslint-config": "workspace:^7.0.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@mui/lab": "^5.0.0-alpha.76",
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "@mui/system": "^5.0.0",
         "@types/jest": "^29.5.0",
         "@types/lodash.isequal": "^4.0.0",
@@ -78,7 +78,6 @@
     },
     "peerDependencies": {
         "@mui/material": "^5.0.0",
-        "@mui/styles": "^5.0.0",
         "react": "^16.8.0 || ^17.0.0",
         "react-dnd": "^16.0.0",
         "react-dom": "^16.8.0 || ^17.0.0",

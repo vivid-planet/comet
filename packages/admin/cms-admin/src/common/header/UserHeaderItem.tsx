@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
 import { Account, Info, Logout } from "@comet/admin-icons";
-import { Box, Button as MUIButton } from "@mui/material";
+import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -41,12 +41,15 @@ interface UserHeaderItemProps {
 export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const { aboutModalLogo, buttonChildren, children } = props;
 
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
     const user = useCurrentUser();
     const [showAboutModal, setShowAboutModal] = React.useState(false);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     return (
-        <AppHeaderDropdown buttonChildren={buttonChildren ?? user.name} startIcon={<Account />}>
+        <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? <Account /> : user.name)} startIcon={isMobile ? undefined : <Account />}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
@@ -67,13 +70,14 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        endIcon={<Logout />}
+                        startIcon={<Logout />}
                         onClick={async () => {
                             const result = await signOut();
                             if (result.data) {
                                 location.href = result.data.currentUserSignOut;
                             }
                         }}
+                        sx={{ justifyContent: "center" }}
                     >
                         <FormattedMessage id="comet.logout" defaultMessage="Logout" />
                     </Button>

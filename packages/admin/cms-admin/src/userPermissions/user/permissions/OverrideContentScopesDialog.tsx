@@ -105,7 +105,7 @@ export const OverrideContentScopesDialog: React.FC<FormProps> = ({ permissionId,
                                 disabled={disabled}
                             />
                             {values.overrideContentScopes &&
-                                data.availableContentScopes.map(({ contentScope, label }: { contentScope: ContentScope; label: string }) => (
+                                data.availableContentScopes.map(({ contentScope, label }: { contentScope: ContentScope; label: string | null }) => (
                                     <Field
                                         disabled={disabled}
                                         key={JSON.stringify(contentScope)}

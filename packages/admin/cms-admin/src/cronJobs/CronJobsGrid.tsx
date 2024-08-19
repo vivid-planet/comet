@@ -7,6 +7,7 @@ import { parseISO } from "date-fns";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import {
     GQLKubernetesCronJobsQuery,
     GQLKubernetesCronJobsQueryVariables,
@@ -52,7 +53,7 @@ const triggerCronJobMutation = gql`
 
 function CronJobsToolbar() {
     return (
-        <Toolbar>
+        <Toolbar scopeIndicator={<ContentScopeIndicator global />}>
             <ToolbarTitleItem>
                 <FormattedMessage id="comet.cronJobs.title" defaultMessage="Cron Jobs" />
             </ToolbarTitleItem>

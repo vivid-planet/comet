@@ -85,7 +85,7 @@ export const ContentScopeGrid: React.FC<{
                     </ToolbarActions>
                 </CardToolbar>
                 <CardContent>
-                    {data.availableContentScopes.map(({ contentScope, label }: { contentScope: ContentScope; label: string }) => (
+                    {data.availableContentScopes.map(({ contentScope, label }: { contentScope: ContentScope; label: string | null }) => (
                         <Field
                             disabled={data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, contentScope))}
                             key={JSON.stringify(contentScope)}
