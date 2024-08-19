@@ -209,7 +209,8 @@ export function generateFormField({
             }
         });
 
-        if ((required && values.length <= 5) || config.inputType === "radio") {
+        const renderAsRadio = config.inputType === "radio" || (required && values.length <= 5 && config.inputType !== "select");
+        if (renderAsRadio) {
             code = `<RadioGroupField
              ${required ? "required" : ""}
               variant="horizontal"
@@ -228,7 +229,7 @@ export function generateFormField({
                       })
                       .join(",")}
             ]}/>`;
-        } else if (!required || values.length > 5 || config.inputType === "select") {
+        } else {
             code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
