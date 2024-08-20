@@ -18,8 +18,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
+import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";

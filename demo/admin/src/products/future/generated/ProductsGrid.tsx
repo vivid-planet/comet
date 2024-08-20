@@ -18,16 +18,15 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Info } from "@comet/admin-icons";
-import { StateFilled as StateFilledIcon } from "@comet/admin-icons";
+import { Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
+import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -144,7 +143,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             flex: 1,
             minWidth: 80,
         },
-        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
+        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, minWidth: 200, maxWidth: 250 },
         {
             field: "description",
             headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),

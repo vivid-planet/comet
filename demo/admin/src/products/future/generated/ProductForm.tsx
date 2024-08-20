@@ -9,7 +9,6 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
-    FinalFormSelect,
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
@@ -25,8 +24,6 @@ import {
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment } from "@mui/material";
 import {
     DamImageBlock,
     FileUploadField,
@@ -35,7 +32,7 @@ import {
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
+import { FormControlLabel, InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -66,7 +63,12 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = Omit<GQLProductFormDetailsFragment, "dimensions" | "manufacturerCountry"> & {
+type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
+    priceList: GQLFinalFormFileUploadFragment | null;
+    datasheets: GQLFinalFormFileUploadFragment[];
+};
+
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "manufacturerCountry"> & {
     dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
@@ -74,12 +76,6 @@ type FormValues = Omit<GQLProductFormDetailsFragment, "dimensions" | "manufactur
         depth: string;
     };
     manufacturerCountry?: { id: string; label: string };
-type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
-    datasheets: GQLFinalFormFileUploadFragment[];
-};
-
-type FormValues = ProductFormDetailsFragment & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
