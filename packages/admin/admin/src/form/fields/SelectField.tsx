@@ -11,18 +11,31 @@ type SelectFieldPropsToExtendFromWithoutChildren<Value extends string | number> 
 };
 
 export interface SelectFieldProps<Value extends string | number> extends SelectFieldPropsToExtendFromWithoutChildren<Value> {
-    children: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
+    children?: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
     componentsProps?: {
         finalFormSelect?: FinalFormSelectProps<Value>;
     };
 }
 
-export function SelectField<Value extends string | number>({ componentsProps = {}, children, ...restProps }: SelectFieldProps<Value>) {
+export function SelectField<Value extends string | number>({
+    componentsProps = {},
+    children,
+    options,
+    getOptionLabel,
+    getOptionSelected,
+    ...restProps
+}: SelectFieldProps<Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;
     return (
         <Field {...restProps}>
             {(props) => (
-                <FinalFormSelect<Value> {...props} {...finalFormSelectProps}>
+                <FinalFormSelect<Value>
+                    options={options}
+                    getOptionLabel={getOptionLabel}
+                    getOptionSelected={getOptionSelected}
+                    {...props}
+                    {...finalFormSelectProps}
+                >
                     {children}
                 </FinalFormSelect>
             )}

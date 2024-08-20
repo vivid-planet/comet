@@ -1,4 +1,4 @@
-import { Field, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormSelect, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { Card, CardContent, InputAdornment, MenuItem } from "@mui/material";
 import { storiesOf } from "@storybook/react";
@@ -49,17 +49,14 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="flavorOptions" label="Flavor with Options as prop" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect
-                                                {...props}
-                                                options={options}
-                                                getOptionLabel={(option: Option) => option.label}
-                                                getOptionSelected={(option: Option, value: Option) => option.value === value.value}
-                                                fullWidth
-                                            />
-                                        )}
-                                    </Field>
+                                    <SelectField
+                                        name="flavorOptions"
+                                        label="Flavor with Options as prop"
+                                        fullWidth
+                                        options={options}
+                                        getOptionLabel={(option: Option) => option.label}
+                                        getOptionSelected={(option: Option, value: Option) => option.value === value.value}
+                                    />
 
                                     <Field name="flavorRequired" label="Required Flavor" fullWidth>
                                         {(props) => (
