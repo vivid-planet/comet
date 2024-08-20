@@ -1,5 +1,32 @@
 # @comet/blocks-admin
 
+## 7.1.0
+
+### Minor Changes
+
+-   1fe10e883: Add `maxVisibleBlocks` option to `createBlocksBlock`
+-   e53f4ce06: OneOfBlock: Remove label for the type field
+
+    The label was unnecessary and occasionally caused UI problems when having two labels next each other.
+
+### Patch Changes
+
+-   2253a1d00: createListBlock: Don't show the minimum visible blocks tooltip when the option isn't used
+-   6be41b668: Fix color for visible icon button in `ListBlock` and `ColumnsBlock`
+-   Updated dependencies [04844d39e]
+-   Updated dependencies [dfc4a7fff]
+-   Updated dependencies [b1bbd6a0c]
+-   Updated dependencies [c0488eb84]
+-   Updated dependencies [39ab15616]
+-   Updated dependencies [c1ab2b340]
+-   Updated dependencies [99a1f0ae6]
+-   Updated dependencies [edf14d066]
+-   Updated dependencies [2b68513be]
+-   Updated dependencies [374f383ba]
+-   Updated dependencies [c050f2242]
+    -   @comet/admin@7.1.0
+    -   @comet/admin-icons@7.1.0
+
 ## 7.0.0
 
 ### Major Changes
