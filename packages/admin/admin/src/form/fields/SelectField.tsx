@@ -1,7 +1,13 @@
+import { MenuItem } from "@mui/material";
 import React from "react";
 
 import { Field, FieldProps } from "../Field";
 import { FinalFormSelect, FinalFormSelectProps } from "../FinalFormSelect";
+
+export type SelectFieldOption<Value extends string | number = string | number> = {
+    label: React.ReactNode;
+    value: Value;
+};
 
 type SelectFieldPropsToExtendFrom<Value extends string | number> = FieldProps<Value, HTMLSelectElement>;
 
@@ -11,19 +17,25 @@ type SelectFieldPropsToExtendFromWithoutChildren<Value extends string | number> 
 };
 
 export interface SelectFieldProps<Value extends string | number> extends SelectFieldPropsToExtendFromWithoutChildren<Value> {
-    children: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
+    children?: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
+    options?: SelectFieldOption[];
     componentsProps?: {
         finalFormSelect?: FinalFormSelectProps<Value>;
     };
 }
 
-export function SelectField<Value extends string | number>({ componentsProps = {}, children, ...restProps }: SelectFieldProps<Value>) {
+export function SelectField<Value extends string | number>({ componentsProps = {}, children, options, ...restProps }: SelectFieldProps<Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;
     return (
         <Field {...restProps}>
             {(props) => (
                 <FinalFormSelect<Value> {...props} {...finalFormSelectProps}>
                     {children}
+                    {options?.map((option) => (
+                        <MenuItem value={option.value} key={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
                 </FinalFormSelect>
             )}
         </Field>
