@@ -9,7 +9,6 @@ import getUuid from "uuid-by-string";
 
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
-import { FindUsersArgs } from "./dto/paginated-user-list";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
@@ -74,11 +73,6 @@ export class UserPermissionsService {
     async getUser(id: string): Promise<User> {
         if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
         return this.userService.getUser(id);
-    }
-
-    async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
-        if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
-        return this.userService.findUsers(args);
     }
 
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {

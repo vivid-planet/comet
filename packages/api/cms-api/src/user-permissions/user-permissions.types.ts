@@ -31,8 +31,8 @@ export interface AccessControlServiceInterface {
 }
 
 export interface UserPermissionsUserServiceInterface {
-    getUser: (id: string) => Promise<User> | User;
-    findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
+    getUser: (id: string, currentUser?: User) => Promise<User> | User;
+    findUsers: (args: FindUsersArgs, currentUser: User) => Promise<Users> | Users;
     createUserFromIdToken?: (idToken: JwtPayload) => Promise<User> | User;
 }
 
