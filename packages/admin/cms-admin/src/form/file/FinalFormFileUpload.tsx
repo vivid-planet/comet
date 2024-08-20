@@ -26,6 +26,12 @@ type SuccessfulApiResponse = {
     contentHash: string;
 };
 
+type FailedApiResponse = {
+    statusCode?: number;
+    message?: string;
+    error?: string;
+};
+
 type FinalFormFileUploadSingleFileProps = FieldRenderProps<GQLFinalFormFileUploadFragment, HTMLInputElement> & {
     multiple?: false;
     maxFiles?: 1;
@@ -102,7 +108,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                         method: "POST",
                         body: formData,
                     });
-                    const jsonResponse: SuccessfulApiResponse = await response.json();
+                    const jsonResponse: SuccessfulApiResponse | FailedApiResponse = await response.json();
 
                     if ("id" in jsonResponse) {
                         setUploadingFiles((existing) => existing.filter((loadingFile) => loadingFile.name !== file.name));
@@ -119,12 +125,18 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             onChange([...inputValue, ...successfullyUploadedFiles]);
                         }
                     } else {
+                        let errorMessage = <FormattedMessage id="comet.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />;
+
+                        if (jsonResponse.message === "Unsupported mime type") {
+                            errorMessage = commonErrorMessages.invalidFileType;
+                        }
+
                         setUploadingFiles((existing) => existing.filter((loadingFile) => loadingFile.name !== file.name));
                         setFailedUploads((existing) => [
                             ...existing,
                             {
                                 name: file.name,
-                                error: <FormattedMessage id="comet.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />,
+                                error: errorMessage,
                             },
                         ]);
                     }
