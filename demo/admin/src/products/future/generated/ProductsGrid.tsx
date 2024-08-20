@@ -27,6 +27,7 @@ import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ManufacturerFilterOperators } from "../ManufacturerFilter";
+import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -216,9 +217,11 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             filterable: false,
             type: "actions",
             align: "right",
+            width: 116,
             renderCell: (params) => {
                 return (
                     <>
+                        <ProductsGridPreviewAction params={params} />
                         {rowAction && rowAction(params)}
                         <CrudContextMenu
                             copyData={() => {

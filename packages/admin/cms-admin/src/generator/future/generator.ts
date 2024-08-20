@@ -89,7 +89,7 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex"> & { tooltipMessage?: string };
+export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex"> & { tooltipMessage?: string };
 
 type IconKey = string; // TODO: Use `IconName` type from `@comet/admin-icons` after merged: https://github.com/vivid-planet/comet/pull/2421
 
@@ -117,13 +117,15 @@ export type GridColumnConfig<T> = (
     filterOperators?: ImportReference;
 } & DataGridSettings;
 
+export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & DataGridSettings;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
     exportQuery?: boolean; // to refetch from outside
-    columns: GridColumnConfig<T>[];
+    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig>;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
