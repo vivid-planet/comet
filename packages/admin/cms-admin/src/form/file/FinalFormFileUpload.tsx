@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import { ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
+import { commonErrorMessages } from "@comet/admin/src/form/file/commonErrorMessages";
 import React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -72,13 +73,11 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                     };
 
                     if (rejection.errors.some((error) => error.code === "file-too-large")) {
-                        failedFile.error = <FormattedMessage id="comet.finalFormFileUpload.fileTooLarge" defaultMessage="File is too large." />;
+                        failedFile.error = commonErrorMessages.fileTooLarge;
                     }
 
                     if (rejection.errors.some((error) => error.code === "file-invalid-type")) {
-                        failedFile.error = (
-                            <FormattedMessage id="comet.finalFormFileUpload.fileInvalidType" defaultMessage="File type is not allowed." />
-                        );
+                        failedFile.error = commonErrorMessages.invalidFileType;
                     }
 
                     setFailedUploads((existing) => [...existing, failedFile]);
@@ -147,15 +146,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             files={files}
             multiple={multiple}
             maxFiles={maxFiles}
-            error={
-                tooManyFilesSelected ? (
-                    <FormattedMessage
-                        id="comet.finalFormFileUpload.maximumFilesAmount"
-                        defaultMessage="Upload was canceled. You can only upload a maximum of {maxFiles} {maxFiles, plural, one {file} other {files}}, please reduce your selection."
-                        values={{ maxFiles }}
-                    />
-                ) : undefined
-            }
+            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonErrorMessages.tooManyFiles(maxFiles) : undefined}
             {...restProps}
         />
     );
