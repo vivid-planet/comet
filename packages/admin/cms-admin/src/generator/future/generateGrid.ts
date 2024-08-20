@@ -7,12 +7,13 @@ import {
     IntrospectionQuery,
 } from "graphql";
 import { plural } from "pluralize";
+import { ReactNode } from "react";
 
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { GeneratorReturn, GridConfig } from "./generator";
+import { GeneratorReturn, GridConfig, StaticSelectLabelCellContent } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findQueryTypeOrThrow } from "./utils/findQueryType";
@@ -62,6 +63,62 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
     };
 }
 
+type LabelData = {
+    textLabel: string;
+    gridCellContent: ReactNode;
+};
+
+const getLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
+    if (typeof label === "string") {
+        const labelText = `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`;
+        return {
+            textLabel: labelText,
+            gridCellContent: labelText,
+        };
+    }
+
+    const textLabelParts: string[] = [];
+    const gridCellContentProps: Record<string, string> = {};
+
+    if (label.primaryText) {
+        const primaryMessageId = `${messageId}.primary`;
+        textLabelParts.push(`intl.formatMessage({ id: "${primaryMessageId}", defaultMessage: "${label.primaryText}" })`);
+        gridCellContentProps.primaryText = `<FormattedMessage id="${primaryMessageId}" defaultMessage="${label.primaryText}" />`;
+    }
+
+    if (label.secondaryText) {
+        const secondaryMessageId = `${messageId}.secondary`;
+        textLabelParts.push(`intl.formatMessage({ id: "${secondaryMessageId}", defaultMessage: "${label.secondaryText}" })`);
+        gridCellContentProps.secondaryText = `<FormattedMessage id="${secondaryMessageId}" defaultMessage="${label.secondaryText}" />`;
+    }
+
+    if (typeof label.icon === "string") {
+        gridCellContentProps.icon = `<${label.icon}Icon />`;
+    } else if (typeof label.icon === "object") {
+        if ("import" in label.icon) {
+            gridCellContentProps.icon = `<${label.icon.name} />`;
+        } else {
+            const { name, ...iconProps } = label.icon;
+            gridCellContentProps.icon = `<${name}Icon
+                ${Object.entries(iconProps)
+                    .map(([key, value]) => `${key}="${value}"`)
+                    .join("\n")}
+            />`;
+        }
+    }
+
+    const gridCellContent = `<GridCellContent
+        ${Object.entries(gridCellContentProps)
+            .map(([key, value]) => `${key}={${value}}`)
+            .join("\n")}
+    />`;
+
+    return {
+        textLabel: textLabelParts.join(" + ' ' + "),
+        gridCellContent,
+    };
+};
+
 export function generateGrid(
     {
         exportName,
@@ -80,6 +137,7 @@ export function generateGrid(
     const gridQuery = config.query ? config.query : instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
+    const iconsToImport: string[] = ["Add", "Edit"];
     const props: Prop[] = [];
 
     const fieldList = generateGqlFieldList({ columns: config.columns.filter((column) => column.name !== "id") }); // exclude id because it's always required
@@ -256,9 +314,35 @@ export function generateGrid(
             const enumType = gqlIntrospection.__schema.types.find(
                 (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
             ) as IntrospectionEnumType | undefined;
-            if (!enumType) throw new Error(`Enum type not found`);
 
-            const values = (column.values ? column.values : enumType.enumValues.map((i) => i.name)).map((value) => {
+            column.values?.forEach((value) => {
+                if (typeof value === "object" && typeof value.label === "object" && "icon" in value.label) {
+                    if (typeof value.label.icon === "string") {
+                        iconsToImport.push(value.label.icon);
+                    } else if (typeof value.label.icon?.name === "string") {
+                        if ("import" in value.label.icon) {
+                            imports.push({
+                                name: value.label.icon.name,
+                                importPath: value.label.icon.import,
+                            });
+                        } else {
+                            iconsToImport.push(value.label.icon.name);
+                        }
+                    }
+                }
+            });
+
+            let columnValues = [];
+
+            if (column.values) {
+                columnValues = column.values;
+            } else if (enumType) {
+                columnValues = enumType.enumValues.map((i) => i.name);
+            } else {
+                throw new Error(`Enum type not found`);
+            }
+
+            const values = columnValues.map((value) => {
                 if (typeof value === "string") {
                     return {
                         value,
@@ -269,18 +353,22 @@ export function generateGrid(
                 }
             });
 
-            const valueOptions = `[${values
-                .map((i) => {
-                    const id = `${instanceGqlType}.${name}.${i.value.charAt(0).toLowerCase() + i.value.slice(1)}`;
-                    const label = `intl.formatMessage({ id: "${id}", defaultMessage: "${i.label}" })`;
-                    return `{value: ${JSON.stringify(i.value)}, label: ${label}}, `;
+            const labelData = values.map(({ value, label }) => ({
+                value,
+                ...getLabelData(`${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`, label),
+            }));
+
+            const valueOptions = `[${labelData.map(({ value, textLabel }) => `{value: ${JSON.stringify(value)}, label: ${textLabel}}, `).join(" ")}]`;
+
+            const valueLabels = `{${labelData
+                .map(({ value, gridCellContent }) => {
+                    return `${JSON.stringify(value)}: ${gridCellContent},`;
                 })
-                .join(" ")}]`;
+                .join(" ")}}`;
 
             renderCell = `({ row }) => {
-                const valueOptions = ${valueOptions};
-                const selectedOption = valueOptions.find(({ value }) => value === row.${name});
-                return selectedOption ? selectedOption.label : row.${name};
+                const valueLabels: Record<string, React.ReactNode> = ${valueLabels};
+                return row.${name}.toString() in valueLabels ? valueLabels[row.${name}.toString()] : row.${name}.toString();
             }`;
 
             return {
@@ -316,6 +404,13 @@ export function generateGrid(
         };
     });
 
+    iconsToImport.forEach((icon) => {
+        imports.push({
+            name: `${icon} as ${icon}Icon`,
+            importPath: "@comet/admin-icons",
+        });
+    });
+
     let createMutationInputFields: readonly IntrospectionInputValue[] = [];
     {
         const inputArg = createMutationType?.args.find((arg) => arg.name === "input");
@@ -348,6 +443,7 @@ export function generateGrid(
         filterByFragment,
         GridFilterButton,
         GridColDef,
+        GridCellContent,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
@@ -592,7 +688,7 @@ export function generateGrid(
                                             ? `{rowAction && rowAction(params)}`
                                             : `
                                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                            <Edit color="primary" />
+                                            <EditIcon color="primary" />
                                         </IconButton>`
                                         : ""
                                 }${
