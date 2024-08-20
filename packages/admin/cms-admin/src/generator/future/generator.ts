@@ -136,6 +136,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     toolbar?: boolean;
     toolbarActionProp?: boolean;
     rowActionProp?: boolean;
+    dataGridPropsProp?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

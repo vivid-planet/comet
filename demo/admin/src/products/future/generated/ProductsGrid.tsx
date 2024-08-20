@@ -20,7 +20,7 @@ import {
 } from "@comet/admin";
 import { Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, DataGridProProps, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -99,9 +99,10 @@ type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
+    dataGridProps?: DataGridProProps;
 };
 
-export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React.ReactElement {
+export function ProductsGrid({ filter, toolbarAction, rowAction, dataGridProps: forwardedDataGridProps }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -112,6 +113,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             ],
         }),
         ...usePersistentColumnState("ProductsGrid"),
+        ...forwardedDataGridProps,
     };
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
