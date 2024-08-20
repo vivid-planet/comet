@@ -16,5 +16,12 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { type: "staticSelect", name: "type", maxWidth: 150, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
         { type: "date", name: "availableSince", width: 140 },
         { type: "dateTime", name: "createdAt", width: 170 },
+        {
+            type: "text",
+            name: "manufacturer.name",
+            headerName: "Manufacturer",
+            fieldName: "manufacturer",
+            filterOperators: { name: "ManufacturerFilterOperators", import: "./ManufacturerFilter" },
+        },
     ],
 };

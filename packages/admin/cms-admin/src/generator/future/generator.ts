@@ -65,7 +65,11 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T> } & DataGridSettings;
+) & {
+    name: UsableFields<T>;
+    fieldName?: string; // this can be used to overwrite field-prop of column-config
+    filterOperators?: ImportReference;
+} & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];

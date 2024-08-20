@@ -22,6 +22,7 @@ import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
+import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -42,6 +43,9 @@ const productsFragment = gql`
         type
         availableSince
         createdAt
+        manufacturer {
+            name
+        }
     }
 `;
 
@@ -141,6 +145,15 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             type: "dateTime",
             valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             width: 170,
+        },
+        {
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: ({ row }) => row.manufacturer?.name,
+            filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "actions",
