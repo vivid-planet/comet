@@ -41,7 +41,7 @@ function findQueryTypeOrThrow(queryName: string, schema: IntrospectionQuery) {
     return ret;
 }
 
-export type Prop = { type: string; optional: boolean; name: string };
+export type Prop = { type: string; optional: boolean; name: string; destructionAlias?: string };
 function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; gridPropsParamsCode: string } {
     if (!props.length) return { gridPropsTypeCode: "", gridPropsParamsCode: "" };
     const uniqueProps = props.reduce<Prop[]>((acc, prop) => {
@@ -71,7 +71,9 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
                 )
                 .join("\n")}
         };`,
-        gridPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: Props`,
+        gridPropsParamsCode: `{${uniqueProps
+            .map((prop) => `${prop.name}${prop.destructionAlias ? `: ${prop.destructionAlias}` : ``}`)
+            .join(", ")}}: Props`,
     };
 }
 
@@ -326,6 +328,16 @@ export function generateGrid(
         });
     }
 
+    if (config.dataGridPropsProp) {
+        imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
+        props.push({
+            name: "dataGridProps",
+            destructionAlias: "forwardedDataGridProps",
+            type: `DataGridProProps`,
+            optional: true,
+        });
+    }
+
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
@@ -477,7 +489,9 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        config.dataGridPropsProp ? `, ...forwardedDataGridProps` : ``
+    } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
