@@ -1,6 +1,7 @@
-import { ArrowDown, ArrowUp, Check, Clear, Close, MoreVertical, Search } from "@comet/admin-icons";
+import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search } from "@comet/admin-icons";
 import {
     buttonBaseClasses,
+    buttonClasses,
     getSwitchUtilityClass,
     inputAdornmentClasses,
     inputBaseClasses,
@@ -12,7 +13,7 @@ import {
     TextField,
     TextFieldProps,
 } from "@mui/material";
-import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
+import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import React from "react";
 
@@ -25,7 +26,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         components: {
             QuickFilterIcon: Search,
             QuickFilterClearIcon: Clear,
-            FilterPanelDeleteIcon: Close,
+            FilterPanelDeleteIcon: Delete,
             BooleanCellTrueIcon: Check,
             BooleanCellFalseIcon: Close,
             ColumnSortedAscendingIcon: ArrowUp,
@@ -87,18 +88,17 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             height: "20px",
             marginRight: "10px",
         },
-        panelContent: {
-            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
-                ["@media (max-width: 900px)"]: {
-                    display: "none",
-                },
-            },
-        },
         filterForm: {
-            padding: spacing(4),
+            margin: spacing(7, 4, 4, 4),
+            padding: "7px 5px",
+            borderBottom: `1px solid ${palette.grey[100]}`,
+            "&:last-child": {
+                border: "none",
+            },
 
             [`.${inputLabelClasses.root}`]: {
-                display: "none",
+                transform: "translateY(-22px)",
+                fontSize: 14,
             },
             [`.${inputClasses.root}`]: {
                 marginTop: 0,
@@ -132,6 +132,13 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 alignItems: "flex-end",
             },
         },
+        panelFooter: {
+            borderTop: `1px solid ${palette.grey[100]}`,
+            padding: "7px 0",
+            [`.${buttonClasses.root}`]: {
+                color: palette.text.primary,
+            },
+        },
         filterFormColumnInput: {
             marginRight: spacing(4),
 
@@ -155,7 +162,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
         },
         paper: {
-            boxShadow: shadows[1],
+            boxShadow: "0px 0px 40px 0px #0000001A",
+            border: `1px solid ${palette.grey[100]}`,
+            borderRadius: "4px",
         },
         // @ts-expect-error This key exists but is missing in the types.
         toolbarQuickFilter: {
