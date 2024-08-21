@@ -538,7 +538,7 @@ export function generateGrid(
                               renderCell: `(params) => {
                             return (
                                 <>
-                                ${actionsColumnComponent?.name ? `<${actionsColumnComponent.name} params={params} />` : ""}${
+                                ${actionsColumnComponent?.name ? `<${actionsColumnComponent.name} {...params} />` : ""}${
                                   allowEditing
                                       ? forwardRowAction
                                           ? `{rowAction && rowAction(params)}`

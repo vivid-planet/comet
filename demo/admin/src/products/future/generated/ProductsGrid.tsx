@@ -154,7 +154,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             renderCell: (params) => {
                 return (
                     <>
-                        <ProductsGridPreviewAction params={params} />
+                        <ProductsGridPreviewAction {...params} />
                         {rowAction && rowAction(params)}
                         <CrudContextMenu
                             copyData={() => {
