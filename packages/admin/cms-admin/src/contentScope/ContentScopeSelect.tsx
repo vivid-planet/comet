@@ -5,6 +5,8 @@ import { capitalCase } from "change-case";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { MarkedMatches } from "../common/MarkedMatches";
+import { matchContentScopeLabels } from "./matchContentScopeLabels";
 import { ContentScopeInterface } from "./Provider";
 
 type Option<Value extends ContentScopeInterface = ContentScopeInterface> = {
@@ -33,7 +35,9 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     renderSelectedOption,
 }: Props<Value>) {
     const intl = useIntl();
+    const values: string[] = [];
     const [searchValue, setSearchValue] = React.useState<string>("");
+    let isFirstMatch = true;
 
     const hasMultipleDimensions = Object.keys(value).length > 1;
 
@@ -82,8 +86,17 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 .filter(([dimension]) => (hasMultipleDimensions && groupBy ? dimension !== groupBy : true))
                 .map(([, option]) => option.label ?? option.value)
                 .join(" – ");
-
-            return <ListItemText primaryTypographyProps={{ variant: "body2" }} sx={{ margin: 0 }} primary={text} />;
+            values.push(text);
+            const matches = matchContentScopeLabels({ query: searchValue, item: text, isFirstMatch });
+            if (matches.length > 0) isFirstMatch = false;
+            return (
+                <ListItemText
+                    primaryTypographyProps={{ variant: "body2" }}
+                    sx={{ margin: 0 }}
+                    // primary={text}
+                    primary={matches ? <MarkedMatches text={text} matches={matches} /> : text}
+                />
+            );
         };
     }
 
@@ -146,12 +159,20 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                         {groups.map((group, index) => {
                             const showGroupHeader = hasMultipleDimensions;
                             const showGroupDivider = showGroupHeader && index !== groups.length - 1;
+                            const matches = matchContentScopeLabels({ query: searchValue, item: humanReadableLabel(group), isFirstMatch });
+                            if (matches.length > 0) isFirstMatch = false;
 
                             return (
                                 <React.Fragment key={group.value}>
                                     {showGroupHeader && (
                                         <ListSubheader sx={{ paddingX: (theme) => theme.spacing(3) }}>
-                                            <Typography variant="overline">{humanReadableLabel(group)}</Typography>
+                                            <Typography variant="overline">
+                                                {matches ? (
+                                                    <MarkedMatches text={humanReadableLabel(group)} matches={matches} />
+                                                ) : (
+                                                    humanReadableLabel(group)
+                                                )}
+                                            </Typography>
                                         </ListSubheader>
                                     )}
                                     {group.options.map((option) => (
