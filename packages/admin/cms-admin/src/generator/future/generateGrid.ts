@@ -450,12 +450,16 @@ export function generateGrid(
         });
     }
 
-    if (config.dataGridPropsProp) {
+    if (config.selectionProps) {
         imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
         props.push({
-            name: "dataGridProps",
-            destructionAlias: "forwardedDataGridProps",
-            type: `DataGridProProps`,
+            name: "selectionProps",
+            type: `{
+                checkboxSelection: boolean;
+                keepNonExistentRowsSelected: boolean;
+                selectionModel: DataGridProProps["selectionModel"];
+                onSelectionModelChange: DataGridProProps["onSelectionModelChange"];
+            }`,
             optional: true,
         });
     }
@@ -622,7 +626,7 @@ export function generateGrid(
                       })
                       .join(",\n")} ] }`
                 : ""
-        }), ...usePersistentColumnState("${gqlTypePlural}Grid")${ config.dataGridPropsProp ? `, ...forwardedDataGridProps` : ``} };
+        }), ...usePersistentColumnState("${gqlTypePlural}Grid")${config.selectionProps ? `, ...selectionProps` : ``} };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         
 

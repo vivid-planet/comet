@@ -12,7 +12,6 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { field: "inStock", sort: "desc" },
         { field: "price", sort: "asc" },
     ],
-    dataGridPropsProp: true,
     columns: [
         {
             type: "staticSelect",
