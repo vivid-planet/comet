@@ -328,12 +328,16 @@ export function generateGrid(
         });
     }
 
-    if (config.dataGridPropsProp) {
+    if (config.selectionProps) {
         imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
         props.push({
-            name: "dataGridProps",
-            destructionAlias: "forwardedDataGridProps",
-            type: `DataGridProProps`,
+            name: "selectionProps",
+            type: `{
+                checkboxSelection: boolean;
+                keepNonExistentRowsSelected: boolean;
+                selectionModel: DataGridProProps["selectionModel"];
+                onSelectionModelChange: DataGridProProps["onSelectionModelChange"];
+            }`,
             optional: true,
         });
     }
@@ -490,7 +494,7 @@ export function generateGrid(
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid")${
-        config.dataGridPropsProp ? `, ...forwardedDataGridProps` : ``
+        config.selectionProps ? `, ...selectionProps` : ``
     } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
