@@ -1,5 +1,15 @@
 # @comet/admin-theme
 
+## 7.2.0
+
+### Minor Changes
+
+-   9b800c9f6: Slightly adjust the styling of pinned columns in DataGrid
+
+### Patch Changes
+
+-   @comet/admin-icons@7.2.0
+
 ## 7.1.0
 
 ### Minor Changes

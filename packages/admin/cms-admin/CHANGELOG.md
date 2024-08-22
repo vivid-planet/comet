@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 7.2.0
+
+### Patch Changes
+
+-   4b267f90d: Fix broken export/import of `commonErrorMessages` from the file form field
+-   Updated dependencies [9b800c9f6]
+-   Updated dependencies [0fb8d9a26]
+-   Updated dependencies [4b267f90d]
+    -   @comet/admin-theme@7.2.0
+    -   @comet/admin@7.2.0
+    -   @comet/admin-date-time@7.2.0
+    -   @comet/admin-icons@7.2.0
+    -   @comet/admin-rte@7.2.0
+    -   @comet/blocks-admin@7.2.0
+
 ## 7.1.0
 
 ### Minor Changes
