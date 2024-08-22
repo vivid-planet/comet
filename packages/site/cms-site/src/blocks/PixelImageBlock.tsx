@@ -59,6 +59,7 @@ export const PixelImageBlock = withPreview(
                 loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)}
                 src={urlTemplate}
                 fill
+                style={{ objectFit: "cover" }}
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
                 alt={damFile.altText ?? ""}

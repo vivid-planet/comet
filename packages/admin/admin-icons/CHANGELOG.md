@@ -1,5 +1,11 @@
 # @comet/admin-icons
 
+## 7.1.0
+
+### Minor Changes
+
+-   b1bbd6a0c: Export a type for all icon names: `IconName`
+
 ## 7.0.0
 
 ## 7.0.0-beta.6

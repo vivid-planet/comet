@@ -3,11 +3,13 @@ import {
     AsyncSelectField,
     AutocompleteField,
     CheckboxField,
+    CheckboxListField,
     Field,
-    FieldContainer,
     FieldSet,
-    FinalFormRadio,
+    FinalFormRangeInput,
+    FormSection,
     NumberField,
+    RadioGroupField,
     SearchField,
     SelectField,
     SwitchField,
@@ -16,7 +18,7 @@ import {
 } from "@comet/admin";
 import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
-import { Box, Button, FormControlLabel, Link, MenuItem } from "@mui/material";
+import { Box, Button, Link, MenuItem } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -93,61 +95,198 @@ function Story() {
                                 variant={fieldVariant}
                                 fullWidth
                             />
+                            <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
                         </FieldSet>
-                        <FieldSet title="Field-Components with Field-Container">
-                            <CheckboxField name="singleCheckbox" fieldLabel="Single Checkbox" variant={fieldVariant} fullWidth />
-                            <CheckboxField
-                                name="checkboxWithAdditionalLabel"
-                                fieldLabel="Checkbox with additional label"
-                                label={
-                                    <>
-                                        This label has a{" "}
-                                        <Link href="https://www.comet-dxp.com" target="_blank">
-                                            link
-                                        </Link>{" "}
-                                        inside of it.
-                                    </>
-                                }
+                        <FieldSet title="Checkboxes">
+                            <FormSection title="Individual Checkboxes">
+                                <CheckboxField name="requiredCheckbox" fieldLabel="Required Checkbox" variant={fieldVariant} required fullWidth />
+                                <CheckboxField
+                                    name="checkboxWithAdditionalLabel"
+                                    fieldLabel="Checkbox with additional label"
+                                    label={
+                                        <>
+                                            This label has a{" "}
+                                            <Link href="https://www.comet-dxp.com" target="_blank">
+                                                link
+                                            </Link>{" "}
+                                            inside of it.
+                                        </>
+                                    }
+                                    variant={fieldVariant}
+                                    fullWidth
+                                />
+                                <CheckboxField
+                                    name="checkboxWithoutFieldLabel"
+                                    label="Checkbox without a field label"
+                                    variant={fieldVariant}
+                                    fullWidth
+                                />
+                            </FormSection>
+                            <FormSection title="Checkbox Lists">
+                                <CheckboxListField
+                                    label="Required"
+                                    name="requiredCheckboxList"
+                                    variant={fieldVariant}
+                                    fullWidth
+                                    required
+                                    options={[
+                                        {
+                                            label: "Option One",
+                                            value: "option-one",
+                                        },
+                                        {
+                                            label: "Option Two",
+                                            value: "option-two",
+                                        },
+                                    ]}
+                                />
+                                <CheckboxListField
+                                    label="Many Options"
+                                    name="checkboxListManyOptions"
+                                    variant={fieldVariant}
+                                    fullWidth
+                                    options={[
+                                        {
+                                            label: "Option One",
+                                            value: "option-one",
+                                        },
+                                        {
+                                            label: "Option Two",
+                                            value: "option-two",
+                                        },
+                                        {
+                                            label: "Option Three",
+                                            value: "option-three",
+                                        },
+                                        {
+                                            label: "Option Four",
+                                            value: "option-four",
+                                        },
+                                        {
+                                            label: "Option Five",
+                                            value: "option-five",
+                                        },
+                                        {
+                                            label: "Option Six",
+                                            value: "option-six",
+                                        },
+                                    ]}
+                                />
+                                <CheckboxListField
+                                    label="Column Layout"
+                                    name="checkboxListColumnLayout"
+                                    variant={fieldVariant}
+                                    layout="column"
+                                    fullWidth
+                                    options={[
+                                        {
+                                            label: "Option One",
+                                            value: "option-one",
+                                        },
+                                        {
+                                            label: "Option Two",
+                                            value: "option-two",
+                                        },
+                                        {
+                                            label: "Option Three",
+                                            value: "option-three",
+                                        },
+                                    ]}
+                                />
+                            </FormSection>
+                        </FieldSet>
+                        <FieldSet title="Radio Groups">
+                            <RadioGroupField
+                                label="Required"
+                                name="radio"
+                                variant={fieldVariant}
+                                fullWidth
+                                required
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                ]}
+                            />
+                            <RadioGroupField
+                                label="Many Options"
+                                name="radioGroupManyOptions"
+                                variant={fieldVariant}
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                    {
+                                        label: "Option Three",
+                                        value: "option-three",
+                                    },
+                                    {
+                                        label: "Option Four",
+                                        value: "option-four",
+                                    },
+                                    {
+                                        label: "Option Five",
+                                        value: "option-five",
+                                    },
+                                    {
+                                        label: "Option Six",
+                                        value: "option-six",
+                                    },
+                                ]}
+                            />
+                            <RadioGroupField
+                                label="Column Layout"
+                                name="radioGroupColumnLayout"
+                                variant={fieldVariant}
+                                layout="column"
+                                fullWidth
+                                options={[
+                                    {
+                                        label: "Option One",
+                                        value: "option-one",
+                                    },
+                                    {
+                                        label: "Option Two",
+                                        value: "option-two",
+                                    },
+                                    {
+                                        label: "Option Three",
+                                        value: "option-three",
+                                    },
+                                ]}
+                            />
+                        </FieldSet>
+                        <FieldSet title="Number Range">
+                            <Field
+                                name="numberRange"
+                                label="Range Input"
+                                component={FinalFormRangeInput}
+                                min={-100}
+                                max={100}
                                 variant={fieldVariant}
                                 fullWidth
                             />
-                            <CheckboxField name="checkboxWithoutFieldLabel" label="Checkbox without a field label" variant={fieldVariant} fullWidth />
-                            <FieldContainer label="Checkbox list" variant={fieldVariant} fullWidth>
-                                <CheckboxField name="checkboxList" label="Checkbox one" value="checkbox-one" />
-                                <CheckboxField name="checkboxList" label="Checkbox two" value="checkbox-two" />
-                                <CheckboxField name="checkboxList" label="Checkbox three" value="checkbox-three" />
-                                <CheckboxField name="checkboxList" label="Checkbox four" value="checkbox-four" />
-                                <CheckboxField name="checkboxList" label="Checkbox five" value="checkbox-five" />
-                            </FieldContainer>
-                            <SwitchField name="switch" label={values.switch ? "On" : "Off"} fieldLabel="Switch" variant={fieldVariant} />
-                            <FieldContainer label="Radio" variant={fieldVariant} fullWidth>
-                                <Field name="radio" type="radio" value="option-one">
-                                    {(props) => <FormControlLabel label="Option One" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radio" type="radio" value="option-two">
-                                    {(props) => <FormControlLabel label="Option Two" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                            </FieldContainer>
-                            <FieldContainer label="Radio (many options)" variant={fieldVariant} fullWidth>
-                                <Field name="radioManyOptions" type="radio" value="option-one">
-                                    {(props) => <FormControlLabel label="Option One" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-two">
-                                    {(props) => <FormControlLabel label="Option Two" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-three">
-                                    {(props) => <FormControlLabel label="Option Three" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-four">
-                                    {(props) => <FormControlLabel label="Option Four" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-five">
-                                    {(props) => <FormControlLabel label="Option Five" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                                <Field name="radioManyOptions" type="radio" value="option-six">
-                                    {(props) => <FormControlLabel label="Option Six" control={<FinalFormRadio {...props} />} />}
-                                </Field>
-                            </FieldContainer>
+                            <Field
+                                name="numberRangeWithoutSlider"
+                                label="Without Slider"
+                                component={FinalFormRangeInput}
+                                min={100}
+                                max={1000}
+                                disableSlider
+                                variant={fieldVariant}
+                                fullWidth
+                            />
                         </FieldSet>
                         <FieldSet title="Date and Time" supportText="@comet/admin-date-time">
                             <DateField name="date" label="Date" variant={fieldVariant} fullWidth />

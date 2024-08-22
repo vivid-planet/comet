@@ -470,7 +470,7 @@ DamModule.register({
 ### Replace `graphql-type-json` with `graphql-scalars`
 
 1. Install graphql-scalars: `npm install graphql-scalars`
-2. Uninstall graphql-type-json: `npm install graphql-type-json`
+2. Uninstall graphql-type-json: `npm uninstall graphql-type-json`
 3. Update imports:
 
     ```diff

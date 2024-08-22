@@ -5,6 +5,7 @@ import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 
+import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
 import { UsableFields } from "./generateGrid/usableFields";
@@ -15,16 +16,28 @@ type ImportReference = {
     import: string;
 };
 
+type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1 } & Pick<
+    Partial<FinalFormFileUploadProps<false>>,
+    "maxFileSize" | "readOnly" | "layout" | "accept"
+>;
+
+type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number } & Pick<
+    Partial<FinalFormFileUploadProps<true>>,
+    "maxFileSize" | "readOnly" | "layout" | "accept"
+>;
+
 export type FormFieldConfig<T> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
     | { type: "boolean" }
     | { type: "date" }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
-) & { name: keyof T; label?: string; required?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+    | SingleFileFormFieldConfig
+    | MultiFileFormFieldConfig
+) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
@@ -33,10 +46,10 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
 export type FormLayoutConfig<T> = {
     type: "fieldSet";
     name: string;
-    title: string;
+    title?: string;
     supportText?: string; // can contain field-placeholder
-    collapsible: boolean; // default true
-    initiallyExpanded: boolean; // default false
+    collapsible?: boolean; // default true
+    initiallyExpanded?: boolean; // default false
     fields: FormFieldConfig<T>[];
 };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -63,7 +76,7 @@ export type GridColumnConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: string[] }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T> } & DataGridSettings;
 export type GridConfig<T extends { __typename?: string }> = {
@@ -127,8 +140,9 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
+                import { finalFormFileUploadFragment } from "@comet/cms-admin";
 
-            ${gqlDocumentsOutputCode}
+                ${gqlDocumentsOutputCode}
             `;
             await writeGenerated(gqlDocumentsOuputFilename, gqlDocumentsOutputCode);
         }

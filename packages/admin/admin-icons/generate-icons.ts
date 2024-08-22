@@ -58,6 +58,7 @@ const main = async () => {
     );
     bar.stop();
 
+    await writeGeneratedTypesFile(icons);
     await writeIndexFile(icons);
 };
 
@@ -110,6 +111,13 @@ const writeComponent = async (icon: Icon, svgString: string) => {
     if (icon.componentName != null && component != null) {
         writeFileSync(`src/generated/${icon.componentName}.tsx`, component);
     }
+};
+
+const writeGeneratedTypesFile = async (icons: Icon[]) => {
+    writeFileSync(
+        `src/generated/GeneratedIconName.ts`,
+        `export type GeneratedIconName = ${icons.map((icon) => `"${icon.componentName}"`).join(" | ")};`,
+    );
 };
 
 const writeIndexFile = async (icons: Icon[]) => {

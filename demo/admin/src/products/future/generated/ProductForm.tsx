@@ -20,7 +20,14 @@ import {
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import {
+    DamImageBlock,
+    FileUploadField,
+    GQLFinalFormFileUploadFragment,
+    queryUpdatedAt,
+    resolveHasSaveConflict,
+    useFormSaveConflict,
+} from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
@@ -45,7 +52,12 @@ const rootBlocks = {
     image: DamImageBlock,
 };
 
-type FormValues = GQLProductFormDetailsFragment & {
+type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
+    priceList: GQLFinalFormFileUploadFragment | null;
+    datasheets: GQLFinalFormFileUploadFragment[];
+};
+
+type FormValues = ProductFormDetailsFragment & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -68,7 +80,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         () =>
             data?.product
                 ? {
-                      ...filterByFragment<GQLProductFormDetailsFragment>(productFormFragment, data.product),
+                      ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
@@ -97,6 +109,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             ...formValues,
             category: formValues.category?.id,
             image: rootBlocks.image.state2Output(formValues.image),
+            priceList: formValues.priceList ? formValues.priceList.id : null,
+            datasheets: formValues.datasheets?.map(({ id }) => id),
         };
         if (mode === "edit") {
             if (!id) throw new Error();
@@ -206,7 +220,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 {(props) => (
                                     <FinalFormSelect {...props}>
                                         <MenuItem value="Cap">
-                                            <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
+                                            <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />
                                         </MenuItem>
                                         <MenuItem value="Shirt">
                                             <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
@@ -261,6 +275,17 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             <Field name="image" isEqual={isEqual}>
                                 {createFinalFormBlock(rootBlocks.image)}
                             </Field>
+                            <FileUploadField
+                                name="priceList"
+                                label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
+                                maxFileSize={4194304}
+                            />
+                            <FileUploadField
+                                name="datasheets"
+                                label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                                multiple
+                                maxFileSize={4194304}
+                            />
                         </FieldSet>
                     </MainContent>
                 </>
