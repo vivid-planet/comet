@@ -234,6 +234,7 @@ export function generateGrid(
         component: actionsColumnComponent,
         type: actionsColumnType,
         headerName: actionsColumnHeaderName,
+        pinned: actionsColumnPinned = "right",
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
@@ -298,6 +299,7 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                pinned: column.pinned,
             };
         }
 
@@ -314,6 +316,7 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            pinned: column.pinned,
         };
     });
 
@@ -511,6 +514,7 @@ export function generateGrid(
                         renderCell: column.renderCell,
                         width: column.width,
                         flex: column.flex,
+                        pinned: column.pinned && `"${column.pinned}"`,
                     };
 
                     if (typeof column.width === "undefined") {
@@ -542,6 +546,7 @@ export function generateGrid(
                               filterable: "false",
                               type: '"actions"',
                               align: '"right"',
+                              pinned: `"${actionsColumnPinned}"`,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (

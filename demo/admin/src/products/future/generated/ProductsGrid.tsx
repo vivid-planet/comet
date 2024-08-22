@@ -150,6 +150,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             filterable: false,
             type: "actions",
             align: "right",
+            pinned: "right",
             width: 116,
             renderCell: (params) => {
                 return (
