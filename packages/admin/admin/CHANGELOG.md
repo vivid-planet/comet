@@ -1,5 +1,32 @@
 # @comet/admin
 
+## 7.2.0
+
+### Minor Changes
+
+-   0fb8d9a26: Allow pinning DataGrid columns using the column config when using `DataGridPro` or `DataGridPremium` with the `usePersistentColumnState` hook
+
+    ```tsx
+    const columns: GridColDef[] = [
+        {
+            field: "title",
+            pinned: "left",
+        },
+        // ... other columns
+        {
+            field: "actions",
+            pinned: "right",
+        },
+    ];
+    ```
+
+### Patch Changes
+
+-   4b267f90d: Fix broken export/import of `commonErrorMessages` from the file form field
+-   Updated dependencies [9b800c9f6]
+    -   @comet/admin-theme@7.2.0
+    -   @comet/admin-icons@7.2.0
+
 ## 7.1.0
 
 ### Minor Changes
