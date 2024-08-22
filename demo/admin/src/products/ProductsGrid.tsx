@@ -216,6 +216,7 @@ export function ProductsGrid() {
             sortable: false,
             filterable: false,
             width: 106,
+            pinned: "right",
             renderCell: (params) => {
                 return (
                     <>
