@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { commonFormFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
+import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
 import React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -78,11 +78,11 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                     };
 
                     if (rejection.errors.some((error) => error.code === "file-too-large")) {
-                        failedFile.error = commonFormFileErrorMessages.fileTooLarge;
+                        failedFile.error = commonFileErrorMessages.fileTooLarge;
                     }
 
                     if (rejection.errors.some((error) => error.code === "file-invalid-type")) {
-                        failedFile.error = commonFormFileErrorMessages.invalidFileType;
+                        failedFile.error = commonFileErrorMessages.invalidFileType;
                     }
 
                     setFailedUploads((existing) => [...existing, failedFile]);
@@ -127,7 +127,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                         let errorMessage = <FormattedMessage id="comet.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />;
 
                         if (jsonResponse.message === "Unsupported mime type") {
-                            errorMessage = commonFormFileErrorMessages.invalidFileType;
+                            errorMessage = commonFileErrorMessages.invalidFileType;
                         }
 
                         setUploadingFiles((existing) => existing.filter((loadingFile) => loadingFile.name !== file.name));
@@ -157,7 +157,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             files={files}
             multiple={multiple}
             maxFiles={maxFiles}
-            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFormFileErrorMessages.tooManyFiles(maxFiles) : undefined}
+            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles) : undefined}
             {...restProps}
         />
     );

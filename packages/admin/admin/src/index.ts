@@ -90,7 +90,7 @@ export { SelectField, SelectFieldProps } from "./form/fields/SelectField";
 export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
 export { TextAreaField, TextAreaFieldProps } from "./form/fields/TextAreaField";
 export { TextField, TextFieldProps } from "./form/fields/TextField";
-export { commonErrorMessages as commonFormFileErrorMessages } from "./form/file/commonErrorMessages";
+export { commonErrorMessages as commonFileErrorMessages } from "./form/file/commonErrorMessages";
 export { FileDropzone, FileDropzoneClassKey, FileDropzoneProps } from "./form/file/FileDropzone";
 export { FileSelect, FileSelectClassKey, FileSelectProps } from "./form/file/FileSelect";
 export { ErrorFileSelectItem, FileSelectItem, LoadingFileSelectItem, ValidFileSelectItem } from "./form/file/fileSelectItemTypes";
