@@ -219,7 +219,7 @@ export function ProductsGrid() {
             renderCell: (params) => {
                 return (
                     <>
-                        <ProductsGridPreviewAction product={params.row} />
+                        <ProductsGridPreviewAction {...params} />
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>

@@ -68,7 +68,7 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
+export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
 
 export type GridColumnConfig<T> = (
     | { type: "text" }
@@ -79,12 +79,15 @@ export type GridColumnConfig<T> = (
     | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T> } & DataGridSettings;
+
+export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & DataGridSettings;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
-    columns: GridColumnConfig<T>[];
+    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig>;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
