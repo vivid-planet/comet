@@ -63,9 +63,10 @@ type FormValues = ProductFormDetailsFragment & {
 
 interface FormProps {
     id?: string;
+    showAvailableSince?: boolean;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id, showAvailableSince }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -264,14 +265,15 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     />
                                 )}
                             </Field>
-
-                            <Field
-                                variant="horizontal"
-                                fullWidth
-                                name="availableSince"
-                                component={FinalFormDatePicker}
-                                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
-                            />
+                            {showAvailableSince && (
+                                <Field
+                                    variant="horizontal"
+                                    fullWidth
+                                    name="availableSince"
+                                    component={FinalFormDatePicker}
+                                    label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                />
+                            )}
                             <Field name="image" isEqual={isEqual}>
                                 {createFinalFormBlock(rootBlocks.image)}
                             </Field>

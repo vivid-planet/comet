@@ -320,7 +320,8 @@ export function generateFormField({
         throw new Error(`Unsupported type`);
     }
     return {
-        code,
+        code: config.optionalRender ? `{ show${name[0].toUpperCase() + name.substring(1)} && ${code} }` : code,
+        props: config.optionalRender ? [{ name: `show${name[0].toUpperCase() + name.substring(1)}`, type: `boolean`, optional: true }] : [],
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],
