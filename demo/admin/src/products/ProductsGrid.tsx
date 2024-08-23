@@ -3,6 +3,7 @@ import {
     CrudContextMenu,
     CrudVisibility,
     DataGridToolbar,
+    ExportApi,
     filterByFragment,
     GridCellContent,
     GridColDef,
@@ -15,12 +16,13 @@ import {
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
+    useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, Excel, MoreVertical, StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
+import { Button, CircularProgress, IconButton, Menu, MenuItem, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
@@ -41,7 +43,10 @@ import {
 } from "./ProductsGrid.generated";
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
-function ProductsGridToolbar() {
+function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
+    const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
+    const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -53,6 +58,32 @@ function ProductsGridToolbar() {
             <ToolbarFillSpace />
             <ToolbarItem>
                 <GridColumnsButton />
+            </ToolbarItem>
+            <ToolbarItem>
+                <Button
+                    variant="text"
+                    ref={moreMenuRef}
+                    onClick={() => {
+                        setShowMoreMenu(true);
+                    }}
+                    endIcon={<MoreVertical />}
+                >
+                    <FormattedMessage id="products.moreActions" defaultMessage="Mehr Aktionen" />
+                </Button>
+                <Menu
+                    open={showMoreMenu}
+                    onClose={() => setShowMoreMenu(false)}
+                    anchorEl={moreMenuRef.current}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                >
+                    <MenuItem onClick={() => exportApi.exportGrid()} disabled={exportApi.loading}>
+                        {exportApi.loading ? <CircularProgress size={20} sx={{ marginRight: "10px" }} /> : <Excel sx={{ marginRight: "10px" }} />}
+                        <FormattedMessage id="phsrdb.downloadAsExcel" defaultMessage="Als Excel herunterladen" />
+                    </MenuItem>
+                </Menu>
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
@@ -79,6 +110,7 @@ export function ProductsGrid() {
             flex: 1,
             sortBy: ["title", "price", "type", "category", "inStock"],
             visible: theme.breakpoints.down("md"),
+            valueGetter: ({ value, row }) => row.title, // needed for export because renderCell does not return string
             renderCell: ({ row }) => {
                 const secondaryValues = [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
@@ -106,6 +138,7 @@ export function ProductsGrid() {
             flex: 1,
             type: "number",
             visible: theme.breakpoints.up("md"),
+            valueFormatter: ({ value }) => intl.formatNumber(value, { style: "currency", currency: "EUR" }), // excel-column should be configured as currency-type alternatively prop below
             renderCell: ({ row }) => (typeof row.price === "number" ? <FormattedNumber value={row.price} style="currency" currency="EUR" /> : "-"),
         },
         {
@@ -120,6 +153,7 @@ export function ProductsGrid() {
             field: "additionalTypes",
             headerName: "Additional Types",
             width: 150,
+            valueFormatter: ({ value }) => value.join(", "),
             renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
             filterOperators: [
                 {
@@ -137,6 +171,7 @@ export function ProductsGrid() {
             headerName: "Category",
             flex: 1,
             minWidth: 100,
+            valueGetter: ({ value, row }) => value?.title ?? "",
             renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
@@ -147,6 +182,7 @@ export function ProductsGrid() {
             headerName: "Tags",
             flex: 1,
             minWidth: 150,
+            valueFormatter: ({ value }) => value.join(", "),
             renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
             filterOperators: [
                 {
@@ -165,6 +201,12 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 80,
             visible: theme.breakpoints.up("md"),
+            valueFormatter: (
+                { value }, // should probably be a boolean-column
+            ) =>
+                value
+                    ? intl.formatMessage({ id: "products.inStock", defaultMessage: "In Stock" })
+                    : intl.formatMessage({ id: "products.outOfStock", defaultMessage: "Out of Stock" }),
             renderCell: (params) => (
                 <GridCellContent
                     icon={<StateFilled color={params.row.inStock ? "success" : "error"} />}
@@ -183,6 +225,7 @@ export function ProductsGrid() {
             headerName: "Available Since",
             width: 130,
             type: "date",
+            disableExport: true, // date-value is not allowed for export, no way to provide a different value for excel-export
             valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
         },
         {
@@ -191,7 +234,8 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 130,
             type: "boolean",
-            valueGetter: (params) => params.row.status == "Published",
+            disableExport: true, // boolean-value is not allowed for export, no way to provide a different value for excel-export
+            valueGetter: (params) => params.row.status == "Published", // why is this here?
             renderCell: (params) => {
                 return (
                     <CrudVisibility
@@ -216,6 +260,7 @@ export function ProductsGrid() {
             sortable: false,
             filterable: false,
             width: 106,
+            disableExport: true, // action-columns not needed in excel
             pinned: "right",
             renderCell: (params) => {
                 return (
@@ -275,6 +320,19 @@ export function ProductsGrid() {
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
+    const exportApi = useDataGridExcelExport<GQLProductsListQuery["products"]["nodes"][0], GQLProductsListQuery, GQLProductsListQueryVariables>({
+        columns,
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+        },
+        query: productsQuery,
+        resolveQueryNodes: (data) => data.products.nodes,
+        totalCount: data?.products.totalCount ?? 0,
+        exportOptions: {
+            fileName: "Products",
+        },
+    });
+
     return (
         <MainContent fullHeight>
             <DataGridPro
@@ -287,6 +345,9 @@ export function ProductsGrid() {
                 error={error}
                 components={{
                     Toolbar: ProductsGridToolbar,
+                }}
+                componentsProps={{
+                    toolbar: { exportApi: exportApi },
                 }}
             />
         </MainContent>
