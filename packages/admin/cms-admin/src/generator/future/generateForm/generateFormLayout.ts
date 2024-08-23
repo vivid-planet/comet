@@ -1,5 +1,6 @@
 import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
+import { Prop } from "../generateForm";
 import { FormConfig, FormLayoutConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
@@ -34,6 +35,7 @@ export function generateFormLayout({
     const formFragmentFields: string[] = [];
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
+    const props: Prop[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
     const finalFormConfig = { subscription: {}, renderProps: {} };
 
@@ -56,6 +58,7 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        props.push(...generatedFields.props);
         formValuesConfig.push(...generatedFields.formValuesConfig);
 
         finalFormConfig.subscription = { ...finalFormConfig.subscription, ...generatedFields.finalFormConfig?.subscription };
@@ -186,6 +189,7 @@ export function generateFormLayout({
     }
     return {
         code,
+        props,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields,

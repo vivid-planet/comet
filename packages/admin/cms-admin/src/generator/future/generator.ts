@@ -48,7 +48,7 @@ export type FormFieldConfig<T> = (
     | { type: "block"; name: keyof T; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
-) & { label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & { label?: string; required?: boolean; optionalRender?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
@@ -89,7 +89,7 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex"> & { tooltipMessage?: string };
+export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & { tooltipMessage?: string };
 
 type IconKey = string; // TODO: Use `IconName` type from `@comet/admin-icons` after merged: https://github.com/vivid-planet/comet/pull/2421
 

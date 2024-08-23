@@ -1,4 +1,4 @@
-import { BlockContext, BlockTransformerServiceInterface } from "@comet/blocks-api";
+import { BlockContext, BlockTransformerServiceInterface, TraversableTransformResponse } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
 import { FilesService } from "../../files/files.service";
@@ -28,18 +28,21 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
     constructor(private readonly filesService: FilesService) {}
 
     async transformToPlain(block: DamVideoBlockData, { previewDamUrls, relativeDamUrls }: BlockContext) {
+        const ret: TraversableTransformResponse = {
+            autoplay: block.autoplay,
+            loop: block.loop,
+            showControls: block.showControls,
+            previewImage: block.previewImage,
+        };
+
         if (!block.damFileId) {
-            return {};
+            return ret;
         }
 
         const file = await this.filesService.findOneById(block.damFileId);
 
-        if (!file) {
-            return {};
-        }
-
-        return {
-            damFile: {
+        if (file) {
+            ret.damFile = {
                 id: file.id,
                 name: file.name,
                 size: file.size,
@@ -50,11 +53,9 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
                 archived: file.archived,
                 scope: file.scope,
                 fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
-            },
-            autoplay: block.autoplay,
-            loop: block.loop,
-            showControls: block.showControls,
-            previewImage: block.previewImage,
-        };
+            };
+        }
+
+        return ret;
     }
 }

@@ -216,10 +216,11 @@ export function ProductsGrid() {
             sortable: false,
             filterable: false,
             width: 106,
+            pinned: "right",
             renderCell: (params) => {
                 return (
                     <>
-                        <ProductsGridPreviewAction params={params} />
+                        <ProductsGridPreviewAction {...params} />
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>

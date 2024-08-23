@@ -7,11 +7,9 @@ import { GQLProductsListManualFragment } from "@src/products/ProductsGrid.genera
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-type Props = {
-    params: GridCellParams<unknown, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
-};
+type Props = GridCellParams<unknown, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
 
-export const ProductsGridPreviewAction = ({ params: { row } }: Props) => {
+export const ProductsGridPreviewAction = ({ row }: Props) => {
     const [showDetails, setShowDetails] = React.useState(false);
     return (
         <>

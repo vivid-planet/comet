@@ -4,6 +4,11 @@ import * as React from "react";
 import { useStoredState } from "../hooks/useStoredState";
 import { GridColDef } from "./GridColDef";
 
+export type GridPinnedColumns = {
+    left?: string[];
+    right?: string[];
+};
+
 const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
     const [columns, setColumns] = React.useState<GridColDef[] | undefined>();
 
@@ -75,13 +80,27 @@ export function usePersistentColumnState(stateKey: string): GridProps {
         [mediaQueryColumnVisibilityModel, setStoredColumnVisibilityModel],
     );
 
-    const [pinnedColumns, setPinnedColumns] = useStoredState<GridColumnVisibilityModel>(`${stateKey}PinnedColumns`, {});
+    const [pinnedColumns, setPinnedColumns] = useStoredState<GridPinnedColumns>(`${stateKey}PinnedColumns`, {});
     const handlePinnedColumnsChange = React.useCallback(
-        (newModel: GridColumnVisibilityModel) => {
+        (newModel: GridPinnedColumns) => {
             setPinnedColumns(newModel);
         },
         [setPinnedColumns],
     );
+
+    React.useEffect(() => {
+        // During the first render, `columns` is `undefined`, so we cannot set this as the initial values of the `pinnedColumns` state.
+        // We have to wait until the columns are loaded from the `useGridColumns` hook.
+        const pinnedColumnsHaveNotYetBeenSet = Object.keys(pinnedColumns).length === 0;
+        const columnsHaveBeenLoaded = Boolean(columns);
+
+        if (pinnedColumnsHaveNotYetBeenSet && columnsHaveBeenLoaded) {
+            setPinnedColumns({
+                left: columns?.filter((column) => column.pinned === "left")?.map((column) => column.field),
+                right: columns?.filter((column) => column.pinned === "right")?.map((column) => column.field),
+            });
+        }
+    }, [columns, setPinnedColumns, pinnedColumns]);
 
     //no API for column dimensions as controlled state, export on change instead
     const columnDimensionsKey = `${stateKey}ColumnDimensions`;
