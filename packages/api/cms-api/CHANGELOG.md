@@ -1,5 +1,51 @@
 # @comet/cms-api
 
+## 7.2.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.2.0
+
+## 7.1.0
+
+### Minor Changes
+
+-   19d53c407: Add Sentry module to simplify integration with Sentry.
+
+    ### Usage:
+
+    ```ts
+    // main.ts
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+    app.use(Sentry.Handlers.errorHandler());
+    ```
+
+    ```ts
+    // app.module.ts
+
+    SentryModule.forRootAsync({
+        dsn: "sentry_dsn_url",
+        environment: "dev",
+        shouldReportException: (exception) => {
+            // Custom logic to determine if the exception should be reported
+            return true;
+        },
+    }),
+    ```
+
+### Patch Changes
+
+-   87f74d307: Sort the keys in content scopes returned by `UserPermissionsService` alphabetically
+
+    This fixes issues when comparing content scopes after converting them to strings via `JSON.stringify()`.
+
+    This specifically fixes a bug on the UserPermissionsPage:
+    When the `availableContentScopes` passed to the `UserPermissionsModule` weren't sorted alphabetically, the allowed scopes wouldn't be displayed correctly in the UI.
+
+    -   @comet/blocks-api@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

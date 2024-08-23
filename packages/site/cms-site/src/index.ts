@@ -18,6 +18,8 @@ export { hasRichTextBlockContent } from "./blocks/RichTextBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
+export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
+export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
 export { createFetchWithDefaults, createFetchWithPreviewHeaders, createGraphQLFetch, gql, GraphQLFetch } from "./graphQLFetch/graphQLFetch";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export { IFrameMessageType } from "./iframebridge/IFrameMessage";

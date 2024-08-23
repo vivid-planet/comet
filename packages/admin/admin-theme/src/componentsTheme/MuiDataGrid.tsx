@@ -68,11 +68,13 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 outline: "none",
             },
         },
-        columnHeadersInner: {
-            padding: spacing(0, 2),
+        pinnedColumnHeaders: {
+            backgroundColor: "white",
+            boxShadow: shadows[2],
         },
-        row: {
-            padding: spacing(0, 2),
+        pinnedColumns: {
+            backgroundColor: "white",
+            boxShadow: shadows[2],
         },
         cell: {
             borderTop: `1px solid ${palette.grey[100]}`,
