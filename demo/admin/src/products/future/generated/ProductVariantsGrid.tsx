@@ -119,6 +119,7 @@ export function ProductVariantsGrid({ product }: Props) {
             filterable: false,
             type: "actions",
             align: "right",
+            pinned: "right",
             renderCell: (params) => {
                 return (
                     <>

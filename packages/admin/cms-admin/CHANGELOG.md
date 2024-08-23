@@ -1,5 +1,85 @@
 # @comet/cms-admin
 
+## 7.2.0
+
+### Patch Changes
+
+-   4b267f90d: Fix broken export/import of `commonErrorMessages` from the file form field
+-   Updated dependencies [9b800c9f6]
+-   Updated dependencies [0fb8d9a26]
+-   Updated dependencies [4b267f90d]
+    -   @comet/admin-theme@7.2.0
+    -   @comet/admin@7.2.0
+    -   @comet/admin-date-time@7.2.0
+    -   @comet/admin-icons@7.2.0
+    -   @comet/admin-rte@7.2.0
+    -   @comet/blocks-admin@7.2.0
+
+## 7.1.0
+
+### Minor Changes
+
+-   7410aae83: Add new `FileUploadField` component for uploading files in forms using the `FileUploadsModule`
+-   945ba8725: Add `icon` prop to `DashboardWidgetRoot`
+-   9a8098488: Rework `EditImageDialog`
+
+    Changes
+
+    -   Increase image size
+    -   Add hover effects for focal points
+    -   Add "Open in DAM" button
+
+        Note: This feature only works if the `DependenciesConfig` is configured for `DamFile`:
+
+        ```diff
+        // App.tsx
+
+        <DependenciesConfigProvider
+            entityDependencyMap={{
+        +       DamFile: createDamFileDependency(),
+                // ...
+            }}
+        >
+        ```
+
+-   91b154b06: Make the details and creator/author fields optional when using the DAM license feature
+
+### Patch Changes
+
+-   7dabe8d11: Fix the content scope indicator on the `EditFile` page if DAM scoping is disabled
+-   452a12a3c: Change text color of `FilePreview` action buttons to white
+
+    Previously, the text was invisible because it was black on a black background.
+
+-   bbb753600: Fix false positives in `resolveHasSaveConflict` check
+
+    The check occasionally failed due to rounding errors.
+    This is fixed by rounding to full seconds before checking.
+
+-   Updated dependencies [3adf5fecd]
+-   Updated dependencies [04844d39e]
+-   Updated dependencies [2253a1d00]
+-   Updated dependencies [dfc4a7fff]
+-   Updated dependencies [1fe10e883]
+-   Updated dependencies [c90ae39d4]
+-   Updated dependencies [b1bbd6a0c]
+-   Updated dependencies [c0488eb84]
+-   Updated dependencies [e53f4ce06]
+-   Updated dependencies [39ab15616]
+-   Updated dependencies [c1ab2b340]
+-   Updated dependencies [99a1f0ae6]
+-   Updated dependencies [edf14d066]
+-   Updated dependencies [2b68513be]
+-   Updated dependencies [6be41b668]
+-   Updated dependencies [374f383ba]
+-   Updated dependencies [c050f2242]
+    -   @comet/admin-theme@7.1.0
+    -   @comet/admin@7.1.0
+    -   @comet/blocks-admin@7.1.0
+    -   @comet/admin-icons@7.1.0
+    -   @comet/admin-date-time@7.1.0
+    -   @comet/admin-rte@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

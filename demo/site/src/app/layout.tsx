@@ -1,4 +1,5 @@
 import { SitePreviewProvider } from "@comet/cms-site";
+import { ErrorHandler } from "@src/util/ErrorHandler";
 import StyledComponentsRegistry from "@src/util/StyledComponentsRegistry";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -16,7 +17,7 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
         <html>
             <body className={inter.className}>
                 <StyledComponentsRegistry>
-                    {draftMode().isEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}
+                    <ErrorHandler>{draftMode().isEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}</ErrorHandler>
                 </StyledComponentsRegistry>
             </body>
         </html>
