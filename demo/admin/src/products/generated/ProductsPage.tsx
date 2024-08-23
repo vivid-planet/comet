@@ -3,12 +3,13 @@
 
 import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
+import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { ProductForm } from "./ProductForm";
 import { ProductsGrid } from "./ProductsGrid";
 
-export function ProductsPage() {
+export function ProductsPage(): React.ReactElement {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>

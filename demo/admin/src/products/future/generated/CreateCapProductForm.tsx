@@ -20,6 +20,7 @@ import { FormControlLabel } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
+import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
@@ -43,7 +44,7 @@ interface FormProps {
     type: GQLProductType;
 }
 
-export function CreateCapProductForm({ type }: FormProps) {
+export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
     const client = useApolloClient();
 
     const formApiRef = useFormApiRef<FormValues>();

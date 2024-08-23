@@ -19,7 +19,7 @@ import {
 import { DamImageBlock } from "@comet/cms-admin";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
-import { ReactNode } from "react";
+import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
@@ -72,7 +72,7 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
+function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -89,12 +89,12 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
 
 type Props = {
     filter?: GQLProductFilter;
-    toolbarAction?: ReactNode;
+    toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
 };
 
-export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
+export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };

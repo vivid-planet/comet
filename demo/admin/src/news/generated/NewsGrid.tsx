@@ -23,6 +23,7 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
+import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
@@ -96,7 +97,7 @@ function NewsGridToolbar() {
     );
 }
 
-export function NewsGrid() {
+export function NewsGrid(): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };

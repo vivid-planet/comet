@@ -22,6 +22,7 @@ import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -98,7 +99,7 @@ function ProductsGridToolbar() {
     );
 }
 
-export function ProductsGrid() {
+export function ProductsGrid(): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };

@@ -30,7 +30,7 @@ import { ContentScopeIndicator, DamImageBlock, queryUpdatedAt, resolveHasSaveCon
 import { FormControlLabel, IconButton, MenuItem } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import { useMemo } from "react";
+import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createProductMutation, productFormFragment, productFormQuery, updateProductMutation } from "./ProductForm.gql";
@@ -57,7 +57,7 @@ interface FormProps {
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps) {
+export function ProductForm({ id }: FormProps): React.ReactElement {
     const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
@@ -69,7 +69,7 @@ export function ProductForm({ id }: FormProps) {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = useMemo<Partial<FormValues>>(
+    const initialValues = React.useMemo<Partial<FormValues>>(
         () =>
             data?.product
                 ? {
