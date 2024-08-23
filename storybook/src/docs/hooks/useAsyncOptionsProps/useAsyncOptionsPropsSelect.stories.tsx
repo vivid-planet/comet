@@ -23,7 +23,7 @@ storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () =
 
     return (
         <div style={{ minHeight: "50px" }}>
-            <Form onSubmit={() => {}} initialValues={{ selectAsync: { value: "strawberry", label: "Strawberry" } }}>
+            <Form onSubmit={() => {}} keepDirtyOnReinitialize initialValues={{ selectAsync: { value: "strawberry", label: "Strawberry" } }}>
                 {() => (
                     <Field
                         name="selectAsync"
@@ -31,6 +31,8 @@ storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () =
                         {...selectAsyncProps}
                         getOptionLabel={(option: Option) => option.label}
                         getOptionSelected={(option: Option, value: Option) => {
+                            console.log({ option, value });
+
                             return option.value === value.value;
                         }}
                         style={{ width: "300px" }}
