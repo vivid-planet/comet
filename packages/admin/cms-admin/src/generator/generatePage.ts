@@ -19,11 +19,12 @@ export async function writeCrudPage({ entityName, target: targetDirectory }: Cru
     const out = `
         import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
         import { ContentScopeIndicator } from "@comet/cms-admin";
+        import * as React from "react";
         import { useIntl } from "react-intl";
         import { ${entityName}Form } from "./${entityName}Form";
         import { ${classNamePlural}Grid } from "./${classNamePlural}Grid";
 
-        export function ${classNamePlural}Page() {
+        export function ${classNamePlural}Page(): React.ReactElement {
             const intl = useIntl();
             return (
                 <Stack topLevelTitle={intl.formatMessage({ id: "${instanceNamePlural}.${instanceNamePlural}", defaultMessage: "${camelCaseToHumanReadable(
