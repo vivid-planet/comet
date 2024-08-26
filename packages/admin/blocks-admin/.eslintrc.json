@@ -3,17 +3,6 @@
     "ignorePatterns": ["src/*.generated.ts", "lib/**"],
     "rules": {
         "@comet/no-other-module-relative-import": "off",
-        "react/react-in-jsx-scope": "off",
-        "no-restricted-imports": [
-            "error",
-            {
-                "paths": [
-                    {
-                        "name": "react",
-                        "importNames": ["default"]
-                    }
-                ]
-            }
-        ]
+        "react/react-in-jsx-scope": "off"
     }
 }
