@@ -1,7 +1,7 @@
 import { Check, Close, Delete, RteLink } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormLabel, Grid, InputBase } from "@mui/material";
 import { EditorState, RichUtils } from "draft-js";
-import * as React from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../../Controls/ControlButton";
@@ -13,14 +13,14 @@ import { ENTITY_TYPE } from "./Decorator";
 import { ILinkProps } from "./EditorComponent";
 
 export default function ToolbarButton(props: IControlProps) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const linkData = findEntityDataInCurrentSelection<ILinkProps>(props.editorState, ENTITY_TYPE);
     const { entity: previousLinkEntity, entitySelection: linkEntitySelection } = findEntityInCurrentSelection(props.editorState, ENTITY_TYPE);
     const selection = props.editorState.getSelection();
     const linkEditCreateDisabled = (selection.isCollapsed() && !linkData) || !selectionIsInOneBlock(props.editorState);
     const globallyDisabled = !!props.disabled;
 
-    function handleClick(e: React.MouseEvent) {
+    function handleClick(e: MouseEvent) {
         if (linkEditCreateDisabled) {
             return;
         }
@@ -57,9 +57,9 @@ function LinkDialog(props: {
 }) {
     const { onClose, open, linkData, editorState, onChange } = props;
     const linkDataUrl = linkData ? linkData.url : "";
-    const [newUrl, setNewUrl] = React.useState(linkDataUrl);
+    const [newUrl, setNewUrl] = useState(linkDataUrl);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setNewUrl(linkDataUrl);
     }, [linkDataUrl, setNewUrl]);
 
@@ -67,7 +67,7 @@ function LinkDialog(props: {
         onClose();
     };
 
-    const handleRemove = (e: React.MouseEvent) => {
+    const handleRemove = (e: MouseEvent) => {
         e.preventDefault();
 
         setNewUrl("");
@@ -78,7 +78,7 @@ function LinkDialog(props: {
         onClose();
     };
 
-    const handleUpdate = (e: React.MouseEvent) => {
+    const handleUpdate = (e: MouseEvent) => {
         e.preventDefault();
         const contentState = editorState.getCurrentContent();
         const contentStateWithEntity = contentState.createEntity("LINK", "MUTABLE", { url: newUrl });
