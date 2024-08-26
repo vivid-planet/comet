@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 
+import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
 import { SupportedBlocks } from "./types";
 
@@ -32,7 +33,11 @@ export const BlocksBlock = ({ supportedBlocks, data: { blocks } }: Props) => {
                     return null;
                 }
 
-                return <Fragment key={block.key}>{blockFunction(block.props)}</Fragment>;
+                return (
+                    <Fragment key={block.key}>
+                        <ErrorHandlerBoundary>{blockFunction(block.props)}</ErrorHandlerBoundary>
+                    </Fragment>
+                );
             })}
         </>
     );

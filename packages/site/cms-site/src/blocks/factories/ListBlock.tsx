@@ -1,5 +1,6 @@
 import { Fragment, ReactNode } from "react";
 
+import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
 
 interface Props {
@@ -18,7 +19,9 @@ export const ListBlock = ({ block: blockFunction, data: { blocks } }: Props) => 
     return (
         <>
             {blocks.map((block) => (
-                <Fragment key={block.key}>{blockFunction(block.props)}</Fragment>
+                <Fragment key={block.key}>
+                    <ErrorHandlerBoundary>{blockFunction(block.props)}</ErrorHandlerBoundary>
+                </Fragment>
             ))}
         </>
     );
