@@ -5,18 +5,7 @@
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@comet/no-other-module-relative-import": "off",
-        "react/react-in-jsx-scope": "off",
-        "no-restricted-imports": [
-            "error",
-            {
-                "paths": [
-                    {
-                        "name": "react",
-                        "importNames": ["default"]
-                    }
-                ]
-            }
-        ]
+        "react/react-in-jsx-scope": "off"
     },
     "overrides": [
         {
