@@ -1,5 +1,34 @@
 # @comet/admin-theme
 
+## 7.2.1
+
+### Patch Changes
+
+-   @comet/admin-icons@7.2.1
+
+## 7.2.0
+
+### Minor Changes
+
+-   9b800c9f6: Slightly adjust the styling of pinned columns in DataGrid
+
+### Patch Changes
+
+-   @comet/admin-icons@7.2.0
+
+## 7.1.0
+
+### Minor Changes
+
+-   04844d39e: Adjust the alignment and spacing of the label, the input, and child fields inside `FieldContainer` and `Field`
+
+### Patch Changes
+
+-   3adf5fecd: Remove unnecessary padding of DataGrid rows
+-   c90ae39d4: Fix spacing between page number and chevron icon in the pagination select of `DataGrid`
+-   Updated dependencies [b1bbd6a0c]
+    -   @comet/admin-icons@7.1.0
+
 ## 7.0.0
 
 ### Major Changes
