@@ -194,6 +194,7 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             type: "actions",
             align: "right",
+            pinned: "right",
             renderCell: (params) => {
                 return (
                     <>

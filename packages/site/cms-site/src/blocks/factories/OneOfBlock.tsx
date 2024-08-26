@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
 import { SupportedBlocks } from "./types";
 
 interface Props {
@@ -34,5 +35,5 @@ export const OneOfBlock: React.FC<Props> = ({ data: { block, ...additionalProps 
         return null;
     }
 
-    return <>{blockFunction({ ...block.props, ...additionalProps, children, className })}</>;
+    return <ErrorHandlerBoundary>{blockFunction({ ...block.props, ...additionalProps, children, className })}</ErrorHandlerBoundary>;
 };
