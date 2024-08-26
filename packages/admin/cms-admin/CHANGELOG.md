@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 6.17.3
+
+### Patch Changes
+
+-   60b06d402: Allow emptying `targetUrl` in `ExternalLinkBlock`
+    -   @comet/admin@6.17.3
+    -   @comet/admin-date-time@6.17.3
+    -   @comet/admin-icons@6.17.3
+    -   @comet/admin-rte@6.17.3
+    -   @comet/admin-theme@6.17.3
+    -   @comet/blocks-admin@6.17.3
+
 ## 6.17.2
 
 ### Patch Changes
