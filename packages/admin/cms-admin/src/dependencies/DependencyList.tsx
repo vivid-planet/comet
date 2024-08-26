@@ -1,5 +1,5 @@
 import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
-import { GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
+import { Alert, GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
 import { IconButton, LinearProgress, tablePaginationClasses } from "@mui/material";
 import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
@@ -204,6 +204,12 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     return `${row.id}_${row.rootColumnName}_${row.jsonPath}`;
                 }}
             />
+            <Alert title={<FormattedMessage id="comet.dam.file.dependants.info.title" defaultMessage="What are dependants?" />} sx={{ marginTop: 2 }}>
+                <FormattedMessage
+                    id="comet.dam.file.dependants.info.content"
+                    defaultMessage="Dependants are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it´s easy to manage or reorganize the integration of your assets."
+                />
+            </Alert>
         </>
     );
 };

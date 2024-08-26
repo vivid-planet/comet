@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { FormSection, useStackApi } from "@comet/admin";
+import { Alert, FormSection, useStackApi } from "@comet/admin";
 import { BallTriangle as BallTriangleIcon, Link as LinkIcon, OpenNewTab as OpenNewTabIcon, Reload as ReloadIcon } from "@comet/admin-icons";
 import {
     Button,
@@ -98,6 +98,15 @@ const Duplicates: React.FC<{ fileId: string }> = ({ fileId }) => {
                     </ListItem>
                 )}
             </List>
+            <Alert
+                title={<FormattedMessage id="comet.dam.file.duplicates.info.title" defaultMessage="What are duplicate assets?" />}
+                sx={{ marginTop: 2 }}
+            >
+                <FormattedMessage
+                    id="comet.dam.file.duplicates.info.content"
+                    defaultMessage="Duplicates refer to one or more identical copies of a digital asset stored in the DAM system. The DAM automatically detects identical assets, even if their file names are different, to reduce storage usage."
+                />
+            </Alert>
         </FormSection>
     );
 };
