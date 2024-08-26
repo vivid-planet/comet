@@ -1,10 +1,9 @@
 import { MainContent, Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { ManufacturersGrid } from "@src/products/future/generated/ManufacturersGrid";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
-export function ManufacturersPage(): React.ReactElement {
+export function ManufacturersPage() {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "manufacturers.manufacturers", defaultMessage: "Manufacturers" })}>
