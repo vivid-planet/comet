@@ -1,17 +1,16 @@
 import { ContentState } from "draft-js";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 interface IProps {
     contentState: ContentState;
     entityKey: string;
-    children?: React.ReactNode;
 }
 
 export interface ILinkProps {
     url: string;
 }
 
-function EditorComponent(props: IProps) {
+const EditorComponent = (props: PropsWithChildren<IProps>) => {
     const { url } = props.contentState.getEntity(props.entityKey).getData() as ILinkProps; // not typed
     return (
         <a
@@ -24,6 +23,6 @@ function EditorComponent(props: IProps) {
             {props.children}
         </a>
     );
-}
+};
 
 export default EditorComponent;
