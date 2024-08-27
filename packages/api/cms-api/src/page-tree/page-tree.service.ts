@@ -152,29 +152,34 @@ export class PageTreeService {
             throw new Error(`Page "home" cannot be ${newVisibility.toLowerCase()}`);
         }
 
-        let changedSlug: string | undefined = undefined;
-        if (node.visibility === PageTreeNodeVisibility.Archived && newVisibility !== PageTreeNodeVisibility.Archived) {
-            const readApi = this.createReadApi({ visibility: "all" });
-            const existingNodePath = await readApi.nodePath(node);
-            const slug = node.slug;
+        const nodes = await this.createReadApi({ visibility: "all" }).getChildNodes(node);
+        nodes.push(node);
 
-            let slugIncrement = 0;
-            // eslint-disable-next-line no-constant-condition
-            while (true) {
-                const nextSlugToTest = slugIncrement ? `${slug}-${slugIncrement}` : slug;
+        for (const node of nodes) {
+            let changedSlug: string | undefined = undefined;
+            if (node.visibility === PageTreeNodeVisibility.Archived && newVisibility !== PageTreeNodeVisibility.Archived) {
+                const readApi = this.createReadApi({ visibility: "all" });
+                const existingNodePath = await readApi.nodePath(node);
+                const slug = node.slug;
 
-                const newPath = this.newPathForSlug(existingNodePath, nextSlugToTest);
-                const nodeWithSamePath = await this.nodeWithSamePath(newPath, node.scope);
+                let slugIncrement = 0;
+                // eslint-disable-next-line no-constant-condition
+                while (true) {
+                    const nextSlugToTest = slugIncrement ? `${slug}-${slugIncrement}` : slug;
 
-                if (!nodeWithSamePath) {
-                    break;
+                    const newPath = this.newPathForSlug(existingNodePath, nextSlugToTest);
+                    const nodeWithSamePath = await this.nodeWithSamePath(newPath, node.scope);
+
+                    if (!nodeWithSamePath) {
+                        break;
+                    }
+                    slugIncrement++;
                 }
-                slugIncrement++;
+                changedSlug = slugIncrement ? `${slug}-${slugIncrement}` : slug;
             }
-            changedSlug = slugIncrement ? `${slug}-${slugIncrement}` : slug;
-        }
 
-        node.assign({ visibility: newVisibility, slug: changedSlug ?? node.slug });
+            node.assign({ visibility: newVisibility, slug: changedSlug ?? node.slug });
+        }
 
         // TODO flush shouldn't happen here, remove in a major version
         await this.pageTreeRepository.flush();
