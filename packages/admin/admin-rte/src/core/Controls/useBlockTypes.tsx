@@ -1,6 +1,6 @@
 import { SelectChangeEvent } from "@mui/material";
 import { DraftBlockType, Editor, EditorState, RichUtils } from "draft-js";
-import * as React from "react";
+import { MouseEvent, RefObject, useCallback, useMemo } from "react";
 
 import { SupportedThings } from "../Rte";
 import { IBlocktypeMap, IFeatureConfig } from "../types";
@@ -11,7 +11,7 @@ interface IProps {
     setEditorState: (editorState: EditorState) => void;
     supportedThings: SupportedThings[];
     blocktypeMap: IBlocktypeMap;
-    editorRef: React.RefObject<Editor>;
+    editorRef: RefObject<Editor>;
     standardBlockType: DraftBlockType;
 }
 
@@ -19,7 +19,7 @@ interface IFeaturesFromBlocktypeMapArg {
     blocktypeMap: IBlocktypeMap;
     supports: (a?: SupportedThings) => boolean;
     blockTypeActive: (a: DraftBlockType) => boolean;
-    handleBlockTypeButtonClick: (blockType: DraftBlockType, e: React.MouseEvent) => void;
+    handleBlockTypeButtonClick: (blockType: DraftBlockType, e: MouseEvent) => void;
     standardBlockType: DraftBlockType;
 }
 
@@ -63,12 +63,9 @@ export default function useBlockTypes({
     standardBlockType,
 }: IProps): BlockTypesApi {
     // can check if blocktype is supported by the editor
-    const supports = React.useCallback(
-        (supportedBy?: SupportedThings) => (supportedBy ? supportedThings.includes(supportedBy) : true),
-        [supportedThings],
-    );
+    const supports = useCallback((supportedBy?: SupportedThings) => (supportedBy ? supportedThings.includes(supportedBy) : true), [supportedThings]);
 
-    const blockTypeActive = React.useCallback(
+    const blockTypeActive = useCallback(
         (blockType: DraftBlockType) => {
             const currentBlock = getCurrentBlock(editorState);
             if (!currentBlock) {
@@ -79,15 +76,15 @@ export default function useBlockTypes({
         [editorState],
     );
 
-    const handleBlockTypeButtonClick = React.useCallback(
-        (blockType: DraftBlockType, e: React.MouseEvent) => {
+    const handleBlockTypeButtonClick = useCallback(
+        (blockType: DraftBlockType, e: MouseEvent) => {
             e.preventDefault();
             setEditorState(RichUtils.toggleBlockType(editorState, blockType));
         },
         [setEditorState, editorState],
     );
 
-    const handleBlockTypeChange = React.useCallback(
+    const handleBlockTypeChange = useCallback(
         (e: BlockChangeEvent) => {
             e.preventDefault();
 
@@ -109,17 +106,17 @@ export default function useBlockTypes({
         [setEditorState, editorState, editorRef],
     );
 
-    const dropdownFeatures: IFeatureConfig[] = React.useMemo(
+    const dropdownFeatures: IFeatureConfig[] = useMemo(
         () => createFeaturesFromBlocktypeMap("dropdown")({ supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType }),
         [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType],
     );
 
-    const listsFeatures: IFeatureConfig[] = React.useMemo(
+    const listsFeatures: IFeatureConfig[] = useMemo(
         () => createFeaturesFromBlocktypeMap("button")({ supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType }),
         [supports, blockTypeActive, handleBlockTypeButtonClick, blocktypeMap, standardBlockType],
     );
 
-    const activeDropdownBlockType: string = React.useMemo(() => {
+    const activeDropdownBlockType: string = useMemo(() => {
         const activeFeature = dropdownFeatures.find((c) => c.selected);
         return activeFeature ? activeFeature.name : "unstyled";
     }, [dropdownFeatures]);

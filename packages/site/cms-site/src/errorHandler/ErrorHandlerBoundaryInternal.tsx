@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ErrorInfo, PropsWithChildren } from "react";
+import { Component, ErrorInfo, PropsWithChildren } from "react";
 
 interface Props extends PropsWithChildren {
     onError: (error: Error, errorInfo: ErrorInfo) => void;
@@ -10,7 +10,7 @@ type State = {
     hasError: boolean;
 };
 
-export class ErrorHandlerBoundaryInternal extends React.Component<Props, State> {
+export class ErrorHandlerBoundaryInternal extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = { hasError: false };
