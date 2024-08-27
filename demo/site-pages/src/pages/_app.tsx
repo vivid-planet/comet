@@ -4,7 +4,6 @@ import { AppProps, NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
-import * as React from "react";
 import { IntlProvider } from "react-intl";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 

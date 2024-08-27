@@ -4,13 +4,13 @@ import { Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui
 import { GridCellParams } from "@mui/x-data-grid-pro";
 import { GQLProductsGridFutureFragment } from "@src/products/future/generated/ProductsGrid.generated";
 import { GQLProductsListManualFragment } from "@src/products/ProductsGrid.generated";
-import React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 type Props = GridCellParams<unknown, GQLProductsListManualFragment | GQLProductsGridFutureFragment>;
 
 export const ProductsGridPreviewAction = ({ row }: Props) => {
-    const [showDetails, setShowDetails] = React.useState(false);
+    const [showDetails, setShowDetails] = useState(false);
     return (
         <>
             <Tooltip title="View Details">
