@@ -1,11 +1,37 @@
-import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormFieldConfig } from "../generator";
+import { FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
+
+function getTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
+    let typeKind = undefined;
+    let typeClass = "unknown";
+    let required = false;
+    let type = arg.type;
+
+    if (type.kind === "NON_NULL") {
+        required = true;
+        type = type.ofType;
+    }
+    if (type.kind === "INPUT_OBJECT") {
+        typeClass = type.name;
+        typeKind = type.kind;
+    } else if (type.kind === "ENUM") {
+        typeClass = type.name;
+        typeKind = type.kind;
+    } else {
+        throw new Error(`Resolving kind ${type.kind} currently not supported.`);
+    }
+    return {
+        required,
+        typeKind,
+        typeClass,
+    };
+}
 
 export function generateFormField({
     gqlIntrospection,
@@ -268,12 +294,62 @@ export function generateFormField({
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
         const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
-        const rootQueryFilterType = rootQueryType.args.find((arg) => arg.name === "filter");
 
         formFragmentField = `${name} { id ${labelField} }`;
 
-        const filterField = config.filterField?.name ? findFieldByName(config.filterField.name, formConfig.fields) : undefined;
-        if (filterField) {
+        const filterConfig = config.filterField
+            ? (() => {
+                  const filterField = findFieldByName(config.filterField.name, formConfig.fields);
+                  if (!filterField) {
+                      throw new Error(
+                          `Field ${String(config.name)}: No field with name "${
+                              config.filterField?.name
+                          }" referenced as filterField found in form-config.`,
+                      );
+                  }
+                  if (!isFormFieldConfig(filterField)) {
+                      throw new Error(
+                          `Field ${String(config.name)}: Field with name "${config.filterField?.name}" referenced as filterField is no FormField.`,
+                      );
+                  }
+
+                  const gqlName = config.filterField.gqlName ?? config.filterField.name;
+
+                  // try to find arg used to filter by checking names of root-props and filter-prop-fields
+                  const rootArgForName = rootQueryType.args.find((arg) => arg.name === gqlName);
+                  let filterType = rootArgForName ? getTypeInfo(rootArgForName, gqlIntrospection) : undefined;
+                  let filterVarName = undefined;
+                  let filterVarValue = undefined;
+
+                  if (filterType) {
+                      // there is a root-prop with same name, so the dev probably wants to filter with this prop
+                      filterVarName = gqlName;
+                      filterVarValue = `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
+                  } else {
+                      // no root-prop with same name, check filter-prop-fields
+                      const rootArgFilter = rootQueryType.args.find((arg) => arg.name === "filter");
+                      filterType = rootArgFilter ? getTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
+                      if (filterType) {
+                          filterVarName = "filter";
+                          filterVarValue = `{ ${gqlName}: { equal: values.${
+                              filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
+                          } } }`;
+                      } else {
+                          throw new Error(
+                              `Neither filter-prop nor root-prop with name: ${gqlName} for asyncSelect-query not found. Consider setting filterField.gqlVarName explicitly.`,
+                          );
+                      }
+                  }
+
+                  return {
+                      filterField,
+                      filterType,
+                      filterVarName,
+                      filterVarValue,
+                  };
+              })()
+            : undefined;
+        if (filterConfig) {
             imports.push({ name: "OnChangeField", importPath: "@comet/admin" });
             finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
         }
@@ -298,37 +374,23 @@ export function generateFormField({
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName}${
-            filterField && rootQueryFilterType && rootQueryFilterType.type.kind === "INPUT_OBJECT"
-                ? `($filter: ${rootQueryFilterType.type.name})`
-                : ``
+            filterConfig ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})` : ``
         } {
-                            ${rootQuery}${filterField && rootQueryFilterType ? `(filter: $filter)` : ``} {
+                            ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
                                 nodes {
                                     id
                                     ${labelField}
                                 }
                             }
-                        }\`${
-                            filterField && rootQueryFilterType && config.filterField
-                                ? `, variables: { ${
-                                      config.filterField?.gqlVarType === "filter"
-                                          ? `filter: { ${config.filterField.gqlVarName}: { equal: values.${
-                                                filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
-                                            } } }`
-                                          : `${config.filterField.gqlVarName}: values.${
-                                                filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
-                                            }`
-                                  } }`
-                                : ``
-                        }
+                        }\`${filterConfig ? `, variables: { ${filterConfig.filterVarName}: ${filterConfig.filterVarValue} }` : ``}
                     });
                     return data.${rootQuery}.nodes;
                 }}
                 getOptionLabel={(option) => option.${labelField}}
-                ${filterField ? `disabled={!values?.${String(filterField.name)}}` : ``}
+                ${filterConfig ? `disabled={!values?.${String(filterConfig.filterField.name)}}` : ``}
             />${
-                filterField
-                    ? `<OnChangeField name="${String(filterField.name)}">
+                filterConfig
+                    ? `<OnChangeField name="${String(filterConfig.filterField.name)}">
                             {(value, previousValue) => {
                                 if (value.id !== previousValue.id) {
                                     form.change("${String(config.name)}", undefined);

@@ -26,7 +26,7 @@ export type FormFieldConfig<T> = (
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
-          filterField?: { name: string; gqlVarName: string; gqlVarType: "rootProp" | "filter" };
+          filterField?: { name: string; gqlName?: string };
       }
     | { type: "block"; block: ImportReference }
 ) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };

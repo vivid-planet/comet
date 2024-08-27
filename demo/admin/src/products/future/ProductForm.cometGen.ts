@@ -37,8 +37,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     rootQuery: "manufacturers",
                     filterField: {
                         name: "type",
-                        gqlVarType: "filter",
-                        gqlVarName: "addressAsEmbeddable_country",
+                        gqlName: "addressAsEmbeddable_country",
                     },
                 },
                 { type: "boolean", name: "inStock" },
