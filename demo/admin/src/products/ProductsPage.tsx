@@ -54,7 +54,7 @@ const ProductsPage = () => {
                                         path=""
                                         label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                     >
-                                        <ProductForm id={selectedProductId} />
+                                        <ProductForm id={selectedProductId} manufacturerCountry="DE" />
                                     </RouterTab>
                                     <RouterTab
                                         forceRender={true}
@@ -118,7 +118,7 @@ const ProductsPage = () => {
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ProductForm />
+                        <ProductForm manufacturerCountry="DE" />
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>

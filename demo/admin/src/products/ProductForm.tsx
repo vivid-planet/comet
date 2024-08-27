@@ -8,7 +8,6 @@ import {
     FinalFormSubmitEvent,
     Loading,
     MainContent,
-    OnChangeField,
     SelectField,
     TextAreaField,
     TextField,
@@ -26,12 +25,7 @@ import {
 } from "@comet/cms-admin";
 import { MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
-import {
-    GQLManufacturerCountriesQuery,
-    GQLManufacturerCountriesQueryVariables,
-    GQLManufacturersQuery,
-    GQLManufacturersQueryVariables,
-} from "@src/products/ProductForm.generated";
+import { GQLManufacturersQuery, GQLManufacturersQueryVariables } from "@src/products/ProductForm.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -56,6 +50,7 @@ import {
 
 interface FormProps {
     id?: string;
+    manufacturerCountry: string;
 }
 
 const rootBlocks = {
@@ -68,12 +63,11 @@ type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" 
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 
-type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry"> & {
+type FormValues = Omit<ProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
-    manufacturerCountry?: { id: string };
 };
 
-export function ProductForm({ id }: FormProps) {
+export function ProductForm({ id, manufacturerCountry }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -97,11 +91,6 @@ export function ProductForm({ id }: FormProps) {
         return {
             ...filteredData,
             image: rootBlocks.image.input2State(filteredData.image),
-            manufacturerCountry: filteredData.manufacturerCountry
-                ? {
-                      id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
-                  }
-                : undefined,
         };
     }, [data]);
 
@@ -116,7 +105,7 @@ export function ProductForm({ id }: FormProps) {
         },
     });
 
-    const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
 
         const output = {
@@ -184,28 +173,6 @@ export function ProductForm({ id }: FormProps) {
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
                         <AsyncSelectField
-                            name="manufacturerCountry"
-                            loadOptions={async () => {
-                                const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
-                                    query: gql`
-                                        query ManufacturerCountries {
-                                            manufacturerCountries {
-                                                nodes {
-                                                    id
-                                                    used
-                                                }
-                                            }
-                                        }
-                                    `,
-                                });
-
-                                return data.manufacturerCountries.nodes;
-                            }}
-                            getOptionLabel={(option) => option.id}
-                            label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
-                            fullWidth
-                        />
-                        <AsyncSelectField
                             name="manufacturer"
                             loadOptions={async () => {
                                 const { data } = await client.query<GQLManufacturersQuery, GQLManufacturersQueryVariables>({
@@ -222,7 +189,7 @@ export function ProductForm({ id }: FormProps) {
                                     variables: {
                                         filter: {
                                             addressAsEmbeddable_country: {
-                                                equal: values.manufacturerCountry?.id,
+                                                equal: manufacturerCountry,
                                             },
                                         },
                                     },
@@ -233,15 +200,7 @@ export function ProductForm({ id }: FormProps) {
                             getOptionLabel={(option) => option.name}
                             label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                             fullWidth
-                            disabled={!values?.manufacturerCountry}
                         />
-                        <OnChangeField name="manufacturerCountry">
-                            {(value, previousValue) => {
-                                if (value.id !== previousValue.id) {
-                                    form.change("manufacturer", undefined);
-                                }
-                            }}
-                        </OnChangeField>
                         <SelectField name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />} required fullWidth>
                             <MenuItem value="Cap">
                                 <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
