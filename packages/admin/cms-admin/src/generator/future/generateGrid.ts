@@ -12,7 +12,7 @@ import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { GeneratorReturn, GridConfig } from "./generator";
+import { ActionsGridColumnConfig, GeneratorReturn, GridColumnConfig, GridConfig } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findQueryTypeOrThrow } from "./utils/findQueryType";
@@ -82,7 +82,13 @@ export function generateGrid(
     const imports: Imports = [];
     const props: Prop[] = [];
 
-    const fieldList = generateGqlFieldList({ columns: config.columns.filter((column) => column.name !== "id") }); // exclude id because it's always required
+    const fieldList = generateGqlFieldList({
+        columns: config.columns.filter((column) => {
+            return (
+                column.type !== "actions" && column.name !== "id" // exclude id because it's always required
+            );
+        }),
+    });
 
     // all root blocks including those we don't have columns for (required for copy/paste)
     // this is not configured in the grid config, it's just an heuristics
@@ -210,7 +216,16 @@ export function generateGrid(
             return true;
         });
 
-    const gridColumnFields = config.columns.map((column) => {
+    const actionsColumnConfig = config.columns.find((column) => column.type === "actions") as ActionsGridColumnConfig;
+    const {
+        component: actionsColumnComponent,
+        type: actionsColumnType,
+        headerName: actionsColumnHeaderName,
+        pinned: actionsColumnPinned = "right",
+        ...restActionsColumnConfig
+    } = actionsColumnConfig ?? {};
+
+    const gridColumnFields = (config.columns.filter((column) => column.type !== "actions") as GridColumnConfig<unknown>[]).map((column) => {
         const type = column.type;
         const name = String(column.name);
 
@@ -271,6 +286,7 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                pinned: column.pinned,
             };
         }
 
@@ -287,6 +303,7 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            pinned: column.pinned,
         };
     });
 
@@ -353,6 +370,7 @@ export function generateGrid(
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
         .join("\n")}
+    ${actionsColumnComponent ? `import { ${actionsColumnComponent.name} } from "${actionsColumnComponent.import}";` : ""}
 
     const ${instanceGqlTypePlural}Fragment = gql\`
         fragment ${fragmentName} on ${gqlType} {
@@ -483,6 +501,7 @@ export function generateGrid(
                         renderCell: column.renderCell,
                         width: column.width,
                         flex: column.flex,
+                        pinned: column.pinned && `"${column.pinned}"`,
                     };
 
                     if (typeof column.width === "undefined") {
@@ -505,28 +524,32 @@ export function generateGrid(
                 .join(",\n")},
                 ${
                     showActionsColumn
-                        ? `{
-                        field: "actions",
-                        headerName: "",
-                        sortable: false,
-                        filterable: false,
-                        type: "actions",
-                        align: "right",
-                        renderCell: (params) => {
+                        ? tsCodeRecordToString({
+                              field: '"actions"',
+                              headerName: actionsColumnHeaderName
+                                  ? `intl.formatMessage({ id: "${instanceGqlType}.actions", defaultMessage: "${actionsColumnHeaderName}" })`
+                                  : `""`,
+                              sortable: "false",
+                              filterable: "false",
+                              type: '"actions"',
+                              align: '"right"',
+                              pinned: `"${actionsColumnPinned}"`,
+                              ...restActionsColumnConfig,
+                              renderCell: `(params) => {
                             return (
                                 <>
-                                ${
-                                    allowEditing
-                                        ? forwardRowAction
-                                            ? `{rowAction && rowAction(params)}`
-                                            : `
+                                ${actionsColumnComponent?.name ? `<${actionsColumnComponent.name} {...params} />` : ""}${
+                                  allowEditing
+                                      ? forwardRowAction
+                                          ? `{rowAction && rowAction(params)}`
+                                          : `
                                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                                             <Edit color="primary" />
                                         </IconButton>`
-                                        : ""
-                                }${
-                              allowCopyPaste || allowDeleting
-                                  ? `
+                                      : ""
+                              }${
+                                  allowCopyPaste || allowDeleting
+                                      ? `
                                         <CrudContextMenu
                                             ${
                                                 allowCopyPaste
@@ -582,12 +605,12 @@ export function generateGrid(
                                             refetchQueries={[${instanceGqlTypePlural}Query]}
                                         />
                                     `
-                                  : ""
-                          }
+                                      : ""
+                              }
                                 </>
                             );
-                        },
-                    },`
+                                }`,
+                          })
                         : ""
                 }
         ];

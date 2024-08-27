@@ -4,7 +4,6 @@ import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@co
 import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { productPriceFormFragment, productPriceFormQuery, updateProductPriceFormMutation } from "./ProductPriceForm.gql";
@@ -24,7 +23,7 @@ type FormValues = Omit<GQLProductPriceFormFragment, "price"> & {
     price?: string;
 };
 
-export function ProductPriceForm({ id }: FormProps): React.ReactElement {
+export function ProductPriceForm({ id }: FormProps) {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
 

@@ -93,6 +93,8 @@ export function generateFormField({
         validateCode = `validate={${config.validate.name}}`;
     }
 
+    const fieldLabel = `<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />`;
+
     let code = "";
     let formValueToGqlInputCode = "";
     let formFragmentField = name;
@@ -105,7 +107,7 @@ export function generateFormField({
             variant="horizontal"
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+            label={${fieldLabel}}
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
@@ -123,7 +125,7 @@ export function generateFormField({
                 name="${name}"
                 component={FinalFormInput}
                 type="number"
-                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                label={${fieldLabel}}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
@@ -158,7 +160,7 @@ export function generateFormField({
         code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
-                    label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                    label={${fieldLabel}}
                     control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
                     ${
                         config.helperText
@@ -187,7 +189,7 @@ export function generateFormField({
                 fullWidth
                 name="${name}"
                 component={FinalFormDatePicker}
-                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                label={${fieldLabel}}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
@@ -220,6 +222,22 @@ export function generateFormField({
                 },
             },
         ];
+    } else if (config.type === "fileUpload") {
+        const multiple = config.multiple || (typeof config.maxFiles === "number" && config.maxFiles > 1);
+        code = `<FileUploadField name="${name}" label={${fieldLabel}}
+            ${config.multiple ? "multiple" : ""}
+            ${config.maxFiles ? `maxFiles={${config.maxFiles}}` : ""}
+            ${config.maxFileSize ? `maxFileSize={${config.maxFileSize}}` : ""}
+            ${config.readOnly ? `readOnly` : ""}
+            ${config.layout ? `layout="${config.layout}"` : ""}
+            ${config.accept ? `accept="${config.accept}"` : ""}
+        />`;
+        if (multiple) {
+            formValueToGqlInputCode = `${name}: formValues.${name}?.map(({ id }) => id),`;
+        } else {
+            formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
+        }
+        formFragmentField = `${name} { ...FinalFormFileUpload }`;
     } else if (config.type == "staticSelect") {
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
@@ -240,7 +258,7 @@ export function generateFormField({
             variant="horizontal"
             fullWidth
             name="${name}"
-            label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}>
+            label={${fieldLabel}}>
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
@@ -370,7 +388,7 @@ export function generateFormField({
                 variant="horizontal"
                 fullWidth
                 name="${name}"
-                label={<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />}
+                label={${fieldLabel}}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName}${
