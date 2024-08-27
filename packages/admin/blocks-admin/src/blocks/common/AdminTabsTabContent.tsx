@@ -1,15 +1,14 @@
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { useScrollRestoration } from "../../common/useScrollRestoration";
 
 interface TabContentProps {
-    children: React.ReactNode;
     selectedTab?: string;
 }
 
-export function TabContent({ children, selectedTab }: TabContentProps): React.ReactElement {
+export const TabContent = ({ children, selectedTab }: PropsWithChildren<TabContentProps>) => {
     const scrollRestoration = useScrollRestoration<HTMLDivElement>(`adminTabsTabContent-${selectedTab}`);
     return (
         <Root {...scrollRestoration}>
@@ -18,7 +17,7 @@ export function TabContent({ children, selectedTab }: TabContentProps): React.Re
             </Box>
         </Root>
     );
-}
+};
 
 const Root = styled("div")`
     overflow-y: auto;
