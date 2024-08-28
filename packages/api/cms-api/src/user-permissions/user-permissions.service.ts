@@ -96,6 +96,10 @@ export class UserPermissionsService {
         return this.userService.findUsers(args);
     }
 
+    getOptions(): UserPermissionsOptions & UserPermissionsUserServiceInterface["options"] {
+        return { ...this.options, ...(this.userService && this.userService.options ? this.userService.options : []) };
+    }
+
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {
         const availableContentScopes = await this.getAvailableContentScopes();
         contentScopes.forEach((scope) => {
