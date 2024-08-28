@@ -31,6 +31,10 @@ export class FileUploadsModule {
 
         // TODO should we validate the secret more (min length, etc.)?
         if (options.download) {
+            if (options.download.secret.length < 16) {
+                throw new Error("The download secret must be at least 16 characters long.");
+            }
+
             controllers.push(FileUploadsDownloadController);
         }
 
