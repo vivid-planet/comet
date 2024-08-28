@@ -1,6 +1,6 @@
 import { Accept, Copy } from "@comet/admin-icons";
 import { ComponentsOverrides, css, Grow, IconButton, Theme, useThemeProps } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -14,8 +14,8 @@ export interface CopyToClipboardButtonProps
         successButton: typeof IconButton;
     }> {
     copyText: string;
-    copyIcon?: React.ReactNode;
-    successIcon?: React.ReactNode;
+    copyIcon?: ReactNode;
+    successIcon?: ReactNode;
 }
 
 export type CopyToClipboardButtonClassKey =
@@ -32,7 +32,7 @@ type OwnerState = {
     showSuccess: boolean;
 };
 
-export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): React.ReactElement => {
+export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps) => {
     const {
         copyText,
         copyIcon = <Copy />,
@@ -41,7 +41,7 @@ export const CopyToClipboardButton = (inProps: CopyToClipboardButtonProps): Reac
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminCopyToClipboardButton" });
 
-    const [showSuccess, setShowSuccess] = React.useState<boolean>(false);
+    const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
     const ownerState: OwnerState = {
         showSuccess: showSuccess,

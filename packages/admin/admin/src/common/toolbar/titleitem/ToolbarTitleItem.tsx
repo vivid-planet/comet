@@ -1,6 +1,6 @@
 import { ComponentsOverrides, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -9,15 +9,16 @@ import { ToolbarItem } from "../item/ToolbarItem";
 export type ToolbarTitleItemClassKey = "root" | "typography";
 
 export interface ToolbarTitleItemProps
-    extends ThemedComponentBaseProps<{
-        root: typeof ToolbarItem;
-        typography: typeof MuiTypography;
-    }> {
+    extends PropsWithChildren<
+        ThemedComponentBaseProps<{
+            root: typeof ToolbarItem;
+            typography: typeof MuiTypography;
+        }>
+    > {
     /**
      * @deprecated Use `slotProps` instead.
      */
     typographyProps?: TypographyTypeMap["props"];
-    children?: React.ReactNode;
 }
 
 const Root = createComponentSlot(ToolbarItem)<ToolbarTitleItemClassKey>({
