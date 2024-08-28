@@ -7,7 +7,7 @@ import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG, FILE_UPLOADS_FILE_VALIDATION_SERVICE } from "./file-uploads.constants";
 import { FileUploadsService } from "./file-uploads.service";
-import { FileUploadsDownloadController } from "./file-uploads-download.controller";
+import { createFileUploadsDownloadController } from "./file-uploads-download.controller";
 import { createFileUploadsUploadController } from "./file-uploads-upload.controller";
 
 @Global()
@@ -29,12 +29,12 @@ export class FileUploadsModule {
 
         const controllers = [createFileUploadsUploadController(options.upload ?? { public: false })];
 
-        // TODO should we validate the secret more (min length, etc.)?
         if (options.download) {
             if (options.download.secret.length < 16) {
                 throw new Error("The download secret must be at least 16 characters long.");
             }
 
+            const FileUploadsDownloadController = createFileUploadsDownloadController({ public: options.download.public ?? false });
             controllers.push(FileUploadsDownloadController);
         }
 

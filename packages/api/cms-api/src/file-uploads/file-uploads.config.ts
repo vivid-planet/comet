@@ -6,6 +6,7 @@ export interface FileUploadsConfig {
         public: boolean;
     };
     download?: {
+        public?: boolean;
         apiUrl: string;
         secret: string;
     };
