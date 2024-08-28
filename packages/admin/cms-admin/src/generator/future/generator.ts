@@ -37,7 +37,7 @@ export type FormFieldConfig<T> = (
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
-          filterField?: { name: string; gqlName?: string };
+          filter?: { type: "field" | "prop"; name: string; gqlName?: string };
       }
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
