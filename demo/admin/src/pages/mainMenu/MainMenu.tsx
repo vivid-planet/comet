@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { Loading, Selected, Stack, StackPage, StackSwitch } from "@comet/admin";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 import EditMainMenuItem, { editMainMenuItemFragment, GQLEditMainMenuItemFragment } from "./components/EditMainMenuItem";
@@ -16,7 +15,7 @@ const MAIN_MENU_ITEM_QUERY = gql`
     ${editMainMenuItemFragment}
 `;
 
-const MainMenu: React.FunctionComponent = () => {
+const MainMenu = () => {
     const intl = useIntl();
 
     return (

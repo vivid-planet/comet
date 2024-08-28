@@ -18,7 +18,7 @@ import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@co
 import { Divider, FormControlLabel } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createManufacturerMutation, manufacturerFormFragment, manufacturerQuery, updateManufacturerMutation } from "./ManufacturerForm.gql";
@@ -65,7 +65,7 @@ interface FormProps {
     id?: string;
 }
 
-export function ManufacturerForm({ id }: FormProps): React.ReactElement {
+export function ManufacturerForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -76,7 +76,7 @@ export function ManufacturerForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(() => {
+    const initialValues = useMemo<Partial<FormValues>>(() => {
         const filteredData = data ? filterByFragment<GQLManufacturerFormDetailsFragment>(manufacturerFormFragment, data.manufacturer) : undefined;
         if (!filteredData) return {};
         return {

@@ -1,8 +1,8 @@
 import { createSpaceBlock } from "@comet/blocks-admin";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-const options: { value: string; label: React.ReactNode }[] = [
+const options: { value: string; label: ReactNode }[] = [
     { value: "d150", label: <FormattedMessage id="spacing.d150" defaultMessage="Dynamic 150" /> },
     { value: "d200", label: <FormattedMessage id="spacing.d200" defaultMessage="Dynamic 200" /> },
     { value: "d250", label: <FormattedMessage id="spacing.d250" defaultMessage="Dynamic 250" /> },
