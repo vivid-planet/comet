@@ -25,6 +25,8 @@ import { sortContentScopeKeysAlphabetically } from "./utils/sort-content-scope-k
 
 @Injectable()
 export class UserPermissionsService {
+    private availablePermissions: string[];
+
     constructor(
         @Inject(USER_PERMISSIONS_OPTIONS) private readonly options: UserPermissionsOptions,
         @Inject(USER_PERMISSIONS_USER_SERVICE) @Optional() private readonly userService: UserPermissionsUserServiceInterface | undefined,
@@ -45,7 +47,8 @@ export class UserPermissionsService {
     }
 
     async getAvailablePermissions(): Promise<string[]> {
-        return [
+        if (this.availablePermissions) return this.availablePermissions;
+        this.availablePermissions = [
             ...new Set(
                 [
                     ...(await this.discoveryService.providerMethodsWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
@@ -59,6 +62,7 @@ export class UserPermissionsService {
                     .sort(),
             ),
         ];
+        return this.availablePermissions;
     }
 
     async createUserFromIdToken(idToken: JwtPayload): Promise<User> {
@@ -78,6 +82,17 @@ export class UserPermissionsService {
 
     async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
         if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
+
+        if (this.userService.options && this.userService.options.filterUsersWithoutPermission && !args.showAllUsers) {
+            const [users] = await this.userService.findUsers(args);
+            const allowedUsers: User[] = [];
+            for (let i = 0; i < users.length; i++) {
+                if ((await this.getPermissions(users[i])).length > 0) allowedUsers.push(users[i]);
+            }
+            const paginatedUsers = allowedUsers.filter((_, index) => index >= args.offset && index < args.offset + args.limit);
+            return [paginatedUsers, allowedUsers.length];
+        }
+
         return this.userService.findUsers(args);
     }
 
