@@ -1,4 +1,3 @@
-import * as React from "react";
 import styled from "styled-components";
 
 import { PreviewOverlayElement } from "./PreviewOverlayElement";
@@ -22,14 +21,14 @@ export const PreviewOverlay = () => {
 
     return (
         <OverlayRoot style={{ height: bottomMostElementPosition }}>
-            {iFrameBridge.previewElementsData.map((element) => {
+            {iFrameBridge.previewElementsData.map((element, index) => {
                 const isSelected = element.adminRoute === iFrameBridge.selectedAdminRoute;
 
                 if (isSelected && lastSelectedElementPath !== element.adminRoute) {
                     lastSelectedElementPath = element.adminRoute;
                 }
 
-                return <PreviewOverlayElement key={element.adminRoute} element={element} />;
+                return <PreviewOverlayElement key={index} element={element} />;
             })}
         </OverlayRoot>
     );

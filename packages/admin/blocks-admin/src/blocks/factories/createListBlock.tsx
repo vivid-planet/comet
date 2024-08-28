@@ -2,7 +2,7 @@ import { StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -67,9 +67,9 @@ export interface ListBlockAdditionalItemField<Value = unknown> {
 
 interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown>> {
     name: string;
-    displayName?: React.ReactNode;
-    itemName?: React.ReactNode;
-    itemsName?: React.ReactNode;
+    displayName?: ReactNode;
+    itemName?: ReactNode;
+    itemsName?: ReactNode;
     block: T;
     minVisibleBlocks?: number;
     maxVisibleBlocks?: number;
@@ -77,12 +77,12 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
     additionalItemFields?: {
         [Key in keyof AdditionalItemFields]: ListBlockAdditionalItemField<AdditionalItemFields[Key]>;
     };
-    AdditionalItemContextMenuItems?: React.FunctionComponent<{
+    AdditionalItemContextMenuItems?: FunctionComponent<{
         item: ListBlockItem<T, AdditionalItemFields>;
         onChange: (item: ListBlockItem<T, AdditionalItemFields>) => void;
         onMenuClose: () => void;
     }>;
-    AdditionalItemContent?: React.FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
+    AdditionalItemContent?: FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
 }
 
 export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
