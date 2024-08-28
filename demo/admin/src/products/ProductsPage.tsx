@@ -14,7 +14,6 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import React from "react";
 import { useIntl } from "react-intl";
 
 import { ProductForm } from "./ProductForm";
@@ -34,7 +33,7 @@ const FormToolbar = () => (
     </StackToolbar>
 );
 
-const ProductsPage: React.FC = () => {
+const ProductsPage = () => {
     const intl = useIntl();
 
     return (
@@ -55,7 +54,7 @@ const ProductsPage: React.FC = () => {
                                         path=""
                                         label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                     >
-                                        <ProductForm id={selectedProductId} />
+                                        <ProductForm id={selectedProductId} manufacturerCountry="DE" />
                                     </RouterTab>
                                     <RouterTab
                                         forceRender={true}
@@ -119,7 +118,7 @@ const ProductsPage: React.FC = () => {
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ProductForm />
+                        <ProductForm manufacturerCountry="DE" />
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>

@@ -14,7 +14,6 @@ import {
     Loading,
     MainContent,
     messages,
-    OnChangeField,
     RadioGroupField,
     TextAreaField,
     TextField,
@@ -81,10 +80,11 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "manufacturerC
 
 interface FormProps {
     id?: string;
+    manufacturerCountry: string;
     showAvailableSince?: boolean;
 }
 
-export function ProductForm({ id, showAvailableSince }: FormProps): React.ReactElement {
+export function ProductForm({ id, manufacturerCountry, showAvailableSince }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -396,20 +396,12 @@ export function ProductForm({ id, showAvailableSince }: FormProps): React.ReactE
                                                 }
                                             }
                                         `,
-                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.manufacturerCountry?.id } } },
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } } },
                                     });
                                     return data.manufacturers.nodes;
                                 }}
                                 getOptionLabel={(option) => option.name}
-                                disabled={!values?.manufacturerCountry}
                             />
-                            <OnChangeField name="manufacturerCountry">
-                                {(value, previousValue) => {
-                                    if (value.id !== previousValue.id) {
-                                        form.change("manufacturer", undefined);
-                                    }
-                                }}
-                            </OnChangeField>
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel

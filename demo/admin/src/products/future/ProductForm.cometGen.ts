@@ -62,10 +62,10 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     type: "asyncSelect",
                     name: "manufacturer",
                     rootQuery: "manufacturers",
-                    filterField: {
+                    filter: {
+                        type: "prop",
                         name: "manufacturerCountry",
-                        gqlVarType: "filter",
-                        gqlVarName: "addressAsEmbeddable_country",
+                        gqlName: "addressAsEmbeddable_country",
                     },
                 },
                 { type: "boolean", name: "inStock" },

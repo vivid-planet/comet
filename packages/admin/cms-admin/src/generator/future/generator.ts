@@ -43,12 +43,20 @@ export type FormFieldConfig<T> = (
           initQueryLabelPath?: string; // if label is not on first level of gqlField-object; dot-separated
           rootQuery: string;
           labelField?: string; // should be the field used as option-label of the rootQuery
-          filterField?: { name: string; gqlVarName: string; gqlVarType: "rootProp" | "filter" };
+          filter?: { type: "field" | "prop"; name: string; gqlName?: string };
       }
     | { type: "block"; name: keyof T; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
-) & { label?: string; required?: boolean; optionalRender?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & {
+    label?: string;
+    required?: boolean;
+    optionalRender?: boolean;
+    virtual?: boolean;
+    validate?: ImportReference;
+    helperText?: string;
+    readOnly?: boolean;
+};
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {

@@ -3,7 +3,6 @@ import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Tool
 import { ArrowLeft } from "@comet/admin-icons";
 import { PageName } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -48,7 +47,7 @@ interface Props {
     id: string;
 }
 
-export const EditPredefinedPage: React.FC<Props> = ({ id }) => {
+export const EditPredefinedPage = ({ id }: Props) => {
     const stackApi = useStackApi();
 
     const { data, loading } = useQuery<GQLPredefinedPageQuery, GQLPredefinedPageQueryVariables>(getQuery, {

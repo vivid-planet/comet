@@ -16,7 +16,6 @@ import { AdminComponentRoot } from "@comet/blocks-admin";
 import { ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { GQLEditLinkQuery, GQLEditLinkQueryVariables, GQLUpdateLinkMutation, GQLUpdateLinkMutationVariables } from "./EditLink.generated";
@@ -62,7 +61,7 @@ interface Props {
     id: string;
 }
 
-export const EditLink: React.FC<Props> = ({ id }) => {
+export const EditLink = ({ id }: Props) => {
     const intl = useIntl();
     const stackApi = useStackApi();
 
