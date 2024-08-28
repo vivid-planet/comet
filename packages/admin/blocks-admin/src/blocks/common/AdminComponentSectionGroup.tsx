@@ -1,15 +1,14 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
 import { HiddenInSubroute } from "./HiddenInSubroute";
 
 interface Props {
-    children: React.ReactNode;
-    title?: React.ReactNode;
+    title?: ReactNode;
 }
 
-export function AdminComponentSectionGroup({ children, title }: Props): React.ReactElement {
+export const AdminComponentSectionGroup = ({ children, title }: PropsWithChildren<Props>) => {
     return (
         <Root>
             {title && (
@@ -22,7 +21,7 @@ export function AdminComponentSectionGroup({ children, title }: Props): React.Re
             {children}
         </Root>
     );
-}
+};
 
 const Root = styled("div")`
     &:not(:last-child) {
