@@ -3,7 +3,7 @@ import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectTy
 import { FormConfig, FormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
-import { isFieldOptional } from "../utils/isFieldOptional";
+import { isFieldOptional, isFieldOptionalInApi } from "../utils/isFieldOptional";
 import { GenerateFieldsReturn } from "./generateFields";
 
 export function generateFormField({
@@ -34,6 +34,14 @@ export function generateFormField({
     if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
+    const fieldIsOptionalInApi = isFieldOptionalInApi({ name: String(config.name), gqlIntrospection, gqlType });
+    if (config.optionalRender && !fieldIsOptionalInApi) {
+        console.warn(
+            `Field ${String(
+                config.name,
+            )}: Required input can not be optionalRender. Try generating a second form without this field to enable providing a value via prop.`,
+        );
+    }
     const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
