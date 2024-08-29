@@ -26,8 +26,8 @@ export type ContentScopesForUser = ContentScope[] | UserPermissions.allContentSc
 
 export interface AccessControlServiceInterface {
     isAllowed(user: CurrentUser | SystemUser, permission: string, contentScope?: ContentScope): boolean;
-    getPermissionsForUser?: (user: User) => Promise<PermissionsForUser> | PermissionsForUser;
-    getContentScopesForUser?: (user: User) => Promise<ContentScopesForUser> | ContentScopesForUser;
+    getPermissionsForUser?: (user: User, environment?: string) => Promise<PermissionsForUser> | PermissionsForUser;
+    getContentScopesForUser?: (user: User, environment?: string) => Promise<ContentScopesForUser> | ContentScopesForUser;
 }
 
 export interface UserPermissionsUserServiceInterface {
@@ -39,6 +39,7 @@ export interface UserPermissionsUserServiceInterface {
 export interface UserPermissionsOptions {
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
     systemUsers?: string[];
+    environment?: string;
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
     UserService?: Type<UserPermissionsUserServiceInterface>;
