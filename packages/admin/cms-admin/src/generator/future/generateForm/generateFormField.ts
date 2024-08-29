@@ -35,6 +35,7 @@ export function generateFormField({
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
     const fieldIsOptionalInApi = isFieldOptionalInApi({ name: String(config.name), gqlIntrospection, gqlType });
+    const optionalRender = config.optionalRender && fieldIsOptionalInApi;
     if (config.optionalRender && !fieldIsOptionalInApi) {
         console.warn(
             `Field ${String(
@@ -53,6 +54,9 @@ export function generateFormField({
     const imports: Imports = [];
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
+        initializationCode: optionalRender
+            ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? data.${instanceGqlType}.${name} : undefined`
+            : undefined,
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig];
 
@@ -122,9 +126,13 @@ export function generateFormField({
         }
         formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
 
-        let initializationAssignment = `String(data.${instanceGqlType}.${name})`;
+        let initializationAssignment = optionalRender
+            ? `show${name[0].toUpperCase() + name.substring(1)} ? String(data.${instanceGqlType}.${name}) : undefined`
+            : `String(data.${instanceGqlType}.${name})`;
         if (!required) {
-            initializationAssignment = `data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`;
+            initializationAssignment = optionalRender
+                ? `show${name[0].toUpperCase() + name.substring(1)} && data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`
+                : `data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`;
         }
         formValuesConfig = [
             {
@@ -156,7 +164,9 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    defaultInitializationCode: `${name}: false`,
+                    defaultInitializationCode: optionalRender
+                        ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? false : undefined`
+                        : `${name}: false`,
                 },
             },
         ];
@@ -183,7 +193,11 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    initializationCode: `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
+                    initializationCode: optionalRender
+                        ? `${name}: show${
+                              name[0].toUpperCase() + name.substring(1)
+                          } && data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`
+                        : `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
                 },
             },
         ];
@@ -197,8 +211,14 @@ export function generateFormField({
                 ...defaultFormValuesConfig,
                 ...{
                     typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
-                    initializationCode: `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
-                    defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+                    initializationCode: optionalRender
+                        ? `${name}: show${
+                              name[0].toUpperCase() + name.substring(1)
+                          } ? rootBlocks.${name}.input2State(data.${instanceGqlType}.${name}) : undefined`
+                        : `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
+                    defaultInitializationCode: optionalRender
+                        ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? rootBlocks.${name}.defaultValues() : undefined`
+                        : `${name}: rootBlocks.${name}.defaultValues()`,
                 },
             },
         ];
@@ -328,8 +348,8 @@ export function generateFormField({
         throw new Error(`Unsupported type`);
     }
     return {
-        code: config.optionalRender ? `{ show${name[0].toUpperCase() + name.substring(1)} && ${code} }` : code,
-        props: config.optionalRender ? [{ name: `show${name[0].toUpperCase() + name.substring(1)}`, type: `boolean`, optional: true }] : [],
+        code: optionalRender ? `{ show${name[0].toUpperCase() + name.substring(1)} && ${code} }` : code,
+        props: optionalRender ? [{ name: `show${name[0].toUpperCase() + name.substring(1)}`, type: `boolean`, optional: true }] : [],
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],
