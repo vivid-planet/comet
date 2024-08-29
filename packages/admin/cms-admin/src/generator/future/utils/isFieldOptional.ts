@@ -21,7 +21,18 @@ export const isFieldOptional = ({
     if (config.readOnly) {
         return true;
     }
+    return isFieldOptionalInApi({ gqlFieldName, gqlIntrospection, gqlType });
+};
 
+export const isFieldOptionalInApi = ({
+    gqlFieldName,
+    gqlIntrospection,
+    gqlType,
+}: {
+    gqlFieldName: string;
+    gqlIntrospection: IntrospectionQuery;
+    gqlType: string;
+}): boolean => {
     const schemaEntity = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType);
     if (!schemaEntity) throw new Error(`didn't find entity ${gqlType} in schema types`);
     if (schemaEntity.kind !== "OBJECT") throw new Error(`kind of ${gqlType} is not object, but should be.`); // this should not happen

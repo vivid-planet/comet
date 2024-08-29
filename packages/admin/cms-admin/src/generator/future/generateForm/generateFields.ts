@@ -18,6 +18,7 @@ export type GenerateFieldsReturn = GeneratorReturn & {
         typeCode?: string;
         initializationCode?: string;
         defaultInitializationCode?: string;
+        initializationVarDependency?: string;
     }[];
     finalFormConfig?: {
         subscription?: { values?: true };

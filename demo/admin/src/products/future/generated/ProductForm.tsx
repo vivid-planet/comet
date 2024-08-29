@@ -115,7 +115,7 @@ export function ProductForm({ id, manufacturerCountry, showAvailableSince }: For
                                 label: data.product.manufacturerCountry?.label.country,
                             }
                           : undefined,
-                      availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
+                      availableSince: showAvailableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {

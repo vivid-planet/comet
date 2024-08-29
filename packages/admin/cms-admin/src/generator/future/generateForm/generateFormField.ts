@@ -5,7 +5,7 @@ import { FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
-import { isFieldOptional } from "../utils/isFieldOptional";
+import { isFieldOptional, isFieldOptionalInApi } from "../utils/isFieldOptional";
 import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
 
 function convertGqlScalarToTypescript(scalarName: string) {
@@ -99,6 +99,15 @@ export function generateFormField({
     if (!introspectionField) throw new Error(`didn't find field ${gqlFieldName} in gql introspection type ${gqlType}`);
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
+    const fieldIsOptionalInApi = isFieldOptionalInApi({ gqlFieldName, gqlIntrospection, gqlType });
+    const optionalRender = config.optionalRenderProp && fieldIsOptionalInApi;
+    if (config.optionalRenderProp && !fieldIsOptionalInApi) {
+        console.warn(
+            `Field ${String(
+                config.name,
+            )}: Required input can not be optionalRender. Try generating a second form without this field to enable providing a value via prop.`,
+        );
+    }
     const required = !isFieldOptional({ config, gqlFieldName, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
@@ -112,6 +121,10 @@ export function generateFormField({
 
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
+        initializationCode: optionalRender
+            ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? data.${dataRootName}.${nameWithPrefix} : undefined`
+            : undefined,
+        initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
@@ -184,9 +197,15 @@ export function generateFormField({
         }
         formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
 
-        let initializationAssignment = `String(data.${dataRootName}.${nameWithPrefix})`;
+        let initializationAssignment = optionalRender
+            ? `show${name[0].toUpperCase() + name.substring(1)} ? String(data.${dataRootName}.${nameWithPrefix}) : undefined`
+            : `String(data.${dataRootName}.${nameWithPrefix})`;
         if (!required) {
-            initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
+            initializationAssignment = optionalRender
+                ? `show${
+                      name[0].toUpperCase() + name.substring(1)
+                  } && data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`
+                : `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
         }
         formValuesConfig = [
             {
@@ -195,6 +214,7 @@ export function generateFormField({
                     omitFromFragmentType: name,
                     typeCode: `${name}${!required ? `?` : ``}: string;`,
                     initializationCode: `${name}: ${initializationAssignment}`,
+                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];
@@ -218,7 +238,10 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    defaultInitializationCode: `${name}: false`,
+                    defaultInitializationCode: optionalRender
+                        ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? false : undefined`
+                        : `${name}: false`,
+                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];
@@ -245,7 +268,12 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
+                    initializationCode: optionalRender
+                        ? `${name}: show${
+                              name[0].toUpperCase() + name.substring(1)
+                          } && data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`
+                        : `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
+                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];
@@ -259,8 +287,15 @@ export function generateFormField({
                 ...defaultFormValuesConfig,
                 ...{
                     typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
-                    initializationCode: `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
-                    defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+                    initializationCode: optionalRender
+                        ? `${name}: show${
+                              name[0].toUpperCase() + name.substring(1)
+                          } ? rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix}) : undefined`
+                        : `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
+                    defaultInitializationCode: optionalRender
+                        ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? rootBlocks.${name}.defaultValues() : undefined`
+                        : `${name}: rootBlocks.${name}.defaultValues()`,
+                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];
@@ -589,7 +624,7 @@ export function generateFormField({
         throw new Error(`Unsupported type`);
     }
 
-    if (config.optionalRender) {
+    if (optionalRender) {
         code = `{ show${name[0].toUpperCase() + name.substring(1)} && ${code} }`;
         props.push({ name: `show${name[0].toUpperCase() + name.substring(1)}`, type: `boolean`, optional: true });
     }
