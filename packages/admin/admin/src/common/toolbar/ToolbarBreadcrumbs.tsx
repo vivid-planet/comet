@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { ButtonBase, ComponentsOverrides, css, ListItemText, Menu, MenuItem, Theme, Typography, useThemeProps } from "@mui/material";
-import React from "react";
+import { Fragment, ReactNode, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -54,9 +54,9 @@ interface ToolbarBreadcrumbsProps
         mobileMenuItemNestingIndicator: "div";
     }> {
     iconMapping?: {
-        itemSeparator?: React.ReactNode;
-        openMobileMenu?: React.ReactNode;
-        closeMobileMenu?: React.ReactNode;
+        itemSeparator?: ReactNode;
+        openMobileMenu?: ReactNode;
+        closeMobileMenu?: ReactNode;
     };
 }
 
@@ -67,8 +67,8 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
         openMobileMenu: openMobileMenuIcon = <ChevronDown />,
         closeMobileMenu: closeMobileMenuIcon = <ChevronUp />,
     } = iconMapping;
-    const [showMobileMenu, setShowMobileMenu] = React.useState(false);
-    const rootRef = React.useRef<HTMLDivElement>(null);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
+    const rootRef = useRef<HTMLDivElement>(null);
     const stackApi = useStackApi();
 
     const breadcrumbs = __DEBUG__useDebugBreadcrumbData ? __DEBUG__usedNumberOfStackPages : stackApi?.breadCrumbs ?? [];
@@ -99,7 +99,7 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                         } as const;
 
                         return (
-                            <React.Fragment key={index}>
+                            <Fragment key={index}>
                                 {isCurrentPage ? (
                                     <CurrentBreadcrumbsItem {...commonItemProps} {...slotProps?.currentBreadcrumbsItem}>
                                         {title}
@@ -118,7 +118,7 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                                         {itemSeparator}
                                     </>
                                 )}
-                            </React.Fragment>
+                            </Fragment>
                         );
                     })}
                 </BreadcrumbsList>

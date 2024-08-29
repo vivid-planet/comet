@@ -2,7 +2,7 @@
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
-import * as React from "react";
+import { useContext } from "react";
 import { Router } from "react-router";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
@@ -13,7 +13,7 @@ import { StackSwitch, StackSwitchApiContext } from "./Switch";
 
 test("StackNested basic test", async () => {
     function Page1() {
-        const switchApi = React.useContext(StackSwitchApiContext);
+        const switchApi = useContext(StackSwitchApiContext);
         return (
             <div>
                 <button

@@ -1,5 +1,4 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
 import { ColumnsIcon } from "./ColumnsIcon";
@@ -8,7 +7,7 @@ interface Props extends FieldRenderProps<number> {
     columns: number[];
 }
 
-export function FinalFormColumnsSelect({ input: { value, onChange }, columns }: Props): React.ReactElement {
+export function FinalFormColumnsSelect({ input: { value, onChange }, columns }: Props) {
     return (
         <ToggleButtonGroup
             value={value}

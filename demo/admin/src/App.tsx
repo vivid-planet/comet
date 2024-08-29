@@ -27,7 +27,7 @@ import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
 import { theme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
-import * as React from "react";
+import { Component, Fragment } from "react";
 import { DndProvider } from "react-dnd-multi-backend";
 import * as ReactDOM from "react-dom";
 import { FormattedMessage, IntlProvider } from "react-intl";
@@ -54,7 +54,7 @@ const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
 const apiClient = createHttpClient(config.apiUrl);
 
-class App extends React.Component {
+class App extends Component {
     public static render(baseEl: Element): void {
         ReactDOM.render(<App />, baseEl);
     }
@@ -111,7 +111,7 @@ class App extends React.Component {
                                                             pageTreeDocumentTypes={pageTreeDocumentTypes}
                                                             additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
                                                         >
-                                                            <React.Fragment>
+                                                            <Fragment>
                                                                 <GlobalStyle />
                                                                 <ContentScopeProvider>
                                                                     {({ match }) => (
@@ -141,7 +141,7 @@ class App extends React.Component {
                                                                         </Switch>
                                                                     )}
                                                                 </ContentScopeProvider>
-                                                            </React.Fragment>
+                                                            </Fragment>
                                                         </CmsBlockContextProvider>
                                                     </SnackbarProvider>
                                                 </DndProvider>

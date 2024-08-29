@@ -1,5 +1,5 @@
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -34,7 +34,7 @@ export interface FilterBarProps
         root: "div";
         barWrapper: "div";
     }> {
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 /**

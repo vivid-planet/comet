@@ -1,13 +1,13 @@
 import { Button, Collapse } from "@mui/material";
-import React, { FunctionComponent } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
 interface CollapsibleProps {
     open: boolean;
-    header: React.ReactNode;
+    header: ReactNode;
     onChange: (open: boolean) => void;
 }
 
-export const Collapsible: FunctionComponent<CollapsibleProps> = ({ header, children, open, onChange }) => {
+export const Collapsible = ({ header, children, open, onChange }: PropsWithChildren<CollapsibleProps>) => {
     return (
         <>
             <Button
