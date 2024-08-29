@@ -57,6 +57,7 @@ export function generateFormField({
         initializationCode: optionalRender
             ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? data.${instanceGqlType}.${name} : undefined`
             : undefined,
+        initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig];
 
@@ -141,6 +142,7 @@ export function generateFormField({
                     omitFromFragmentType: name,
                     typeCode: `${name}${!required ? `?` : ``}: string;`,
                     initializationCode: `${name}: ${initializationAssignment}`,
+                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];
@@ -167,6 +169,7 @@ export function generateFormField({
                     defaultInitializationCode: optionalRender
                         ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? false : undefined`
                         : `${name}: false`,
+                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];
@@ -198,6 +201,7 @@ export function generateFormField({
                               name[0].toUpperCase() + name.substring(1)
                           } && data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`
                         : `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
+                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];
@@ -219,6 +223,7 @@ export function generateFormField({
                     defaultInitializationCode: optionalRender
                         ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? rootBlocks.${name}.defaultValues() : undefined`
                         : `${name}: rootBlocks.${name}.defaultValues()`,
+                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];

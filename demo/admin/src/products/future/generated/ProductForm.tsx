@@ -83,14 +83,14 @@ export function ProductForm({ id, showAvailableSince }: FormProps): React.ReactE
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
-                      availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
+                      availableSince: showAvailableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
                       inStock: false,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data],
+        [data, showAvailableSince],
     );
 
     const saveConflict = useFormSaveConflict({
