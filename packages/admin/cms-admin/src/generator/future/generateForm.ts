@@ -313,7 +313,12 @@ export function generateForm(
                 .map((config) => config.defaultInitializationCode)
                 .join(",\n")}
         }
-    , [data]);`
+    , [${[
+        "data",
+        ...formValuesConfig
+            .filter((formValueConfig) => !!formValueConfig.initializationVarDependency)
+            .map((formValueConfig) => formValueConfig.initializationVarDependency),
+    ].join(", ")}]);`
                 : `const initialValues = {
                 ${formValuesConfig
                     .filter((config) => !!config.defaultInitializationCode)
