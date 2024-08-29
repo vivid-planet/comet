@@ -122,7 +122,7 @@ export function ProductForm({ id, manufacturerCountry, showAvailableSince }: For
                       inStock: false,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data],
+        [data, showAvailableSince],
     );
 
     const saveConflict = useFormSaveConflict({
