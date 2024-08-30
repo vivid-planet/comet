@@ -32,5 +32,20 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
                 text: "Foo bar",
             },
         },
+        {
+            type: "combination",
+            name: "currencyAndNumber",
+            headerName: "Price (currency and number)",
+            primaryText: {
+                type: "number",
+                field: "price",
+                currency: "EUR",
+            },
+            secondaryText: {
+                type: "number",
+                field: "price",
+                decimals: 4,
+            },
+        },
     ],
 };

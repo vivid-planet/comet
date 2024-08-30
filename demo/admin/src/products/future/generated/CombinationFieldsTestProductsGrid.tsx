@@ -20,7 +20,7 @@ import {
 import { DamImageBlock } from "@comet/cms-admin";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
     GQLCombinationFieldsTestProductsGridFutureFragment,
@@ -39,6 +39,7 @@ const productsFragment = gql`
         category {
             title
         }
+        price
     }
 `;
 
@@ -125,6 +126,40 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                     <GridCellContent
                         primaryText={<FormattedMessage id="product.staticTextExample.primaryText" defaultMessage="Lorem ipsum" />}
                         secondaryText={<FormattedMessage id="product.staticTextExample.secondaryText" defaultMessage="Foo bar" />}
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "currencyAndNumber",
+            headerName: intl.formatMessage({ id: "product.currencyAndNumber", defaultMessage: "Price (currency and number)" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                return (
+                    <GridCellContent
+                        primaryText={
+                            typeof row.price === "number" ? (
+                                <FormattedNumber
+                                    value={row.price}
+                                    minimumFractionDigits={2}
+                                    maximumFractionDigits={2}
+                                    style="currency"
+                                    currency="EUR"
+                                />
+                            ) : (
+                                "-"
+                            )
+                        }
+                        secondaryText={
+                            typeof row.price === "number" ? (
+                                <FormattedNumber value={row.price} minimumFractionDigits={4} maximumFractionDigits={4} />
+                            ) : (
+                                "-"
+                            )
+                        }
                     />
                 );
             },
