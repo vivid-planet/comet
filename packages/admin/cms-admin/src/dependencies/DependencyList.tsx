@@ -6,7 +6,7 @@ import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagin
 import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { useHistory } from "react-router";
+import { matchPath, useHistory } from "react-router";
 
 import { useContentScope } from "../contentScope/Provider";
 import { GQLDependency } from "../graphql.generated";
@@ -104,7 +104,8 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                         apolloClient,
                         id: row.id,
                     });
-                    return contentScope.match.url + path;
+                    const hasScopeInBasePath = !!matchPath(path, contentScope.match);
+                    return hasScopeInBasePath ? path : contentScope.match.url + path;
                 };
 
                 return (

@@ -1,11 +1,12 @@
-import { gql } from "@apollo/client";
+import { DocumentNode, gql } from "@apollo/client";
 import { BlockInputApi, BlockInterface } from "@comet/blocks-admin";
 
+import { ContentScopeInterface } from "../contentScope/Provider";
 import { Maybe } from "../graphql.generated";
 import { DependencyInterface } from "./types";
 
 interface Query<RootBlocks extends Record<string, BlockInterface>> {
-    node: Maybe<{ id: string } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> }>;
+    node: Maybe<{ id: string } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> } & { scope?: ContentScopeInterface }>;
 }
 
 interface QueryVariables {
@@ -15,10 +16,12 @@ interface QueryVariables {
 export function createDependencyMethods<RootBlocks extends Record<string, BlockInterface>>({
     rootQueryName,
     rootBlocks,
+    scopeFragment,
     basePath,
 }: {
     rootQueryName: string;
     rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
+    scopeFragment?: { name: string; fragment: DocumentNode };
     basePath: string | ((node: NonNullable<Query<RootBlocks>["node"]>) => string);
 }): Pick<DependencyInterface, "resolvePath"> {
     return {
@@ -29,8 +32,15 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
                         node: ${rootQueryName}(id: $id) {
                             id
                             ${Object.keys(rootBlocks).join("\n")}
+                            ${
+                                scopeFragment &&
+                                `scope {
+                                    ...${scopeFragment.name}
+                                }`
+                            }
                         }    
                     }    
+                    ${scopeFragment ? scopeFragment?.fragment : ""}
                 `,
                 variables: {
                     id,
