@@ -15,7 +15,7 @@ import {
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Box } from "@mui/material";
-import { AssignedProductsGrid } from "@src/products/categories/AssignedProductsGrid";
+import { AssignedProductsTab } from "@src/products/categories/AssignedProductsTab";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -66,7 +66,7 @@ const ProductCategoriesPage: React.FC = () => {
                                     })}
                                 >
                                     <Box sx={{ height: "100vh" }}>
-                                        <AssignedProductsGrid productCategoryId={selectedId} />
+                                        <AssignedProductsTab productCategoryId={selectedId} />
                                     </Box>
                                 </RouterTab>
                             </RouterTabs>
