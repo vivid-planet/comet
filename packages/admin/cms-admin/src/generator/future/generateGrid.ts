@@ -456,13 +456,13 @@ export function generateGrid(
     if (config.selectionProps) {
         imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
         props.push({
-            name: "selectionProps",
-            type: `{
-                checkboxSelection: boolean;
-                keepNonExistentRowsSelected: boolean;
-                selectionModel: DataGridProProps["selectionModel"];
-                onSelectionModelChange: DataGridProProps["onSelectionModelChange"];
-            }`,
+            name: "selectionModel",
+            type: `DataGridProProps["selectionModel"]`,
+            optional: true,
+        });
+        props.push({
+            name: "onSelectionModelChange",
+            type: `DataGridProProps["onSelectionModelChange"]`,
             optional: true,
         });
     }
@@ -629,7 +629,9 @@ export function generateGrid(
                       })
                       .join(",\n")} ] }`
                 : ""
-        }), ...usePersistentColumnState("${gqlTypePlural}Grid")${config.selectionProps ? `, ...selectionProps` : ``} };
+        }), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        config.selectionProps ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true` : ``
+    } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         
 
