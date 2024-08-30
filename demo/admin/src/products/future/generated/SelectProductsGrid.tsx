@@ -58,17 +58,20 @@ function ProductsGridToolbar() {
 }
 
 type Props = {
-    selectionProps?: {
-        checkboxSelection: boolean;
-        keepNonExistentRowsSelected: boolean;
-        selectionModel: DataGridProProps["selectionModel"];
-        onSelectionModelChange: DataGridProProps["onSelectionModelChange"];
-    };
+    selectionModel?: DataGridProProps["selectionModel"];
+    onSelectionModelChange?: DataGridProProps["onSelectionModelChange"];
 };
 
-export function ProductsGrid({ selectionProps }: Props): React.ReactElement {
+export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props): React.ReactElement {
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid"), ...selectionProps };
+    const dataGridProps = {
+        ...useDataGridRemote(),
+        ...usePersistentColumnState("ProductsGrid"),
+        selectionModel,
+        onSelectionModelChange,
+        checkboxSelection: true,
+        keepNonExistentRowsSelected: true,
+    };
 
     const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = [
         { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
