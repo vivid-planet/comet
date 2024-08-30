@@ -22,11 +22,11 @@ import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import { ManufacturerFilterOperator } from "@src/products/ManufacturerFilter";
 import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
+import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -211,11 +211,11 @@ export function ProductsGrid() {
                 );
             },
         },
-        //stub column(s) to show needed filters, still shown in find-column-list
         {
             field: "manufacturer",
             headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }), // shown in filter-column-list and find-column-list
             sortable: false,
+            valueGetter: ({ value }) => (value ? value.name : "-"),
             filterOperators: [ManufacturerFilterOperator],
         },
         // action column
@@ -296,7 +296,6 @@ export function ProductsGrid() {
                 components={{
                     Toolbar: ProductsGridToolbar,
                 }}
-                columnVisibilityModel={{ manufacturer: false }}
             />
         </MainContent>
     );
@@ -328,6 +327,9 @@ const productsFragment = gql`
         }
         variants {
             id
+        }
+        manufacturer {
+            name
         }
         articleNumbers
         discounts {

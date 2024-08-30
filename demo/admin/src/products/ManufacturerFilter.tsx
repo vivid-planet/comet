@@ -2,32 +2,25 @@ import { gql, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
-import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "@src/products/ManufacturerFilter.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
-const manufacturerFilterFragment = gql`
-    fragment ManufacturersFilter on Manufacturer {
-        id
-        name
-    }
-`;
+import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
 
 const manufacturersQuery = gql`
     query ManufacturersFilter($offset: Int!, $limit: Int!, $search: String) {
         manufacturers(offset: $offset, limit: $limit, search: $search) {
             nodes {
-                ...ManufacturersFilter
+                id
+                name
             }
             totalCount
         }
     }
-    ${manufacturerFilterFragment}
 `;
 
 // Source: https://mui.com/x/react-data-grid/filtering/customization/#multiple-values-operator
-function ManufacturerFilter(props: GridFilterInputValueProps) {
-    const { item, applyValue } = props;
+function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
     const intl = useIntl();
 
     const { data } = useQuery<GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables>(manufacturersQuery, {
@@ -40,7 +33,6 @@ function ManufacturerFilter(props: GridFilterInputValueProps) {
     // source https://mui.com/material-ui/react-autocomplete/
     return (
         <Autocomplete
-            id="manufacturer-select"
             size="small"
             options={data?.manufacturers.nodes ?? []}
             autoHighlight
