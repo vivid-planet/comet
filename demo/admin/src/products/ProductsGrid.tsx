@@ -68,7 +68,7 @@ function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
                     }}
                     endIcon={<MoreVertical />}
                 >
-                    <FormattedMessage id="products.moreActions" defaultMessage="Mehr Aktionen" />
+                    <FormattedMessage id="products.moreActions" defaultMessage="More actions" />
                 </Button>
                 <Menu
                     open={showMoreMenu}
@@ -81,7 +81,7 @@ function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
                 >
                     <MenuItem onClick={() => exportApi.exportGrid()} disabled={exportApi.loading}>
                         {exportApi.loading ? <CircularProgress size={20} sx={{ marginRight: "10px" }} /> : <Excel sx={{ marginRight: "10px" }} />}
-                        <FormattedMessage id="phsrdb.downloadAsExcel" defaultMessage="Als Excel herunterladen" />
+                        <FormattedMessage id="products.downloadAsExcel" defaultMessage="Download as Excel" />
                     </MenuItem>
                 </Menu>
             </ToolbarItem>
