@@ -154,7 +154,6 @@ export function ProductsGrid() {
             headerName: "Additional Types",
             width: 150,
             valueFormatter: ({ value }) => value.join(", "),
-            renderCell: (params) => <>{params.row.additionalTypes.join(", ")}</>,
             filterOperators: [
                 {
                     value: "contains",
@@ -172,7 +171,6 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 100,
             valueGetter: ({ value, row }) => value?.title ?? "",
-            renderCell: (params) => <>{params.row.category?.title}</>,
             type: "singleSelect",
             visible: theme.breakpoints.up("md"),
             valueOptions: relationsData?.productCategories.nodes.map((i) => ({ value: i.id, label: i.title })),
@@ -183,7 +181,6 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 150,
             valueFormatter: ({ value }) => value.join(", "),
-            renderCell: (params) => <>{params.row.tags.map((tag) => tag.title).join(", ")}</>,
             filterOperators: [
                 {
                     label: "Search",
