@@ -222,7 +222,7 @@ export function ProductsGrid() {
             headerName: "Available Since",
             width: 130,
             type: "date",
-            disableExport: true, // date-value is not allowed for export, no way to provide a different value for excel-export
+            disableExport: true, // TODO add support date-value or a function to provide a different value for excel-export
             valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
         },
         {
@@ -231,8 +231,8 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 130,
             type: "boolean",
-            disableExport: true, // boolean-value is not allowed for export, no way to provide a different value for excel-export
-            valueGetter: (params) => params.row.status == "Published", // why is this here?
+            disableExport: true, // TODO add support boolean-value or a function to provide a different value for excel-export
+            valueGetter: (params) => params.row.status == "Published",
             renderCell: (params) => {
                 return (
                     <CrudVisibility
