@@ -110,7 +110,7 @@ export function ProductsGrid() {
             flex: 1,
             sortBy: ["title", "price", "type", "category", "inStock"],
             visible: theme.breakpoints.down("md"),
-            valueGetter: ({ value, row }) => row.title, // needed for export because renderCell does not return string
+            disableExport: true,
             renderCell: ({ row }) => {
                 const secondaryValues = [
                     typeof row.price === "number" && intl.formatNumber(row.price, { style: "currency", currency: "EUR" }),
