@@ -18,6 +18,7 @@ export interface CurrentUserInterface {
     email: string;
     permissions: GQLCurrentUserPermission[];
     allowedContentScopes: ContentScopeInterface[];
+    impersonated: boolean;
 }
 
 export const CurrentUserProvider: React.FC<{
@@ -33,6 +34,7 @@ export const CurrentUserProvider: React.FC<{
                     permission
                     contentScopes
                 }
+                impersonated
             }
         }
     `);

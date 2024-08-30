@@ -1,6 +1,6 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
-import { Account, Info, Logout } from "@comet/admin-icons";
+import { Account, Clear, Info, Logout } from "@comet/admin-icons";
 import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
@@ -8,7 +8,7 @@ import { FormattedMessage } from "react-intl";
 
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
 import { AboutModal } from "./about/AboutModal";
-import { GQLSignOutMutation } from "./UserHeaderItem.generated";
+import { GQLSignOutMutation, GQLUserPermissionsStopImpersonateMutation } from "./UserHeaderItem.generated";
 
 const DropdownContent = styled(Box)`
     width: 250px;
@@ -39,6 +39,20 @@ interface UserHeaderItemProps {
 }
 
 export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
+    const client = useApolloClient();
+    const stopImpersonate = async () => {
+        const result = await client.mutate<GQLUserPermissionsStopImpersonateMutation>({
+            mutation: gql`
+                mutation UserPermissionsStopImpersonate {
+                    userPermissionsStopImpersonate
+                }
+            `,
+        });
+        if (result.data?.userPermissionsStopImpersonate) {
+            location.href = "/";
+        }
+    };
+
     const { aboutModalLogo, buttonChildren, children } = props;
 
     const theme = useTheme();
@@ -63,6 +77,21 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
                 </Button>
                 {children}
                 <Separator />
+                {user.impersonated && (
+                    <>
+                        <Button
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                            startIcon={<Clear />}
+                            onClick={stopImpersonate}
+                            sx={{ justifyContent: "center" }}
+                        >
+                            <FormattedMessage id="comet.stopImpersonate" defaultMessage="Exit Impersonation" />
+                        </Button>
+                        <Separator />
+                    </>
+                )}
                 {isSigningOut ? (
                     <Loading />
                 ) : (

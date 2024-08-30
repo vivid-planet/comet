@@ -21,4 +21,6 @@ export class CurrentUser {
     email: string;
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
+    @Field()
+    impersonated?: boolean;
 }

@@ -17,6 +17,7 @@ type CurrentUser {
   name: String!
   email: String!
   permissions: [CurrentUserPermission!]!
+  impersonated: Boolean!
   permissionsForScope(scope: JSONObject!): [String!]!
 }
 
@@ -1151,6 +1152,8 @@ input ManufacturerCountryFilter {
 
 type Mutation {
   currentUserSignOut: String!
+  userPermissionsImpersonate(userId: String!): Boolean!
+  userPermissionsStopImpersonate: Boolean!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
