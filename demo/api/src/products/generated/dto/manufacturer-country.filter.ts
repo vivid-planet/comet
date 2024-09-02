@@ -13,6 +13,12 @@ export class ManufacturerCountryFilter {
     @Type(() => StringFilter)
     id?: StringFilter;
 
+    @Field(() => StringFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => StringFilter)
+    label?: StringFilter;
+
     @Field(() => NumberFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
