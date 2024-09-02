@@ -11,7 +11,7 @@ import {
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ChangeEvent, FunctionComponent, ReactNode, useCallback, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -90,18 +90,18 @@ interface BlocksBlockAdditionalItemField<Value = unknown> {
 
 interface CreateBlocksBlockOptions<AdditionalItemFields extends Record<string, unknown>> {
     name: string;
-    displayName?: React.ReactNode;
+    displayName?: ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
     maxVisibleBlocks?: number;
     additionalItemFields?: {
         [Key in keyof AdditionalItemFields]: BlocksBlockAdditionalItemField<AdditionalItemFields[Key]>;
     };
-    AdditionalItemContextMenuItems?: React.FunctionComponent<{
+    AdditionalItemContextMenuItems?: FunctionComponent<{
         item: BlocksBlockItem<BlockInterface, AdditionalItemFields>;
         onChange: (item: BlocksBlockItem<BlockInterface, AdditionalItemFields>) => void;
         onMenuClose: () => void;
     }>;
-    AdditionalItemContent?: React.FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
+    AdditionalItemContent?: FunctionComponent<{ item: BlocksBlockItem<BlockInterface, AdditionalItemFields> }>;
 }
 
 export function createBlocksBlock<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
@@ -294,7 +294,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
         definesOwnPadding: true,
 
         AdminComponent: ({ state, updateState }) => {
-            const toggleVisible = React.useCallback(
+            const toggleVisible = useCallback(
                 (blockKey: string) => {
                     updateState((prevState) => ({
                         ...prevState,
@@ -304,15 +304,15 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 [updateState],
             );
 
-            const [showAddBlockDrawer, setShowAddBlockDrawer] = React.useState(false);
-            const [beforeIndex, setBeforeIndex] = React.useState<number>();
-            const [cannotPasteBlockError, setCannotPasteBlockError] = React.useState<React.ReactNode>();
+            const [showAddBlockDrawer, setShowAddBlockDrawer] = useState(false);
+            const [beforeIndex, setBeforeIndex] = useState<number>();
+            const [cannotPasteBlockError, setCannotPasteBlockError] = useState<ReactNode>();
 
             const snackbarApi = useSnackbarApi();
 
             const totalVisibleBlocks = state.blocks.filter((block) => block.visible).length;
 
-            React.useEffect(() => {
+            useEffect(() => {
                 if (state.blocks.some((block) => block.slideIn)) {
                     const timeoutHandle = window.setTimeout(() => {
                         updateState((prevState) => ({ ...prevState, blocks: prevState.blocks.map((block) => ({ ...block, slideIn: false })) }));
@@ -324,7 +324,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 }
             }, [state.blocks, updateState]);
 
-            const handleUndoClick = React.useCallback(
+            const handleUndoClick = useCallback(
                 (removedBlocks: RemovedBlocksBlockItem<BlockInterface, AdditionalItemFields>[] | undefined) => {
                     if (!removedBlocks) {
                         return;
@@ -345,7 +345,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 [updateState],
             );
 
-            const deleteBlocks = React.useCallback(
+            const deleteBlocks = useCallback(
                 (blockKeys: string[]) => {
                     updateState((prevState) => {
                         const blocksToRemove = prevState.blocks
@@ -439,7 +439,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 return key;
             };
 
-            const createUpdateSubBlocksFn = React.useCallback(
+            const createUpdateSubBlocksFn = useCallback(
                 (blockKey: string) => {
                     const updateSubBlocksFn: DispatchSetStateAction<unknown> = (setStateAction) => {
                         updateState((prevState) => ({
@@ -509,7 +509,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                 setBeforeIndex(undefined);
             };
 
-            const handleToggleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+            const handleToggleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
                 const selected = event.target.checked;
                 updateState((prevState) => {
                     return {

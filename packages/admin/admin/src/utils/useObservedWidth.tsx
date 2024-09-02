@@ -1,11 +1,11 @@
 import debounce from "lodash.debounce";
-import * as React from "react";
+import { RefObject, useEffect, useMemo, useState } from "react";
 
-export const useObservedWidth = (ref: React.RefObject<HTMLElement>): number => {
-    const [containerWidth, setContainerWidth] = React.useState(ref.current?.clientWidth ?? 0);
+export const useObservedWidth = (ref: RefObject<HTMLElement>): number => {
+    const [containerWidth, setContainerWidth] = useState(ref.current?.clientWidth ?? 0);
     const element = ref.current;
 
-    const elementObserver = React.useMemo(() => {
+    const elementObserver = useMemo(() => {
         return new ResizeObserver(() => {
             debounce(() => {
                 if (!element) return;
@@ -14,7 +14,7 @@ export const useObservedWidth = (ref: React.RefObject<HTMLElement>): number => {
         });
     }, [element]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!element) return;
         elementObserver.observe(element);
         setContainerWidth(element.clientWidth);

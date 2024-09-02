@@ -1,5 +1,5 @@
 import { ComponentsOverrides, Drawer as MuiDrawer, Theme, useThemeProps } from "@mui/material";
-import * as React from "react";
+import { Children, cloneElement, ReactNode, useContext, useEffect, useMemo, useRef } from "react";
 import { useHistory } from "react-router";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -18,7 +18,7 @@ export interface MenuProps
         temporaryDrawer: typeof MuiDrawer;
         permanentDrawer: typeof MuiDrawer;
     }> {
-    children: React.ReactNode;
+    children: ReactNode;
     variant?: "permanent" | "temporary";
     drawerWidth?: number;
     drawerWidthCollapsed?: number;
@@ -34,19 +34,19 @@ export const Menu = (inProps: MenuProps) => {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMenu" });
     const history = useHistory();
-    const { open, toggleOpen, setDrawerVariant, drawerVariant } = React.useContext(MenuContext);
-    const initialRender = React.useRef(true);
-    const { headerHeight } = React.useContext(MasterLayoutContext);
+    const { open, toggleOpen, setDrawerVariant, drawerVariant } = useContext(MenuContext);
+    const initialRender = useRef(true);
+    const { headerHeight } = useContext(MasterLayoutContext);
 
     // useEffect needed to avoid a React error stating that a bad setState call was made.
-    React.useEffect(() => {
+    useEffect(() => {
         if (drawerVariant !== variant) {
             setDrawerVariant(variant);
         }
     }, [drawerVariant, setDrawerVariant, variant]);
 
     // Close the menu on initial render if it is temporary to prevent a page-overlay when initially loading the page.
-    React.useEffect(() => {
+    useEffect(() => {
         if (variant === "temporary" && open) {
             toggleOpen();
         }
@@ -58,7 +58,7 @@ export const Menu = (inProps: MenuProps) => {
     }, []);
 
     // Close temporary menu after changing location (e.g. when clicking menu item).
-    React.useEffect(() => {
+    useEffect(() => {
         return history.listen(() => {
             if (variant === "temporary" && open) {
                 toggleOpen();
@@ -76,10 +76,10 @@ export const Menu = (inProps: MenuProps) => {
         headerHeight,
     };
 
-    const childElements = React.useMemo(
+    const childElements = useMemo(
         () =>
-            React.Children.map(children, (child: MenuChild) => {
-                return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+            Children.map(children, (child: MenuChild) => {
+                return cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
                     isMenuOpen: open,
                 });
             }),

@@ -1,7 +1,7 @@
 import { GridRoot } from "@src/components/common/GridRoot";
 import { gql } from "graphql-request";
 import Link from "next/link";
-import * as React from "react";
+import { Fragment } from "react";
 
 import { GQLBreadcrumbsFragment } from "./Breadcrumbs.generated";
 import * as sc from "./Breadcrumbs.sc";
@@ -17,18 +17,18 @@ export const breadcrumbsFragment = gql`
     }
 `;
 
-const Breadcrumbs: React.FunctionComponent<GQLBreadcrumbsFragment> = ({ name, path, parentNodes }) => {
+const Breadcrumbs = ({ name, path, parentNodes }: GQLBreadcrumbsFragment) => {
     return (
         <GridRoot>
             {parentNodes.length > 0 && (
                 <sc.Container>
                     {parentNodes.map((parentNode) => (
-                        <React.Fragment key={parentNode.path}>
+                        <Fragment key={parentNode.path}>
                             <Link href={parentNode.path} passHref>
                                 <sc.Link> {parentNode.name}</sc.Link>
                             </Link>
                             <sc.Divider />
-                        </React.Fragment>
+                        </Fragment>
                     ))}
                     <Link href={path} passHref>
                         <sc.Link> {name}</sc.Link>
