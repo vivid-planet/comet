@@ -29,6 +29,7 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -63,9 +64,11 @@ type FormValues = ProductFormDetailsFragment & {
 
 interface FormProps {
     id?: string;
+    title?: string;
+    type?: GQLProductType;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id, title, type }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -86,10 +89,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
+                      title: title,
+                      type: type,
                       inStock: false,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data],
+        [data, title, type],
     );
 
     const saveConflict = useFormSaveConflict({

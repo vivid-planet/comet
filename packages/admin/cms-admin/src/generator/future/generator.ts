@@ -37,7 +37,16 @@ export type FormFieldConfig<T> = (
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
-) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & {
+    name: keyof T;
+    label?: string;
+    initialValueProp?: boolean;
+    required?: boolean;
+    virtual?: boolean;
+    validate?: ImportReference;
+    helperText?: string;
+    readOnly?: boolean;
+};
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);

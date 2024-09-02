@@ -16,6 +16,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 {
                     type: "text",
                     name: "title",
+                    initialValueProp: true,
                     label: "Titel", // default is generated from name (camelCaseToHumanReadable)
                     required: true, // default is inferred from gql schema
                     validate: { name: "validateTitle", import: "./validateTitle" },
@@ -23,7 +24,14 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "text", name: "slug" },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
-                { type: "staticSelect", name: "type", label: "Type", required: true, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
+                {
+                    type: "staticSelect",
+                    initialValueProp: true,
+                    name: "type",
+                    label: "Type",
+                    required: true,
+                    values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
+                },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
             ],
         },
