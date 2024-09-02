@@ -1,19 +1,19 @@
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import { DraftInlineStyleType, Editor, EditorState } from "draft-js";
-import * as React from "react";
+import { ComponentType, CSSProperties, MouseEvent, ReactNode, RefObject } from "react";
 
 import { IRteOptions, SupportedThings } from "./Rte";
 
 // overwrite draftjs' insufficient type for Draft.DraftBlockRenderConfig
 interface DraftBlockRenderConfig {
-    element: string | React.ComponentType;
-    wrapper?: React.ReactNode;
+    element: string | ComponentType;
+    wrapper?: ReactNode;
     aliasedElements?: string[];
 }
 
 export interface IBlocktypeConfig {
     renderConfig?: DraftBlockRenderConfig; // visual appearance of the blocktype
-    label?: string | React.ReactNode; // displayed in the dropdown
+    label?: string | ReactNode; // displayed in the dropdown
     group?: "dropdown" | "button"; // displays the element in the dropdown or as button
     icon?: (props: SvgIconProps) => JSX.Element | null;
     supportedBy?: SupportedThings; // blocktype is active when this "supported thing" is active
@@ -25,12 +25,12 @@ export interface IBlocktypeMap {
 
 export interface IFeatureConfig<T extends string = string> {
     name: T;
-    label: React.ReactNode;
+    label: ReactNode;
     disabled?: boolean;
     selected?: boolean;
-    onButtonClick?: (e: React.MouseEvent) => void;
+    onButtonClick?: (e: MouseEvent) => void;
     icon?: (props: SvgIconProps) => JSX.Element | null;
-    tooltipText?: React.ReactNode;
+    tooltipText?: ReactNode;
 
     /** @deprecated use icon instead */
     Icon?: (props: SvgIconProps) => JSX.Element | null;
@@ -44,7 +44,7 @@ export interface IControlProps {
     editorState: EditorState;
     setEditorState: (editorState: EditorState) => void;
     options: IRteOptions;
-    editorRef: React.RefObject<Editor>;
+    editorRef: RefObject<Editor>;
     disabled?: boolean;
 }
 
@@ -69,9 +69,9 @@ export interface ICustomBlockTypeMap_Deprecated {
 
 export interface CustomInlineStyles {
     [name: string]: {
-        label: React.ReactNode;
+        label: ReactNode;
         icon?: (props: SvgIconProps) => JSX.Element | null;
-        tooltipText?: React.ReactNode;
-        style: React.CSSProperties;
+        tooltipText?: ReactNode;
+        style: CSSProperties;
     };
 }

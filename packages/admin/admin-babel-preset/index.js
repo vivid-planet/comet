@@ -1,6 +1,8 @@
 module.exports = function () {
     return {
-        presets: ["@babel/preset-env", "@babel/react", "@babel/preset-typescript"],
+        presets: ["@babel/preset-env", "@babel/preset-typescript", ["@babel/preset-react", {
+            "runtime": "automatic"
+        }]],
         plugins: [
             [
                 "@emotion",

@@ -11,7 +11,7 @@ import {
     Theme,
     useThemeProps,
 } from "@mui/material";
-import * as React from "react";
+import { PropsWithChildren, ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "./helpers/createComponentSlot";
@@ -42,15 +42,14 @@ export interface ContentOverflowProps
         dialogContent: typeof MuiDialogContent;
         innerDialogContent: "div";
     }> {
-    dialogTitle?: React.ReactNode;
-    children?: React.ReactNode;
+    dialogTitle?: ReactNode;
     iconMapping?: {
-        openDialog?: React.ReactNode;
-        closeDialog?: React.ReactNode;
+        openDialog?: ReactNode;
+        closeDialog?: ReactNode;
     };
 }
 
-export const ContentOverflow = (inProps: ContentOverflowProps) => {
+export const ContentOverflow = (inProps: PropsWithChildren<ContentOverflowProps>) => {
     const {
         children,
         dialogTitle = <FormattedMessage id="comet.contentOverflow.dialogTitle" defaultMessage="Preview" />,
@@ -60,7 +59,7 @@ export const ContentOverflow = (inProps: ContentOverflowProps) => {
     } = useThemeProps({ props: inProps, name: "CometAdminContentOverflow" });
     const { openDialog: openDialogIcon = <Maximize fontSize="inherit" />, closeDialog: closeDialogIcon = <Close /> } = iconMapping;
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     return (
         <>

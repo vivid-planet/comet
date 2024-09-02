@@ -1,17 +1,17 @@
 import { grey as greyPalette } from "@mui/material/colors";
-import * as React from "react";
+import { CSSProperties } from "react";
 
 import { RteProps } from "../Rte";
 
 export interface RteTheme {
     colors: {
-        border: React.CSSProperties["color"];
-        toolbarBackground: React.CSSProperties["color"];
-        buttonIcon: React.CSSProperties["color"];
-        buttonIconDisabled: React.CSSProperties["color"];
-        buttonBackgroundHover: React.CSSProperties["color"];
-        buttonBorderHover: React.CSSProperties["color"];
-        buttonBorderDisabled: React.CSSProperties["color"];
+        border: CSSProperties["color"];
+        toolbarBackground: CSSProperties["color"];
+        buttonIcon: CSSProperties["color"];
+        buttonIconDisabled: CSSProperties["color"];
+        buttonBackgroundHover: CSSProperties["color"];
+        buttonBorderHover: CSSProperties["color"];
+        buttonBorderDisabled: CSSProperties["color"];
     };
 }
 

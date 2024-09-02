@@ -10,7 +10,7 @@ import { Time } from "@comet/admin-icons";
 import { ComponentsOverrides, InputAdornment, ListItemText, MenuItem, MenuList } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { format } from "date-fns";
-import * as React from "react";
+import { useRef } from "react";
 import { FormatDateOptions, FormattedTime, useIntl } from "react-intl";
 
 import { getClosestDateToDate, getDateFromTimeValue, getDateRangeListByMinuteStep } from "../utils/timePickerHelpers";
@@ -74,7 +74,7 @@ export const TimePicker = (inProps: TimePickerProps) => {
         ...inputWithPopperProps
     } = useThemeProps({ props: inProps, name: "CometAdminTimePicker" });
     const intl = useIntl();
-    const focusedItemRef = React.useRef<HTMLLIElement>(null);
+    const focusedItemRef = useRef<HTMLLIElement>(null);
 
     const dateValue: Date | null = value ? getDateFromTimeValue(value) : null;
     const timeOptions = getDateRangeListByMinuteStep(min, max, minuteStep);

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext } from "react";
 
 /**
  * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
@@ -10,5 +10,5 @@ export interface SplitButtonContextOptions {
 /**
  * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
  */
-const SplitButtonContext = React.createContext<SplitButtonContextOptions | undefined>(undefined);
+const SplitButtonContext = createContext<SplitButtonContextOptions | undefined>(undefined);
 export { SplitButtonContext };

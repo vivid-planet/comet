@@ -1,6 +1,5 @@
 import { Button, ButtonProps, ComponentsOverrides, IconButton, Tooltip } from "@mui/material";
 import { css, Theme, useTheme, useThemeProps } from "@mui/material/styles";
-import React from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";

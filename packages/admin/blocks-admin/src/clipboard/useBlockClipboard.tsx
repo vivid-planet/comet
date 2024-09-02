@@ -1,5 +1,5 @@
 import { readClipboardText, writeClipboardText } from "@comet/admin";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlockInterface, BlockOutputApi, BlockState } from "../blocks/types";
@@ -23,7 +23,7 @@ interface TransformedClipboardBlock {
 
 type TransformedClipboardContent = TransformedClipboardBlock[];
 
-type GetClipboardContentResponse = { canPaste: true; content: ClipboardContent } | { canPaste: false; error: React.ReactNode };
+type GetClipboardContentResponse = { canPaste: true; content: ClipboardContent } | { canPaste: false; error: ReactNode };
 
 interface BlockClipboardApi {
     updateClipboardContent: (content: ClipboardContent) => Promise<void>;

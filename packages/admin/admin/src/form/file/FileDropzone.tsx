@@ -1,6 +1,6 @@
 import { Error, Select } from "@comet/admin-icons";
 import { Box, Button, ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
-import React from "react";
+import { ReactNode, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
@@ -17,11 +17,11 @@ export type FileDropzoneProps = ThemedComponentBaseProps<{
     hasError?: boolean;
     hideDroppableArea?: boolean;
     hideButton?: boolean;
-    dropzoneText?: React.ReactNode;
-    buttonText?: React.ReactNode;
+    dropzoneText?: ReactNode;
+    buttonText?: ReactNode;
     iconMapping?: {
-        error?: React.ReactNode;
-        select?: React.ReactNode;
+        error?: ReactNode;
+        select?: ReactNode;
     };
 } & DropzoneOptions;
 
@@ -70,8 +70,8 @@ export const FileDropzone = (inProps: FileDropzoneProps) => {
         name: "CometAdminFileDropzone",
     });
     const { error: errorIcon = <Error color="error" />, select: selectIcon = <Select /> } = iconMapping;
-    const [focused, setFocused] = React.useState(false);
-    const [dragging, setDragging] = React.useState(false);
+    const [focused, setFocused] = useState(false);
+    const [dragging, setDragging] = useState(false);
 
     const ownerState: OwnerState = {
         disabled: Boolean(disabled),

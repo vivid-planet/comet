@@ -1,6 +1,6 @@
 import { ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -19,8 +19,8 @@ export interface ToolbarProps
         scopeIndicator: "div";
     }> {
     elevation?: number;
-    children?: React.ReactNode;
-    scopeIndicator?: React.ReactNode;
+    children?: ReactNode;
+    scopeIndicator?: ReactNode;
     hideTopBar?: boolean;
 }
 
@@ -52,8 +52,8 @@ const TopBar = createComponentSlot("div")<ToolbarClassKey>({
         display: flex;
         align-items: center;
         gap: ${theme.spacing(2)};
-        padding-left: ${theme.spacing(2)};
-        padding-right: ${theme.spacing(2)};
+        padding-left: ${theme.spacing(4)};
+        padding-right: ${theme.spacing(4)};
     `,
 );
 
@@ -109,7 +109,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
         scopeIndicator,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
-    const { headerHeight } = React.useContext(MasterLayoutContext);
+    const { headerHeight } = useContext(MasterLayoutContext);
 
     const ownerState: OwnerState = {
         headerHeight,
