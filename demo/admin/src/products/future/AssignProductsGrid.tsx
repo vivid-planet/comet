@@ -72,13 +72,9 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
                 }}
             />
             <SelectProductsGrid
-                selectionProps={{
-                    checkboxSelection: true,
-                    keepNonExistentRowsSelected: true,
-                    selectionModel: values,
-                    onSelectionModelChange: (newSelectionModel) => {
-                        setValues(newSelectionModel.map((rowId) => String(rowId)));
-                    },
+                selectionModel={values}
+                onSelectionModelChange={(newSelectionModel) => {
+                    setValues(newSelectionModel.map((rowId) => String(rowId)));
                 }}
             />
         </>
