@@ -1,4 +1,4 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
@@ -29,6 +29,7 @@ interface PageVisibilityProps {
 }
 
 const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
+    const client = useApolloClient();
     const { tree } = usePageTreeContext();
     const snackbarApi = useSnackbarApi();
     const [updatePageVisibility] = useMutation<GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables>(
@@ -59,7 +60,7 @@ const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
                     slug: page.slug,
                 },
             },
-        });
+        }).then(() => client.refetchQueries({ include: ["Pages"] }));
     };
 
     const handleVisibilityClick = (visibility: GQLPageTreeNodeVisibility) => {
