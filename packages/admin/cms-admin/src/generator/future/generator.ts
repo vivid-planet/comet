@@ -51,13 +51,13 @@ export type FormFieldConfig<T> = (
 ) & {
     label?: string;
     required?: boolean;
+    initialValueProp?: boolean;
     optionalRenderProp?: boolean;
     virtual?: boolean;
     validate?: ImportReference;
     helperText?: string;
     readOnly?: boolean;
 };
-
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);

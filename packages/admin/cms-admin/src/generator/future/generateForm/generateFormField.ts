@@ -119,12 +119,49 @@ export function generateFormField({
     const imports: Imports = [];
     const props: Prop[] = [];
 
+    const initialValuePropConfig = config.initialValueProp
+        ? (() => {
+              if (introspectionFieldType.kind === "OBJECT" || introspectionFieldType.kind === "ENUM") {
+                  imports.push({
+                      name: `GQL${introspectionFieldType.name}`,
+                      importPath: `@src/graphql.generated`,
+                  });
+              }
+              props.push({
+                  optional: true,
+                  type:
+                      introspectionFieldType.kind === "OBJECT" || introspectionFieldType.kind === "ENUM"
+                          ? `GQL${introspectionFieldType.name}`
+                          : introspectionFieldType.kind === "SCALAR"
+                          ? introspectionFieldType.name
+                          : "unknown",
+                  name: name,
+              });
+              return {
+                  defaultInitializationCode: `${name}: ${name}`, // TODO consider optionFields field nesting for defaultInitializationCode
+                  initializationVarDependency: `${name}`,
+              };
+          })()
+        : undefined;
+
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
         initializationCode: optionalRender
             ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? data.${dataRootName}.${nameWithPrefix} : undefined`
             : undefined,
-        initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+        defaultInitializationCode:
+            initialValuePropConfig && optionalRender
+                ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? ${name} : undefined`
+                : initialValuePropConfig
+                ? initialValuePropConfig.defaultInitializationCode
+                : undefined,
+        initializationVarDependency:
+            optionalRender || initialValuePropConfig
+                ? [
+                      ...(optionalRender ? [`show${name[0].toUpperCase() + name.substring(1)}`] : []),
+                      ...(initialValuePropConfig ? [initialValuePropConfig.initializationVarDependency] : []),
+                  ].join(",")
+                : undefined,
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
@@ -214,7 +251,13 @@ export function generateFormField({
                     omitFromFragmentType: name,
                     typeCode: `${name}${!required ? `?` : ``}: string;`,
                     initializationCode: `${name}: ${initializationAssignment}`,
-                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+                    initializationVarDependency:
+                        optionalRender || initialValuePropConfig
+                            ? [
+                                  ...(optionalRender ? [`show${name[0].toUpperCase() + name.substring(1)}`] : []),
+                                  ...(initialValuePropConfig ? [initialValuePropConfig.initializationVarDependency] : []),
+                              ].join(",")
+                            : undefined,
                 },
             },
         ];
@@ -238,10 +281,23 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    defaultInitializationCode: optionalRender
-                        ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? false : undefined`
-                        : `${name}: false`,
-                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+                    defaultInitializationCode:
+                        optionalRender && initialValuePropConfig
+                            ? `${name}: show${
+                                  name[0].toUpperCase() + name.substring(1)
+                              } ? ${name} !== undefined : ${name} ? ${name} : false : undefined`
+                            : optionalRender
+                            ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? false : undefined`
+                            : initialValuePropConfig
+                            ? `${name}: ${name} !== undefined ? ${name} : false`
+                            : `${name}: false`,
+                    initializationVarDependency:
+                        optionalRender || initialValuePropConfig
+                            ? [
+                                  ...(optionalRender ? [`show${name[0].toUpperCase() + name.substring(1)}`] : []),
+                                  ...(initialValuePropConfig ? [initialValuePropConfig.initializationVarDependency] : []),
+                              ].join(",")
+                            : undefined,
                 },
             },
         ];
@@ -273,7 +329,13 @@ export function generateFormField({
                               name[0].toUpperCase() + name.substring(1)
                           } && data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`
                         : `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
-                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+                    initializationVarDependency:
+                        optionalRender || initialValuePropConfig
+                            ? [
+                                  ...(optionalRender ? [`show${name[0].toUpperCase() + name.substring(1)}`] : []),
+                                  ...(initialValuePropConfig ? [initialValuePropConfig.initializationVarDependency] : []),
+                              ].join(",")
+                            : undefined,
                 },
             },
         ];
@@ -282,6 +344,12 @@ export function generateFormField({
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;
+        if (initialValuePropConfig && introspectionFieldType.kind === "SCALAR") {
+            imports.push({
+                name: introspectionFieldType.name,
+                importPath: "@src/blocks.generated",
+            });
+        }
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,
@@ -292,10 +360,21 @@ export function generateFormField({
                               name[0].toUpperCase() + name.substring(1)
                           } ? rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix}) : undefined`
                         : `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
-                    defaultInitializationCode: optionalRender
-                        ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? rootBlocks.${name}.defaultValues() : undefined`
-                        : `${name}: rootBlocks.${name}.defaultValues()`,
-                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+                    defaultInitializationCode:
+                        optionalRender && initialValuePropConfig
+                            ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? ${name} ?? rootBlocks.${name}.defaultValues() : undefined`
+                            : optionalRender
+                            ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? rootBlocks.${name}.defaultValues() : undefined`
+                            : initialValuePropConfig
+                            ? `${name}: ${name} ?? rootBlocks.${name}.defaultValues()`
+                            : `${name}: rootBlocks.${name}.defaultValues()`,
+                    initializationVarDependency:
+                        optionalRender || initialValuePropConfig
+                            ? [
+                                  ...(optionalRender ? [`show${name[0].toUpperCase() + name.substring(1)}`] : []),
+                                  ...(initialValuePropConfig ? [initialValuePropConfig.initializationVarDependency] : []),
+                              ].join(",")
+                            : undefined,
                 },
             },
         ];

@@ -32,6 +32,7 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -80,11 +81,14 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "manufacturerC
 
 interface FormProps {
     id?: string;
+    title?: string;
+    type?: GQLProductType;
     manufacturerCountry: string;
+    availableSince?: Date;
     showAvailableSince?: boolean;
 }
 
-export function ProductForm({ id, manufacturerCountry, showAvailableSince }: FormProps): React.ReactElement {
+export function ProductForm({ id, title, type, manufacturerCountry, availableSince, showAvailableSince }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -119,10 +123,13 @@ export function ProductForm({ id, manufacturerCountry, showAvailableSince }: For
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
+                      title: title,
+                      type: type,
                       inStock: false,
+                      availableSince: showAvailableSince ? availableSince : undefined,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data, showAvailableSince],
+        [data, title, type, showAvailableSince, availableSince],
     );
 
     const saveConflict = useFormSaveConflict({

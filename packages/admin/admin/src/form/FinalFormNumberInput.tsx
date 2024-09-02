@@ -1,5 +1,5 @@
 import { InputBase, InputBaseProps } from "@mui/material";
-import * as React from "react";
+import { ChangeEvent, FocusEvent, useCallback, useEffect, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
@@ -11,20 +11,12 @@ export type FinalFormNumberInputProps = InputBaseProps &
         decimals?: number;
     };
 
-export function FinalFormNumberInput({
-    meta,
-    input,
-    innerRef,
-    clearable,
-    endAdornment,
-    decimals = 0,
-    ...props
-}: FinalFormNumberInputProps): React.ReactElement {
+export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdornment, decimals = 0, ...props }: FinalFormNumberInputProps) {
     const intl = useIntl();
 
-    const [formattedNumberValue, setFormattedNumberValue] = React.useState("");
+    const [formattedNumberValue, setFormattedNumberValue] = useState("");
 
-    const getFormattedValue = React.useCallback(
+    const getFormattedValue = useCallback(
         (value: number | undefined) => {
             const formattedValue =
                 value !== undefined ? intl.formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) : "";
@@ -33,12 +25,12 @@ export function FinalFormNumberInput({
         [decimals, intl],
     );
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setFormattedNumberValue(value);
     };
 
-    const updateFormattedNumberValue = React.useCallback(
+    const updateFormattedNumberValue = useCallback(
         (inputValue?: number) => {
             if (!inputValue && inputValue !== 0) {
                 input.onChange(undefined);
@@ -50,7 +42,7 @@ export function FinalFormNumberInput({
         [getFormattedValue, input],
     );
 
-    const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
         const { value } = event.target;
         const numberParts = intl.formatNumberToParts(1111.111);
         const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;
@@ -77,7 +69,7 @@ export function FinalFormNumberInput({
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         updateFormattedNumberValue(input.value);
     }, [updateFormattedNumberValue, input]);
 

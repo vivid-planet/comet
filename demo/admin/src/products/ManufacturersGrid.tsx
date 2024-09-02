@@ -123,6 +123,8 @@ export function ManufacturersGrid() {
             headerName: "",
             sortable: false,
             filterable: false,
+            pinned: "right",
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>

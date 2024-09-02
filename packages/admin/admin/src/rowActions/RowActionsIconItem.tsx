@@ -1,5 +1,5 @@
 import { IconButton, IconButtonProps, Tooltip, TooltipProps } from "@mui/material";
-import * as React from "react";
+import { forwardRef, ReactNode } from "react";
 
 import { CommonRowActionItemProps } from "./RowActionsItem";
 
@@ -10,10 +10,10 @@ export interface RowActionsIconItemComponentsProps {
 
 export interface RowActionsIconItemProps extends CommonRowActionItemProps {
     componentsProps?: RowActionsIconItemComponentsProps;
-    tooltip?: React.ReactNode;
+    tooltip?: ReactNode;
 }
 
-export const RowActionsIconItem = React.forwardRef<HTMLButtonElement, RowActionsIconItemProps>(
+export const RowActionsIconItem = forwardRef<HTMLButtonElement, RowActionsIconItemProps>(
     ({ icon, tooltip, componentsProps = {}, ...restIconButtonProps }, ref) => {
         const { tooltip: tooltipProps, iconButton: iconButtonProps } = componentsProps;
         const button = (
