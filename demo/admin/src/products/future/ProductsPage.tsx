@@ -74,7 +74,7 @@ export function ProductsPage() {
                                     path=""
                                     label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                 >
-                                    <ProductForm id={selectedProductId} />
+                                    <ProductForm id={selectedProductId} manufacturerCountry="DE" />
                                 </RouterTab>
                                 <RouterTab
                                     forceRender={true}
@@ -106,7 +106,7 @@ export function ProductsPage() {
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ProductForm />
+                        <ProductForm manufacturerCountry="DE" />
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>
