@@ -1,20 +1,20 @@
 import { Edit, Warning } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { MouseEventHandler, ReactNode } from "react";
 
 import { usePromise } from "../../common/usePromise";
 import { AdminComponentPaper } from "./AdminComponentPaper";
 
 interface Props {
-    displayName: React.ReactNode;
-    preview: React.ReactNode;
+    displayName: ReactNode;
+    preview: ReactNode;
     count?: number;
-    onClick?: React.MouseEventHandler<HTMLElement>;
+    onClick?: MouseEventHandler<HTMLElement>;
     isValid?: () => Promise<boolean> | boolean;
 }
 
-export function AdminComponentNestedButton({ displayName, preview, count, onClick, isValid: isValidFn }: Props): React.ReactElement {
+export const AdminComponentNestedButton = ({ displayName, preview, count, onClick, isValid: isValidFn }: Props) => {
     const isValid = usePromise(isValidFn, { initialValue: true });
 
     return (
@@ -33,7 +33,7 @@ export function AdminComponentNestedButton({ displayName, preview, count, onClic
             </Button>
         </AdminComponentPaper>
     );
-}
+};
 
 const TextContainer = styled("span")`
     min-width: 0;

@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import * as React from "react";
+import { useState } from "react";
 
 import { Table } from "../Table";
 import { ITableQueryApi } from "../TableQueryContext";
@@ -21,8 +21,8 @@ export function useExportPagedTableQuery<IVariables>(
     excelOptions?: IExcelExportOptions,
 ): IExportApi<any> {
     let tableRef: Table<any> | undefined;
-    const [progress, setProgress] = React.useState(0);
-    const [loading, setLoading] = React.useState(false);
+    const [progress, setProgress] = useState(0);
+    const [loading, setLoading] = useState(false);
     function attachTable(ref: Table<any>) {
         tableRef = ref;
     }

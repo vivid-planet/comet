@@ -23,5 +23,10 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             fieldName: "manufacturer",
             filterOperators: { name: "ManufacturerFilterOperators", import: "./ManufacturerFilter" },
         },
+        {
+            type: "actions",
+            width: 116,
+            component: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
+        },
     ],
 };

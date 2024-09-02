@@ -14,7 +14,6 @@ import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -46,7 +45,7 @@ type FormValues = Omit<GQLProductVariantFormFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-export function ProductVariantForm({ id, productId }: FormProps): React.ReactElement {
+export function ProductVariantForm({ id, productId }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();

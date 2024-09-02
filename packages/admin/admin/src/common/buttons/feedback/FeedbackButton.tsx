@@ -2,7 +2,7 @@ import { ThreeDotSaving } from "@comet/admin-icons";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 import { ButtonClassKey, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
@@ -39,10 +39,10 @@ export interface FeedbackButtonProps
         LoadingButtonProps {
     loading?: boolean;
     hasErrors?: boolean;
-    startIcon?: React.ReactNode;
-    endIcon?: React.ReactNode;
-    tooltipSuccessMessage?: React.ReactNode;
-    tooltipErrorMessage?: React.ReactNode;
+    startIcon?: ReactNode;
+    endIcon?: ReactNode;
+    tooltipSuccessMessage?: ReactNode;
+    tooltipErrorMessage?: ReactNode;
 }
 
 type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "error";
@@ -67,7 +67,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         name: "CometAdminFeedbackButton",
     });
 
-    const [displayState, setDisplayState] = React.useState<FeedbackButtonDisplayState>("idle");
+    const [displayState, setDisplayState] = useState<FeedbackButtonDisplayState>("idle");
 
     const ownerState: OwnerState = {
         displayState,
@@ -84,7 +84,7 @@ export function FeedbackButton(inProps: FeedbackButtonProps) {
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         let timeoutId: number | undefined;
         let timeoutDuration: number | undefined;
         let newDisplayState: FeedbackButtonDisplayState;

@@ -1,5 +1,5 @@
 import * as History from "history";
-import * as React from "react";
+import { createContext, MutableRefObject } from "react";
 
 import { PromptRoutes } from "./Prompt";
 import { ResetAction, SaveAction } from "./PromptHandler";
@@ -12,9 +12,9 @@ interface IContext {
         resetAction?: ResetAction;
         path: string;
         subRoutePath?: string;
-        promptRoutes?: React.MutableRefObject<PromptRoutes>;
+        promptRoutes?: MutableRefObject<PromptRoutes>;
     }) => void;
     unregister: (id: string) => void;
 }
 
-export const RouterContext = React.createContext<IContext | undefined>(undefined);
+export const RouterContext = createContext<IContext | undefined>(undefined);
