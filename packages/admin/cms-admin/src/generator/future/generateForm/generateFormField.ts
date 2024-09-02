@@ -1,5 +1,6 @@
 import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
+import { Prop } from "../generateForm";
 import { FormConfig, FormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
@@ -43,6 +44,8 @@ export function generateFormField({
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
     const imports: Imports = [];
+    const props: Prop[] = [];
+
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
     };
@@ -321,6 +324,7 @@ export function generateFormField({
     }
     return {
         code,
+        props,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],
