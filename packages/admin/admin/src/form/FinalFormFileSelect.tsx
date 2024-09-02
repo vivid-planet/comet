@@ -1,5 +1,5 @@
 import { useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { useCallback, useState } from "react";
 import { DropzoneOptions } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
 
@@ -24,11 +24,11 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
         name: "CometAdminFinalFormFileSelect",
     });
 
-    const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const [rejectedFiles, setRejectedFiles] = React.useState<ErrorFileSelectItem[]>([]);
+    const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
+    const [rejectedFiles, setRejectedFiles] = useState<ErrorFileSelectItem[]>([]);
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
 
-    const onDrop = React.useCallback<NonNullable<DropzoneOptions["onDrop"]>>(
+    const onDrop = useCallback<NonNullable<DropzoneOptions["onDrop"]>>(
         (acceptedFiles, fileRejections) => {
             setRejectedFiles(
                 fileRejections.map((rejectedFile) => {

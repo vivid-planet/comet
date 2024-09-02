@@ -10,7 +10,6 @@ import {
     useSitesConfig,
 } from "@comet/cms-admin";
 import { SitesConfig } from "@src/config";
-import React from "react";
 
 type Domain = "main" | "secondary" | string;
 type Language = "en" | string;
@@ -30,7 +29,7 @@ export function useContentScopeConfig(p: ContentScopeConfigProps): void {
     return useContentScopeConfigLibrary(p);
 }
 
-const ContentScopeProvider: React.FC<Pick<ContentScopeProviderProps, "children">> = ({ children }) => {
+const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
     const sitesConfig = useSitesConfig<SitesConfig>();
     const user = useCurrentUser();
 
