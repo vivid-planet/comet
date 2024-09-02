@@ -26,6 +26,7 @@ import { Button, CircularProgress, IconButton, Menu, MenuItem, useTheme } from "
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import * as React from "react";
+import { useRef, useState } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
@@ -44,8 +45,8 @@ import {
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
 function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
-    const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
-    const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+    const [showMoreMenu, setShowMoreMenu] = useState<boolean>(false);
+    const moreMenuRef = useRef<HTMLButtonElement>(null);
 
     return (
         <DataGridToolbar>
