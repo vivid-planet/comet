@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import { useState } from "react";
 import styled, { css } from "styled-components";
 
 import { VimeoVideoBlockData } from "../blocks.generated";
@@ -39,7 +39,7 @@ export const VimeoVideoBlock = withPreview(
         renderPreviewImage,
         fill,
     }: VimeoVideoBlockProps) => {
-        const [showPreviewImage, setShowPreviewImage] = React.useState(true);
+        const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
         if (!vimeoIdentifier) return <PreviewSkeleton type="media" hasContent={false} />;
