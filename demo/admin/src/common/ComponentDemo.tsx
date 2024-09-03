@@ -43,7 +43,7 @@ import {
 } from "@comet/blocks-admin";
 import { DamImageBlock, FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
 import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useState } from "react";
 
 import { RichTextBlock } from "./blocks/RichTextBlock";
 
@@ -76,12 +76,12 @@ const ColumnsBlock = createColumnsBlock({
 });
 
 interface CustomSelectItemProps {
-    icon: React.ReactNode;
-    primary: React.ReactNode;
-    secondary: React.ReactNode;
+    icon: ReactNode;
+    primary: ReactNode;
+    secondary: ReactNode;
 }
 
-function CustomSelectItem({ icon, primary, secondary }: CustomSelectItemProps): React.ReactElement {
+function CustomSelectItem({ icon, primary, secondary }: CustomSelectItemProps) {
     return (
         <Grid container spacing={4} alignItems="center">
             <Grid item>
@@ -99,13 +99,13 @@ function CustomSelectItem({ icon, primary, secondary }: CustomSelectItemProps): 
     );
 }
 
-export function ComponentDemo(): React.ReactElement {
-    const [optionalBlockState, setOptionalBlockState] = React.useState(OptionalRichTextBlock.defaultValues());
-    const [pixelImageBlockState, setPixelImageBlockState] = React.useState(PixelImageBlock.defaultValues());
-    const [listBlockState, setListBlockState] = React.useState(ListBlock.defaultValues());
-    const [blocksBlockState, setBlocksBlockState] = React.useState(BlocksBlock.defaultValues());
-    const [columnsBlockState, setColumnsBlockState] = React.useState(ColumnsBlock.defaultValues());
-    const [imageBlockState, setImageBlockState] = React.useState(DamImageBlock.defaultValues());
+export function ComponentDemo() {
+    const [optionalBlockState, setOptionalBlockState] = useState(OptionalRichTextBlock.defaultValues());
+    const [pixelImageBlockState, setPixelImageBlockState] = useState(PixelImageBlock.defaultValues());
+    const [listBlockState, setListBlockState] = useState(ListBlock.defaultValues());
+    const [blocksBlockState, setBlocksBlockState] = useState(BlocksBlock.defaultValues());
+    const [columnsBlockState, setColumnsBlockState] = useState(ColumnsBlock.defaultValues());
+    const [imageBlockState, setImageBlockState] = useState(DamImageBlock.defaultValues());
 
     return (
         <Stack topLevelTitle="Component demo">

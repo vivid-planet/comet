@@ -9,7 +9,6 @@ import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
 import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
-import * as React from "react";
 
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";

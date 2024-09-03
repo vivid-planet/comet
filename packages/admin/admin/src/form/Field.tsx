@@ -1,5 +1,5 @@
 import { FieldValidator } from "final-form";
-import * as React from "react";
+import { ComponentType, createElement, ReactNode, useRef } from "react";
 import { Field as FinalFormField, FieldMetaState, FieldRenderProps, FormSpy, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -15,10 +15,10 @@ const composeValidators =
 
 export interface FieldProps<FieldValue = any, T extends HTMLElement = HTMLElement> {
     name: string;
-    label?: React.ReactNode;
-    helperText?: React.ReactNode;
-    component?: React.ComponentType<any> | string;
-    children?: (props: FieldRenderProps<FieldValue, T>) => React.ReactNode;
+    label?: ReactNode;
+    helperText?: ReactNode;
+    component?: ComponentType<any> | string;
+    children?: (props: FieldRenderProps<FieldValue, T>) => ReactNode;
     required?: boolean;
     disabled?: boolean;
     validate?: FieldValidator<FieldValue>;
@@ -43,12 +43,12 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     shouldShowWarning: passedShouldShowWarning,
     shouldScrollTo: passedShouldScrollTo,
     ...otherProps
-}: FieldProps<FieldValue, FieldElement>): React.ReactElement {
+}: FieldProps<FieldValue, FieldElement>) {
     const { disabled, variant, fullWidth } = otherProps;
 
     const { mutators } = useForm();
     const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
-    const currentWarningValidationRound = React.useRef(0);
+    const currentWarningValidationRound = useRef(0);
 
     const validateError = required ? (validate ? composeValidators(requiredValidator, validate) : requiredValidator) : validate;
 
@@ -65,7 +65,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean; required?: boolean }) {
         function render() {
             if (component) {
-                return React.createElement(component, { ...rest, input, meta });
+                return createElement(component, { ...rest, input, meta });
             } else {
                 if (typeof children !== "function") {
                     throw new Error(`Warning: Must specify either a render function as children, or a component prop to ${name}`);

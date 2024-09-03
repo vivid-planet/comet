@@ -1,17 +1,17 @@
-import * as React from "react";
+import { Fragment, ReactNode } from "react";
 
 import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
 
 interface Props {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    block: (props: any) => React.ReactNode;
+    block: (props: any) => ReactNode;
     data: {
         blocks: Array<{ key: string; visible: boolean; props: unknown }>;
     };
 }
 
-export const ListBlock: React.FC<Props> = ({ block: blockFunction, data: { blocks } }: Props) => {
+export const ListBlock = ({ block: blockFunction, data: { blocks } }: Props) => {
     if (blocks.length === 0) {
         return <PreviewSkeleton hasContent={false} />;
     }
@@ -19,9 +19,9 @@ export const ListBlock: React.FC<Props> = ({ block: blockFunction, data: { block
     return (
         <>
             {blocks.map((block) => (
-                <React.Fragment key={block.key}>
+                <Fragment key={block.key}>
                     <ErrorHandlerBoundary>{blockFunction(block.props)}</ErrorHandlerBoundary>
-                </React.Fragment>
+                </Fragment>
             ))}
         </>
     );

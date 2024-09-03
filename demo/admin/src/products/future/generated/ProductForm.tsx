@@ -278,11 +278,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             <FileUploadField
                                 name="priceList"
                                 label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
+                                variant="horizontal"
                                 maxFileSize={4194304}
                             />
                             <FileUploadField
                                 name="datasheets"
                                 label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                                variant="horizontal"
                                 multiple
                                 maxFileSize={4194304}
                             />

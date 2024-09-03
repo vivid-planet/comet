@@ -1,15 +1,15 @@
 import { useReactiveVar } from "@apollo/client";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 import { ErrorDialog, ErrorDialogOptions } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
 
-export const ErrorDialogHandler: React.VoidFunctionComponent = () => {
+export const ErrorDialogHandler = () => {
     const errorOptions = useReactiveVar<ErrorDialogOptions | undefined>(errorDialogVar);
 
-    const [errorDialogVisible, setErrorDialogVisible] = React.useState(false);
+    const [errorDialogVisible, setErrorDialogVisible] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setErrorDialogVisible(errorOptions != null);
     }, [errorOptions]);
 

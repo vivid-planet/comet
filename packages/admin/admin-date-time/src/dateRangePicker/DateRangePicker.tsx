@@ -5,7 +5,6 @@ import { ClearInputAdornment, InputWithPopperProps } from "@comet/admin";
 import { Calendar } from "@comet/admin-icons";
 import { ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
 import { Range } from "react-date-range";
 import { FormatDateOptions, useIntl } from "react-intl";
 

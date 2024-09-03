@@ -1,14 +1,13 @@
 import { MainContent, Stack, Toolbar } from "@comet/admin";
 import { ContentScopeIndicator, DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 import backgroundImage1x from "./dashboard-image@1x.jpg";
 import backgroundImage2x from "./dashboard-image@2x.jpg";
 import { LatestContentUpdates } from "./LatestContentUpdates";
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
     const intl = useIntl();
     const isAllowed = useUserPermissionCheck();
     return (

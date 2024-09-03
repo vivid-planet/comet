@@ -3,7 +3,7 @@ import { createComponentSlot } from "@comet/admin";
 import { ChevronDown, Clear, Close } from "@comet/admin-icons";
 import { Chip, ComponentsOverrides, InputBase, inputBaseClasses, MenuItem, Paper, SvgIconProps, Theme, Typography, useTheme } from "@mui/material";
 import { css } from "@mui/material/styles";
-import * as React from "react";
+import { ComponentType } from "react";
 import Select, { OptionTypeBase } from "react-select";
 import AsyncSelect, { Props as ReactSelectAsyncProps } from "react-select/async";
 import AsyncCreatableSelect from "react-select/async-creatable";
@@ -298,10 +298,10 @@ const components = {
 };
 
 export interface SelectProps<OptionType extends OptionTypeBase, IsMulti extends boolean = false> {
-    selectComponent: React.ComponentType<ReactSelectProps<OptionType, IsMulti>>;
-    clearIcon?: React.ComponentType<SvgIconProps>;
-    dropdownIcon?: React.ComponentType<SvgIconProps>;
-    dropdownIconOpen?: React.ComponentType<SvgIconProps>;
+    selectComponent: ComponentType<ReactSelectProps<OptionType, IsMulti>>;
+    clearIcon?: ComponentType<SvgIconProps>;
+    dropdownIcon?: ComponentType<SvgIconProps>;
+    dropdownIconOpen?: ComponentType<SvgIconProps>;
 }
 
 function SelectWrapper<OptionType extends OptionTypeBase, IsMulti extends boolean = false>({
