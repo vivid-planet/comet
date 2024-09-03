@@ -33,7 +33,7 @@ interface CrudMoreActionsGroupProps {
 function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
     return (
         <>
-            <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" pt="20px" px="15px" {...typographyProps}>
+            <Typography variant="overline" color={(theme) => theme.palette.grey[500]} pt="20px" px="15px" {...typographyProps}>
                 {groupTitle}
             </Typography>
             <MenuList {...menuListProps}>{children}</MenuList>
@@ -106,13 +106,14 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                     <MenuItem
                                         key={index}
                                         disabled={!!selectionSize}
+                                        sx={{ padding: "8px 15px 8px 30px !important", columnGap: "10px" }}
                                         {...rest}
                                         onClick={(e) => {
                                             onClick?.(e);
                                             handleClose();
                                         }}
                                     >
-                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
+                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                     </MenuItem>
                                     {!!divider && <CrudMoreActionsDivider />}
@@ -138,13 +139,14 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                     <MenuItem
                                         key={index}
                                         disabled={!selectionSize}
+                                        sx={{ padding: "8px 15px 8px 30px !important", columnGap: "10px" }}
                                         {...rest}
                                         onClick={(e) => {
                                             onClick?.(e);
                                             handleClose();
                                         }}
                                     >
-                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
+                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                         {!!selectionSize && <SelectedItemsChip label={selectionSize} />}
                                     </MenuItem>
