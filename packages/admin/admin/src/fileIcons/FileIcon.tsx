@@ -1,5 +1,5 @@
 import { SvgIconProps } from "@mui/material/SvgIcon";
-import * as React from "react";
+import { ComponentType } from "react";
 
 import { Excel } from "./Excel";
 import { File } from "./File";
@@ -11,7 +11,7 @@ import { Word } from "./Word";
 import { Zip } from "./Zip";
 
 interface IComponents {
-    [fileType: string]: React.ComponentType;
+    [fileType: string]: ComponentType;
 }
 const components: IComponents = {
     "application/msexcel": Excel,
@@ -40,7 +40,7 @@ interface IProps extends SvgIconProps {
     fileType: string;
 }
 
-export const FileIcon: React.FunctionComponent<IProps> = ({ fileType, ...rest }) => {
+export const FileIcon = ({ fileType, ...rest }: IProps) => {
     if (components[fileType]) {
         const Cmp = components[fileType];
         return <Cmp {...rest} />;

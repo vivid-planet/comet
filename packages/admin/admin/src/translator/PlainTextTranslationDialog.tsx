@@ -1,5 +1,4 @@
 import { TextField } from "@mui/material";
-import * as React from "react";
 
 import { BaseTranslationDialog } from "./BaseTranslationDialog";
 
@@ -11,7 +10,7 @@ interface PlainTextTranslationDialogProps {
     onApplyTranslation: (value: string) => void;
 }
 
-export const PlainTextTranslationDialog: React.FC<PlainTextTranslationDialogProps> = (props) => {
+export const PlainTextTranslationDialog = (props: PlainTextTranslationDialogProps) => {
     const { open, onClose, originalText, translatedText, onApplyTranslation } = props;
 
     return (

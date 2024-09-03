@@ -1,10 +1,10 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import React from "react";
+import { ReactNode } from "react";
 
 import { Field, FieldProps } from "../Field";
 
 type CheckboxListFieldOption<Value extends string> = {
-    label: React.ReactNode;
+    label: ReactNode;
     value: Value;
 };
 

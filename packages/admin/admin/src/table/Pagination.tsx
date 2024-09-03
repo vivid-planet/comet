@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
 import { Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
-import * as React from "react";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { IPagingInfo } from "./paging/IPagingInfo";
@@ -15,7 +14,7 @@ interface IProps {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingInfo, rowName }) => {
+export const TablePagination = ({ totalCount, pagingInfo, rowName }: IProps) => {
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);
     }

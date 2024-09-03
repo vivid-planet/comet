@@ -2,7 +2,6 @@
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
-import * as React from "react";
 import { Router } from "react-router";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";

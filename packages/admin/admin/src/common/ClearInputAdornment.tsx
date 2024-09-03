@@ -11,7 +11,7 @@ import {
     Theme,
     useThemeProps,
 } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -22,7 +22,7 @@ export interface ClearInputAdornmentProps
             root: typeof InputAdornment;
             buttonBase: typeof ButtonBase;
         }> {
-    icon?: React.ReactNode;
+    icon?: ReactNode;
     onClick: () => void;
     hasClearableContent: boolean;
 }
@@ -31,7 +31,7 @@ type OwnerState = Pick<ClearInputAdornmentProps, "position">;
 
 export type ClearInputAdornmentClassKey = InputAdornmentClassKey | "buttonBase";
 
-export const ClearInputAdornment = (inProps: ClearInputAdornmentProps): React.ReactElement => {
+export const ClearInputAdornment = (inProps: ClearInputAdornmentProps) => {
     const {
         hasClearableContent,
         onClick,

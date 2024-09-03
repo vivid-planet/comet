@@ -2,7 +2,7 @@ import { ChevronDown, ChevronRight, Error } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Alert as MuiAlert, AlertProps, ComponentsOverrides, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { Component, ErrorInfo, PropsWithChildren, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -23,12 +23,12 @@ type OwnerState = {
     showDetails?: boolean;
 };
 
-export type ErrorBoundaryProps = React.PropsWithChildren<{
-    userErrorMessage?: React.ReactNode;
+export type ErrorBoundaryProps = PropsWithChildren<{
+    userErrorMessage?: ReactNode;
     variant?: AlertProps["variant"];
     icon?: AlertProps["icon"];
-    toggleDetailsOpenedIcon?: React.ReactNode;
-    toggleDetailsClosedIcon?: React.ReactNode;
+    toggleDetailsOpenedIcon?: ReactNode;
+    toggleDetailsClosedIcon?: ReactNode;
     key?: string | number;
 }> &
     ThemedComponentBaseProps<{
@@ -44,7 +44,7 @@ export type ErrorBoundaryProps = React.PropsWithChildren<{
 
 interface IErrorBoundaryState {
     error?: Error;
-    errorInfo?: React.ErrorInfo;
+    errorInfo?: ErrorInfo;
     showDetails?: boolean;
 }
 
@@ -138,13 +138,13 @@ export const ErrorBoundary = (inProps: ErrorBoundaryProps) => {
     return <CoreErrorBoundary {...props} />;
 };
 
-class CoreErrorBoundary extends React.Component<ErrorBoundaryProps, IErrorBoundaryState> {
+class CoreErrorBoundary extends Component<ErrorBoundaryProps, IErrorBoundaryState> {
     constructor(props: ErrorBoundaryProps) {
         super(props);
         this.state = {};
     }
 
-    public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         this.setState((prev) => ({ ...prev, error, errorInfo }));
     }
 

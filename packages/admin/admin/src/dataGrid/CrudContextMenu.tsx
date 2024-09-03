@@ -1,7 +1,7 @@
 import { ApolloClient, RefetchQueriesOptions, useApolloClient } from "@apollo/client";
 import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { readClipboardText } from "../clipboard/readClipboardText";
@@ -18,7 +18,7 @@ interface DeleteDialogProps {
     onCancel: () => void;
 }
 
-const DeleteDialog: React.FC<DeleteDialogProps> = (props) => {
+const DeleteDialog = (props: DeleteDialogProps) => {
     const { dialogOpen, onDelete, onCancel } = props;
 
     return (
@@ -56,14 +56,14 @@ export interface CrudContextMenuProps<CopyData> {
     copyData?: () => Promise<CopyData> | CopyData;
 }
 
-export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueries, copyData }: CrudContextMenuProps<CopyData>): React.ReactElement {
+export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueries, copyData }: CrudContextMenuProps<CopyData>) {
     const intl = useIntl();
     const client = useApolloClient();
     const errorDialog = useErrorDialog();
 
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-    const [copyLoading, setCopyLoading] = React.useState(false);
-    const [pasting, setPasting] = React.useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [copyLoading, setCopyLoading] = useState(false);
+    const [pasting, setPasting] = useState(false);
 
     const handleDeleteClick = async () => {
         if (!onDelete) return;

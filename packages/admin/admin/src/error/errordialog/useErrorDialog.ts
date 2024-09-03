@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback } from "react";
 
 import { ErrorDialogOptions } from "./ErrorDialog";
 import { errorDialogVar } from "./errorDialogVar";
@@ -8,7 +8,7 @@ export interface UseErrorDialogReturn {
 }
 
 export function useErrorDialog(): UseErrorDialogReturn | undefined {
-    const showError = React.useCallback((options: ErrorDialogOptions) => {
+    const showError = useCallback((options: ErrorDialogOptions) => {
         errorDialogVar(options);
     }, []);
     return { showError };
