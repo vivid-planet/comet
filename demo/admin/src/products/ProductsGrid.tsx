@@ -27,7 +27,7 @@ import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToo
 import gql from "graphql-tag";
 import * as React from "react";
 import { useRef, useState } from "react";
-import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import {
     GQLCreateProductMutation,
@@ -139,8 +139,7 @@ export function ProductsGrid() {
             flex: 1,
             type: "number",
             visible: theme.breakpoints.up("md"),
-            valueFormatter: ({ value }) => intl.formatNumber(value, { style: "currency", currency: "EUR" }), // excel-column should be configured as currency-type alternatively prop below
-            renderCell: ({ row }) => (typeof row.price === "number" ? <FormattedNumber value={row.price} style="currency" currency="EUR" /> : "-"),
+            valueFormatter: ({ value }) => (typeof value === "number" ? intl.formatNumber(value, { style: "currency", currency: "EUR" }) : "-"),
         },
         {
             field: "type",
