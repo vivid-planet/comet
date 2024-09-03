@@ -111,7 +111,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
                         onClick: deleteSelected,
                         icon: <Delete />,
                     },
-                ]} // filter out null values
+                ]}
                 selectionSize={selectionSize}
                 slotProps={{
                     menu: {
