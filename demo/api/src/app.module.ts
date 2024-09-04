@@ -49,6 +49,7 @@ import { Page } from "./pages/entities/page.entity";
 import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
+import { WarningsModule } from "./warnings/warning.module";
 
 @Module({})
 export class AppModule {
@@ -170,6 +171,7 @@ export class AppModule {
                     },
                 }),
                 ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
+                WarningsModule,
             ],
         };
     }
