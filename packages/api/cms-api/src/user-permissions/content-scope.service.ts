@@ -105,6 +105,9 @@ export class ContentScopeService {
             return GqlExecutionContext.create(context).getArgs();
         } else {
             const request = context.switchToHttp().getRequest();
+            if (request.query?.scope) {
+                request.query.scope = JSON.parse(request.query.scope);
+            }
             return { ...request.params, ...request.query };
         }
     }
