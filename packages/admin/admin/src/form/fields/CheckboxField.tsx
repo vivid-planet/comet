@@ -16,7 +16,12 @@ export const CheckboxField = ({ fieldLabel, label, componentsProps = {}, ...rest
     return (
         <Field type="checkbox" label={fieldLabel} {...restProps}>
             {(props) => (
-                <FormControlLabel label={label} control={<FinalFormCheckbox {...props} {...finalFormCheckboxProps} />} {...formControlLabelProps} />
+                <FormControlLabel
+                    label={label}
+                    // control={<Checkbox {...props} {...finalFormCheckboxProps} checked={props.input.value.includes(option.value)} />}
+                    control={<FinalFormCheckbox {...props} {...finalFormCheckboxProps} />}
+                    {...formControlLabelProps}
+                />
             )}
         </Field>
     );

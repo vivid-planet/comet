@@ -20,23 +20,28 @@ export const CheckboxListField = <Value extends string>({ options, layout = "row
             {({ input: { value, onBlur, onFocus, onChange, name, ...restInput } }) => (
                 <FormGroup row={layout === "row"} {...restInput}>
                     {options.map((option) => (
-                        <FormControlLabel
-                            key={option.value}
-                            label={option.label}
-                            value={option.value}
-                            disabled={option.disabled}
-                            name={name}
-                            onChange={(_, checked) => {
-                                if (checked) {
-                                    onChange([...value, option.value]);
-                                } else if (value.length > 1) {
-                                    onChange(value.filter((v) => v !== option.value));
-                                } else {
-                                    onChange(undefined);
-                                }
+                        <Field name={name} key={option.value}>
+                            {() => {
+                                return (
+                                    <FormControlLabel
+                                        key={option.value}
+                                        label={option.label}
+                                        value={option.value}
+                                        name={name}
+                                        onChange={(_, checked) => {
+                                            if (checked) {
+                                                onChange([...value, option.value]);
+                                            } else if (value.length > 1) {
+                                                onChange(value.filter((v) => v !== option.value));
+                                            } else {
+                                                onChange(undefined);
+                                            }
+                                        }}
+                                        control={<Checkbox disabled={option.disabled} checked={value.includes(option.value)} required={required} />}
+                                    />
+                                );
                             }}
-                            control={<Checkbox required={required} />}
-                        />
+                        </Field>
                     ))}
                 </FormGroup>
             )}
