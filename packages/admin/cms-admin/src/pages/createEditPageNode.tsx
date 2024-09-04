@@ -1,5 +1,16 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { ErrorScope, Field, FieldContainer, FinalForm, FinalFormCheckbox, FinalFormInput, FinalFormSelect, Loading, Tooltip } from "@comet/admin";
+import {
+    CheckboxField,
+    ErrorScope,
+    Field,
+    FieldContainer,
+    FinalForm,
+    FinalFormCheckbox,
+    FinalFormInput,
+    FinalFormSelect,
+    Loading,
+    Tooltip,
+} from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Box, Divider, FormControlLabel, IconButton, MenuItem, Typography } from "@mui/material";
 import { Mutator } from "final-form";
@@ -387,42 +398,35 @@ export function createEditPageNode({
                                                                 </>
                                                             }
                                                         >
-                                                            <Field
-                                                                name="createAutomaticRedirectsOnSlugChange"
-                                                                type="checkbox"
+                                                            <CheckboxField
                                                                 initialValue={isActivePage}
-                                                            >
-                                                                {(props) => (
-                                                                    <FormControlLabel
-                                                                        label={
-                                                                            <Typography display="flex" alignItems="center">
-                                                                                <div>
-                                                                                    <Typography variant="body1">
-                                                                                        <FormattedMessage
-                                                                                            tagName="span"
-                                                                                            id="comet.pages.pages.page.createAutomaticRedirects.label"
-                                                                                            defaultMessage="Create {numberOfDescendants, plural, =0 {a redirect} other {redirects}}"
-                                                                                            values={{
-                                                                                                numberOfDescendants,
-                                                                                            }}
-                                                                                        />
-                                                                                    </Typography>
-                                                                                    {numberOfDescendants > 0 && (
-                                                                                        <Typography variant="body2" color="rgba(0, 0, 0, 0.6)">
-                                                                                            <FormattedMessage
-                                                                                                tagName="span"
-                                                                                                id="comet.pages.pages.page.createAutomaticRedirects.labelSubline"
-                                                                                                defaultMessage="for this page and all its child pages"
-                                                                                            />
-                                                                                        </Typography>
-                                                                                    )}
-                                                                                </div>
+                                                                label={
+                                                                    <Typography display="flex" alignItems="center">
+                                                                        <div>
+                                                                            <Typography variant="body1">
+                                                                                <FormattedMessage
+                                                                                    tagName="span"
+                                                                                    id="comet.pages.pages.page.createAutomaticRedirects.label"
+                                                                                    defaultMessage="Create {numberOfDescendants, plural, =0 {a redirect} other {redirects}}"
+                                                                                    values={{
+                                                                                        numberOfDescendants,
+                                                                                    }}
+                                                                                />
                                                                             </Typography>
-                                                                        }
-                                                                        control={<FinalFormCheckbox {...props} />}
-                                                                    />
-                                                                )}
-                                                            </Field>
+                                                                            {numberOfDescendants > 0 && (
+                                                                                <Typography variant="body2" color="rgba(0, 0, 0, 0.6)">
+                                                                                    <FormattedMessage
+                                                                                        tagName="span"
+                                                                                        id="comet.pages.pages.page.createAutomaticRedirects.labelSubline"
+                                                                                        defaultMessage="for this page and all its child pages"
+                                                                                    />
+                                                                                </Typography>
+                                                                            )}
+                                                                        </div>
+                                                                    </Typography>
+                                                                }
+                                                                name="createAutomaticRedirectsOnSlugChange"
+                                                            />
                                                         </FieldContainer>
                                                     </Box>
                                                 )}
