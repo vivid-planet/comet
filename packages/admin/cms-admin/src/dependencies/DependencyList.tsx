@@ -207,7 +207,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             <Alert title={<FormattedMessage id="comet.dam.file.dependants.info.title" defaultMessage="What are dependants?" />} sx={{ marginTop: 2 }}>
                 <FormattedMessage
                     id="comet.dam.file.dependants.info.content"
-                    defaultMessage="Dependants are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it´s easy to manage or reorganize the integration of your assets."
+                    defaultMessage="Dependants are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it's easy to manage or reorganize the integration of your assets."
                 />
             </Alert>
         </>
