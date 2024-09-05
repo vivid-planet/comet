@@ -9,11 +9,22 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
+
+    const uniqueProps = props.reduce<Prop[]>((acc, item) => {
+        const propWithSameName = acc.find((prop) => prop.name == item.name);
+        if (!propWithSameName) return [item, ...acc];
+        if (propWithSameName.type != item.type || propWithSameName.optional != item.optional) {
+            // this is currently not supported
+            return [item, ...acc];
+        }
+        return acc;
+    }, []);
+
     return {
         formPropsTypeCode: `interface FormProps {
-            ${props.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
+            ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
         }`,
-        formPropsParamsCode: `{${props.map((prop) => prop.name).join(", ")}}: FormProps`,
+        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: FormProps`,
     };
 }
 

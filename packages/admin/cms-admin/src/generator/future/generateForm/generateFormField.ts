@@ -381,6 +381,7 @@ export function generateFormField({
     } else if (config.type === "fileUpload") {
         const multiple = config.multiple || (typeof config.maxFiles === "number" && config.maxFiles > 1);
         code = `<FileUploadField name="${name}" label={${fieldLabel}}
+            variant="horizontal"
             ${config.multiple ? "multiple" : ""}
             ${config.maxFiles ? `maxFiles={${config.maxFiles}}` : ""}
             ${config.maxFileSize ? `maxFileSize={${config.maxFileSize}}` : ""}
