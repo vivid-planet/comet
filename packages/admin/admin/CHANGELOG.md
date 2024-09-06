@@ -1,5 +1,16 @@
 # @comet/admin
 
+## 6.17.5
+
+### Patch Changes
+
+-   9f649e070: Update required validator in `Field` to correctly handle falsey values
+
+    Previously, the validator incorrectly returned errors for all falsey values, e.g. the number `0`.
+    Now, it only returns an error for `undefined`, `null`, `false` and empty strings.
+
+    -   @comet/admin-icons@6.17.5
+
 ## 6.17.4
 
 ### Patch Changes
