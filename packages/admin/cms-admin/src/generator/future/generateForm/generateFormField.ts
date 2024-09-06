@@ -1,4 +1,4 @@
-import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionEnumType, IntrospectionField, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 import { GqlArg } from "../generateForm";
 import { FormConfig, FormFieldConfig } from "../generator";
@@ -12,6 +12,7 @@ export function generateFormField({
     baseOutputFilename,
     config,
     formConfig,
+    createMutationType,
 }: {
     gqlIntrospection: IntrospectionQuery;
     baseOutputFilename: string;
@@ -19,6 +20,7 @@ export function generateFormField({
     config: FormFieldConfig<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
+    createMutationType?: IntrospectionField;
 }): GenerateFieldsReturn {
     const gqlArgs: GqlArg[] = [];
 

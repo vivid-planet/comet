@@ -1,4 +1,4 @@
-import { IntrospectionQuery } from "graphql";
+import { IntrospectionField, IntrospectionQuery } from "graphql";
 
 import { GqlArg } from "../generateForm";
 import { FormConfig, FormLayoutConfig } from "../generator";
@@ -11,6 +11,7 @@ export function generateFormLayout({
     baseOutputFilename,
     config,
     formConfig,
+    createMutationType,
 }: {
     gqlIntrospection: IntrospectionQuery;
     baseOutputFilename: string;
@@ -18,6 +19,7 @@ export function generateFormLayout({
     config: FormLayoutConfig<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
+    createMutationType?: IntrospectionField;
 }): GenerateFieldsReturn {
     const gqlType = formConfig.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
@@ -34,7 +36,7 @@ export function generateFormLayout({
     if (config.type === "fieldSet") {
         const title = config.title ?? camelCaseToHumanReadable(config.name);
 
-        const generatedFields = generateFields({ gqlIntrospection, baseOutputFilename, fields: config.fields, formConfig });
+        const generatedFields = generateFields({ gqlIntrospection, baseOutputFilename, fields: config.fields, formConfig, createMutationType });
         hooksCode += generatedFields.hooksCode;
         formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
         formFragmentFields.push(...generatedFields.formFragmentFields);

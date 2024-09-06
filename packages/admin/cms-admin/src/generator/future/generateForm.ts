@@ -103,6 +103,7 @@ export function generateForm(
         baseOutputFilename,
         fields: config.fields,
         formConfig: config,
+        createMutationType: createMutationType || undefined,
     });
     for (const name in generatedFields.gqlDocuments) {
         gqlDocuments[name] = generatedFields.gqlDocuments[name];
