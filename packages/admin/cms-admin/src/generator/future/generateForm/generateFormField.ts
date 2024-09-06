@@ -75,13 +75,15 @@ export function generateFormField({
 
               return {
                   isFieldForRootProp: !isInputArgSubfield,
+                  isReadOnlyOnEdit: !isInputArgSubfield, // we assume root-args are not changeable, alternatively check update-mutation
               };
           })()
         : undefined;
 
-    const endAdornmentWithLockIconProp = `endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>}`;
-    const readOnlyProps = `readOnly disabled`;
-    const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
+    type RenderProp = { name: string; value?: string };
+    const endAdornmentWithLockIconProp: RenderProp = { name: "endAdornment", value: `<InputAdornment position="end"><Lock /></InputAdornment>` };
+    const readOnlyProps: RenderProp[] = [{ name: "readOnly" }, { name: "disabled" }];
+    const readOnlyPropsWithLock: RenderProp[] = [...readOnlyProps, endAdornmentWithLockIconProp];
 
     const imports: Imports = [];
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
@@ -116,7 +118,17 @@ export function generateFormField({
         code = `
         <${TextInputComponent}
             ${required ? "required" : ""}
-            ${config.readOnly ? readOnlyPropsWithLock : ""}
+            ${
+                config.readOnly
+                    ? readOnlyPropsWithLock.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                    : gqlArgConfig?.isReadOnlyOnEdit
+                    ? readOnlyPropsWithLock
+                          .map((prop) =>
+                              prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                          )
+                          .join(" ")
+                    : ""
+            }
             variant="horizontal"
             fullWidth
             name="${name}"
@@ -132,7 +144,17 @@ export function generateFormField({
         code = `
             <Field
                 ${required ? "required" : ""}
-                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                ${
+                    config.readOnly
+                        ? readOnlyPropsWithLock.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                        : gqlArgConfig?.isReadOnlyOnEdit
+                        ? readOnlyPropsWithLock
+                              .map((prop) =>
+                                  prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                              )
+                              .join(" ")
+                        : ""
+                }
                 variant="horizontal"
                 fullWidth
                 name="${name}"
@@ -174,7 +196,17 @@ export function generateFormField({
             {(props) => (
                 <FormControlLabel
                     label={${fieldLabel}}
-                    control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
+                    control={<FinalFormCheckbox ${
+                        config.readOnly
+                            ? readOnlyProps.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                            : gqlArgConfig?.isReadOnlyOnEdit
+                            ? readOnlyProps
+                                  .map((prop) =>
+                                      prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                                  )
+                                  .join(" ")
+                            : ""
+                    } {...props} />}
                     ${
                         config.helperText
                             ? `helperText={<FormattedMessage id=` +
@@ -197,7 +229,17 @@ export function generateFormField({
         code = `
             <Field
                 ${required ? "required" : ""}
-                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                ${
+                    config.readOnly
+                        ? readOnlyPropsWithLock.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                        : gqlArgConfig?.isReadOnlyOnEdit
+                        ? readOnlyPropsWithLock
+                              .map((prop) =>
+                                  prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                              )
+                              .join(" ")
+                        : ""
+                }
                 variant="horizontal"
                 fullWidth
                 name="${name}"
@@ -280,7 +322,17 @@ export function generateFormField({
             }
             ${validateCode}
             {(props) =>
-                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
+                <FinalFormSelect ${
+                    config.readOnly
+                        ? readOnlyPropsWithLock.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                        : gqlArgConfig?.isReadOnlyOnEdit
+                        ? readOnlyPropsWithLock
+                              .map((prop) =>
+                                  prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                              )
+                              .join(" ")
+                        : ""
+                } {...props}>
                 ${values
                     .map((value) => {
                         const id = `${instanceGqlType}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
@@ -346,6 +398,17 @@ export function generateFormField({
                 ${required ? "required" : ""}
                 variant="horizontal"
                 fullWidth
+                ${
+                    config.readOnly
+                        ? readOnlyProps.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                        : gqlArgConfig?.isReadOnlyOnEdit
+                        ? readOnlyProps
+                              .map((prop) =>
+                                  prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                              )
+                              .join(" ")
+                        : ""
+                }
                 name="${name}"
                 label={${fieldLabel}}
                 loadOptions={async () => {
