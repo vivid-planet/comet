@@ -37,6 +37,7 @@ export function createAuthProxyJwtStrategy({
 
         async validate(request: Request): Promise<CurrentUser> {
             let user;
+            // TODO remove this mess in the next version
             if (strategyOptions?.passReqToCallback) {
                 user = await this.service.createUserFromIdToken(request);
             } else {
