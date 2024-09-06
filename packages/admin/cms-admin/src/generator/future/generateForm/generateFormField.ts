@@ -30,6 +30,13 @@ export function generateFormField({
     const name = String(config.name);
     const label = config.label ?? camelCaseToHumanReadable(name);
 
+    gqlArgs.push({
+        name,
+        type: "unknown", // doesn't matter because currently only input-fields supported
+        isInputArgSubfield: true,
+        isInOutputVar: true,
+    });
+
     const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
         | undefined;

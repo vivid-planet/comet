@@ -52,21 +52,6 @@ export function generateForm(
         return acc;
     }, []);
 
-    if (createMutationType) {
-        const {
-            imports: forwardedGqlArgsImports,
-            props: forwardedGqlArgsProps,
-            gqlArgs: forwardedGqlArgs,
-        } = getForwardedGqlArgs({
-            fields: formFields,
-            gqlOperation: createMutationType,
-            gqlIntrospection,
-        });
-        imports.push(...forwardedGqlArgsImports);
-        props.push(...forwardedGqlArgsProps);
-        gqlArgs.push(...forwardedGqlArgs);
-    }
-
     if (editMode) {
         if (mode === "all") {
             props.push({ name: "id", optional: true, type: "string" });
@@ -114,6 +99,21 @@ export function generateForm(
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
+
+    if (createMutationType) {
+        const {
+            imports: forwardedGqlArgsImports,
+            props: forwardedGqlArgsProps,
+            gqlArgs: forwardedGqlArgs,
+        } = getForwardedGqlArgs({
+            gqlOperation: createMutationType,
+            gqlIntrospection,
+            skipGqlArgs: gqlArgs,
+        });
+        imports.push(...forwardedGqlArgsImports);
+        props.push(...forwardedGqlArgsProps);
+        gqlArgs.push(...forwardedGqlArgs);
+    }
 
     const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
