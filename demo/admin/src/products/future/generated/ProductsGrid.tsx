@@ -114,6 +114,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),
+            sortBy: ["title", "description"],
             maxWidth: 250,
             minWidth: 200,
         },
