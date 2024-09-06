@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: String!
+  name: String!
+  email: String!
+}
+
 type CurrentUserPermission {
   permission: String!
   contentScopes: [JSONObject!]!
@@ -18,6 +24,7 @@ type CurrentUser {
   email: String!
   permissions: [CurrentUserPermission!]!
   impersonated: Boolean!
+  authenticatedUser: User
   permissionsForScope(scope: JSONObject!): [String!]!
 }
 
@@ -186,12 +193,6 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-type User {
-  id: String!
-  name: String!
-  email: String!
 }
 
 type PaginatedUserList {

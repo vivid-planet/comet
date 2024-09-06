@@ -1,6 +1,7 @@
 import { DynamicModule, Global, Module } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { Request } from "express";
+import { User } from "src/user-permissions/interfaces/user";
 
 import { CurrentUser } from "../user-permissions/dto/current-user";
 import { SystemUser } from "../user-permissions/user-permissions.types";
@@ -12,7 +13,7 @@ export type ShouldLogRequest = ({ user, req }: { user?: CurrentUser | SystemUser
 type AccessLogModuleOptions = AccessLogConfig;
 export interface AccessLogConfig {
     shouldLogRequest?: ShouldLogRequest;
-    userToLog?: (user: CurrentUser) => string;
+    userToLog?: (user: User, impersonatedUser?: User) => string;
 }
 
 @Global()

@@ -208,6 +208,7 @@ export class UserPermissionsService {
             ...user,
             permissions,
             impersonated: !!impersonatedUser,
+            authenticatedUser: impersonatedUser ? authenticatedUser : undefined,
         };
     }
 }
