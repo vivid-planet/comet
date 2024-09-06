@@ -6,6 +6,8 @@ import { FormConfig, FormFieldConfig, GeneratorReturn, isFormFieldConfig, isForm
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
+export type GqlArg = { type: string; name: string; isInputArgSubfield: boolean; isInOutputVar?: boolean };
+
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
@@ -32,6 +34,7 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
     const props: Prop[] = [];
+    const gqlArgs: GqlArg[] = [];
 
     const mode = config.mode ?? "all";
     const editMode = mode === "edit" || mode == "all";
@@ -49,7 +52,6 @@ export function generateForm(
         return acc;
     }, []);
 
-    const gqlArgs: ReturnType<typeof getForwardedGqlArgs>["gqlArgs"] = [];
     if (createMutationType) {
         const {
             imports: forwardedGqlArgsImports,
@@ -106,6 +108,7 @@ export function generateForm(
         gqlDocuments[name] = generatedFields.gqlDocuments[name];
     }
     imports.push(...generatedFields.imports);
+    gqlArgs.push(...generatedFields.gqlArgs);
     hooksCode += generatedFields.hooksCode;
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
@@ -373,7 +376,7 @@ export function generateForm(
                     variables: { input: ${
                         gqlArgs.filter((prop) => prop.isInputArgSubfield).length
                             ? `{ ...output, ${gqlArgs
-                                  .filter((prop) => prop.isInputArgSubfield)
+                                  .filter((prop) => prop.isInputArgSubfield && !prop.isInOutputVar)
                                   .map((prop) => prop.name)
                                   .join(",")} }`
                             : "output"

@@ -1,10 +1,8 @@
 import { IntrospectionField, IntrospectionInputValue, IntrospectionQuery } from "graphql";
 
-import { Prop } from "../generateForm";
+import { GqlArg, Prop } from "../generateForm";
 import { FormFieldConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
-
-type GqlArg = { type: string; name: string; isInputArgSubfield: boolean };
 
 export function getForwardedGqlArgs({
     fields,

@@ -1,5 +1,6 @@
 import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
+import { GqlArg } from "../generateForm";
 import { FormConfig, FormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
@@ -19,6 +20,8 @@ export function generateFormField({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
 }): GenerateFieldsReturn {
+    const gqlArgs: GqlArg[] = [];
+
     const gqlType = formConfig.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
 
@@ -322,6 +325,7 @@ export function generateFormField({
     }
     return {
         code,
+        gqlArgs,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],

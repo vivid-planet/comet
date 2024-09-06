@@ -1,5 +1,6 @@
 import { IntrospectionQuery } from "graphql";
 
+import { GqlArg } from "../generateForm";
 import { FormConfig, FormLayoutConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
@@ -27,6 +28,7 @@ export function generateFormLayout({
     const formFragmentFields: string[] = [];
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
+    const gqlArgs: GqlArg[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
 
     if (config.type === "fieldSet") {
@@ -40,6 +42,7 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        gqlArgs.push(...generatedFields.gqlArgs);
         formValuesConfig.push(...generatedFields.formValuesConfig);
 
         imports.push({ name: "FieldSet", importPath: "@comet/admin" });
@@ -73,6 +76,7 @@ export function generateFormLayout({
     }
     return {
         code,
+        gqlArgs,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields,
