@@ -11,6 +11,7 @@ import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
 import { GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { UsableFields } from "./generateGrid/usableFields";
+import { ColumnVisibleOption } from "./utils/getColumnVisibleValue";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -79,7 +80,9 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned">;
+export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+    visible?: ColumnVisibleOption;
+};
 
 export type GridColumnConfig<T> = (
     | { type: "text" }

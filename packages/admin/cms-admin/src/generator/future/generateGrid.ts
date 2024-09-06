@@ -18,6 +18,7 @@ import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
+import { getColumnVisibleValue } from "./utils/getColumnVisibleValue";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -237,8 +238,11 @@ export function generateGrid(
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = 84,
+        visible: actionsColumnVisible = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
+
+    const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "function");
 
     const gridColumnFields = (
         config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
@@ -250,6 +254,8 @@ export function generateGrid(
         let valueGetter: string | undefined = name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
+
+        const visibleValue = getColumnVisibleValue(column.visible);
 
         if (type == "dateTime") {
             valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
@@ -303,6 +309,7 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                visible: visibleValue,
                 pinned: column.pinned,
             };
         } else if (type == "combination") {
@@ -322,6 +329,7 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            visible: visibleValue,
             pinned: column.pinned,
         };
     });
@@ -371,7 +379,7 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton } from "@mui/material";
+    import { Alert, Button, Box, IconButton, useTheme } from "@mui/material";
     import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -504,6 +512,7 @@ export function generateGrid(
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -522,6 +531,7 @@ export function generateGrid(
                         width: column.width,
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,
+                        visible: column.visible,
                     };
 
                     if (typeof column.width === "undefined") {
@@ -555,6 +565,7 @@ export function generateGrid(
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
                               width: actionsColumnWidth,
+                              visible: getColumnVisibleValue(actionsColumnVisible),
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (
