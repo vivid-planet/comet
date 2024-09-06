@@ -30,13 +30,6 @@ export function generateFormField({
     const name = String(config.name);
     const label = config.label ?? camelCaseToHumanReadable(name);
 
-    gqlArgs.push({
-        name,
-        type: "unknown", // doesn't matter because currently only input-fields supported
-        isInputArgSubfield: true,
-        isInOutputVar: true,
-    });
-
     const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
         | IntrospectionObjectType
         | undefined;
@@ -50,13 +43,49 @@ export function generateFormField({
 
     //TODO verify introspectionField.type is compatbile with config.type
 
+    const gqlArgConfig = createMutationType
+        ? (() => {
+              const inputArg = createMutationType.args.find((arg) => arg.name === "input");
+              if (!inputArg) throw new Error(`Field ${String(config.name)}: No input arg found`);
+              let inputArgTypeRef = inputArg.type;
+              if (inputArgTypeRef.kind === "NON_NULL") inputArgTypeRef = inputArgTypeRef.ofType;
+              if (inputArgTypeRef.kind !== "INPUT_OBJECT") throw new Error(`Field ${String(config.name)}: input-arg is usually input-object.`);
+              const inputArgTypeName = inputArgTypeRef.name;
+              const inputArgType = gqlIntrospection.__schema.types.find((type) => type.name === inputArgTypeName);
+              if (!inputArgType) throw new Error(`Field ${String(config.name)}: Input-Type ${inputArgTypeName} not found.`);
+              if (inputArgType.kind !== "INPUT_OBJECT") {
+                  throw new Error(`Field ${String(config.name)}: Input-Type ${inputArgTypeName} is no input-object.`);
+              }
+              const inputArgField = inputArgType.inputFields.find((field) => field.name === name);
+
+              let gqlArgField = inputArgField;
+              let isInputArgSubfield = true;
+              if (!gqlArgField) {
+                  // no input-arg-field found, probably root-arg
+                  const rootArg = createMutationType.args.find((arg) => arg.name === name);
+                  if (!rootArg) throw new Error(`Field ${String(config.name)}: No matching input-arg field nor root-arg found.`);
+                  gqlArgField = rootArg;
+                  isInputArgSubfield = false;
+              }
+
+              const gqlArgType = gqlArgField.type.kind === "NON_NULL" ? gqlArgField.type.ofType : gqlArgField.type;
+              if (gqlArgType.kind === "SCALAR" || gqlArgType.kind === "ENUM" || gqlArgType.kind === "INPUT_OBJECT") {
+                  gqlArgs.push({ name, type: gqlArgType.name, isInputArgSubfield, isInOutputVar: isInputArgSubfield });
+              }
+
+              return {
+                  isFieldForRootProp: !isInputArgSubfield,
+              };
+          })()
+        : undefined;
+
     const endAdornmentWithLockIconProp = `endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>}`;
     const readOnlyProps = `readOnly disabled`;
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
     const imports: Imports = [];
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
-        destructFromFormValues: config.virtual ? name : undefined,
+        destructFromFormValues: config.virtual || gqlArgConfig?.isFieldForRootProp ? name : undefined,
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig];
 
@@ -308,6 +337,11 @@ export function generateFormField({
             importPath: `./${baseOutputFilename}.generated`,
         });
 
+        // handle asyncSelect submitted via gql-root-prop
+        if (defaultFormValuesConfig.destructFromFormValues && gqlArgConfig?.isFieldForRootProp) {
+            defaultFormValuesConfig.destructFromFormValues = `${name}: { id: ${name}}`;
+        }
+
         code = `<AsyncSelectField
                 ${required ? "required" : ""}
                 variant="horizontal"
@@ -336,7 +370,7 @@ export function generateFormField({
         code,
         gqlArgs,
         hooksCode,
-        formValueToGqlInputCode,
+        formValueToGqlInputCode: gqlArgConfig && gqlArgConfig.isFieldForRootProp ? `` : formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],
         gqlDocuments,
         imports,
