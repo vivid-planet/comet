@@ -175,7 +175,8 @@ export async function runFutureGenerate({
         //const configs = await import(`${process.cwd()}/${file}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
-        if (deleteGeneratedFilesPreGeneration) await fs.rm(codeOuputFilename);
+        if (deleteGeneratedFilesPreGeneration) await fs.rm(codeOuputFilename).catch((e) => false);
+
         // eslint-disable-next-line no-console
         console.log(`generating ${file}`);
 
@@ -199,7 +200,7 @@ export async function runFutureGenerate({
 
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
-            if (deleteGeneratedFilesPreGeneration) await fs.rm(gqlDocumentsOuputFilename);
+            if (deleteGeneratedFilesPreGeneration) await fs.rm(gqlDocumentsOuputFilename).catch((e) => false);
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
                 import { finalFormFileUploadFragment } from "@comet/cms-admin";
 

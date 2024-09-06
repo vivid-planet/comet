@@ -1,6 +1,6 @@
-import { IntrospectionQuery } from "graphql";
+import { IntrospectionField, IntrospectionQuery } from "graphql";
 
-import { Prop } from "../generateForm";
+import { GqlArg, Prop } from "../generateForm";
 import { FormConfig, GeneratorReturn, isFormFieldConfig, isFormLayoutConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
 import { generateFormField } from "./generateFormField";
@@ -12,6 +12,7 @@ export type GenerateFieldsReturn = GeneratorReturn & {
     formFragmentFields: string[];
     formValueToGqlInputCode: string;
     props: Prop[];
+    gqlArgs: GqlArg[];
     formValuesConfig: {
         omitFromFragmentType?: string;
         destructFromFormValues?: string; // equals omitting from formValues copied directly to mutation-input
@@ -41,6 +42,7 @@ export function generateFields({
     formFragmentName,
     formConfig,
     gqlType,
+    createMutationType,
     namePrefix,
 }: {
     gqlIntrospection: IntrospectionQuery;
@@ -51,6 +53,7 @@ export function generateFields({
     formConfig: FormConfig<any>;
     formFragmentName: string;
     gqlType: string;
+    createMutationType?: IntrospectionField;
     namePrefix?: string;
 }): GenerateFieldsReturn {
     const gqlDocuments: Record<string, string> = {};
@@ -59,6 +62,7 @@ export function generateFields({
     const formFragmentFields: string[] = [];
     const imports: Imports = [];
     const props: Prop[] = [];
+    const gqlArgs: GqlArg[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
     const finalFormConfig = { subscription: {}, renderProps: {} };
 
@@ -73,6 +77,7 @@ export function generateFields({
                     config: field,
                     formConfig,
                     gqlType,
+                    createMutationType,
                     namePrefix,
                 });
             } else if (isFormLayoutConfig(field)) {
@@ -83,6 +88,7 @@ export function generateFields({
                     config: field,
                     formConfig,
                     gqlType,
+                    createMutationType,
                     namePrefix,
                 });
             } else {
@@ -94,6 +100,7 @@ export function generateFields({
             }
             imports.push(...generated.imports);
             props.push(...generated.props);
+            gqlArgs.push(...generated.gqlArgs);
             hooksCode += generated.hooksCode;
             formValueToGqlInputCode += generated.formValueToGqlInputCode;
             formFragmentFields.push(...generated.formFragmentFields);
@@ -109,6 +116,7 @@ export function generateFields({
     return {
         code,
         props,
+        gqlArgs,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields,

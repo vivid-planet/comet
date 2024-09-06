@@ -1,6 +1,13 @@
-import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import {
+    IntrospectionEnumType,
+    IntrospectionField,
+    IntrospectionInputValue,
+    IntrospectionNamedTypeRef,
+    IntrospectionObjectType,
+    IntrospectionQuery,
+} from "graphql";
 
-import { Prop } from "../generateForm";
+import { GqlArg, Prop } from "../generateForm";
 import { FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
@@ -64,6 +71,7 @@ export function generateFormField({
     config,
     formConfig,
     gqlType,
+    createMutationType,
     namePrefix,
 }: {
     gqlIntrospection: IntrospectionQuery;
@@ -75,7 +83,12 @@ export function generateFormField({
     formConfig: FormConfig<any>;
     gqlType: string;
     namePrefix?: string;
+    createMutationType?: IntrospectionField;
 }): GenerateFieldsReturn {
+    const imports: Imports = [];
+    const props: Prop[] = [];
+    const gqlArgs: GqlArg[] = [];
+
     const rootGqlType = formConfig.gqlType;
     const formattedMessageRootId = rootGqlType[0].toLowerCase() + rootGqlType.substring(1);
     const dataRootName = rootGqlType[0].toLowerCase() + rootGqlType.substring(1); // TODO should probably be deteced via query
@@ -108,16 +121,51 @@ export function generateFormField({
             )}: Required input can not be optionalRender. Try generating a second form without this field to enable providing a value via prop.`,
         );
     }
+    // console.log("Field", config.name, introspectionFieldType);
     const required = !isFieldOptional({ config, gqlFieldName, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
+    const gqlArgConfig = createMutationType
+        ? (() => {
+              const inputArg = createMutationType.args.find((arg) => arg.name === "input");
+              if (!inputArg) throw new Error(`No input arg found`);
+              let inputArgType = inputArg.type;
+              if (inputArgType.kind !== "NON_NULL") throw new Error(`Input arg is usually required.`);
+              inputArgType = inputArgType.ofType;
+              if (inputArgType.kind !== "INPUT_OBJECT") throw new Error(`Input arg is usually input-object.`);
+              const inputArgTypeName = inputArgType.name;
+              const inputArgType2 = gqlIntrospection.__schema.types.find((type) => type.name === inputArgTypeName);
+              if (!inputArgType2) throw new Error(`saldkfj`);
+              if (inputArgType2.kind !== "INPUT_OBJECT") throw new Error(`saldkfj`);
+              const inputArgField = inputArgType2.inputFields.find((field) => field.name === name);
+              let gqlArgField = inputArgField;
+              let isInputArgSubfield = true;
+              if (!gqlArgField) {
+                  // no input-field, probably root-arg
+                  const rootArg = createMutationType.args.find((arg) => arg.name === name);
+                  if (!rootArg) throw new Error(`Not found`);
+                  gqlArgField = rootArg;
+                  isInputArgSubfield = false;
+              }
+              let gqlArgType = gqlArgField.type;
+              if (gqlArgType.kind === "NON_NULL") {
+                  gqlArgType = gqlArgType.ofType;
+              }
+              if (gqlArgType.kind === "SCALAR" || gqlArgType.kind === "ENUM" || gqlArgType.kind === "INPUT_OBJECT") {
+                  gqlArgs.push({ name, type: gqlArgType.name, isInputArgSubfield, isInOutputVar: isInputArgSubfield });
+              }
 
-    const endAdornmentWithLockIconProp = `endAdornment={<InputAdornment position="end"><Lock /></InputAdornment>}`;
-    const readOnlyProps = `readOnly disabled`;
-    const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
+              return {
+                  isFieldForRootProp: !isInputArgSubfield,
+                  isReadOnlyOnEdit: !isInputArgSubfield, // we assume root-args are not changeable
+              };
+          })()
+        : undefined;
 
-    const imports: Imports = [];
-    const props: Prop[] = [];
+    type RenderProp = { name: string; value?: string };
+    const endAdornmentWithLockIconProp: RenderProp = { name: "endAdornment", value: `<InputAdornment position="end"><Lock /></InputAdornment>` };
+    const readOnlyProps: RenderProp[] = [{ name: "readOnly" }, { name: "disabled" }];
+    const readOnlyPropsWithLock: RenderProp[] = [...readOnlyProps, endAdornmentWithLockIconProp];
 
     const initialValuePropConfig = config.initialValueProp
         ? (() => {
@@ -145,7 +193,7 @@ export function generateFormField({
         : undefined;
 
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
-        destructFromFormValues: config.virtual ? name : undefined,
+        destructFromFormValues: config.virtual || gqlArgConfig?.isFieldForRootProp ? name : undefined,
         initializationCode: optionalRender
             ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? data.${dataRootName}.${nameWithPrefix} : undefined`
             : undefined,
@@ -193,7 +241,17 @@ export function generateFormField({
         code = `
         <${TextInputComponent}
             ${required ? "required" : ""}
-            ${config.readOnly ? readOnlyPropsWithLock : ""}
+            ${
+                config.readOnly
+                    ? readOnlyPropsWithLock.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                    : gqlArgConfig?.isReadOnlyOnEdit
+                    ? readOnlyPropsWithLock
+                          .map((prop) =>
+                              prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                          )
+                          .join(" ")
+                    : ""
+            }
             variant="horizontal"
             fullWidth
             name="${nameWithPrefix}"
@@ -211,7 +269,17 @@ export function generateFormField({
         code = `
             <Field
                 ${required ? "required" : ""}
-                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                ${
+                    config.readOnly
+                        ? readOnlyPropsWithLock.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                        : gqlArgConfig?.isReadOnlyOnEdit
+                        ? readOnlyPropsWithLock
+                              .map((prop) =>
+                                  prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                              )
+                              .join(" ")
+                        : ""
+                }
                 variant="horizontal"
                 fullWidth
                 name="${nameWithPrefix}"
@@ -266,7 +334,17 @@ export function generateFormField({
             {(props) => (
                 <FormControlLabel
                     label={${fieldLabel}}
-                    control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
+                    control={<FinalFormCheckbox ${
+                        config.readOnly
+                            ? readOnlyProps.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                            : gqlArgConfig?.isReadOnlyOnEdit
+                            ? readOnlyProps
+                                  .map((prop) =>
+                                      prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                                  )
+                                  .join(" ")
+                            : ""
+                    } {...props} />}
                     ${
                         config.helperText
                             ? `helperText={<FormattedMessage id=` +
@@ -305,7 +383,17 @@ export function generateFormField({
         code = `
             <Field
                 ${required ? "required" : ""}
-                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                ${
+                    config.readOnly
+                        ? readOnlyPropsWithLock.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                        : gqlArgConfig?.isReadOnlyOnEdit
+                        ? readOnlyPropsWithLock
+                              .map((prop) =>
+                                  prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                              )
+                              .join(" ")
+                        : ""
+                }
                 variant="horizontal"
                 fullWidth
                 name="${nameWithPrefix}"
@@ -416,6 +504,7 @@ export function generateFormField({
             code = `
             <RadioGroupField
              ${required ? "required" : ""}
+             ${`` /* TODO wenn root-prop muss es bei edit auf readonly gesetzt werden, hier fehlt auch readonly?? */}
               variant="horizontal"
              fullWidth
              name="${name}"
@@ -449,7 +538,17 @@ export function generateFormField({
             }
             ${validateCode}
             {(props) =>
-                <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
+                <FinalFormSelect ${
+                    config.readOnly
+                        ? readOnlyPropsWithLock.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                        : gqlArgConfig?.isReadOnlyOnEdit
+                        ? readOnlyPropsWithLock
+                              .map((prop) =>
+                                  prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                              )
+                              .join(" ")
+                        : ""
+                } {...props}>
                 ${values
                     .map((value) => {
                         const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
@@ -626,6 +725,11 @@ export function generateFormField({
             config.gqlFieldName ? `: ${String(config.gqlFieldName)}` : ``
         } { ${initQueryIdSelection} ${initQueryLabelSelection} }`;
 
+        // handle asyncSelect submitted via gql-root-prop
+        if (defaultFormValuesConfig.destructFromFormValues && gqlArgConfig?.isFieldForRootProp) {
+            defaultFormValuesConfig.destructFromFormValues = `${name}: { id: ${name}}`;
+        }
+
         if (initQueryIdPath.indexOf(".") !== -1 || initQueryLabelPath.indexOf(".") !== -1) {
             // fetched nested values for id or label, formValues needs to be adjusted for asyncSelect to work
             formValuesConfig = [
@@ -662,6 +766,17 @@ export function generateFormField({
                 ${required ? "required" : ""}
                 variant="horizontal"
                 fullWidth
+                ${
+                    config.readOnly
+                        ? readOnlyProps.map((prop) => (prop.value ? `${prop.name}={${prop.value}}` : prop.name)).join(" ")
+                        : gqlArgConfig?.isReadOnlyOnEdit
+                        ? readOnlyProps
+                              .map((prop) =>
+                                  prop.value ? `${prop.name}={mode === "edit" ? ${prop.value} : undefined}` : `${prop.name}={mode === "edit"}`,
+                              )
+                              .join(" ")
+                        : ""
+                }
                 name="${nameWithPrefix}"
                 label={${fieldLabel}}
                 loadOptions={async () => {
@@ -712,8 +827,9 @@ export function generateFormField({
     return {
         code,
         props,
+        gqlArgs,
         hooksCode,
-        formValueToGqlInputCode,
+        formValueToGqlInputCode: gqlArgConfig && gqlArgConfig.isFieldForRootProp ? `` : formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],
         gqlDocuments,
         imports,

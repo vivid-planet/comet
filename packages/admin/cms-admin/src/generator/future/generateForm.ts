@@ -6,6 +6,8 @@ import { FormConfig, FormFieldConfig, GeneratorReturn, isFormFieldConfig, isForm
 import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
+export type GqlArg = { type: string; name: string; isInputArgSubfield: boolean; isInOutputVar?: boolean };
+
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
@@ -50,6 +52,7 @@ export function generateForm(
     const addMode = mode === "add" || mode == "all";
 
     const createMutationType = addMode && findMutationTypeOrThrow(config.createMutation ?? `create${gqlType}`, gqlIntrospection);
+    const updateMutationType = editMode && findMutationTypeOrThrow(`update${gqlType}`, gqlIntrospection);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formFields = config.fields.reduce<FormFieldConfig<any>[]>((acc, field) => {
@@ -66,22 +69,7 @@ export function generateForm(
         return acc;
     }, []);
 
-    const gqlArgs: ReturnType<typeof getForwardedGqlArgs>["gqlArgs"] = [];
-    if (createMutationType) {
-        const {
-            imports: forwardedGqlArgsImports,
-            props: forwardedGqlArgsProps,
-            gqlArgs: forwardedGqlArgs,
-        } = getForwardedGqlArgs({
-            fields: formFields,
-            gqlOperation: createMutationType,
-            gqlIntrospection,
-        });
-        imports.push(...forwardedGqlArgsImports);
-        props.push(...forwardedGqlArgsProps);
-        gqlArgs.push(...forwardedGqlArgs);
-    }
-
+    const gqlArgs: GqlArg[] = [];
     if (editMode) {
         if (mode === "all") {
             props.push({ name: "id", optional: true, type: "string" });
@@ -117,6 +105,7 @@ export function generateForm(
         fields: config.fields,
         formFragmentName,
         formConfig: config,
+        createMutationType: createMutationType || undefined,
         gqlType: config.gqlType,
     });
     for (const name in generatedFields.gqlDocuments) {
@@ -124,10 +113,26 @@ export function generateForm(
     }
     imports.push(...generatedFields.imports);
     props.push(...generatedFields.props);
+    gqlArgs.push(...generatedFields.gqlArgs);
     hooksCode += generatedFields.hooksCode;
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
+
+    if (createMutationType) {
+        const {
+            imports: forwardedGqlArgsImports,
+            props: forwardedGqlArgsProps,
+            gqlArgs: forwardedGqlArgs,
+        } = getForwardedGqlArgs({
+            gqlOperation: createMutationType,
+            gqlIntrospection,
+            skipGqlArgs: gqlArgs,
+        });
+        imports.push(...forwardedGqlArgsImports);
+        props.push(...forwardedGqlArgsProps);
+        gqlArgs.push(...forwardedGqlArgs);
+    }
 
     const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
@@ -182,10 +187,10 @@ export function generateForm(
         `;
     }
 
-    if (editMode) {
+    if (editMode && updateMutationType) {
         gqlDocuments[`update${gqlType}Mutation`] = `
             mutation Update${gqlType}($id: ID!, $input: ${gqlType}UpdateInput!) {
-                update${gqlType}(id: $id, input: $input) {
+                ${updateMutationType.name}(id: $id, input: $input) {
                     id
                     updatedAt
                     ...${formFragmentName}
@@ -401,7 +406,7 @@ export function generateForm(
                     variables: { input: ${
                         gqlArgs.filter((prop) => prop.isInputArgSubfield).length
                             ? `{ ...output, ${gqlArgs
-                                  .filter((prop) => prop.isInputArgSubfield)
+                                  .filter((prop) => prop.isInputArgSubfield && !prop.isInOutputVar)
                                   .map((prop) => prop.name)
                                   .join(",")} }`
                             : "output"
