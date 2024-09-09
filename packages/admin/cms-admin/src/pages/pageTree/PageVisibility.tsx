@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
-import { Chip, ListItemIcon, Menu, MenuItem, useTheme } from "@mui/material";
+import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -30,7 +30,6 @@ interface PageVisibilityProps {
 const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
     const { tree } = usePageTreeContext();
     const snackbarApi = useSnackbarApi();
-    const theme = useTheme();
     const [updatePageVisibility] = useMutation<GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables>(
         updatePageVisibilityMutation,
     );
@@ -95,13 +94,6 @@ const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
         );
     };
 
-    const chipBackgroundColor =
-        page.visibility === "Published"
-            ? theme.palette.success.main
-            : page.visibility === "Unpublished"
-            ? theme.palette.grey[100]
-            : theme.palette.common.white;
-
     return (
         <>
             <Chip
@@ -115,12 +107,8 @@ const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
                         }}
                     />
                 }
-                sx={{
-                    backgroundColor: chipBackgroundColor,
-                    "&:hover": {
-                        backgroundColor: chipBackgroundColor,
-                    },
-                }}
+                variant={page.visibility === "Archived" ? "outlined" : "filled"}
+                color={page.visibility === "Published" ? "success" : page.visibility === "Unpublished" ? "default" : undefined}
                 clickable
                 onClick={handleMenuOpen}
             />
