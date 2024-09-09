@@ -1,17 +1,13 @@
 import { LinkExternal } from "@comet/admin-icons";
 import { ListItemButtonProps } from "@mui/material";
 import * as React from "react";
+import { FC, HTMLProps } from "react";
 
 import { MenuItem, MenuItemProps } from "./Item";
 
-export type MenuItemAnchorLinkProps = MenuItemProps & ListItemButtonProps & React.HTMLProps<HTMLAnchorElement>;
+export type MenuItemAnchorLinkProps = MenuItemProps & ListItemButtonProps & HTMLProps<HTMLAnchorElement>;
 
-export const MenuItemAnchorLink: React.FC<MenuItemAnchorLinkProps> = ({
-    secondaryAction: passedSecondaryAction,
-    isMenuOpen,
-    slotProps,
-    ...props
-}) => {
+export const MenuItemAnchorLink: FC<MenuItemAnchorLinkProps> = ({ secondaryAction: passedSecondaryAction, isMenuOpen, slotProps, ...props }) => {
     const secondaryAction =
         passedSecondaryAction !== undefined ? ( // don't use ?? to allow null as value and with that an empty secondaryAction
             passedSecondaryAction
