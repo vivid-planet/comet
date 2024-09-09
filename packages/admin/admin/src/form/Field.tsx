@@ -7,7 +7,7 @@ import { FieldContainer, FieldContainerProps } from "./FieldContainer";
 import { useFinalFormContext } from "./FinalFormContextProvider";
 
 const requiredValidator = (value: any) => {
-    if (value === undefined || value === null || value === false || value === "") {
+    if (value === undefined || value === null || value === false || (typeof value === "string" && value.trim() === "")) {
         return <FormattedMessage id="comet.form.required" defaultMessage="Required" />;
     }
     return undefined;
