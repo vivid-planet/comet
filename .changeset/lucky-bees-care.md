@@ -3,7 +3,7 @@
 "@comet/admin": minor
 ---
 
-Add support for `badgeContent` prop in `MenuItemRouterLink`.
+Add support for `badgeContent` prop in `MenuItemRouterLink`
 
 **Example usage in `masterMenuData`:**
 
@@ -25,5 +25,3 @@ const masterMenuData = [
 ```tsx
 <MenuItemRouterLink primary="Some Route" to="/someRoute" badgeContent={2} />
 ```
-
-Extend `MenuItemAnchorLink` to define a correctly styled `LinkExternal` icon if no `secondaryAction` is passed.
