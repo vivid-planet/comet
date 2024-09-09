@@ -1,6 +1,6 @@
 import { LinkExternal } from "@comet/admin-icons";
 import { ListItemButtonProps } from "@mui/material";
-import { FC, HTMLProps } from "react";
+import { HTMLProps } from "react";
 
 import { MenuItem, MenuItemProps } from "./Item";
 

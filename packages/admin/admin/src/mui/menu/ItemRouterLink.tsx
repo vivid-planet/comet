@@ -1,6 +1,6 @@
 import { Badge } from "@mui/material";
 import { ListItemProps } from "@mui/material/ListItem";
-import { FC, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Link, LinkProps, Route } from "react-router-dom";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -16,12 +16,7 @@ interface MenuItemRouterLinkStandardProps
 
 export type MenuItemRouterLinkProps = MenuItemRouterLinkStandardProps & MenuItemProps & ListItemProps & LinkProps;
 
-export const MenuItemRouterLink = ({
-    badgeContent,
-    secondaryAction: passedSecondaryAction,
-    slotProps,
-    ...restProps
-}: MenuItemRouterLinkProps) => {
+export const MenuItemRouterLink = ({ badgeContent, secondaryAction: passedSecondaryAction, slotProps, ...restProps }: MenuItemRouterLinkProps) => {
     const tempSlotProps = { ...slotProps };
     const badge = tempSlotProps?.badge;
     delete tempSlotProps?.badge;
