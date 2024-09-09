@@ -51,6 +51,7 @@ export function FinalFormNumberInput({
     );
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+        input.onBlur(event);
         const { value } = event.target;
         const numberParts = intl.formatNumberToParts(1111.111);
         const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;
