@@ -67,15 +67,12 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             content: PageContentBlock,
             seo: { block: SeoBlock, path: "/config" },
         },
-        scopeFragment: {
-            fragment: gql`
-                fragment PageDependencyScope on PageTreeNodeScope {
-                    domain
-                    language
-                }
-            `,
-            name: "PageDependencyScope",
-        },
+        scopeFragment: gql`
+            fragment PageDependencyScope on PageTreeNodeScope {
+                domain
+                language
+            }
+        `,
         basePath: ({ pageTreeNode, scope }) => {
             const contentScope = scope as ContentScope;
             return `/${contentScope.domain}/${contentScope.language}/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${

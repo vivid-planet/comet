@@ -1,5 +1,6 @@
 import { DocumentNode, gql } from "@apollo/client";
 import { BlockInputApi, BlockInterface } from "@comet/blocks-admin";
+import { FragmentDefinitionNode } from "graphql/language/ast";
 
 import { ContentScopeInterface } from "../contentScope/Provider";
 import { Maybe } from "../graphql.generated";
@@ -21,9 +22,15 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
 }: {
     rootQueryName: string;
     rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
-    scopeFragment?: { name: string; fragment: DocumentNode };
+    scopeFragment?: DocumentNode;
     basePath: string | ((node: NonNullable<Query<RootBlocks>["node"]>) => string);
 }): Pick<DependencyInterface, "resolvePath"> {
+    const scopeFragmentName = (scopeFragment?.definitions?.[0] as FragmentDefinitionNode | undefined)?.name.value;
+
+    if (scopeFragment && !scopeFragmentName) {
+        throw new Error("Can't determine scope fragment name");
+    }
+
     return {
         resolvePath: async ({ rootColumnName, jsonPath, apolloClient, id }) => {
             const { data, error } = await apolloClient.query<Query<RootBlocks>, QueryVariables>({
@@ -35,13 +42,13 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
                             ${
                                 scopeFragment
                                     ? `scope {
-                                        ...${scopeFragment.name}
+                                        ...${scopeFragmentName}
                                     }`
                                     : ""
                             }
                         }    
                     }    
-                    ${scopeFragment ? scopeFragment?.fragment : ""}
+                    ${scopeFragment ?? ""}
                 `,
                 variables: {
                     id,

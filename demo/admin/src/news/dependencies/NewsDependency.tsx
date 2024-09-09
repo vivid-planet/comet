@@ -9,15 +9,12 @@ export const NewsDependency: DependencyInterface = {
     ...createDependencyMethods({
         rootQueryName: "news",
         rootBlocks: { content: { block: NewsContentBlock, path: "/form" }, image: DamImageBlock },
-        scopeFragment: {
-            fragment: gql`
-                fragment NewsDependencyScope on NewsContentScope {
-                    domain
-                    language
-                }
-            `,
-            name: "NewsDependencyScope",
-        },
+        scopeFragment: gql`
+            fragment NewsDependencyScope on NewsContentScope {
+                domain
+                language
+            }
+        `,
         basePath: ({ id, scope }) => {
             const newsScope = scope as GQLNewsContentScope;
             return `/${newsScope.domain}/${newsScope.language}/structured-content/news/${id}/edit`;
