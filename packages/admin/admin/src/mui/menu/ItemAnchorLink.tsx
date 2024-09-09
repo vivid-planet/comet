@@ -6,10 +6,15 @@ import { MenuItem, MenuItemProps } from "./Item";
 
 export type MenuItemAnchorLinkProps = MenuItemProps & ListItemButtonProps & React.HTMLProps<HTMLAnchorElement>;
 
-export const MenuItemAnchorLink: React.FC<MenuItemAnchorLinkProps> = ({ secondaryAction, isMenuOpen, slotProps, ...props }) => {
-    const computedSecondaryAction =
-        secondaryAction !== undefined ? (
-            secondaryAction
+export const MenuItemAnchorLink: React.FC<MenuItemAnchorLinkProps> = ({
+    secondaryAction: passedSecondaryAction,
+    isMenuOpen,
+    slotProps,
+    ...props
+}) => {
+    const secondaryAction =
+        passedSecondaryAction !== undefined ? ( // don't use ?? to allow null as value and with that an empty secondaryAction
+            passedSecondaryAction
         ) : (
             <>
                 <LinkExternal color="primary" sx={{ marginRight: "auto", marginLeft: 2 }} fontSize={isMenuOpen ? "medium" : "small"} />
@@ -22,7 +27,7 @@ export const MenuItemAnchorLink: React.FC<MenuItemAnchorLinkProps> = ({ secondar
             selected={false}
             // @ts-expect-error "component"-property is used as described in the documentation  https://mui.com/material-ui/react-list/, but type is missing in ListItemButtonProps
             component="a"
-            secondaryAction={computedSecondaryAction}
+            secondaryAction={secondaryAction}
             isMenuOpen={isMenuOpen}
             slotProps={{
                 ...slotProps,
