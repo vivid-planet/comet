@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 5.9.0
+
+### Minor Changes
+
+-   a9d867afd: Allow overriding the block context in `BlocksTransformerService#transformToPlain`
+
+### Patch Changes
+
+-   @comet/blocks-api@5.9.0
+
 ## 5.8.7
 
 ### Patch Changes
