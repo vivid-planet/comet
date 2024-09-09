@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Field, FieldProps } from "../Field";
 import { FinalFormSelect, FinalFormSelectProps } from "../FinalFormSelect";
 

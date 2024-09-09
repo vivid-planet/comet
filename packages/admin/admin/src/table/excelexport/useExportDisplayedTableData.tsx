@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 
 import { Table } from "../Table";
 import { createExcelExportDownload, IExcelExportOptions } from "./createExcelExportDownload";
@@ -10,7 +10,7 @@ import { IExportApi } from "./IExportApi";
 export function useExportDisplayedTableData(options?: IExcelExportOptions): IExportApi<any> {
     let tableRef: Table<any> | undefined;
 
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = useState(false);
     function attachTable(ref: Table<any>) {
         tableRef = ref;
     }

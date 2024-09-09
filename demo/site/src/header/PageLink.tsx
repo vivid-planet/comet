@@ -4,13 +4,12 @@ import { GQLPredefinedPage } from "@src/graphql.generated";
 import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { GQLPageLinkFragment } from "./PageLink.fragment.generated";
 
-interface Props {
+interface Props extends PropsWithChildren {
     page: GQLPageLinkFragment;
-    children: React.ReactNode;
     className?: string;
     activeClassName?: string;
 }

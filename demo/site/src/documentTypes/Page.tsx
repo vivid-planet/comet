@@ -11,7 +11,6 @@ import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fr
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import * as React from "react";
 
 import { GQLPageQuery, GQLPageQueryVariables } from "./Page.generated";
 

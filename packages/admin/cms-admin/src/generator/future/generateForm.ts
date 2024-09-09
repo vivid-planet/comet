@@ -9,11 +9,22 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
+
+    const uniqueProps = props.reduce<Prop[]>((acc, item) => {
+        const propWithSameName = acc.find((prop) => prop.name == item.name);
+        if (!propWithSameName) return [item, ...acc];
+        if (propWithSameName.type != item.type || propWithSameName.optional != item.optional) {
+            // this is currently not supported
+            return [item, ...acc];
+        }
+        return acc;
+    }, []);
+
     return {
         formPropsTypeCode: `interface FormProps {
-            ${props.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
+            ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
         }`,
-        formPropsParamsCode: `{${props.map((prop) => prop.name).join(", ")}}: FormProps`,
+        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: FormProps`,
     };
 }
 
@@ -90,6 +101,7 @@ export function generateForm(
     });
 
     const readOnlyFields = formFields.filter((field) => field.readOnly);
+    const fileFields = formFields.filter((field) => field.type == "fileUpload");
 
     let hooksCode = "";
     let formValueToGqlInputCode = "";
@@ -115,6 +127,7 @@ export function generateForm(
         fragment ${fragmentName} on ${gqlType} {
             ${formFragmentFields.join("\n")}
         }
+        ${fileFields.length > 0 ? "${finalFormFileUploadFragment}" : ""}
     `;
 
     if (editMode) {
@@ -194,6 +207,31 @@ export function generateForm(
         });
     }
 
+    let filterByFragmentType = `GQL${fragmentName}Fragment`;
+    let customFilterByFragment = "";
+
+    if (fileFields.length > 0) {
+        const keysToOverride = fileFields.map((field) => field.name);
+
+        customFilterByFragment = `type ${fragmentName}Fragment = Omit<${filterByFragmentType}, ${keysToOverride
+            .map((key) => `"${String(key)}"`)
+            .join(" | ")}> & {
+            ${fileFields
+                .map((field) => {
+                    if (
+                        ("multiple" in field && field.multiple) ||
+                        ("maxFiles" in field && typeof field.maxFiles === "number" && field.maxFiles > 1)
+                    ) {
+                        return `${String(field.name)}: GQLFinalFormFileUploadFragment[];`;
+                    }
+                    return `${String(field.name)}: GQLFinalFormFileUploadFragment | null;`;
+                })
+                .join("\n")}
+        }`;
+
+        filterByFragmentType = `${fragmentName}Fragment`;
+    }
+
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
         AsyncSelectField,
@@ -214,6 +252,7 @@ export function generateForm(
     import { ArrowLeft, Lock } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
+    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField, GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
     import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
@@ -229,15 +268,17 @@ export function generateForm(
             : ""
     }
 
+    ${customFilterByFragment}
+
     type FormValues = ${
         formValuesConfig.filter((config) => !!config.omitFromFragmentType).length > 0
-            ? `Omit<GQL${fragmentName}Fragment, ${formValuesConfig
+            ? `Omit<${filterByFragmentType}, ${formValuesConfig
                   .filter((config) => !!config.omitFromFragmentType)
                   .map((config) => `"${config.omitFromFragmentType}"`)
                   .join(" | ")}>`
-            : `GQL${fragmentName}Fragment`
+            : `${filterByFragmentType}`
     } ${
-        formValuesConfig.length > 0
+        formValuesConfig.filter((config) => !!config.typeCode).length > 0
             ? `& {
                 ${formValuesConfig
                     .filter((config) => !!config.typeCode)
@@ -270,7 +311,7 @@ export function generateForm(
             editMode
                 ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
         ? {
-            ...filterByFragment<GQL${fragmentName}Fragment>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
+            ...filterByFragment<${filterByFragmentType}>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${formValuesConfig
                 .filter((config) => !!config.initializationCode)
                 .map((config) => config.initializationCode)

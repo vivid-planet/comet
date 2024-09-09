@@ -3,7 +3,7 @@ import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import * as React from "react";
+import { ReactNode, useCallback, useRef } from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -21,7 +21,7 @@ interface IDndOrderRowProps<TRow extends IRow>
         ITableRowProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     onDragEnd?: () => void;
-    dragHandleIcon: React.ReactNode;
+    dragHandleIcon: ReactNode;
 }
 
 interface DragItem {
@@ -32,8 +32,8 @@ interface DragItem {
 function DndOrderRow<TRow extends IRow>(props: IDndOrderRowProps<TRow>) {
     const { columns, row, rowProps, slotProps } = props;
 
-    const refDragHandle = React.useRef<HTMLTableCellElement>(null);
-    const refRow = React.useRef<HTMLTableRowElement>(null);
+    const refDragHandle = useRef<HTMLTableCellElement>(null);
+    const refRow = useRef<HTMLTableRowElement>(null);
 
     const [{ isDragging }, drag, dragPreview] = useDrag({
         type: "row", // TODO: configurable? unique per table?
@@ -163,7 +163,7 @@ interface TableDndOrderProps<TRow extends IRow>
         ITableProps<TRow> {
     moveRow: (dragIndex: number, hoverIndex: number) => void;
     onDragEnd?: () => void;
-    dragHandleIcon?: React.ReactNode;
+    dragHandleIcon?: ReactNode;
 }
 
 /**
@@ -178,7 +178,7 @@ export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRo
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminTableDndOrder" });
 
-    const renderHeadTableRow = React.useCallback<NonNullable<ITableProps<TRow>["renderHeadTableRow"]>>((ownProps) => {
+    const renderHeadTableRow = useCallback<NonNullable<ITableProps<TRow>["renderHeadTableRow"]>>((ownProps) => {
         return (
             <TableRow>
                 <TableCell />
@@ -186,7 +186,7 @@ export function TableDndOrder<TRow extends IRow>(inProps: TableDndOrderProps<TRo
             </TableRow>
         );
     }, []);
-    const renderTableRow = React.useCallback<NonNullable<ITableProps<TRow>["renderTableRow"]>>(
+    const renderTableRow = useCallback<NonNullable<ITableProps<TRow>["renderTableRow"]>>(
         (ownProps) => {
             return <DndOrderRow dragHandleIcon={dragHandleIcon} moveRow={moveRow} onDragEnd={onDragEnd} {...ownProps} />;
         },
