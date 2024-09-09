@@ -1,12 +1,15 @@
-import { gql } from "@apollo/client";
+import { DocumentNode, gql } from "@apollo/client";
 import { BlockInputApi, BlockInterface } from "@comet/blocks-admin";
 
+import { ContentScopeInterface } from "../contentScope/Provider";
 import { GQLPageTreeNode, Maybe } from "../graphql.generated";
 import { DependencyInterface } from "./types";
 
 interface Query<RootBlocks extends Record<string, BlockInterface>> {
     node: Maybe<
-        { id: string; pageTreeNode: Maybe<Pick<GQLPageTreeNode, "id" | "category">> } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> }
+        { id: string; pageTreeNode: Pick<GQLPageTreeNode, "id" | "category"> & { scope?: ContentScopeInterface }; scope?: ContentScopeInterface } & {
+            [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]>;
+        }
     >;
 }
 
@@ -17,17 +20,13 @@ interface QueryVariables {
 export function createDocumentDependencyMethods<RootBlocks extends Record<string, BlockInterface>>({
     rootQueryName,
     rootBlocks,
+    scopeFragment,
     basePath,
 }: {
     rootQueryName: string;
     rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
-    basePath:
-        | string
-        | ((
-              node: { id: string; pageTreeNode: Pick<GQLPageTreeNode, "id" | "category"> } & {
-                  [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]>;
-              },
-          ) => string);
+    scopeFragment?: { name: string; fragment: DocumentNode };
+    basePath: string | ((node: NonNullable<Query<RootBlocks>["node"]>) => string);
 }): Pick<DependencyInterface, "resolvePath"> {
     return {
         resolvePath: async ({ rootColumnName, jsonPath, apolloClient, id }) => {
@@ -40,9 +39,17 @@ export function createDocumentDependencyMethods<RootBlocks extends Record<string
                             pageTreeNode {
                                 id
                                 category
+                                ${
+                                    scopeFragment
+                                        ? `scope {
+                                            ...${scopeFragment.name}
+                                        }`
+                                        : ""
+                                }
                             }
                         }    
-                    }    
+                    }
+                    ${scopeFragment ? scopeFragment?.fragment : ""}
                 `,
                 variables: {
                     id,
@@ -62,7 +69,7 @@ export function createDocumentDependencyMethods<RootBlocks extends Record<string
             if (typeof basePath === "string") {
                 url = basePath;
             } else {
-                url = basePath(data.node);
+                url = basePath({ ...data.node, scope: data.node.pageTreeNode.scope });
             }
 
             if (jsonPath && rootColumnName) {
