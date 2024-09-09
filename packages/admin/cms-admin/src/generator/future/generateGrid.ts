@@ -631,7 +631,11 @@ export function generateGrid(
                       .join(",\n")} ] }`
                 : ""
         }), ...usePersistentColumnState("${gqlTypePlural}Grid")${
-        config.selectionProps ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true` : ``
+        config.selectionProps === "multiSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+            : config.selectionProps === "singleSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
+            : ``
     } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         
