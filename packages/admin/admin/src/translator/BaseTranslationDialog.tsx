@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
@@ -16,7 +16,7 @@ interface TranslationDialogBaseProps<T> {
 
 export const BaseTranslationDialog = <T,>(props: TranslationDialogBaseProps<T>) => {
     const { open, onClose, originalText, translatedText, onApplyTranslation, renderOriginalText, renderTranslatedText } = props;
-    const [translation, setTranslation] = React.useState(translatedText);
+    const [translation, setTranslation] = useState(translatedText);
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">

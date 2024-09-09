@@ -1,5 +1,5 @@
 import { ComponentsOverrides, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, Theme, useThemeProps } from "@mui/material";
-import * as React from "react";
+import { ReactElement, ReactNode } from "react";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { Icon, MenuItemClassKey, OwnerState, Root, Text } from "./Item.styles";
@@ -14,10 +14,10 @@ export interface MenuItemProps
         }>,
         ListItemButtonProps {
     level?: MenuItemLevel;
-    primary: React.ReactNode;
-    secondary?: React.ReactNode;
-    icon?: React.ReactElement;
-    secondaryAction?: React.ReactNode;
+    primary: ReactNode;
+    secondary?: ReactNode;
+    icon?: ReactElement;
+    secondaryAction?: ReactNode;
     isMenuOpen?: boolean;
     isCollapsibleOpen?: boolean;
     hasSubitems?: boolean;

@@ -1,4 +1,5 @@
 import { readFile } from "fs/promises";
+import { PropsWithChildren } from "react";
 
 import { IntlProvider } from "./IntlProvider";
 
@@ -11,7 +12,7 @@ async function loadMessages(lang: string) {
     return messages;
 }
 
-export default async function Page({ children, params }: { children: React.ReactNode; params: { lang: string } }) {
+export default async function Page({ children, params }: PropsWithChildren<{ params: { lang: string } }>) {
     const messages = await loadMessages(params.lang);
     return (
         <IntlProvider locale={params.lang} messages={messages}>
