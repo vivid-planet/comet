@@ -33,10 +33,11 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
                             id
                             ${Object.keys(rootBlocks).join("\n")}
                             ${
-                                scopeFragment &&
-                                `scope {
-                                    ...${scopeFragment.name}
-                                }`
+                                scopeFragment
+                                    ? `scope {
+                                        ...${scopeFragment.name}
+                                    }`
+                                    : ""
                             }
                         }    
                     }    
