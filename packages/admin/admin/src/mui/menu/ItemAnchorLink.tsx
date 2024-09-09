@@ -16,10 +16,7 @@ export const MenuItemAnchorLink: React.FC<MenuItemAnchorLinkProps> = ({
         passedSecondaryAction !== undefined ? ( // don't use ?? to allow null as value and with that an empty secondaryAction
             passedSecondaryAction
         ) : (
-            <>
-                <LinkExternal color="primary" sx={{ marginRight: "auto", marginLeft: 2 }} fontSize={isMenuOpen ? "medium" : "small"} />
-                {props.level}
-            </>
+            <LinkExternal color="primary" sx={{ marginRight: "auto", marginLeft: 2 }} fontSize={isMenuOpen ? "medium" : "small"} />
         );
 
     return (
