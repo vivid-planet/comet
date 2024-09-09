@@ -494,7 +494,11 @@ export function generateGrid(
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid")${
-        config.selectionProps ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true` : ``
+        config.selectionProps === "multiSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+            : config.selectionProps === "singleSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
+            : ``
     } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
 
