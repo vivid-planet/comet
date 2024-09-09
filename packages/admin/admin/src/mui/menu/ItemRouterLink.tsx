@@ -16,12 +16,17 @@ interface MenuItemRouterLinkStandardProps
 
 export type MenuItemRouterLinkProps = MenuItemRouterLinkStandardProps & MenuItemProps & ListItemProps & LinkProps;
 
-export const MenuItemRouterLink: React.FC<MenuItemRouterLinkProps> = ({ badgeContent, secondaryAction, slotProps, ...restProps }) => {
+export const MenuItemRouterLink: React.FC<MenuItemRouterLinkProps> = ({
+    badgeContent,
+    secondaryAction: passedSecondaryAction,
+    slotProps,
+    ...restProps
+}) => {
     const tempSlotProps = { ...slotProps };
     const badge = tempSlotProps?.badge;
     delete tempSlotProps?.badge;
 
-    const computedSecondaryAction = badgeContent ? (
+    const secondaryAction = badgeContent ? ( // prioritize badgeContent over passed secondaryAction
         <Badge
             variant={restProps.isMenuOpen ? "standard" : "dot"}
             color="error"
@@ -31,21 +36,13 @@ export const MenuItemRouterLink: React.FC<MenuItemRouterLinkProps> = ({ badgeCon
             sx={{ marginLeft: 2, ...badge?.sx }}
         />
     ) : (
-        secondaryAction
+        passedSecondaryAction
     );
 
     return (
         <Route path={restProps.to} strict={false}>
             {({ match }) => {
-                return (
-                    <MenuItem
-                        selected={!!match}
-                        secondaryAction={computedSecondaryAction}
-                        component={Link}
-                        slotProps={tempSlotProps}
-                        {...restProps}
-                    />
-                );
+                return <MenuItem selected={!!match} secondaryAction={secondaryAction} component={Link} slotProps={tempSlotProps} {...restProps} />;
             }}
         </Route>
     );
