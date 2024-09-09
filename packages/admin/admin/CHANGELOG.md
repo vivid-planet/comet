@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 6.17.6
+
+### Patch Changes
+
+-   f4adb9505: Fix validation for `NumberField` and `FinalFormNumberInput` by calling the `onBlur` event, passed in by the `Field`
+    -   @comet/admin-icons@6.17.6
+
 ## 6.17.5
 
 ### Patch Changes
