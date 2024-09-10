@@ -11,11 +11,22 @@ export type GqlArg = { type: string; name: string; isInputArgSubfield: boolean; 
 export type Prop = { type: string; optional: boolean; name: string };
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
+
+    const uniqueProps = props.reduce<Prop[]>((acc, item) => {
+        const propWithSameName = acc.find((prop) => prop.name == item.name);
+        if (!propWithSameName) return [item, ...acc];
+        if (propWithSameName.type != item.type || propWithSameName.optional != item.optional) {
+            // this is currently not supported
+            return [item, ...acc];
+        }
+        return acc;
+    }, []);
+
     return {
         formPropsTypeCode: `interface FormProps {
-            ${props.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
+            ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
         }`,
-        formPropsParamsCode: `{${props.map((prop) => prop.name).join(", ")}}: FormProps`,
+        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: FormProps`,
     };
 }
 
@@ -31,6 +42,7 @@ export function generateForm(
 ): GeneratorReturn {
     const gqlType = config.gqlType;
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
+    const formFragmentName = config.fragmentName ?? `${gqlType}Form`;
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
     const props: Prop[] = [];
@@ -45,7 +57,12 @@ export function generateForm(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formFields = config.fields.reduce<FormFieldConfig<any>[]>((acc, field) => {
         if (isFormLayoutConfig(field)) {
-            acc.push(...field.fields);
+            // using forEach instead of acc.push(...field.fields.filter(isFormFieldConfig)) because typescript can't handle mixed typing
+            field.fields.forEach((nestedFieldConfig) => {
+                if (isFormFieldConfig(nestedFieldConfig)) {
+                    acc.push(nestedFieldConfig);
+                }
+            });
         } else if (isFormFieldConfig(field)) {
             acc.push(field);
         }
@@ -87,8 +104,10 @@ export function generateForm(
         gqlIntrospection,
         baseOutputFilename,
         fields: config.fields,
+        formFragmentName,
         formConfig: config,
         createMutationType: createMutationType || undefined,
+        gqlType: config.gqlType,
     });
     for (const name in generatedFields.gqlDocuments) {
         gqlDocuments[name] = generatedFields.gqlDocuments[name];
@@ -115,9 +134,8 @@ export function generateForm(
         gqlArgs.push(...forwardedGqlArgs);
     }
 
-    const fragmentName = config.fragmentName ?? `${gqlType}Form`;
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
-        fragment ${fragmentName} on ${gqlType} {
+        fragment ${formFragmentName} on ${gqlType} {
             ${formFragmentFields.join("\n")}
         }
         ${fileFields.length > 0 ? "${finalFormFileUploadFragment}" : ""}
@@ -129,7 +147,7 @@ export function generateForm(
                 ${instanceGqlType}(id: $id) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
@@ -160,7 +178,7 @@ export function generateForm(
         }input: $input) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
@@ -173,7 +191,7 @@ export function generateForm(
                 update${gqlType}(id: $id, input: $input) {
                     id
                     updatedAt
-                    ...${fragmentName}
+                    ...${formFragmentName}
                 }
             }
             \${${`${instanceGqlType}FormFragment`}}
@@ -200,13 +218,13 @@ export function generateForm(
         });
     }
 
-    let filterByFragmentType = `GQL${fragmentName}Fragment`;
+    let filterByFragmentType = `GQL${formFragmentName}Fragment`;
     let customFilterByFragment = "";
 
     if (fileFields.length > 0) {
         const keysToOverride = fileFields.map((field) => field.name);
 
-        customFilterByFragment = `type ${fragmentName}Fragment = Omit<${filterByFragmentType}, ${keysToOverride
+        customFilterByFragment = `type ${formFragmentName}Fragment = Omit<${filterByFragmentType}, ${keysToOverride
             .map((key) => `"${String(key)}"`)
             .join(" | ")}> & {
             ${fileFields
@@ -222,7 +240,7 @@ export function generateForm(
                 .join("\n")}
         }`;
 
-        filterByFragmentType = `${fragmentName}Fragment`;
+        filterByFragmentType = `${formFragmentName}Fragment`;
     }
 
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
