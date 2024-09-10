@@ -2,7 +2,7 @@ import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import MuiTab, { TabProps as MuiTabProps } from "@mui/material/Tab";
 import MuiTabs, { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
-import * as React from "react";
+import { ChangeEvent, Children, ComponentType, isValidElement, ReactElement, ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -38,19 +38,19 @@ const Content = createComponentSlot("div")<TabsClassKey, OwnerState>({
 );
 
 interface TabProps extends Omit<MuiTabProps, "children"> {
-    label: React.ReactNode;
+    label: ReactNode;
     forceRender?: boolean;
-    children: React.ReactNode;
+    children: ReactNode;
 }
 
-export const Tab: React.SFC<TabProps> = () => null;
+export const Tab = (props: TabProps) => null;
 
 interface ITabsState {
     value: number;
     setValue: (value: number) => void;
 }
 
-type TabsChild = React.ReactElement<TabProps> | boolean | null | undefined;
+type TabsChild = ReactElement<TabProps> | boolean | null | undefined;
 type TabsChildren = TabsChild | Array<TabsChild | Array<TabsChild>>;
 
 export interface TabsProps
@@ -61,7 +61,7 @@ export interface TabsProps
             content: "div";
         }> {
     children: TabsChildren;
-    tabComponent?: React.ComponentType<MuiTabProps>;
+    tabComponent?: ComponentType<MuiTabProps>;
     defaultIndex?: number;
     tabsState?: ITabsState;
 }
@@ -80,7 +80,7 @@ export function Tabs(inProps: TabsProps) {
     let value: ITabsState["value"];
     let setValue: ITabsState["setValue"];
 
-    const state = React.useState(defaultIndex !== undefined ? defaultIndex : 0);
+    const state = useState(defaultIndex !== undefined ? defaultIndex : 0);
     if (tabsState === undefined) {
         value = state[0];
         setValue = state[1];
@@ -89,13 +89,13 @@ export function Tabs(inProps: TabsProps) {
         setValue = tabsState.setValue;
     }
 
-    const handleChange = (event: React.ChangeEvent, newValue: number) => {
+    const handleChange = (event: ChangeEvent, newValue: number) => {
         setValue(newValue);
     };
 
-    React.Children.forEach(children, (child: React.ReactElement<TabProps>) => {
+    Children.forEach(children, (child: ReactElement<TabProps>) => {
         // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
-        if (!React.isValidElement<TabProps>(child)) {
+        if (!isValidElement<TabProps>(child)) {
             return null;
         }
 
@@ -115,8 +115,8 @@ export function Tabs(inProps: TabsProps) {
                 {...slotProps?.tabs}
                 {...restProps}
             >
-                {React.Children.map(children, (child: React.ReactElement<TabProps>) => {
-                    if (!React.isValidElement<TabProps>(child)) {
+                {Children.map(children, (child: ReactElement<TabProps>) => {
+                    if (!isValidElement<TabProps>(child)) {
                         return null;
                     }
 
@@ -124,12 +124,12 @@ export function Tabs(inProps: TabsProps) {
                     return <TabComponent label={label} {...restTabProps} />;
                 })}
             </StyledTabs>
-            {React.Children.map(children, (child: React.ReactElement<TabProps>, index) => {
+            {Children.map(children, (child: ReactElement<TabProps>, index) => {
                 const ownerState: OwnerState = {
                     contentHidden: index !== value && child.props.forceRender,
                 };
 
-                if (!React.isValidElement<TabProps>(child)) {
+                if (!isValidElement<TabProps>(child)) {
                     return null;
                 }
 

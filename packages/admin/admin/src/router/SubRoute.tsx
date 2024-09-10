@@ -1,15 +1,15 @@
-import * as React from "react";
+import { createContext, ReactNode, useContext } from "react";
 import { __RouterContext, matchPath, Route, useLocation, useRouteMatch } from "react-router";
 
 interface SubRoutesContext {
     path: string;
 }
-const SubRoutesContext = React.createContext<SubRoutesContext | undefined>(undefined);
+const SubRoutesContext = createContext<SubRoutesContext | undefined>(undefined);
 
-export function SubRouteIndexRoute({ children }: { children: React.ReactNode }) {
+export function SubRouteIndexRoute({ children }: { children?: ReactNode }) {
     const location = useLocation();
     const match = useRouteMatch();
-    const subRoutesContext = React.useContext(SubRoutesContext);
+    const subRoutesContext = useContext(SubRoutesContext);
     const urlPrefix = subRoutesContext?.path || match.url;
 
     const matchIndex = matchPath(location.pathname, { path: match.url, exact: true });
@@ -22,7 +22,7 @@ export function SubRouteIndexRoute({ children }: { children: React.ReactNode }) 
     );
 }
 
-export function SubRoute({ children, path }: { children: React.ReactNode; path: string }) {
+export function SubRoute({ children, path }: { children?: ReactNode; path: string }) {
     const subRoutePrefix = useSubRoutePrefix();
     if (path.startsWith("./")) {
         path = subRoutePrefix + path.substring(1);
@@ -31,8 +31,8 @@ export function SubRoute({ children, path }: { children: React.ReactNode; path: 
 }
 
 export function useSubRoutePrefix() {
-    const routerContext = React.useContext(__RouterContext);
-    const subRoutesContext = React.useContext(SubRoutesContext);
+    const routerContext = useContext(__RouterContext);
+    const subRoutesContext = useContext(SubRoutesContext);
     let ret;
     if (subRoutesContext?.path) {
         ret = subRoutesContext.path;
