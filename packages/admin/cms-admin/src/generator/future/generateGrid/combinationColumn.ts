@@ -78,18 +78,18 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
 };
 
 export const getCombinationColumnRenderCell = (column: GridCombinationColumnConfig<string>, messageIdPrefix: string) => {
-    const gridCellContenetProps: Record<string, string> = {};
+    const gridCellContentProps: Record<string, string> = {};
 
     if (column.primaryText) {
-        gridCellContenetProps.primaryText = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`);
+        gridCellContentProps.primaryText = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`);
     }
 
     if (column.secondaryText) {
-        gridCellContenetProps.secondaryText = getTextForCellContent(column.secondaryText, `${messageIdPrefix}.secondaryText`);
+        gridCellContentProps.secondaryText = getTextForCellContent(column.secondaryText, `${messageIdPrefix}.secondaryText`);
     }
 
     return `({ row }) => {
-        return <GridCellContent ${Object.entries(gridCellContenetProps)
+        return <GridCellContent ${Object.entries(gridCellContentProps)
             .map(([key, value]) => `${key}={${value}}`)
             .join(" ")} />;
     }`;
