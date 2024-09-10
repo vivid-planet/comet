@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Unify DAM Filter Dropdown Buttons
+Harmonize the size and alignment of the DAM filters
