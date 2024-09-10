@@ -384,7 +384,7 @@ export function generateGrid(
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
     import * as React from "react";
-    import { FormattedMessage, useIntl } from "react-intl";
+    import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
 
     ${Object.entries(rootBlocks)
