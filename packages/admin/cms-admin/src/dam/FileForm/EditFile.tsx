@@ -22,13 +22,11 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
-import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
-import { useDamScope } from "../config/useDamScope";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
@@ -59,6 +57,7 @@ export interface EditFileFormValues extends EditImageFormValues {
 
 interface EditFormProps {
     id: string;
+    contentScopeIndicator?: React.ReactNode;
 }
 
 const useInitialValues = (id: string) => {
@@ -70,7 +69,7 @@ const useInitialValues = (id: string) => {
     return { loading, data, error };
 };
 
-const EditFile = ({ id }: EditFormProps): React.ReactElement => {
+const EditFile = ({ id, contentScopeIndicator }: EditFormProps): React.ReactElement => {
     const { match: scopeMatch } = useContentScope();
     const initialValues = useInitialValues(id);
     const file = initialValues.data?.damFile;
@@ -99,7 +98,7 @@ const EditFile = ({ id }: EditFormProps): React.ReactElement => {
         );
     }
 
-    return <EditFileInner file={file} id={id} />;
+    return <EditFileInner file={file} id={id} contentScopeIndicator={contentScopeIndicator} />;
 };
 
 export type DamFileDetails = GQLDamFileDetailFragment;
@@ -107,13 +106,13 @@ export type DamFileDetails = GQLDamFileDetailFragment;
 interface EditFileInnerProps {
     file: DamFileDetails;
     id: string;
+    contentScopeIndicator?: React.ReactNode;
 }
 
-const EditFileInner = ({ file, id }: EditFileInnerProps) => {
+const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
     const dependencyMap = useDependenciesConfig();
     const intl = useIntl();
     const damConfig = useDamConfig();
-    const scope = useDamScope();
     const apolloClient = useApolloClient();
 
     const onSubmit = React.useCallback(
@@ -188,7 +187,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
         >
             {() => (
                 <>
-                    <Toolbar scopeIndicator={<ContentScopeIndicator scope={scope} />}>
+                    <Toolbar scopeIndicator={contentScopeIndicator}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
                         {damConfig.enableLicenseFeature &&

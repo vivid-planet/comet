@@ -380,7 +380,7 @@ This requires the following changes:
 
 -   Change all usages of the `PublicUpload` entity to `FileUpload`.
 -   Change all usages of the `PublicUploadsService` to `FileUploadsService`.
--   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/files-uploads/upload`.
+-   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/file-uploads/upload`.
 
 ### Make file uploads upload endpoint public
 
@@ -470,7 +470,7 @@ DamModule.register({
 ### Replace `graphql-type-json` with `graphql-scalars`
 
 1. Install graphql-scalars: `npm install graphql-scalars`
-2. Uninstall graphql-type-json: `npm install graphql-type-json`
+2. Uninstall graphql-type-json: `npm uninstall graphql-type-json`
 3. Update imports:
 
     ```diff
@@ -1198,7 +1198,7 @@ Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
 
 ```diff
 - import { Link } from "@comet/cms-site";
-+ import { Link } from "next/link";
++ import Link from "next/link";
 ```
 
 Remove the preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters).

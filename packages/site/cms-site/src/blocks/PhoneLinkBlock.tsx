@@ -1,10 +1,10 @@
-import * as React from "react";
+import { cloneElement, ReactElement } from "react";
 
 import { PhoneLinkBlockData } from "../blocks.generated";
 import { PropsWithData } from "./PropsWithData";
 
 interface PhoneLinkBlockProps extends PropsWithData<PhoneLinkBlockData> {
-    children: React.ReactElement;
+    children: ReactElement;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
@@ -22,7 +22,7 @@ export const PhoneLinkBlock = ({ data: { phone }, children, title, className, le
     const href = `tel:${phone}`;
 
     if (legacyBehavior) {
-        return React.cloneElement(children, { href, title });
+        return cloneElement(children, { href, title });
     }
 
     return (

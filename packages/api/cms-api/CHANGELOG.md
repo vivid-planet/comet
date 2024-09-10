@@ -1,5 +1,84 @@
 # @comet/cms-api
 
+## 7.3.2
+
+### Patch Changes
+
+-   @comet/blocks-api@7.3.2
+
+## 7.3.1
+
+### Patch Changes
+
+-   @comet/blocks-api@7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   c130adc38: `BuildsService`: Start all jobs that match the scope exactly
+
+    Previously, the first job that matched the scope exactly would be started, and the rest would be ignored. This has been fixed so that all jobs that match the scope exactly are started.
+
+    -   @comet/blocks-api@7.3.0
+
+## 7.2.1
+
+### Patch Changes
+
+-   c66336963: Fix bug in `DamVideoBlock` that caused the block to crash if no video file was selected
+
+    The block used to crash if no video was selected because the `DamVideoBlockTransformerService` returned an empty object.
+    This left the `previewImage` state in the admin `undefined` causing `state2Output` to fail.
+
+    -   @comet/blocks-api@7.2.1
+
+## 7.2.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.2.0
+
+## 7.1.0
+
+### Minor Changes
+
+-   19d53c407: Add Sentry module to simplify integration with Sentry.
+
+    ### Usage:
+
+    ```ts
+    // main.ts
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+    app.use(Sentry.Handlers.errorHandler());
+    ```
+
+    ```ts
+    // app.module.ts
+
+    SentryModule.forRootAsync({
+        dsn: "sentry_dsn_url",
+        environment: "dev",
+        shouldReportException: (exception) => {
+            // Custom logic to determine if the exception should be reported
+            return true;
+        },
+    }),
+    ```
+
+### Patch Changes
+
+-   87f74d307: Sort the keys in content scopes returned by `UserPermissionsService` alphabetically
+
+    This fixes issues when comparing content scopes after converting them to strings via `JSON.stringify()`.
+
+    This specifically fixes a bug on the UserPermissionsPage:
+    When the `availableContentScopes` passed to the `UserPermissionsModule` weren't sorted alphabetically, the allowed scopes wouldn't be displayed correctly in the UI.
+
+    -   @comet/blocks-api@7.1.0
+
 ## 7.0.0
 
 ### Major Changes
@@ -209,7 +288,7 @@
     -   Use `FileUploadsModule` instead of `PublicUploadModule`
     -   Use `FileUpload` instead of `PublicUpload`
     -   Use `FileUploadsService` instead of `PublicUploadsService`
-    -   Change the upload URL from `/public-upload/files/upload` to `/files-uploads/upload`
+    -   Change the upload URL from `/public-upload/files/upload` to `/file-uploads/upload`
 
 -   17c7f79a2: Secure file uploads upload endpoint by default
 

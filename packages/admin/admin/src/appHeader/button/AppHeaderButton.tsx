@@ -1,6 +1,6 @@
 import { ButtonBase, ButtonBaseProps, ComponentsOverrides, Theme, Typography } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { AppHeaderButtonClassKey, Content, EndIcon, Root, StartIcon, Text } from "./AppHeaderButton.styles";
@@ -14,8 +14,8 @@ export interface AppHeaderButtonProps
             startIcon: "div";
             endIcon: "div";
         }> {
-    startIcon?: React.ReactNode;
-    endIcon?: React.ReactNode;
+    startIcon?: ReactNode;
+    endIcon?: ReactNode;
     disableTypography?: boolean;
 }
 

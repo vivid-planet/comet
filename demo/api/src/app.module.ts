@@ -14,6 +14,7 @@ import {
     KubernetesModule,
     PageTreeModule,
     RedirectsModule,
+    SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
@@ -139,7 +140,7 @@ export class AppModule {
                 FileUploadsModule.register({
                     maxFileSize: config.fileUploads.maxFileSize,
                     directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
-                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip"],
+                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip", "image/png", "image/jpeg", "image/gif"],
                     upload: {
                         public: true,
                     },
@@ -168,6 +169,7 @@ export class AppModule {
                         return true;
                     },
                 }),
+                ...(config.sentry ? [SentryModule.forRootAsync(config.sentry)] : []),
             ],
         };
     }
