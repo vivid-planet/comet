@@ -113,7 +113,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "comet.pages.dam.edit", defaultMessage: "Edit" })}>
                     {(selectedId: string) => {
-                        return <EditFile id={selectedId} />;
+                        return <EditFile id={selectedId} contentScopeIndicator={props.contentScopeIndicator} />;
                     }}
                 </StackPage>
                 <StackPage name="folder" title={data?.damFolder.name}>

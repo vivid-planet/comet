@@ -1,23 +1,22 @@
 import { RteSoftHyphen } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import { ContentState } from "draft-js";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 interface Props {
     contentState: ContentState;
     entityKey: string;
-    children?: React.ReactNode;
 }
 
 //TODO: Allow text selection for SoftHyphen
-export function EditorComponent({ children }: Props): React.ReactElement {
+export const EditorComponent = ({ children }: PropsWithChildren<Props>) => {
     return (
         <span>
             <VisibleHyphen />
             {children}
         </span>
     );
-}
+};
 
 const VisibleHyphen = styled(RteSoftHyphen)`
     font-size: inherit;

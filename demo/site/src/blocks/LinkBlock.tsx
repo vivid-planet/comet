@@ -11,7 +11,7 @@ import {
 } from "@comet/cms-site";
 import { LinkBlockData } from "@src/blocks.generated";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { InternalLinkBlock } from "./InternalLinkBlock";
 
@@ -48,8 +48,7 @@ const supportedBlocks: SupportedBlocks = {
     ),
 };
 
-interface LinkBlockProps extends PropsWithData<LinkBlockData> {
-    children: React.ReactNode;
+interface LinkBlockProps extends PropsWithChildren<PropsWithData<LinkBlockData>> {
     className?: string;
 }
 

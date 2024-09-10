@@ -1,7 +1,6 @@
 "use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { DemoTextLinkBlockData } from "@src/blocks.generated";
-import * as React from "react";
 import styled from "styled-components";
 
 import { LinkBlock } from "./LinkBlock";
