@@ -26,7 +26,10 @@ export function generateFields({
     gqlIntrospection,
     baseOutputFilename,
     fields,
+    formFragmentName,
     formConfig,
+    gqlType,
+    namePrefix,
 }: {
     gqlIntrospection: IntrospectionQuery;
     baseOutputFilename: string;
@@ -34,6 +37,9 @@ export function generateFields({
     fields: FormConfig<any>["fields"];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
+    formFragmentName: string;
+    gqlType: string;
+    namePrefix?: string;
 }): GenerateFieldsReturn {
     const gqlDocuments: Record<string, string> = {};
     let hooksCode = "";
@@ -47,9 +53,25 @@ export function generateFields({
         .map((field) => {
             let generated: GenerateFieldsReturn;
             if (isFormFieldConfig(field)) {
-                generated = generateFormField({ gqlIntrospection, baseOutputFilename, config: field, formConfig });
+                generated = generateFormField({
+                    gqlIntrospection,
+                    baseOutputFilename,
+                    formFragmentName,
+                    config: field,
+                    formConfig,
+                    gqlType,
+                    namePrefix,
+                });
             } else if (isFormLayoutConfig(field)) {
-                generated = generateFormLayout({ gqlIntrospection, baseOutputFilename, config: field, formConfig });
+                generated = generateFormLayout({
+                    gqlIntrospection,
+                    baseOutputFilename,
+                    formFragmentName,
+                    config: field,
+                    formConfig,
+                    gqlType,
+                    namePrefix,
+                });
             } else {
                 throw new Error("Not supported config");
             }
