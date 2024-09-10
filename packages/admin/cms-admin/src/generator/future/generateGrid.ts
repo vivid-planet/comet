@@ -8,6 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
+import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
@@ -239,7 +240,9 @@ export function generateGrid(
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
-    const gridColumnFields = (config.columns.filter((column) => column.type !== "actions") as GridColumnConfig<unknown>[]).map((column) => {
+    const gridColumnFields = (
+        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
+    ).map((column) => {
         const type = column.type;
         const name = String(column.name);
 
@@ -302,6 +305,8 @@ export function generateGrid(
                 flex: column.flex,
                 pinned: column.pinned,
             };
+        } else if (type == "combination") {
+            renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
         //TODO suppoort n:1 relation with singleSelect
@@ -352,6 +357,7 @@ export function generateGrid(
         DataGridToolbar,
         filterByFragment,
         GridFilterButton,
+        GridCellContent,
         GridColDef,
         muiGridFilterToGql,
         muiGridSortToGql,

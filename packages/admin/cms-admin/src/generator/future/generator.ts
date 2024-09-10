@@ -9,6 +9,7 @@ import { basename, dirname } from "path";
 import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { UsableFields } from "./generateGrid/usableFields";
 import { writeGenerated } from "./utils/writeGenerated";
 
@@ -97,7 +98,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
-    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig>;
+    columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
