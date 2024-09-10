@@ -141,7 +141,9 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                 return (
                     <GridCellContent
                         primaryText={
-                            typeof row.price === "number" ? (
+                            typeof row.price === "undefined" || row.price === null ? (
+                                "-"
+                            ) : (
                                 <FormattedNumber
                                     value={row.price}
                                     minimumFractionDigits={2}
@@ -149,15 +151,13 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                                     style="currency"
                                     currency="EUR"
                                 />
-                            ) : (
-                                "-"
                             )
                         }
                         secondaryText={
-                            typeof row.price === "number" ? (
-                                <FormattedNumber value={row.price} minimumFractionDigits={4} maximumFractionDigits={4} />
-                            ) : (
+                            typeof row.price === "undefined" || row.price === null ? (
                                 "-"
+                            ) : (
+                                <FormattedNumber value={row.price} minimumFractionDigits={4} maximumFractionDigits={4} />
                             )
                         }
                     />
@@ -174,9 +174,17 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             renderCell: ({ row }) => {
                 return (
                     <GridCellContent
-                        primaryText={typeof row.price === "number" ? <FormattedNumber value={row.price} style="unit" unit="kilogram" /> : "-"}
+                        primaryText={
+                            typeof row.price === "undefined" || row.price === null ? (
+                                "-"
+                            ) : (
+                                <FormattedNumber value={row.price} style="unit" unit="kilogram" />
+                            )
+                        }
                         secondaryText={
-                            typeof row.price === "number" ? (
+                            typeof row.price === "undefined" || row.price === null ? (
+                                "-"
+                            ) : (
                                 <FormattedNumber
                                     value={row.price}
                                     minimumFractionDigits={1}
@@ -185,8 +193,6 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                                     unit="kilobyte"
                                     unitDisplay="short"
                                 />
-                            ) : (
-                                "-"
                             )
                         }
                     />

@@ -111,7 +111,7 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
             })
             .join(" ");
 
-        return `typeof ${rowValue} === "number" ? <FormattedNumber ${formattedNumberPropsString} /> : ${emptyText}`;
+        return `typeof ${rowValue} === "undefined" || ${rowValue} === null ? ${emptyText} : <FormattedNumber ${formattedNumberPropsString} />`;
     }
 
     return `${rowValue} ?? ${emptyText}`;
