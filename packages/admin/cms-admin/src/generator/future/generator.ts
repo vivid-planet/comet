@@ -43,18 +43,27 @@ export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
 }
 
-export type FormLayoutConfig<T> = {
-    type: "fieldSet";
-    name: string;
-    title?: string;
-    supportText?: string; // can contain field-placeholder
-    collapsible?: boolean; // default true
-    initiallyExpanded?: boolean; // default false
-    fields: FormFieldConfig<T>[];
+type OptionalNestedFieldsConfig<T> = {
+    type: "optionalNestedFields";
+    name: keyof T; // object name containing fields
+    checkboxLabel?: string;
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    fields: FormFieldConfig<any>[];
 };
+export type FormLayoutConfig<T> =
+    | {
+          type: "fieldSet";
+          name: string;
+          title?: string;
+          supportText?: string; // can contain field-placeholder
+          collapsible?: boolean; // default true
+          initiallyExpanded?: boolean; // default false
+          fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T>)[];
+      }
+    | OptionalNestedFieldsConfig<T>;
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormLayoutConfig<T>(arg: any): arg is FormLayoutConfig<T> {
-    return arg.type !== undefined && arg.type == "fieldSet";
+    return arg.type !== undefined && ["fieldSet", "optionalNestedFields"].includes(arg.type);
 }
 
 export type FormConfig<T extends { __typename?: string }> = {
