@@ -8,10 +8,13 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormCheckbox,
+    FinalFormInput,
     FinalFormSelect,
     FinalFormSubmitEvent,
+    FinalFormSwitch,
     Loading,
     MainContent,
+    messages,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -62,16 +65,22 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = ProductFormDetailsFragment & {
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
+    dimensionsEnabled: boolean;
+    dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
+        width: string;
+        height: string;
+        depth: string;
+    };
     image: BlockState<typeof rootBlocks.image>;
 };
 
 interface FormProps {
-    id?: string;
     manufacturerCountry: string;
+    id?: string;
 }
 
-export function ProductForm({ id, manufacturerCountry }: FormProps): React.ReactElement {
+export function ProductForm({ manufacturerCountry, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -88,6 +97,14 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
+                      dimensionsEnabled: !!data.product.dimensions,
+                      dimensions: data.product.dimensions
+                          ? {
+                                width: String(data.product.dimensions.width),
+                                height: String(data.product.dimensions.height),
+                                depth: String(data.product.dimensions.depth),
+                            }
+                          : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -109,11 +126,19 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
         },
     });
 
-    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
             category: formValues.category?.id,
+            dimensions:
+                dimensionsEnabled && formValues.dimensions
+                    ? {
+                          width: parseFloat(formValues.dimensions.width),
+                          height: parseFloat(formValues.dimensions.height),
+                          depth: parseFloat(formValues.dimensions.depth),
+                      }
+                    : null,
             manufacturer: formValues.manufacturer?.id,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
@@ -260,6 +285,56 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
                                 }}
                                 getOptionLabel={(option) => option.title}
                             />
+                            <Field
+                                fullWidth
+                                name="dimensionsEnabled"
+                                type="checkbox"
+                                label={<FormattedMessage id="product.dimensions.dimensionsEnabled" defaultMessage="Configure dimensions" />}
+                            >
+                                {(props) => (
+                                    <FormControlLabel
+                                        control={<FinalFormSwitch {...props} />}
+                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
+                                    />
+                                )}
+                            </Field>
+                            <Field name="dimensionsEnabled" subscription={{ value: true }}>
+                                {({ input: { value } }) =>
+                                    value ? (
+                                        <>
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.width"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
+                                            />
+
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.height"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
+                                            />
+
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.depth"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
+                                            />
+                                        </>
+                                    ) : null
+                                }
+                            </Field>
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
@@ -308,11 +383,13 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
                             <FileUploadField
                                 name="priceList"
                                 label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
+                                variant="horizontal"
                                 maxFileSize={4194304}
                             />
                             <FileUploadField
                                 name="datasheets"
                                 label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
+                                variant="horizontal"
                                 multiple
                                 maxFileSize={4194304}
                             />

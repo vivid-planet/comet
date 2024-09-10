@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext, createRef, PropsWithChildren, Ref, useCallback, useEffect, useRef, useState } from "react";
 import { Route, useHistory } from "react-router";
 
 import {
@@ -14,7 +14,7 @@ import {
 } from "./IFrameMessage";
 
 export interface IFrameBridgeContext {
-    iFrameRef: React.Ref<HTMLIFrameElement>;
+    iFrameRef: Ref<HTMLIFrameElement>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendBlockState: (blockState: any) => void; // TODO: only PageBlock is supported currently
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,8 +26,8 @@ export interface IFrameBridgeContext {
     sendHoverComponent: (adminRoute: string | null) => void;
 }
 
-export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
-    iFrameRef: React.createRef(),
+export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
+    iFrameRef: createRef(),
     sendBlockState: () => {
         // empty
     },
@@ -50,14 +50,14 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
 interface IFrameBridgeProviderProps {
     onReceiveMessage?: (message: IFrameMessage) => void;
 }
-export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderProps> = ({ children, onReceiveMessage }) => {
-    const iFrameRef = React.useRef<HTMLIFrameElement>(null);
-    const [iFrameReady, setIFrameReady] = React.useState(false);
+export const IFrameBridgeProvider = ({ children, onReceiveMessage }: PropsWithChildren<IFrameBridgeProviderProps>) => {
+    const iFrameRef = useRef<HTMLIFrameElement>(null);
+    const [iFrameReady, setIFrameReady] = useState(false);
 
-    const [hoveredSiteRoute, setHoveredSiteRoute] = React.useState<string | null>(null);
+    const [hoveredSiteRoute, setHoveredSiteRoute] = useState<string | null>(null);
 
     const history = useHistory();
-    const sendMessage = React.useCallback(
+    const sendMessage = useCallback(
         (message: AdminMessage) => {
             if (!iFrameReady) {
                 throw Error("iFrame not ready");
@@ -69,7 +69,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
         },
         [iFrameReady],
     );
-    const _onReceiveMessage = React.useCallback(
+    const _onReceiveMessage = useCallback(
         (message: IFrameMessage) => {
             onReceiveMessage?.(message);
             switch (message.cometType) {
@@ -87,7 +87,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
         [history, onReceiveMessage],
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
             try {
                 const message = JSON.parse(event.data);
@@ -108,7 +108,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
         };
     }, [_onReceiveMessage]);
 
-    const sendSelectComponent = React.useCallback(
+    const sendSelectComponent = useCallback(
         (adminRoute: string) => {
             const message: IAdminSelectComponentMessage = { cometType: AdminMessageType.SelectComponent, data: { adminRoute } };
             sendMessage(message);

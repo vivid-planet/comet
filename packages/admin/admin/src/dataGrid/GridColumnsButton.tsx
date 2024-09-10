@@ -1,11 +1,11 @@
 import { Columns4 } from "@comet/admin-icons";
 import { GridToolbarColumnsButton } from "@mui/x-data-grid";
-import * as React from "react";
+import { ComponentProps } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
 
-type Props = Omit<React.ComponentProps<typeof GridToolbarColumnsButton>, "onResize" | "onResizeCapture">;
+type Props = Omit<ComponentProps<typeof GridToolbarColumnsButton>, "onResize" | "onResizeCapture">;
 
 export function GridColumnsButton(props: Props) {
     return (

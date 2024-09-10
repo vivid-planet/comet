@@ -1,15 +1,14 @@
 import { Warning } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { usePromise } from "../../common/usePromise";
 
 export interface AdminTabLabelProps {
-    children: React.ReactNode;
     isValid?: () => Promise<boolean> | boolean;
 }
 
-export function AdminTabLabel({ children, isValid: isValidFn }: AdminTabLabelProps): JSX.Element | null {
+export function AdminTabLabel({ children, isValid: isValidFn }: PropsWithChildren<AdminTabLabelProps>) {
     const isValid = usePromise(isValidFn, { initialValue: true });
 
     return (

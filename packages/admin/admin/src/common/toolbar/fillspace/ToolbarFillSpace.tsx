@@ -1,6 +1,6 @@
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -8,7 +8,7 @@ import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBasePr
 export type ToolbarFillSpaceClassKey = "root";
 
 export interface ToolbarFillSpaceProps extends ThemedComponentBaseProps {
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 const Root = createComponentSlot("div")<ToolbarFillSpaceClassKey>({
