@@ -71,7 +71,13 @@ export function generateFormField({
                   if (!gqlArgField) {
                       // no input-arg-field found, probably root-arg
                       const rootArg = createMutationType.args.find((arg) => arg.name === name);
-                      if (!rootArg) throw new Error(`Field ${String(config.name)}: No matching input-arg field nor root-arg found.`);
+                      if (!rootArg) {
+                          throw new Error(
+                              `Field ${String(config.name)}: No matching input-arg field (${inputArgTypeRef.name}) nor root-arg (${
+                                  createMutationType.name
+                              }) found.`,
+                          );
+                      }
                       gqlArgField = rootArg;
                       isInputArgSubfield = false;
                   }
