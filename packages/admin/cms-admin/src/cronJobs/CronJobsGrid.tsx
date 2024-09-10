@@ -1,10 +1,10 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { MainContent, StackLink, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
+import { CancelButton, MainContent, StackLink, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
 import { Play, Time } from "@comet/admin-icons";
-import { IconButton } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
-import React from "react";
+import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
@@ -66,11 +66,16 @@ export function CronJobsGrid() {
     const intl = useIntl();
     const client = useApolloClient();
     const stackSwitchApi = useStackSwitchApi();
+    const [cronJobToStart, setCronJobToStart] = useState<string>();
+    const dialogOpen = Boolean(cronJobToStart);
 
     const { data, loading, error } = useQuery<GQLKubernetesCronJobsQuery, GQLKubernetesCronJobsQueryVariables>(cronJobsQuery);
 
     const rows = data?.kubernetesCronJobs ?? [];
 
+    const closeDialog = () => {
+        setCronJobToStart(undefined);
+    };
     return (
         <MainContent disablePadding fullHeight>
             <DataGrid
@@ -131,12 +136,8 @@ export function CronJobsGrid() {
                                 <IconButton>
                                     <Play
                                         color="primary"
-                                        onClick={async () => {
-                                            await client.mutate<GQLTriggerKubernetesCronJobMutation, GQLTriggerKubernetesCronJobMutationVariables>({
-                                                mutation: triggerCronJobMutation,
-                                                variables: { name: row.name },
-                                            });
-                                            stackSwitchApi.activatePage("jobs", row.name);
+                                        onClick={() => {
+                                            setCronJobToStart(row.name);
                                         }}
                                     />
                                 </IconButton>
@@ -148,6 +149,39 @@ export function CronJobsGrid() {
                 disableColumnSelector
                 components={{ Toolbar: CronJobsToolbar }}
             />
+            <Dialog open={dialogOpen} onClose={closeDialog}>
+                <DialogTitle>
+                    <FormattedMessage id="comet.pages.cronjob.dialog.title" defaultMessage="Start cron job now?" />
+                </DialogTitle>
+                <DialogContent>
+                    <FormattedMessage
+                        id="comet.pages.cronjob.dialog.content"
+                        defaultMessage="Are you sure you want to start the {cronJobName} cron job now?"
+                        values={{
+                            cronJobName: cronJobToStart,
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <CancelButton onClick={closeDialog} />
+
+                    <Button
+                        variant="contained"
+                        startIcon={<Play />}
+                        onClick={async () => {
+                            if (cronJobToStart) {
+                                await client.mutate<GQLTriggerKubernetesCronJobMutation, GQLTriggerKubernetesCronJobMutationVariables>({
+                                    mutation: triggerCronJobMutation,
+                                    variables: { name: cronJobToStart },
+                                });
+                                stackSwitchApi.activatePage("jobs", cronJobToStart);
+                            }
+                        }}
+                    >
+                        <FormattedMessage id="comet.pages.cronjob.dialog.action" defaultMessage="Start now" />
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </MainContent>
     );
 }

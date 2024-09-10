@@ -1,5 +1,5 @@
 import { Button, CircularProgress } from "@mui/material";
-import * as React from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FileIcon } from "../fileIcons/FileIcon";
@@ -8,13 +8,13 @@ import { IExportApi } from "./excelexport/IExportApi";
 interface IProps {
     exportApi: IExportApi<any>;
     onClick?: () => void;
-    loadingComponent?: React.ReactNode;
+    loadingComponent?: ReactNode;
 }
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export const ExcelExportButton: React.FunctionComponent<IProps> = ({ onClick, children, exportApi, loadingComponent }) => {
+export const ExcelExportButton = ({ onClick, children, exportApi, loadingComponent }: PropsWithChildren<IProps>) => {
     const onClickButtonPressed = () => {
         if (onClick != null) {
             onClick();

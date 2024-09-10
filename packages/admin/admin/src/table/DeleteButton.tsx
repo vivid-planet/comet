@@ -3,7 +3,7 @@ import { Delete } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import * as React from "react";
+import { Component, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DeleteMutation } from "../DeleteMutation";
@@ -12,8 +12,8 @@ import { messages } from "../messages";
 interface IProps {
     selectedId?: string;
     mutation: any;
-    icon?: React.ReactNode | null;
-    text?: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
+    icon?: ReactNode | null;
+    text?: ReactNode; // typically a string or a FormattedMessage (intl) is passed
     color?: ButtonProps["color"];
     refetchQueries?: Array<string | PureQueryOptions>;
 }
@@ -23,7 +23,7 @@ const DeleteMessage = () => <FormattedMessage {...messages.delete} />;
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export class TableDeleteButton extends React.Component<IProps> {
+export class TableDeleteButton extends Component<IProps> {
     public render() {
         const { selectedId, mutation, refetchQueries, icon = <Delete />, text = <DeleteMessage />, color } = this.props;
         const disabled = !selectedId;

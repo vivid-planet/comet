@@ -22,6 +22,7 @@ import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 
+import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -149,9 +150,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             filterable: false,
             type: "actions",
             align: "right",
+            pinned: "right",
+            width: 116,
             renderCell: (params) => {
                 return (
                     <>
+                        <ProductsGridPreviewAction {...params} />
                         {rowAction && rowAction(params)}
                         <CrudContextMenu
                             copyData={() => {

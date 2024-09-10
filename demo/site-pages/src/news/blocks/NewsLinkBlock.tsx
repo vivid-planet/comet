@@ -1,11 +1,11 @@
 import { PropsWithData } from "@comet/cms-site";
 import { NewsLinkBlockData } from "@src/blocks.generated";
 import Link from "next/link";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 type Props = PropsWithData<NewsLinkBlockData> & { title?: string };
 
-function NewsLinkBlock({ data: { id }, children, title }: React.PropsWithChildren<Props>): JSX.Element | null {
+function NewsLinkBlock({ data: { id }, children, title }: PropsWithChildren<Props>): JSX.Element | null {
     if (id === undefined) {
         return null;
     }

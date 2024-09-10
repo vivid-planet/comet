@@ -1,7 +1,6 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
-import * as React from "react";
 
-export default function ThreeDotSaving(props: SvgIconProps): JSX.Element {
+export default function ThreeDotSaving(props: SvgIconProps) {
     return (
         <SvgIcon {...props} viewBox="0 0 16 16">
             <circle cx="2.5" cy="8" r="2.5" fillOpacity="1">

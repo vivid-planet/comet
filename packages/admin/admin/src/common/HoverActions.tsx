@@ -1,5 +1,5 @@
 import { ComponentsOverrides, css, Grow, Theme, useThemeProps } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -11,15 +11,15 @@ export interface HoverActionsProps
         actions: "div";
         children: "div";
     }> {
-    actions?: React.ReactNode;
-    children?: React.ReactNode;
+    actions?: ReactNode;
+    children?: ReactNode;
 }
 
 export type HoverActionsClassKey = "root" | "hoverAreaExpansion" | "actions" | "children";
 
 export const HoverActions = (inProps: HoverActionsProps) => {
     const { actions, children, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminHoverActions" });
-    const [isHovering, setIsHovering] = React.useState<boolean>(false);
+    const [isHovering, setIsHovering] = useState<boolean>(false);
 
     return (
         <Root onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)} {...slotProps?.root} {...restProps}>

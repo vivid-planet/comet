@@ -3,7 +3,6 @@ import { filterByFragment, FinalForm, FinalFormSubmitEvent, MainContent, TextFie
 import { resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -31,7 +30,7 @@ interface FormProps {
 
 type FormState = GQLProductCategoryFormFragment;
 
-function ProductCategoryForm({ id }: FormProps): React.ReactElement {
+function ProductCategoryForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormState>();

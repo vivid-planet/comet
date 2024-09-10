@@ -1,17 +1,16 @@
 import { css, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
 import { HiddenInSubroute } from "./HiddenInSubroute";
 
 interface Props {
-    children: React.ReactNode;
-    title?: React.ReactNode;
+    title?: ReactNode;
     variant?: "normal" | "dense";
     disableBottomMargin?: boolean;
 }
 
-export function AdminComponentSection({ children, title, disableBottomMargin }: Props): React.ReactElement {
+export const AdminComponentSection = ({ children, title, disableBottomMargin }: PropsWithChildren<Props>) => {
     if (title) {
         return (
             <Root disableBottomMargin={disableBottomMargin}>
@@ -24,7 +23,7 @@ export function AdminComponentSection({ children, title, disableBottomMargin }: 
     }
 
     return <Root disableBottomMargin={disableBottomMargin}>{children}</Root>;
-}
+};
 
 const Root = styled("div", { shouldForwardProp: (prop) => prop !== "disableBottomMargin" })<Pick<Props, "variant" | "disableBottomMargin">>`
     ${({ disableBottomMargin, variant, theme }) =>

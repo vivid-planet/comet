@@ -4,15 +4,15 @@ import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { graphQLApiUrl } from "@src/util/graphQLClient";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
-const PreviewPage: React.FunctionComponent = () => {
+const PreviewPage = () => {
     const iFrameBridge = useIFrameBridge();
 
     const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
 
-    const [blockData, setBlockData] = React.useState<PageContentBlockData>();
-    React.useEffect(() => {
+    const [blockData, setBlockData] = useState<PageContentBlockData>();
+    useEffect(() => {
         async function load() {
             if (!iFrameBridge.block) {
                 setBlockData(undefined);
