@@ -1,8 +1,11 @@
 import { GridColDef } from "@comet/admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+<<<<<<< HEAD
 import { IconProps } from "@mui/material";
 import { GridSortDirection } from "@mui/x-data-grid";
+=======
+>>>>>>> admin-gen-configurable_generate-single-file
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -175,8 +178,7 @@ export async function runFutureGenerate({
         //const configs = await import(`${process.cwd()}/${file}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
-        if (deleteGeneratedFilesPreGeneration) await fs.rm(codeOuputFilename).catch((e) => false);
-
+        await fs.rm(codeOuputFilename).catch((e) => false);
         // eslint-disable-next-line no-console
         console.log(`generating ${file}`);
 
@@ -200,7 +202,11 @@ export async function runFutureGenerate({
 
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
+<<<<<<< HEAD
             if (deleteGeneratedFilesPreGeneration) await fs.rm(gqlDocumentsOuputFilename).catch((e) => false);
+=======
+            await fs.rm(gqlDocumentsOuputFilename).catch((e) => false);
+>>>>>>> admin-gen-configurable_generate-single-file
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
                 import { finalFormFileUploadFragment } from "@comet/cms-admin";
 
