@@ -204,10 +204,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     return `${row.id}_${row.rootColumnName}_${row.jsonPath}`;
                 }}
             />
-            <Alert title={<FormattedMessage id="comet.dam.file.dependants.info.title" defaultMessage="What are dependants?" />} sx={{ marginTop: 2 }}>
+            <Alert title={<FormattedMessage id="comet.dam.file.dependents.info.title" defaultMessage="What are dependents?" />} sx={{ marginTop: 4 }}>
                 <FormattedMessage
-                    id="comet.dam.file.dependants.info.content"
-                    defaultMessage="Dependants are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it's easy to manage or reorganize the integration of your assets."
+                    id="comet.dam.file.dependents.info.content"
+                    defaultMessage="Dependents are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it's easy to manage or reorganize the integration of your assets."
                 />
             </Alert>
         </>

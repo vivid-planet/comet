@@ -100,7 +100,7 @@ const Duplicates: React.FC<{ fileId: string }> = ({ fileId }) => {
             </List>
             <Alert
                 title={<FormattedMessage id="comet.dam.file.duplicates.info.title" defaultMessage="What are duplicate assets?" />}
-                sx={{ marginTop: 2 }}
+                sx={{ marginTop: 4 }}
             >
                 <FormattedMessage
                     id="comet.dam.file.duplicates.info.content"
