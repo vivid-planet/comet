@@ -73,7 +73,7 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
     const rowValue = `row.${textConfig.field.replace(/\./g, "?.")}`;
 
     if (textConfig.type === "number") {
-        const { type, decimals: decimalsConfigValue, field, ...configForFormattedNumberProps } = textConfig;
+        const { type, decimals: decimalsConfigValue, field, emptyValue, ...configForFormattedNumberProps } = textConfig;
 
         const hasCurrency = Boolean(textConfig.currency);
         const hasUnit = Boolean(textConfig.unit);
