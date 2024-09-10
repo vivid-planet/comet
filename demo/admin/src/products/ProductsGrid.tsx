@@ -23,7 +23,6 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
-import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {

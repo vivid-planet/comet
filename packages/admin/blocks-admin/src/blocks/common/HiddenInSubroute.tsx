@@ -1,11 +1,7 @@
-import * as React from "react";
+import { ReactNode } from "react";
 import { Route, useRouteMatch } from "react-router";
 
-interface Props {
-    children: React.ReactNode;
-}
-
-export function HiddenInSubroute({ children }: Props): React.ReactElement {
+export const HiddenInSubroute = ({ children }: { children?: ReactNode }) => {
     const match = useRouteMatch();
 
     return (
@@ -13,4 +9,4 @@ export function HiddenInSubroute({ children }: Props): React.ReactElement {
             {children}
         </Route>
     );
-}
+};

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 interface UsePromiseOptions<S> {
     initialValue: S;
@@ -8,13 +8,13 @@ export function usePromise(): undefined; // For convinience, the caller doesnt n
 export function usePromise<S>(fn: undefined | (() => Promise<S> | S)): S | undefined; // Without initial value the return maybe undefined (until the first promise is resolved)
 export function usePromise<S>(fn: undefined | (() => Promise<S> | S), options: UsePromiseOptions<S>): S; // Initial values are given, return is never undefined
 export function usePromise<S>(fn?: undefined | (() => Promise<S> | S), options?: UsePromiseOptions<S>): S | undefined {
-    const [state, setState] = React.useState(() => {
+    const [state, setState] = useState(() => {
         if (options) {
             return options.initialValue;
         }
         return undefined;
     });
-    React.useEffect(() => {
+    useEffect(() => {
         // @TODO: add throtteling- or debouncing-options to avoid evaluating the promise on every render
         const evaluateFn = async () => {
             if (fn) {

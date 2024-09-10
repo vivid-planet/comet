@@ -2,7 +2,7 @@ import { Field, StackPage, StackPageTitle, StackSwitch, StackSwitchApiContext } 
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
 import { Checkbox, Divider, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage, IntlShape, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -27,13 +27,13 @@ import { createUseAdminComponent as createUseListBlockAdminComponent } from "./l
 export interface ColumnsBlockLayout {
     name: string;
     columns: number;
-    label: React.ReactNode;
-    preview: React.ReactNode;
+    label: ReactNode;
+    preview: ReactNode;
     section?:
         | string
         | {
               name: string;
-              label?: React.ReactNode;
+              label?: ReactNode;
           };
 }
 
@@ -53,7 +53,7 @@ interface ColumnsBlockState<T extends BlockInterface> {
 
 interface CreateColumnsBlockOptions<T extends BlockInterface> {
     name: string;
-    displayName: React.ReactNode;
+    displayName: ReactNode;
     category?: BlockCategory | CustomBlockCategory;
     contentBlock: T;
     layouts: ColumnsBlockLayout[];

@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { isPreviewContentImageRule, isPreviewContentTextRule, PreviewContent, PreviewImage } from "../types";
 
@@ -29,7 +29,7 @@ export function OneImageWithTextPreview({ content }: { content: PreviewContent[]
     }
 }
 
-function TextAndImage({ text, image }: { text: React.ReactNode; image: PreviewImage }): JSX.Element {
+function TextAndImage({ text, image }: { text: ReactNode; image: PreviewImage }): JSX.Element {
     return (
         <div style={{ display: "flex" }}>
             <div>
@@ -48,7 +48,7 @@ const ImageTag = styled("img")`
     margin-right: 12px;
 `;
 
-function Text({ text }: { text: React.ReactNode }): JSX.Element {
+function Text({ text }: { text: ReactNode }): JSX.Element {
     return <>{text}</>;
 }
 

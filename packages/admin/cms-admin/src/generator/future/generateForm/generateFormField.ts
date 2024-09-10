@@ -11,18 +11,25 @@ export function generateFormField({
     baseOutputFilename,
     config,
     formConfig,
+    gqlType,
+    namePrefix,
 }: {
     gqlIntrospection: IntrospectionQuery;
     baseOutputFilename: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormFieldConfig<any>;
+    formFragmentName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
+    gqlType: string;
+    namePrefix?: string;
 }): GenerateFieldsReturn {
-    const gqlType = formConfig.gqlType;
-    const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
+    const rootGqlType = formConfig.gqlType;
+    const formattedMessageRootId = rootGqlType[0].toLowerCase() + rootGqlType.substring(1);
+    const dataRootName = rootGqlType[0].toLowerCase() + rootGqlType.substring(1); // TODO should probably be deteced via query
 
     const name = String(config.name);
+    const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
     const label = config.label ?? camelCaseToHumanReadable(name);
 
     const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
@@ -55,11 +62,11 @@ export function generateFormField({
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
         initializationCode: optionalRender
-            ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? data.${instanceGqlType}.${name} : undefined`
+            ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? data.${dataRootName}.${name} : undefined`
             : undefined,
         initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
     };
-    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig];
+    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
@@ -78,7 +85,7 @@ export function generateFormField({
         validateCode = `validate={${config.validate.name}}`;
     }
 
-    const fieldLabel = `<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />`;
+    const fieldLabel = `<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />`;
 
     let code = "";
     let formValueToGqlInputCode = "";
@@ -91,11 +98,13 @@ export function generateFormField({
             ${config.readOnly ? readOnlyPropsWithLock : ""}
             variant="horizontal"
             fullWidth
-            name="${name}"
+            name="${nameWithPrefix}"
             label={${fieldLabel}}
             ${
                 config.helperText
-                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    ? `helperText={<FormattedMessage id=` +
+                      `"${formattedMessageRootId}.${name}.helperText" ` +
+                      `defaultMessage="${config.helperText}" />}`
                     : ""
             }
             ${validateCode}
@@ -107,33 +116,33 @@ export function generateFormField({
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
                 fullWidth
-                name="${name}"
+                name="${nameWithPrefix}"
                 component={FinalFormInput}
                 type="number"
                 label={${fieldLabel}}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
-                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `"${formattedMessageRootId}.${name}.helperText" ` +
                           `defaultMessage="${config.helperText}" />}`
                         : ""
                 }
                 ${validateCode}
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
-        let assignment = `parseFloat(formValues.${String(name)})`;
+        let assignment = `parseFloat(formValues.${nameWithPrefix})`;
         if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
-            assignment = `formValues.${name} ? ${assignment} : null`;
+            assignment = `formValues.${nameWithPrefix} ? ${assignment} : null`;
         }
         formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
 
         let initializationAssignment = optionalRender
-            ? `show${name[0].toUpperCase() + name.substring(1)} ? String(data.${instanceGqlType}.${name}) : undefined`
-            : `String(data.${instanceGqlType}.${name})`;
+            ? `show${name[0].toUpperCase() + name.substring(1)} ? String(data.${dataRootName}.${nameWithPrefix}) : undefined`
+            : `String(data.${dataRootName}.${nameWithPrefix})`;
         if (!required) {
             initializationAssignment = optionalRender
-                ? `show${name[0].toUpperCase() + name.substring(1)} && data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`
-                : `data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`;
+                ? `show${name[0].toUpperCase() + name.substring(1)} && data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`
+                : `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
         }
         formValuesConfig = [
             {
@@ -147,7 +156,7 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "boolean") {
-        code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
+        code = `<Field name="${nameWithPrefix}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
                     label={${fieldLabel}}
@@ -155,7 +164,7 @@ export function generateFormField({
                     ${
                         config.helperText
                             ? `helperText={<FormattedMessage id=` +
-                              `"${instanceGqlType}.${name}.helperText" ` +
+                              `"${formattedMessageRootId}.${name}.helperText" ` +
                               `defaultMessage="${config.helperText}" />}`
                             : ""
                     }
@@ -180,13 +189,13 @@ export function generateFormField({
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
                 fullWidth
-                name="${name}"
+                name="${nameWithPrefix}"
                 component={FinalFormDatePicker}
                 label={${fieldLabel}}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
-                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `"${formattedMessageRootId}.${name}.helperText" ` +
                           `defaultMessage="${config.helperText}" />}`
                         : ""
                 }
@@ -199,17 +208,17 @@ export function generateFormField({
                     initializationCode: optionalRender
                         ? `${name}: show${
                               name[0].toUpperCase() + name.substring(1)
-                          } && data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`
-                        : `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
+                          } && data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`
+                        : `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
                     initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
                 },
             },
         ];
     } else if (config.type == "block") {
-        code = `<Field name="${name}" isEqual={isEqual}>
+        code = `<Field name="${nameWithPrefix}" isEqual={isEqual}>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
-        formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${name}),` : ``;
+        formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,
@@ -218,8 +227,8 @@ export function generateFormField({
                     initializationCode: optionalRender
                         ? `${name}: show${
                               name[0].toUpperCase() + name.substring(1)
-                          } ? rootBlocks.${name}.input2State(data.${instanceGqlType}.${name}) : undefined`
-                        : `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
+                          } ? rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix}) : undefined`
+                        : `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
                     defaultInitializationCode: optionalRender
                         ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? rootBlocks.${name}.defaultValues() : undefined`
                         : `${name}: rootBlocks.${name}.defaultValues()`,
@@ -230,6 +239,7 @@ export function generateFormField({
     } else if (config.type === "fileUpload") {
         const multiple = config.multiple || (typeof config.maxFiles === "number" && config.maxFiles > 1);
         code = `<FileUploadField name="${name}" label={${fieldLabel}}
+            variant="horizontal"
             ${config.multiple ? "multiple" : ""}
             ${config.maxFiles ? `maxFiles={${config.maxFiles}}` : ""}
             ${config.maxFileSize ? `maxFileSize={${config.maxFileSize}}` : ""}
@@ -262,11 +272,13 @@ export function generateFormField({
             ${required ? "required" : ""}
             variant="horizontal"
             fullWidth
-            name="${name}"
+            name="${nameWithPrefix}"
             label={${fieldLabel}}>
             ${
                 config.helperText
-                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    ? `helperText={<FormattedMessage id=` +
+                      `"${formattedMessageRootId}.${name}.helperText" ` +
+                      `defaultMessage="${config.helperText}" />}`
                     : ""
             }
             ${validateCode}
@@ -274,7 +286,7 @@ export function generateFormField({
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
                     .map((value) => {
-                        const id = `${instanceGqlType}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
+                        const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
                         const label = `<FormattedMessage id="${id}" defaultMessage="${value.label}" />`;
                         return `<MenuItem value="${value.value}">${label}</MenuItem>`;
                     })
@@ -332,7 +344,7 @@ export function generateFormField({
                 ${required ? "required" : ""}
                 variant="horizontal"
                 fullWidth
-                name="${name}"
+                name="${nameWithPrefix}"
                 label={${fieldLabel}}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({

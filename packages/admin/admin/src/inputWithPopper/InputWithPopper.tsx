@@ -1,13 +1,13 @@
 import { ClickAwayListener, Grow, InputBase as MuiInputBase, InputBaseProps, Paper as MuiPaper, Popper as MuiPopper } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
-import * as React from "react";
+import { ElementType, ReactNode, RefObject, useCallback, useEffect, useRef, useState } from "react";
 
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { InputBase, Paper, Popper, Root } from "./InputWithPopper.slots";
 
 export type InputWithPopperComponents = InputBaseProps["components"] & {
-    Transition?: React.ElementType<TransitionProps>;
+    Transition?: ElementType<TransitionProps>;
 };
 
 type ClosePopper = (focusInput?: boolean) => void;
@@ -21,11 +21,11 @@ type BaseProps = ThemedComponentBaseProps<{
 }>;
 
 export interface InputWithPopperProps extends Omit<InputBaseProps, "components" | "inputRef" | "sx" | "slotProps">, BaseProps {
-    children: ((closePopper: ClosePopper) => React.ReactNode) | React.ReactNode;
+    children: ((closePopper: ClosePopper) => ReactNode) | ReactNode;
     components?: InputWithPopperComponents;
     onOpenPopper?: () => void;
     onClosePopper?: () => void;
-    inputRef?: React.RefObject<HTMLElement>;
+    inputRef?: RefObject<HTMLElement>;
     slotProps?: BaseProps["slotProps"] & {
         transition?: TransitionProps;
     };
@@ -44,13 +44,13 @@ export const InputWithPopper = (inProps: InputWithPopperProps) => {
     } = useThemeProps({ props: inProps, name: "CometAdminInputWithPopper" });
     const { Transition = Grow, ...inputBaseComponents } = components;
 
-    const rootRef = React.useRef<HTMLDivElement>(null);
-    const ownInputRef = React.useRef<HTMLElement>(null);
-    const [showPopper, setShowPopper] = React.useState<boolean>(false);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const ownInputRef = useRef<HTMLElement>(null);
+    const [showPopper, setShowPopper] = useState<boolean>(false);
 
     const inputRef = inputRefProp ?? ownInputRef;
 
-    const closePopper: ClosePopper = React.useCallback(
+    const closePopper: ClosePopper = useCallback(
         (focusInput) => {
             if (showPopper) {
                 if (focusInput) {
@@ -78,7 +78,7 @@ export const InputWithPopper = (inProps: InputWithPopperProps) => {
      * Pressing the "Tab" key closes the popper, to allow the user to navigate to the next/previous form element.
      * The `onBlur` of `InputBase` cannot be used, this would close the popper when clicking inside the popper itself, preventing further interaction.
      */
-    React.useEffect(() => {
+    useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Tab" || e.key === "Escape") {
                 closePopper(true);
