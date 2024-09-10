@@ -105,13 +105,7 @@ export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 
-export async function runFutureGenerate({
-    filePattern = "src/**/*.cometGen.ts",
-    deleteGeneratedFilesPreGeneration = false,
-}: {
-    filePattern?: string;
-    deleteGeneratedFilesPreGeneration?: boolean;
-}) {
+export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });
@@ -127,7 +121,7 @@ export async function runFutureGenerate({
         //const configs = await import(`${process.cwd()}/${file}`);
 
         const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
-        if (deleteGeneratedFilesPreGeneration) await fs.rm(codeOuputFilename).catch((e) => false);;
+        await fs.rm(codeOuputFilename).catch((e) => false);
         // eslint-disable-next-line no-console
         console.log(`generating ${file}`);
 
@@ -151,7 +145,7 @@ export async function runFutureGenerate({
 
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
-            if (deleteGeneratedFilesPreGeneration) await fs.rm(gqlDocumentsOuputFilename).catch((e) => false);
+            await fs.rm(gqlDocumentsOuputFilename).catch((e) => false);
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
                 import { finalFormFileUploadFragment } from "@comet/cms-admin";
 
