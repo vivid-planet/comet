@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
 import { ComponentsOverrides, css } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -16,14 +16,14 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
 }> & {
     variant?: "vertical" | "horizontal";
     fullWidth?: boolean;
-    label?: React.ReactNode;
+    label?: ReactNode;
     required?: boolean;
     disabled?: boolean;
     error?: string;
     warning?: string;
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
-    helperText?: React.ReactNode;
+    helperText?: ReactNode;
 };
 
 export type FieldContainerClassKey =
@@ -204,7 +204,7 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     `,
 );
 
-export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerProps>) => {
+export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) => {
     const {
         variant = "vertical",
         fullWidth: passedFullWidth,
@@ -225,11 +225,11 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
     const hasError = !!error;
     const hasWarning = !hasError && !!warning;
 
-    const ref = React.useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLDivElement>(null);
     const rootWidth = useObservedWidth(ref);
     const forceVertical = rootWidth <= 600;
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (scrollTo) {
             ref.current?.scrollIntoView({ behavior: "smooth" });
         }

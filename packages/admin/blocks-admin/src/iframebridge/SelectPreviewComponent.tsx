@@ -1,13 +1,13 @@
-import * as React from "react";
+import { ReactNode, useEffect } from "react";
 import { useLocation } from "react-router";
 
 import { useIFrameBridge } from "./useIFrameBridge";
 
-export const SelectPreviewComponent: React.FunctionComponent = ({ children }) => {
+export const SelectPreviewComponent = ({ children }: { children?: ReactNode }) => {
     const location = useLocation();
     const iFrameBridge = useIFrameBridge();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (iFrameBridge.iFrameReady) {
             iFrameBridge.sendSelectComponent(`${location.pathname}${location.hash}`);
         }

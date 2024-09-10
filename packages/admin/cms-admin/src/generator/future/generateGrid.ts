@@ -222,6 +222,7 @@ export function generateGrid(
         type: actionsColumnType,
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
+        width: actionsColumnWidth = 84,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
@@ -534,6 +535,7 @@ export function generateGrid(
                               type: '"actions"',
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
+                              width: actionsColumnWidth,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (

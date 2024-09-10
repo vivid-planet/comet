@@ -1,7 +1,7 @@
 import { Clear } from "@comet/admin-icons";
 import { Button, Grid, Typography } from "@mui/material";
 import { AnyObject } from "final-form";
-import * as React from "react";
+import { Component, ReactNode } from "react";
 import { Form, FormProps, FormRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -9,7 +9,7 @@ import { renderComponent } from "../finalFormRenderComponent";
 import { IFilterApi } from "./useTableQueryFilter";
 
 type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" | "initialValues"> & {
-    headline?: React.ReactNode;
+    headline?: ReactNode;
     resetButton?: boolean;
     onSubmit?: FormProps<FilterValues>["onSubmit"];
     filterApi: IFilterApi<FilterValues>;
@@ -18,7 +18,7 @@ type Props<FilterValues = AnyObject> = Omit<FormProps<FilterValues>, "onSubmit" 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export class TableFilterFinalForm<FilterValues = AnyObject> extends React.Component<Props<FilterValues>> {
+export class TableFilterFinalForm<FilterValues = AnyObject> extends Component<Props<FilterValues>> {
     public render() {
         // remove render, children and component from forwardProps as we define render and those would interfere
         const { headline, resetButton, render, children, component, onSubmit, ...forwardProps } = this.props;

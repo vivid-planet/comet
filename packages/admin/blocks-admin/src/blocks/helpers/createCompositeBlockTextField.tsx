@@ -1,5 +1,4 @@
 import { TextField, TextFieldProps } from "@comet/admin";
-import * as React from "react";
 
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
