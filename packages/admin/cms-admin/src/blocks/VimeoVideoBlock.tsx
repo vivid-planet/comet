@@ -14,36 +14,36 @@ import { Box } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
+import { VimeoVideoBlockData, VimeoVideoBlockInput } from "../blocks.generated";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { PixelImageBlock } from "./PixelImageBlock";
 
-type State = Omit<YouTubeVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
+type State = Omit<VimeoVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 
-const EXPECTED_YT_ID_LENGTH = 11;
+const isValidVimeoIdentifier = (value: string) => {
+    const urlRegEx = /^(https?:\/\/)?((www\.|player\.)?vimeo\.com\/?(showcase\/)*([0-9a-z]*\/)*([0-9]{6,11})[?]?.*)$/;
+    const idRegEx = /^([0-9]{6,11})$/;
 
-const isValidYouTubeIdentifier = (value: string) => {
-    // regex from https://stackoverflow.com/a/51870158
-    const regExp =
-        /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/;
-    const match = value.match(regExp);
-    return value.length === EXPECTED_YT_ID_LENGTH || (!!match && match[8].length == EXPECTED_YT_ID_LENGTH);
+    const urlMatch = urlRegEx.test(value);
+    const idMatch = idRegEx.test(value);
+
+    return urlMatch || idMatch;
 };
 
 const validateIdentifier = (value?: string) => {
     if (!value) return undefined;
 
-    return value && isValidYouTubeIdentifier(value) ? undefined : (
-        <FormattedMessage id="comet.blocks.youTubeVideo.validation" defaultMessage="Should be a valid YouTube URL or identifier" />
+    return value && isValidVimeoIdentifier(value) ? undefined : (
+        <FormattedMessage id="comet.blocks.vimeoVideo.validation" defaultMessage="Should be a valid Vimeo URL or identifier" />
     );
 };
 
-export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, YouTubeVideoBlockInput> = {
+export const VimeoVideoBlock: BlockInterface<VimeoVideoBlockData, State, VimeoVideoBlockInput> = {
     ...createBlockSkeleton(),
 
-    name: "YouTubeVideo",
+    name: "VimeoVideo",
 
-    displayName: <FormattedMessage id="comet.blocks.youTubeVideo" defaultMessage="Video (YouTube)" />,
+    displayName: <FormattedMessage id="comet.blocks.vimeoVideo" defaultMessage="Video (Vimeo)" />,
 
     defaultValues: () => ({ showControls: true, previewImage: PixelImageBlock.defaultValues() }),
 
@@ -66,7 +66,7 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
 
     definesOwnPadding: true,
 
-    isValid: ({ youtubeIdentifier }) => !youtubeIdentifier || isValidYouTubeIdentifier(youtubeIdentifier),
+    isValid: ({ vimeoIdentifier }) => !vimeoIdentifier || isValidVimeoIdentifier(vimeoIdentifier),
 
     AdminComponent: ({ state, updateState }) => {
         const isInPaper = useAdminComponentPaper();
@@ -76,11 +76,10 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                 <SelectPreviewComponent>
                     <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                         <Field
-                            label={
-                                <FormattedMessage id="comet.blocks.youTubeVideo.youtubeIdentifier" defaultMessage="YouTube URL or YouTube Video ID" />
-                            }
+                            name="vimeoIdentifier"
+                            label={<FormattedMessage id="comet.blocks.vimeoVideo.vimeoIdentifier" defaultMessage="Vimeo URL or Vimeo Video ID" />}
                             validate={validateIdentifier}
-                            name="youtubeIdentifier"
+                            type="text"
                             component={FinalFormInput}
                             fullWidth
                             disableContentTranslation
@@ -91,7 +90,10 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                         <PixelImageBlock.AdminComponent
                             state={state.previewImage}
                             updateState={(setStateAction) => {
-                                updateState({ ...state, previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }) });
+                                updateState({
+                                    ...state,
+                                    previewImage: resolveNewState({ prevState: state.previewImage, setStateAction }),
+                                });
                             }}
                         />
                     </AdminComponentSection>
@@ -100,5 +102,5 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
         );
     },
 
-    previewContent: (state) => [{ type: "text", content: state.youtubeIdentifier }],
+    previewContent: (state) => [{ type: "text", content: state.vimeoIdentifier }],
 };
