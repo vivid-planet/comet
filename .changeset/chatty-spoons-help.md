@@ -2,4 +2,4 @@
 "@comet/admin-theme": minor
 ---
 
-Customise GridFilterPanel according to UI Requirements
+Rework `GridFilterPanel` to match the updated Comet CI

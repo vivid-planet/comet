@@ -13,7 +13,7 @@ import {
     TextField,
     TextFieldProps,
 } from "@mui/material";
-import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
+import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import React from "react";
 
@@ -88,10 +88,18 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             height: "20px",
             marginRight: "10px",
         },
+        panelContent: {
+            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
+                display: "flex",
+                ["@media (max-width: 900px)"]: {
+                    display: "none",
+                },
+            },
+        },
         filterForm: {
-            margin: spacing(7, 4, 4, 4),
+            margin: spacing(5, 4, 0, 4),
             padding: "7px 5px",
-            borderBottom: `1px solid ${palette.grey[100]}`,
+            borderBottom: `1px solid ${palette.divider}`,
             "&:last-child": {
                 border: "none",
             },
@@ -99,6 +107,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`.${inputLabelClasses.root}`]: {
                 transform: "translateY(-22px)",
                 fontSize: 14,
+                ["@media (max-width: 900px)"]: {
+                    display: "none",
+                },
             },
             [`.${inputClasses.root}`]: {
                 marginTop: 0,
@@ -162,8 +173,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
         },
         paper: {
-            boxShadow: "0px 0px 40px 0px #0000001A",
-            border: `1px solid ${palette.grey[100]}`,
+            boxShadow: shadows[4],
+            border: `1px solid ${palette.divider}`,
             borderRadius: "4px",
         },
         // @ts-expect-error This key exists but is missing in the types.
