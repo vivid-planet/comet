@@ -3,7 +3,7 @@
 // @ts-ignore
 import * as Excel from "exceljs/dist/exceljs.js";
 import { saveAs } from "file-saver";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { isVisible } from "../isVisible";
 import { safeColumnGet } from "../safeColumnGet";
@@ -99,6 +99,6 @@ function safeFileNameWithExtension(fileName: string): string {
     return fileName.match(excelRegex) ? fileName : `${fileName}.xlsx`;
 }
 
-function safeStringFromReactNode(node: string | string | React.ReactNode): string {
+function safeStringFromReactNode(node: string | string | ReactNode): string {
     return typeof node === "string" ? node : "";
 }

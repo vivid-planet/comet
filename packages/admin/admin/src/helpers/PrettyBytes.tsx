@@ -1,20 +1,15 @@
-import * as React from "react";
+import { ComponentProps } from "react";
 import { FormattedNumber } from "react-intl";
 
 type AvailableUnits = "byte" | "kilobyte" | "megabyte" | "gigabyte" | "terabyte" | "petabyte";
 const availableUnits: AvailableUnits[] = ["byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte"];
 
-interface PrettyBytesProps extends Omit<React.ComponentProps<typeof FormattedNumber>, "style"> {
+interface PrettyBytesProps extends Omit<ComponentProps<typeof FormattedNumber>, "style"> {
     value: number;
     unit?: AvailableUnits;
 }
 
-export const PrettyBytes = ({
-    value: bytes,
-    unit: customUnit,
-    maximumFractionDigits: customMaximumFractionDigits,
-    ...props
-}: PrettyBytesProps): React.ReactElement => {
+export const PrettyBytes = ({ value: bytes, unit: customUnit, maximumFractionDigits: customMaximumFractionDigits, ...props }: PrettyBytesProps) => {
     let exponent;
     if (customUnit) {
         exponent = availableUnits.findIndex((unit) => unit === customUnit);

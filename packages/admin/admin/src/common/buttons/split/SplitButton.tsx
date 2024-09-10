@@ -9,8 +9,7 @@ import {
     PopoverProps,
 } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import * as React from "react";
-import { PropsWithChildren } from "react";
+import { Children, isValidElement, MouseEvent, PropsWithChildren, ReactElement, ReactNode, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -34,9 +33,9 @@ export interface SplitButtonProps
             menuList: typeof MuiMenuList;
             menuItem: typeof MuiMenuItem;
         }> {
-    selectIcon?: React.ReactNode;
+    selectIcon?: ReactNode;
     selectedIndex?: number;
-    onSelectIndex?: (index: number, item: React.ReactElement) => void;
+    onSelectIndex?: (index: number, item: ReactElement) => void;
     showSelectButton?: boolean;
     localStorageKey?: string;
     autoClickOnSelect?: boolean;
@@ -91,9 +90,9 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminSplitButton" });
 
-    const [showSelectButtonState, setShowSelectButtonState] = React.useState<boolean | undefined>(undefined);
+    const [showSelectButtonState, setShowSelectButtonState] = useState<boolean | undefined>(undefined);
 
-    const childrenArray = React.Children.toArray(children);
+    const childrenArray = Children.toArray(children);
     const [uncontrolledSelectedIndex, setUncontrolledIndex] = useStoredState<number>(localStorageKey || false, 0, storage);
     const _selectedIndex = selectedIndex ?? uncontrolledSelectedIndex;
     const _onSelectIndex = onSelectIndex
@@ -102,10 +101,14 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
               setUncontrolledIndex(index);
           };
 
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLDivElement>(null);
 
-    const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number, child: React.ReactElement) => {
+    const handleMenuItemClick: (event: MouseEvent, index: number, child: ReactElement) => void = (
+        event: MouseEvent,
+        index: number,
+        child: ReactElement,
+    ) => {
         _onSelectIndex(index, child);
         setOpen(false);
         if (autoClickOnSelect) {
@@ -117,7 +120,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleClose = (event: React.MouseEvent<Document, MouseEvent>) => {
+    const handleClose = (event: MouseEvent) => {
         if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
             return;
         }
@@ -125,11 +128,11 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
         setOpen(false);
     };
 
-    if (!React.isValidElement(childrenArray[_selectedIndex])) {
+    if (!isValidElement(childrenArray[_selectedIndex])) {
         return null;
     }
 
-    const ActiveChild = childrenArray[_selectedIndex] as React.ReactElement;
+    const ActiveChild = childrenArray[_selectedIndex] as ReactElement;
 
     const { variant: activeChildVariant, color: activeChildColor } = ActiveChild.props;
 
@@ -161,7 +164,7 @@ export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
                 {...slotProps?.popover}
             >
                 <MenuList {...slotProps?.menuList}>
-                    {childrenArray.map((child: React.ReactElement, index) => {
+                    {childrenArray.map((child: ReactElement, index) => {
                         return (
                             <MenuItem
                                 key={index}

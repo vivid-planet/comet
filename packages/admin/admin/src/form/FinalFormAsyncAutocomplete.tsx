@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useAsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import FinalFormAutocomplete, { FinalFormAutocompleteProps } from "./Autocomplete";
 

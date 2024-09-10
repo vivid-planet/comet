@@ -1,5 +1,4 @@
 import { AutocompleteProps } from "@mui/material";
-import React from "react";
 
 import { AsyncOptionsProps } from "../../hooks/useAsyncOptionsProps";
 import FinalFormAutocomplete from "../Autocomplete";

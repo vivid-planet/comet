@@ -25,6 +25,16 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "text", name: "description", label: "Description", multiline: true },
                 { type: "staticSelect", name: "type", label: "Type", required: true, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+                {
+                    type: "optionalNestedFields",
+                    name: "dimensions",
+                    checkboxLabel: "Configure dimensions",
+                    fields: [
+                        { type: "number", name: "width", label: "Width" },
+                        { type: "number", name: "height", label: "Height" },
+                        { type: "number", name: "depth", label: "Depth" },
+                    ],
+                },
             ],
         },
         {
