@@ -1,5 +1,15 @@
 # @comet/cms-site
 
+## 7.3.2
+
+## 7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   f2e10ec21: Fix a bug where a block's hover-overlay element in the admin preview might persist after the underlying element is moved or resized
+
 ## 7.2.1
 
 ## 7.2.0

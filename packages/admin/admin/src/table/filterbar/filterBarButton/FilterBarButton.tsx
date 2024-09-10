@@ -3,7 +3,7 @@ import { buttonClasses, ButtonProps, ComponentsOverrides, svgIconClasses } from 
 import Button from "@mui/material/Button";
 import { css, Theme } from "@mui/material/styles";
 import { useThemeProps } from "@mui/system";
-import * as React from "react";
+import { ComponentType } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -78,7 +78,7 @@ export interface FilterBarButtonProps
             filterBadge: "span";
         }>,
         ButtonProps {
-    dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
+    dirtyFieldsBadge?: ComponentType<FilterBarActiveFilterBadgeProps>;
     numberDirtyFields?: number;
     openPopover?: boolean;
 }

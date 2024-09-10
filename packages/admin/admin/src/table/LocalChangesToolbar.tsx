@@ -1,5 +1,4 @@
 import { Toolbar } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { SaveButton } from "../common/buttons/save/SaveButton";

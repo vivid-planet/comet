@@ -1,5 +1,5 @@
 import { createBlocksBlock } from "@comet/blocks-admin";
-import { AnchorBlock, DamImageBlock, DamVideoBlock, YouTubeVideoBlock } from "@comet/cms-admin";
+import { AnchorBlock, DamImageBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
@@ -15,7 +15,6 @@ import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
 import { TeaserBlock } from "./blocks/TeaserBlock";
 import { TwoListsBlock } from "./blocks/TwoListsBlock";
-import { VideoBlock } from "./blocks/VideoBlock";
 
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
@@ -25,9 +24,6 @@ export const PageContentBlock = createBlocksBlock({
         headline: HeadlineBlock,
         image: DamImageBlock,
         textImage: TextImageBlock,
-        damVideo: DamVideoBlock,
-        youTubeVideo: YouTubeVideoBlock,
-        video: VideoBlock,
         linkList: LinkListBlock,
         fullWidthImage: FullWidthImageBlock,
         columns: ColumnsBlock,
