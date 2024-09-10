@@ -40,6 +40,7 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
                 type: "number",
                 field: "price",
                 currency: "EUR",
+                emptyValue: "No price set",
             },
             secondaryText: {
                 type: "number",

@@ -142,7 +142,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                     <GridCellContent
                         primaryText={
                             typeof row.price === "undefined" || row.price === null ? (
-                                "-"
+                                <FormattedMessage id="product.currencyAndNumber.primaryText.empty" defaultMessage="No price set" />
                             ) : (
                                 <FormattedNumber
                                     value={row.price}
