@@ -3,12 +3,14 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () => {
-    interface Option {
-        value: string;
-        label: string;
-    }
+interface Option {
+    value: string;
+    label: string;
+}
 
+const initialValues = { selectAsync: { value: "strawberry", label: "Strawberry" } };
+
+function Story() {
     const selectAsyncProps = useAsyncOptionsProps<Option>(async () => {
         return new Promise((resolve) =>
             setTimeout(() => {
@@ -23,7 +25,7 @@ storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () =
 
     return (
         <div style={{ minHeight: "50px" }}>
-            <Form onSubmit={() => {}} keepDirtyOnReinitialize initialValues={{ selectAsync: { value: "strawberry", label: "Strawberry" } }}>
+            <Form onSubmit={() => {}} initialValues={initialValues}>
                 {() => (
                     <Field
                         name="selectAsync"
@@ -31,8 +33,6 @@ storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () =
                         {...selectAsyncProps}
                         getOptionLabel={(option: Option) => option.label}
                         getOptionSelected={(option: Option, value: Option) => {
-                            console.log({ option, value });
-
                             return option.value === value.value;
                         }}
                         style={{ width: "300px" }}
@@ -41,4 +41,6 @@ storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () =
             </Form>
         </div>
     );
-});
+}
+
+storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", Story);
