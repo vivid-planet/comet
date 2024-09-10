@@ -47,5 +47,22 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
                 decimals: 4,
             },
         },
+        {
+            type: "combination",
+            name: "weightAndFileSize",
+            headerName: "Weight and file-size format",
+            primaryText: {
+                type: "number",
+                field: "price",
+                unit: "kilogram",
+            },
+            secondaryText: {
+                type: "number",
+                field: "price",
+                unit: "kilobyte",
+                unitDisplay: "short",
+                decimals: 1,
+            },
+        },
     ],
 };

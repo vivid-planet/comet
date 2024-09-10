@@ -1,3 +1,5 @@
+import { FormattedNumber } from "react-intl";
+
 import { DataGridSettings } from "../generator";
 
 type AbstractField<FieldName extends string> = {
@@ -14,11 +16,13 @@ type StaticText = {
     text: string;
 };
 
-type NumberField<FieldName extends string> = AbstractField<FieldName> & {
-    type: "number";
-    decimals?: number;
-    currency?: string;
-};
+type FormattedNumberPropsForNumberField = Omit<React.ComponentProps<typeof FormattedNumber>, "value" | "children">;
+
+type NumberField<FieldName extends string> = AbstractField<FieldName> &
+    FormattedNumberPropsForNumberField & {
+        type: "number";
+        decimals?: number;
+    };
 
 // type StaticSelectField<FieldName extends string> = AbstractField<FieldName> & {
 //     type: "staticSelect";
@@ -69,15 +73,45 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
     const rowValue = `row.${textConfig.field.replace(/\./g, "?.")}`;
 
     if (textConfig.type === "number") {
-        const hasCurrency = Boolean(textConfig.currency);
-        const nonCurrencyDecimals = typeof textConfig.decimals === "number" ? textConfig.decimals : null;
-        const decimals = hasCurrency && nonCurrencyDecimals === null ? 2 : nonCurrencyDecimals;
+        const { type, decimals: decimalsConfigValue, field, ...configForFormattedNumberProps } = textConfig;
 
-        return `typeof ${rowValue} === "number" ? <FormattedNumber
-                value={${rowValue}}
-                ${typeof decimals === "number" ? `minimumFractionDigits={${decimals}} maximumFractionDigits={${decimals}}` : ""}
-                ${hasCurrency ? `style="currency" currency="${textConfig.currency}"` : ""}
-            /> : ${emptyText}`;
+        const hasCurrency = Boolean(textConfig.currency);
+        const hasUnit = Boolean(textConfig.unit);
+
+        const defaultDecimalsProp = hasCurrency && decimalsConfigValue === undefined ? 2 : decimalsConfigValue;
+        let defaultStyleProp: string | undefined = undefined;
+
+        if (hasCurrency) {
+            defaultStyleProp = '"currency"';
+        } else if (hasUnit) {
+            defaultStyleProp = '"unit"';
+        }
+
+        const formattedNumberProps: Record<string, unknown> = {
+            value: `{${rowValue}}`,
+            minimumFractionDigits: typeof defaultDecimalsProp !== "undefined" ? `{${defaultDecimalsProp}}` : undefined,
+            maximumFractionDigits: typeof defaultDecimalsProp !== "undefined" ? `{${defaultDecimalsProp}}` : undefined,
+            style: typeof defaultStyleProp !== "undefined" ? defaultStyleProp : undefined,
+        };
+
+        Object.entries(configForFormattedNumberProps).forEach(([key, value]) => {
+            if (typeof value === "string") {
+                formattedNumberProps[key] = `"${value}"`;
+            } else {
+                formattedNumberProps[key] = `{${value}}`;
+            }
+        });
+
+        const formattedNumberPropsString = Object.entries(formattedNumberProps)
+            .map(([key, value]) => {
+                if (typeof value === "undefined") {
+                    return null;
+                }
+                return `${key}=${value}`;
+            })
+            .join(" ");
+
+        return `typeof ${rowValue} === "number" ? <FormattedNumber ${formattedNumberPropsString} /> : ${emptyText}`;
     }
 
     return `${rowValue} ?? ${emptyText}`;

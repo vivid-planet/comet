@@ -167,6 +167,35 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             minWidth: 150,
         },
         {
+            field: "weightAndFileSize",
+            headerName: intl.formatMessage({ id: "product.weightAndFileSize", defaultMessage: "Weight and file-size format" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                return (
+                    <GridCellContent
+                        primaryText={typeof row.price === "number" ? <FormattedNumber value={row.price} style="unit" unit="kilogram" /> : "-"}
+                        secondaryText={
+                            typeof row.price === "number" ? (
+                                <FormattedNumber
+                                    value={row.price}
+                                    minimumFractionDigits={1}
+                                    maximumFractionDigits={1}
+                                    style="unit"
+                                    unit="kilobyte"
+                                    unitDisplay="short"
+                                />
+                            ) : (
+                                "-"
+                            )
+                        }
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
             field: "actions",
             headerName: "",
             sortable: false,
