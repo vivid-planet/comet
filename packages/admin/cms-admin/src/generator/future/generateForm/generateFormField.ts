@@ -82,8 +82,8 @@ export function generateFormField({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
     gqlType: string;
-    namePrefix?: string;
     createMutationType?: IntrospectionField;
+    namePrefix?: string;
 }): GenerateFieldsReturn {
     const imports: Imports = [];
     const props: Prop[] = [];
@@ -125,42 +125,49 @@ export function generateFormField({
     const required = !isFieldOptional({ config, gqlFieldName, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
-    const gqlArgConfig = createMutationType
-        ? (() => {
-              const inputArg = createMutationType.args.find((arg) => arg.name === "input");
-              if (!inputArg) throw new Error(`No input arg found`);
-              let inputArgType = inputArg.type;
-              if (inputArgType.kind !== "NON_NULL") throw new Error(`Input arg is usually required.`);
-              inputArgType = inputArgType.ofType;
-              if (inputArgType.kind !== "INPUT_OBJECT") throw new Error(`Input arg is usually input-object.`);
-              const inputArgTypeName = inputArgType.name;
-              const inputArgType2 = gqlIntrospection.__schema.types.find((type) => type.name === inputArgTypeName);
-              if (!inputArgType2) throw new Error(`saldkfj`);
-              if (inputArgType2.kind !== "INPUT_OBJECT") throw new Error(`saldkfj`);
-              const inputArgField = inputArgType2.inputFields.find((field) => field.name === name);
-              let gqlArgField = inputArgField;
-              let isInputArgSubfield = true;
-              if (!gqlArgField) {
-                  // no input-field, probably root-arg
-                  const rootArg = createMutationType.args.find((arg) => arg.name === name);
-                  if (!rootArg) throw new Error(`Not found`);
-                  gqlArgField = rootArg;
-                  isInputArgSubfield = false;
-              }
-              let gqlArgType = gqlArgField.type;
-              if (gqlArgType.kind === "NON_NULL") {
-                  gqlArgType = gqlArgType.ofType;
-              }
-              if (gqlArgType.kind === "SCALAR" || gqlArgType.kind === "ENUM" || gqlArgType.kind === "INPUT_OBJECT") {
-                  gqlArgs.push({ name, type: gqlArgType.name, isInputArgSubfield, isInOutputVar: isInputArgSubfield });
-              }
+    const gqlArgConfig =
+        !config.readOnly && createMutationType
+            ? (() => {
+                  const inputArg = createMutationType.args.find((arg) => arg.name === "input");
+                  if (!inputArg) throw new Error(`Field ${String(config.name)}: No input arg found`);
+                  let inputArgTypeRef = inputArg.type;
+                  if (inputArgTypeRef.kind === "NON_NULL") inputArgTypeRef = inputArgTypeRef.ofType;
+                  if (inputArgTypeRef.kind !== "INPUT_OBJECT") throw new Error(`Field ${String(config.name)}: input-arg is usually input-object.`);
+                  const inputArgTypeName = inputArgTypeRef.name;
+                  const inputArgType = gqlIntrospection.__schema.types.find((type) => type.name === inputArgTypeName);
+                  if (!inputArgType) throw new Error(`Field ${String(config.name)}: Input-Type ${inputArgTypeName} not found.`);
+                  if (inputArgType.kind !== "INPUT_OBJECT") {
+                      throw new Error(`Field ${String(config.name)}: Input-Type ${inputArgTypeName} is no input-object.`);
+                  }
+                  const inputArgField = inputArgType.inputFields.find((field) => field.name === name);
 
-              return {
-                  isFieldForRootProp: !isInputArgSubfield,
-                  isReadOnlyOnEdit: !isInputArgSubfield, // we assume root-args are not changeable
-              };
-          })()
-        : undefined;
+                  let gqlArgField = inputArgField;
+                  let isInputArgSubfield = true;
+                  if (!gqlArgField) {
+                      // no input-arg-field found, probably root-arg
+                      const rootArg = createMutationType.args.find((arg) => arg.name === name);
+                      if (!rootArg) {
+                          throw new Error(
+                              `Field ${String(config.name)}: No matching input-arg field (${inputArgTypeRef.name}) nor root-arg (${
+                                  createMutationType.name
+                              }) found.`,
+                          );
+                      }
+                      gqlArgField = rootArg;
+                      isInputArgSubfield = false;
+                  }
+
+                  const gqlArgType = gqlArgField.type.kind === "NON_NULL" ? gqlArgField.type.ofType : gqlArgField.type;
+                  if (gqlArgType.kind === "SCALAR" || gqlArgType.kind === "ENUM" || gqlArgType.kind === "INPUT_OBJECT") {
+                      gqlArgs.push({ name, type: gqlArgType.name, isInputArgSubfield, isInOutputVar: isInputArgSubfield });
+                  }
+
+                  return {
+                      isFieldForRootProp: !isInputArgSubfield,
+                      isReadOnlyOnEdit: !isInputArgSubfield, // we assume root-args are not changeable, alternatively check update-mutation
+                  };
+              })()
+            : undefined;
 
     type RenderProp = { name: string; value?: string };
     const endAdornmentWithLockIconProp: RenderProp = { name: "endAdornment", value: `<InputAdornment position="end"><Lock /></InputAdornment>` };
@@ -761,6 +768,11 @@ export function generateFormField({
             name: `GQL${queryName}QueryVariables`,
             importPath: `./${baseOutputFilename}.generated`,
         });
+
+        // handle asyncSelect submitted via gql-root-prop
+        if (defaultFormValuesConfig.destructFromFormValues && gqlArgConfig?.isFieldForRootProp) {
+            defaultFormValuesConfig.destructFromFormValues = `${name}: { id: ${name}}`;
+        }
 
         code = `<AsyncSelectField
                 ${required ? "required" : ""}

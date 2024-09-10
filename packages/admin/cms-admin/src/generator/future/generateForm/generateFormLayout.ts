@@ -55,6 +55,7 @@ export function generateFormLayout({
             createMutationType,
             namePrefix,
         });
+
         hooksCode += generatedFields.hooksCode;
         formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
         formFragmentFields.push(...generatedFields.formFragmentFields);

@@ -46,6 +46,7 @@ export function generateForm(
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
     const props: Prop[] = [];
+    const gqlArgs: GqlArg[] = [];
 
     const mode = config.mode ?? "all";
     const editMode = mode === "edit" || mode == "all";
@@ -69,7 +70,6 @@ export function generateForm(
         return acc;
     }, []);
 
-    const gqlArgs: GqlArg[] = [];
     if (editMode) {
         if (mode === "all") {
             props.push({ name: "id", optional: true, type: "string" });

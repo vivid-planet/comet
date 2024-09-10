@@ -8,7 +8,6 @@ export function getForwardedGqlArgs({
     gqlIntrospection,
     skipGqlArgs,
 }: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     gqlOperation: IntrospectionField;
     gqlIntrospection: IntrospectionQuery;
     skipGqlArgs: GqlArg[];

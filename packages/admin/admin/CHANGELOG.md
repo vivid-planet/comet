@@ -1,5 +1,25 @@
 # @comet/admin
 
+## 7.3.2
+
+### Patch Changes
+
+-   2286234e5: Update required validator in `Field` to correctly handle falsey values
+
+    Previously, the validator incorrectly returned errors for all falsey values, e.g. the number `0`.
+    Now, it only returns an error for `undefined`, `null`, `false` and empty strings.
+
+    -   @comet/admin-icons@7.3.2
+    -   @comet/admin-theme@7.3.2
+
+## 7.3.1
+
+### Patch Changes
+
+-   91bfda996: Fix validation for `NumberField` and `FinalFormNumberInput` by calling the `onBlur` event, passed in by the `Field`
+    -   @comet/admin-icons@7.3.1
+    -   @comet/admin-theme@7.3.1
+
 ## 7.3.0
 
 ### Patch Changes
