@@ -34,7 +34,7 @@ import {
 } from "@src/products/ProductForm.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -74,7 +74,7 @@ type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry
     manufacturerCountry?: { id: string };
 };
 
-export function ProductForm({ id, manufacturerCountry }: FormProps): React.ReactElement {
+export function ProductForm({ id, manufacturerCountry }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -85,7 +85,7 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormValues> = React.useMemo<Partial<FormValues>>(() => {
+    const initialValues: Partial<FormValues> = useMemo<Partial<FormValues>>(() => {
         const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
         if (!filteredData) {
             return {

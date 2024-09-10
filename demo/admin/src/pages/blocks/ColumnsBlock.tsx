@@ -9,7 +9,6 @@ import {
 import { DamImageBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 const ColumnsContentBlock = createBlocksBlock({

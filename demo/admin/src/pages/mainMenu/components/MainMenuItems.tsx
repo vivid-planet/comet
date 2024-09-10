@@ -4,7 +4,6 @@ import { Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "./MainMenuItems.generated";
@@ -24,7 +23,7 @@ const mainMenuQuery = gql`
     }
 `;
 
-const MainMenuItems: React.FunctionComponent = () => {
+const MainMenuItems = () => {
     const { scope } = useContentScope();
 
     const { tableData, api, loading, error } = useTableQuery<GQLMainMenuQuery, GQLMainMenuQueryVariables>()(mainMenuQuery, {

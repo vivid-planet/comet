@@ -1,5 +1,6 @@
 "use client";
-import * as React from "react";
+
+import { cloneElement, MouseEventHandler, ReactElement } from "react";
 
 import { ExternalLinkBlockData } from "../blocks.generated";
 import { usePreview } from "../preview/usePreview";
@@ -8,23 +9,17 @@ import { SitePreviewIFrameMessageType } from "../sitePreview/iframebridge/SitePr
 import { PropsWithData } from "./PropsWithData";
 
 interface ExternalLinkBlockProps extends PropsWithData<ExternalLinkBlockData> {
-    children: React.ReactElement;
+    children: ReactElement;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
 }
 
-export function ExternalLinkBlock({
-    data: { targetUrl, openInNewWindow },
-    children,
-    title,
-    className,
-    legacyBehavior,
-}: ExternalLinkBlockProps): React.ReactElement {
+export function ExternalLinkBlock({ data: { targetUrl, openInNewWindow }, children, title, className, legacyBehavior }: ExternalLinkBlockProps) {
     const preview = usePreview();
 
     if (preview.previewType === "SitePreview" || preview.previewType === "BlockPreview") {
-        const onClick: React.MouseEventHandler = (event) => {
+        const onClick: MouseEventHandler = (event) => {
             event.preventDefault();
             if (preview.previewType === "SitePreview") {
                 // send link to admin to handle external link
@@ -36,7 +31,7 @@ export function ExternalLinkBlock({
         };
 
         if (legacyBehavior) {
-            return React.cloneElement(children, { href: "#", onClick, title });
+            return cloneElement(children, { href: "#", onClick, title });
         }
 
         return (
@@ -57,7 +52,7 @@ export function ExternalLinkBlock({
         const target = openInNewWindow ? "_blank" : undefined;
 
         if (legacyBehavior) {
-            return React.cloneElement(children, { href, target, title });
+            return cloneElement(children, { href, target, title });
         }
 
         return (

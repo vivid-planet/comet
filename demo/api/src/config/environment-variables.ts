@@ -123,4 +123,12 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL || v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY)
     @IsString()
     AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID?: string;
+
+    @IsOptional()
+    @IsUrl()
+    SENTRY_DSN?: string;
+
+    @ValidateIf((v) => v.SENTRY_DSN)
+    @IsString()
+    SENTRY_ENVIRONMENT?: string;
 }

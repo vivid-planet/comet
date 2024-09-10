@@ -1,7 +1,6 @@
 import { RadioChecked, RadioUnchecked } from "@comet/admin-icons";
 import { radioClasses, svgIconClasses } from "@mui/material";
 import { Components } from "@mui/material/styles/components";
-import * as React from "react";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";

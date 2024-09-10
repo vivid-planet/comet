@@ -1,6 +1,6 @@
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { useFormState } from "react-final-form";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
@@ -15,8 +15,8 @@ export interface FinalFormSaveCancelButtonsLegacyProps
         cancelButton: typeof CancelButton;
         saveButton: typeof SaveButton;
     }> {
-    cancelIcon?: React.ReactNode;
-    saveIcon?: React.ReactNode;
+    cancelIcon?: ReactNode;
+    saveIcon?: ReactNode;
 }
 
 export type FinalFormSaveCancelButtonsLegacyClassKey = "root" | "cancelButton" | "saveButton";

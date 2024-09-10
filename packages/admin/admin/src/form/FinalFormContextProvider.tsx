@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext, ReactNode, useContext } from "react";
 import { FieldMetaState } from "react-final-form";
 
 export interface FinalFormContext {
@@ -13,16 +13,16 @@ const defaultFinalFormContext: FinalFormContext = {
     shouldShowFieldWarning: (fieldMeta) => !!fieldMeta?.touched,
 };
 
-const FinalFormContext = React.createContext<FinalFormContext>(defaultFinalFormContext);
+const FinalFormContext = createContext<FinalFormContext>(defaultFinalFormContext);
 
 export interface FinalFormContextProviderProps extends Partial<FinalFormContext> {
-    children: React.ReactNode;
+    children?: ReactNode;
 }
 
-export function FinalFormContextProvider({ children, ...rest }: FinalFormContextProviderProps): React.ReactElement {
+export function FinalFormContextProvider({ children, ...rest }: FinalFormContextProviderProps) {
     return <FinalFormContext.Provider value={{ ...defaultFinalFormContext, ...rest }}>{children}</FinalFormContext.Provider>;
 }
 
 export function useFinalFormContext(): FinalFormContext {
-    return React.useContext(FinalFormContext);
+    return useContext(FinalFormContext);
 }

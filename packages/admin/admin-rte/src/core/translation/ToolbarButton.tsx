@@ -1,7 +1,7 @@
 import { Tooltip, useContentTranslationService } from "@comet/admin";
 import { Translate } from "@comet/admin-icons";
 import { EditorState } from "draft-js";
-import * as React from "react";
+import { MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../Controls/ControlButton";
@@ -10,13 +10,13 @@ import { EditorStateTranslationDialog } from "./EditorStateTranslationDialog";
 import { htmlToState } from "./htmlToState";
 import { stateToHtml } from "./stateToHtml";
 
-function ToolbarButton({ editorState, setEditorState, options }: IControlProps): React.ReactElement {
+function ToolbarButton({ editorState, setEditorState, options }: IControlProps) {
     const translationContext = useContentTranslationService();
 
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [pendingTranslation, setPendingTranslation] = React.useState<EditorState | undefined>(undefined);
+    const [open, setOpen] = useState<boolean>(false);
+    const [pendingTranslation, setPendingTranslation] = useState<EditorState | undefined>(undefined);
 
-    async function handleClick(event: React.MouseEvent) {
+    async function handleClick(event: MouseEvent) {
         if (!translationContext) return;
 
         event.preventDefault();

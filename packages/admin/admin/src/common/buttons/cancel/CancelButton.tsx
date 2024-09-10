@@ -3,7 +3,6 @@ import { Button, ButtonClassKey } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import { ComponentsOverrides } from "@mui/material/styles/overrides";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
