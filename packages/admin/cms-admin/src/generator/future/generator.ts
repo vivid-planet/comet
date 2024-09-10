@@ -1,6 +1,7 @@
 import { GridColDef } from "@comet/admin";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
@@ -128,6 +129,11 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
         //const configs = await import(`${process.cwd()}/${file}`);
 
+        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
+        await fs.rm(codeOuputFilename, { force: true });
+        // eslint-disable-next-line no-console
+        console.log(`generating ${file}`);
+
         for (const exportName in configs) {
             const config = configs[exportName] as GeneratorConfig;
             let generated: GeneratorReturn;
@@ -144,13 +150,11 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
             }
         }
 
-        {
-            const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
-            await writeGenerated(codeOuputFilename, outputCode);
-        }
+        await writeGenerated(codeOuputFilename, outputCode);
 
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
+            await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
                 import { finalFormFileUploadFragment } from "@comet/cms-admin";
 
