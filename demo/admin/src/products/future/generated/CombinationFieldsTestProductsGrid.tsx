@@ -139,6 +139,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             type: "actions",
             align: "right",
             pinned: "right",
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>
