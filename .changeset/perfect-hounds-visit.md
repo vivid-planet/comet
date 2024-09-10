@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Add Info Alert to Dependant and Duplicates Section in DAM
+Add info alert for dependents and duplicates in DAM
