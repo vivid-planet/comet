@@ -6,7 +6,7 @@ export const SelectProductsGrid: GridConfig<GQLProduct> = {
     gqlType: "Product",
     fragmentName: "SelectProductsGridFuture",
     readOnly: true,
-    selectionProps: true,
+    selectionProps: "multiSelect",
     columns: [
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
         { type: "text", name: "description", headerName: "Description" },
