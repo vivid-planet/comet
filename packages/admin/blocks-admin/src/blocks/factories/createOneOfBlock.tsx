@@ -62,7 +62,7 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
     name: string;
     displayName?: ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
-    tabLabels?: Record<BlockType, React.ReactNode>;
+    labels?: Record<BlockType, React.ReactNode>;
     category?: BlockCategory | CustomBlockCategory;
     variant?: "select" | "radio" | "toggle";
     allowEmpty?: T;
@@ -70,7 +70,7 @@ export interface CreateOneOfBlockOptions<T extends boolean> {
 
 export const createOneOfBlock = <T extends boolean = boolean>({
     supportedBlocks,
-    tabLabels,
+    labels,
     name,
     displayName = "Switch",
     category = BlockCategory.Other,
@@ -118,7 +118,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
     Object.entries(supportedBlocks).forEach(([blockType, block]) => {
         options.push({
             value: blockType,
-            label: tabLabels && tabLabels[blockType] ? tabLabels[blockType] : block.displayName,
+            label: labels && labels[blockType] ? labels[blockType] : block.displayName,
         });
     });
 

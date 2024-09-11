@@ -1,5 +1,5 @@
 import { Tooltip } from "@comet/admin";
-import { Image, Video, YouTube } from "@comet/admin-icons";
+import { Image, Video, Vimeo, YouTube } from "@comet/admin-icons";
 import { BlockCategory, createOneOfBlock } from "@comet/blocks-admin";
 import { DamImageBlock, DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-admin";
 import { FormattedMessage } from "react-intl";
@@ -11,7 +11,7 @@ export const MediaBlock = createOneOfBlock({
     allowEmpty: false,
     variant: "toggle",
     supportedBlocks: { image: DamImageBlock, damVideo: DamVideoBlock, youTubeVideo: YouTubeVideoBlock, vimeoVideo: VimeoVideoBlock },
-    tabLabels: {
+    labels: {
         image: (
             <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.image" defaultMessage="Image" />}>
                 <Image />
@@ -25,6 +25,11 @@ export const MediaBlock = createOneOfBlock({
         youTubeVideo: (
             <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.video.youtube" defaultMessage="Video (YouTube)" />}>
                 <YouTube />
+            </Tooltip>
+        ),
+        vimeoVideo: (
+            <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.video.vimeo" defaultMessage="Video (Vimeo)" />}>
+                <Vimeo />
             </Tooltip>
         ),
     },
