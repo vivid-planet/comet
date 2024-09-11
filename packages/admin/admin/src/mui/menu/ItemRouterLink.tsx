@@ -17,9 +17,7 @@ interface MenuItemRouterLinkStandardProps
 export type MenuItemRouterLinkProps = MenuItemRouterLinkStandardProps & MenuItemProps & ListItemProps & LinkProps;
 
 export const MenuItemRouterLink = ({ badgeContent, secondaryAction: passedSecondaryAction, slotProps, ...restProps }: MenuItemRouterLinkProps) => {
-    const tempSlotProps = { ...slotProps };
-    const badge = tempSlotProps?.badge;
-    delete tempSlotProps?.badge;
+    const { badge, ...menuItemSlotProps } = slotProps ?? {};
 
     const secondaryAction = badgeContent ? ( // prioritize badgeContent over passed secondaryAction
         <Badge
@@ -37,7 +35,9 @@ export const MenuItemRouterLink = ({ badgeContent, secondaryAction: passedSecond
     return (
         <Route path={restProps.to} strict={false}>
             {({ match }) => {
-                return <MenuItem selected={!!match} secondaryAction={secondaryAction} component={Link} slotProps={tempSlotProps} {...restProps} />;
+                return (
+                    <MenuItem selected={!!match} secondaryAction={secondaryAction} component={Link} slotProps={menuItemSlotProps} {...restProps} />
+                );
             }}
         </Route>
     );
