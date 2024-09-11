@@ -1,10 +1,11 @@
 import { MenuItem } from "@mui/material";
+import { ReactNode } from "react";
 
 import { Field, FieldProps } from "../Field";
 import { FinalFormSelect, FinalFormSelectProps } from "../FinalFormSelect";
 
 export type SelectFieldOption<Value extends string | number = string | number> = {
-    label: React.ReactNode;
+    label: ReactNode;
     value: Value;
 };
 
