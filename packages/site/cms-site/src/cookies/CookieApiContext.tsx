@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+
+import { createContext, useContext } from "react";
 
 export type CookieApi = {
     initialized: boolean;
@@ -9,7 +10,7 @@ export type CookieApi = {
 
 export type CookieApiHook = () => CookieApi;
 
-const CookieApiContext = React.createContext<CookieApi | undefined>(undefined);
+const CookieApiContext = createContext<CookieApi | undefined>(undefined);
 
 type CookieApiProviderProps = React.PropsWithChildren<{
     api: CookieApiHook;
@@ -21,7 +22,7 @@ export const CookieApiProvider = ({ api: useCookieApi, children }: CookieApiProv
 };
 
 export const useCookieApi: CookieApiHook = () => {
-    const cookieApi = React.useContext(CookieApiContext);
+    const cookieApi = useContext(CookieApiContext);
     if (!cookieApi) {
         throw new Error("Can only be used inside CookieApiProvider.");
     }

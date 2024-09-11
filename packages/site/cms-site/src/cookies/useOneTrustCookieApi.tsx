@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+
+import { useEffect, useState } from "react";
 
 import { CookieApiHook } from "./CookieApiContext";
 
@@ -48,10 +49,10 @@ const isWindowWithOneTrust = (window: Window): window is WindowWithOneTrust => {
 };
 
 export const useOneTrustCookieApi: CookieApiHook = () => {
-    const [consentedCookies, setConsentedCookies] = React.useState<string[]>([]);
-    const [initialized, setInitialized] = React.useState(false);
+    const [consentedCookies, setConsentedCookies] = useState<string[]>([]);
+    const [initialized, setInitialized] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const startListeningForConsentChanges = (oneTrust: OneTrust) => {
             const initialCookieConsent: string[] = [];
             const domainData = oneTrust.GetDomainData();

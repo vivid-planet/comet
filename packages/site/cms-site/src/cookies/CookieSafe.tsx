@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 
 import { usePreview } from "../preview/usePreview";
 import { useCookieApi } from "./CookieApiContext";
