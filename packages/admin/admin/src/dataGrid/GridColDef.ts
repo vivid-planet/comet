@@ -4,6 +4,8 @@ import {
     GridValidRowModel,
 } from "@mui/x-data-grid";
 
+import { GridPinnedColumns } from "./usePersistentColumnState";
+
 export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> extends MuiGridColDef<R, V, F> {
     /**
      * Media query to define when the column is visible.
@@ -14,4 +16,8 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> e
      * Requires DataGridPro or DataGridPremium.
      */
     sortBy?: string | string[];
+    /**
+     * Requires DataGridPro or DataGridPremium.
+     */
+    pinned?: keyof GridPinnedColumns;
 }

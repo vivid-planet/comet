@@ -24,13 +24,14 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
             return domain.includes("localhost") ? `http://${domain}` : `https://${domain}`;
         };
 
-        const replacerFunctions: Record<string, (siteConfigs: BaseSiteConfig[]) => unknown> = {
-            private: (siteConfigs: BaseSiteConfig[]): ExtractPrivateSiteConfig<BaseSiteConfig>[] =>
+        const replacerFunctions: Record<string, (siteConfigs: BaseSiteConfig[], env: string) => unknown> = {
+            private: (siteConfigs: BaseSiteConfig[], env: string): ExtractPrivateSiteConfig<BaseSiteConfig>[] =>
                 siteConfigs.map((siteConfig) =>
                     (({ public: publicVars, ...rest }) => ({
                         ...publicVars,
                         ...rest,
                         url: getUrlFromDomain(siteConfig.domains.preliminary ?? siteConfig.domains.main),
+                        preloginEnabled: siteConfig.preloginEnabled ?? !["prod", "local"].includes(env),
                     }))(siteConfig),
                 ),
             public: (siteConfigs: BaseSiteConfig[]): ExtractPublicSiteConfig<BaseSiteConfig>[] =>
@@ -50,7 +51,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                 console.error(`inject-site-configs: ERROR: type must be ${Object.keys(replacerFunctions).join("|")} (got ${type})`);
                 return substr;
             }
-            const ret = JSON.stringify(replacerFunctions[type](siteConfigs)).replace(/\\/g, "\\\\");
+            const ret = JSON.stringify(replacerFunctions[type](siteConfigs, env)).replace(/\\/g, "\\\\");
             if (options.dotenv) return ret.replace(/\$/g, "\\$");
             return ret;
         });

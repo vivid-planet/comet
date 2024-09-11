@@ -24,6 +24,7 @@ import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -129,7 +130,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "Cap" }) },
+                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
                 { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
                 { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
             ],
@@ -158,9 +159,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             filterable: false,
             type: "actions",
             align: "right",
+            pinned: "right",
+            width: 116,
             renderCell: (params) => {
                 return (
                     <>
+                        <ProductsGridPreviewAction {...params} />
                         {rowAction && rowAction(params)}
                         <CrudContextMenu
                             copyData={() => {

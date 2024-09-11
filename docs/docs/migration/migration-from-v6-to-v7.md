@@ -380,7 +380,7 @@ This requires the following changes:
 
 -   Change all usages of the `PublicUpload` entity to `FileUpload`.
 -   Change all usages of the `PublicUploadsService` to `FileUploadsService`.
--   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/files-uploads/upload`.
+-   In the site or the Admin change the upload URL from `/public-upload/files/upload` to `/file-uploads/upload`.
 
 ### Make file uploads upload endpoint public
 
@@ -470,7 +470,7 @@ DamModule.register({
 ### Replace `graphql-type-json` with `graphql-scalars`
 
 1. Install graphql-scalars: `npm install graphql-scalars`
-2. Uninstall graphql-type-json: `npm install graphql-type-json`
+2. Uninstall graphql-type-json: `npm uninstall graphql-type-json`
 3. Update imports:
 
     ```diff
@@ -1066,6 +1066,20 @@ You must upgrade
 -   React to v18 (Migration Guide: [17 -> 18](https://react.dev/blog/2022/03/08/react-18-upgrade-guide))
 -   Styled Components to v6 (Migration Guide: [5 -> 6](https://styled-components.com/docs/faqs#what-do-i-need-to-do-to-migrate-to-v6))
 
+Make sure to upgrade to Next 14.2.0 or later.
+Enable `optimizePackageImports` for `@comet/cms-site` in `next.config.js`:
+
+```diff
+const nextConfig = {
+    /* ... */
++   experimental: {
++       optimizePackageImports: ["@comet/cms-site"],
++   },
+};
+
+module.exports = withBundleAnalyzer(nextConfig);
+```
+
 ### Add a custom `InternalLinkBlock`
 
 The `InternalLinkBlock` provided by `@comet/cms-site` is deprecated.
@@ -1184,7 +1198,7 @@ Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
 
 ```diff
 - import { Link } from "@comet/cms-site";
-+ import { Link } from "next/link";
++ import Link from "next/link";
 ```
 
 Remove the preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters).

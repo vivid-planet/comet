@@ -5,6 +5,7 @@ import { DamImageBlock, IsNullable, IsSlug, PartialType, RootBlockInputScalar } 
 import { Field, ID, InputType } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
+import { GraphQLDate } from "graphql-scalars";
 
 import { ProductDimensions, ProductDiscounts, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
@@ -56,8 +57,13 @@ export class ProductInput {
 
     @IsNullable()
     @IsDate()
-    @Field({ nullable: true, defaultValue: null })
+    @Field(() => GraphQLDate, { nullable: true, defaultValue: null })
     availableSince?: Date;
+
+    @IsNullable()
+    @IsDate()
+    @Field({ nullable: true, defaultValue: null })
+    lastCheckedAt?: Date;
 
     @IsNotEmpty()
     @Field(() => RootBlockInputScalar(DamImageBlock))
@@ -114,6 +120,16 @@ export class ProductInput {
     @Field(() => ID, { nullable: true, defaultValue: null })
     @IsUUID()
     manufacturer?: string;
+
+    @IsNullable()
+    @Field(() => ID, { nullable: true, defaultValue: null })
+    @IsString()
+    priceList?: string;
+
+    @Field(() => [ID], { defaultValue: [] })
+    @IsArray()
+    @IsString({ each: true })
+    datasheets: string[];
 }
 
 @InputType()

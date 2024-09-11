@@ -23,7 +23,6 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
-import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
@@ -179,6 +178,13 @@ export function ProductsGrid() {
             ),
         },
         {
+            field: "availableSince",
+            headerName: "Available Since",
+            width: 130,
+            type: "date",
+            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
+        },
+        {
             field: "status",
             headerName: "Status",
             flex: 1,
@@ -209,10 +215,11 @@ export function ProductsGrid() {
             sortable: false,
             filterable: false,
             width: 106,
+            pinned: "right",
             renderCell: (params) => {
                 return (
                     <>
-                        <ProductsGridPreviewAction product={params.row} />
+                        <ProductsGridPreviewAction {...params} />
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
                             <Edit color="primary" />
                         </IconButton>
@@ -317,6 +324,7 @@ const productsFragment = gql`
             quantity
             price
         }
+        availableSince
     }
 `;
 

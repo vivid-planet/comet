@@ -1,5 +1,4 @@
 import { FormControlLabel, FormControlLabelProps } from "@mui/material";
-import * as React from "react";
 
 import { FinalFormCheckbox, FinalFormCheckboxProps } from "../Checkbox";
 import { Field, FieldProps } from "../Field";
@@ -12,7 +11,7 @@ export interface CheckboxFieldProps extends FieldProps<string, HTMLInputElement>
     };
 }
 
-export const CheckboxField = ({ fieldLabel, label, componentsProps = {}, ...restProps }: CheckboxFieldProps): React.ReactElement => {
+export const CheckboxField = ({ fieldLabel, label, componentsProps = {}, ...restProps }: CheckboxFieldProps) => {
     const { formControlLabel: formControlLabelProps, finalFormCheckbox: finalFormCheckboxProps } = componentsProps;
     return (
         <Field type="checkbox" label={fieldLabel} {...restProps}>

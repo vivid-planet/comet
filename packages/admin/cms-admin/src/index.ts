@@ -17,6 +17,7 @@ export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
 export { useCmsBlockContext } from "./blocks/useCmsBlockContext";
+export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { BuildEntry } from "./builds/BuildEntry";
 export { PublisherPage } from "./builds/PublisherPage";
@@ -72,6 +73,9 @@ export { createDocumentRootBlocksMethods } from "./documents/createDocumentRootB
 export type { DocumentInterface, DocumentType } from "./documents/types";
 export { ChooseFileDialog } from "./form/file/chooseFile/ChooseFileDialog";
 export { FileField } from "./form/file/FileField";
+export { FileUploadField, FileUploadFieldProps } from "./form/file/FileUploadField";
+export { FinalFormFileUpload, finalFormFileUploadFragment, FinalFormFileUploadProps } from "./form/file/FinalFormFileUpload";
+export { GQLFinalFormFileUploadFragment } from "./form/file/FinalFormFileUpload.generated";
 export { FinalFormToggleButtonGroup } from "./form/FinalFormToggleButtonGroup";
 export { queryUpdatedAt } from "./form/queryUpdatedAt";
 export { serializeInitialValues } from "./form/serializeInitialValues";

@@ -31,6 +31,9 @@ const nextConfig = {
     compiler: {
         styledComponents: true,
     },
+    experimental: {
+        optimizePackageImports: ["@comet/cms-site"],
+    },
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

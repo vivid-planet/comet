@@ -196,12 +196,12 @@ module.exports = {
         //group demo api
         {
             name: "demo-docker",
-            script: "node docker-compose.js",
+            script: "docker compose up",
             group: ["demo-api", "demo"],
         },
         {
             name: "demo-api",
-            script: ["pnpm --filter comet-demo-api run db:migrate", "pnpm --filter comet-demo-api run start:dev"].join(" && "),
+            script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
             waitOn: [...waitOnPackages("@comet/blocks-api", "@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
@@ -244,6 +244,14 @@ module.exports = {
             script: "pnpm --filter comet-demo-site-pages run generate-block-types:watch",
             group: ["demo-site-pages", "demo"],
             waitOn: ["tcp:$API_PORT"],
+        },
+        {
+            name: "docs",
+            script: "pnpm --filter comet-docs start",
+        },
+        {
+            name: "storybook",
+            script: "pnpm --filter comet-storybook run storybook",
         },
     ],
 };

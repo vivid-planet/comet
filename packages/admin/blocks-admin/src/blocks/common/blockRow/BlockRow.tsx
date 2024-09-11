@@ -1,7 +1,7 @@
 import { messages } from "@comet/admin";
 import { Copy, Delete, Drag, MoreVertical, Paste, Warning } from "@comet/admin-icons";
 import { Checkbox, Divider, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import * as React from "react";
+import { ChangeEvent, MouseEventHandler, ReactNode, useRef, useState } from "react";
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl";
 
@@ -15,13 +15,13 @@ const ItemTypes = {
 };
 
 interface BlockRowProps {
-    renderPreviewContent: () => React.ReactNode;
+    renderPreviewContent: () => ReactNode;
     onContentClick?: () => void;
     onDeleteClick?: () => void;
     id: string;
     index: number;
     moveBlock: (dragIndex: number, hoverIndex: number) => void;
-    visibilityButton: React.ReactNode;
+    visibilityButton: ReactNode;
     onAddNewBlock: (beforeIndex: number) => void;
     onCopyClick?: () => void;
     onPasteClick?: () => void;
@@ -30,8 +30,8 @@ interface BlockRowProps {
     isValidFn: () => boolean | Promise<boolean>;
     slideIn: boolean;
     hideBottomInsertBetweenButton?: boolean;
-    additionalMenuItems?: (onMenuClose: () => void) => React.ReactNode;
-    additionalContent?: React.ReactNode;
+    additionalMenuItems?: (onMenuClose: () => void) => ReactNode;
+    additionalContent?: ReactNode;
 }
 
 interface IDragItem {
@@ -42,7 +42,7 @@ interface IDragItem {
 
 export function BlockRow(props: BlockRowProps): JSX.Element {
     const { index, onAddNewBlock, slideIn } = props;
-    const ref = React.useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLDivElement>(null);
     const [, drop] = useDrop({
         accept: ItemTypes.BLOCK,
         hover(item: IDragItem, monitor: DropTargetMonitor) {
@@ -94,7 +94,7 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
         },
     });
 
-    const [hover, setHover] = React.useState(false);
+    const [hover, setHover] = useState(false);
     const [{ isDragging }, drag] = useDrag({
         type: ItemTypes.BLOCK,
         item: { type: ItemTypes.BLOCK, id: props.id, index: props.index }, // type in item should not be needed anymore since react-dnd 14
@@ -105,9 +105,9 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
     const opacity = isDragging ? 0 : 1;
     drag(drop(ref));
 
-    const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement>();
+    const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement>();
 
-    const handleMoreClick: React.MouseEventHandler<HTMLElement> = (event) => {
+    const handleMoreClick: MouseEventHandler<HTMLElement> = (event) => {
         setMenuAnchorEl(event.currentTarget);
     };
 
@@ -162,7 +162,7 @@ export function BlockRow(props: BlockRowProps): JSX.Element {
                         {hover || props.selected ? (
                             <Checkbox
                                 checked={props.selected}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                     props.onSelectedClick?.(event.target.checked);
                                 }}
                             />

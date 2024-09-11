@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
 import { ComponentsOverrides, css } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -16,14 +16,14 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
 }> & {
     variant?: "vertical" | "horizontal";
     fullWidth?: boolean;
-    label?: React.ReactNode;
+    label?: ReactNode;
     required?: boolean;
     disabled?: boolean;
     error?: string;
     warning?: string;
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
-    helperText?: React.ReactNode;
+    helperText?: ReactNode;
 };
 
 export type FieldContainerClassKey =
@@ -85,7 +85,6 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
         css`
             display: flex;
             flex-direction: row;
-            align-items: center;
             max-width: 944px;
             gap: ${theme.spacing(4)};
         `}
@@ -130,6 +129,7 @@ const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>
             flex-shrink: 0;
             flex-grow: 0;
             margin-bottom: 0;
+            margin-top: ${theme.spacing(2)};
         `}
 
         ${ownerState.disabled &&
@@ -165,6 +165,16 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
             flex-grow: 1;
         `}
 
+        ${ownerState.variant === "horizontal" &&
+        !ownerState.forceVertical &&
+        css`
+            min-height: 40px;
+
+            > .CometAdminFormFieldContainer-root {
+                margin-bottom: 0;
+            }
+        `}
+
         & > [class*="${inputBaseClasses.root}"] {
             width: 100%;
         }
@@ -194,7 +204,7 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     `,
 );
 
-export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerProps>) => {
+export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) => {
     const {
         variant = "vertical",
         fullWidth: passedFullWidth,
@@ -215,11 +225,11 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
     const hasError = !!error;
     const hasWarning = !hasError && !!warning;
 
-    const ref = React.useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLDivElement>(null);
     const rootWidth = useObservedWidth(ref);
     const forceVertical = rootWidth <= 600;
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (scrollTo) {
             ref.current?.scrollIntoView({ behavior: "smooth" });
         }
@@ -239,7 +249,7 @@ export const FieldContainer = (inProps: React.PropsWithChildren<FieldContainerPr
     return (
         <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...slotProps?.root} {...restProps}>
             <>
-                {label && (
+                {(label || (variant === "horizontal" && !forceVertical)) && (
                     <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
                         {label}
                     </Label>

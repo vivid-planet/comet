@@ -1,5 +1,606 @@
 # @comet/admin
 
+## 7.3.2
+
+### Patch Changes
+
+-   2286234e5: Update required validator in `Field` to correctly handle falsey values
+
+    Previously, the validator incorrectly returned errors for all falsey values, e.g. the number `0`.
+    Now, it only returns an error for `undefined`, `null`, `false` and empty strings.
+
+    -   @comet/admin-icons@7.3.2
+    -   @comet/admin-theme@7.3.2
+
+## 7.3.1
+
+### Patch Changes
+
+-   91bfda996: Fix validation for `NumberField` and `FinalFormNumberInput` by calling the `onBlur` event, passed in by the `Field`
+    -   @comet/admin-icons@7.3.1
+    -   @comet/admin-theme@7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   6a1310cf6: Deprecate FinalForm components where a Field component exists as a simpler alternative
+
+    -   Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
+    -   Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
+    -   Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
+    -   Use `<AsyncSelectField />` instead of `<Field component={FinalFormAsyncSelect} />`
+    -   Use `<NumberField />` instead of `<Field component={FinalFormNumberInput} />`
+    -   Use `<SearchField />` instead of `<Field component={FinalFormSearchTextField} />`
+    -   Use `<SelectField />` instead of `<Field />` with `<FinalFormSelect />`
+    -   Use `<SwitchField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormSwitch />`
+    -   Use `<DateField />` instead of `<Field component={FinalFormDatePicker} />`
+    -   Use `<DateRangeField />` instead of `<Field component={FinalFormDateRangePicker} />`
+    -   Use `<DateTimeField />` instead of `<Field component={FinalFormDateTimePicker} />`
+    -   Use `<TimeField />` instead of `<Field component={FinalFormTimePicker} />`
+    -   Use `<TimeRangeField />` instead of `<Field component={FinalFormTimeRangePicker} />`
+    -   Use `<ColorField />` instead of `<Field component={FinalFormColorPicker} />`
+
+-   Updated dependencies [5364ecb37]
+-   Updated dependencies [a1f4c0dec]
+-   Updated dependencies [2ab7b688e]
+    -   @comet/admin-icons@7.3.0
+    -   @comet/admin-theme@7.3.0
+
+## 7.2.1
+
+### Patch Changes
+
+-   @comet/admin-icons@7.2.1
+-   @comet/admin-theme@7.2.1
+
+## 7.2.0
+
+### Minor Changes
+
+-   0fb8d9a26: Allow pinning DataGrid columns using the column config when using `DataGridPro` or `DataGridPremium` with the `usePersistentColumnState` hook
+
+    ```tsx
+    const columns: GridColDef[] = [
+        {
+            field: "title",
+            pinned: "left",
+        },
+        // ... other columns
+        {
+            field: "actions",
+            pinned: "right",
+        },
+    ];
+    ```
+
+### Patch Changes
+
+-   4b267f90d: Fix broken export/import of `commonErrorMessages` from the file form field
+-   Updated dependencies [9b800c9f6]
+    -   @comet/admin-theme@7.2.0
+    -   @comet/admin-icons@7.2.0
+
+## 7.1.0
+
+### Minor Changes
+
+-   04844d39e: Adjust the alignment and spacing of the label, the input, and child fields inside `FieldContainer` and `Field`
+-   c0488eb84: Use `FeedbackButton` in `DeleteDialog` of `CrudContextMenu`
+
+    This provides the user with feedback about the current status of the delete action.
+
+-   c1ab2b340: Add `CheckboxListField` component to make it easier to create checkbox lists in forms
+
+    You can now do:
+
+    ```tsx
+    <CheckboxListField
+        label="Checkbox List"
+        name="checkboxList"
+        fullWidth
+        options={[
+            {
+                label: "Option One",
+                value: "option-one",
+            },
+            {
+                label: "Option Two",
+                value: "option-two",
+            },
+        ]}
+    />
+    ```
+
+    instead of:
+
+    ```tsx
+    <FieldContainer label="Checkbox List" fullWidth>
+        <CheckboxField name="checkboxList" label="Checkbox one" value="checkbox-one" />
+        <CheckboxField name="checkboxList" label="Checkbox two" value="checkbox-two" />
+    </FieldContainer>
+    ```
+
+-   99a1f0ae6: Add `RadioGroupField` component to make it easier to create radio group fields in forms
+
+    You can now do:
+
+    ```tsx
+    <RadioGroupField
+        label="Radio"
+        name="radio"
+        fullWidth
+        options={[
+            {
+                label: "Option One",
+                value: "option-one",
+            },
+            {
+                label: "Option Two",
+                value: "option-two",
+            },
+        ]}
+    />
+    ```
+
+    instead of:
+
+    ```tsx
+    <FieldContainer label="Radio" fullWidth>
+        <Field name="radio" type="radio" value="option-one">
+            {(props) => <FormControlLabel label="Option One" control={<FinalFormRadio {...props} />} />}
+        </Field>
+        <Field name="radio" type="radio" value="option-two">
+            {(props) => <FormControlLabel label="Option Two" control={<FinalFormRadio {...props} />} />}
+        </Field>
+    </FieldContainer>
+    ```
+
+-   edf14d066: Add the `disableSlider` prop to `FinalFormRangeInput` to disable the slider and only show the input fields
+
+    ```tsx
+    <Field name="numberRange" label="Range Input" component={FinalFormRangeInput} min={0} max={100} disableSlider />
+    ```
+
+-   c050f2242: Make the separator of `FinalFormRangeInput` overridable using the `separator` prop and change the default to the string "to"
+
+    Example to restore the previous separator:
+
+    ```tsx
+    <Field name="numberRange" label="Range Input" component={FinalFormRangeInput} min={0} max={100} separator="-" />
+    ```
+
+### Patch Changes
+
+-   dfc4a7fff: Adjust the spacing of `FinalFormRangeInput` to align with other inputs
+-   39ab15616: Fix the behavior of `FinalFormRangeInput` when the `min` and `max` values are inverted
+
+    Previously, e.g., when the `min` value was changed to something greater than the `max` value, the `min` value would be set to the same as the max value.
+    Now, the `min` and `max` values are swapped.
+
+-   2b68513be: Fix the alignment of the input inside `FieldContainer` and `Field` when there is no label with `variant="horizontal"`
+-   374f383ba: Increase `Toolbar` padding left and right from 10px to 20px
+-   Updated dependencies [3adf5fecd]
+-   Updated dependencies [04844d39e]
+-   Updated dependencies [c90ae39d4]
+-   Updated dependencies [b1bbd6a0c]
+    -   @comet/admin-theme@7.1.0
+    -   @comet/admin-icons@7.1.0
+
+## 7.0.0
+
+### Major Changes
+
+-   949356e84: Remove `clearable` prop from `FinalFormSelect` and `FinalFormAsyncSelect`
+
+    `FinalFormSelect` and `FinalFormAsyncSelect` are now clearable when `required` is not set.
+
+-   51a0861d8: Create a subroute by default in `SaveBoundary`
+
+    The default path is `./save`, you can change it using the `subRoutePath` prop.
+
+-   73140014f: Change theming method of `Menu`
+
+    -   Rename `permanent` class-key to `permanentDrawer` and `temporary` class-key to `temporaryDrawer`
+    -   Replace the `permanentDrawerProps` and `temporaryDrawerProps` props with `slotProps`
+
+-   9a4530b06: Remove the `listItem` class key from `MenuCollapsibleItemClassKey` due to a larger overhaul of the menu components
+-   dc8bb6a99: Remove the `openedIcon` and `closedIcon` props from `MenuCollapsibleItem` and add `iconMapping` instead
+
+    The icon shown as the collapse indicator will be chosen from `iconMapping`, depending on the collapsed states of the Menu and the Item.
+
+-   8cc51b368: Remove `popoverProps` from `AppHeaderDropdown`
+
+    Use `slotProps.popover` instead.
+
+-   6054fdcab: Remove the `requiredSymbol` prop from `FieldContainer` and use MUIs native implementation
+
+    This prop was used to display a custom required symbol next to the label of the field. We now use the native implementation of the required attribute of MUI to ensure better accessibility and compatibility with screen readers.
+
+-   d0869ac82: Rework `Toolbar`
+
+    -   The `Toolbar` is now split into a top and a bottom bar.
+
+        The top bar displays a scope indicator and breadcrumbs. The bottom bar behaves like the old `Toolbar`.
+
+    -   The styling of `Toolbar`, `ToolbarItem`, `ToolbarActions`, `ToolbarAutomaticTitleItem` and `ToolbarBackButton` was adjusted
+
+    -   The new `ToolbarActionButton` should be used for buttons inside the `ToolbarActions`
+
+        It automatically switches from a normal `Button` to an `IconButton` for smaller screen sizes.
+
+    -   To show a scope indicator, you must pass a `<ContentScopeIndicator />` to the `Toolbar` via the `scopeIndicator` prop
+
+-   9a4530b06: Remove `temporaryDrawerProps`, `permanentDrawerProps`, `temporaryDrawerPaperProps` and `permanentDrawerPaperProps` props from `Menu` component.
+
+    Use `slotProps` instead.
+
+-   47ec528a4: Remove the `FieldContainerComponent` component
+
+    `FieldContainerComponent` was never intended to be exported, use `FieldContainer` instead.
+
+-   956111ab2: Rename the `FilterBarMoveFilersClassKey` type to `FilterBarMoreFiltersClassKey`
+-   19eaee4ca: Remove the `disabled` class-key in `TabScrollButton`
+
+    Use the `:disabled` selector instead when styling the disabled state.
+
+-   9a4530b06: Remove the `MenuLevel` type
+
+    The type can be used from `MenuItemProps['level']` instead, if necessary.
+
+-   04ed68cc9: Remove the `components` and `componentProps` props from `CopyToClipboardButton`
+
+    Instead, for the icons, use the `copyIcon` and `successIcon` props to pass a `ReactNode` instead of separately passing in values to the `components` and `componentProps` objects.
+    Use `slotPops` to pass props to the remaining elements.
+
+-   61b2acfb2: Add `FeedbackButton` component
+-   2a7bc765c: Replace the `componentsProps` prop with `slotProps` in `FieldSet`
+-   27efe7bd8: `FinalFormFileSelect` is now a simple final form wrapper around `FileSelect`
+
+    Props now mirror those of `FileSelect` and are passed through to the `FileSelect` component.
+    Setting `defaultProps` in the theme must now be done with `CometAdminFileSelect` instead of `CometAdminFinalFormFileSelect`.
+
+    Class keys have been removed. Apply custom styling to `CometAdminFileSelect` instead of `FinalFormFileSelect`.
+
+    The default value for `maxSize` has been removed.
+    You may want to set the previous default value of 50 MB explicitly.
+
+    ```diff
+     <Field
+         name="files"
+         label="Files"
+         component={FinalFormFileSelect}
+    +    maxSize={50 * 1024 * 1024} // 50 MB
+     />
+    ```
+
+    The `disableDropzone` prop has been removed.
+    Use `slotProps.dropzone.hideDroppableArea` instead.
+
+    ```diff
+     <Field
+         name="files"
+         label="Files"
+         component={FinalFormFileSelect}
+    -    disableDropzone
+    +    slotProps={{
+    +        dropzone: {
+    +            hideDroppableArea: true,
+    +        },
+    +    }}
+     />
+    ```
+
+    The `disableSelectFileButton` prop has been removed.
+    Use `slotProps.dropzone.hideButton` instead.
+
+    ```diff
+     <Field
+         name="files"
+         label="Files"
+         component={FinalFormFileSelect}
+    -    disableSelectFileButton
+    +    slotProps={{
+    +        dropzone: {
+    +            hideButton: true,
+    +        },
+    +    }}
+     />
+    ```
+
+-   b87c3c292: Replace the `componentsProps` prop with `slotProps` in `InputWithPopper` and remove the `InputWithPopperComponentsProps` type
+-   2a7bc765c: Remove the `message` class-key from `Alert`
+
+    Use the `.MuiAlert-message` selector instead to style the message of the underlying MUI `Alert` component.
+
+-   d2e64d1ec: Remove the `paper` class-key from `FilterBarPopoverFilter`
+
+    Instead of using `styleOverrides` for `paper` in the theme, use the `slotProps` and `sx` props.
+
+-   241249bd4: Remove the `disabled` and `focusVisible` class-keys and rename the `inner` class-key to `content` in `AppHeaderButton`
+
+    Use the `:disabled` selector instead when styling the disabled state.
+    Use the `:focus` selector instead when styling the focus state.
+
+-   be4e6392d: Remove `endAdornment` prop from `FinalFormSelect` component
+
+    The reason were conflicts with the clearable prop. This decision was based on the fact that MUI doesn't support endAdornment on selects (see: [mui/material-ui#17799](https://github.com/mui/material-ui/issues/17799)), and that there are no common use cases where both `endAdornment` and `clearable` are needed simultaneously.
+
+-   a53545438: Remove the `disabled` class-key in `ClearInputButton`
+
+    Use the `:disabled` selector instead when styling the disabled state.
+
+-   1a1d83156: `MenuItem` no longer supports props from MUI's `ListItem` but those from `ListItemButton` instead
+-   a2f278bbd: Remove the `popoverPaper` class-key and rename the `popoverRoot` class-key to `popover` in `AppHeaderDropdown`
+
+    Instead of using `styleOverrides` for `popoverPaper` in the theme, use the `slotProps` and `sx` props.
+    Use the `popover` prop instead of `popoverRoot` to override styles.
+
+-   92eae2ba9: Change the method of overriding the styling of Admin components
+
+    -   Remove dependency on the legacy `@mui/styles` package in favor of `@mui/material/styles`.
+    -   Add the ability to style components using [MUI's `sx` prop](https://mui.com/system/getting-started/the-sx-prop/).
+    -   Add the ability to style individual elements (slots) of a component using the `slotProps` and `sx` props.
+    -   The `# @comet/admin syntax in the theme's `styleOverrides` is no longer supported, see: https://mui.com/material-ui/migration/v5-style-changes/#migrate-theme-styleoverrides-to-emotion
+
+    ```diff
+     const theme = createCometTheme({
+         components: {
+             CometAdminMyComponent: {
+                 styleOverrides: {
+    -                root: {
+    -                    "&$hasShadow": {
+    -                        boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+    -                    },
+    -                    "& $header": {
+    -                        backgroundColor: "lime",
+    -                    },
+    -                },
+    +                hasShadow: {
+    +                    boxShadow: "2px 2px 5px 0 rgba(0, 0, 0, 0.25)",
+    +                },
+    +                header: {
+    +                    backgroundColor: "lime",
+    +                },
+                 },
+             },
+         },
+     });
+    ```
+
+    -   Overriding a component's styles using `withStyles` is no longer supported. Use the `sx` and `slotProps` props instead:
+
+    ```diff
+    -import { withStyles } from "@mui/styles";
+    -
+    -const StyledMyComponent = withStyles({
+    -    root: {
+    -        backgroundColor: "lime",
+    -    },
+    -    header: {
+    -        backgroundColor: "fuchsia",
+    -    },
+    -})(MyComponent);
+    -
+    -// ...
+    -
+    -<StyledMyComponent title="Hello World" />;
+    +<MyComponent
+    +    title="Hello World"
+    +    sx={{
+    +        backgroundColor: "lime",
+    +    }}
+    +    slotProps={{
+    +        header: {
+    +            sx: {
+    +                backgroundColor: "fuchsia",
+    +            },
+    +        },
+    +    }}
+    +/>
+    ```
+
+    -   The module augmentation for the `DefaultTheme` type from `@mui/styles/defaultTheme` is no longer needed and needs to be removed from the admins theme file, usually located in `admin/src/theme.ts`:
+
+    ```diff
+    -declare module "@mui/styles/defaultTheme" {
+    -    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    -    export interface DefaultTheme extends Theme {}
+    -}
+    ```
+
+    -   Class-keys originating from MUI components have been removed from Comet Admin components, causing certain class-names and `styleOverrides` to no longer be applied.
+        The components `root` class-key is not affected. Other class-keys will retain the class-names and `styleOverrides` from the underlying MUI component.
+        For example, in `ClearInputAdornment` (when used with `position="end"`) the class-name `CometAdminClearInputAdornment-positionEnd` and the `styleOverrides` for `CometAdminClearInputAdornment.positionEnd` will no longer be applied.
+        The component will retain the class-names `MuiInputAdornment-positionEnd`, `MuiInputAdornment-root`, and `CometAdminClearInputAdornment-root`.
+        Also, the `styleOverrides` for `MuiInputAdornment.positionEnd`, `MuiInputAdornment.root`, and `CometAdminClearInputAdornment.root` will continue to be applied.
+
+        This affects the following components:
+
+        -   `AppHeader`
+        -   `AppHeaderMenuButton`
+        -   `ClearInputAdornment`
+        -   `Tooltip`
+        -   `CancelButton`
+        -   `DeleteButton`
+        -   `OkayButton`
+        -   `SaveButton`
+        -   `StackBackButton`
+        -   `DatePicker`
+        -   `DateRangePicker`
+        -   `TimePicker`
+
+    -   For more details, see MUI's migration guide: https://mui.com/material-ui/migration/v5-style-changes/#mui-styles
+
+### Minor Changes
+
+-   05ce68ec0: Add `StackToolbar`, a variant of `Toolbar` component that hides itself in a nested stack
+-   dc8bb6a99: Add hover effect for collapsed menu icons. This ensures that navigation is also possible in collapsed state.
+-   54f775497: Add new `DataGridToolbar` component
+
+    The "normal" `Toolbar` is meant to be used on page-level to show the current scope, breadcrumbs and page-wide action buttons (like save).
+    The `DataGridToolbar`, however, is meant to be used in DataGrids to contain a search input, filter options, bulk actions and an add button.
+
+    You can use it like this:
+
+    ```tsx
+    <DataGrid
+        // ...
+        components={{
+            Toolbar: () => <DataGridToolbar>{/* ... */}</DataGridToolbar>,
+        }}
+    />
+    ```
+
+-   e3efdfcc3: Add the ability to change by which fields a DataGrid column is sorted using `sortBy` in the column definition
+
+    This can be useful for custom columns that do not represent an actual field in the data, e.g., columns that render the data of multiple fields.
+
+    ```tsx
+    const columns: GridColDef[] = [
+        {
+            field: "fullName",
+            sortBy: ["firstName", "lastName"],
+            renderCell: ({ row }) => `${row.firstName} ${row.lastName}`,
+        },
+    ];
+    ```
+
+-   02d33e230: Show icons in permanent menu even in closed state.
+-   a0bd09afa: Add `ForcePromptRoute`, a `Route` that triggers a prompt even if it is a subroute
+
+    Used in `StackSwitch` so that navigating to a nested stack subpage will show a prompt (if dirty)
+
+-   c46146cb3: Add new `FileSelect`, `FileDropzone` and `FileSelectListItem` components
+
+    `FileSelect` combines `FileDropzone` and `FileSelectListItem` to handle the user's selection of files, display those files below, and handle the download and removal actions.
+
+    `FileDropzone` is a wrapper around [react-dropzone](https://www.npmjs.com/package/react-dropzone) that manages error and disabled states.
+
+    `FileSelectListItem` is used to display a list of files, including loading, skeleton, and error states and options to download and delete the file.
+
+-   758c65656: Only use horizontal layout in `FieldContainer` when it exceeds `600px` in width
+-   0263a45fa: Add the ability to make `DataGrid` columns responsive by setting the `visible` property of the column definition to a media query
+
+    This can be used to hide certain columns on smaller screens and show a combined column instead.
+
+    This will only work when using `usePersistentColumnState` with `DataGridPro`/`DataGridPremium`.
+    When defining the columns, use the `GridColDef` type from `@comet/admin` instead of `@mui/x-data-grid`.
+
+    ```ts
+    const columns: GridColDef[] = [
+        {
+            field: "fullName",
+            visible: theme.breakpoints.down("md"),
+        },
+        {
+            field: "firstName",
+            visible: theme.breakpoints.up("md"),
+        },
+        {
+            field: "lastName",
+            visible: theme.breakpoints.up("md"),
+        },
+    ];
+    ```
+
+-   4ca4830f3: Router Prompt: actively reset form state when choosing discard in the prompt dialog
+-   3397ec1b6: Add the `GridCellContent` component
+
+    Used to display primary and secondary texts and an icon in a `DataGrid` cell using the columns `renderCell` function.
+
+    ```tsx
+    const columns: GridColDef[] = [
+        {
+            field: "title",
+            renderCell: ({ row }) => <GridCellContent>{row.title}</GridCellContent>,
+        },
+        {
+            field: "overview",
+            renderCell: ({ row }) => <GridCellContent primaryText={row.title} secondaryText={row.description} icon={<Favorite />} />,
+        },
+    ];
+    ```
+
+-   20b2bafd8: Add setting `signInUrl` to `createErrorDialogApolloLink`
+-   51a0861d8: Support relative paths in `SubRoute` component using `./subroute` notation
+-   9c4b7c974: Add support for third level menu items. Collapsible items can be nested in each other, which creates subsubitems.
+-   774977311: Add `GridColumnsButton`
+
+    This button opens a panel to hide or show columns of `DataGrid`, similar to MUIs `GridToolbarColumnsButton`.
+
+-   f8114cd39: Pass `required` prop to children of `Field` component
+-   569ad0463: Deprecate `SplitButton`, `FinalFormSaveSplitButton` and `SplitButtonContext` and remove all uses of these components in our libraries
+
+    The reason is that we decided to retire the SplitButton pattern.
+
+-   170720b0c: Stack: Update parent breadcrumb URL in state to not forget filters and other states when going back
+-   f06f4bea6: Add `MenuItemGroup` component to group menu items
+
+    **Example:**
+
+    ```tsx
+    <MenuItemGroup title="Some item group title">
+        <MenuItemRouterLink primary="Menu item 1" icon={<Settings />} to="/menu-item-1" />
+        <MenuItemRouterLink primary="Menu item 2" icon={<Settings />} to="/menu-item-2" />
+        <MenuItemRouterLink primary="Menu item 3" icon={<Settings />} to="/menu-item-3" />
+        {/* Some more menu items... */}
+    </MenuItemGroup>
+    ```
+
+-   119714999: Automatically set `fullWidth` for `FieldContainer` with `variant="horizontal"`
+
+    Horizontal fields are automatically responsive:
+    If they are less than 600px wide, the layout automatically changes to vertical.
+    For this to work correctly, the fields must be `fullWidth`.
+    Therefore, `fullWidth` is now `true` by default for horizontal fields.
+
+-   b0249e3bc: Add `helperIcon` prop to MenuItemGroup. Its intended purpose is to render an icon with a `Tooltip` behind the group section title, if the menu is not collapsed.
+
+    ### Examples:
+
+    **Render only an icon:**
+
+    ```tsx
+    <MenuItemGroup title="Group Title" helperIcon={<QuestionMark />}>
+        {/* ... */}
+    </MenuItemGroup>
+    ```
+
+    **Render an icon with tooltip:**
+
+    ```tsx
+    <MenuItemGroup
+        title="Group Title"
+        helperIcon={
+            <Tooltip title="Some help text">
+                <QuestionMark />
+            </Tooltip>
+        }
+    >
+        {/* ... */}
+    </MenuItemGroup>
+    ```
+
+### Patch Changes
+
+-   b5753e612: Allow partial props in the theme's `defaultProps` instead of requiring all props when setting the `defaultProps` of a component
+-   66330e4e6: Fix a bug where the `disabled` prop would not be passed to the children of `Field`
+-   Updated dependencies [803bc607f]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [c702cc5b2]
+-   Updated dependencies [535444623]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [f9615fbf4]
+-   Updated dependencies [33ba50719]
+-   Updated dependencies [cce88d448]
+-   Updated dependencies [865f253d8]
+-   Updated dependencies [92eae2ba9]
+-   Updated dependencies [33ba50719]
+    -   @comet/admin-theme@7.0.0
+    -   @comet/admin-icons@7.0.0
+
 ## 7.0.0-beta.6
 
 ### Minor Changes

@@ -8,14 +8,14 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useMemo } from "react";
 import { FieldRenderProps } from "react-final-form";
 
 import { ColumnsBlockLayout } from "../createColumnsBlock";
 
 interface Section {
     name?: string;
-    label?: React.ReactNode;
+    label?: ReactNode;
     layouts: ColumnsBlockLayout[];
 }
 
@@ -24,7 +24,7 @@ interface Props extends FieldRenderProps<ColumnsBlockLayout> {
 }
 
 export function FinalFormLayoutSelect({ input: { value, onChange }, layouts }: Props) {
-    const sections = React.useMemo(() => {
+    const sections = useMemo(() => {
         const sections: Section[] = [];
 
         layouts.forEach((layout) => {
