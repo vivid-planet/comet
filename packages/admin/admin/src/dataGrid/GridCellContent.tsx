@@ -1,5 +1,5 @@
 import { ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
-import React from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -14,10 +14,10 @@ export interface GridCellContentProps
         primaryText: typeof Typography;
         secondaryText: typeof Typography;
     }> {
-    primaryText?: React.ReactNode;
-    secondaryText?: React.ReactNode;
-    children?: React.ReactNode;
-    icon?: React.ReactNode;
+    primaryText?: ReactNode;
+    secondaryText?: ReactNode;
+    children?: ReactNode;
+    icon?: ReactNode;
 }
 
 type OwnerState = {

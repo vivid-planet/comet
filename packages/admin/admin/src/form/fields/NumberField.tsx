@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { Field, FieldProps } from "../Field";
 import { FinalFormNumberInput } from "../FinalFormNumberInput";
 

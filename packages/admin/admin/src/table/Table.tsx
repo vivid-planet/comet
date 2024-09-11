@@ -5,7 +5,7 @@ import TableFooter from "@mui/material/TableFooter";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import * as React from "react";
+import { Component, createRef, KeyboardEvent, ReactNode, RefObject } from "react";
 
 import { ISelectionApi } from "../SelectionApi";
 import { IExportApi } from "./excelexport/IExportApi";
@@ -40,7 +40,7 @@ export interface ITableHeadColumnsProps<TRow extends IRow> {
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export function TableHeadColumns<TRow extends IRow>({ columns, sortApi }: ITableHeadColumnsProps<TRow>) {
-    const handleSortClick = (name: string, ev: React.MouseEvent) => {
+    const handleSortClick = (name: string, ev: MouseEvent) => {
         if (sortApi) sortApi.changeSort(name);
     };
 
@@ -118,9 +118,9 @@ export type Visible = boolean | { [key in VisibleType]?: boolean };
 export interface ITableColumn<TRow extends IRow> {
     name: string;
     visible?: Visible;
-    header?: React.ReactNode;
+    header?: ReactNode;
     headerExcel?: string;
-    render?: (row: TRow) => React.ReactNode;
+    render?: (row: TRow) => ReactNode;
     renderExcel?: (row: TRow) => string | number;
     formatForExcel?: string;
     sortable?: boolean;
@@ -146,8 +146,8 @@ export interface ITableProps<TRow extends IRow> {
     selectedId?: string;
     selectable?: boolean;
     page?: number;
-    renderTableRow?: (props: ITableRowProps<TRow>) => React.ReactNode;
-    renderHeadTableRow?: (props: ITableHeadRowProps<TRow>) => React.ReactNode;
+    renderTableRow?: (props: ITableRowProps<TRow>) => ReactNode;
+    renderHeadTableRow?: (props: ITableHeadRowProps<TRow>) => ReactNode;
     selectionApi?: ISelectionApi;
     pagingInfo?: IPagingInfo;
     rowName?: string | ((count: number) => string);
@@ -170,11 +170,11 @@ function DefaultTableRow<TRow extends IRow>({ columns, row, rowProps }: ITableRo
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>> {
-    private domRef: React.RefObject<HTMLTableElement>;
+export class Table<TRow extends IRow> extends Component<ITableProps<TRow>> {
+    private domRef: RefObject<HTMLTableElement>;
     constructor(props: ITableProps<TRow>) {
         super(props);
-        this.domRef = React.createRef<HTMLTableElement>();
+        this.domRef = createRef<HTMLTableElement>();
     }
 
     public render() {
@@ -241,13 +241,13 @@ export class Table<TRow extends IRow> extends React.Component<ITableProps<TRow>>
         );
     }
 
-    private handleClick = (id: string, event: React.MouseEvent) => {
+    private handleClick = (id: string, event: MouseEvent) => {
         if (this.props.selectable && this.props.selectionApi) {
             this.props.selectionApi.handleSelectId(id);
         }
     };
 
-    private handleKeyDown = (event: React.KeyboardEvent) => {
+    private handleKeyDown = (event: KeyboardEvent) => {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") {
             if (this.props.selectable && this.props.selectionApi) {
                 const selectedIndex = this.props.data.findIndex((i) => String(this.props.selectedId) === String(i.id));

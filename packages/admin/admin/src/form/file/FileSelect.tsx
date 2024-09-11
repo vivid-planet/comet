@@ -1,7 +1,7 @@
 import { Error as ErrorIcon } from "@comet/admin-icons";
 import { ComponentsOverrides, FormHelperText, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { Accept, DropzoneOptions } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -54,10 +54,10 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     maxFileSize?: number;
     maxFiles?: number;
     multiple?: boolean;
-    error?: React.ReactNode;
+    error?: ReactNode;
     layout?: Layout;
     iconMapping?: {
-        error?: React.ReactNode;
+        error?: ReactNode;
     };
 } & ThemeProps;
 

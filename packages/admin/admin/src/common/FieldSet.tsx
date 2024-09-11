@@ -4,7 +4,7 @@ import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import { css, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren, ReactNode, SyntheticEvent, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -20,9 +20,9 @@ export interface FieldSetProps
         endAdornment: "div";
         children: typeof MuiAccordionDetails;
     }> {
-    title: React.ReactNode;
-    supportText?: React.ReactNode;
-    endAdornment?: React.ReactNode;
+    title: ReactNode;
+    supportText?: ReactNode;
+    endAdornment?: ReactNode;
     collapsible?: boolean;
     initiallyExpanded?: boolean;
     disablePadding?: boolean;
@@ -43,7 +43,7 @@ type OwnerState = {
     disablePadding: boolean;
 };
 
-export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React.ReactElement {
+export const FieldSet = (inProps: PropsWithChildren<FieldSetProps>) => {
     const {
         title,
         supportText,
@@ -55,9 +55,9 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminFieldSet" });
-    const [expanded, setExpanded] = React.useState(initiallyExpanded);
+    const [expanded, setExpanded] = useState(initiallyExpanded);
 
-    const handleChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
+    const handleChange = (event: SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded);
     };
 
@@ -91,7 +91,7 @@ export function FieldSet(inProps: React.PropsWithChildren<FieldSetProps>): React
             </Children>
         </Root>
     );
-}
+};
 
 const Root = createComponentSlot(MuiAccordion)<FieldSetClassKey>({
     componentName: "FieldSet",
