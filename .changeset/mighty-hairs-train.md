@@ -11,13 +11,13 @@ This is done to provide a simple api to create a more actions menu for a list of
 ```tsx
 <CrudMoreActionsMenu
     selectionSize={selectionSize}
-    overAllItems={[
+    overallActions={[
         {
             label: "Export to excel",
             onClick: handleExportToExcelClick,
         },
     ]}
-    selectiveItems={[
+    selectiveActions={[
         {
             label: "move",
             onClick: handleMoveClick,
