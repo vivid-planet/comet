@@ -321,12 +321,6 @@ export function generateGrid(
                 return row.${name};
             }`;
 
-            renderCell = `({ row }) => {
-                const valueOptions = ${valueOptions};
-                const selectedOption = valueOptions.find(({ value }) => value === row.${name});
-                return selectedOption ? selectedOption.label : row.${name};
-            }`;
-
             return {
                 name,
                 type,
