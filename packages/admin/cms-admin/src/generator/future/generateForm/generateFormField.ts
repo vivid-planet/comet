@@ -1,5 +1,6 @@
 import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
+import { Prop } from "../generateForm";
 import { FormConfig, FormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
@@ -50,9 +51,39 @@ export function generateFormField({
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
     const imports: Imports = [];
+    const props: Prop[] = [];
+
+    const initialValuePropConfig = config.initialValueProp
+        ? (() => {
+              if (introspectionFieldType.kind === "OBJECT" || introspectionFieldType.kind === "ENUM") {
+                  imports.push({
+                      name: `GQL${introspectionFieldType.name}`,
+                      importPath: `@src/graphql.generated`,
+                  });
+              }
+              props.push({
+                  optional: true,
+                  type:
+                      introspectionFieldType.kind === "OBJECT" || introspectionFieldType.kind === "ENUM"
+                          ? `GQL${introspectionFieldType.name}`
+                          : introspectionFieldType.kind === "SCALAR"
+                          ? introspectionFieldType.name
+                          : "unknown",
+                  name: name,
+              });
+              return {
+                  defaultInitializationCode: `${name}: ${name}`, // TODO consider optionFields field nesting for defaultInitializationCode
+                  initializationVarDependency: `${name}`,
+              };
+          })()
+        : undefined;
+
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
+        defaultInitializationCode: initialValuePropConfig ? initialValuePropConfig.defaultInitializationCode : undefined,
+        initializationVarDependency: initialValuePropConfig ? initialValuePropConfig.initializationVarDependency : undefined,
     };
+
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
     const gqlDocuments: Record<string, string> = {};
@@ -157,7 +188,7 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    defaultInitializationCode: `${name}: false`,
+                    defaultInitializationCode: initialValuePropConfig ? `${name}: ${name} !== undefined ? ${name} : false` : `${name}: false`,
                 },
             },
         ];
@@ -193,13 +224,21 @@ export function generateFormField({
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;
+        if (initialValuePropConfig && introspectionFieldType.kind === "SCALAR") {
+            imports.push({
+                name: introspectionFieldType.name,
+                importPath: "@src/blocks.generated",
+            });
+        }
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,
                 ...{
                     typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
                     initializationCode: `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
-                    defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+                    defaultInitializationCode: initialValuePropConfig
+                        ? `${name}: ${name} ?? rootBlocks.${name}.defaultValues()`
+                        : `${name}: rootBlocks.${name}.defaultValues()`,
                 },
             },
         ];
@@ -333,6 +372,7 @@ export function generateFormField({
     }
     return {
         code,
+        props,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],
