@@ -32,6 +32,16 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+                {
+                    type: "optionalNestedFields",
+                    name: "dimensions",
+                    checkboxLabel: "Configure dimensions",
+                    fields: [
+                        { type: "number", name: "width", label: "Width" },
+                        { type: "number", name: "height", label: "Height" },
+                        { type: "number", name: "depth", label: "Depth" },
+                    ],
+                },
             ],
         },
         {
@@ -41,6 +51,8 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince" },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
+                { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4 },
+                { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4 },
             ],
         },
     ],

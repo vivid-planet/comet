@@ -1,22 +1,23 @@
-import * as React from "react";
+import { PropsWithChildren, useEffect, useRef } from "react";
 import { useRouteMatch } from "react-router";
 import scrollIntoView from "scroll-into-view-if-needed";
 
 import * as sc from "./HoverPreviewComponent.sc";
 import { useIFrameBridge } from "./useIFrameBridge";
 
-interface IHoverPreviewComponentProps {
+interface HoverPreviewComponentProps {
     componentSlug: string;
 }
-export const HoverPreviewComponent: React.FunctionComponent<IHoverPreviewComponentProps> = ({ children, componentSlug }) => {
+
+export const HoverPreviewComponent = ({ children, componentSlug }: PropsWithChildren<HoverPreviewComponentProps>) => {
     const match = useRouteMatch();
     const iFrameBridge = useIFrameBridge();
-    const rootEl = React.useRef<HTMLDivElement | null>(null);
+    const rootEl = useRef<HTMLDivElement | null>(null);
 
     const componentRoute = componentSlug.startsWith("#") ? `${match.url}${componentSlug}` : `${match.url}/${componentSlug}`;
 
     const isHovered = iFrameBridge.hoveredSiteRoute?.includes(componentRoute) ?? false;
-    React.useEffect(() => {
+    useEffect(() => {
         const timeout = setTimeout(() => {
             if (isHovered) {
                 if (rootEl.current) {

@@ -1,12 +1,11 @@
 "use client";
 import Link from "next/link";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { InternalLinkBlockData } from "../blocks.generated";
 import { PropsWithData } from "./PropsWithData";
 
-interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
-    children: React.ReactNode;
+interface InternalLinkBlockProps extends PropsWithChildren<PropsWithData<InternalLinkBlockData>> {
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
@@ -15,13 +14,7 @@ interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
 /**
  * @deprecated There should be a copy of this component in the application for flexibility (e.g. multi language support)
  */
-export function InternalLinkBlock({
-    data: { targetPage, targetPageAnchor },
-    children,
-    title,
-    className,
-    legacyBehavior,
-}: InternalLinkBlockProps): React.ReactElement {
+export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title, className, legacyBehavior }: InternalLinkBlockProps) {
     if (!targetPage) {
         if (legacyBehavior) {
             return <>{children}</>;

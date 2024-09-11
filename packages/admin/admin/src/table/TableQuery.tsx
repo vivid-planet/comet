@@ -1,7 +1,7 @@
 import { ApolloError } from "@apollo/client";
 import { ComponentsOverrides, Paper } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Loading } from "../common/Loading";
@@ -73,7 +73,7 @@ export interface TableQueryProps
     api: ITableQueryApi;
     loading: boolean;
     error?: ApolloError;
-    children: React.ReactNode;
+    children?: ReactNode;
 }
 
 /**

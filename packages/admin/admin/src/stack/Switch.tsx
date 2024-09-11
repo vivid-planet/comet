@@ -1,4 +1,18 @@
-import * as React from "react";
+import {
+    Children,
+    ComponentType,
+    createContext,
+    forwardRef,
+    ReactElement,
+    ReactNode,
+    RefForwardingComponent,
+    useCallback,
+    useContext,
+    useImperativeHandle,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { matchPath, RouteComponentProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
@@ -10,11 +24,11 @@ import { StackSwitchMeta } from "./SwitchMeta";
 
 interface IProps {
     initialPage?: string;
-    title?: React.ReactNode;
-    children: Array<React.ReactElement<IStackPageProps>>;
+    title?: ReactNode;
+    children: Array<ReactElement<IStackPageProps>>;
 }
 
-export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
+export const StackSwitchApiContext = createContext<IStackSwitchApi>({
     activatePage: () => {
         return;
     },
@@ -26,13 +40,13 @@ export const StackSwitchApiContext = React.createContext<IStackSwitchApi>({
     },
 });
 export function useStackSwitchApi() {
-    return React.useContext(StackSwitchApiContext);
+    return useContext(StackSwitchApiContext);
 }
 
 export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string, subUrl?: string) => void;
     getTargetUrl: (pageName: string, payload: string, subUrl?: string) => string;
-    updatePageBreadcrumbTitle: (title?: React.ReactNode) => void;
+    updatePageBreadcrumbTitle: (title?: ReactNode) => void;
     id?: string;
 }
 interface IRouteParams {
@@ -40,7 +54,7 @@ interface IRouteParams {
 }
 
 function useUuid() {
-    const ref = React.useRef<string | undefined>(undefined);
+    const ref = useRef<string | undefined>(undefined);
     if (ref.current === undefined) {
         ref.current = uuid() as string;
     }
@@ -51,8 +65,8 @@ function removeTrailingSlash(url: string) {
     return url.replace(/\/$/, "");
 }
 
-export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi] {
-    const apiRef = React.useRef<IStackSwitchApi>(null);
+export function useStackSwitch(): [ComponentType<IProps>, IStackSwitchApi] {
+    const apiRef = useRef<IStackSwitchApi>(null);
     const id = useUuid();
     const api: IStackSwitchApi = {
         id,
@@ -68,11 +82,11 @@ export function useStackSwitch(): [React.ComponentType<IProps>, IStackSwitchApi]
                 return "";
             }
         },
-        updatePageBreadcrumbTitle: (title?: React.ReactNode) => {
+        updatePageBreadcrumbTitle: (title?: ReactNode) => {
             apiRef.current?.updatePageBreadcrumbTitle(title);
         },
     };
-    const StackSwitchWithHookProps = React.useMemo(() => {
+    const StackSwitchWithHookProps = useMemo(() => {
         return (props: IProps) => {
             return <StackSwitchWithRef {...props} id={id} ref={apiRef} />;
         };
@@ -84,9 +98,9 @@ interface IHookProps {
     id: string;
 }
 
-const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & IHookProps> = (props, ref) => {
+const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookProps> = (props, ref) => {
     const { id } = props;
-    const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = React.useState<Record<string, string | undefined>>({});
+    const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = useState<Record<string, string | undefined>>({});
     const history = useHistory();
     const match = useRouteMatch<IRouteParams>();
     const subRoutePrefix = useSubRoutePrefix();
@@ -94,7 +108,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
 
     let activePage: string | undefined;
 
-    const isInitialPage = React.useCallback(
+    const isInitialPage = useCallback(
         (pageName?: string) => {
             if (!pageName) return true;
 
@@ -107,7 +121,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         [props],
     );
 
-    const getTargetUrl = React.useCallback(
+    const getTargetUrl = useCallback(
         (pageName: string, payload: string, subUrl?: string): string => {
             if (isInitialPage(pageName)) {
                 return removeTrailingSlash(subRoutePrefix);
@@ -118,7 +132,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         [isInitialPage, subRoutePrefix],
     );
 
-    const activatePage = React.useCallback(
+    const activatePage = useCallback(
         (pageName: string, payload: string, subUrl?: string) => {
             const targetUrl = getTargetUrl(pageName, payload, subUrl);
             history.push(targetUrl);
@@ -131,7 +145,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         [getTargetUrl, history, isInitialPage],
     );
 
-    const api: IStackSwitchApi = React.useMemo(() => {
+    const api: IStackSwitchApi = useMemo(() => {
         const updatePageBreadcrumbTitle = (t?: string) => {
             if (activePage) {
                 const title = { ...pageBreadcrumbTitle };
@@ -146,9 +160,9 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
             updatePageBreadcrumbTitle,
         };
     }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle]);
-    React.useImperativeHandle(ref, () => api);
+    useImperativeHandle(ref, () => api);
 
-    function renderRoute(page: React.ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {
+    function renderRoute(page: ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {
         activePage = page.props.name;
         const ret = (
             <StackSwitchMeta id={id} activePage={page.props.name} isInitialPageActive={isInitialPage(page.props.name)}>
@@ -176,7 +190,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
     let routeMatched = false; //to prevent rendering the initial page when a route is matched (as the initial would also match)
     return (
         <>
-            {React.Children.map(props.children, (page: React.ReactElement<IStackPageProps>) => {
+            {Children.map(props.children, (page: ReactElement<IStackPageProps>) => {
                 if (isInitialPage(page.props.name)) return null; // don't render initial Page
                 const path = `${removeTrailingSlash(subRoutePrefix)}/:id/${page.props.name}`;
                 if (matchPath(location.pathname, { path })) {
@@ -196,8 +210,8 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
                     {(routeProps: RouteComponentProps<IRouteParams>) => {
                         if (!routeProps.match) return null;
                         // now render initial page (as last route so it's a fallback)
-                        let initialPage: React.ReactElement<IStackPageProps> | null = null;
-                        React.Children.forEach(props.children, (page: React.ReactElement<IStackPageProps>) => {
+                        let initialPage: ReactElement<IStackPageProps> | null = null;
+                        Children.forEach(props.children, (page: ReactElement<IStackPageProps>) => {
                             if (isInitialPage(page.props.name)) {
                                 initialPage = page;
                             }
@@ -209,7 +223,7 @@ const StackSwitchInner: React.RefForwardingComponent<IStackSwitchApi, IProps & I
         </>
     );
 };
-const StackSwitchWithRef = React.forwardRef(StackSwitchInner);
+const StackSwitchWithRef = forwardRef(StackSwitchInner);
 
 export function StackSwitch(props: IProps) {
     const [StackSwitchWithApi] = useStackSwitch();

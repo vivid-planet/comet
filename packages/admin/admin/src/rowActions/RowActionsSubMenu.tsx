@@ -1,6 +1,6 @@
 import { ChevronRight, MoreVertical } from "@comet/admin-icons";
 import { Menu, MenuProps } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useContext, useRef } from "react";
 
 import { RowActionsIconItem, RowActionsIconItemProps } from "./RowActionsIconItem";
 import { RowActionsListItem, RowActionsListItemProps } from "./RowActionsListItem";
@@ -12,13 +12,13 @@ export interface RowActionsSubMenuComponentsProps {
 }
 
 export interface RowActionsSubMenuProps extends Omit<MenuProps, "open" | "onClose" | "componentsProps"> {
-    icon?: React.ReactNode;
-    text?: React.ReactNode;
+    icon?: ReactNode;
+    text?: ReactNode;
     menuIsOpen: boolean;
     closeMenu: () => void;
     openMenu: () => void;
-    textSecondary?: React.ReactNode;
-    endIcon?: React.ReactNode;
+    textSecondary?: ReactNode;
+    endIcon?: ReactNode;
     componentsProps?: RowActionsSubMenuComponentsProps & MenuProps["componentsProps"];
 }
 
@@ -32,10 +32,10 @@ export const RowActionsSubMenu = ({
     closeMenu,
     componentsProps = {},
     ...restMenuProps
-}: RowActionsSubMenuProps): React.ReactElement => {
-    const { level } = React.useContext(RowActionsMenuContext);
-    const menuIconItemButtonRef = React.useRef<HTMLButtonElement>(null);
-    const menuListItemButtonRef = React.useRef<HTMLLIElement>(null);
+}: RowActionsSubMenuProps) => {
+    const { level } = useContext(RowActionsMenuContext);
+    const menuIconItemButtonRef = useRef<HTMLButtonElement>(null);
+    const menuListItemButtonRef = useRef<HTMLLIElement>(null);
     const showMenuButtonAsIconButton = level === 2;
     const { rowActionsIconItem: rowActionsIconItemProps, rowActionsListItem: rowActionsListItemProps, ...menuComponentsProps } = componentsProps;
 

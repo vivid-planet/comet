@@ -1,7 +1,7 @@
 import { ChevronRight } from "@comet/admin-icons";
 import { Link, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import { css } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { BreadcrumbItem } from "../Stack";
@@ -10,7 +10,7 @@ import { StackBreadcrumbsClassKey, StackBreadcrumbsProps } from "./StackBreadcru
 
 interface BreadcrumbsOverflowProps {
     items: BreadcrumbItem[];
-    linkText: React.ReactNode;
+    linkText: ReactNode;
     slotProps: StackBreadcrumbsProps["slotProps"];
 }
 
@@ -33,9 +33,9 @@ const OverflowLink = createComponentSlot(Link)<StackBreadcrumbsClassKey>({
     `,
 );
 
-export const BreadcrumbsOverflow = ({ items, linkText, slotProps }: BreadcrumbsOverflowProps): React.ReactElement => {
-    const [showOverflowMenu, setShowOverflowMenu] = React.useState<boolean>(false);
-    const overflowLinkRef = React.useRef<HTMLAnchorElement>(null);
+export const BreadcrumbsOverflow = ({ items, linkText, slotProps }: BreadcrumbsOverflowProps) => {
+    const [showOverflowMenu, setShowOverflowMenu] = useState<boolean>(false);
+    const overflowLinkRef = useRef<HTMLAnchorElement>(null);
 
     return (
         <>

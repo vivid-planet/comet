@@ -1,5 +1,4 @@
 import { ButtonGroup } from "@mui/material";
-import * as React from "react";
 
 import NonBreakingSpaceToolbarButton from "../extension/NonBreakingSpace/ToolbarButton";
 import { ToolbarButton as SoftHyphenToolbarButton } from "../extension/SoftHyphen/ToolbarButton";
