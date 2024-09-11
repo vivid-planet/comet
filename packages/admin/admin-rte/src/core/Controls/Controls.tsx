@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { IControlProps } from "../types";
 import BlockTypesControls from "./BlockTypesControls";
 import CustomControls from "./CustomControls";

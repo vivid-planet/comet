@@ -9,7 +9,6 @@ import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
 import { EditLink } from "@src/links/EditLink";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import gql from "graphql-tag";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 const rootBlocks = {

@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { PreviewContentImage } from "../../../types";
 import * as sc from "./StackedImages.sc";
 

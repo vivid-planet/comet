@@ -1,6 +1,6 @@
 import { SelectField } from "@comet/admin";
 import { MenuItem } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlocksFinalForm } from "../../../form/BlocksFinalForm";
@@ -11,7 +11,7 @@ import { BlockCategory, BlockInterface } from "../../types";
 export interface SpaceBlockFactoryOptions<T> {
     name?: string;
     defaultValue: T;
-    options: { value: T; label: React.ReactNode }[];
+    options: { value: T; label: ReactNode }[];
 }
 
 export const createSpaceBlock = <T extends string | number>({

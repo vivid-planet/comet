@@ -1,7 +1,7 @@
 import { ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, Theme } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import React from "react";
+import { createElement } from "react";
 
 import { IControlProps } from "../../types";
 import { Root, RteToolbarClassKey, Slot } from "./Toolbar.styles";
@@ -25,7 +25,7 @@ export function Toolbar(inProps: RteToolbarProps) {
         })
         .map((c) => {
             const Comp = c;
-            return React.createElement(Comp, restProps);
+            return createElement(Comp, restProps);
         });
 
     return (

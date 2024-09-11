@@ -2,7 +2,7 @@ import { Field, FieldContainer, FinalFormRadio, FinalFormSelect } from "@comet/a
 import { Box, Divider, FormControlLabel, MenuItem, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
@@ -60,7 +60,7 @@ export type OneOfBlockOutput<Config extends boolean> = {
 type BlockType = string;
 export interface CreateOneOfBlockOptions<T extends boolean> {
     name: string;
-    displayName?: React.ReactNode;
+    displayName?: ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
     tabLabels?: Record<BlockType, React.ReactNode>;
     category?: BlockCategory | CustomBlockCategory;
@@ -111,7 +111,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
         };
     }
 
-    const options: Array<{ value: string; label: React.ReactNode }> = allowEmpty
+    const options: Array<{ value: string; label: ReactNode }> = allowEmpty
         ? [{ value: "none", label: <FormattedMessage id="comet.blocks.oneOfBlock.empty" defaultMessage="None" /> }]
         : [];
 
@@ -277,7 +277,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
         AdminComponent: ({ state, updateState }) => {
             const isInPaper = useAdminComponentPaper();
 
-            const handleBlockSelect = React.useCallback(
+            const handleBlockSelect = useCallback(
                 (blockType: string) => {
                     updateState((prevState) => {
                         let newState: OneOfBlockState = prevState;
@@ -334,7 +334,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                 [updateState],
             );
 
-            const createUpdateSubBlocksFn = React.useCallback(
+            const createUpdateSubBlocksFn = useCallback(
                 (blockType: string) => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const updateSubBlocksFn: DispatchSetStateAction<any> = (setStateAction) => {
@@ -368,11 +368,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field
-                                                name="blockType"
-                                                fullWidth
-                                                label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}
-                                            >
+                                            <Field name="blockType" fullWidth>
                                                 {(props) => (
                                                     <FinalFormSelect {...props} fullWidth>
                                                         {options.map((option) => (
@@ -390,7 +386,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "radio" && (
                                     <>
                                         <Box display="flex" flexDirection="column" padding={3}>
-                                            <FieldContainer label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}>
+                                            <FieldContainer>
                                                 {options.map((option) => (
                                                     <Field key={option.value} name="blockType" type="radio" value={option.value} fullWidth>
                                                         {(props) => <FormControlLabel label={option.label} control={<FinalFormRadio {...props} />} />}
@@ -404,11 +400,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "toggle" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field
-                                                name="blockType"
-                                                fullWidth
-                                                label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}
-                                            >
+                                            <Field name="blockType" fullWidth>
                                                 {({ input: { value, onChange } }) => (
                                                     <ToggleButtonGroup
                                                         value={value}

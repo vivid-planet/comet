@@ -9,7 +9,7 @@ import {
     Typography,
     useThemeProps,
 } from "@mui/material";
-import React from "react";
+import { ReactNode, useRef } from "react";
 
 import { Tooltip } from "../../common/Tooltip";
 import { createComponentSlot } from "../../helpers/createComponentSlot";
@@ -62,13 +62,13 @@ export type FileSelectListItemProps = ThemedComponentBaseProps<{
     onClickDelete?: () => void;
     filePreview?: string | boolean;
     iconMapping?: {
-        download?: React.ReactNode;
-        loading?: React.ReactNode;
-        delete?: React.ReactNode;
-        error?: React.ReactNode;
-        filePreviewGenericFile?: React.ReactNode;
-        filePreviewLoading?: React.ReactNode;
-        filePreviewError?: React.ReactNode;
+        download?: ReactNode;
+        loading?: ReactNode;
+        delete?: ReactNode;
+        error?: ReactNode;
+        filePreviewGenericFile?: ReactNode;
+        filePreviewLoading?: ReactNode;
+        filePreviewError?: ReactNode;
     };
 };
 
@@ -87,7 +87,7 @@ export const FileSelectListItem = (inProps: FileSelectListItemProps) => {
         props: inProps,
         name: "CometAdminFileSelectListItem",
     });
-    const fileNameRef = React.useRef<HTMLDivElement>(null);
+    const fileNameRef = useRef<HTMLDivElement>(null);
     const fileNameIsOverflowing = useElementIsOverflowing(fileNameRef);
 
     const {

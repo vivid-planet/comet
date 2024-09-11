@@ -157,7 +157,8 @@ export class BuildsService {
         const builderCronJobs = await this.buildTemplatesService.getAllBuilderCronJobs();
 
         const getMatchingBuilderCronJobs = (scope: ContentScope) => {
-            const matchingCronJobs: V1CronJob[] = [];
+            const partiallyMatchingCronJobs: V1CronJob[] = [];
+            const exactlyMatchingCronJobs: V1CronJob[] = [];
 
             for (const cronJob of builderCronJobs) {
                 const cronJobScope = this.kubernetesService.getContentScope(cronJob);
@@ -169,22 +170,22 @@ export class BuildsService {
 
                 // Exact match between job's scope and the scope with changes.
                 if (Object.entries(cronJobScope).every(([key, value]) => (scope as Record<string, unknown>)[key] === value)) {
-                    return [cronJob];
+                    exactlyMatchingCronJobs.push(cronJob);
                 }
 
                 // Check if scopes match partially. For instance, a job's scope may be { "domain": "main" }, but the change was in
                 // { "domain": "main", "language": "en" }. Or the job's scope may be { "domain": "main", "language": "en" }, but the change
                 // was in { "domain": "main" }. In both cases, the job should still be started.
                 if (Object.entries(cronJobScope).some(([key, value]) => (scope as Record<string, unknown>)[key] === value)) {
-                    matchingCronJobs.push(cronJob);
+                    partiallyMatchingCronJobs.push(cronJob);
                 }
             }
 
-            if (matchingCronJobs.length === 0) {
+            if (exactlyMatchingCronJobs.length === 0 && partiallyMatchingCronJobs.length === 0) {
                 throw new Error(`Found changes in scope ${JSON.stringify(scope)} but no matching builder cron job!`);
             }
 
-            return matchingCronJobs;
+            return exactlyMatchingCronJobs.length > 0 ? exactlyMatchingCronJobs : partiallyMatchingCronJobs;
         };
 
         const uniqueMatchingCronJobs = new Set<V1CronJob>();

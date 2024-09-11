@@ -4,7 +4,7 @@ import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
 import { gql } from "graphql-request";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { GQLPageLinkFragment } from "./PageLink.generated";
 
@@ -26,7 +26,7 @@ const pageLinkFragment = gql`
 
 interface Props {
     page: GQLPageLinkFragment;
-    children: ((active: boolean) => React.ReactNode) | React.ReactNode;
+    children: ((active: boolean) => ReactNode) | ReactNode;
 }
 
 function PageLink({ page, children }: Props): JSX.Element | null {

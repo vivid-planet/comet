@@ -1,6 +1,5 @@
 import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ButtonGroup, ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
-import * as React from "react";
 
 import LinkToolbarButton from "../extension/Link/ToolbarButton";
 import LinksRemoveToolbarButton from "../extension/LinksRemove/ToolbarButton";

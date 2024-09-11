@@ -1,4 +1,4 @@
-import React from "react";
+import { forwardRef } from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
 import { IStackSwitchApi, useStackSwitchApi } from "./Switch";
@@ -10,7 +10,7 @@ interface StackLinkProps extends Omit<RouterLinkProps, "to"> {
     switchApi?: IStackSwitchApi;
 }
 
-export const StackLink = React.forwardRef<HTMLAnchorElement, StackLinkProps>(
+export const StackLink = forwardRef<HTMLAnchorElement, StackLinkProps>(
     ({ switchApi: externalSwitchApi, payload, pageName, subUrl, children, ...props }, ref) => {
         const internalSwitchApi = useStackSwitchApi();
         // external switchApi allows the creation of StackLinks outside of the stack with the useStackSwitch() hook

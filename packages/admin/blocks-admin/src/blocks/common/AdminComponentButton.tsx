@@ -1,18 +1,17 @@
 import { Button } from "@mui/material";
-import * as React from "react";
+import { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
 
 import { AdminComponentPaper } from "./AdminComponentPaper";
 
 interface Props {
     variant?: "primary" | "default";
     size?: "medium" | "large";
-    startIcon?: React.ReactNode;
-    children?: React.ReactNode;
-    onClick?: React.MouseEventHandler;
+    startIcon?: ReactNode;
+    onClick?: MouseEventHandler;
     disabled?: boolean;
 }
 
-export function AdminComponentButton({ variant, size, ...buttonProps }: Props): React.ReactElement {
+export const AdminComponentButton = ({ variant, size, ...buttonProps }: PropsWithChildren<Props>) => {
     return (
         <AdminComponentPaper disablePadding>
             <Button
@@ -27,4 +26,4 @@ export function AdminComponentButton({ variant, size, ...buttonProps }: Props): 
             />
         </AdminComponentPaper>
     );
-}
+};

@@ -1,7 +1,7 @@
 import { StyledComponent } from "@emotion/styled";
 import { css, generateUtilityClass, styled, Theme } from "@mui/material";
 import { CSSProperties } from "@mui/material/styles/createMixins";
-import React from "react";
+import { ComponentProps, ElementType, forwardRef, PropsWithChildren } from "react";
 
 const classNamePrefix = "CometAdmin";
 
@@ -25,7 +25,7 @@ type SlotStylesOrStylesFunction<OwnerState extends object | undefined> =
     | StylesStringOrObject
     | ((props: { theme: Theme } & OwnerStateObjectIfDefined<OwnerState>) => StylesStringOrObject);
 
-export const createComponentSlot = <BaseComponent extends React.ElementType | keyof JSX.IntrinsicElements>(component: BaseComponent) => {
+export const createComponentSlot = <BaseComponent extends ElementType | keyof JSX.IntrinsicElements>(component: BaseComponent) => {
     return <ClassKey extends string, OwnerState extends object | undefined = undefined>(options: Options<ClassKey, OwnerState>) => {
         return (styles: SlotStylesOrStylesFunction<OwnerState> = css``) => {
             return withClassNameOwnerStateAndRef(
@@ -49,7 +49,7 @@ function withClassNameOwnerStateAndRef<Props extends object>(
     Component: StyledComponent<Props & { className?: string; ownerState?: object }>,
     options: Options<string, object | undefined>,
 ) {
-    return React.forwardRef<unknown, React.PropsWithChildren<React.ComponentProps<typeof Component>>>((props, ref) => {
+    return forwardRef<unknown, PropsWithChildren<ComponentProps<typeof Component>>>((props, ref) => {
         const { className, ownerState } = props;
         const resolvedClassNames = getResolvedClassNames(options, ownerState);
         const customClassName = [className, ...resolvedClassNames].filter(Boolean).join(" ");

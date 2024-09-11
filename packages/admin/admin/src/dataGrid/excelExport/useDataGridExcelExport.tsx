@@ -1,7 +1,7 @@
 import { DocumentNode, OperationVariables, useApolloClient } from "@apollo/client";
 import { GridValidRowModel } from "@mui/x-data-grid";
 import { saveAs } from "file-saver";
-import * as React from "react";
+import { useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { GridColDef } from "../GridColDef";
@@ -27,12 +27,12 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
     exportOptions?: DataGridExcelExportOptions;
 }): ExportApi {
     const { columns, variables, query, resolveQueryNodes, totalCount, exportOptions } = params;
-    const [loading, setLoading] = React.useState(false);
-    const [error, setError] = React.useState<string | undefined>();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | undefined>();
     const client = useApolloClient();
     const intl = useIntl();
 
-    const createExcelExportDownload = React.useCallback(
+    const createExcelExportDownload = useCallback(
         async <Row extends GridValidRowModel>(columns: Array<GridColDef<Row>>, data: Row[], exportOptions: DataGridExcelExportOptions = {}) => {
             const {
                 fileName = intl.formatMessage({ id: "comet.dataGrid.excelExport.defaultFileName", defaultMessage: "ExcelExport" }),
@@ -48,7 +48,7 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
         [intl],
     );
 
-    const exportGrid = React.useCallback(async () => {
+    const exportGrid = useCallback(async () => {
         setLoading(true);
 
         try {

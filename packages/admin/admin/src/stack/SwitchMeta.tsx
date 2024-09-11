@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Component, createContext } from "react";
 
 import { StackApiContext } from "./Api";
 
@@ -8,9 +8,9 @@ interface IProps {
     isInitialPageActive: boolean;
 }
 
-const SwitchMetaContext = React.createContext<string>("");
+const SwitchMetaContext = createContext<string>("");
 
-export class StackSwitchMeta extends React.Component<IProps> {
+export class StackSwitchMeta extends Component<IProps> {
     public static contextType = StackApiContext;
     private parentId?: string;
 

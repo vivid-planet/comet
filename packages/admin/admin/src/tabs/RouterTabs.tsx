@@ -1,6 +1,6 @@
 import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { Children, ComponentType, isValidElement, ReactElement, ReactNode, SyntheticEvent } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -45,14 +45,14 @@ function deduplicateSlashesInUrl(url: string) {
 
 interface TabProps extends Omit<MuiTabProps, "children"> {
     path: string;
-    label: React.ReactNode;
+    label: ReactNode;
     forceRender?: boolean;
-    children: React.ReactNode;
+    children: ReactNode;
 }
 
-export const RouterTab: React.FunctionComponent<TabProps> = () => null;
+export const RouterTab = (props: TabProps) => null;
 
-type RouterTabsChild = React.ReactElement<TabProps> | boolean | null | undefined;
+type RouterTabsChild = ReactElement<TabProps> | boolean | null | undefined;
 type RouterTabsChildren = RouterTabsChild | Array<RouterTabsChild | Array<RouterTabsChild>>;
 
 export interface Props
@@ -62,7 +62,7 @@ export interface Props
         content: "div";
     }> {
     children: RouterTabsChildren;
-    tabComponent?: React.ComponentType<MuiTabProps>;
+    tabComponent?: ComponentType<MuiTabProps>;
     tabsProps?: Partial<TabsProps>;
 }
 
@@ -81,18 +81,18 @@ export function RouterTabs(inProps: Props) {
     const subRoutePrefix = useSubRoutePrefix();
     const routeMatch = useRouteMatch();
 
-    const childrenArr = React.Children.toArray(children);
+    const childrenArr = Children.toArray(children);
 
-    const handleChange = (event: React.SyntheticEvent, value: number) => {
+    const handleChange = (event: SyntheticEvent, value: number) => {
         const paths = childrenArr.map((child) => {
-            return React.isValidElement<TabProps>(child) ? child.props.path : null;
+            return isValidElement<TabProps>(child) ? child.props.path : null;
         });
         history.push(deduplicateSlashesInUrl(subRoutePrefix + paths[value]));
     };
 
     const paths = childrenArr.map((child) => {
         // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
-        if (!React.isValidElement<TabProps>(child)) {
+        if (!isValidElement<TabProps>(child)) {
             return null;
         }
 
@@ -102,7 +102,7 @@ export function RouterTabs(inProps: Props) {
         return child.props.path;
     });
 
-    const rearrangedChildren = React.Children.toArray(children);
+    const rearrangedChildren = Children.toArray(children);
     const defaultPathIndex = paths.indexOf("");
 
     if (defaultPathIndex >= 0) {
@@ -144,8 +144,8 @@ export function RouterTabs(inProps: Props) {
                                 {...slotProps?.tabs}
                                 {...tabsProps}
                             >
-                                {React.Children.map(children, (child) => {
-                                    if (!React.isValidElement<TabProps>(child)) {
+                                {Children.map(children, (child) => {
+                                    if (!isValidElement<TabProps>(child)) {
                                         return null;
                                     }
                                     const { path, forceRender, children, label, ...restTabProps } = child.props;
@@ -156,8 +156,8 @@ export function RouterTabs(inProps: Props) {
                     }}
                 </Route>
             )}
-            {React.Children.map(rearrangedChildren, (child) => {
-                if (!React.isValidElement<TabProps>(child)) {
+            {Children.map(rearrangedChildren, (child) => {
+                if (!isValidElement<TabProps>(child)) {
                     return null;
                 }
                 const path = child.props.path != "" ? deduplicateSlashesInUrl(`${subRoutePrefix}/${child.props.path}`) : routeMatch.path;

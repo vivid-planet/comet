@@ -1,6 +1,6 @@
 import { RteRedo, RteUndo } from "@comet/admin-icons";
 import { EditorState } from "draft-js";
-import * as React from "react";
+import { MouseEvent, useCallback, useMemo } from "react";
 import { useIntl } from "react-intl";
 
 import { SupportedThings } from "../Rte";
@@ -16,12 +16,12 @@ export default function useHistory({ editorState, setEditorState, supportedThing
     const intl = useIntl();
 
     // can check if history is supported
-    const supported = React.useMemo(() => supportedThings.includes("history"), [supportedThings]);
-    const canRedo = React.useMemo(() => !editorState.getRedoStack().isEmpty(), [editorState]);
-    const canUndo = React.useMemo(() => !editorState.getUndoStack().isEmpty(), [editorState]);
+    const supported = useMemo(() => supportedThings.includes("history"), [supportedThings]);
+    const canRedo = useMemo(() => !editorState.getRedoStack().isEmpty(), [editorState]);
+    const canUndo = useMemo(() => !editorState.getUndoStack().isEmpty(), [editorState]);
 
-    const handleUndoClick = React.useCallback(
-        (e: React.MouseEvent) => {
+    const handleUndoClick = useCallback(
+        (e: MouseEvent) => {
             e.preventDefault();
             const newEditorState = EditorState.undo(editorState);
             setEditorState(newEditorState);
@@ -29,8 +29,8 @@ export default function useHistory({ editorState, setEditorState, supportedThing
         [editorState, setEditorState],
     );
 
-    const handleRedoClick = React.useCallback(
-        (e: React.MouseEvent) => {
+    const handleRedoClick = useCallback(
+        (e: MouseEvent) => {
             e.preventDefault();
             const newEditorState = EditorState.redo(editorState);
             setEditorState(newEditorState);
@@ -38,7 +38,7 @@ export default function useHistory({ editorState, setEditorState, supportedThing
         [editorState, setEditorState],
     );
 
-    const features: IFeatureConfig[] = React.useMemo(
+    const features: IFeatureConfig[] = useMemo(
         () =>
             supported
                 ? [

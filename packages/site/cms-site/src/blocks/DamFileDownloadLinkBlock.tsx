@@ -1,12 +1,13 @@
 "use client";
-import * as React from "react";
+
+import { cloneElement, ReactElement } from "react";
 
 import { DamFileDownloadLinkBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PropsWithData } from "./PropsWithData";
 
 interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
-    children: React.ReactElement;
+    children: ReactElement;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
@@ -26,7 +27,7 @@ export const DamFileDownloadLinkBlock = withPreview(
         const target = openFileType === "NewTab" ? "_blank" : undefined;
 
         if (legacyBehavior) {
-            return React.cloneElement(children, { href, target, title });
+            return cloneElement(children, { href, target, title });
         }
 
         return (

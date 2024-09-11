@@ -1,9 +1,9 @@
-import React from "react";
+import { RefObject, useEffect, useState } from "react";
 
-export const useElementIsOverflowing = (ref: React.RefObject<HTMLElement>) => {
-    const [isOverflowing, setIsOverflowing] = React.useState(false);
+export const useElementIsOverflowing = (ref: RefObject<HTMLElement>) => {
+    const [isOverflowing, setIsOverflowing] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const element = ref.current;
 
         const observer = new ResizeObserver((entries) => {

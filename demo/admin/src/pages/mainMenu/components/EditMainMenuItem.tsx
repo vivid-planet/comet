@@ -17,7 +17,7 @@ import { Button } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
 
@@ -55,27 +55,27 @@ interface EditMainMenuItemProps {
 type RichTextBlockState = BlockState<typeof RichTextBlock>;
 type RichTextBlockOutput = BlockOutputApi<typeof RichTextBlock>;
 
-const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item }) => {
+const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
     const previewApi = useBlockPreview();
     const match = useRouteMatch();
     const [updateMainMenuItem, { loading: saving, error: saveError }] = useMutation<
         GQLUpdateMainMenuItemMutation,
         GQLUpdateMainMenuItemMutationVariables
     >(updateMainMenuItemMutation);
-    const [referenceContent, setReferenceContent] = React.useState<RichTextBlockOutput | null>(null);
-    const [hasChanges, setHasChanges] = React.useState(false);
-    const [content, setContent] = React.useState<RichTextBlockState | null>(null);
+    const [referenceContent, setReferenceContent] = useState<RichTextBlockOutput | null>(null);
+    const [hasChanges, setHasChanges] = useState(false);
+    const [content, setContent] = useState<RichTextBlockState | null>(null);
     const { match: contentScopeMatch, scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
     const intl = useIntl();
     const blockContext = useCmsBlockContext();
 
-    React.useEffect(() => {
+    useEffect(() => {
         setContent(item.content ? RichTextBlock.input2State(item.content) : null);
         setReferenceContent(item.content ? RichTextBlock.state2Output(RichTextBlock.input2State(item.content)) : null);
     }, [item]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const equal = isEqual(referenceContent, content ? RichTextBlock.state2Output(content) : null);
         setHasChanges(!equal);
     }, [content, referenceContent]);

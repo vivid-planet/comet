@@ -1,17 +1,17 @@
-import * as React from "react";
+import { Component, createContext, ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 
 import { StackApiContext } from "./Api";
 
 interface IProps {
     url: string;
-    title: React.ReactNode;
+    title: ReactNode;
     ignoreParentId?: boolean;
 }
 
-const BreadcrumbContext = React.createContext<string>("");
+const BreadcrumbContext = createContext<string>("");
 
-export class StackBreadcrumb extends React.Component<IProps> {
+export class StackBreadcrumb extends Component<IProps> {
     public static contextType = StackApiContext;
     public id: string;
     private parentId?: string;

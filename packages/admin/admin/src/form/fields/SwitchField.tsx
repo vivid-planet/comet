@@ -1,5 +1,4 @@
 import { FormControlLabel, FormControlLabelProps } from "@mui/material";
-import * as React from "react";
 
 import { Field, FieldProps } from "../Field";
 import { FinalFormSwitch, FinalFormSwitchProps } from "../Switch";
@@ -12,7 +11,7 @@ export interface SwitchFieldProps extends FieldProps<string, HTMLInputElement> {
     };
 }
 
-export const SwitchField = ({ fieldLabel, label, componentsProps = {}, ...restProps }: SwitchFieldProps): React.ReactElement => {
+export const SwitchField = ({ fieldLabel, label, componentsProps = {}, ...restProps }: SwitchFieldProps) => {
     const { formControlLabel: formControlLabelProps, finalFormSwitch: finalFormSwitchProps } = componentsProps;
     return (
         <Field type="checkbox" label={fieldLabel} {...restProps}>

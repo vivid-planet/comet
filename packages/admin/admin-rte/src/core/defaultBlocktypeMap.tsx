@@ -1,5 +1,4 @@
 import { RteOl, RteUl } from "@comet/admin-icons";
-import * as React from "react";
 import { defineMessage, FormattedMessage } from "react-intl";
 
 import { BlockElement } from "./BlockElement";

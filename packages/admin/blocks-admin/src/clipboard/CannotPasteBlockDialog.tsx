@@ -1,15 +1,15 @@
 import { messages } from "@comet/admin";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface Props {
     open: boolean;
     onClose: () => void;
-    error: React.ReactNode;
+    error: ReactNode;
 }
 
-function CannotPasteBlockDialog({ open, onClose, error }: Props): React.ReactElement {
+const CannotPasteBlockDialog = ({ open, onClose, error }: Props) => {
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>
@@ -23,6 +23,6 @@ function CannotPasteBlockDialog({ open, onClose, error }: Props): React.ReactEle
             </DialogActions>
         </Dialog>
     );
-}
+};
 
 export { CannotPasteBlockDialog };

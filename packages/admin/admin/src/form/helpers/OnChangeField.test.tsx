@@ -1,6 +1,6 @@
 // Copied from https://github.com/final-form/react-final-form-listeners/blob/master/src/OnChange.test.js
 import { cleanup, fireEvent, render } from "@testing-library/react";
-import React from "react";
+import { Fragment } from "react";
 import { Field, Form } from "react-final-form";
 
 import { OnChangeField } from "./OnChangeField";
@@ -84,7 +84,7 @@ describe("OnChangeField", () => {
         const { getByTestId } = render(
             <Form onSubmit={onSubmitMock}>
                 {({ form }) => (
-                    <React.Fragment>
+                    <Fragment>
                         <Field name="everything" component="input" type="checkbox" data-testid="everything" />
                         <OnChangeField name="everything">
                             {(next) => {
@@ -104,7 +104,7 @@ describe("OnChangeField", () => {
                                 form.change("everything", next && next.length === toppings.length);
                             }}
                         </OnChangeField>
-                    </React.Fragment>
+                    </Fragment>
                 )}
             </Form>,
         );

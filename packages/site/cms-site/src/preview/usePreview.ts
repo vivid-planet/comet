@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useCallback, useContext } from "react";
 
 import { useIFrameBridge } from "../iframebridge/useIFrameBridge";
 import { PreviewContext, PreviewContextOptions } from "./PreviewContext";
@@ -10,15 +10,15 @@ export interface PreviewHookReturn extends PreviewContextOptions {
 
 export function usePreview(): PreviewHookReturn {
     const iFrameBridge = useIFrameBridge();
-    const previewContext = React.useContext(PreviewContext);
-    const isSelected = React.useCallback(
+    const previewContext = useContext(PreviewContext);
+    const isSelected = useCallback(
         (url: string) => {
             return url === iFrameBridge.selectedAdminRoute;
         },
         [iFrameBridge.selectedAdminRoute],
     );
 
-    const isHovered = React.useCallback(
+    const isHovered = useCallback(
         (url: string) => {
             return url === iFrameBridge.hoveredAdminRoute;
         },

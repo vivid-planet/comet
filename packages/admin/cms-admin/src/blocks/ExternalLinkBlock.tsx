@@ -59,7 +59,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
             <SelectPreviewComponent>
                 <BlocksFinalForm
                     onSubmit={(newState) => {
-                        updateState((prevState) => ({ ...prevState, ...newState }));
+                        updateState(newState);
                     }}
                     initialValues={state}
                 >

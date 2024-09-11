@@ -1,5 +1,4 @@
 import { FinalFormContextProvider, FinalFormContextProviderProps } from "@comet/admin";
-import * as React from "react";
 import { AnyObject, Form, FormProps, FormSpy } from "react-final-form";
 
 interface AutoSaveSpyProps<FormValues> {

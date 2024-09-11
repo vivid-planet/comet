@@ -1,7 +1,7 @@
 import { Check, Reset } from "@comet/admin-icons";
 import { Button, ButtonProps, ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ComponentType, MouseEvent, PropsWithChildren, useState } from "react";
 import { Form, useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -82,7 +82,7 @@ export interface FilterBarPopoverFilterProps
         popover: typeof Popover;
     }> {
     label: string;
-    dirtyFieldsBadge?: React.ComponentType<FilterBarActiveFilterBadgeProps>;
+    dirtyFieldsBadge?: ComponentType<FilterBarActiveFilterBadgeProps>;
     calcNumberDirtyFields?: (values: Record<string, any>, registeredFields: string[]) => number;
     submitButtonProps?: Partial<ButtonProps>;
     resetButtonProps?: Partial<ButtonProps>;
@@ -92,7 +92,7 @@ export interface FilterBarPopoverFilterProps
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export function FilterBarPopoverFilter(inProps: React.PropsWithChildren<FilterBarPopoverFilterProps>) {
+export function FilterBarPopoverFilter(inProps: PropsWithChildren<FilterBarPopoverFilterProps>) {
     const {
         children,
         label,
@@ -106,10 +106,10 @@ export function FilterBarPopoverFilter(inProps: React.PropsWithChildren<FilterBa
     } = useThemeProps({ props: inProps, name: "CometAdminFilterBarPopoverFilter" });
 
     const outerForm = useForm();
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 

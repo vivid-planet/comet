@@ -12,13 +12,12 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import React from "react";
 import { useIntl } from "react-intl";
 
 import ProductTagForm from "./ProductTagForm";
 import ProductTagsTable from "./ProductTagTable";
 
-const ProductTagsPage: React.FC = () => {
+const ProductTagsPage = () => {
     const intl = useIntl();
 
     return (

@@ -1,10 +1,10 @@
 import { Locale } from "date-fns";
-import * as React from "react";
+import { createContext, useContext } from "react";
 
-export const DateFnsLocaleContext = React.createContext<Locale | undefined>(undefined);
+export const DateFnsLocaleContext = createContext<Locale | undefined>(undefined);
 
 export const DateFnsLocaleProvider = DateFnsLocaleContext.Provider;
 
 export function useDateFnsLocale() {
-    return React.useContext(DateFnsLocaleContext);
+    return useContext(DateFnsLocaleContext);
 }

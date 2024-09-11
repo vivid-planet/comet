@@ -12,7 +12,7 @@ import {
 } from "@comet/blocks-admin";
 import { Box } from "@mui/material";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
@@ -69,7 +69,6 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
     isValid: ({ youtubeIdentifier }) => !youtubeIdentifier || isValidYouTubeIdentifier(youtubeIdentifier),
 
     AdminComponent: ({ state, updateState }) => {
-        const intl = useIntl();
         const isInPaper = useAdminComponentPaper();
 
         return (
@@ -77,10 +76,9 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
                 <SelectPreviewComponent>
                     <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                         <Field
-                            label={intl.formatMessage({
-                                id: "comet.blocks.youTubeVideo.youtubeIdentifier",
-                                defaultMessage: "YouTube URL or YouTube Video ID",
-                            })}
+                            label={
+                                <FormattedMessage id="comet.blocks.youTubeVideo.youtubeIdentifier" defaultMessage="YouTube URL or YouTube Video ID" />
+                            }
                             validate={validateIdentifier}
                             name="youtubeIdentifier"
                             component={FinalFormInput}

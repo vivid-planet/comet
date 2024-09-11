@@ -1,7 +1,7 @@
 import { RteSoftHyphen } from "@comet/admin-icons";
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";
-import * as React from "react";
+import { MouseEvent } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ControlButton } from "../../Controls/ControlButton";
@@ -9,8 +9,8 @@ import { IControlProps } from "../../types";
 
 const SHY_UNICODE_CHAR = 0x00ad;
 
-export function ToolbarButton({ editorState, setEditorState }: IControlProps): React.ReactElement {
-    function handleClick(e: React.MouseEvent) {
+export function ToolbarButton({ editorState, setEditorState }: IControlProps) {
+    function handleClick(e: MouseEvent) {
         e.preventDefault(); // important to preserve focus
         const currentContent = editorState.getCurrentContent();
         const selection = editorState.getSelection();

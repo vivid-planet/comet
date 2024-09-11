@@ -1,7 +1,7 @@
 import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, FormControl, Theme, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { FormatDateOptions, FormattedMessage, useIntl } from "react-intl";
 
 import { TimePicker as TimePickerBase } from "../timePicker/TimePicker";
@@ -78,7 +78,7 @@ export interface TimeRangePickerProps
     min?: string;
     max?: string;
     required?: boolean;
-    separatorText?: React.ReactNode;
+    separatorText?: ReactNode;
 }
 
 type IndividualTimeValue = string | undefined;
@@ -96,16 +96,16 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
     } = useThemeProps({ props: inProps, name: "CometAdminTimeRangePicker" });
     const intl = useIntl();
 
-    const [startTime, setStartTime] = React.useState<IndividualTimeValue>(value?.start);
-    const [endTime, setEndTime] = React.useState<IndividualTimeValue>(value?.end);
+    const [startTime, setStartTime] = useState<IndividualTimeValue>(value?.start);
+    const [endTime, setEndTime] = useState<IndividualTimeValue>(value?.end);
 
-    const [startPickerIsOpen, setStartPickerIsOpen] = React.useState<boolean>(false);
-    const [endPickerIsOpen, setEndPickerIsOpen] = React.useState<boolean>(false);
+    const [startPickerIsOpen, setStartPickerIsOpen] = useState<boolean>(false);
+    const [endPickerIsOpen, setEndPickerIsOpen] = useState<boolean>(false);
 
-    const startPickerRef = React.useRef<HTMLElement>(null);
-    const endPickerRef = React.useRef<HTMLElement>(null);
+    const startPickerRef = useRef<HTMLElement>(null);
+    const endPickerRef = useRef<HTMLElement>(null);
 
-    const onChangeTimeValue = React.useCallback(
+    const onChangeTimeValue = useCallback(
         (newTimeValue: IndividualTimeValue, type: "start" | "end") => {
             if (newTimeValue === undefined) {
                 onChange?.(undefined);
@@ -133,7 +133,7 @@ export const TimeRangePicker = (inProps: TimeRangePickerProps) => {
     );
 
     // Setting both values the same when closing the pickers and one value is undefined needs to be handled inside `useEffect`, as `setStartTime`/`setEndTime` might not be complete when calling `onClosePopper`.
-    React.useEffect(() => {
+    useEffect(() => {
         if (!startPickerIsOpen && !endPickerIsOpen) {
             if (startTime !== undefined && endTime === undefined) {
                 onChangeTimeValue(startTime, "end");

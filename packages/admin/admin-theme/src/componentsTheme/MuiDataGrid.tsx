@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
-import React from "react";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
@@ -68,11 +67,13 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 outline: "none",
             },
         },
-        columnHeadersInner: {
-            padding: spacing(0, 2),
+        pinnedColumnHeaders: {
+            backgroundColor: "white",
+            boxShadow: shadows[2],
         },
-        row: {
-            padding: spacing(0, 2),
+        pinnedColumns: {
+            backgroundColor: "white",
+            boxShadow: shadows[2],
         },
         cell: {
             borderTop: `1px solid ${palette.grey[100]}`,

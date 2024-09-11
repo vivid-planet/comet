@@ -2,20 +2,14 @@
 import { PropsWithData } from "@comet/cms-site";
 import { InternalLinkBlockData } from "@src/blocks.generated";
 import Link from "next/link";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
-interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
-    children: React.ReactNode;
+interface InternalLinkBlockProps extends PropsWithChildren<PropsWithData<InternalLinkBlockData>> {
     title?: string;
     className?: string;
 }
 
-export function InternalLinkBlock({
-    data: { targetPage, targetPageAnchor },
-    children,
-    title,
-    className,
-}: InternalLinkBlockProps): React.ReactElement {
+export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title, className }: InternalLinkBlockProps) {
     if (!targetPage) {
         return <span className={className}>{children}</span>;
     }

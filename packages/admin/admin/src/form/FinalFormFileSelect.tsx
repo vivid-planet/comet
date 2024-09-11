@@ -1,9 +1,9 @@
 import { useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { useCallback, useState } from "react";
 import { DropzoneOptions } from "react-dropzone";
 import { FieldRenderProps } from "react-final-form";
-import { FormattedMessage } from "react-intl";
 
+import { commonErrorMessages } from "./file/commonErrorMessages";
 import { FileSelect, FileSelectProps } from "./file/FileSelect";
 import { ErrorFileSelectItem, ValidFileSelectItem } from "./file/fileSelectItemTypes";
 
@@ -24,11 +24,11 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
         name: "CometAdminFinalFormFileSelect",
     });
 
-    const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const [rejectedFiles, setRejectedFiles] = React.useState<ErrorFileSelectItem[]>([]);
+    const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
+    const [rejectedFiles, setRejectedFiles] = useState<ErrorFileSelectItem[]>([]);
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
 
-    const onDrop = React.useCallback<NonNullable<DropzoneOptions["onDrop"]>>(
+    const onDrop = useCallback<NonNullable<DropzoneOptions["onDrop"]>>(
         (acceptedFiles, fileRejections) => {
             setRejectedFiles(
                 fileRejections.map((rejectedFile) => {
@@ -38,13 +38,11 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
                     };
 
                     if (rejectedFile.errors.some((error) => error.code === "file-too-large")) {
-                        failedFile.error = <FormattedMessage id="comet.finalFormFileSelect.fileTooLarge" defaultMessage="File is too large." />;
+                        failedFile.error = commonErrorMessages.fileTooLarge;
                     }
 
                     if (rejectedFile.errors.some((error) => error.code === "file-invalid-type")) {
-                        failedFile.error = (
-                            <FormattedMessage id="comet.finalFormFileSelect.fileInvalidType" defaultMessage="File type is not allowed." />
-                        );
+                        failedFile.error = commonErrorMessages.invalidFileType;
                     }
 
                     return failedFile;
@@ -95,15 +93,7 @@ export function FinalFormFileSelect(inProps: FinalFormFileSelectProps) {
             multiple={multiple}
             maxFiles={maxFiles}
             maxFileSize={maxSize}
-            error={
-                tooManyFilesSelected ? (
-                    <FormattedMessage
-                        id="comet.finalFormFileSelect.maximumFilesAmount"
-                        defaultMessage="Upload was canceled. You can only upload a maximum of {maxFiles} {maxFiles, plural, one {file} other {files}}, please reduce your selection."
-                        values={{ maxFiles }}
-                    />
-                ) : undefined
-            }
+            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonErrorMessages.tooManyFiles(maxFiles) : undefined}
             {...restProps}
         />
     );

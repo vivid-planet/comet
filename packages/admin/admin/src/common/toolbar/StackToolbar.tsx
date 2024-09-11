@@ -1,10 +1,10 @@
-import React from "react";
+import { ComponentProps } from "react";
 
 import { useStackApi } from "../../stack/Api";
 import { useStackSwitchApi } from "../../stack/Switch";
 import { Toolbar } from "./Toolbar";
 
-export function StackToolbar(props: React.ComponentProps<typeof Toolbar>) {
+export function StackToolbar(props: ComponentProps<typeof Toolbar>) {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
     let shouldShow = true;

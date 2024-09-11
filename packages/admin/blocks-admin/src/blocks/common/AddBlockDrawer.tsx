@@ -16,7 +16,7 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ChangeEventHandler, isValidElement, KeyboardEventHandler, ReactElement, ReactNode, useMemo, useState } from "react";
 import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
 import { BlockCategory, blockCategoryLabels, BlockInterface, CustomBlockCategory } from "../types";
@@ -25,7 +25,7 @@ type BlockType = string;
 
 interface Category {
     id: string;
-    label: React.ReactNode;
+    label: ReactNode;
     blocks: Array<[BlockType, BlockInterface]>;
 }
 
@@ -36,12 +36,12 @@ interface Props {
     onAddNewBlock: (type: string, addAndEdit: boolean) => void;
 }
 
-export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props): React.ReactElement {
+export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props) {
     const intl = useIntl();
-    const [searchValue, setSearchValue] = React.useState("");
+    const [searchValue, setSearchValue] = useState("");
     const [addAndEdit, setAddAndEdit] = useStoredState<boolean>("addAndEdit", true);
 
-    const categories = React.useMemo(() => {
+    const categories = useMemo(() => {
         const categories: Category[] = [];
         const categoriesOrder = Object.keys(BlockCategory);
 
@@ -61,7 +61,7 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
             }
 
             let id: string;
-            let label: React.ReactNode;
+            let label: ReactNode;
 
             if (isCustomBlockCategory(block.category)) {
                 if (block.category.id in BlockCategory) {
@@ -115,11 +115,11 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
         onClose();
     };
 
-    const handleSearchFieldChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const handleSearchFieldChange: ChangeEventHandler<HTMLInputElement> = (event) => {
         setSearchValue(event.target.value);
     };
 
-    const handleSearchFieldKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
+    const handleSearchFieldKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
         const hasSearchResults = categories.length > 0 && categories[0].blocks.length > 0;
 
         if (event.key === "Enter" && hasSearchResults) {
@@ -129,7 +129,7 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props):
         }
     };
 
-    const handleAddAndEditChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const handleAddAndEditChange: ChangeEventHandler<HTMLInputElement> = (event) => {
         setAddAndEdit(event.target.checked);
     };
 
@@ -199,8 +199,8 @@ function isCustomBlockCategory(category: BlockCategory | CustomBlockCategory): c
     return typeof category === "object";
 }
 
-function isFormattedMessage(node: React.ReactNode): node is React.ReactElement<MessageDescriptor> {
-    return React.isValidElement(node) && node.type === FormattedMessage;
+function isFormattedMessage(node: ReactNode): node is ReactElement<MessageDescriptor> {
+    return isValidElement(node) && node.type === FormattedMessage;
 }
 
 const Content = styled(DialogContent)`

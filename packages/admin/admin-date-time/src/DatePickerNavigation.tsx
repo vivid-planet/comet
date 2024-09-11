@@ -2,7 +2,7 @@ import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ArrowLeft, ArrowRight, ChevronDown } from "@comet/admin-icons";
 import { Box, Button, buttonClasses, ComponentsOverrides, IconButton, Menu, menuClasses, MenuItem } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { useRef, useState } from "react";
 import { useIntl } from "react-intl";
 
 export interface DatePickerNavigationProps
@@ -26,11 +26,11 @@ export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
     });
     const intl = useIntl();
 
-    const [showMonthSelect, setShowMonthSelect] = React.useState<boolean>(false);
-    const [showYearSelect, setShowYearSelect] = React.useState<boolean>(false);
+    const [showMonthSelect, setShowMonthSelect] = useState<boolean>(false);
+    const [showYearSelect, setShowYearSelect] = useState<boolean>(false);
 
-    const monthSelectRef = React.useRef<HTMLButtonElement>(null);
-    const yearSelectRef = React.useRef<HTMLButtonElement>(null);
+    const monthSelectRef = useRef<HTMLButtonElement>(null);
+    const yearSelectRef = useRef<HTMLButtonElement>(null);
 
     return (
         <Root {...slotProps?.root} {...restProps}>

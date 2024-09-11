@@ -1,5 +1,5 @@
 import * as History from "history";
-import * as React from "react";
+import { MutableRefObject, PropsWithChildren, useRef, useState } from "react";
 import { matchPath, Prompt } from "react-router";
 
 import { PromptAction, RouterConfirmationDialog } from "./ConfirmationDialog";
@@ -18,10 +18,10 @@ function InnerPromptHandler({
     registeredMessages,
     apiRef,
 }: {
-    registeredMessages: React.MutableRefObject<PromptMessages>;
-    apiRef: React.MutableRefObject<PromptHandlerApi | undefined>;
+    registeredMessages: MutableRefObject<PromptMessages>;
+    apiRef: MutableRefObject<PromptHandlerApi | undefined>;
 }) {
-    const [state, setState] = React.useState<PromptHandlerState>({
+    const [state, setState] = useState<PromptHandlerState>({
         showConfirmationDialog: false,
         message: "",
         callback: undefined,
@@ -107,19 +107,19 @@ interface PromptMessages {
         subRoutePath?: string;
         saveAction?: SaveAction;
         resetAction?: ResetAction;
-        promptRoutes?: React.MutableRefObject<PromptRoutes>;
+        promptRoutes?: MutableRefObject<PromptRoutes>;
     };
 }
 interface Props {
-    apiRef: React.MutableRefObject<PromptHandlerApi | undefined>;
+    apiRef: MutableRefObject<PromptHandlerApi | undefined>;
 }
 
 export type SaveActionSuccess = boolean;
 export type SaveAction = (() => Promise<SaveActionSuccess>) | (() => SaveActionSuccess);
 export type ResetAction = () => void;
 
-export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, apiRef }) => {
-    const registeredMessages = React.useRef<PromptMessages>({});
+export const RouterPromptHandler = function ({ children, apiRef }: PropsWithChildren<Props>) {
+    const registeredMessages = useRef<PromptMessages>({});
 
     const register = ({
         id,
@@ -136,7 +136,7 @@ export const RouterPromptHandler: React.FunctionComponent<Props> = ({ children, 
         resetAction?: ResetAction;
         path: string;
         subRoutePath?: string;
-        promptRoutes?: React.MutableRefObject<PromptRoutes>;
+        promptRoutes?: MutableRefObject<PromptRoutes>;
     }) => {
         registeredMessages.current[id] = { message, path, subRoutePath, saveAction, resetAction, promptRoutes };
         // If saveAction is passed it has to be passed for all registered components

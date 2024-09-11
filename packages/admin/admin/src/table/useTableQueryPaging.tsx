@@ -1,4 +1,4 @@
-import * as React from "react";
+import { RefObject } from "react";
 
 import { usePersistedState } from "./usePersistedState";
 
@@ -10,7 +10,7 @@ export interface IPagingApi<T> {
     current: T;
     currentPage?: number;
     changePage: (variables: T, page?: number, changePageOptions?: IChangePageOptions) => void;
-    attachTableRef: (ref: React.RefObject<HTMLDivElement | undefined>) => void;
+    attachTableRef: (ref: RefObject<HTMLDivElement | undefined>) => void;
 }
 
 /**
@@ -36,7 +36,7 @@ export function useTableQueryPaging<T>(
         persistedStateId: options.persistedStateId ? `${options.persistedStateId}_pagingVariables` : undefined,
     });
 
-    let tableRef: React.RefObject<HTMLDivElement | undefined> | undefined;
+    let tableRef: RefObject<HTMLDivElement | undefined> | undefined;
     function attachTableRef(ref: any) {
         tableRef = ref;
     }

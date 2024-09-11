@@ -2,7 +2,6 @@ import { PixelImageBlock, PreviewSkeleton, PropsWithData, SvgImageBlock, withPre
 import { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
 import { NextImageBottomPaddingFix } from "@src/components/common/NextImageBottomPaddingFix";
 import { ImageProps } from "next/image";
-import * as React from "react";
 
 type Props = PropsWithData<DamImageBlockData> &
     Omit<ImageProps, "src" | "width" | "height" | "alt"> & {

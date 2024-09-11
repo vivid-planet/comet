@@ -1,21 +1,21 @@
 "use client";
-import * as React from "react";
+
+import { PropsWithChildren, ReactNode } from "react";
 
 import { usePreview } from "../preview/usePreview";
 import * as sc from "./PreviewSkeleton.sc";
 
-interface SkeletonProps {
+interface SkeletonProps extends PropsWithChildren {
     type?: "bar" | "rows" | "media";
     height?: number;
     hasContent: boolean;
     backgroundColor?: string;
     color?: string;
-    title?: React.ReactNode;
-    customContainer?: React.ReactNode;
-    children?: React.ReactNode;
+    title?: ReactNode;
+    customContainer?: ReactNode;
 }
 
-const PreviewSkeleton: React.FunctionComponent<SkeletonProps> = ({
+const PreviewSkeleton = ({
     children,
     customContainer,
     title,
@@ -23,7 +23,7 @@ const PreviewSkeleton: React.FunctionComponent<SkeletonProps> = ({
     hasContent,
     color = "#A8A7A8",
     backgroundColor = type === "media" ? "#efefef" : "#E0DDE0",
-}) => {
+}: SkeletonProps) => {
     const preview = usePreview();
 
     if (preview.showPreviewSkeletons && !hasContent) {

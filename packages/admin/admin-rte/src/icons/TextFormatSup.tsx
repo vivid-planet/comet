@@ -1,5 +1,4 @@
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
-import * as React from "react";
 
 export default function TextFormatSup({ viewBox, ...props }: SvgIconProps) {
     return (

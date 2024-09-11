@@ -1,18 +1,18 @@
 import { BallTriangle } from "@comet/admin-icons";
 import { SvgIconProps } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
-import React from "react";
+import { CSSProperties, useRef } from "react";
 
 export interface LoadingProps extends SvgIconProps {
     behavior?: "auto" | "fillParent" | "fillParentAbsolute" | "fillPageHeight";
 }
 
 export const Loading = ({ behavior = "auto", fontSize, sx, ...svgIconsProps }: LoadingProps) => {
-    const rootRef = React.useRef<HTMLDivElement>(null);
+    const rootRef = useRef<HTMLDivElement>(null);
     const offsetTop = rootRef.current?.offsetTop || 0;
 
     return (
-        <Root ref={rootRef} style={{ "--comet-admin-loading-offset-top": `${offsetTop}px` } as React.CSSProperties} behavior={behavior}>
+        <Root ref={rootRef} style={{ "--comet-admin-loading-offset-top": `${offsetTop}px` } as CSSProperties} behavior={behavior}>
             <LoadingContainer behavior={behavior}>
                 <BallTriangle sx={{ fontSize: fontSize ?? 40, ...sx }} {...svgIconsProps} />
             </LoadingContainer>

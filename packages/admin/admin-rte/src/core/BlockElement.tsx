@@ -1,6 +1,6 @@
 import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, css, Theme, Typography, TypographyProps, useThemeProps } from "@mui/material";
-import * as React from "react";
+import { ElementType } from "react";
 
 import { SupportedThings } from "./Rte";
 
@@ -108,7 +108,7 @@ export interface RteBlockElementProps
         }>,
         TypographyProps {
     type?: StylableBlockTypes;
-    component?: React.ElementType;
+    component?: ElementType;
 }
 
 export function BlockElement(inProps: RteBlockElementProps) {

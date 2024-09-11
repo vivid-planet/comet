@@ -1,22 +1,21 @@
 import { RteNonBreakingSpace } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import { ContentState } from "draft-js";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 interface Props {
     contentState: ContentState;
     entityKey: string;
-    children?: React.ReactNode;
 }
 
-function EditorComponent({ children }: Props): React.ReactElement {
+const EditorComponent = ({ children }: PropsWithChildren<Props>) => {
     return (
         <Root>
             <Icon />
             {children}
         </Root>
     );
-}
+};
 
 const Root = styled("span")`
     position: relative;

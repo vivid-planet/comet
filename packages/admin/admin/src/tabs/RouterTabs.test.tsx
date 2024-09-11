@@ -2,7 +2,7 @@
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render } from "@testing-library/react";
 import { createMemoryHistory } from "history";
-import * as React from "react";
+import { useEffect } from "react";
 import { Router, useRouteMatch } from "react-router";
 
 import { MuiThemeProvider } from "../mui/ThemeProvider";
@@ -54,7 +54,7 @@ test("RouterTabs in SubRoute", async () => {
 test("RouterTabs must not remount content", async () => {
     let mountCountFoo = 0;
     function MountCountFoo() {
-        React.useEffect(() => {
+        useEffect(() => {
             mountCountFoo++;
         });
         return null;
@@ -62,7 +62,7 @@ test("RouterTabs must not remount content", async () => {
 
     let mountCountBar = 0;
     function MountCountBar() {
-        React.useEffect(() => {
+        useEffect(() => {
             mountCountBar++;
         });
         return null;

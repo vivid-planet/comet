@@ -2,7 +2,7 @@ import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { SvgIconProps } from "@mui/material/SvgIcon";
-import * as React from "react";
+import { MouseEvent, PropsWithChildren } from "react";
 
 import getRteTheme from "../utils/getRteTheme";
 
@@ -69,15 +69,14 @@ export interface IProps
     }> {
     disabled?: boolean;
     selected?: boolean;
-    onButtonClick?: (e: React.MouseEvent) => void;
+    onButtonClick?: (e: MouseEvent) => void;
     icon?: (props: SvgIconProps) => JSX.Element | null;
-    children?: React.ReactNode;
 
     /** @deprecated use icon instead */
     Icon?: (props: SvgIconProps) => JSX.Element | null;
 }
 
-export function ControlButton(inProps: IProps) {
+export function ControlButton(inProps: PropsWithChildren<IProps>) {
     const {
         disabled = false,
         selected = false,

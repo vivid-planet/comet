@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 const allStates: { [key: string]: any } = {};
 
@@ -8,15 +8,15 @@ interface IOptions {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export function usePersistedState<T>(defaultValue: T, options: IOptions = {}): [T, React.Dispatch<React.SetStateAction<T>>] {
+export function usePersistedState<T>(defaultValue: T, options: IOptions = {}): [T, Dispatch<SetStateAction<T>>] {
     const stateId = options.persistedStateId;
 
     const v = (stateId && allStates[stateId]) || defaultValue;
 
-    const [state, setState] = React.useState<T>(v);
+    const [state, setState] = useState<T>(v);
     if (stateId) delete allStates[stateId]; // delete from allStates as the component is mounted now and handles it's state itself
 
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             // on unmount we backup the current state into allStates
             if (stateId) allStates[stateId] = state;

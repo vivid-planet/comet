@@ -1,14 +1,11 @@
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 
 export type ToolbarActionsClassKey = "root";
-interface Props extends ThemedComponentBaseProps {
-    children: React.ReactNode;
-}
 
 const Root = createComponentSlot("div")<ToolbarActionsClassKey>({
     componentName: "ToolbarActions",
@@ -25,7 +22,7 @@ const Root = createComponentSlot("div")<ToolbarActionsClassKey>({
     `,
 );
 
-export const ToolbarActions = (inProps: Props) => {
+export const ToolbarActions = (inProps: PropsWithChildren<ThemedComponentBaseProps>) => {
     const { children, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarActions" });
     return <Root {...restProps}>{children}</Root>;
 };

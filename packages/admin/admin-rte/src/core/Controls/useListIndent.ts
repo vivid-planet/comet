@@ -1,6 +1,6 @@
 import { RteIndentDecrease, RteIndentIncrease } from "@comet/admin-icons";
 import { BlockMap, ContentState, EditorState } from "draft-js";
-import * as React from "react";
+import { MouseEvent, useCallback, useMemo } from "react";
 import { useIntl } from "react-intl";
 
 import { SupportedThings } from "../Rte";
@@ -71,12 +71,12 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
     const intl = useIntl();
 
     // can check if indenting lists is supported
-    const supported = React.useMemo(
+    const supported = useMemo(
         () => supportedThings.some((c) => ["ordered-list", "unordered-list"].includes(c) && listLevelMax !== 0),
         [supportedThings, listLevelMax],
     );
 
-    const active = React.useMemo(() => {
+    const active = useMemo(() => {
         const currentBlock = getCurrentBlock(editorState);
         if (!currentBlock) {
             return false;
@@ -84,27 +84,24 @@ export default function useListIndent({ editorState, setEditorState, supportedTh
         return ["ordered-list-item", "unordered-list-item"].includes(currentBlock.getType()) && selectionIsInOneBlock(editorState);
     }, [editorState]);
 
-    const canIndentLeft = React.useMemo(() => active && getCurrentBlock(editorState)!.getDepth() > 0, [active, editorState]);
-    const canIndentRight = React.useMemo(
-        () => active && getCurrentBlock(editorState)!.getDepth() < listLevelMax - 1,
-        [active, editorState, listLevelMax],
-    );
+    const canIndentLeft = useMemo(() => active && getCurrentBlock(editorState)!.getDepth() > 0, [active, editorState]);
+    const canIndentRight = useMemo(() => active && getCurrentBlock(editorState)!.getDepth() < listLevelMax - 1, [active, editorState, listLevelMax]);
 
-    const handleListIndentLeftClick = React.useCallback(
-        (e: React.MouseEvent) => {
+    const handleListIndentLeftClick = useCallback(
+        (e: MouseEvent) => {
             e.preventDefault();
             setEditorState(adjustBlockDepth("decrease", editorState, listLevelMax));
         },
         [editorState, setEditorState, listLevelMax],
     );
-    const handleListIndentRightClick = React.useCallback(
-        (e: React.MouseEvent) => {
+    const handleListIndentRightClick = useCallback(
+        (e: MouseEvent) => {
             e.preventDefault();
             setEditorState(adjustBlockDepth("increase", editorState, listLevelMax));
         },
         [editorState, setEditorState, listLevelMax],
     );
-    const features: IFeatureConfig[] = React.useMemo(() => {
+    const features: IFeatureConfig[] = useMemo(() => {
         return supported
             ? [
                   {

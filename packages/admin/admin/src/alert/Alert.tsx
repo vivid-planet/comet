@@ -2,7 +2,7 @@ import { Close } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
 import { Alert as MuiAlert, alertClasses, AlertTitle, buttonClasses, IconButton, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { forwardRef, ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -16,10 +16,10 @@ export interface AlertProps
         closeIcon: typeof IconButton;
     }> {
     severity?: "info" | "warning" | "error" | "success";
-    title?: React.ReactNode;
-    children?: React.ReactNode;
+    title?: ReactNode;
+    children?: ReactNode;
     onClose?: () => void;
-    action?: React.ReactNode;
+    action?: ReactNode;
 }
 
 export type AlertClassKey = "root" | "title" | "text" | "action" | "closeIcon" | "hasTitle" | "singleRow";
@@ -29,7 +29,7 @@ type OwnerState = {
     renderAsSingleRow: boolean;
 };
 
-export const Alert = React.forwardRef<HTMLDivElement, AlertProps>((inProps, ref) => {
+export const Alert = forwardRef<HTMLDivElement, AlertProps>((inProps, ref) => {
     const {
         severity = "info",
         title,

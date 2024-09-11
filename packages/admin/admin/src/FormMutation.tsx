@@ -1,11 +1,11 @@
 import { useMutation } from "@apollo/client";
-import * as React from "react";
+import { ReactNode } from "react";
 
 interface IProps {
     updateMutation: any;
     createMutation: any;
     // TODO  use MutationFn<TData, TVariables> for update and create
-    children: (actions: { update: () => void; create: () => void }, data: { loading: boolean; error: any }) => React.ReactNode;
+    children: (actions: { update: () => void; create: () => void }, data: { loading: boolean; error: any }) => ReactNode;
 }
 
 export function FormMutation(props: IProps) {

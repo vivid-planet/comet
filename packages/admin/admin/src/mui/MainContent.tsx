@@ -1,5 +1,5 @@
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -50,7 +50,7 @@ const Root = createComponentSlot("main")<MainContentClassKey, OwnerState>({
 );
 
 export interface MainContentProps extends ThemedComponentBaseProps {
-    children?: React.ReactNode;
+    children?: ReactNode;
     disablePaddingTop?: boolean;
     disablePaddingBottom?: boolean;
     disablePadding?: boolean;
@@ -62,10 +62,10 @@ export function MainContent(inProps: MainContentProps) {
         props: inProps,
         name: "CometAdminMainContent",
     });
-    const mainRef = React.useRef<HTMLElement>(null);
-    const [topOffset, setTopOffset] = React.useState(0);
+    const mainRef = useRef<HTMLElement>(null);
+    const [topOffset, setTopOffset] = useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (mainRef.current) {
             setTopOffset(mainRef.current.offsetTop);
         }

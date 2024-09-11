@@ -1,5 +1,5 @@
 import { EditorState } from "draft-js";
-import * as React from "react";
+import { FunctionComponent, useRef } from "react";
 import { FieldRenderProps } from "react-final-form";
 
 import makeRteApi, { IMakeRteApiProps, OnDebouncedContentChangeFn } from "../core/makeRteApi";
@@ -17,13 +17,13 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
     const { rteApiOptions, rteOptions } = config;
     const [useRteApi, { createStateFromRawContent }] = makeRteApi(rteApiOptions);
 
-    const RteField: React.FunctionComponent<FieldRenderProps<T, HTMLInputElement> & Pick<RteProps, "options">> = ({
+    const RteField: FunctionComponent<FieldRenderProps<T, HTMLInputElement> & Pick<RteProps, "options">> = ({
         input: { value, onChange, ...restInput },
         meta,
         value: remove,
         ...rest
     }) => {
-        const ref = React.useRef<any>();
+        const ref = useRef<any>();
 
         const onDebouncedContentChange: OnDebouncedContentChangeFn<T> = (debouncedEditorState: EditorState, convertStateToRawContent) => {
             onChange(convertStateToRawContent(debouncedEditorState));
@@ -48,7 +48,7 @@ function createFinalFormRte<T = any>(config: IConfig<T> = defaultConfig) {
         );
     };
 
-    const RteReadOnly: React.FunctionComponent<{ content?: T; plainTextOnly?: boolean }> = ({ content, plainTextOnly }) => {
+    const RteReadOnly: FunctionComponent<{ content?: T; plainTextOnly?: boolean }> = ({ content, plainTextOnly }) => {
         if (!content) {
             return null;
         }

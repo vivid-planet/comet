@@ -27,6 +27,15 @@ const jobMainEnglish = {
     },
 };
 
+const jobMainEnglish2 = {
+    metadata: {
+        name: "main-en-2",
+        annotations: {
+            [CONTENT_SCOPE_ANNOTATION]: '{"domain":"main","language":"en"}',
+        },
+    },
+};
+
 const jobMainGerman = {
     metadata: {
         name: "main-de",
@@ -60,6 +69,11 @@ describe("BuildsService", () => {
     describe("getBuilderCronJobsToStart", () => {
         it("should return single job for exact match", async () => {
             await expect(service.getBuilderCronJobsToStart([{ domain: "main", language: "en" }])).resolves.toEqual([jobMainEnglish]);
+        });
+
+        it("should return two jobs if two jobs have the exact same scope", async () => {
+            mockedBuildTemplatesService.getAllBuilderCronJobs.mockResolvedValueOnce([jobMainEnglish, jobMainEnglish2]);
+            await expect(service.getBuilderCronJobsToStart([{ domain: "main", language: "en" }])).resolves.toEqual([jobMainEnglish, jobMainEnglish2]);
         });
 
         it("should return multiple jobs for multiple exact matches", async () => {

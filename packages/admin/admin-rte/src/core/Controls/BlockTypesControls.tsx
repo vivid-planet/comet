@@ -10,7 +10,7 @@ import {
     Theme,
     useThemeProps,
 } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { IControlProps } from "../types";
 import getRteTheme from "../utils/getRteTheme";
@@ -70,7 +70,7 @@ export function StyledBlockTypesControls(inProps: Props) {
     const { disabled, blockTypes, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminRteBlockTypeControls" });
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
 
-    const blockTypesListItems: Array<{ name: string; label: React.ReactNode }> = dropdownFeatures.map((c) => ({ name: c.name, label: c.label }));
+    const blockTypesListItems: Array<{ name: string; label: ReactNode }> = dropdownFeatures.map((c) => ({ name: c.name, label: c.label }));
 
     return (
         <Root {...slotProps?.root} {...restProps}>

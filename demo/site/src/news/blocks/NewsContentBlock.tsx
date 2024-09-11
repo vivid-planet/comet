@@ -4,7 +4,6 @@ import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import { HeadlineBlock } from "@src/blocks/HeadlineBlock";
 import RichTextBlock from "@src/blocks/RichTextBlock";
 import { TextImageBlock } from "@src/blocks/TextImageBlock";
-import * as React from "react";
 
 const supportedBlocks: SupportedBlocks = {
     headline: (props) => <HeadlineBlock data={props} />,
@@ -13,6 +12,6 @@ const supportedBlocks: SupportedBlocks = {
     textImage: (props) => <TextImageBlock data={props} />,
 };
 
-export const NewsContentBlock: React.FC<PropsWithData<NewsContentBlockData>> = ({ data }) => {
+export const NewsContentBlock = ({ data }: PropsWithData<NewsContentBlockData>) => {
     return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
 };

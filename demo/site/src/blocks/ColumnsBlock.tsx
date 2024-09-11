@@ -1,7 +1,6 @@
 "use client";
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
-import * as React from "react";
 import styled from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";

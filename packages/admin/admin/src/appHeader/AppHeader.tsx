@@ -1,6 +1,6 @@
 import { AppBar as MuiAppBar, AppBarClassKey, capitalize, ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import { AppBarProps } from "@mui/material/AppBar";
-import * as React from "react";
+import { CSSProperties, useContext } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { MasterLayoutContext } from "../mui/MasterLayoutContext";
@@ -38,11 +38,11 @@ const AppHeaderRoot = createComponentSlot(MuiAppBar)<AppHeaderClassKey, OwnerSta
     `,
 );
 
-export function AppHeader(inProps: AppHeaderProps): React.ReactElement {
+export const AppHeader = (inProps: AppHeaderProps) => {
     const props = useThemeProps({ props: inProps, name: "CometAdminAppHeader" });
     const { children, headerHeight: passedHeaderHeight, position = "fixed", color = "primary", ...restProps } = props;
 
-    const { headerHeight: masterLayoutHeaderHeight } = React.useContext(MasterLayoutContext);
+    const { headerHeight: masterLayoutHeaderHeight } = useContext(MasterLayoutContext);
     const headerHeight = passedHeaderHeight === undefined ? masterLayoutHeaderHeight : passedHeaderHeight;
 
     const ownerState: OwnerState = {
@@ -56,12 +56,12 @@ export function AppHeader(inProps: AppHeaderProps): React.ReactElement {
             color={color}
             ownerState={ownerState}
             {...restProps}
-            style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}
+            style={{ "--header-height": `${headerHeight}px` } as CSSProperties}
         >
             {children}
         </AppHeaderRoot>
     );
-}
+};
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

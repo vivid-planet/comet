@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext } from "react";
 
 export interface ContentTranslationServiceContext {
     enabled: boolean;
@@ -6,7 +6,7 @@ export interface ContentTranslationServiceContext {
     translate: (text: string) => Promise<string>;
 }
 
-export const ContentTranslationServiceContext = React.createContext<ContentTranslationServiceContext>({
+export const ContentTranslationServiceContext = createContext<ContentTranslationServiceContext>({
     enabled: false,
     translate: function (text: string): Promise<string> {
         throw new Error("This is a dummy function for the translation feature that should never be called!");

@@ -1,5 +1,5 @@
 import { ComponentsOverrides, css, Theme, Typography, useThemeProps } from "@mui/material";
-import React from "react";
+import { Children, cloneElement, isValidElement, ReactElement, ReactNode, useMemo } from "react";
 import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 
 import { Tooltip as CommonTooltip } from "../../common/Tooltip";
@@ -96,10 +96,10 @@ export interface MenuItemGroupProps
         title: typeof Typography;
         shortTitle: typeof Typography;
     }> {
-    title: React.ReactNode;
-    shortTitle?: React.ReactNode;
-    helperIcon?: React.ReactNode;
-    children?: React.ReactNode;
+    title: ReactNode;
+    shortTitle?: ReactNode;
+    helperIcon?: ReactNode;
+    children?: ReactNode;
     isMenuOpen?: boolean;
 }
 
@@ -113,11 +113,11 @@ export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
 
     const ownerState: OwnerState = { open: Boolean(isMenuOpen) };
 
-    function isFormattedMessage(node: React.ReactNode): node is React.ReactElement<MessageDescriptor> {
-        return !!node && React.isValidElement(node) && node.type === FormattedMessage;
+    function isFormattedMessage(node: ReactNode): node is ReactElement<MessageDescriptor> {
+        return !!node && isValidElement(node) && node.type === FormattedMessage;
     }
 
-    function getInitials(title: React.ReactNode) {
+    function getInitials(title: ReactNode) {
         let titleAsString: string;
         if (typeof title === "string") {
             titleAsString = title;
@@ -139,10 +139,10 @@ export const MenuItemGroup = (inProps: MenuItemGroupProps) => {
         return words.map((word) => word[0].toUpperCase()).join("");
     }
 
-    const childElements = React.useMemo(
+    const childElements = useMemo(
         () =>
-            React.Children.map(children, (child: MenuChild) => {
-                return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+            Children.map(children, (child: MenuChild) => {
+                return cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
                     isMenuOpen,
                 });
             }),

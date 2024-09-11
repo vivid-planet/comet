@@ -1,6 +1,6 @@
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -24,7 +24,7 @@ const Root = createComponentSlot("div")<ToolbarItemClassKey>({
 );
 
 export interface ToolbarItemProps extends ThemedComponentBaseProps {
-    children: React.ReactNode;
+    children?: ReactNode;
 }
 
 export const ToolbarItem = (inProps: ToolbarItemProps) => {

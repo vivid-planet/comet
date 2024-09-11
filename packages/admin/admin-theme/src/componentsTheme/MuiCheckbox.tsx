@@ -1,6 +1,5 @@
 import { CheckboxChecked, CheckboxUnchecked } from "@comet/admin-icons";
 import { checkboxClasses, svgIconClasses } from "@mui/material";
-import * as React from "react";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";

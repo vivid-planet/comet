@@ -2,7 +2,7 @@ import { ClearInputAdornment, InputWithPopperComponents, InputWithPopperProps } 
 import { Close } from "@comet/admin-icons";
 import { ComponentsOverrides, InputBaseProps, Typography } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ChangeEvent, ComponentType, FocusEvent, HTMLAttributes, ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import tinycolor from "tinycolor2";
 import { useDebouncedCallback } from "use-debounce";
@@ -29,13 +29,13 @@ import {
     SlotProps,
 } from "./ColorPicker.slots";
 
-export interface ColorPickerColorPreviewProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "color">, PreviewIndicatorColorProps {}
-export interface ColorPickerNoColorPreviewProps extends React.HTMLAttributes<HTMLDivElement>, PreviewIndicatorEmptyOrInvalidProps {}
+export interface ColorPickerColorPreviewProps extends Omit<HTMLAttributes<HTMLDivElement>, "color">, PreviewIndicatorColorProps {}
+export interface ColorPickerNoColorPreviewProps extends HTMLAttributes<HTMLDivElement>, PreviewIndicatorEmptyOrInvalidProps {}
 
 export interface ColorPickerPropsComponents extends InputWithPopperComponents {
-    ColorPickerColorPreview?: React.ComponentType<ColorPickerColorPreviewProps>;
-    ColorPickerInvalidPreview?: React.ComponentType<ColorPickerNoColorPreviewProps>;
-    ColorPickerEmptyPreview?: React.ComponentType<ColorPickerNoColorPreviewProps>;
+    ColorPickerColorPreview?: ComponentType<ColorPickerColorPreviewProps>;
+    ColorPickerInvalidPreview?: ComponentType<ColorPickerNoColorPreviewProps>;
+    ColorPickerEmptyPreview?: ComponentType<ColorPickerNoColorPreviewProps>;
 }
 
 const DefaultColorPreviewIndicator = ({ type, color }: ColorPickerColorPreviewProps) => {
@@ -59,8 +59,8 @@ export interface ColorPickerProps extends Omit<InputWithPopperProps, "children" 
     endAdornment?: InputBaseProps["endAdornment"];
     invalidIndicatorCharacter?: string;
     required?: boolean;
-    titleText?: React.ReactNode;
-    clearButtonText?: React.ReactNode;
+    titleText?: ReactNode;
+    clearButtonText?: ReactNode;
     components?: ColorPickerPropsComponents;
     slotProps?: SlotProps;
 }
@@ -92,10 +92,10 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
         ...inputWithPopperComponents
     } = components;
 
-    const [displayValue, setDisplayValue] = React.useState<string>(value ?? "");
+    const [displayValue, setDisplayValue] = useState<string>(value ?? "");
     const previewColor = displayValue ? tinycolor(displayValue) : null;
 
-    React.useEffect(() => {
+    useEffect(() => {
         setDisplayValue(value ?? "");
     }, [value, setDisplayValue]);
 
@@ -160,10 +160,10 @@ export const ColorPicker = (inProps: ColorPickerProps) => {
                 )
             }
             value={displayValue}
-            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                 setDisplayValue(e.currentTarget.value);
             }}
-            onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            onBlur={(e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                 onBlur && onBlur(e);
                 onChangeColor(displayValue);
             }}

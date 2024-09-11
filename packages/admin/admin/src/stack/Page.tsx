@@ -1,13 +1,13 @@
-import * as React from "react";
+import { Component, ReactNode } from "react";
 
 export interface IStackPageProps {
     name: string;
-    title?: React.ReactNode;
-    children: ((id: string) => React.ReactNode) | React.ReactNode;
+    title?: ReactNode;
+    children: ((id: string) => ReactNode) | ReactNode;
 }
 
-export class StackPage extends React.Component<IStackPageProps> {
-    public render(): React.ReactNode {
+export class StackPage extends Component<IStackPageProps> {
+    public render(): ReactNode {
         return null;
     }
 }

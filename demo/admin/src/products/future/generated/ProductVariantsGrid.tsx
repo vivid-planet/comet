@@ -120,6 +120,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             filterable: false,
             type: "actions",
             align: "right",
+            pinned: "right",
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>

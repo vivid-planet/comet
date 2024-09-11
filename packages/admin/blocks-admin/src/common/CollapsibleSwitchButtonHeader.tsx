@@ -1,13 +1,13 @@
 import { Switch, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { FunctionComponent } from "react";
+import { ReactNode } from "react";
 
 interface CollapsibleSwitchButtonHeaderProps {
     checked: boolean;
-    title?: React.ReactNode;
+    title?: ReactNode;
 }
 
-export const CollapsibleSwitchButtonHeader: FunctionComponent<CollapsibleSwitchButtonHeaderProps> = ({ checked, title }) => {
+export const CollapsibleSwitchButtonHeader = ({ checked, title }: CollapsibleSwitchButtonHeaderProps) => {
     return (
         <Root>
             <Typography>{title}</Typography>

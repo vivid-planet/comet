@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import * as React from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { writeClipboardText } from "../../clipboard/writeClipboardText";
@@ -14,7 +14,7 @@ import { messages } from "../../messages";
 
 export type ErrorType = "network" | "graphql" | "unauthorized" | "unauthenticated" | "unknown";
 
-const errorTypeLabels: Record<ErrorType, React.ReactNode> = {
+const errorTypeLabels: Record<ErrorType, ReactNode> = {
     graphql: <FormattedMessage id="comet.errorDialog.details.errorType.graphql" defaultMessage="Server error" />,
     network: <FormattedMessage id="comet.errorDialog.details.errorType.network" defaultMessage="Network error" />,
     unauthorized: <FormattedMessage id="comet.errorDialog.details.errorType.unauthorized" defaultMessage="Not authorized" />,
@@ -24,8 +24,8 @@ const errorTypeLabels: Record<ErrorType, React.ReactNode> = {
 
 export interface ErrorDialogOptions {
     error: string | string[];
-    title?: React.ReactNode;
-    userMessage?: React.ReactNode;
+    title?: ReactNode;
+    userMessage?: ReactNode;
     additionalInformation?: {
         errorType: ErrorType;
         httpStatus?: string;
@@ -44,7 +44,7 @@ export interface ErrorDialogProps {
     errorOptions?: ErrorDialogOptions;
 }
 
-export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = false, onCloseClicked, errorOptions }) => {
+export const ErrorDialog = ({ show = false, onCloseClicked, errorOptions }: ErrorDialogProps) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -199,10 +199,10 @@ type CopyToClipboardButtonProps = {
 };
 
 function CopyToClipboardButton({ copyData }: CopyToClipboardButtonProps): JSX.Element {
-    const [showSuccess, setShowSuccess] = React.useState<boolean>(false);
-    const timeoutID = React.useRef<number>();
+    const [showSuccess, setShowSuccess] = useState<boolean>(false);
+    const timeoutID = useRef<number>();
 
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             if (timeoutID.current) {
                 window.clearTimeout(timeoutID.current);

@@ -1,7 +1,7 @@
 import { Close, Delete, Save, Warning } from "@comet/admin-icons";
 import { Button, ComponentsOverrides, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Theme, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -101,7 +101,7 @@ export interface RouterConfirmationDialogProps
         discardButton: typeof Button;
     }> {
     isOpen: boolean;
-    message?: React.ReactNode; // typically a string or a FormattedMessage (intl) is passed
+    message?: ReactNode; // typically a string or a FormattedMessage (intl) is passed
     handleClose: (action: PromptAction) => void;
     showSaveButton?: boolean;
 }

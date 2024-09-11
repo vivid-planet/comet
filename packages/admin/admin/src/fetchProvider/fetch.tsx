@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext, useContext } from "react";
 
 interface ICreateFetchOptions {
     baseUrl?: string; // pepends a baseUrl to all requests starting with /
@@ -24,9 +24,9 @@ export function createFetch(options: ICreateFetchOptions) {
 }
 
 type fetchType = typeof window.fetch;
-export const FetchContext = React.createContext<fetchType>(window.fetch);
+export const FetchContext = createContext<fetchType>(window.fetch);
 export const FetchProvider = FetchContext.Provider;
 
 export function useFetch() {
-    return React.useContext(FetchContext);
+    return useContext(FetchContext);
 }

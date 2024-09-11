@@ -1,5 +1,5 @@
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import * as React from "react";
+import { MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useSnackbarApi } from "../snackbar/SnackbarProvider";
@@ -11,11 +11,11 @@ export interface CrudVisibilityProps {
     onUpdateVisibility: (visibility: boolean) => Promise<void>;
 }
 
-export const CrudVisibility = ({ visibility, onUpdateVisibility }: CrudVisibilityProps): React.ReactElement => {
+export const CrudVisibility = ({ visibility, onUpdateVisibility }: CrudVisibilityProps) => {
     const snackbarApi = useSnackbarApi();
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 

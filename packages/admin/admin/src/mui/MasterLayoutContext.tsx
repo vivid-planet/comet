@@ -1,9 +1,9 @@
-import * as React from "react";
+import { createContext } from "react";
 
 export interface MasterLayoutContextValues {
     headerHeight: number;
 }
 
-export const MasterLayoutContext = React.createContext<MasterLayoutContextValues>({
+export const MasterLayoutContext = createContext<MasterLayoutContextValues>({
     headerHeight: 0,
 });

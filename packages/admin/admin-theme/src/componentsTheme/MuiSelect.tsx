@@ -1,5 +1,4 @@
 import { InputBase } from "@mui/material";
-import React from "react";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { commonSelectDefaultProps, commonSelectStyleOverrides, getCommonIconStyleOverrides } from "./getCommonSelectTheme";

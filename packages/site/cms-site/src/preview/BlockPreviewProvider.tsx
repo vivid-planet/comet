@@ -1,9 +1,10 @@
 "use client";
-import * as React from "react";
+
+import { PropsWithChildren } from "react";
 
 import { PreviewContext } from "./PreviewContext";
 
-export const BlockPreviewProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
+export const BlockPreviewProvider = ({ children }: PropsWithChildren) => {
     return (
         <PreviewContext.Provider
             value={{

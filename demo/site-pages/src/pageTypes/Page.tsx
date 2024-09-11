@@ -6,7 +6,6 @@ import { Header, headerFragment } from "@src/header/Header";
 import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/TopNavigation";
 import { gql, GraphQLClient } from "graphql-request";
 import Head from "next/head";
-import * as React from "react";
 
 import { GQLPageQuery } from "./Page.generated";
 

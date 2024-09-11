@@ -1,14 +1,14 @@
-import * as React from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 import { RowActionsSubMenu, RowActionsSubMenuProps } from "./RowActionsSubMenu";
 
 export type RowActionsMenuProps = Omit<RowActionsSubMenuProps, "menuIsOpen" | "openMenu" | "closeMenu"> & {
-    text?: React.ReactNode;
+    text?: ReactNode;
 };
 
-export const RowActionsMenu = (props: RowActionsMenuProps): React.ReactElement => {
-    const [menuIsOpen, setMenuIsOpen] = React.useState(false);
-    const { level: previousLevel, closeAllMenus: closeAllPreviousMenus } = React.useContext(RowActionsMenuContext);
+export const RowActionsMenu = (props: RowActionsMenuProps) => {
+    const [menuIsOpen, setMenuIsOpen] = useState(false);
+    const { level: previousLevel, closeAllMenus: closeAllPreviousMenus } = useContext(RowActionsMenuContext);
     const level = previousLevel + 1;
 
     const closeAllMenus = () => {
@@ -34,7 +34,7 @@ type RowActionsMenuContext = {
     closeAllMenus: () => void;
 };
 
-export const RowActionsMenuContext = React.createContext<RowActionsMenuContext>({
+export const RowActionsMenuContext = createContext<RowActionsMenuContext>({
     level: 0,
     closeAllMenus: () => {
         // Do nothing, will be re-defined when using the context's provider.

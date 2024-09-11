@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Component } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { OptionTypeBase } from "react-select";
 import { Props as ReactSelectAsyncProps } from "react-select/async";
@@ -13,7 +13,7 @@ import {
 } from "./ReactSelect";
 
 // tslint:disable:max-classes-per-file
-export class FinalFormReactSelect<OptionType extends OptionTypeBase> extends React.Component<
+export class FinalFormReactSelect<OptionType extends OptionTypeBase> extends Component<
     FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectProps<OptionType>
 > {
     public render() {
@@ -21,7 +21,7 @@ export class FinalFormReactSelect<OptionType extends OptionTypeBase> extends Rea
         return <Select<OptionType> {...input} {...rest} />;
     }
 }
-export class FinalFormReactSelectAsync<OptionType extends OptionTypeBase, IsMulti extends boolean> extends React.Component<
+export class FinalFormReactSelectAsync<OptionType extends OptionTypeBase, IsMulti extends boolean> extends Component<
     FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectAsyncProps<OptionType, IsMulti>
 > {
     public render() {
@@ -30,7 +30,7 @@ export class FinalFormReactSelectAsync<OptionType extends OptionTypeBase, IsMult
         return <Async<OptionType, boolean> {...input} {...rest} />;
     }
 }
-export class FinalFormReactSelectCreatable<OptionType extends OptionTypeBase, IsMulti extends boolean> extends React.Component<
+export class FinalFormReactSelectCreatable<OptionType extends OptionTypeBase, IsMulti extends boolean> extends Component<
     FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectCreatableProps<OptionType, IsMulti>
 > {
     public render() {
@@ -39,7 +39,7 @@ export class FinalFormReactSelectCreatable<OptionType extends OptionTypeBase, Is
         return <Creatable<OptionType, boolean> {...input} {...rest} />;
     }
 }
-export class FinalFormReactSelectAsyncCreatable<OptionType extends OptionTypeBase, IsMulti extends boolean> extends React.Component<
+export class FinalFormReactSelectAsyncCreatable<OptionType extends OptionTypeBase, IsMulti extends boolean> extends Component<
     FieldRenderProps<OptionType | null, HTMLElement> & ReactSelectCreatableProps<OptionType, false> & ReactSelectAsyncProps<OptionType, IsMulti>
 > {
     public render() {

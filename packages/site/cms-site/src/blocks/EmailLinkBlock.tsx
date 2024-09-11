@@ -1,10 +1,10 @@
-import * as React from "react";
+import { cloneElement, ReactElement } from "react";
 
 import { EmailLinkBlockData } from "../blocks.generated";
 import { PropsWithData } from "./PropsWithData";
 
 interface EmailLinkBlockProps extends PropsWithData<EmailLinkBlockData> {
-    children: React.ReactElement;
+    children: ReactElement;
     title?: string;
     className?: string;
     legacyBehavior?: boolean;
@@ -22,7 +22,7 @@ export const EmailLinkBlock = ({ data: { email }, children, title, className, le
     const href = `mailto:${email}`;
 
     if (legacyBehavior) {
-        return React.cloneElement(children, { href, title });
+        return cloneElement(children, { href, title });
     }
 
     return (

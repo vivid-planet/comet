@@ -1,9 +1,6 @@
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
-interface NotFound404Props {
-    children: React.ReactNode;
-}
-export default function NotFound404({ children }: NotFound404Props): JSX.Element {
+export default function NotFound404({ children }: PropsWithChildren) {
     return (
         <>
             <h1>404 - Page Not Found</h1>

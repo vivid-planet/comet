@@ -4,7 +4,6 @@ import { DocumentInterface } from "@comet/cms-admin";
 import { GQLPredefinedPage, GQLPredefinedPageInput } from "@src/graphql.generated";
 import { EditPredefinedPage } from "@src/predefinedPage/EditPredefinedPage";
 import gql from "graphql-tag";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLPredefinedPageInfoTagQuery, GQLPredefinedPageInfoTagQueryVariables } from "./PredefinedPage.generated";

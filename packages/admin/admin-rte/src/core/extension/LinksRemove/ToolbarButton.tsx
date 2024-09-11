@@ -1,6 +1,6 @@
 import { RteClearLink } from "@comet/admin-icons";
 import { RichUtils } from "draft-js";
-import * as React from "react";
+import { MouseEvent } from "react";
 
 import { ControlButton } from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
@@ -10,7 +10,7 @@ export default function ToolbarButton(props: IControlProps) {
     const globallyDisabled = !!props.disabled;
 
     const buttonEnabled = !selection.isCollapsed(); // @TODO: better to scan the selection if any link-entities are in the selection
-    function handleClick(e: React.MouseEvent) {
+    function handleClick(e: MouseEvent) {
         e.preventDefault();
         if (buttonEnabled) {
             props.setEditorState(RichUtils.toggleLink(props.editorState, selection, null)); // @TODO, this removes all entities not only LINK entity, should be improved, now its ok as there are no other entities than links

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ReactNode } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -6,7 +6,7 @@ import { SaveButton } from "./common/buttons/save/SaveButton";
 import { messages } from "./messages";
 
 interface FinalFormSaveButtonProps {
-    message?: React.ReactNode;
+    message?: ReactNode;
     hasConflict?: boolean;
 }
 

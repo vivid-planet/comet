@@ -58,7 +58,7 @@ interface DraftJsInput<LinkBlockInput extends BlockInputInterface> {
     };
 }
 
-interface RichTextBlockDataInterface extends BlockDataInterface {
+export interface RichTextBlockDataInterface extends BlockDataInterface {
     draftContent: RawDraftContentState;
 }
 

@@ -2,7 +2,6 @@
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
-import * as React from "react";
 import { Route, Router, Switch, useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 

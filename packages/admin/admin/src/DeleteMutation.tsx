@@ -2,7 +2,7 @@ import { PureQueryOptions, useApolloClient } from "@apollo/client";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import * as React from "react";
+import { Fragment, ReactNode, useContext, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
@@ -11,19 +11,19 @@ import { TableQueryContext } from "./table/TableQueryContext";
 
 interface IProps {
     mutation: any;
-    children: (action: (options: { variables: object }) => void, data: { loading: boolean; error: any }) => React.ReactNode;
+    children: (action: (options: { variables: object }) => void, data: { loading: boolean; error: any }) => ReactNode;
     refetchQueries?: Array<string | PureQueryOptions>;
 }
 export function DeleteMutation(props: IProps) {
-    const [dialogOpen, setDialogOpen] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
-    const [pendingVariables, setPendingVariables] = React.useState<object | undefined>(undefined);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [pendingVariables, setPendingVariables] = useState<object | undefined>(undefined);
     const client = useApolloClient();
-    const tableQuery = React.useContext(TableQueryContext);
+    const tableQuery = useContext(TableQueryContext);
     const { refetchQueries = [] } = props;
 
     return (
-        <React.Fragment>
+        <Fragment>
             {props.children(
                 (options) => {
                     setDialogOpen(true);
@@ -44,7 +44,7 @@ export function DeleteMutation(props: IProps) {
                     <DeleteButton onClick={handleYesClick} autoFocus />
                 </DialogActions>
             </Dialog>
-        </React.Fragment>
+        </Fragment>
     );
 
     function handleYesClick() {

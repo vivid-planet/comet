@@ -1,13 +1,11 @@
 "use client";
 import { PropsWithData } from "@comet/cms-site";
 import { NewsLinkBlockData } from "@src/blocks.generated";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { LoadedData } from "./NewsDetailBlock.loader";
 
-function NewsDetailBlock({
-    data: { id, loaded },
-}: React.PropsWithChildren<PropsWithData<NewsLinkBlockData & { loaded: LoadedData }>>): JSX.Element | null {
+function NewsDetailBlock({ data: { id, loaded } }: PropsWithChildren<PropsWithData<NewsLinkBlockData & { loaded: LoadedData }>>): JSX.Element | null {
     if (id === undefined) {
         return null;
     }

@@ -1,6 +1,6 @@
 import { ComponentsOverrides, CssBaseline } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ComponentType, CSSProperties, ReactNode, useState } from "react";
 
 import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
@@ -42,9 +42,9 @@ export interface MasterLayoutProps
         header: "div";
         contentWrapper: "div";
     }> {
-    children: React.ReactNode;
-    menuComponent: React.ComponentType;
-    headerComponent?: React.ComponentType;
+    children: ReactNode;
+    menuComponent: ComponentType;
+    headerComponent?: ComponentType;
     openMenuByDefault?: boolean;
     /**
      * Defines the global header-height. The value defined here will also be used by AppHeader and Toolbar.
@@ -63,8 +63,8 @@ export function MasterLayout(inProps: MasterLayoutProps) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMasterLayout" });
 
-    const [open, setOpen] = React.useState(openMenuByDefault);
-    const [drawerVariant, setDrawerVariant] = React.useState<"permanent" | "temporary">("permanent");
+    const [open, setOpen] = useState(openMenuByDefault);
+    const [drawerVariant, setDrawerVariant] = useState<"permanent" | "temporary">("permanent");
 
     const toggleOpen = () => {
         setOpen(!open);
@@ -87,7 +87,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
                     <Menu />
                     <ContentWrapper
                         {...slotProps?.contentWrapper}
-                        style={{ "--comet-admin-master-layout-content-top-spacing": `${headerHeight}px` } as React.CSSProperties}
+                        style={{ "--comet-admin-master-layout-content-top-spacing": `${headerHeight}px` } as CSSProperties}
                     >
                         {children}
                     </ContentWrapper>

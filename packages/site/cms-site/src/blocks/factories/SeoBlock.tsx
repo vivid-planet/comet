@@ -1,5 +1,4 @@
 import Head from "next/head";
-import * as React from "react";
 
 import { PixelImageBlockData, SeoBlockData } from "../../blocks.generated";
 import { generateImageUrl } from "../../image/Image";

@@ -1,7 +1,7 @@
 import { getApolloContext } from "@apollo/client";
 import { Config, Decorator, FORM_ERROR, FormApi, FormSubscription, MutableState, Mutator, SubmissionErrors, ValidationErrors } from "final-form";
 import setFieldData from "final-form-set-field-data";
-import * as React from "react";
+import { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useRef } from "react";
 import { AnyObject, Form, FormRenderProps, FormSpy, RenderableProps } from "react-final-form";
 import { useIntl } from "react-intl";
 
@@ -14,7 +14,7 @@ import { Savable, useSaveBoundaryApi } from "./saveBoundary/SaveBoundary";
 import { TableQueryContext } from "./table/TableQueryContext";
 
 export const useFormApiRef = <FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>() =>
-    React.useRef<FormApi<FormValues, InitialFormValues>>();
+    useRef<FormApi<FormValues, InitialFormValues>>();
 
 // copy of FormProps from final-form, because Omit doen't work on it
 interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<FormValues>>
@@ -42,7 +42,7 @@ interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<F
     onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
-    apiRef?: React.MutableRefObject<FormApi<FormValues> | undefined>;
+    apiRef?: MutableRefObject<FormApi<FormValues> | undefined>;
     subRoutePath?: string;
 }
 
@@ -60,17 +60,16 @@ const getSubmitEvent: Mutator<any, any> = (args: any[], state: MutableState<any,
     return state.formState.submitEvent;
 };
 
-function RouterPromptIf({
+const RouterPromptIf = ({
     children,
     doSave,
     subRoutePath,
     formApi,
-}: {
-    children: React.ReactNode;
+}: PropsWithChildren<{
     doSave: () => Promise<boolean>;
     subRoutePath: string;
     formApi: FormApi<any>;
-}) {
+}>) => {
     const saveBoundaryApi = useSaveBoundaryApi();
     const intl = useIntl();
 
@@ -93,15 +92,15 @@ function RouterPromptIf({
             {children}
         </RouterPrompt>
     );
-}
+};
 
 export class FinalFormSubmitEvent extends Event {
     navigatingBack?: boolean;
 }
 
 export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
-    const { client } = React.useContext(getApolloContext());
-    const tableQuery = React.useContext(TableQueryContext);
+    const { client } = useContext(getApolloContext());
+    const tableQuery = useContext(TableQueryContext);
 
     const { onAfterSubmit, validateWarning } = props;
 
@@ -127,7 +126,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
         const subRoutePath = props.subRoutePath ?? `${subRoutePrefix}/form`;
 
-        const submit = React.useCallback(
+        const submit = useCallback(
             (event: any) => {
                 event.preventDefault(); //  Prevents from reloading the page with GET-params on submit
                 if (saveBoundaryApi) {
@@ -153,11 +152,11 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             [formRenderProps, saveBoundaryApi],
         );
 
-        const currentWarningValidationRound = React.useRef(0);
+        const currentWarningValidationRound = useRef(0);
 
         const registeredFields = formRenderProps.form.getRegisteredFields();
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (validateWarning) {
                 const validate = async () => {
                     currentWarningValidationRound.current++;
@@ -186,7 +185,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             }
         }, [formRenderProps.values, setFieldData, registeredFields]);
 
-        const doSave = React.useCallback(async () => {
+        const doSave = useCallback(async () => {
             const hasValidationErrors = await waitForValidationToFinish(formRenderProps.form);
             if (hasValidationErrors) {
                 return false;
@@ -199,7 +198,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
 
             return true;
         }, [formRenderProps.form]);
-        const doReset = React.useCallback(() => {
+        const doReset = useCallback(() => {
             formRenderProps.form.reset();
         }, [formRenderProps.form]);
         return (

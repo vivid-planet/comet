@@ -1,6 +1,5 @@
 import { ChevronDown } from "@comet/admin-icons";
 import { Autocomplete, AutocompleteProps, AutocompleteRenderInputParams, CircularProgress, InputBase } from "@mui/material";
-import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";

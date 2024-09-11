@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ComponentType, SFC } from "react";
 
 import { ITableQueryContext, TableQueryContext } from "./TableQueryContext";
 
@@ -10,7 +10,7 @@ export interface IWithTableQueryProps {
 }
 
 /*
-    return React.forwardRef((props, ref) => {
+    return forwardRef((props, ref) => {
         return (
             <TableQueryApiContext.Consumer>
                 {tableQueryApi => <WrappedComponent {...props} tableQueryApi={tableQueryApi} forwardedRef={ref} />}
@@ -26,6 +26,6 @@ type Subtract<T, K> = Omit<T, keyof K>;
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export const withTableQueryContext =
-    <P extends IWithTableQueryProps>(WrappedComponent: React.ComponentType<P>): React.SFC<Subtract<P, IWithTableQueryProps>> =>
+    <P extends IWithTableQueryProps>(WrappedComponent: ComponentType<P>): SFC<Subtract<P, IWithTableQueryProps>> =>
     (props: any) =>
         <TableQueryContext.Consumer>{(tableQuery) => <WrappedComponent {...props} tableQuery={tableQuery} />}</TableQueryContext.Consumer>;

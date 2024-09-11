@@ -2,17 +2,17 @@ import { CancelButton, messages, SaveButton } from "@comet/admin";
 import { useCurrentDamFolder, useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { getRandomUnsplashImage, UnsplashImage } from "./getRandomUnsplashImage";
 import UnsplashIcon from "./UnsplashIcon";
 
-export const ImportFromUnsplash: React.FC = () => {
+export const ImportFromUnsplash = () => {
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const { folderId } = useCurrentDamFolder();
-    const [isOpen, setIsOpen] = React.useState(false);
-    const [unsplashImage, setUnsplashImage] = React.useState<UnsplashImage>();
+    const [isOpen, setIsOpen] = useState(false);
+    const [unsplashImage, setUnsplashImage] = useState<UnsplashImage>();
 
     const { uploadFiles } = useDamFileUpload({
         acceptedMimetypes: allAcceptedMimeTypes,

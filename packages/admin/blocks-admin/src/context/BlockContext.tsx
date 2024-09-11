@@ -1,3 +1,3 @@
-import * as React from "react";
+import { createContext } from "react";
 
-export const BlockContext = React.createContext<unknown>(undefined);
+export const BlockContext = createContext<unknown>(undefined);

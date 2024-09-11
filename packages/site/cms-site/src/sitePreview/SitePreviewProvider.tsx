@@ -1,16 +1,16 @@
 "use client";
 import { usePathname, useSearchParams } from "next/navigation";
-import * as React from "react";
+import { PropsWithChildren, useEffect } from "react";
 
 import { PreviewContext } from "../preview/PreviewContext";
 import { sendSitePreviewIFrameMessage } from "./iframebridge/sendSitePreviewIFrameMessage";
 import { SitePreviewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 
-const SitePreview: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
+const SitePreview = ({ children }: PropsWithChildren) => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    React.useEffect(() => {
+    useEffect(() => {
         function sendUpstreamMessage() {
             const message: SitePreviewIFrameLocationMessage = {
                 cometType: SitePreviewIFrameMessageType.SitePreviewLocation,
@@ -37,6 +37,6 @@ const SitePreview: React.FunctionComponent<{ children: React.ReactNode }> = ({ c
     );
 };
 
-export const SitePreviewProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
+export const SitePreviewProvider = ({ children }: PropsWithChildren) => {
     return <SitePreview>{children}</SitePreview>;
 };

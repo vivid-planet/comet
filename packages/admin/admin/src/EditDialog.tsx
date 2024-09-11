@@ -8,7 +8,7 @@ import {
     DialogTitle,
     DialogTitleProps,
 } from "@mui/material";
-import * as React from "react";
+import { ComponentType, forwardRef, PropsWithChildren, ReactNode, RefForwardingComponent, useCallback, useImperativeHandle, useMemo } from "react";
 import { useIntl } from "react-intl";
 
 import { CancelButton } from "./common/buttons/cancel/CancelButton";
@@ -20,8 +20,8 @@ import { ISelectionApi } from "./SelectionApi";
 import { useSelectionRoute } from "./SelectionRoute";
 
 interface ITitle {
-    edit: React.ReactNode;
-    add: React.ReactNode;
+    edit: ReactNode;
+    add: ReactNode;
 }
 
 interface EditDialogComponentsProps {
@@ -38,24 +38,24 @@ interface EditDialogProps {
     componentsProps?: EditDialogComponentsProps;
 }
 
-export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
+export function useEditDialog(): [ComponentType<EditDialogProps>, { id?: string; mode?: "edit" | "add" }, IEditDialogApi, ISelectionApi] {
     const [Selection, selection, selectionApi] = useSelectionRoute();
 
-    const openAddDialog = React.useCallback(
+    const openAddDialog = useCallback(
         (id?: string) => {
             selectionApi.handleAdd(id);
         },
         [selectionApi],
     );
 
-    const openEditDialog = React.useCallback(
+    const openEditDialog = useCallback(
         (id: string) => {
             selectionApi.handleSelectId(id);
         },
         [selectionApi],
     );
 
-    const closeDialog = React.useCallback(
+    const closeDialog = useCallback(
         (options?: CloseDialogOptions) => {
             const { delay } = { delay: false, ...options };
 
@@ -71,7 +71,7 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
         [selectionApi],
     );
 
-    const api: IEditDialogApi = React.useMemo(() => {
+    const api: IEditDialogApi = useMemo(() => {
         return {
             openAddDialog,
             openEditDialog,
@@ -79,7 +79,7 @@ export function useEditDialog(): [React.ComponentType<EditDialogProps>, { id?: s
         };
     }, [closeDialog, openAddDialog, openEditDialog]);
 
-    const EditDialogWithHookProps = React.useMemo(() => {
+    const EditDialogWithHookProps = useMemo(() => {
         return (props: EditDialogProps) => {
             return (
                 <Selection>
@@ -101,7 +101,7 @@ interface IHookProps {
     api: IEditDialogApi;
 }
 
-const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = ({
+const EditDialogInner = ({
     selection,
     selectionApi,
     api,
@@ -110,7 +110,7 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
     onAfterSave,
     children,
     componentsProps,
-}) => {
+}: PropsWithChildren<EditDialogProps & IHookProps>) => {
     const intl = useIntl();
 
     const title = maybeTitle ?? {
@@ -127,7 +127,7 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
         api.closeDialog();
     };
 
-    const handleAfterSave = React.useCallback(() => {
+    const handleAfterSave = useCallback(() => {
         setTimeout(() => {
             // TODO DirtyHandler removal: do we need a onReset functionality here?
             if (!disableCloseAfterSave) {
@@ -158,19 +158,19 @@ const EditDialogInner: React.FunctionComponent<EditDialogProps & IHookProps> = (
 };
 
 interface IEditDialogHooklessProps extends EditDialogProps {
-    children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => React.ReactNode;
+    children: (injectedProps: { selectedId?: string; selectionMode?: "edit" | "add" }) => ReactNode;
 }
 
-const EditDialogHooklessInner: React.RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = (
+const EditDialogHooklessInner: RefForwardingComponent<IEditDialogApi, IEditDialogHooklessProps> = (
     { children, title, onAfterSave, componentsProps },
     ref,
 ) => {
     const [EditDialogConfigured, selection, api] = useEditDialog();
-    React.useImperativeHandle(ref, () => api);
+    useImperativeHandle(ref, () => api);
     return (
         <EditDialogConfigured title={title} onAfterSave={onAfterSave} componentsProps={componentsProps}>
             {children({ selectedId: selection.id, selectionMode: selection.mode })}
         </EditDialogConfigured>
     );
 };
-export const EditDialog = React.forwardRef(EditDialogHooklessInner);
+export const EditDialog = forwardRef(EditDialogHooklessInner);

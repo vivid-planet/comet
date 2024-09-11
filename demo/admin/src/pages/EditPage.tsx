@@ -18,7 +18,6 @@ import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
 
@@ -87,7 +86,7 @@ const usePage = createUsePage({
     `,
 });
 
-export const EditPage: React.FC<Props> = ({ id, category }) => {
+export const EditPage = ({ id, category }: Props) => {
     const intl = useIntl();
     const { pageState, rootBlocksApi, hasChanges, loading, dialogs, pageSaveButton, handleSavePage } = usePage({
         pageId: id,

@@ -1,5 +1,5 @@
 import { CompositeDecorator, ContentState, convertFromRaw, convertToRaw, DraftDecorator, EditorState, RawDraftContentState } from "draft-js";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 import useDebounce from "../useDebounce";
 import usePrevious from "../usePrevious";
@@ -60,13 +60,13 @@ function makeRteApi<T = any>(o?: IMakeRteApiProps<T>) {
         const options: IRteApiOptions<T> = passedProps ? { ...defaultRteApiOptions, ...passedProps } : defaultRteApiOptions; // merge default options with passed props
         const { defaultValue, onDebouncedContentChange, debounceDelay } = options;
 
-        const [editorState, setEditorState] = React.useState(defaultValue ? createStateFromRawContent(defaultValue) : createEmptyState());
+        const [editorState, setEditorState] = useState(defaultValue ? createStateFromRawContent(defaultValue) : createEmptyState());
 
         const debouncedEditorState = useDebounce(editorState, debounceDelay);
         const previousDebouncedContent = usePrevious(debouncedEditorState.getCurrentContent());
         const debouncedContent = debouncedEditorState.getCurrentContent();
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (onDebouncedContentChange) {
                 if (previousDebouncedContent !== debouncedContent) {
                     onDebouncedContentChange(debouncedEditorState, convertStateToRawContent);

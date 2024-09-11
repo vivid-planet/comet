@@ -10,10 +10,9 @@ import {
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { CreateCapProductForm } from "@src/products/future/generated/CreateCapProductForm";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
-export function CreateCapProductPage(): React.ReactElement {
+export function CreateCapProductPage() {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.createCapProduct", defaultMessage: "Create Cap Product" })}>

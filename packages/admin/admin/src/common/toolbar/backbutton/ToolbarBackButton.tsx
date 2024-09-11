@@ -1,7 +1,7 @@
 import { ArrowLeft } from "@comet/admin-icons";
 import { ComponentsOverrides, IconButton as MuiIconButton, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
@@ -53,7 +53,7 @@ export interface ToolbarBackButtonProps
         toolbarItem: typeof ToolbarItem;
         iconButton: typeof MuiIconButton;
     }> {
-    backIcon?: React.ReactNode;
+    backIcon?: ReactNode;
 }
 
 export const ToolbarBackButton = (inProps: ToolbarBackButtonProps) => {

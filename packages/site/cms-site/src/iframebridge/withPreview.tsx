@@ -1,5 +1,6 @@
 "use client";
-import * as React from "react";
+
+import { ComponentType, createContext, useContext } from "react";
 
 import { Preview } from "./Preview";
 
@@ -28,17 +29,17 @@ interface AdminRouteContextOptions {
     parentRoute: string;
     parentEnabledAutoScrolling: boolean;
 }
-const AdminRouteContext = React.createContext<AdminRouteContextOptions>({
+const AdminRouteContext = createContext<AdminRouteContextOptions>({
     parentRoute: "",
     parentEnabledAutoScrolling: true,
 });
 
 export const withPreview = <ComponentProps,>(
-    Component: React.ComponentType<ComponentProps>,
+    Component: ComponentType<ComponentProps>,
     { label = "No type", enabledChildrenAutoScrolling = true }: PreviewOptions,
 ) => {
-    return ({ ...componentProps }: WithPreviewProps & ComponentProps): React.ReactElement => {
-        const { parentRoute, parentEnabledAutoScrolling } = React.useContext(AdminRouteContext);
+    return ({ ...componentProps }: WithPreviewProps & ComponentProps) => {
+        const { parentRoute, parentEnabledAutoScrolling } = useContext(AdminRouteContext);
 
         if (componentProps.data?.adminMeta && componentProps.data?.adminMeta.route !== parentRoute) {
             return (

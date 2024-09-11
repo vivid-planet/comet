@@ -13,7 +13,6 @@ import {
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { ManufacturerForm } from "@src/products/ManufacturerForm";
 import { ManufacturersGrid } from "@src/products/ManufacturersGrid";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 const FormToolbar = () => (
@@ -27,7 +26,7 @@ const FormToolbar = () => (
     </StackToolbar>
 );
 
-export function ManufacturersPage(): React.ReactElement {
+export function ManufacturersPage() {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.manufacturers", defaultMessage: "Manufacturers" })}>

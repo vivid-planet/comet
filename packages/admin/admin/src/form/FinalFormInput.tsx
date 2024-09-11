@@ -1,6 +1,6 @@
 import { Translate } from "@comet/admin-icons";
 import { IconButton, InputBase, InputBaseProps, Tooltip } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -14,21 +14,13 @@ export type FinalFormInputProps = InputBaseProps &
         disableContentTranslation?: boolean;
     };
 
-export function FinalFormInput({
-    meta,
-    input,
-    innerRef,
-    endAdornment,
-    clearable,
-    disableContentTranslation,
-    ...props
-}: FinalFormInputProps): React.ReactElement {
+export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable, disableContentTranslation, ...props }: FinalFormInputProps) {
     const type = props.type ?? input.type ?? "text";
     const { enabled: translationEnabled, showApplyTranslationDialog, translate } = useContentTranslationService();
     const isTranslatable = translationEnabled && !disableContentTranslation && type === "text" && !props.disabled;
 
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [pendingTranslation, setPendingTranslation] = React.useState<string | undefined>(undefined);
+    const [open, setOpen] = useState<boolean>(false);
+    const [pendingTranslation, setPendingTranslation] = useState<string | undefined>(undefined);
 
     return (
         <>

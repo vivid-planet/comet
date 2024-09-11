@@ -1,7 +1,6 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
-import * as React from "react";
 
-export default function RadioUnchecked(props: SvgIconProps): JSX.Element {
+export default function RadioUnchecked(props: SvgIconProps) {
     return (
         <SvgIcon {...props} viewBox="0 0 16 16">
             <g fillRule="evenodd">

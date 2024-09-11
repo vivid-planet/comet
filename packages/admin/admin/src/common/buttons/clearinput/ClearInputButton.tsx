@@ -1,7 +1,7 @@
 import { Clear } from "@comet/admin-icons";
 import { ButtonBase, ButtonBaseProps, ComponentsOverrides, inputAdornmentClasses } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 
@@ -31,7 +31,7 @@ const Root = createComponentSlot(ButtonBase)<ClearInputButtonClassKey>({
 );
 
 export interface ClearInputButtonProps extends ButtonBaseProps {
-    icon?: React.ReactNode;
+    icon?: ReactNode;
 }
 
 export function ClearInputButton(inProps: ClearInputButtonProps) {

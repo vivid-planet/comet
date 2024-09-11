@@ -1,7 +1,6 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
-import * as React from "react";
 
-export default function Comet(props: SvgIconProps): JSX.Element {
+export default function Comet(props: SvgIconProps) {
     return (
         <SvgIcon {...props} viewBox="0 0 200 200">
             <defs>

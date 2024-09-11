@@ -1,7 +1,7 @@
 import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { ComponentsOverrides, FormControl } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { useRef } from "react";
 import { useIntl } from "react-intl";
 
 import { DatePicker as DatePickerBase } from "../datePicker/DatePicker";
@@ -65,8 +65,8 @@ export const DateTimePicker = (inProps: DateTimePickerProps) => {
         name: "CometAdminDateTimePicker",
     });
     const intl = useIntl();
-    const datePickerRef = React.useRef<HTMLElement>(null);
-    const timePickerRef = React.useRef<HTMLElement>(null);
+    const datePickerRef = useRef<HTMLElement>(null);
+    const timePickerRef = useRef<HTMLElement>(null);
 
     const onChangeDate = (newDate?: string) => {
         if (newDate === undefined) {

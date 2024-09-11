@@ -1,7 +1,6 @@
 import { Delete } from "@comet/admin-icons";
 import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";

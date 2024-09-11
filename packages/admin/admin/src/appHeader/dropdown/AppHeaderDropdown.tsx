@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import { ComponentsOverrides, Popover as MuiPopover, Theme } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -16,9 +16,9 @@ export interface AppHeaderDropdownProps
             popover: typeof Popover;
             button: typeof AppHeaderButton;
         }> {
-    children?: ((closeDropdown: () => void) => React.ReactNode) | React.ReactNode;
-    buttonChildren?: React.ReactNode;
-    dropdownArrow?: ((isOpen: boolean) => React.ReactNode) | null;
+    children?: ((closeDropdown: () => void) => ReactNode) | ReactNode;
+    buttonChildren?: ReactNode;
+    dropdownArrow?: ((isOpen: boolean) => ReactNode) | null;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
 }
@@ -51,7 +51,7 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderDropdown" });
 
-    const [uncontrolledOpen, setUncontrolledOpen] = React.useState<boolean>(false);
+    const [uncontrolledOpen, setUncontrolledOpen] = useState<boolean>(false);
 
     const _open = open !== undefined ? open : uncontrolledOpen;
     const _onOpenChange =
@@ -61,10 +61,10 @@ export function AppHeaderDropdown(inProps: AppHeaderDropdownProps) {
                   setUncontrolledOpen(open);
               };
 
-    const [itemWidth, setItemWidth] = React.useState<number>(0);
-    const rootRef = React.useRef<HTMLDivElement>(null);
+    const [itemWidth, setItemWidth] = useState<number>(0);
+    const rootRef = useRef<HTMLDivElement>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (rootRef.current) {
             setItemWidth(rootRef.current.clientWidth);
         }

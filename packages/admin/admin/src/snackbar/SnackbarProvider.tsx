@@ -1,18 +1,18 @@
 import { SnackbarCloseReason, SnackbarProps } from "@mui/material";
-import * as React from "react";
+import { cloneElement, createContext, ReactElement, ReactNode, SyntheticEvent, useContext, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 import { UndoSnackbarProps } from "./UndoSnackbar";
 
 export interface SnackbarApi {
-    showSnackbar: (newSnackbar: React.ReactElement<Omit<SnackbarProps | UndoSnackbarProps<unknown>, "open">>) => void;
+    showSnackbar: (newSnackbar: ReactElement<Omit<SnackbarProps | UndoSnackbarProps<unknown>, "open">>) => void;
     hideSnackbar: () => void;
 }
 
-const SnackbarContext = React.createContext<SnackbarApi | null>(null);
+const SnackbarContext = createContext<SnackbarApi | null>(null);
 
 export const useSnackbarApi = () => {
-    const context = React.useContext(SnackbarContext);
+    const context = useContext(SnackbarContext);
 
     if (context === null) {
         throw new Error("No snackbar context found. Please ensure that you have called `SnackbarProvider` higher up in your tree.");
@@ -21,15 +21,15 @@ export const useSnackbarApi = () => {
     return context;
 };
 
-type SnackbarCloseEvent = React.SyntheticEvent<any> | Event;
+type SnackbarCloseEvent = SyntheticEvent<any> | Event;
 type HandleClose = (event: SnackbarCloseEvent, reason: SnackbarCloseReason, onClose?: SnackbarProps["onClose"]) => void;
 
-export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [snackbar, setSnackbar] = React.useState<React.ReactElement>();
-    const [key, setKey] = React.useState(uuid());
+export const SnackbarProvider = ({ children }: { children?: ReactNode }) => {
+    const [open, setOpen] = useState<boolean>(false);
+    const [snackbar, setSnackbar] = useState<ReactElement>();
+    const [key, setKey] = useState(uuid());
 
-    const updateSnackbar = (newSnackbar: React.ReactElement) => {
+    const updateSnackbar = (newSnackbar: ReactElement) => {
         setKey(uuid());
         setSnackbar(newSnackbar);
         if (newSnackbar !== undefined) {
@@ -62,7 +62,7 @@ export const SnackbarProvider: React.FunctionComponent = ({ children }) => {
         >
             {children}
             {snackbar !== undefined &&
-                React.cloneElement<SnackbarProps>(snackbar, {
+                cloneElement<SnackbarProps>(snackbar, {
                     key,
                     open: open,
                     onClose: (event, reason) => handleClose(event, reason, snackbar?.props.onClose),

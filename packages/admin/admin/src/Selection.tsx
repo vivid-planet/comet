@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 
 import { ISelectionApi } from "./SelectionApi";
 
@@ -7,27 +7,27 @@ interface IState {
     mode?: "edit" | "add";
 }
 export function useSelection(): [{ id?: string; mode?: "edit" | "add" }, ISelectionApi] {
-    const [selection, setSelection] = React.useState<IState>({ id: undefined, mode: undefined });
+    const [selection, setSelection] = useState<IState>({ id: undefined, mode: undefined });
 
-    const handleSelectId = React.useCallback(
+    const handleSelectId = useCallback(
         async (id: string) => {
             setSelection({ id, mode: "edit" });
         },
         [setSelection],
     );
 
-    const handleDeselect = React.useCallback(async () => {
+    const handleDeselect = useCallback(async () => {
         setSelection({ id: undefined, mode: undefined });
     }, [setSelection]);
 
-    const handleAdd = React.useCallback(
+    const handleAdd = useCallback(
         (id?: string) => {
             setSelection({ id, mode: "add" });
         },
         [setSelection],
     );
 
-    const api: ISelectionApi = React.useMemo(
+    const api: ISelectionApi = useMemo(
         () => ({
             handleSelectId,
             handleDeselect,
@@ -52,7 +52,7 @@ export interface ISelectionRenderPropArgs {
 }
 
 interface IProps {
-    children: (injectedProps: ISelectionRenderPropArgs) => React.ReactNode;
+    children: (injectedProps: ISelectionRenderPropArgs) => ReactNode;
 }
 
 export function Selection({ children }: IProps) {

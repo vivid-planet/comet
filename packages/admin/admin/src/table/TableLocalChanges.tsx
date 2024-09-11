@@ -1,6 +1,6 @@
 import { ApolloClient } from "@apollo/client";
 import { DocumentNode } from "graphql";
-import * as React from "react";
+import { Component, ReactNode } from "react";
 
 import { RouterPrompt } from "../router/Prompt";
 
@@ -42,7 +42,7 @@ interface IProps<TData> {
         localChangesCount: number;
         data: TData[];
         loading: boolean;
-    }) => React.ReactNode;
+    }) => ReactNode;
 }
 interface IState<TData> {
     changedOrder: string[] | null;
@@ -54,7 +54,7 @@ interface IState<TData> {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export class TableLocalChanges<TData extends { id: string; [key: string]: any }> extends React.Component<IProps<TData>, IState<TData>> {
+export class TableLocalChanges<TData extends { id: string; [key: string]: any }> extends Component<IProps<TData>, IState<TData>> {
     protected static defaultProps = {
         orderColumn: "pos",
     };

@@ -9,7 +9,7 @@ import {
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import React, { cloneElement } from "react";
+import { cloneElement, ComponentProps, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
@@ -190,13 +190,13 @@ export const Tooltip = (inProps: TooltipProps) => {
     } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
     const theme = useTheme();
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleTooltipClose = () => {
         setOpen(false);
     };
 
-    const toggleTooltip = (event: React.MouseEvent) => {
+    const toggleTooltip = (event: MouseEvent) => {
         event.stopPropagation();
         setOpen(!open);
     };
@@ -209,7 +209,7 @@ export const Tooltip = (inProps: TooltipProps) => {
         isRtl: theme.direction === "rtl",
     };
 
-    const commonTooltipProps: React.ComponentProps<typeof TooltipRoot> = {
+    const commonTooltipProps: ComponentProps<typeof TooltipRoot> = {
         ...props,
         ownerState,
         slots: {

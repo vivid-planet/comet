@@ -1,5 +1,4 @@
 import { BlockCategory } from "@comet/blocks-admin";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 const customBlockCategory = {

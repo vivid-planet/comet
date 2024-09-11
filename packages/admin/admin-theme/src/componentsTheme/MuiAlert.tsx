@@ -1,5 +1,4 @@
 import { Check, Error, Info, Warning } from "@comet/admin-icons";
-import React from "react";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";

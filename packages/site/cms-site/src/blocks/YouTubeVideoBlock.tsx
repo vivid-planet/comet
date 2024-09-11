@@ -1,5 +1,6 @@
 "use client";
-import * as React from "react";
+
+import { ReactElement, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
@@ -23,7 +24,7 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
 interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
-    renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
+    renderPreviewImage?: (props: VideoPreviewImageProps) => ReactElement;
     fill?: boolean;
 }
 
@@ -35,7 +36,7 @@ export const YouTubeVideoBlock = withPreview(
         renderPreviewImage,
         fill,
     }: YouTubeVideoBlockProps) => {
-        const [showPreviewImage, setShowPreviewImage] = React.useState(true);
+        const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
         if (!youtubeIdentifier) {

@@ -1,14 +1,14 @@
 import { Search } from "@comet/admin-icons";
 import { InputAdornment } from "@mui/material";
 import { useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { useIntl } from "react-intl";
 
 import { ClearInputAdornment } from "../common/ClearInputAdornment";
 import { FinalFormInput, FinalFormInputProps } from "./FinalFormInput";
 
 export interface FinalFormSearchTextFieldProps extends FinalFormInputProps {
-    icon?: React.ReactNode;
+    icon?: ReactNode;
     clearable?: boolean;
 }
 

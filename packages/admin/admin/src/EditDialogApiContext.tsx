@@ -1,4 +1,4 @@
-import * as React from "react";
+import { createContext, useContext } from "react";
 
 export interface CloseDialogOptions {
     delay?: boolean | number;
@@ -10,7 +10,7 @@ export interface IEditDialogApi {
     closeDialog: (options?: CloseDialogOptions) => void;
 }
 
-export const EditDialogApiContext = React.createContext<IEditDialogApi | null>(null);
+export const EditDialogApiContext = createContext<IEditDialogApi | null>(null);
 export function useEditDialogApi() {
-    return React.useContext(EditDialogApiContext);
+    return useContext(EditDialogApiContext);
 }

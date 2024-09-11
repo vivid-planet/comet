@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { SaveButton, SaveButtonProps } from "../common/buttons/save/SaveButton";
 import { useSavable, useSaveBoundaryApi } from "./SaveBoundary";
 

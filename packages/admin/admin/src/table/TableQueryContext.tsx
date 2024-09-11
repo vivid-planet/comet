@@ -1,5 +1,5 @@
 import { DocumentNode } from "graphql";
-import * as React from "react";
+import { createContext } from "react";
 
 import { ITableData } from "./useTableQuery";
 
@@ -25,4 +25,4 @@ export interface ITableQueryContext {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export const TableQueryContext = React.createContext<ITableQueryContext | undefined>(undefined);
+export const TableQueryContext = createContext<ITableQueryContext | undefined>(undefined);

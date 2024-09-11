@@ -1,6 +1,6 @@
 import { FormControl, InputBase, Slider, SliderProps } from "@mui/material";
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -82,9 +82,9 @@ export interface FinalFormRangeInputProps
         }> {
     min: number;
     max: number;
-    startAdornment?: React.ReactNode;
-    endAdornment?: React.ReactNode;
-    separator?: React.ReactNode;
+    startAdornment?: ReactNode;
+    endAdornment?: ReactNode;
+    separator?: ReactNode;
     disableSlider?: boolean;
     sliderProps?: Omit<SliderProps, "min" | "max">;
 }
@@ -103,8 +103,8 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminFinalFormRangeInput" });
 
-    const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || undefined);
-    const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || undefined);
+    const [internalMinInput, setInternalMinInput] = useState(fieldValue.min || undefined);
+    const [internalMaxInput, setInternalMaxInput] = useState(fieldValue.max || undefined);
 
     const handleSliderChange = (event: Event, newValue: number[]) => {
         onChange({ min: newValue[0], max: newValue[1] });
@@ -112,7 +112,7 @@ export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
 
     const ownerState: OwnerState = { disableSlider: Boolean(disableSlider) };
 
-    React.useEffect(() => {
+    useEffect(() => {
         setInternalMinInput(fieldValue.min);
         setInternalMaxInput(fieldValue.max);
     }, [fieldValue]);

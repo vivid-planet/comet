@@ -2,7 +2,7 @@ import { messages, SelectField } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, MenuItem } from "@mui/material";
 import { GQLUserGroup } from "@src/graphql.generated";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -24,7 +24,7 @@ interface Props {
 }
 
 function UserGroupContextMenuItem({ item, onChange, onMenuClose }: Props): JSX.Element {
-    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     interface FormValues {
         userGroup: GQLUserGroup;

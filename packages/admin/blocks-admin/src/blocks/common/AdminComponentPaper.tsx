@@ -1,19 +1,18 @@
 import { Box, Paper } from "@mui/material";
-import * as React from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
 
-const AdminComponentPaperContext = React.createContext<boolean>(false);
+const AdminComponentPaperContext = createContext<boolean>(false);
 
 export function useAdminComponentPaper(): boolean {
-    return React.useContext(AdminComponentPaperContext);
+    return useContext(AdminComponentPaperContext);
 }
 
 interface Props {
-    children?: React.ReactNode;
     disablePadding?: boolean;
 }
 
-export function AdminComponentPaper({ children, disablePadding }: Props): React.ReactElement {
-    const hasBackground = React.useContext(AdminComponentPaperContext);
+export const AdminComponentPaper = ({ children, disablePadding }: PropsWithChildren<Props>) => {
+    const hasBackground = useContext(AdminComponentPaperContext);
 
     if (hasBackground) {
         return <Box padding={disablePadding ? 0 : 3}>{children}</Box>;
@@ -26,4 +25,4 @@ export function AdminComponentPaper({ children, disablePadding }: Props): React.
             </AdminComponentPaperContext.Provider>
         );
     }
-}
+};

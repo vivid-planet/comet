@@ -8,7 +8,6 @@ import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNod
 import { GQLPage, GQLPageInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import gql from "graphql-tag";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { EditPage } from "./EditPage";

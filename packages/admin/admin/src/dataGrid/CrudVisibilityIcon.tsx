@@ -1,6 +1,5 @@
 import { Disabled, Online } from "@comet/admin-icons";
 import { useTheme } from "@mui/material";
-import React from "react";
 
 interface CrudVisibilityIconProps {
     visibility: boolean;

@@ -1,6 +1,5 @@
 import { useContentTranslationService } from "@comet/admin";
 import { ButtonGroup } from "@mui/material";
-import * as React from "react";
 
 import TranslationToolbarButton from "../translation/ToolbarButton";
 import { IControlProps } from "../types";

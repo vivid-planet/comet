@@ -1,6 +1,5 @@
 import { Clear } from "@comet/admin-icons";
 import { chipClasses } from "@mui/material";
-import React from "react";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";

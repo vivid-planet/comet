@@ -1,5 +1,4 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { SpaceBlockData, SpaceBlockInput } from "../blocks.generated";

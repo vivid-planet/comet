@@ -2,7 +2,6 @@ import { BlockCategory, createCompositeBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 const TeaserBlock = createCompositeBlock(

@@ -1,10 +1,8 @@
-import * as React from "react";
-
 interface CometLogoProps {
     color?: "colored" | "white";
 }
 
-export function CometLogo({ color = "colored" }: CometLogoProps): React.ReactElement {
+export const CometLogo = ({ color = "colored" }: CometLogoProps) => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="133" height="34" viewBox="0 0 133 34">
             <defs>
@@ -22,4 +20,4 @@ export function CometLogo({ color = "colored" }: CometLogoProps): React.ReactEle
             </g>
         </svg>
     );
-}
+};

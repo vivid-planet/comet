@@ -28,7 +28,6 @@ import {
     GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
 import gql from "graphql-tag";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 function ManufacturersGridToolbar() {
@@ -128,6 +127,8 @@ export function ManufacturersGrid() {
             headerName: "",
             sortable: false,
             filterable: false,
+            pinned: "right",
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>

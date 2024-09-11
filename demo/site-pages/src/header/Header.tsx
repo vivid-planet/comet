@@ -1,5 +1,4 @@
 import { gql } from "graphql-request";
-import * as React from "react";
 import styled from "styled-components";
 
 import { GQLHeaderFragment } from "./Header.generated";

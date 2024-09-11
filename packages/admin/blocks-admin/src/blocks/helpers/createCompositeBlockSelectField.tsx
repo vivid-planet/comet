@@ -1,13 +1,13 @@
 import { SelectField, SelectFieldProps } from "@comet/admin";
 import { MenuItem } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
 
 interface Options<T extends string | number> {
     defaultValue: T;
-    options: Array<{ value: T; label: React.ReactNode }>;
+    options: Array<{ value: T; label: ReactNode }>;
     fieldProps?: Partial<SelectFieldProps<T>>;
 }
 

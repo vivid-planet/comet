@@ -1,5 +1,4 @@
 import { SelectProps } from "@mui/material";
-import React from "react";
 
 import { useAsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 import { FinalFormSelect, FinalFormSelectProps } from "./FinalFormSelect";

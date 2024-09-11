@@ -1,34 +1,34 @@
-import * as React from "react";
+import { ElementType, MouseEventHandler, ReactElement, ReactNode, useContext } from "react";
 
 import { RowActionsIconItem, RowActionsIconItemComponentsProps, RowActionsIconItemProps } from "./RowActionsIconItem";
 import { RowActionsListItem, RowActionsListItemComponentsProps, RowActionsListItemProps } from "./RowActionsListItem";
 import { RowActionsMenuContext } from "./RowActionsMenu";
 
 export interface CommonRowActionItemProps {
-    icon?: React.ReactNode;
+    icon?: ReactNode;
     disabled?: boolean;
-    onClick?: React.MouseEventHandler<HTMLElement>;
+    onClick?: MouseEventHandler<HTMLElement>;
 }
 
-export type RowActionsItemPropsComponentsProps<T extends React.ElementType = "li"> = RowActionsIconItemComponentsProps &
+export type RowActionsItemPropsComponentsProps<T extends ElementType = "li"> = RowActionsIconItemComponentsProps &
     RowActionsListItemComponentsProps<T>;
 
-export interface RowActionsItemProps<T extends React.ElementType = "li">
+export interface RowActionsItemProps<T extends ElementType = "li">
     extends Omit<RowActionsIconItemProps, "componentsProps">,
         Omit<RowActionsListItemProps<T>, "componentsProps"> {
     componentsProps?: RowActionsItemPropsComponentsProps<T>;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
-export function RowActionsItem<MenuItemComponent extends React.ElementType = "li">({
+export function RowActionsItem<MenuItemComponent extends ElementType = "li">({
     icon,
     children,
     disabled,
     onClick,
     componentsProps,
     ...restListItemProps
-}: RowActionsItemProps<MenuItemComponent>): React.ReactElement<RowActionsItemProps<MenuItemComponent>> {
-    const { level, closeAllMenus } = React.useContext(RowActionsMenuContext);
+}: RowActionsItemProps<MenuItemComponent>): ReactElement<RowActionsItemProps<MenuItemComponent>> {
+    const { level, closeAllMenus } = useContext(RowActionsMenuContext);
 
     if (level === 1) {
         return (

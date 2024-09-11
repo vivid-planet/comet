@@ -1,5 +1,6 @@
 "use client";
-import * as React from "react";
+
+import { createContext, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -45,7 +46,7 @@ export interface IFrameBridgeContext {
     removePreviewElement: (element: PreviewElement) => void;
 }
 
-export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
+export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
     hasBridge: false,
     showOutlines: false,
     showOnlyVisible: false,
@@ -68,19 +69,19 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     },
 });
 
-export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
-    const [block, setBlock] = React.useState<unknown | undefined>(undefined);
-    const [showOnlyVisible, setShowOnlyVisible] = React.useState<boolean>(false);
-    const [selectedAdminRoute, setSelectedAdminRoute] = React.useState<string | undefined>(undefined);
-    const [hoveredAdminRoute, setHoveredAdminRoute] = React.useState<string | undefined>(undefined);
-    const [showOutlines, setShowOutlines] = React.useState<boolean>(false);
-    const [contentScope, setContentScope] = React.useState<unknown>(undefined);
-    const [previewElements, setPreviewElements] = React.useState<PreviewElement[]>([]);
-    const [previewElementsData, setPreviewElementsData] = React.useState<OverlayElementData[]>([]);
+export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
+    const [block, setBlock] = useState<unknown | undefined>(undefined);
+    const [showOnlyVisible, setShowOnlyVisible] = useState<boolean>(false);
+    const [selectedAdminRoute, setSelectedAdminRoute] = useState<string | undefined>(undefined);
+    const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | undefined>(undefined);
+    const [showOutlines, setShowOutlines] = useState<boolean>(false);
+    const [contentScope, setContentScope] = useState<unknown>(undefined);
+    const [previewElements, setPreviewElements] = useState<PreviewElement[]>([]);
+    const [previewElementsData, setPreviewElementsData] = useState<OverlayElementData[]>([]);
 
-    const childrenWrapperRef = React.useRef<HTMLDivElement>(null);
+    const childrenWrapperRef = useRef<HTMLDivElement>(null);
 
-    const recalculatePreviewElementsData = React.useCallback(() => {
+    const recalculatePreviewElementsData = useCallback(() => {
         setPreviewElementsData(
             previewElements
                 .map((previewElement) => {
@@ -115,7 +116,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
         );
     }, [previewElements]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (childrenWrapperRef.current) {
             const mutationObserver = new MutationObserver(() => {
                 recalculatePreviewElementsData();
@@ -143,7 +144,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
         setShowOutlines(false);
     }, 2500);
 
-    const onReceiveMessage = React.useCallback(
+    const onReceiveMessage = useCallback(
         (message: AdminMessage) => {
             switch (message.cometType) {
                 case AdminMessageType.Block:
@@ -172,7 +173,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
         [debounceDeactivateOutlines],
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (typeof window === "undefined") {
             return;
         }
@@ -199,14 +200,14 @@ export const IFrameBridgeProvider: React.FunctionComponent<{ children: React.Rea
         };
     }, [onReceiveMessage]);
 
-    const addPreviewElement = React.useCallback(
+    const addPreviewElement = useCallback(
         (element: PreviewElement) => {
             setPreviewElements((prev) => [...prev, element]);
         },
         [setPreviewElements],
     );
 
-    const removePreviewElement = React.useCallback(
+    const removePreviewElement = useCallback(
         (element: PreviewElement) => {
             setPreviewElements((prev) => prev.filter((el) => el.adminRoute !== element.adminRoute));
         },

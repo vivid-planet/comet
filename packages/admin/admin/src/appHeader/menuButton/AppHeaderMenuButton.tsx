@@ -1,6 +1,6 @@
 import { HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
 import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonProps, Theme, useThemeProps } from "@mui/material";
-import * as React from "react";
+import { useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { MenuContext } from "../../mui/menu/Context";
@@ -11,7 +11,7 @@ export type AppHeaderMenuButtonClassKey = IconButtonClassKey;
 
 export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     const { children: propChildren, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderMenuButton" });
-    const { toggleOpen, open } = React.useContext(MenuContext);
+    const { toggleOpen, open } = useContext(MenuContext);
 
     const children = !propChildren ? open ? <HamburgerClose fontSize="large" /> : <HamburgerOpen fontSize="large" /> : propChildren;
 

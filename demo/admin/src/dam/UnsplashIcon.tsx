@@ -1,5 +1,4 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
-import * as React from "react";
 
 export default function UnsplashIcon(props: SvgIconProps): JSX.Element {
     return (

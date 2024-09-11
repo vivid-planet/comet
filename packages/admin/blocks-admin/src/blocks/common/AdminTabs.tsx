@@ -1,7 +1,6 @@
 import { RouteWithErrorBoundary } from "@comet/admin";
 import { Tab as MuiTab, TabProps, Tabs as MuiTabs } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { Switch, useRouteMatch } from "react-router";
 import { Link, LinkProps } from "react-router-dom";
 

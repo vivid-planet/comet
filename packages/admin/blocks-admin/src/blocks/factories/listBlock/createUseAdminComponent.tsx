@@ -1,5 +1,5 @@
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import * as React from "react";
+import { ChangeEvent, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
@@ -18,7 +18,7 @@ interface CreateListBlockUseAdminComponentOptions<T extends BlockInterface> {
 type ListBlockUseAdminComponentProps<T extends BlockInterface> = BlockAdminComponentProps<ListBlockState<T>>;
 
 interface ListBlockUseAdminComponentApi<T extends BlockInterface> {
-    cannotPasteBlockErrorDialog: React.ReactNode;
+    cannotPasteBlockErrorDialog: ReactNode;
     toggleVisible: (blockKey: string) => void;
     deleteBlocks: (blockKeys: string[]) => void;
     deleteAllSelectedBlocks: () => void;
@@ -27,7 +27,7 @@ interface ListBlockUseAdminComponentApi<T extends BlockInterface> {
     totalVisibleBlocks: number;
     updateClipboardContent: (content: ClipboardContent) => Promise<void>;
     pasteBlock: (insertAt: number) => Promise<void>;
-    handleToggleSelectAll: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleToggleSelectAll: (event: ChangeEvent<HTMLInputElement>) => void;
     selectBlock: (currentBlock: ListBlockItem<T>, select: boolean) => void;
     copySelectedBlocks: () => void;
     selectedCount: number;
@@ -42,9 +42,9 @@ export function createUseAdminComponent<T extends BlockInterface>({
     additionalItemFields = {},
 }: CreateListBlockUseAdminComponentOptions<T>): (props: ListBlockUseAdminComponentProps<T>) => ListBlockUseAdminComponentApi<T> {
     const useListBlockAdminComponent: (props: ListBlockUseAdminComponentProps<T>) => ListBlockUseAdminComponentApi<T> = ({ state, updateState }) => {
-        const [cannotPasteBlockError, setCannotPasteBlockError] = React.useState<React.ReactNode>();
+        const [cannotPasteBlockError, setCannotPasteBlockError] = useState<ReactNode>();
 
-        React.useEffect(() => {
+        useEffect(() => {
             if (state.blocks.some((block) => block.slideIn)) {
                 const timeoutHandle = window.setTimeout(() => {
                     updateState((prevState) => ({ ...prevState, blocks: prevState.blocks.map((block) => ({ ...block, slideIn: false })) }));
@@ -56,7 +56,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
             }
         }, [state.blocks, updateState]);
 
-        const toggleVisible = React.useCallback(
+        const toggleVisible = useCallback(
             (blockKey: string) => {
                 updateState((prevState) => ({
                     ...prevState,
@@ -67,7 +67,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
         );
 
         const snackbarApi = useSnackbarApi();
-        const handleUndoClick = React.useCallback(
+        const handleUndoClick = useCallback(
             (removedBlocks: RemovedListBlockItem<T>[] | undefined) => {
                 if (!removedBlocks) {
                     return;
@@ -86,7 +86,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
             [updateState],
         );
 
-        const deleteBlocks = React.useCallback(
+        const deleteBlocks = useCallback(
             (blockKeys: string[]) => {
                 updateState((prevState) => {
                     const blocksToRemove = prevState.blocks
@@ -159,7 +159,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
             return key;
         };
 
-        const createUpdateSubBlocksFn = React.useCallback(
+        const createUpdateSubBlocksFn = useCallback(
             (blockKey: string) => {
                 const updateSubBlocksFn: DispatchSetStateAction<BlockState<T>> = (setStateAction) => {
                     updateState((prevState) => ({
@@ -178,7 +178,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
 
         const { updateClipboardContent, getClipboardContent } = useBlockClipboard({ supports: block });
 
-        const cannotPasteBlockErrorDialog = React.useMemo(
+        const cannotPasteBlockErrorDialog = useMemo(
             () =>
                 cannotPasteBlockError !== undefined && (
                     <CannotPasteBlockDialog open onClose={() => setCannotPasteBlockError(undefined)} error={cannotPasteBlockError} />
@@ -220,7 +220,7 @@ export function createUseAdminComponent<T extends BlockInterface>({
             });
         };
 
-        const handleToggleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const handleToggleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
             const selected = event.target.checked;
 
             updateState((prevState) => {

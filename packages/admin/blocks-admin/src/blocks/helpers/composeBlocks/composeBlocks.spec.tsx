@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { SpaceBlock } from "../../SpaceBlock";
 import { BlockInputApi, BlockState } from "../../types";
 import { resolveNewState } from "../../utils";

@@ -1,5 +1,192 @@
 # @comet/admin
 
+## 7.3.2
+
+### Patch Changes
+
+-   2286234e5: Update required validator in `Field` to correctly handle falsey values
+
+    Previously, the validator incorrectly returned errors for all falsey values, e.g. the number `0`.
+    Now, it only returns an error for `undefined`, `null`, `false` and empty strings.
+
+    -   @comet/admin-icons@7.3.2
+    -   @comet/admin-theme@7.3.2
+
+## 7.3.1
+
+### Patch Changes
+
+-   91bfda996: Fix validation for `NumberField` and `FinalFormNumberInput` by calling the `onBlur` event, passed in by the `Field`
+    -   @comet/admin-icons@7.3.1
+    -   @comet/admin-theme@7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   6a1310cf6: Deprecate FinalForm components where a Field component exists as a simpler alternative
+
+    -   Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
+    -   Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
+    -   Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
+    -   Use `<AsyncSelectField />` instead of `<Field component={FinalFormAsyncSelect} />`
+    -   Use `<NumberField />` instead of `<Field component={FinalFormNumberInput} />`
+    -   Use `<SearchField />` instead of `<Field component={FinalFormSearchTextField} />`
+    -   Use `<SelectField />` instead of `<Field />` with `<FinalFormSelect />`
+    -   Use `<SwitchField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormSwitch />`
+    -   Use `<DateField />` instead of `<Field component={FinalFormDatePicker} />`
+    -   Use `<DateRangeField />` instead of `<Field component={FinalFormDateRangePicker} />`
+    -   Use `<DateTimeField />` instead of `<Field component={FinalFormDateTimePicker} />`
+    -   Use `<TimeField />` instead of `<Field component={FinalFormTimePicker} />`
+    -   Use `<TimeRangeField />` instead of `<Field component={FinalFormTimeRangePicker} />`
+    -   Use `<ColorField />` instead of `<Field component={FinalFormColorPicker} />`
+
+-   Updated dependencies [5364ecb37]
+-   Updated dependencies [a1f4c0dec]
+-   Updated dependencies [2ab7b688e]
+    -   @comet/admin-icons@7.3.0
+    -   @comet/admin-theme@7.3.0
+
+## 7.2.1
+
+### Patch Changes
+
+-   @comet/admin-icons@7.2.1
+-   @comet/admin-theme@7.2.1
+
+## 7.2.0
+
+### Minor Changes
+
+-   0fb8d9a26: Allow pinning DataGrid columns using the column config when using `DataGridPro` or `DataGridPremium` with the `usePersistentColumnState` hook
+
+    ```tsx
+    const columns: GridColDef[] = [
+        {
+            field: "title",
+            pinned: "left",
+        },
+        // ... other columns
+        {
+            field: "actions",
+            pinned: "right",
+        },
+    ];
+    ```
+
+### Patch Changes
+
+-   4b267f90d: Fix broken export/import of `commonErrorMessages` from the file form field
+-   Updated dependencies [9b800c9f6]
+    -   @comet/admin-theme@7.2.0
+    -   @comet/admin-icons@7.2.0
+
+## 7.1.0
+
+### Minor Changes
+
+-   04844d39e: Adjust the alignment and spacing of the label, the input, and child fields inside `FieldContainer` and `Field`
+-   c0488eb84: Use `FeedbackButton` in `DeleteDialog` of `CrudContextMenu`
+
+    This provides the user with feedback about the current status of the delete action.
+
+-   c1ab2b340: Add `CheckboxListField` component to make it easier to create checkbox lists in forms
+
+    You can now do:
+
+    ```tsx
+    <CheckboxListField
+        label="Checkbox List"
+        name="checkboxList"
+        fullWidth
+        options={[
+            {
+                label: "Option One",
+                value: "option-one",
+            },
+            {
+                label: "Option Two",
+                value: "option-two",
+            },
+        ]}
+    />
+    ```
+
+    instead of:
+
+    ```tsx
+    <FieldContainer label="Checkbox List" fullWidth>
+        <CheckboxField name="checkboxList" label="Checkbox one" value="checkbox-one" />
+        <CheckboxField name="checkboxList" label="Checkbox two" value="checkbox-two" />
+    </FieldContainer>
+    ```
+
+-   99a1f0ae6: Add `RadioGroupField` component to make it easier to create radio group fields in forms
+
+    You can now do:
+
+    ```tsx
+    <RadioGroupField
+        label="Radio"
+        name="radio"
+        fullWidth
+        options={[
+            {
+                label: "Option One",
+                value: "option-one",
+            },
+            {
+                label: "Option Two",
+                value: "option-two",
+            },
+        ]}
+    />
+    ```
+
+    instead of:
+
+    ```tsx
+    <FieldContainer label="Radio" fullWidth>
+        <Field name="radio" type="radio" value="option-one">
+            {(props) => <FormControlLabel label="Option One" control={<FinalFormRadio {...props} />} />}
+        </Field>
+        <Field name="radio" type="radio" value="option-two">
+            {(props) => <FormControlLabel label="Option Two" control={<FinalFormRadio {...props} />} />}
+        </Field>
+    </FieldContainer>
+    ```
+
+-   edf14d066: Add the `disableSlider` prop to `FinalFormRangeInput` to disable the slider and only show the input fields
+
+    ```tsx
+    <Field name="numberRange" label="Range Input" component={FinalFormRangeInput} min={0} max={100} disableSlider />
+    ```
+
+-   c050f2242: Make the separator of `FinalFormRangeInput` overridable using the `separator` prop and change the default to the string "to"
+
+    Example to restore the previous separator:
+
+    ```tsx
+    <Field name="numberRange" label="Range Input" component={FinalFormRangeInput} min={0} max={100} separator="-" />
+    ```
+
+### Patch Changes
+
+-   dfc4a7fff: Adjust the spacing of `FinalFormRangeInput` to align with other inputs
+-   39ab15616: Fix the behavior of `FinalFormRangeInput` when the `min` and `max` values are inverted
+
+    Previously, e.g., when the `min` value was changed to something greater than the `max` value, the `min` value would be set to the same as the max value.
+    Now, the `min` and `max` values are swapped.
+
+-   2b68513be: Fix the alignment of the input inside `FieldContainer` and `Field` when there is no label with `variant="horizontal"`
+-   374f383ba: Increase `Toolbar` padding left and right from 10px to 20px
+-   Updated dependencies [3adf5fecd]
+-   Updated dependencies [04844d39e]
+-   Updated dependencies [c90ae39d4]
+-   Updated dependencies [b1bbd6a0c]
+    -   @comet/admin-theme@7.1.0
+    -   @comet/admin-icons@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

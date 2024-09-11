@@ -19,7 +19,6 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {

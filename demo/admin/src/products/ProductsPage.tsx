@@ -14,7 +14,6 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import React from "react";
 import { useIntl } from "react-intl";
 
 import { ProductForm } from "./ProductForm";
@@ -34,7 +33,7 @@ const FormToolbar = () => (
     </StackToolbar>
 );
 
-const ProductsPage: React.FC = () => {
+const ProductsPage = () => {
     const intl = useIntl();
 
     return (

@@ -1,4 +1,4 @@
-import { BlobStorageBackendService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -9,7 +9,7 @@ import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generat
 import { Link } from "@src/links/entities/link.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
-import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
+import { PageContentBlock } from "@src/pages/blocks/page-content.block";
 import { PageInput } from "@src/pages/dto/page.input";
 import { Page } from "@src/pages/entities/page.entity";
 import { UserGroup } from "@src/user-groups/user-group";
@@ -49,6 +49,7 @@ export class FixturesConsole {
         @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
+        private readonly dependenciesService: DependenciesService,
     ) {}
 
     @Command({
@@ -276,6 +277,8 @@ export class FixturesConsole {
         }
 
         await this.fileUploadsFixtureService.generateFileUploads();
+
+        await this.dependenciesService.createViews();
 
         await this.orm.em.flush();
     }

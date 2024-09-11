@@ -2,7 +2,6 @@ import { createListBlock } from "@comet/blocks-admin";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
 import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { TextLinkBlock } from "./TextLinkBlock";

@@ -1,6 +1,6 @@
-import * as React from "react";
-
 // inspired by https://stackoverflow.com/questions/24613955/is-there-a-type-in-typescript-for-anything-except-functions#answer-48045023
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+
 type NoFunctionValue = boolean | string | number | null | undefined | NoFunctionObject | NoFunctionArray;
 
 type NoFunctionObject = object; // @TODO this is not accurate, must be an object without functions as values
@@ -12,8 +12,8 @@ function useStoredState<S extends NoFunctionValue = undefined>(
     key: string | false,
     initialValue: S | (() => S),
     storage = window.localStorage,
-): [S, React.Dispatch<React.SetStateAction<S>>] {
-    const [state, setState] = React.useState<S>(() => {
+): [S, Dispatch<SetStateAction<S>>] {
+    const [state, setState] = useState<S>(() => {
         if (key === false) {
             return initialValue instanceof Function ? initialValue() : initialValue;
         }
@@ -29,9 +29,9 @@ function useStoredState<S extends NoFunctionValue = undefined>(
         }
     });
 
-    const serializedState = React.useMemo(() => JSON.stringify(state), [state]);
+    const serializedState = useMemo(() => JSON.stringify(state), [state]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (key === false) {
             return;
         }

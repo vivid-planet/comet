@@ -1,10 +1,10 @@
 import { Theme } from "@mui/material/styles";
 import { MUIStyledCommonProps, SxProps } from "@mui/system";
-import React from "react";
+import { ComponentPropsWithRef, ElementType } from "react";
 
-type SlotProps<Component extends React.ElementType> = Partial<React.ComponentPropsWithRef<Component>> & MUIStyledCommonProps<Theme>;
+type SlotProps<Component extends ElementType> = Partial<ComponentPropsWithRef<Component>> & MUIStyledCommonProps<Theme>;
 
-export type ThemedComponentBaseProps<Slots extends Record<string, React.ElementType> = never> = {
+export type ThemedComponentBaseProps<Slots extends Record<string, ElementType> = never> = {
     sx?: SxProps<Theme>;
     className?: string;
     slotProps?: {

@@ -1,6 +1,6 @@
 import { Box, Divider } from "@mui/material";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { ReactNode } from "react";
 import { Route, useRouteMatch } from "react-router";
 
 import { Collapsible } from "../../common/Collapsible";
@@ -30,7 +30,7 @@ export interface OptionalBlockOutput<DecoratedBlock extends BlockInterface> {
 
 export function createOptionalBlock<T extends BlockInterface>(
     decoratedBlock: T,
-    options?: { title?: React.ReactNode; name?: string },
+    options?: { title?: ReactNode; name?: string },
 ): BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>> {
     const OptionalBlock: BlockInterface<OptionalBlockDecoratorFragment<T>, OptionalBlockState<T>, OptionalBlockOutput<T>> = {
         ...createBlockSkeleton(),
