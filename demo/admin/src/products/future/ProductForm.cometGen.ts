@@ -28,6 +28,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     name: "type",
                     label: "Type",
                     required: true,
+                    inputType: "radio",
                     values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
