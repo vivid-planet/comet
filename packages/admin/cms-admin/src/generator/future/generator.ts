@@ -34,7 +34,7 @@ export type FormFieldConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
     | { type: "asyncSelect"; rootQuery: string; labelField?: string }
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
