@@ -1,3 +1,4 @@
+import { GridColDef } from "@comet/admin";
 import {
     IntrospectionEnumType,
     IntrospectionInputObjectType,
@@ -76,7 +77,7 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
     };
 }
 
-const getSortByValue = (sortBy: GridColumnConfig<unknown>["sortBy"]) => {
+const getSortByValue = (sortBy: GridColDef["sortBy"]) => {
     if (Array.isArray(sortBy)) {
         return `[${sortBy.map((i) => `"${i}"`).join(", ")}]`;
     }
@@ -250,7 +251,6 @@ export function generateGrid(
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = 84,
         visible: actionsColumnVisible = undefined,
-        sortBy: actionsColumnSortBy = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
@@ -333,7 +333,6 @@ export function generateGrid(
                 flex: column.flex,
                 visible: column.visible && `theme.breakpoints.${column.visible}`,
                 pinned: column.pinned,
-                sortBy: column.sortBy,
             };
         } else if (type == "combination") {
             renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
@@ -354,7 +353,7 @@ export function generateGrid(
             flex: column.flex,
             visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
-            sortBy: column.sortBy,
+            sortBy: "sortBy" in column && column.sortBy,
         };
     });
 
@@ -556,8 +555,11 @@ export function generateGrid(
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,
                         visible: column.visible,
-                        sortBy: getSortByValue(column.sortBy),
                     };
+
+                    if ("sortBy" in column && column.sortBy) {
+                        columnDefinition["sortBy"] = getSortByValue(column.sortBy);
+                    }
 
                     if (typeof column.width === "undefined") {
                         const defaultMinWidth = 150;
@@ -591,7 +593,6 @@ export function generateGrid(
                               pinned: `"${actionsColumnPinned}"`,
                               width: actionsColumnWidth,
                               visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
-                              sortBy: getSortByValue(actionsColumnSortBy),
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (
