@@ -18,7 +18,6 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { ProductVariantsGrid } from "@src/products/future/generated/ProductVariantsGrid";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductForm } from "./generated/ProductForm";
@@ -36,7 +35,7 @@ const FormToolbar = () => (
     </StackToolbar>
 );
 
-export function ProductsPage(): React.ReactElement {
+export function ProductsPage() {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "products.products", defaultMessage: "Products" })}>

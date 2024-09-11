@@ -1,25 +1,25 @@
 "use client";
-import * as React from "react";
+
+import { PropsWithChildren, useEffect, useRef } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
 import styled from "styled-components";
 
 import { useIFrameBridge } from "./useIFrameBridge";
 import { BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE } from "./utils";
 
-interface Props {
+interface Props extends PropsWithChildren {
     adminRoute: string;
     label: string;
     enabledAutoScrolling?: boolean;
-    children: React.ReactNode;
 }
 
-export const Preview: React.FunctionComponent<Props> = ({ adminRoute, children, label, enabledAutoScrolling = true }) => {
+export const Preview = ({ adminRoute, children, label, enabledAutoScrolling = true }: Props) => {
     const { addPreviewElement, removePreviewElement, ...iFrameBridge } = useIFrameBridge();
     const isSelected = adminRoute === iFrameBridge.selectedAdminRoute;
     const isHovered = adminRoute === iFrameBridge.hoveredAdminRoute;
-    const previewElementContainerRef = React.useRef<HTMLDivElement>(null);
+    const previewElementContainerRef = useRef<HTMLDivElement>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const previewElement = previewElementContainerRef.current
             ? {
                   label,
@@ -37,7 +37,7 @@ export const Preview: React.FunctionComponent<Props> = ({ adminRoute, children, 
         }
     }, [label, adminRoute, addPreviewElement, removePreviewElement]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const timeout = setTimeout(() => {
             if (enabledAutoScrolling) {
                 if (isHovered || isSelected) {

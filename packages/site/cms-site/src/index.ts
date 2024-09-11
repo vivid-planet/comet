@@ -16,6 +16,7 @@ export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export type { PropsWithData } from "./blocks/PropsWithData";
 export { hasRichTextBlockContent } from "./blocks/RichTextBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
+export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { CookieApi, CookieApiProvider, useCookieApi } from "./cookies/CookieApiContext";
 export { CookieSafe } from "./cookies/CookieSafe";

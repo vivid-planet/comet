@@ -90,7 +90,7 @@ const getFormattedText = async (text: string) => {
 const writeComponent = async (icon: Icon, svgString: string) => {
     const component = await getFormattedText(`
         import { SvgIcon, SvgIconProps } from "@mui/material";
-        import * as React from "react";
+        import { forwardRef } from "react";
         
         ${
             icon.deprecated
@@ -99,7 +99,7 @@ const writeComponent = async (icon: Icon, svgString: string) => {
                     */`
                 : ""
         };
-        export const ${icon.componentName} = React.forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => {
+        export const ${icon.componentName} = forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => {
             return (
                 <SvgIcon {...props} ref={ref} viewBox="0 0 16 16">
                     ${svgString}

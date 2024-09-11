@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 
 import { ErrorHandlerBoundaryInternal } from "./ErrorHandlerBoundaryInternal";
 import { useErrorHandler } from "./ErrorHandlerProvider";

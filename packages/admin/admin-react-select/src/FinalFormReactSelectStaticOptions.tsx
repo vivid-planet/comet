@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Component } from "react";
 import { FieldInputProps, FieldRenderProps } from "react-final-form";
 import { Props as ReactSelectProps } from "react-select/base";
 import { OptionsType } from "react-select/src/types";
@@ -13,7 +13,7 @@ interface IOptionType {
 interface IProps extends FieldRenderProps<string, HTMLElement>, ReactSelectProps<IOptionType> {
     options: OptionsType<IOptionType>;
 }
-export class FinalFormReactSelectStaticOptions extends React.Component<IProps> {
+export class FinalFormReactSelectStaticOptions extends Component<IProps> {
     public render() {
         const { input, meta, ...rest } = this.props;
 

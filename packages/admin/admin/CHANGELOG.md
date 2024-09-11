@@ -1,5 +1,86 @@
 # @comet/admin
 
+## 7.3.2
+
+### Patch Changes
+
+-   2286234e5: Update required validator in `Field` to correctly handle falsey values
+
+    Previously, the validator incorrectly returned errors for all falsey values, e.g. the number `0`.
+    Now, it only returns an error for `undefined`, `null`, `false` and empty strings.
+
+    -   @comet/admin-icons@7.3.2
+    -   @comet/admin-theme@7.3.2
+
+## 7.3.1
+
+### Patch Changes
+
+-   91bfda996: Fix validation for `NumberField` and `FinalFormNumberInput` by calling the `onBlur` event, passed in by the `Field`
+    -   @comet/admin-icons@7.3.1
+    -   @comet/admin-theme@7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   6a1310cf6: Deprecate FinalForm components where a Field component exists as a simpler alternative
+
+    -   Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
+    -   Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
+    -   Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
+    -   Use `<AsyncSelectField />` instead of `<Field component={FinalFormAsyncSelect} />`
+    -   Use `<NumberField />` instead of `<Field component={FinalFormNumberInput} />`
+    -   Use `<SearchField />` instead of `<Field component={FinalFormSearchTextField} />`
+    -   Use `<SelectField />` instead of `<Field />` with `<FinalFormSelect />`
+    -   Use `<SwitchField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormSwitch />`
+    -   Use `<DateField />` instead of `<Field component={FinalFormDatePicker} />`
+    -   Use `<DateRangeField />` instead of `<Field component={FinalFormDateRangePicker} />`
+    -   Use `<DateTimeField />` instead of `<Field component={FinalFormDateTimePicker} />`
+    -   Use `<TimeField />` instead of `<Field component={FinalFormTimePicker} />`
+    -   Use `<TimeRangeField />` instead of `<Field component={FinalFormTimeRangePicker} />`
+    -   Use `<ColorField />` instead of `<Field component={FinalFormColorPicker} />`
+
+-   Updated dependencies [5364ecb37]
+-   Updated dependencies [a1f4c0dec]
+-   Updated dependencies [2ab7b688e]
+    -   @comet/admin-icons@7.3.0
+    -   @comet/admin-theme@7.3.0
+
+## 7.2.1
+
+### Patch Changes
+
+-   @comet/admin-icons@7.2.1
+-   @comet/admin-theme@7.2.1
+
+## 7.2.0
+
+### Minor Changes
+
+-   0fb8d9a26: Allow pinning DataGrid columns using the column config when using `DataGridPro` or `DataGridPremium` with the `usePersistentColumnState` hook
+
+    ```tsx
+    const columns: GridColDef[] = [
+        {
+            field: "title",
+            pinned: "left",
+        },
+        // ... other columns
+        {
+            field: "actions",
+            pinned: "right",
+        },
+    ];
+    ```
+
+### Patch Changes
+
+-   4b267f90d: Fix broken export/import of `commonErrorMessages` from the file form field
+-   Updated dependencies [9b800c9f6]
+    -   @comet/admin-theme@7.2.0
+    -   @comet/admin-icons@7.2.0
+
 ## 7.1.0
 
 ### Minor Changes
