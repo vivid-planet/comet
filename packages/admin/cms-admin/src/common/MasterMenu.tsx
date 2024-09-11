@@ -11,7 +11,7 @@ import {
     MenuItemRouterLinkProps,
     useWindowSize,
 } from "@comet/admin";
-import * as React from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
@@ -44,14 +44,14 @@ type MasterMenuItemGroup = MasterMenuItemBase &
         type: "group";
         items: Array<
             (MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible) & {
-                icon: React.ReactNode;
+                icon: ReactNode;
             }
         >;
     };
 
 export type MasterMenuItem =
     | ((MasterMenuItemRoute | MasterMenuItemAnchor | MasterMenuItemCollapsible) & {
-          icon: React.ReactNode;
+          icon: ReactNode;
       })
     | MasterMenuItemGroup;
 
@@ -127,15 +127,15 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     return items.filter(checkPermission).map(mapFn);
 }
 
-export const MasterMenu: React.FC<MasterMenuProps> = ({ menu, permanentMenuMinWidth = 1024 }) => {
+export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuProps) => {
     const menuItems = useMenuFromMasterMenuData(menu);
-    const { open, toggleOpen } = React.useContext(MenuContext);
+    const { open, toggleOpen } = useContext(MenuContext);
     const windowSize = useWindowSize();
     const match = useRouteMatch();
     const useTemporaryMenu: boolean = windowSize.width < permanentMenuMinWidth;
 
     // Open menu when changing to permanent variant and close when changing to temporary variant.
-    React.useEffect(() => {
+    useEffect(() => {
         if ((useTemporaryMenu && open) || (!useTemporaryMenu && !open)) {
             toggleOpen();
         }

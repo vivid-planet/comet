@@ -4,7 +4,6 @@ import { List } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
-import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { JobRuntime } from "./JobRuntime";

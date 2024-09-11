@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import * as React from "react";
+import { MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLPageTreeNodeVisibility } from "../../graphql.generated";
@@ -28,15 +28,15 @@ interface PageVisibilityProps {
     page: PageTreePage;
 }
 
-const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
+const PageVisibility = ({ page }: PageVisibilityProps) => {
     const { tree } = usePageTreeContext();
     const snackbarApi = useSnackbarApi();
     const [updatePageVisibility] = useMutation<GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables>(
         updatePageVisibilityMutation,
     );
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 

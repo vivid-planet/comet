@@ -5,7 +5,7 @@ import { Button, Card, Chip, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarContainer } from "@mui/x-data-grid";
 import { differenceInDays, parseISO } from "date-fns";
-import React from "react";
+import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
@@ -13,12 +13,10 @@ import { OverrideContentScopesDialog } from "./OverrideContentScopesDialog";
 import { PermissionDialog } from "./PermissionDialog";
 import { GQLPermissionForGridFragment, GQLPermissionsQuery, GQLPermissionsQueryVariables, namedOperations } from "./PermissionGrid.generated";
 
-export const PermissionGrid: React.FC<{
-    userId: string;
-}> = ({ userId }) => {
+export const PermissionGrid = ({ userId }: { userId: string }) => {
     const intl = useIntl();
-    const [permissionId, setPermissionId] = React.useState<string | "add" | null>(null);
-    const [overrideContentScopesId, setOverrideContentScopesId] = React.useState<string | null>(null);
+    const [permissionId, setPermissionId] = useState<string | "add" | null>(null);
+    const [overrideContentScopesId, setOverrideContentScopesId] = useState<string | null>(null);
 
     const { data, loading, error } = useQuery<GQLPermissionsQuery, GQLPermissionsQueryVariables>(
         gql`

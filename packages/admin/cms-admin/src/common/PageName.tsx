@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import { LocalErrorScopeApolloContext } from "@comet/admin";
 import { List, ListItem, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 import { GQLPageQuery, GQLPageQueryVariables } from "./PageName.generated";
 
