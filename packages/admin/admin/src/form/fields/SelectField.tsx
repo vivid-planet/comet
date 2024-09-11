@@ -18,7 +18,7 @@ type SelectFieldPropsToExtendFromWithoutChildren<Value extends string | number> 
 
 export interface SelectFieldProps<Value extends string | number> extends SelectFieldPropsToExtendFromWithoutChildren<Value> {
     children?: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
-    options?: SelectFieldOption[];
+    options?: SelectFieldOption<Value>[];
     componentsProps?: {
         finalFormSelect?: FinalFormSelectProps<Value>;
     };
