@@ -30,12 +30,13 @@ export function SelectField<Value extends string | number>({ componentsProps = {
         <Field {...restProps}>
             {(props) => (
                 <FinalFormSelect<Value> {...props} {...finalFormSelectProps}>
-                    {children}
-                    {options?.map((option) => (
-                        <MenuItem value={option.value} key={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
+                    {children
+                        ? children
+                        : options?.map((option) => (
+                              <MenuItem value={option.value} key={option.value}>
+                                  {option.label}
+                              </MenuItem>
+                          ))}
                 </FinalFormSelect>
             )}
         </Field>
