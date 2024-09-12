@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Fix bug that made the number 0 unclearable when used inside a `SelectField`
+FinalFormSelect: Fix value `0` and `false` not being clearable
