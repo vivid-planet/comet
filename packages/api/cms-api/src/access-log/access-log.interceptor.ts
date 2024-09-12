@@ -2,9 +2,9 @@ import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestIntercep
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
-import { User } from "src/user-permissions/interfaces/user";
 
 import { CurrentUser } from "../user-permissions/dto/current-user";
+import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
 
