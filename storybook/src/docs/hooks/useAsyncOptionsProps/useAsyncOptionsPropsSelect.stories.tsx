@@ -3,14 +3,15 @@ import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-interface Option {
-    value: string;
-    label: string;
-}
+storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () => {
+    interface Option {
+        value: string;
+        label: string;
+    }
+    const initialValues = React.useMemo(() => {
+        return { selectAsync: { value: "strawberry", label: "Strawberry" } };
+    }, []);
 
-const initialValues = { selectAsync: { value: "strawberry", label: "Strawberry" } };
-
-function Story() {
     const selectAsyncProps = useAsyncOptionsProps<Option>(async () => {
         return new Promise((resolve) =>
             setTimeout(() => {
@@ -41,6 +42,4 @@ function Story() {
             </Form>
         </div>
     );
-}
-
-storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", Story);
+});
