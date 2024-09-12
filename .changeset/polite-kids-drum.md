@@ -10,7 +10,6 @@ The endpoint can be enabled by providing the `download` option in the module con
 FileUploadsModule.register({
   /* ... */,
   download: {
-    apiUrl: config.apiUrl,
     secret: "your secret",
   },
 })

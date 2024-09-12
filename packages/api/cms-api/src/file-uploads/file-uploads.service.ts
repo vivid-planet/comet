@@ -52,12 +52,10 @@ export class FileUploadsService {
         return createHmac("sha1", this.config.download.secret).update(hash).digest("hex");
     }
 
-    createDownloadUrl(file: FileUpload, { relativeUrls = false }: { relativeUrls?: boolean } = {}): string {
+    createDownloadUrl(file: FileUpload): string {
         if (!this.config.download) {
             throw new Error("File Uploads: Missing download configuration");
         }
-
-        const baseUrl = `${relativeUrls ? "" : this.config.download.apiUrl}/file-uploads`;
 
         const timeout = addHours(new Date(), 1).getTime();
 
@@ -66,6 +64,6 @@ export class FileUploadsService {
             timeout,
         });
 
-        return [baseUrl, hash, file.id, timeout].join("/");
+        return ["/file-uploads", hash, file.id, timeout].join("/");
     }
 }
