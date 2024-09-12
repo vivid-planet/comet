@@ -40,6 +40,7 @@ const productsFragment = gql`
             title
         }
         type
+        inStock
         price
     }
 `;
@@ -124,15 +125,35 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             sortable: false,
             renderCell: ({ row }) => {
                 const primaryEmptyMessage = "-";
-                const typePrimaryLabels = {
+                const typePrimaryLabels: Record<string, string> = {
                     Cap: intl.formatMessage({ id: "product.staticSelectType.primaryText.Cap", defaultMessage: "This is a cap" }),
                     Shirt: intl.formatMessage({ id: "product.staticSelectType.primaryText.Shirt", defaultMessage: "Look at this shirt" }),
                     Tie: intl.formatMessage({ id: "product.staticSelectType.primaryText.Tie", defaultMessage: "Wow, a tie" }),
                 };
                 return (
                     <GridCellContent
-                        primaryText={row.type == null ? primaryEmptyMessage : typePrimaryLabels[row.type] ?? row.type}
+                        primaryText={row.type == null ? primaryEmptyMessage : typePrimaryLabels[`${row.type}`] ?? row.type}
                         secondaryText={row.type}
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "staticSelectInStock",
+            headerName: intl.formatMessage({ id: "product.staticSelectInStock", defaultMessage: "In stock (static select)" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                const primaryEmptyMessage = "-";
+                const inStockPrimaryLabels: Record<string, string> = {
+                    true: intl.formatMessage({ id: "product.staticSelectInStock.primaryText.true", defaultMessage: "It's in stock :D" }),
+                    false: intl.formatMessage({ id: "product.staticSelectInStock.primaryText.false", defaultMessage: "No longer available :(" }),
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.inStock == null ? primaryEmptyMessage : inStockPrimaryLabels[`${row.inStock}`] ?? row.inStock}
                     />
                 );
             },

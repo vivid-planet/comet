@@ -34,19 +34,19 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
             },
             secondaryText: "type",
         },
-        // {
-        //     type: "combination",
-        //     name: "staticSelectInStock",
-        //     headerName: "In stock (static select)",
-        //     primaryText: {
-        //         type: "staticSelect",
-        //         field: "inStock",
-        //         options: [
-        //             { value: true, label: "It's in stock :D" },
-        //             { value: false, label: "No longer available :(" },
-        //         ],
-        //     },
-        // },
+        {
+            type: "combination",
+            name: "staticSelectInStock",
+            headerName: "In stock (static select)",
+            primaryText: {
+                type: "staticSelect",
+                field: "inStock",
+                options: [
+                    { value: true, label: "It's in stock :D" },
+                    { value: false, label: "No longer available :(" },
+                ],
+            },
+        },
         {
             type: "combination",
             name: "staticTextExample",

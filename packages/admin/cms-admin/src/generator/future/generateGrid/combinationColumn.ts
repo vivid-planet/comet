@@ -129,8 +129,9 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
             .join(", ");
 
         const labelsVariableName = `${textConfig.field}${firstCharUpperCase(target)}Labels`;
-        const labelMappingVar = `const ${labelsVariableName} = { ${labelMapping} };`;
-        const textContent = `(${rowValue} == null ? ${emptyMessageVariableName} : ${labelsVariableName}[${rowValue}] ?? ${rowValue})`;
+        const labelMappingVar = `const ${labelsVariableName}: Record<string, string> = { ${labelMapping} };`;
+        const textContent =
+            `(${rowValue} == null ? ${emptyMessageVariableName} : ${labelsVariableName}[` + `\`\${${rowValue}}\`` + `] ?? ${rowValue})`;
 
         return {
             textContent,
