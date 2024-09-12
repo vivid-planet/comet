@@ -41,6 +41,7 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
             primaryText: {
                 type: "staticSelect",
                 field: "inStock",
+                emptyValue: "No stock info",
                 options: [
                     { value: true, label: "It's in stock :D" },
                     { value: false, label: "No longer available :(" },

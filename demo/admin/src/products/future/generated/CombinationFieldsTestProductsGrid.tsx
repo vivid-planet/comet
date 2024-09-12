@@ -146,7 +146,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const primaryEmptyMessage = "-";
+                const primaryEmptyMessage = <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />;
                 const inStockPrimaryLabels: Record<string, string> = {
                     true: intl.formatMessage({ id: "product.staticSelectInStock.primaryText.true", defaultMessage: "It's in stock :D" }),
                     false: intl.formatMessage({ id: "product.staticSelectInStock.primaryText.false", defaultMessage: "No longer available :(" }),
