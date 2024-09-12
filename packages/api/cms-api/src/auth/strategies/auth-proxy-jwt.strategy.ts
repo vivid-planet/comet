@@ -35,18 +35,8 @@ export function createAuthProxyJwtStrategy({
             });
         }
 
-        async validate(request: Request): Promise<CurrentUser> {
-            let user;
-            // TODO remove this mess in the next version
-            if (strategyOptions?.passReqToCallback) {
-                user = await this.service.createUserFromIdToken(request);
-            } else {
-                const idTokenString = request.headers["authorization"]?.toString().split(" ")[1];
-                if (!idTokenString) throw new Error("No authorization header provided");
-                const idToken = JSON.parse(Buffer.from(idTokenString.split(".")[1], "base64").toString()) as JwtPayload;
-                user = await this.service.createUserFromIdToken(idToken);
-            }
-            return this.service.createCurrentUser(user, request);
+        async validate(request: Request, idToken: JwtPayload): Promise<CurrentUser> {
+            return this.service.createCurrentUser(await this.service.createUser(request, idToken));
         }
     }
     return AuthProxyJwtStrategy;

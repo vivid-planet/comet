@@ -62,8 +62,9 @@ export class UserPermissionsService {
         ];
     }
 
-    async createUserFromIdToken(idToken: JwtPayload): Promise<User> {
+    async createUser(request: Request, idToken: JwtPayload): Promise<User> {
         if (this.userService?.createUserFromIdToken) return this.userService.createUserFromIdToken(idToken);
+        if (this.userService?.createUserFromRequest) return this.userService.createUserFromRequest(request, idToken);
         if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
         return {
             id: idToken.sub,
