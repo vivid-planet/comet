@@ -39,6 +39,7 @@ const productsFragment = gql`
         category {
             title
         }
+        type
         price
     }
 `;
@@ -110,6 +111,28 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                                 <FormattedMessage id="product.titleAndCategory.secondaryText.empty" defaultMessage="No category set" />
                             )
                         }
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "staticSelectType",
+            headerName: intl.formatMessage({ id: "product.staticSelectType", defaultMessage: "Type (static select)" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                const primaryEmptyMessage = "-";
+                const typePrimaryLabels = {
+                    Cap: intl.formatMessage({ id: "product.staticSelectType.primaryText.Cap", defaultMessage: "This is a cap" }),
+                    Shirt: intl.formatMessage({ id: "product.staticSelectType.primaryText.Shirt", defaultMessage: "Look at this shirt" }),
+                    Tie: intl.formatMessage({ id: "product.staticSelectType.primaryText.Tie", defaultMessage: "Wow, a tie" }),
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.type == null ? primaryEmptyMessage : typePrimaryLabels[row.type] ?? row.type}
+                        secondaryText={row.type}
                     />
                 );
             },

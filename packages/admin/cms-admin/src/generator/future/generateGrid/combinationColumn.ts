@@ -1,6 +1,8 @@
 import { FormattedNumber } from "react-intl";
 
 import { DataGridSettings } from "../generator";
+import { getFormattedMessageNode, getFormattedMessageString } from "../utils/intl";
+import { firstCharUpperCase } from "../utils/stringManipulation";
 
 type AbstractField<FieldName extends string> = {
     field: FieldName;
@@ -23,20 +25,14 @@ type NumberField<FieldName extends string> = AbstractField<FieldName> &
         type: "number";
         decimals?: number;
     };
-// type StaticSelectField<FieldName extends string> = AbstractField<FieldName> & {
-//     type: "staticSelect";
-//     options: Array<{
-//         value: string | number | boolean;
-//         label: string;
-//     }>;
-// };
 
-// type Field<FieldName extends string> =
-//     | StaticText
-//     | FieldName
-//     | StringField<FieldName>
-//     | NumberField<FieldName>
-//     | StaticSelectField<FieldName>;
+type StaticSelectField<FieldName extends string> = AbstractField<FieldName> & {
+    type: "staticSelect";
+    options: Array<{
+        value: string | number | boolean;
+        label: string;
+    }>;
+};
 
 // type FieldGroup<FieldName extends string> = {
 //     type: "group";
@@ -46,7 +42,7 @@ type NumberField<FieldName extends string> = AbstractField<FieldName> &
 
 // type TextConfig<FieldName extends string> = Field<FieldName> | FieldGroup<FieldName>;
 
-type Field<FieldName extends string> = StaticText | FieldName | StringField<FieldName> | NumberField<FieldName>;
+type Field<FieldName extends string> = StaticText | FieldName | StringField<FieldName> | NumberField<FieldName> | StaticSelectField<FieldName>;
 
 type TextConfig<FieldName extends string> = Field<FieldName>;
 
@@ -57,18 +53,25 @@ export type GridCombinationColumnConfig<FieldName extends string> = {
     secondaryText?: TextConfig<FieldName>;
 } & DataGridSettings;
 
-const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: string) => {
+type CellContent = {
+    textContent: string;
+    variableDefinitions?: string[];
+};
+
+const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: string, target: "primary" | "secondary"): CellContent => {
     if (typeof textConfig === "string") {
-        return `row.${textConfig}`;
+        return {
+            textContent: `row.${textConfig}`,
+        };
     }
 
     if (textConfig.type === "static") {
-        return `<FormattedMessage id="${messageIdPrefix}" defaultMessage="${textConfig.text}" />`;
+        return {
+            textContent: getFormattedMessageNode(messageIdPrefix, textConfig.text),
+        };
     }
 
-    const emptyText =
-        "emptyValue" in textConfig ? `<FormattedMessage id="${messageIdPrefix}.empty" defaultMessage="${textConfig.emptyValue}" />` : "'-'";
-
+    const emptyText = "emptyValue" in textConfig ? getFormattedMessageNode(`${messageIdPrefix}.empty`, textConfig.emptyValue) : "'-'";
     const rowValue = `row.${textConfig.field.replace(/\./g, "?.")}`;
 
     if (textConfig.type === "number") {
@@ -110,24 +113,60 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
             })
             .join(" ");
 
-        return `typeof ${rowValue} === "undefined" || ${rowValue} === null ? ${emptyText} : <FormattedNumber ${formattedNumberPropsString} />`;
+        return {
+            textContent: `typeof ${rowValue} === "undefined" || ${rowValue} === null ? ${emptyText} : <FormattedNumber ${formattedNumberPropsString} />`,
+        };
     }
 
-    return `${rowValue} ?? ${emptyText}`;
+    if (textConfig.type === "staticSelect") {
+        const emptyMessageVariableName = `${target}EmptyMessage`;
+        const emptyMessage = `const ${emptyMessageVariableName} = ${emptyText};`;
+
+        const labelMapping = textConfig.options
+            .map((option) => {
+                return `${option.value}: ${getFormattedMessageString(`${messageIdPrefix}.${option.value}`, option.label)}`;
+            })
+            .join(", ");
+
+        const labelsVariableName = `${textConfig.field}${firstCharUpperCase(target)}Labels`;
+        const labelMappingVar = `const ${labelsVariableName} = { ${labelMapping} };`;
+        const textContent = `(${rowValue} == null ? ${emptyMessageVariableName} : ${labelsVariableName}[${rowValue}] ?? ${rowValue})`;
+
+        return {
+            textContent,
+            variableDefinitions: [emptyMessage, labelMappingVar],
+        };
+    }
+
+    return {
+        textContent: `${rowValue} ?? ${emptyText}`,
+    };
 };
 
 export const getCombinationColumnRenderCell = (column: GridCombinationColumnConfig<string>, messageIdPrefix: string) => {
     const gridCellContentProps: Record<string, string> = {};
+    const allVariableDefinitions: string[] = [];
 
     if (column.primaryText) {
-        gridCellContentProps.primaryText = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`);
+        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`, "primary");
+        gridCellContentProps.primaryText = textContent;
+        allVariableDefinitions.push(...variableDefinitions);
     }
 
     if (column.secondaryText) {
-        gridCellContentProps.secondaryText = getTextForCellContent(column.secondaryText, `${messageIdPrefix}.secondaryText`);
+        const { textContent, variableDefinitions = [] } = getTextForCellContent(
+            column.secondaryText,
+            `${messageIdPrefix}.secondaryText`,
+            "secondary",
+        );
+        gridCellContentProps.secondaryText = textContent;
+        allVariableDefinitions.push(...variableDefinitions);
     }
 
+    const allUniqueVariableDefinitions = Array.from(new Set(allVariableDefinitions));
+
     return `({ row }) => {
+        ${allUniqueVariableDefinitions.join("\n")}
         return <GridCellContent ${Object.entries(gridCellContentProps)
             .map(([key, value]) => `${key}={${value}}`)
             .join(" ")} />;
