@@ -8,6 +8,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
+import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
@@ -151,8 +152,10 @@ export function generateGrid(
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
+    const toolbar = config.toolbar ?? true;
+
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
-    const hasFilter = !!filterArg;
+    const hasFilter = !!filterArg && toolbar;
     let hasFilterProp = false;
     let filterFields: string[] = [];
     if (filterArg) {
@@ -169,8 +172,6 @@ export function generateGrid(
         imports.push(...filterPropImports);
         props.push(...filterPropProps);
     }
-
-    const toolbar = config.toolbar ?? true;
 
     const forwardToolbarAction = allowAdding && toolbar && config.toolbarActionProp;
     if (forwardToolbarAction) {
@@ -235,10 +236,13 @@ export function generateGrid(
         type: actionsColumnType,
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
+        width: actionsColumnWidth = 84,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
-    const gridColumnFields = (config.columns.filter((column) => column.type !== "actions") as GridColumnConfig<unknown>[]).map((column) => {
+    const gridColumnFields = (
+        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
+    ).map((column) => {
         const type = column.type;
         const name = String(column.name);
 
@@ -301,6 +305,8 @@ export function generateGrid(
                 flex: column.flex,
                 pinned: column.pinned,
             };
+        } else if (type == "combination") {
+            renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
         //TODO suppoort n:1 relation with singleSelect
@@ -351,6 +357,7 @@ export function generateGrid(
         DataGridToolbar,
         filterByFragment,
         GridFilterButton,
+        GridCellContent,
         GridColDef,
         muiGridFilterToGql,
         muiGridSortToGql,
@@ -377,7 +384,7 @@ export function generateGrid(
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
     import * as React from "react";
-    import { FormattedMessage, useIntl } from "react-intl";
+    import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
 
     ${Object.entries(rootBlocks)
@@ -398,7 +405,7 @@ export function generateGrid(
         ...[`$offset: Int!`, `$limit: Int!`],
         ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
         ...(hasSearch ? [`$search: String`] : []),
-        ...(hasFilter ? [`$filter: ${gqlType}Filter`] : []),
+        ...(filterArg && (hasFilter || hasFilterProp) ? [`$filter: ${gqlType}Filter`] : []),
         ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
     ].join(", ")}) {
     ${gridQuery}(${[
@@ -406,7 +413,7 @@ export function generateGrid(
         ...[`offset: $offset`, `limit: $limit`],
         ...(hasSort ? [`sort: $sort`] : []),
         ...(hasSearch ? [`search: $search`] : []),
-        ...(hasFilter ? [`filter: $filter`] : []),
+        ...(filterArg && (hasFilter || hasFilterProp) ? [`filter: $filter`] : []),
         ...(hasScope ? [`scope: $scope`] : []),
     ].join(", ")}) {
                 nodes {
@@ -547,6 +554,7 @@ export function generateGrid(
                               type: '"actions"',
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
+                              width: actionsColumnWidth,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (
@@ -641,7 +649,15 @@ export function generateGrid(
                 ${[
                     ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
                     ...(hasScope ? ["scope"] : []),
-                    ...(hasFilter ? (hasFilterProp ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"] : ["filter: gqlFilter"]) : []),
+                    ...(filterArg
+                        ? hasFilter && hasFilterProp
+                            ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"]
+                            : hasFilter
+                            ? ["filter: gqlFilter"]
+                            : hasFilterProp
+                            ? ["filter"]
+                            : []
+                        : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
                     ...[
                         `offset: dataGridProps.page * dataGridProps.pageSize`,
