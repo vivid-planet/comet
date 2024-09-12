@@ -2,7 +2,9 @@ import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search }
 import {
     buttonBaseClasses,
     buttonClasses,
+    formControlClasses,
     getSwitchUtilityClass,
+    iconButtonClasses,
     inputAdornmentClasses,
     inputBaseClasses,
     inputClasses,
@@ -98,12 +100,23 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         filterForm: {
             margin: spacing(5, 4, 0, 4),
-            padding: "7px 5px",
-            borderBottom: `1px solid ${palette.divider}`,
+            padding: "10px 5px",
+            gap: "4px",
+            borderBottom: `1px solid ${palette.grey[50]}`,
             "&:last-child": {
                 border: "none",
+                marginBottom: spacing(2),
             },
-
+            "&:first-child": {
+                marginTop: spacing(7),
+            },
+            [`.${formControlClasses.root}`]: {
+                marginRight: 0,
+            },
+            [`.${iconButtonClasses.root}`]: {
+                height: 32,
+                width: 32,
+            },
             [`.${inputLabelClasses.root}`]: {
                 transform: "translateY(-22px)",
                 fontSize: 14,
