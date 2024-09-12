@@ -1,17 +1,42 @@
-import { gql, useQuery } from "@apollo/client";
-import { Loading, MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
-import { Box } from "@mui/material";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { Loading, MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { Box, Button, CardContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
+import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 import { UserBasicData } from "./basicData/UserBasicData";
 import { ContentScopeGrid } from "./permissions/ContentScopeGrid";
 import { PermissionGrid } from "./permissions/PermissionGrid";
-import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPage.generated";
+import {
+    GQLUserPageQuery,
+    GQLUserPageQueryVariables,
+    GQLUserPermissionsImpersonateMutation,
+    GQLUserPermissionsImpersonateMutationVariables,
+} from "./UserPage.generated";
 
 export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
+    const client = useApolloClient();
+    const currentUser = useCurrentUser();
+    const isAllowed = useUserPermissionCheck();
+    const impersonate = async () => {
+        const result = await client.mutate<GQLUserPermissionsImpersonateMutation, GQLUserPermissionsImpersonateMutationVariables>({
+            mutation: gql`
+                mutation UserPermissionsImpersonate($userId: String!) {
+                    userPermissionsImpersonate(userId: $userId)
+                }
+            `,
+            variables: {
+                userId,
+            },
+        });
+        if (result.data?.userPermissionsImpersonate) {
+            location.href = "/";
+        }
+    };
+
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
             query UserPage($id: String!) {
@@ -43,6 +68,14 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
                     <TitleText>{data.user.name}</TitleText>
                     <SupportText>{data.user.email}</SupportText>
                 </ToolbarTitleItem>
+                <ToolbarFillSpace />
+                {isAllowed("userPermissions") && currentUser.id !== userId && (
+                    <CardContent>
+                        <Button onClick={impersonate} variant="contained">
+                            <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
+                        </Button>
+                    </CardContent>
+                )}
             </Toolbar>
             <MainContent>
                 <RouterTabs>

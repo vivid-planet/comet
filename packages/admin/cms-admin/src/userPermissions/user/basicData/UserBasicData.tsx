@@ -1,37 +1,15 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, Loading, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
-import { Button, Card, CardContent, Toolbar } from "@mui/material";
+import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
-import {
-    GQLUserBasicDataQuery,
-    GQLUserBasicDataQueryVariables,
-    GQLUserPermissionsImpersonateMutation,
-    GQLUserPermissionsImpersonateMutationVariables,
-} from "./UserBasicData.generated";
+import { GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables } from "./UserBasicData.generated";
 
 export const UserBasicData: React.FC<{
     id: string;
 }> = ({ id }) => {
-    const client = useApolloClient();
-    const impersonate = async () => {
-        const result = await client.mutate<GQLUserPermissionsImpersonateMutation, GQLUserPermissionsImpersonateMutationVariables>({
-            mutation: gql`
-                mutation UserPermissionsImpersonate($userId: String!) {
-                    userPermissionsImpersonate(userId: $userId)
-                }
-            `,
-            variables: {
-                userId: id,
-            },
-        });
-        if (result.data?.userPermissionsImpersonate) {
-            location.href = "/";
-        }
-    };
-
     const { data, error, loading } = useQuery<GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables>(
         gql`
             query UserBasicData($id: String!) {
@@ -86,11 +64,6 @@ export const UserBasicData: React.FC<{
                         label={<FormattedMessage id="comet.userPermissions.name" defaultMessage="Name" />}
                     />
                 </FinalForm>
-            </CardContent>
-            <CardContent>
-                <Button onClick={impersonate} variant="contained">
-                    <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
-                </Button>
             </CardContent>
         </Card>
     );
