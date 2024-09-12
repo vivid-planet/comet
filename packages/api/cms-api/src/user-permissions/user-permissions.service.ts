@@ -157,7 +157,7 @@ export class UserPermissionsService {
     async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
         if (request?.cookies["comet-impersonate-user-id"]) {
             const permissions = await this.getPermissions(authenticatedUser);
-            if (permissions.find((permission) => permission.permission === "userPermissions")) {
+            if (permissions.find((permission) => permission.permission === "impersonation")) {
                 try {
                     return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
                 } catch (e) {

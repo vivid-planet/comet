@@ -27,6 +27,7 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
+    @RequiredPermission("impersonation", { skipScopeCheck: true })
     async userPermissionsImpersonate(@Args("userId", { type: () => String }) userId: string, @Context() request: Request): Promise<boolean> {
         this.userService.setImpersonatedUser(userId, request);
         return true;

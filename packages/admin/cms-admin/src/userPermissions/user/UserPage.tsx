@@ -69,7 +69,7 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
                     <SupportText>{data.user.email}</SupportText>
                 </ToolbarTitleItem>
                 <ToolbarFillSpace />
-                {isAllowed("userPermissions") && currentUser.id !== userId && (
+                {isAllowed("impersonation") && currentUser.id !== userId && (
                     <CardContent>
                         <Button onClick={impersonate} variant="contained">
                             <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
