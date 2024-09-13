@@ -11,7 +11,7 @@ import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
 import { GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { UsableFields } from "./generateGrid/usableFields";
-import { ColumnVisibleOption } from "./utils/getColumnVisibleValue";
+import { ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {

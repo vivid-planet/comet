@@ -18,7 +18,6 @@ import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
-import { getColumnVisibleValue } from "./utils/getColumnVisibleValue";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
@@ -242,7 +241,7 @@ export function generateGrid(
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
-    const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "function");
+    const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
 
     const gridColumnFields = (
         config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
@@ -254,8 +253,6 @@ export function generateGrid(
         let valueGetter: string | undefined = name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
-
-        const visibleValue = getColumnVisibleValue(column.visible);
 
         if (type == "dateTime") {
             valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
@@ -309,7 +306,7 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
-                visible: visibleValue,
+                visible: column.visible && `theme.breakpoints.${column.visible}`,
                 pinned: column.pinned,
             };
         } else if (type == "combination") {
@@ -329,7 +326,7 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
-            visible: visibleValue,
+            visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
         };
     });
@@ -565,7 +562,7 @@ export function generateGrid(
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
                               width: actionsColumnWidth,
-                              visible: getColumnVisibleValue(actionsColumnVisible),
+                              visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (
