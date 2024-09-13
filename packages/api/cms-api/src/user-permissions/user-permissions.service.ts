@@ -128,7 +128,7 @@ export class UserPermissionsService {
         const availableContentScopes = await this.getAvailableContentScopes();
 
         if (this.accessControlService.getContentScopesForUser) {
-            const userContentScopes = await this.accessControlService.getContentScopesForUser(user);
+            const userContentScopes = await this.accessControlService.getContentScopesForUser(user, this.options.environment);
             if (userContentScopes === UserPermissions.allContentScopes) {
                 contentScopes.push(...availableContentScopes);
             } else {
