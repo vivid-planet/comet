@@ -1,7 +1,7 @@
 "use client";
 import { CookieSafe, PropsWithData, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
 import { YouTubeVideoBlockData } from "@src/blocks.generated";
-import { CookiePlaceholder } from "@src/components/common/CookiePlaceholders";
+import { FallbackCookiePlaceholder, LoadingCookiePlaceholder } from "@src/components/common/CookiePlaceholders";
 import { cookieIds } from "@src/util/cookieIds";
 import styled from "styled-components";
 
@@ -14,8 +14,8 @@ export const CookieSafeYouTubeVideoBlock = (props: PropsWithData<YouTubeVideoBlo
         <Root $aspectRatio={aspectRatio.replace("x", "/")}>
             <CookieSafe
                 consented={consentedCookies.includes(cookieIds.thirdParty)}
-                fallback={<CookiePlaceholder variant="fallback" />}
-                loading={<CookiePlaceholder variant="loading" />}
+                fallback={<FallbackCookiePlaceholder />}
+                loading={<LoadingCookiePlaceholder />}
             >
                 <YouTubeVideoBlock aspectRatio={aspectRatio} {...props} />
             </CookieSafe>
