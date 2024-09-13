@@ -7,6 +7,7 @@ import { FinalFormSelect, FinalFormSelectProps } from "../FinalFormSelect";
 export type SelectFieldOption<Value extends string | number = string | number> = {
     label: ReactNode;
     value: Value;
+    disabled?: boolean;
 };
 
 type SelectFieldPropsToExtendFrom<Value extends string | number> = FieldProps<Value, HTMLSelectElement>;
@@ -32,9 +33,9 @@ export function SelectField<Value extends string | number>({ componentsProps = {
                 <FinalFormSelect<Value> {...props} {...finalFormSelectProps}>
                     {children
                         ? children
-                        : options?.map((option) => (
-                              <MenuItem value={option.value} key={option.value}>
-                                  {option.label}
+                        : options?.map(({ label, value, disabled }) => (
+                              <MenuItem key={value} value={value} disabled={disabled}>
+                                  {label}
                               </MenuItem>
                           ))}
                 </FinalFormSelect>

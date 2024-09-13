@@ -15,7 +15,7 @@ Use the existing `AsyncSelectField` for dynamic options.
 const options: SelectFieldOption[] = [
     { value: "chocolate", label: "Chocolate" },
     { value: "strawberry", label: "Strawberry" },
-    { value: "raspberry", label: "Raspberry" },
+    { value: "raspberry", label: "Raspberry", disabled: true },
 ];
 
 // ...
