@@ -1,6 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
-import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
+import { ChevronDown } from "@comet/admin-icons";
+import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -10,8 +11,6 @@ import { PageVisibilityIcon } from "./PageVisibilityIcon";
 import { subTreeFromNode, treeMapToArray } from "./treemap/TreeMapUtils";
 import { GQLPageTreePageFragment, PageTreePage } from "./usePageTree";
 import { usePageTreeContext } from "./usePageTreeContext";
-
-export { GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables } from "./PageVisibility.generated";
 
 export const updatePageVisibilityMutation = gql`
     mutation UpdatePageVisibility($id: ID!, $input: PageTreeNodeUpdateVisibilityInput!) {
@@ -34,9 +33,9 @@ const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
     const [updatePageVisibility] = useMutation<GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables>(
         updatePageVisibilityMutation,
     );
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMenuOpen = (event: React.MouseEvent) => {
         setAnchorEl(event.currentTarget);
     };
 
@@ -97,15 +96,22 @@ const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
 
     return (
         <>
-            <Button size="small" onClick={handleMenuOpen} startIcon={<PageVisibilityIcon visibility={page.visibility} />} color="info">
-                <FormattedMessage
-                    id="comet.pages.pages.page.visibility"
-                    defaultMessage="{visibility, select, visible {Published} hidden {Unpublished} archived {Archived} other {unknown}}"
-                    values={{
-                        visibility: page.visibility === "Published" ? "visible" : page.visibility === "Unpublished" ? "hidden" : "archived",
-                    }}
-                />
-            </Button>
+            <Chip
+                icon={<ChevronDown />}
+                label={
+                    <FormattedMessage
+                        id="comet.pages.pages.page.visibility"
+                        defaultMessage="{visibility, select, visible {Published} hidden {Unpublished} archived {Archived} other {unknown}}"
+                        values={{
+                            visibility: page.visibility === "Published" ? "visible" : page.visibility === "Unpublished" ? "hidden" : "archived",
+                        }}
+                    />
+                }
+                variant={page.visibility === "Archived" ? "outlined" : "filled"}
+                color={page.visibility === "Published" ? "success" : page.visibility === "Unpublished" ? "default" : undefined}
+                clickable
+                onClick={handleMenuOpen}
+            />
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                 <MenuItem onClick={() => handleVisibilityClick("Published")} disabled={page.visibility === "Published"}>
                     <ListItemIcon>
