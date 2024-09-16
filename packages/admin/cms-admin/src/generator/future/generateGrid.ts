@@ -296,12 +296,24 @@ export function generateGrid(
                     return `{value: ${JSON.stringify(i.value)}, label: ${label}}, `;
                 })
                 .join(" ")}]`;
+            renderCell = `({ row, colDef }) => {
+                if (colDef.valueOptions && Array.isArray(colDef.valueOptions)) {
+                    const selectedOption = colDef.valueOptions.find((option) => typeof option === "object" && option.value === row.${name});
+
+                    if (selectedOption && typeof selectedOption === "object") {
+                        return selectedOption.label;
+                    }
+                }
+
+                return row.${name};
+            }`;
 
             return {
                 name,
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
+                renderCell,
                 width: column.width,
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,

@@ -150,6 +150,17 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                 { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
                 { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
             ],
+            renderCell: ({ row, colDef }) => {
+                if (colDef.valueOptions && Array.isArray(colDef.valueOptions)) {
+                    const selectedOption = colDef.valueOptions.find((option) => typeof option === "object" && option.value === row.type);
+
+                    if (selectedOption && typeof selectedOption === "object") {
+                        return selectedOption.label;
+                    }
+                }
+
+                return row.type;
+            },
             flex: 1,
             maxWidth: 150,
             minWidth: 150,
