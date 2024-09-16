@@ -237,8 +237,11 @@ export function generateGrid(
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = 84,
+        visible: actionsColumnVisible = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
+
+    const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
 
     const gridColumnFields = (
         config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
@@ -303,6 +306,7 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                visible: column.visible && `theme.breakpoints.${column.visible}`,
                 pinned: column.pinned,
             };
         } else if (type == "combination") {
@@ -322,6 +326,7 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
         };
     });
@@ -371,7 +376,7 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton } from "@mui/material";
+    import { Alert, Button, Box, IconButton, useTheme } from "@mui/material";
     import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -504,6 +509,7 @@ export function generateGrid(
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -522,6 +528,7 @@ export function generateGrid(
                         width: column.width,
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,
+                        visible: column.visible,
                     };
 
                     if (typeof column.width === "undefined") {
@@ -555,6 +562,7 @@ export function generateGrid(
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
                               width: actionsColumnWidth,
+                              visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (
