@@ -32,7 +32,7 @@ export { AdminComponentRoot };
 
 const ChildrenContainer = styled("div")`
     // TODO: Find another way to access this element, other than the className
-    .CometAdminRteToolbar-root {
+    > .CometAdminRte-root > .CometAdminRteToolbar-root {
         top: 70px;
     }
 `;
