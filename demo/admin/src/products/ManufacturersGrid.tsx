@@ -62,7 +62,7 @@ export function ManufacturersGrid() {
             field: "id",
             width: 150,
             renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <>
                     <GridColumnHeaderTitle label={intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" })} columnWidth={150} />
                     <Tooltip
                         trigger="hover"
@@ -70,7 +70,7 @@ export function ManufacturersGrid() {
                     >
                         <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
-                </div>
+                </>
             ),
         },
         {
