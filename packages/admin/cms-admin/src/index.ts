@@ -38,6 +38,8 @@ export { PageList } from "./common/PageList";
 export { PageName } from "./common/PageName";
 export { useEditState } from "./common/useEditState";
 export { useSaveState } from "./common/useSaveState";
+export type { ApiConfig } from "./config/ApiConfigContext";
+export { ApiConfigProvider, useApiConfig } from "./config/ApiConfigContext";
 export { ContentScopeIndicator } from "./contentScope/ContentScopeIndicator";
 export { ContentScopeSelect } from "./contentScope/ContentScopeSelect";
 export { ContentScopeControls } from "./contentScope/Controls";
