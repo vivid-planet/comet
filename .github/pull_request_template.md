@@ -1,3 +1,11 @@
+<!--
+
+PLEASE MAKE SURE TO KEEP THE PR SIZE AT A MINIMUM!
+Smaller PRs are easier to review and tend to get merged faster.
+Unrelated changes, refactorings, fixes etc. should be made in separate PRs.
+
+--->
+
 ## Description
 
 <!--
