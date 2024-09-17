@@ -11,7 +11,8 @@ Unrelated changes, refactorings, fixes etc. should be made in separate PRs.
 <!--
 
 The description should describe the change you're making.
-It will be used as the commit message for the squashed commit once the PR is merged.
+It will be used as the commit message for the squashed commit once the PR gets merged.
+Therefore, make sure to keep the description up-to-date as the PR changes.
 
 PLEASE DESCRIBE WHY YOU'RE MAKING THE CHANGE, NOT WHAT YOU'RE CHANGING.
 Reviewers see what you're changing when reviewing the code.
