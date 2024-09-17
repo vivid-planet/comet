@@ -1,13 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
-import { LocalErrorScopeApolloContext, useFocusAwarePolling } from "@comet/admin";
+import { AppHeaderDropdown, LocalErrorScopeApolloContext, useFocusAwarePolling } from "@comet/admin";
 import { SsgRunning, SsgStandby } from "@comet/admin-icons";
-import { List, ListItem, Typography } from "@mui/material";
+import { Box, List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { differenceInMinutes, parseISO } from "date-fns";
 import * as React from "react";
 import { FormattedMessage, FormattedTime } from "react-intl";
 
-import { DropdownMenuItem } from "../common/DropdownMenuItem";
 import { GQLBuildStatusQuery } from "./BuildEntry.generated";
 import { PublishButton } from "./PublishButton";
 
@@ -121,8 +120,8 @@ export function BuildEntry(): React.ReactElement {
     const running = data?.builds[0]?.status === "active" || data?.builds[0]?.status === "pending";
 
     return (
-        <DropdownMenuItem buttonIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />} disableArrow>
-            <Content>
+        <AppHeaderDropdown startIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />} dropdownArrow={null}>
+            <Content py={1}>
                 <List>
                     <ListItem dense={false}>
                         <Typography variant="body2">
@@ -141,12 +140,11 @@ export function BuildEntry(): React.ReactElement {
                     {data && <BuildStatusPopperContent data={data} />}
                 </List>
             </Content>
-        </DropdownMenuItem>
+        </AppHeaderDropdown>
     );
 }
 
-const Content = styled("div")`
+const Content = styled(Box)`
     width: 300px;
     min-height: 40px;
-    padding: 4px 0;
 `;
