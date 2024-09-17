@@ -303,7 +303,7 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
-                tooltipMessage: column.tooltipMessage,
+                headerInfoTooltip: column.headerInfoTooltip,
                 pinned: column.pinned,
             };
         } else if (type == "combination") {
@@ -323,7 +323,7 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
-            tooltipMessage: column.tooltipMessage,
+            headerInfoTooltip: column.headerInfoTooltip,
             pinned: column.pinned,
         };
     });
@@ -535,7 +535,7 @@ export function generateGrid(
 
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
-                        renderHeader: column.tooltipMessage
+                        renderHeader: column.headerInfoTooltip
                             ? `() => (
                                     <>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
@@ -547,7 +547,7 @@ export function generateGrid(
                                         <Tooltip
                                             trigger="hover"
                                             title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
-                                  column.tooltipMessage
+                                  column.headerInfoTooltip
                               }" />}
                                         >
                                             <Info sx={{ marginLeft: 1 }} />
@@ -555,7 +555,7 @@ export function generateGrid(
                                     </>
                                 )`
                             : undefined,
-                        headerName: !column.tooltipMessage
+                        headerName: !column.headerInfoTooltip
                             ? `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
                                   column.headerName || camelCaseToHumanReadable(column.name)
                               }" })`
