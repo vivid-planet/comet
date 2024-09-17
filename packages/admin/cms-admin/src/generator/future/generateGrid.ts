@@ -1,3 +1,4 @@
+import { GridColDef } from "@comet/admin";
 import {
     IntrospectionEnumType,
     IntrospectionInputObjectType,
@@ -75,6 +76,18 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
         gridPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: Props`,
     };
 }
+
+const getSortByValue = (sortBy: GridColDef["sortBy"]) => {
+    if (Array.isArray(sortBy)) {
+        return `[${sortBy.map((i) => `"${i}"`).join(", ")}]`;
+    }
+
+    if (typeof sortBy === "string") {
+        return `"${sortBy}"`;
+    }
+
+    return sortBy;
+};
 
 export function generateGrid(
     {
@@ -340,6 +353,7 @@ export function generateGrid(
             flex: column.flex,
             visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
+            sortBy: "sortBy" in column && column.sortBy,
         };
     });
 
@@ -542,6 +556,10 @@ export function generateGrid(
                         pinned: column.pinned && `"${column.pinned}"`,
                         visible: column.visible,
                     };
+
+                    if ("sortBy" in column && column.sortBy) {
+                        columnDefinition["sortBy"] = getSortByValue(column.sortBy);
+                    }
 
                     if (typeof column.width === "undefined") {
                         const defaultMinWidth = 150;

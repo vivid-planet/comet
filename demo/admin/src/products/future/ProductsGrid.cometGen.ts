@@ -18,6 +18,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             primaryText: "title",
             secondaryText: "description",
             visible: "down('md')",
+            sortBy: ["title", "description"],
         },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
         { type: "text", name: "description", headerName: "Description", visible: "up('md')" },
