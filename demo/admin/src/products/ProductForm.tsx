@@ -332,7 +332,6 @@ export function ProductForm({ id }: FormProps) {
                             maxFileSize={1024 * 1024 * 4} // 4 MB
                             fullWidth
                             layout="grid"
-                            previewImageWidth={640}
                         />
                     </MainContent>
                 </>
