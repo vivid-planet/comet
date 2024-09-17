@@ -7,6 +7,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
+    CometConfigProvider,
     ContentScopeInterface,
     createDamFileDependency,
     createHttpClient,
@@ -22,7 +23,7 @@ import { css, Global } from "@emotion/react";
 import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
-import { ConfigProvider, createConfig } from "@src/config";
+import { createConfig } from "@src/config";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
 import { theme } from "@src/theme";
@@ -61,7 +62,7 @@ class App extends Component {
 
     public render(): JSX.Element {
         return (
-            <ConfigProvider config={config}>
+            <CometConfigProvider config={config}>
                 <ApolloProvider client={apolloClient}>
                     <SitesConfigProvider
                         value={{
@@ -158,7 +159,7 @@ class App extends Component {
                         </DamConfigProvider>
                     </SitesConfigProvider>
                 </ApolloProvider>
-            </ConfigProvider>
+            </CometConfigProvider>
         );
     }
 }
