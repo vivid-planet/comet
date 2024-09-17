@@ -1,6 +1,7 @@
 import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { IMenuContext } from "./Context";
 import { MenuItemLevel } from "./Item";
 
 export type MenuItemClassKey =
@@ -23,6 +24,7 @@ export type OwnerState = {
     hasIcon: boolean;
     hasSecondaryText: boolean;
     hasSecondaryAction: boolean;
+    variant: IMenuContext["drawerVariant"];
 };
 
 export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerState>({
@@ -80,7 +82,11 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             color: ${theme.palette.grey[900]};
             height: 60px;
             padding: 16px 22px;
-            background-color: ${!ownerState.open && ownerState.collapsibleOpen ? `${theme.palette.primary.main} !important` : "white !important"};
+            background-color: ${!ownerState.open && ownerState.collapsibleOpen
+                ? `${theme.palette.primary.main} !important`
+                : ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
+                ? theme.palette.grey[50]
+                : "white !important"};
 
             .${listItemIconClasses.root} {
                 color: ${!ownerState.open && ownerState.collapsibleOpen ? `${theme.palette.common.white} !important` : ""};
@@ -147,7 +153,9 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             }
 
             &.Mui-selected {
-                background-color: ${theme.palette.common.white};
+                background-color: ${ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
+                    ? theme.palette.grey[50]
+                    : theme.palette.common.white};
                 color: ${theme.palette.primary.main};
                 font-weight: ${theme.typography.fontWeightMedium};
 
@@ -189,7 +197,9 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             }
 
             &.Mui-selected {
-                background-color: ${theme.palette.common.white};
+                background-color: ${ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
+                    ? theme.palette.grey[50]
+                    : theme.palette.common.white};
                 color: ${theme.palette.primary.main};
                 font-weight: ${theme.typography.fontWeightMedium};
 
