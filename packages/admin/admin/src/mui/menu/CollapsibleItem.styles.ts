@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { IMenuContext } from "./Context";
 import { MenuItem as CometMenuItem, MenuItemLevel } from "./Item";
 
 export type MenuCollapsibleItemClassKey = "root" | "open" | "childSelected" | "menuItem" | "itemTitle" | "collapsibleIndicator";
@@ -12,6 +13,7 @@ export type OwnerState = {
     menuOpen: boolean;
     subMenuOpen: boolean;
     level: MenuItemLevel;
+    variant: IMenuContext["drawerVariant"];
 };
 
 export const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
@@ -26,6 +28,13 @@ export const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, Owne
         css`
             color: ${theme.palette.primary.main};
             font-weight: ${theme.typography.fontWeightMedium};
+        `}
+
+        ${ownerState.subMenuOpen &&
+        ownerState.variant === "temporary" &&
+        ownerState.menuOpen &&
+        css`
+            background-color: ${theme.palette.grey[50]} !important;
         `}
     `,
 );
@@ -53,6 +62,13 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
                     font-weight: 600;
                 `};
             }
+        `}
+
+        ${ownerState.subMenuOpen &&
+        ownerState.variant === "temporary" &&
+        ownerState.menuOpen &&
+        css`
+            background-color: ${theme.palette.grey[50]} !important;
         `}
     `,
 );
