@@ -86,7 +86,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                 ? `${theme.palette.primary.main} !important`
                 : ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
                 ? theme.palette.grey[50]
-                : "white !important"};
+                : "white"};
 
             .${listItemIconClasses.root} {
                 color: ${!ownerState.open && ownerState.collapsibleOpen ? `${theme.palette.common.white} !important` : ""};
@@ -94,10 +94,10 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
 
             :hover {
                 background-color: ${!ownerState.open ? `${theme.palette.primary.main} !important` : ""};
-                color: ${!ownerState.open ? `${theme.palette.common.white} !important` : ""};
+                color: ${!ownerState.open ? `${theme.palette.common.white}` : ""};
 
                 .${listItemIconClasses.root} {
-                    color: ${!ownerState.open ? `${theme.palette.common.white} !important` : ""};
+                    color: ${!ownerState.open ? `${theme.palette.common.white}` : ""};
                 }
             }
 
@@ -204,7 +204,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                 font-weight: ${theme.typography.fontWeightMedium};
 
                 :hover {
-                    background-color: ${theme.palette.grey[50]};
+                    background-color: rgba(0, 0, 0, 0.04);
                 }
 
                 .${listItemTextClasses.primary} {
@@ -255,12 +255,6 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                     }
 
                     &.Mui-selected {
-                        background-color: ${theme.palette.common.white};
-
-                        :hover {
-                            background-color: ${theme.palette.grey[50]};
-                        }
-
                         .${listItemTextClasses.root} {
                             :before,
                             :after {
@@ -296,12 +290,6 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                     }
 
                     &.Mui-selected {
-                        background-color: ${theme.palette.common.white};
-
-                        :hover {
-                            background-color: ${theme.palette.grey[50]};
-                        }
-
                         .${listItemTextClasses.root} {
                             :before,
                             :after {
