@@ -55,7 +55,7 @@ export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Mu
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
     maxFiles,
-    previewImageWidth = 320,
+    previewImageWidth = 640,
     ...restProps
 }: FinalFormFileUploadProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
