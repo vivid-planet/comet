@@ -42,9 +42,9 @@ This can be either:
 
 ## Screenshots/screencasts
 
-When making a visual change, please provide either screenshots or screencasts.
-
 <!--
+
+When making a visual change, please provide either screenshots or screencasts.
 
 Hint: For before/after views, you can use a table:
 
