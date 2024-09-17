@@ -40,7 +40,7 @@ Follow this guidelines when writing a changeset:
 -   The first line should be the title (without a period at the end): "Add new alert component"
 -   If necessary, provide additional information in the description
 -   Use backticks to highlight code: Add new `Alert` component
--   Use bold formatting for "headlines": **Example**
+-   Use bold formatting for "headlines" in the description: **Example**
 
 Example for a good changeset:
 

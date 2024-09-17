@@ -81,7 +81,7 @@ Changeset writing guidelines:
 -   First line should be the title: "Add new alert component"
 -   Provide additional information in the description
 -   Use backticks to highlight code: Add new `Alert` component
--   Use bold formatting for "headlines": **Example**
+-   Use bold formatting for "headlines" in the description: **Example**
 
 --->
 
