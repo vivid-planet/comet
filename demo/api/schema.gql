@@ -185,6 +185,7 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  downloadUrl: String
 }
 
 type User {
