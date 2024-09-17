@@ -17,9 +17,11 @@ export class BlocksTransformerMiddlewareFactory {
                     fieldValue,
                     {
                         ...dependencies,
-                        pageTreeReadApi: (dependencies.pageTreeService as PageTreeService).createReadApi({
-                            visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
-                        }),
+                        pageTreeReadApi: dependencies.pageTreeService
+                            ? (dependencies.pageTreeService as PageTreeService).createReadApi({
+                                  visibility: [PageTreeNodeVisibility.Published, ...(includeInvisiblePages || [])],
+                              })
+                            : undefined,
                     },
                     { includeInvisibleContent: includeInvisibleBlocks, previewDamUrls },
                 );
