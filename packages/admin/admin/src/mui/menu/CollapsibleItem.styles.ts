@@ -34,7 +34,7 @@ export const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, Owne
         ownerState.variant === "temporary" &&
         ownerState.menuOpen &&
         css`
-            background-color: ${theme.palette.grey[50]} !important;
+            background-color: ${theme.palette.grey[50]};
         `}
     `,
 );
@@ -68,7 +68,7 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
         ownerState.variant === "temporary" &&
         ownerState.menuOpen &&
         css`
-            background-color: ${theme.palette.grey[50]} !important;
+            background-color: ${theme.palette.grey[50]};
         `}
     `,
 );
