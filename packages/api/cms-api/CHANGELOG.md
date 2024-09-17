@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 6.17.7
+
+### Patch Changes
+
+-   2208b2663: Fix optional `PageTreeReadApi` in `BlocksTransformerMiddlewareFactory`
+    -   @comet/blocks-api@6.17.7
+
 ## 6.17.6
 
 ### Patch Changes
