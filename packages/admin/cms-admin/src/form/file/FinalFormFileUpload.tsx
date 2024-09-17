@@ -5,7 +5,6 @@ import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { GQLFileUpload } from "../../graphql.generated";
 import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";
 
 export const finalFormFileUploadFragment = gql`
@@ -17,7 +16,16 @@ export const finalFormFileUploadFragment = gql`
     }
 `;
 
-type SuccessfulApiResponse = GQLFileUpload & { downloadUrl: string };
+type SuccessfulApiResponse = {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    size: number;
+    mimetype: string;
+    contentHash: string;
+    downloadUrl?: string;
+};
 
 type FailedApiResponse = {
     statusCode?: number;
@@ -109,7 +117,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             id: jsonResponse.id,
                             name: jsonResponse.name,
                             size: jsonResponse.size,
-                            downloadUrl: jsonResponse.downloadUrl,
+                            downloadUrl: jsonResponse.downloadUrl ?? null,
                         };
 
                         if (singleFile) {
