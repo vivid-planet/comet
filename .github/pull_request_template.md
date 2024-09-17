@@ -79,7 +79,7 @@ Changeset writing guidelines:
 
 [] I have verified if my change requires a changeset
 
-## Related Tasks & Documents
+## Related tasks and documents
 
 <!--
 
