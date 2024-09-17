@@ -22,7 +22,7 @@ import { useTheme } from "@mui/material";
 import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
@@ -39,10 +39,13 @@ const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
         title
-        description
         price
-        inStock
         type
+        category {
+            title
+        }
+        inStock
+        description
         availableSince
         createdAt
     }
@@ -110,12 +113,54 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                return <GridCellContent primaryText={row.title} secondaryText={row.description} />;
+                const secondaryTextTypeEmptyMessage = <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />;
+                const secondaryTextTypeLabels: Record<string, React.ReactNode> = {
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                };
+                const secondaryTextInStockEmptyMessage = "-";
+                const secondaryTextInStockLabels: Record<string, React.ReactNode> = {
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
+                    false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.title}
+                        secondaryText={
+                            <FormattedMessage
+                                id="product.overview.secondaryText"
+                                defaultMessage="{price} • {type} • {category} • {inStock}"
+                                values={{
+                                    price:
+                                        typeof row.price === "undefined" || row.price === null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.price.empty" defaultMessage="No price" />
+                                        ) : (
+                                            <FormattedNumber
+                                                value={row.price}
+                                                minimumFractionDigits={2}
+                                                maximumFractionDigits={2}
+                                                style="currency"
+                                                currency="EUR"
+                                            />
+                                        ),
+                                    type: row.type == null ? secondaryTextTypeEmptyMessage : secondaryTextTypeLabels[`${row.type}`] ?? row.type,
+                                    category: row.category?.title ?? (
+                                        <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
+                                    ),
+                                    inStock:
+                                        row.inStock == null
+                                            ? secondaryTextInStockEmptyMessage
+                                            : secondaryTextInStockLabels[`${row.inStock}`] ?? row.inStock,
+                                }}
+                            />
+                        }
+                    />
+                );
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),
-            sortBy: ["title", "description"],
-            maxWidth: 250,
+            sortBy: ["title", "price", "type", "category", "inStock"],
             minWidth: 200,
         },
         {

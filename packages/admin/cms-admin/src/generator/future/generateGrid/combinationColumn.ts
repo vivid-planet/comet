@@ -38,23 +38,25 @@ type StaticSelectField<FieldName extends string> = AbstractField<FieldName> & {
     >;
 };
 
-// type FieldGroup<FieldName extends string> = {
-//     type: "group";
-//     fields: Array<Field<FieldName> | FieldGroup<FieldName>>;
-//     separator?: string;
-// };
+type FormattedMessage<FieldName extends string> = {
+    type: "formattedMessage";
+    message: string;
+    valueFields: Record<string, Field<FieldName>>;
+};
 
-// type TextConfig<FieldName extends string> = Field<FieldName> | FieldGroup<FieldName>;
-
-type Field<FieldName extends string> = StaticText | FieldName | StringField<FieldName> | NumberField<FieldName> | StaticSelectField<FieldName>;
-
-type TextConfig<FieldName extends string> = Field<FieldName>;
+type Field<FieldName extends string> =
+    | StaticText
+    | FieldName
+    | StringField<FieldName>
+    | NumberField<FieldName>
+    | StaticSelectField<FieldName>
+    | FormattedMessage<FieldName>;
 
 export type GridCombinationColumnConfig<FieldName extends string> = {
     type: "combination";
     name: string;
-    primaryText?: TextConfig<FieldName>;
-    secondaryText?: TextConfig<FieldName>;
+    primaryText?: Field<FieldName>;
+    secondaryText?: Field<FieldName>;
 } & DataGridSettings &
     Pick<GridColDef, "sortBy">;
 
@@ -63,7 +65,7 @@ type CellContent = {
     variableDefinitions?: string[];
 };
 
-const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: string, target: "primary" | "secondary"): CellContent => {
+const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: string, target: "primary" | "secondary"): CellContent => {
     if (typeof textConfig === "string") {
         return {
             textContent: `row.${textConfig}`,
@@ -73,6 +75,31 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
     if (textConfig.type === "static") {
         return {
             textContent: getFormattedMessageNode(messageIdPrefix, textConfig.text),
+        };
+    }
+
+    if (textConfig.type === "formattedMessage") {
+        const variableDefinitions: string[] = [];
+
+        const values = Object.entries(textConfig.valueFields)
+            .map(([key, value]) => {
+                const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(
+                    value,
+                    `${messageIdPrefix}.${key}`,
+                    target,
+                );
+
+                if (cellVariableDefinitions?.length) {
+                    variableDefinitions.push(...cellVariableDefinitions);
+                }
+
+                return `${key}: ${textContent}`;
+            })
+            .join(", ");
+
+        return {
+            textContent: getFormattedMessageNode(messageIdPrefix, textConfig.message, `{${values}}`),
+            variableDefinitions,
         };
     }
 
@@ -124,7 +151,10 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
     }
 
     if (textConfig.type === "staticSelect") {
-        const emptyMessageVariableName = `${target}EmptyMessage`;
+        const variableNamePrefix = `${target}Text${pascalCase(textConfig.field)}`;
+        const labelsVariableName = `${variableNamePrefix}Labels`;
+        const emptyMessageVariableName = `${variableNamePrefix}EmptyMessage`;
+
         const emptyMessage = `const ${emptyMessageVariableName} = ${emptyText};`;
 
         const labelMapping = textConfig.values
@@ -135,7 +165,6 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
             })
             .join(", ");
 
-        const labelsVariableName = `${textConfig.field}${pascalCase(target)}Labels`;
         const labelMappingVar = `const ${labelsVariableName}: Record<string, React.ReactNode> = { ${labelMapping} };`;
         const textContent =
             `(${rowValue} == null ? ${emptyMessageVariableName} : ${labelsVariableName}[` + `\`\${${rowValue}}\`` + `] ?? ${rowValue})`;
@@ -181,13 +210,17 @@ export const getCombinationColumnRenderCell = (column: GridCombinationColumnConf
     }`;
 };
 
-const getFieldNamesFromText = (textConfig: TextConfig<string>): string[] => {
+const getFieldNamesFromText = (textConfig: Field<string>): string[] => {
     if (typeof textConfig === "string") {
         return [textConfig];
     }
 
     if (textConfig.type === "static") {
         return [];
+    }
+
+    if (textConfig.type === "formattedMessage") {
+        return Object.values(textConfig.valueFields).flatMap((value) => getFieldNamesFromText(value));
     }
 
     return [textConfig.field];

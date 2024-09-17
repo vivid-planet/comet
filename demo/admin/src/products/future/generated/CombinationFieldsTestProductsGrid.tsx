@@ -124,15 +124,15 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const primaryEmptyMessage = "-";
-                const typePrimaryLabels: Record<string, React.ReactNode> = {
+                const primaryTextTypeEmptyMessage = "-";
+                const primaryTextTypeLabels: Record<string, React.ReactNode> = {
                     Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="great Cap" />,
                     Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
                 };
                 return (
                     <GridCellContent
-                        primaryText={row.type == null ? primaryEmptyMessage : typePrimaryLabels[`${row.type}`] ?? row.type}
+                        primaryText={row.type == null ? primaryTextTypeEmptyMessage : primaryTextTypeLabels[`${row.type}`] ?? row.type}
                         secondaryText={row.type}
                     />
                 );
@@ -146,14 +146,16 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const primaryEmptyMessage = <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />;
-                const inStockPrimaryLabels: Record<string, React.ReactNode> = {
-                    true: <FormattedMessage id="product.staticSelectInStock.primaryText.true" defaultMessage="It's in stock :D" />,
+                const primaryTextInStockEmptyMessage = (
+                    <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />
+                );
+                const primaryTextInStockLabels: Record<string, React.ReactNode> = {
+                    true: <FormattedMessage id="product.staticSelectInStock.primaryText.true" defaultMessage={`It's in stock :D`} />,
                     false: <FormattedMessage id="product.staticSelectInStock.primaryText.false" defaultMessage="No longer available :(" />,
                 };
                 return (
                     <GridCellContent
-                        primaryText={row.inStock == null ? primaryEmptyMessage : inStockPrimaryLabels[`${row.inStock}`] ?? row.inStock}
+                        primaryText={row.inStock == null ? primaryTextInStockEmptyMessage : primaryTextInStockLabels[`${row.inStock}`] ?? row.inStock}
                     />
                 );
             },
@@ -238,6 +240,85 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                                     unitDisplay="short"
                                 />
                             )
+                        }
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "combinedAndNestedValues",
+            headerName: intl.formatMessage({ id: "product.combinedAndNestedValues", defaultMessage: "Custom formatting with nested values" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                return (
+                    <GridCellContent
+                        primaryText={
+                            <FormattedMessage
+                                id="product.combinedAndNestedValues.primaryText"
+                                defaultMessage={`This product is named "{title}" and is a "{type}"`}
+                                values={{ title: row.title, type: row.type }}
+                            />
+                        }
+                        secondaryText={
+                            <FormattedMessage
+                                id="product.combinedAndNestedValues.secondaryText"
+                                defaultMessage="Price: {price} • Category: {category} • Same values again: ({nestedValues})"
+                                values={{
+                                    price:
+                                        typeof row.price === "undefined" || row.price === null ? (
+                                            <FormattedMessage
+                                                id="product.combinedAndNestedValues.secondaryText.price.empty"
+                                                defaultMessage="No price set"
+                                            />
+                                        ) : (
+                                            <FormattedNumber
+                                                value={row.price}
+                                                minimumFractionDigits={2}
+                                                maximumFractionDigits={2}
+                                                style="currency"
+                                                currency="EUR"
+                                            />
+                                        ),
+                                    category: row.category?.title ?? (
+                                        <FormattedMessage
+                                            id="product.combinedAndNestedValues.secondaryText.category.empty"
+                                            defaultMessage="No category set"
+                                        />
+                                    ),
+                                    nestedValues: (
+                                        <FormattedMessage
+                                            id="product.combinedAndNestedValues.secondaryText.nestedValues"
+                                            defaultMessage="Price: {price} • Category: {category}"
+                                            values={{
+                                                price:
+                                                    typeof row.price === "undefined" || row.price === null ? (
+                                                        <FormattedMessage
+                                                            id="product.combinedAndNestedValues.secondaryText.nestedValues.price.empty"
+                                                            defaultMessage="No price set"
+                                                        />
+                                                    ) : (
+                                                        <FormattedNumber
+                                                            value={row.price}
+                                                            minimumFractionDigits={2}
+                                                            maximumFractionDigits={2}
+                                                            style="currency"
+                                                            currency="EUR"
+                                                        />
+                                                    ),
+                                                category: row.category?.title ?? (
+                                                    <FormattedMessage
+                                                        id="product.combinedAndNestedValues.secondaryText.nestedValues.category.empty"
+                                                        defaultMessage="No category set"
+                                                    />
+                                                ),
+                                            }}
+                                        />
+                                    ),
+                                }}
+                            />
                         }
                     />
                 );
