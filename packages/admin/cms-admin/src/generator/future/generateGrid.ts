@@ -347,7 +347,7 @@ export function generateGrid(
             ) as IntrospectionEnumType | undefined;
 
             column.values?.forEach((value) => {
-                if (typeof value === "object" && typeof value.label === "object" && "icon" in value.label) {
+                if (typeof value === "object" && typeof value.label === "object" && typeof value.label.icon !== "undefined") {
                     if (typeof value.label.icon === "string") {
                         iconsToImport.push(value.label.icon);
                     } else if (typeof value.label.icon?.name === "string") {
