@@ -1,7 +1,8 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 
 function getUniqueId() {
-    return Math.random().toString(36).substring(7);
+    return `comet-icon-${uuidv4()}`;
 }
 
 export default function Comet(props: SvgIconProps) {
