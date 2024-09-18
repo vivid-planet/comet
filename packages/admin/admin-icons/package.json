@@ -23,6 +23,7 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
+        "use-constant": "^1.0.0",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
