@@ -1,5 +1,4 @@
 import { BlockInterface, createCompositeBlock } from "@comet/blocks-admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PixelImageBlock } from "./PixelImageBlock";

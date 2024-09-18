@@ -1,3 +1,4 @@
+import { GridColDef } from "@comet/admin";
 import { pascalCase } from "change-case";
 import { FormattedNumber } from "react-intl";
 
@@ -51,7 +52,8 @@ export type GridCombinationColumnConfig<FieldName extends string> = {
     name: string;
     primaryText?: TextConfig<FieldName>;
     secondaryText?: TextConfig<FieldName>;
-} & DataGridSettings;
+} & DataGridSettings &
+    Pick<GridColDef, "sortBy">;
 
 type CellContent = {
     textContent: string;

@@ -1,12 +1,10 @@
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { DamScopeContext } from "./DamScopeContext";
 import { useDamConfig } from "./useDamConfig";
 
-type Props = { children: React.ReactNode };
-
-export function DamScopeProvider({ children }: Props): JSX.Element {
+export function DamScopeProvider({ children }: { children?: ReactNode }) {
     const { scopeParts = [] } = useDamConfig();
     const { scope: completeScope } = useContentScope();
 

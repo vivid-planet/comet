@@ -18,7 +18,7 @@ import {
 } from "@comet/admin";
 import { MoreVertical } from "@comet/admin-icons";
 import { Button } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { CurrentDamFolderProvider } from "./CurrentDamFolderProvider";
@@ -41,7 +41,7 @@ import EditFile from "./FileForm/EditFile";
 
 interface FolderProps extends DamConfig {
     filterApi: IFilterApi<DamFilter>;
-    additionalToolbarItems?: React.ReactNode;
+    additionalToolbarItems?: ReactNode;
     id?: string;
 }
 
@@ -61,7 +61,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
 
     // The selectedFolderId is only used to determine the name of a folder for the "folder" stack page
     // If you want to use the id of the current folder in the "table" stack page, use the id prop
-    const [selectedFolderId, setSelectedFolderId] = React.useState<string | undefined>();
+    const [selectedFolderId, setSelectedFolderId] = useState<string | undefined>();
     const { data } = useQuery<GQLDamFolderQuery, GQLDamFolderQueryVariables>(damFolderQuery, {
         variables: {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -128,19 +128,19 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
 };
 
 export interface DamConfig {
-    renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: RenderDamLabelOptions) => React.ReactNode;
+    renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: RenderDamLabelOptions) => ReactNode;
     hideArchiveFilter?: boolean;
     hideContextMenu?: boolean;
     allowedMimetypes?: string[];
-    contentScopeIndicator?: React.ReactNode;
+    contentScopeIndicator?: ReactNode;
     hideMultiselect?: boolean;
     hideDamActions?: boolean;
-    additionalToolbarItems?: React.ReactNode;
+    additionalToolbarItems?: ReactNode;
 }
 
 type DamTableProps = DamConfig;
 
-export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
+export const DamTable = ({ ...props }: DamTableProps) => {
     const intl = useIntl();
     const [sorting, setSorting] = useStoredState<ISortInformation>("dam_filter_sorting", {
         columnName: "name",
@@ -159,7 +159,7 @@ export const DamTable = ({ ...props }: DamTableProps): React.ReactElement => {
         sort: sorting,
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (filterApi.current.sort) {
             setSorting(filterApi.current.sort);
         }

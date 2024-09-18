@@ -1,5 +1,95 @@
 # @comet/admin
 
+## 7.4.0
+
+### Minor Changes
+
+-   22863c202: Add an `options` prop to `SelectField` as an alternative to `children`
+
+    Note: the behavior of the `options` prop differs from `FinalFormSelect` and is only intended to work with static options.
+    Use the existing `AsyncSelectField` for dynamic options.
+
+    -   Each option must have the `value` and `label` properties. A custom structure is not supported.
+    -   There are no `getOptionLabel` and `getOptionValue` props. The `label` and `value` properties are used directly.
+    -   The value stored in the form state is the `value` property, not the whole option object.
+
+    ```tsx
+    const options: SelectFieldOption[] = [
+        { value: "chocolate", label: "Chocolate" },
+        { value: "strawberry", label: "Strawberry" },
+        { value: "raspberry", label: "Raspberry", disabled: true },
+    ];
+
+    // ...
+
+    <SelectField name="flavor" label="Select a flavor" options={options} fullWidth />;
+    ```
+
+-   cab7c427a: Add support for downloading previously uploaded files to `FileUploadField`
+-   1ca46e8da: Add support for `badgeContent` prop in `MenuItemRouterLink`
+
+    **Example usage in `masterMenuData`:**
+
+    ```ts
+    const masterMenuData = [
+        // ...
+        {
+            type: "route",
+            primary: "Some Route",
+            to: "/someRoute",
+            badgeContent: 2,
+        },
+        // ...
+    ];
+    ```
+
+    **Example usage as element:**
+
+    ```tsx
+    <MenuItemRouterLink primary="Some Route" to="/someRoute" badgeContent={2} />
+    ```
+
+-   1ca46e8da: Extend `MenuItemAnchorLink` to define a correctly styled `LinkExternal` icon if no `secondaryAction` is passed
+-   bef162a60: Add possibility for uncontrolled (promise-based) behavior to `FeedbackButton`
+
+    Previously the `FeedbackButton` was controlled by the props `loading` and `hasErrors`. To enable more use cases and easier usage, a promise-based way was added. If neither of the mentioned props are passed, the component uses the promise returned by `onClick` to evaluate the idle, loading and error state.
+
+-   3e013b05d: Add the ability to disable individual `CheckboxListField` and `RadioGroupField` options
+
+    ```tsx
+    const options = [
+        {
+            label: "Selectable",
+            value: "selectable",
+        },
+        {
+            label: "Disabled",
+            value: "disabled",
+            disabled: true,
+        },
+    ];
+
+    const FormFields = () => (
+        <>
+            <CheckboxListField label="Checkbox List" name="checkboxList" options={options} />
+            <RadioGroupField label="Radio Group" name="radioGroup" fullWdth options={options} />
+        </>
+    );
+    ```
+
+### Patch Changes
+
+-   48d1403d7: Fix `FieldContainer` layout on first render
+
+    Previously, `FieldContainer` displayed vertically on desktop instead of horizontally due to the container width not being available during the first render (because `ref.current` was null).
+    The layout corrected itself after interacting with the field, triggering a rerender.
+
+    Now, the rerender is triggered automatically when `ref.current` is set resulting in the correct layout from the start.
+
+-   bc1ed880a: FinalFormSelect: Fix value `0` and `false` not being clearable
+    -   @comet/admin-icons@7.4.0
+    -   @comet/admin-theme@7.4.0
+
 ## 7.3.2
 
 ### Patch Changes

@@ -1,17 +1,16 @@
 import { TreeCollapse, TreeExpand } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { PropsWithChildren } from "react";
 
 import { PageTreePage } from "./usePageTree";
 
 interface PageInfoProps {
     page: PageTreePage;
     toggleExpand: (id: string) => void;
-    children: React.ReactNode;
 }
 
-export default function PageInfo({ page, toggleExpand, children }: PageInfoProps): React.ReactElement {
+export default function PageInfo({ page, toggleExpand, children }: PropsWithChildren<PageInfoProps>) {
     return (
         <Root style={{ paddingLeft: `${page.level * 33}px` }}>
             <ExpandIconWrapper>
