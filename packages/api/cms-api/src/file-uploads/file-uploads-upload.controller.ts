@@ -1,10 +1,8 @@
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
-import { Controller, forwardRef, Inject, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { EntityManager } from "@mikro-orm/postgresql";
+import { Controller, Inject, Post, Type, UploadedFile, UseInterceptors } from "@nestjs/common";
 import rimraf from "rimraf";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
-import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { FileUploadInput } from "../dam/files/dto/file-upload.input";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { FileUpload } from "./entities/file-upload.entity";
@@ -13,20 +11,22 @@ import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 import { FileUploadsService } from "./file-uploads.service";
 import { FileUploadsFileInterceptor } from "./file-uploads-file.interceptor";
 
-export function createFileUploadsController(options: { public: boolean }): Type<unknown> {
+type FileUploadsUploadResponse = Pick<FileUpload, "id" | "name" | "size" | "mimetype" | "contentHash" | "createdAt" | "updatedAt"> & {
+    downloadUrl?: string;
+};
+
+export function createFileUploadsUploadController(options: { public: boolean }): Type<unknown> {
     @Controller("file-uploads")
-    class BaseFileUploadsController {
+    class BaseFileUploadsUploadController {
         constructor(
-            @InjectRepository(FileUpload) private readonly fileUploadsRepository: EntityRepository<FileUpload>,
-            @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
-            @Inject(FILE_UPLOADS_CONFIG) private readonly config: FileUploadsConfig,
             private readonly fileUploadsService: FileUploadsService,
             private readonly entityManager: EntityManager,
+            @Inject(FILE_UPLOADS_CONFIG) private readonly config: FileUploadsConfig,
         ) {}
 
         @Post("upload")
         @UseInterceptors(FileUploadsFileInterceptor("file"))
-        async upload(@UploadedFile() file: FileUploadInput): Promise<FileUpload> {
+        async upload(@UploadedFile() file: FileUploadInput): Promise<FileUploadsUploadResponse> {
             const fileUpload = await this.fileUploadsService.upload(file);
 
             await this.entityManager.flush();
@@ -37,19 +37,28 @@ export function createFileUploadsController(options: { public: boolean }): Type<
                 }
             });
 
-            return fileUpload;
+            let downloadUrl: string | undefined;
+
+            if (this.config.download) {
+                downloadUrl = this.fileUploadsService.createDownloadUrl(fileUpload);
+            }
+
+            return {
+                ...fileUpload,
+                downloadUrl,
+            };
         }
     }
 
     if (options.public) {
         @DisableCometGuards()
-        class PublicFileUploadsController extends BaseFileUploadsController {}
+        class PublicFileUploadsUploadController extends BaseFileUploadsUploadController {}
 
-        return PublicFileUploadsController;
+        return PublicFileUploadsUploadController;
     }
 
     @RequiredPermission("fileUploads", { skipScopeCheck: true })
-    class PrivateFileUploadsController extends BaseFileUploadsController {}
+    class PrivateFileUploadsUploadController extends BaseFileUploadsUploadController {}
 
-    return PrivateFileUploadsController;
+    return PrivateFileUploadsUploadController;
 }

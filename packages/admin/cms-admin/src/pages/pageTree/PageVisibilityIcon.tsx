@@ -1,5 +1,4 @@
-import { Archive, Disabled, Online } from "@comet/admin-icons";
-import { useTheme } from "@mui/material";
+import { Archive, Offline, Online } from "@comet/admin-icons";
 
 import { GQLPageTreeNodeVisibility } from "../../graphql.generated";
 
@@ -10,18 +9,13 @@ interface PageVisibilityIconProps {
 
 export function PageVisibilityIcon({ visibility, disabled }: PageVisibilityIconProps): JSX.Element {
     const color = disabled ? "disabled" : undefined;
-    const theme = useTheme();
 
-    if (visibility === "Published") {
-        return <Online htmlColor={theme.palette.success.main} />;
+    switch (visibility) {
+        case "Published":
+            return <Online color={color} />;
+        case "Unpublished":
+            return <Offline color={color} />;
+        case "Archived":
+            return <Archive color={color} />;
     }
-    if (visibility === "Unpublished") {
-        return <Disabled color={color} />;
-    }
-
-    if (visibility === "Archived") {
-        return <Archive color={color} />;
-    }
-
-    throw new Error("Unreachable Code");
 }
