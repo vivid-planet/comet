@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import styled, { css } from "styled-components";
 
 import { PixelImageBlockData } from "../../blocks.generated";
@@ -9,7 +10,7 @@ export interface VideoPreviewImageProps {
     aspectRatio: string;
     sizes?: string;
     fill?: boolean;
-    icon?: React.ReactElement;
+    icon?: ReactNode;
 }
 
 export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon }: VideoPreviewImageProps) => {
