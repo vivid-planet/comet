@@ -9,15 +9,14 @@ export interface VideoPreviewImageProps {
     aspectRatio: string;
     sizes?: string;
     fill?: boolean;
+    icon?: React.ReactElement;
 }
 
-export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill }: VideoPreviewImageProps) => {
+export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon }: VideoPreviewImageProps) => {
     return (
         <Root $fill={fill}>
             <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
-            <IconWrapper onClick={onPlay}>
-                <PlayIcon />
-            </IconWrapper>
+            <IconWrapper onClick={onPlay}>{icon ? icon : <PlayIcon />}</IconWrapper>
         </Root>
     );
 };
