@@ -7,9 +7,9 @@ function getUniqueId() {
 }
 
 export default function Comet(props: SvgIconProps) {
-    const uniqueIdA = useConstant(() => getUniqueId());
-    const uniqueIdB = useConstant(() => getUniqueId());
-    const uniqueIdC = useConstant(() => getUniqueId());
+    const uniqueIdA = useConstant(getUniqueId);
+    const uniqueIdB = useConstant(getUniqueId);
+    const uniqueIdC = useConstant(getUniqueId);
 
     return (
         <SvgIcon {...props} viewBox="0 0 200 200">
