@@ -1,4 +1,5 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
+import useConstant from "use-constant";
 import { v4 as uuidv4 } from "uuid";
 
 function getUniqueId() {
@@ -6,9 +7,9 @@ function getUniqueId() {
 }
 
 export default function Comet(props: SvgIconProps) {
-    const uniqueIdA = getUniqueId();
-    const uniqueIdB = getUniqueId();
-    const uniqueIdC = getUniqueId();
+    const uniqueIdA = useConstant(() => getUniqueId());
+    const uniqueIdB = useConstant(() => getUniqueId());
+    const uniqueIdC = useConstant(() => getUniqueId());
 
     return (
         <SvgIcon {...props} viewBox="0 0 200 200">
