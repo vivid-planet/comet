@@ -19,6 +19,7 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
+import { useCometConfig } from "../config/CometConfigContext";
 import { useContentScope } from "../contentScope/Provider";
 import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
@@ -27,7 +28,6 @@ import { FileField } from "../form/file/FileField";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { EditImageDialog } from "./image/EditImageDialog";
 import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
-import { useCmsBlockContext } from "./useCmsBlockContext";
 
 export type ImageBlockState = Omit<PixelImageBlockData, "urlTemplate">;
 
@@ -158,7 +158,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     AdminComponent: ({ state, updateState }) => {
         const [open, setOpen] = React.useState(false);
         const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-        const context = useCmsBlockContext();
+        const cometConfig = useCometConfig();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();
@@ -180,7 +180,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
             setAnchorEl(null);
         };
 
-        const previewUrl = createPreviewUrl(state, context.damConfig.apiUrl, { width: 320, height: 320 });
+        const previewUrl = createPreviewUrl(state, cometConfig.apiUrl, { width: 320, height: 320 });
 
         return (
             <SelectPreviewComponent>

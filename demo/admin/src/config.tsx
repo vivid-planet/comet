@@ -1,10 +1,15 @@
-import { SiteConfig } from "@comet/cms-admin";
-import { createContext, PropsWithChildren, useContext } from "react";
+import { BaseCometConfig, CometConfig, SiteConfig } from "@comet/cms-admin";
+
+declare module "@comet/cms-admin" {
+    interface CometConfig extends BaseCometConfig {
+        sitesConfig: SitesConfig;
+    }
+}
 
 import cometConfig from "./comet-config.json";
 import { environment } from "./environment";
 
-export function createConfig() {
+export function createConfig(): CometConfig {
     const environmentVariables = {} as Record<(typeof environment)[number], string>;
     for (const variableName of environment) {
         const externalVariableName = `EXTERNAL__${variableName}__`;
@@ -26,21 +31,3 @@ export function createConfig() {
 }
 
 export type SitesConfig = Record<string, SiteConfig>;
-
-export type Config = ReturnType<typeof createConfig>;
-
-const ConfigContext = createContext<Config | undefined>(undefined);
-
-export function ConfigProvider({ config, children }: PropsWithChildren<{ config: Config }>) {
-    return <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>;
-}
-
-export function useConfig(): Config {
-    const config = useContext(ConfigContext);
-
-    if (config === undefined) {
-        throw new Error("useConfig must be used within a ConfigProvider");
-    }
-
-    return config;
-}
