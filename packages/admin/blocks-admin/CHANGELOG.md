@@ -1,5 +1,12 @@
 # @comet/blocks-admin
 
+## 5.9.1
+
+### Patch Changes
+
+-   @comet/admin@5.9.1
+-   @comet/admin-icons@5.9.1
+
 ## 5.9.0
 
 ### Patch Changes
