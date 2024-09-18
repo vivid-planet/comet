@@ -69,6 +69,10 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
         ownerState.menuOpen &&
         css`
             background-color: ${theme.palette.grey[50]};
+
+            :hover {
+                background-color: rgba(0, 0, 0, 0.04);
+            }
         `}
     `,
 );
