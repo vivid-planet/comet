@@ -13,11 +13,11 @@ export interface VideoPreviewImageProps {
     icon?: ReactNode;
 }
 
-export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon }: VideoPreviewImageProps) => {
+export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon = <PlayIcon /> }: VideoPreviewImageProps) => {
     return (
         <Root $fill={fill}>
             <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
-            <IconWrapper onClick={onPlay}>{icon ? icon : <PlayIcon />}</IconWrapper>
+            <IconWrapper onClick={onPlay}>{icon}</IconWrapper>
         </Root>
     );
 };
