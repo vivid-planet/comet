@@ -7,7 +7,7 @@ import {
 
 import { GridPinnedColumns } from "./usePersistentColumnState";
 
-type ValueOptions =
+export type ValueOption =
     | string
     | number
     | {
@@ -17,7 +17,7 @@ type ValueOptions =
       };
 
 export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> extends MuiGridColDef<R, V, F> {
-    valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams<R>) => Array<ValueOptions>);
+    valueOptions?: Array<ValueOption> | ((params: GridValueOptionsParams<R>) => Array<ValueOption>);
     /**
      * Media query to define when the column is visible.
      * Requires DataGridPro or DataGridPremium.

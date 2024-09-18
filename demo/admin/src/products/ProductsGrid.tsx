@@ -11,6 +11,7 @@ import {
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderCellUsingValueOptions,
     StackLink,
     ToolbarFillSpace,
     ToolbarItem,
@@ -184,23 +185,7 @@ export function ProductsGrid() {
                     ),
                 },
             ],
-            renderCell: ({ value, colDef }) => {
-                const valueOptions: GridColDef["valueOptions"] = colDef.valueOptions;
-
-                if (Array.isArray(valueOptions)) {
-                    const renderCellValue = valueOptions?.find((option) => typeof option === "object" && option.value === value.toString());
-
-                    if (typeof renderCellValue === "object") {
-                        if ("cellContent" in renderCellValue) {
-                            return renderCellValue.cellContent;
-                        }
-
-                        return renderCellValue.label;
-                    }
-                }
-
-                return value.toString();
-            },
+            renderCell: renderCellUsingValueOptions,
             flex: 1,
             minWidth: 80,
         },

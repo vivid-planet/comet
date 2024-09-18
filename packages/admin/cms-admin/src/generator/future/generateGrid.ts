@@ -92,15 +92,13 @@ const getSortByValue = (sortBy: GridColDef["sortBy"]) => {
 
 type LabelData = {
     textLabel: string;
-    gridCellContent: ReactNode;
+    gridCellContent?: ReactNode;
 };
 
-const getLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
+const getValueOptionsLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
     if (typeof label === "string") {
-        const labelText = `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`;
         return {
-            textLabel: labelText,
-            gridCellContent: labelText,
+            textLabel: `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`,
         };
     }
 
@@ -386,23 +384,18 @@ export function generateGrid(
                 }
             });
 
-            const labelData = values.map(({ value, label }) => ({
-                value,
-                ...getLabelData(`${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`, label),
-            }));
-
-            const valueOptions = `[${labelData.map(({ value, textLabel }) => `{value: ${JSON.stringify(value)}, label: ${textLabel}}, `).join(" ")}]`;
-
-            const valueLabels = `{${labelData
-                .map(({ value, gridCellContent }) => {
-                    return `${JSON.stringify(value)}: ${gridCellContent},`;
+            const valueOptions = `[${values
+                .map(({ value, label }) => {
+                    const labelData = getValueOptionsLabelData(`${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`, label);
+                    return `{
+                        value: ${JSON.stringify(value)},
+                        label: ${labelData.textLabel},
+                        ${labelData.gridCellContent !== undefined ? `cellContent: ${labelData.gridCellContent},` : ""}
+                    },`;
                 })
-                .join(" ")}}`;
+                .join(" ")}]`;
 
-            renderCell = `({ row }) => {
-                const valueLabels: Record<string, React.ReactNode> = ${valueLabels};
-                return row.${name}.toString() in valueLabels ? valueLabels[row.${name}.toString()] : row.${name}.toString();
-            }`;
+            renderCell = `renderCellUsingValueOptions`;
 
             return {
                 name,
@@ -480,6 +473,7 @@ export function generateGrid(
         GridFilterButton,
         GridCellContent,
         GridColDef,
+        renderCellUsingValueOptions,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,

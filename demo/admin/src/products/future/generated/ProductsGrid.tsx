@@ -10,6 +10,7 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderCellUsingValueOptions,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
@@ -147,26 +148,28 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "true", label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }) },
-                { value: "false", label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }) },
-            ],
-            renderCell: ({ row }) => {
-                const valueLabels: Record<string, React.ReactNode> = {
-                    true: (
+                {
+                    value: "true",
+                    label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
+                    cellContent: (
                         <GridCellContent
                             primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
                             icon={<StateFilledIcon color="success" />}
                         />
                     ),
-                    false: (
+                },
+                {
+                    value: "false",
+                    label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
+                    cellContent: (
                         <GridCellContent
                             primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
                             icon={<StateFilledIcon color="error" />}
                         />
                     ),
-                };
-                return row.inStock.toString() in valueLabels ? valueLabels[row.inStock.toString()] : row.inStock.toString();
-            },
+                },
+            ],
+            renderCell: renderCellUsingValueOptions,
             flex: 1,
             minWidth: 80,
         },
@@ -175,18 +178,20 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
-                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
-                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                {
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                },
+                {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
             ],
-            renderCell: ({ row }) => {
-                const valueLabels: Record<string, React.ReactNode> = {
-                    Cap: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
-                    Shirt: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
-                    Tie: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
-                };
-                return row.type.toString() in valueLabels ? valueLabels[row.type.toString()] : row.type.toString();
-            },
+            renderCell: renderCellUsingValueOptions,
             flex: 1,
             maxWidth: 150,
             minWidth: 150,

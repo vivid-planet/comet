@@ -51,6 +51,7 @@ export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
+export { renderCellUsingValueOptions } from "./dataGrid/renderCellUsingValueOptions";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
