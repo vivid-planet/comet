@@ -1,6 +1,6 @@
 import { ArgsType, Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 
 import { StringFilter } from "../../common/filter/string.filter";
 import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
@@ -70,4 +70,9 @@ export class FindUsersArgs extends OffsetBasedPaginationArgs {
     @ValidateNested({ each: true })
     @Type(() => UserSort)
     sort?: UserSort[];
+
+    @Field({ nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    showAllUsers?: boolean; // Only used when UserService.filterUsersWithoutPermission() returns true
 }

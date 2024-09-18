@@ -34,6 +34,9 @@ export interface UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
     createUserFromIdToken?: (idToken: JwtPayload) => Promise<User> | User;
+    options?: {
+        filterUsersWithoutPermission?: boolean;
+    };
 }
 
 export interface UserPermissionsOptions {

@@ -7,10 +7,12 @@ export const staticUsers: User[] = [
         email: "demo@comet-dxp.com",
         isAdmin: true,
     },
-    {
-        id: "2",
-        name: "Non-Admin",
-        email: "test@test.com",
-        isAdmin: false,
-    },
+    ...Array(50)
+        .fill(0)
+        .map((_f, x) => x + 1)
+        .map((id) => ({ id: `SU${id}`, name: `Superuser ${id}`, email: `demo_superuser_${id}@comext-dxp.com`, isAdmin: false })),
+    ...Array(1000)
+        .fill(0)
+        .map((_f, x) => x + 1)
+        .map((id) => ({ id: `U${id}`, name: `User ${id}`, email: `demo_user_${id}@comet-dxp.com`, isAdmin: false })),
 ];

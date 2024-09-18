@@ -11,11 +11,11 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
+import { IconButton, ToggleButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import React from "react";
-import { useIntl } from "react-intl";
+import React, { useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
@@ -23,6 +23,7 @@ export const UserGrid: React.FC = () => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
     const intl = useIntl();
     const stackApi = React.useContext(StackSwitchApiContext);
+    const [showAllUsers, setShowAllUsers] = useState(false);
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -62,12 +63,22 @@ export const UserGrid: React.FC = () => {
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
-            query UserGrid($offset: Int, $limit: Int, $filter: UserFilter, $sort: [UserSort!], $search: String) {
-                users: userPermissionsUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
+            query UserGrid($offset: Int, $limit: Int, $filter: UserFilter, $sort: [UserSort!], $search: String, $showAllUsers: Boolean) {
+                users: userPermissionsUsers(
+                    offset: $offset
+                    limit: $limit
+                    filter: $filter
+                    sort: $sort
+                    search: $search
+                    showAllUsers: $showAllUsers
+                ) {
                     nodes {
                         ...UserForGrid
                     }
                     totalCount
+                }
+                options: userPermissionsOptions {
+                    showAllUsersButton
                 }
             }
             fragment UserForGrid on User {
@@ -82,6 +93,7 @@ export const UserGrid: React.FC = () => {
                 offset: dataGridProps.page * dataGridProps.pageSize,
                 limit: dataGridProps.pageSize,
                 sort: muiGridSortToGql(dataGridProps.sortModel),
+                showAllUsers,
             },
         },
     );
@@ -104,6 +116,13 @@ export const UserGrid: React.FC = () => {
                         <ToolbarItem>
                             <GridFilterButton />
                         </ToolbarItem>
+                        {data?.options?.showAllUsersButton && (
+                            <ToolbarItem>
+                                <ToggleButton value="showAllUsers" selected={showAllUsers} onChange={() => setShowAllUsers(!showAllUsers)}>
+                                    <FormattedMessage id="comet.userPermissions.showAllUsers" defaultMessage="Show all Users" />
+                                </ToggleButton>
+                            </ToolbarItem>
+                        )}
                     </DataGridToolbar>
                 ),
             }}
