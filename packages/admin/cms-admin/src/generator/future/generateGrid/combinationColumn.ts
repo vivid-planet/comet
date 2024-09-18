@@ -2,7 +2,7 @@ import { pascalCase } from "change-case";
 import { FormattedNumber } from "react-intl";
 
 import { DataGridSettings } from "../generator";
-import { getFormattedMessageNode, getFormattedMessageString } from "../utils/intl";
+import { getFormattedMessageNode } from "../utils/intl";
 
 type AbstractField<FieldName extends string> = {
     field: FieldName;
@@ -124,12 +124,12 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
 
         const labelMapping = textConfig.options
             .map((option) => {
-                return `${option.value}: ${getFormattedMessageString(`${messageIdPrefix}.${option.value}`, option.label)}`;
+                return `${option.value}: ${getFormattedMessageNode(`${messageIdPrefix}.${option.value}`, option.label)}`;
             })
             .join(", ");
 
         const labelsVariableName = `${textConfig.field}${pascalCase(target)}Labels`;
-        const labelMappingVar = `const ${labelsVariableName}: Record<string, string> = { ${labelMapping} };`;
+        const labelMappingVar = `const ${labelsVariableName}: Record<string, React.ReactNode> = { ${labelMapping} };`;
         const textContent =
             `(${rowValue} == null ? ${emptyMessageVariableName} : ${labelsVariableName}[` + `\`\${${rowValue}}\`` + `] ?? ${rowValue})`;
 

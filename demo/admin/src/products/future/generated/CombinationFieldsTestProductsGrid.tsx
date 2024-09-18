@@ -125,10 +125,10 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             sortable: false,
             renderCell: ({ row }) => {
                 const primaryEmptyMessage = "-";
-                const typePrimaryLabels: Record<string, string> = {
-                    Cap: intl.formatMessage({ id: "product.staticSelectType.primaryText.Cap", defaultMessage: "This is a cap" }),
-                    Shirt: intl.formatMessage({ id: "product.staticSelectType.primaryText.Shirt", defaultMessage: "Look at this shirt" }),
-                    Tie: intl.formatMessage({ id: "product.staticSelectType.primaryText.Tie", defaultMessage: "Wow, a tie" }),
+                const typePrimaryLabels: Record<string, React.ReactNode> = {
+                    Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="This is a cap" />,
+                    Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Look at this shirt" />,
+                    Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Wow, a tie" />,
                 };
                 return (
                     <GridCellContent
@@ -147,9 +147,9 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             sortable: false,
             renderCell: ({ row }) => {
                 const primaryEmptyMessage = <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />;
-                const inStockPrimaryLabels: Record<string, string> = {
-                    true: intl.formatMessage({ id: "product.staticSelectInStock.primaryText.true", defaultMessage: "It's in stock :D" }),
-                    false: intl.formatMessage({ id: "product.staticSelectInStock.primaryText.false", defaultMessage: "No longer available :(" }),
+                const inStockPrimaryLabels: Record<string, React.ReactNode> = {
+                    true: <FormattedMessage id="product.staticSelectInStock.primaryText.true" defaultMessage="It's in stock :D" />,
+                    false: <FormattedMessage id="product.staticSelectInStock.primaryText.false" defaultMessage="No longer available :(" />,
                 };
                 return (
                     <GridCellContent
