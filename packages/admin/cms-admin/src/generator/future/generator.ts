@@ -1,4 +1,5 @@
 import { GridColDef } from "@comet/admin";
+import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { IconProps } from "@mui/material";
@@ -85,16 +86,14 @@ export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWid
     visible?: ColumnVisibleOption;
 };
 
-type IconKey = string; // TODO: Use `IconName` type from `@comet/admin-icons` after merged: https://github.com/vivid-planet/comet/pull/2421
-
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
-    name: IconKey;
+    name: IconName;
 };
 
 export type StaticSelectLabelCellContent = {
     primaryText?: string;
     secondaryText?: string;
-    icon?: IconKey | IconObject | ImportReference;
+    icon?: IconName | IconObject | ImportReference;
 };
 
 export type GridColumnConfig<T> = (
