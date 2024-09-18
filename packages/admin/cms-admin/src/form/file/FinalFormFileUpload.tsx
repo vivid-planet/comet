@@ -12,6 +12,7 @@ export const finalFormFileUploadFragment = gql`
         id
         name
         size
+        downloadUrl
     }
 `;
 
@@ -23,6 +24,7 @@ type SuccessfulApiResponse = {
     size: number;
     mimetype: string;
     contentHash: string;
+    downloadUrl?: string;
 };
 
 type FailedApiResponse = {
@@ -115,6 +117,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             id: jsonResponse.id,
                             name: jsonResponse.name,
                             size: jsonResponse.size,
+                            downloadUrl: jsonResponse.downloadUrl ?? null,
                         };
 
                         if (singleFile) {
@@ -158,6 +161,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             multiple={multiple}
             maxFiles={maxFiles}
             error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles) : undefined}
+            getDownloadUrl={(file) => (file.downloadUrl ? `${apiUrl}${file.downloadUrl}` : undefined)}
             {...restProps}
         />
     );

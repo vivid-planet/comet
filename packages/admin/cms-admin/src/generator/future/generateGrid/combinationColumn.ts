@@ -1,3 +1,4 @@
+import { GridColDef } from "@comet/admin";
 import { FormattedNumber } from "react-intl";
 
 import { BaseColumnConfig } from "../generator";
@@ -55,7 +56,8 @@ export type GridCombinationColumnConfig<FieldName extends string> = {
     name: string;
     primaryText?: TextConfig<FieldName>;
     secondaryText?: TextConfig<FieldName>;
-} & BaseColumnConfig;
+} & BaseColumnConfig &
+    Pick<GridColDef, "sortBy">;
 
 const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: string) => {
     if (typeof textConfig === "string") {
