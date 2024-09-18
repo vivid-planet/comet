@@ -47,7 +47,7 @@ This can be either:
 
 --->
 
-[ ] I have verified if my change requires an example
+-   [ ] I have verified if my change requires an example
 
 ## Screenshots/screencasts
 
@@ -86,7 +86,7 @@ Changeset writing guidelines:
 
 --->
 
-[ ] I have verified if my change requires a changeset
+-   [ ] I have verified if my change requires a changeset
 
 ## Related tasks and documents
 
