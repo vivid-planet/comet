@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useContext } from "react";
 
 import { ContentScopeInterface } from "../contentScope/Provider";
 import { LocaleContext } from "./LocaleContext";
@@ -8,7 +8,7 @@ interface UseLocaleOptions {
 }
 
 export function useLocale({ scope }: UseLocaleOptions): string {
-    const { resolveLocaleForScope } = React.useContext(LocaleContext);
+    const { resolveLocaleForScope } = useContext(LocaleContext);
 
     return resolveLocaleForScope(scope);
 }

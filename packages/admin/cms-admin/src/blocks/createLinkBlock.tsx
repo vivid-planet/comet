@@ -9,7 +9,6 @@ import {
     useAdminComponentPaper,
 } from "@comet/blocks-admin";
 import { Box } from "@mui/system";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { LinkBlockData } from "../blocks.generated";

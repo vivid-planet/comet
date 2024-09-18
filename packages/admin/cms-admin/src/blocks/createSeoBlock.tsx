@@ -18,7 +18,6 @@ import {
 import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
-import * as React from "react";
 import { Field as ReactFinalFormField } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { FormattedMessage, useIntl } from "react-intl";

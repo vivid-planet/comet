@@ -1,7 +1,7 @@
 import { Archive, Delete, Error as ErrorIcon, MoreVertical, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
 import { Divider, IconButton as CometAdminIconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DamMoreActions } from "../selection/DamMoreActions";
@@ -21,7 +21,7 @@ interface DamSelectionFooterProps {
     open: boolean;
 }
 
-export const DamSelectionFooter: React.VoidFunctionComponent<DamSelectionFooterProps> = ({ open }) => {
+export const DamSelectionFooter = ({ open }: DamSelectionFooterProps) => {
     const damSelectionActionsApi = useDamSelectionApi();
 
     if (!open) {
@@ -105,9 +105,9 @@ const StyledCometAdminIconButton = styled(CometAdminIconButton)`
 `;
 
 interface IconButtonProps {
-    title: NonNullable<React.ReactNode>;
+    title: NonNullable<ReactNode>;
     onClick?: () => void;
-    icon: React.ReactNode;
+    icon: ReactNode;
     loading?: boolean;
     hasErrors?: boolean;
 }

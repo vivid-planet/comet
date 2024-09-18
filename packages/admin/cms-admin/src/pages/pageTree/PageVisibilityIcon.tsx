@@ -1,5 +1,4 @@
 import { Archive, Offline, Online } from "@comet/admin-icons";
-import React from "react";
 
 import { GQLPageTreeNodeVisibility } from "../../graphql.generated";
 
