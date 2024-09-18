@@ -1,6 +1,5 @@
 import { Field, FinalFormSwitch, OnChangeField } from "@comet/admin";
 import { FormControlLabel } from "@mui/material";
-import * as React from "react";
 import { useForm } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 

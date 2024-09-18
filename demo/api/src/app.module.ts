@@ -144,6 +144,7 @@ export class AppModule {
                     upload: {
                         public: true,
                     },
+                    download: { public: true, ...config.fileUploads.download },
                 }),
                 ...(config.contentGeneration
                     ? [

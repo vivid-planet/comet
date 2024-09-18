@@ -47,7 +47,7 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     onDrop?: DropzoneOptions["onDrop"];
     onRemove?: (file: ValidFileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
     onDownload?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => void;
-    getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string;
+    getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string | undefined;
     disabled?: boolean;
     readOnly?: boolean;
     accept?: Accept;

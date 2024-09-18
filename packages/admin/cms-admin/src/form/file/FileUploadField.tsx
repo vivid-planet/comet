@@ -1,5 +1,4 @@
 import { Field, FieldProps } from "@comet/admin";
-import React from "react";
 
 import { FinalFormFileUpload } from "./FinalFormFileUpload";
 import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated";

@@ -11,8 +11,7 @@ import {
     MenuItemRouterLinkProps,
     useWindowSize,
 } from "@comet/admin";
-import * as React from "react";
-import { FC, ReactNode, useContext, useEffect } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { RouteProps, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
@@ -129,7 +128,7 @@ export function useMenuFromMasterMenuData(items: MasterMenuData): MenuItem[] {
     return items.filter(checkPermission).map(mapFn);
 }
 
-export const MasterMenu: FC<MasterMenuProps> = ({ menu, permanentMenuMinWidth = 1024 }) => {
+export const MasterMenu = ({ menu, permanentMenuMinWidth = 1024 }: MasterMenuProps) => {
     const menuItems = useMenuFromMasterMenuData(menu);
     const { open, toggleOpen } = useContext(MenuContext);
     const windowSize = useWindowSize();

@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading, MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
@@ -11,7 +10,7 @@ import { ContentScopeGrid } from "./permissions/ContentScopeGrid";
 import { PermissionGrid } from "./permissions/PermissionGrid";
 import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPage.generated";
 
-export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
+export const UserPage = ({ userId }: { userId: string }) => {
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
             query UserPage($id: String!) {

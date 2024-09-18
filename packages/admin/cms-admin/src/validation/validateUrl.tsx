@@ -1,5 +1,4 @@
 import { isURL } from "class-validator";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 export function validateUrl(url?: string) {

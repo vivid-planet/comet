@@ -12,7 +12,7 @@ import {
 } from "@comet/admin";
 import { Slide, SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, GridColumns, GridRowClassNameParams, GridSelectionModel } from "@mui/x-data-grid";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
@@ -80,7 +80,7 @@ const FolderDataGrid = ({
     hideMultiselect,
     renderDamLabel,
     ...props
-}: FolderDataGridProps): React.ReactElement => {
+}: FolderDataGridProps) => {
     const intl = useIntl();
     const apolloClient = useApolloClient();
     const switchApi = useStackSwitchApi();
@@ -91,7 +91,7 @@ const FolderDataGrid = ({
 
     const [redirectedToId, setRedirectedToId] = useStoredState<string | null>("FolderDataGrid-redirectedToId", null, window.sessionStorage);
 
-    const [uploadTargetFolderName, setUploadTargetFolderName] = React.useState<string | undefined>();
+    const [uploadTargetFolderName, setUploadTargetFolderName] = useState<string | undefined>();
 
     const showUploadFooter = ({ folderName }: { folderName?: string }) => {
         setUploadTargetFolderName(folderName);
@@ -143,7 +143,7 @@ const FolderDataGrid = ({
         acceptedMimetypes: props.allowedMimetypes ?? allAcceptedMimeTypes,
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         async function navigateToNewlyUploadedItems() {
             if (fileUploadApi.newlyUploadedItems.length === 0) {
                 return;
@@ -229,7 +229,7 @@ const FolderDataGrid = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fileUploadApi.newlyUploadedItems]);
 
-    const [hoveredId, setHoveredId] = React.useState<string | null>(null);
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
 
     const showHoverStyles = useDebouncedCallback(
         (id = "root") => {
@@ -290,7 +290,7 @@ const FolderDataGrid = ({
         },
     });
 
-    const [damItemToMove, setDamItemToMove] = React.useState<{ id: string; type: "file" | "folder" }>();
+    const [damItemToMove, setDamItemToMove] = useState<{ id: string; type: "file" | "folder" }>();
     const moveDialogOpen = damItemToMove !== undefined;
 
     const openMoveDialog = (itemToMove: { id: string; type: "file" | "folder" }) => {
