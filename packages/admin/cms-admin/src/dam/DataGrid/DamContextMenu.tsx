@@ -6,8 +6,8 @@ import { saveAs } from "file-saver";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { UnknownError } from "../../common/errors/errorMessages";
+import { useApiConfig } from "../../config/ApiConfigContext";
 import { GQLDamFile, GQLDamFolder } from "../../graphql.generated";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
@@ -31,7 +31,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): Reac
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
-    const context = useCmsBlockContext();
+    const apiConfig = useApiConfig();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
 
@@ -58,7 +58,7 @@ const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): Reac
         }
     };
 
-    const downloadUrl = `${context.damConfig.apiUrl}/dam/folders/${folder.id}/zip`;
+    const downloadUrl = `${apiConfig.url}/dam/folders/${folder.id}/zip`;
 
     return (
         <>
