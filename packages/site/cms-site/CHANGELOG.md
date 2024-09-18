@@ -1,5 +1,16 @@
 # @comet/cms-site
 
+## 7.4.0
+
+### Minor Changes
+
+-   bfb8f04e6: Add `VimeoVideoBlock` to support Vimeo videos
+-   b132010e2: Add helper functions and components to prevent loading third-party cookies until explicit user consent
+
+    See the docs for information on usage and configuration: https://docs.comet-dxp.com/docs/working-with-cookies/
+
+-   53d896b56: Add optional `icon` prop to `VideoPreviewImage` to enable setting a custom play icon
+
 ## 7.3.2
 
 ## 7.3.1
