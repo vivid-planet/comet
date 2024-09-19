@@ -1,3 +1,4 @@
+import { GridColDef } from "@comet/admin";
 import {
     IntrospectionEnumType,
     IntrospectionInputObjectType,
@@ -75,6 +76,18 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
         gridPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: Props`,
     };
 }
+
+const getSortByValue = (sortBy: GridColDef["sortBy"]) => {
+    if (Array.isArray(sortBy)) {
+        return `[${sortBy.map((i) => `"${i}"`).join(", ")}]`;
+    }
+
+    if (typeof sortBy === "string") {
+        return `"${sortBy}"`;
+    }
+
+    return sortBy;
+};
 
 export function generateGrid(
     {
@@ -237,8 +250,11 @@ export function generateGrid(
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = 84,
+        visible: actionsColumnVisible = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
+
+    const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
 
     const gridColumnFields = (
         config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
@@ -293,16 +309,29 @@ export function generateGrid(
                     return `{value: ${JSON.stringify(i.value)}, label: ${label}}, `;
                 })
                 .join(" ")}]`;
+            renderCell = `({ row, colDef }) => {
+                if (colDef.valueOptions && Array.isArray(colDef.valueOptions)) {
+                    const selectedOption = colDef.valueOptions.find((option) => typeof option === "object" && option.value === row.${name});
+
+                    if (selectedOption && typeof selectedOption === "object") {
+                        return selectedOption.label;
+                    }
+                }
+
+                return row.${name};
+            }`;
 
             return {
                 name,
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
+                renderCell,
                 width: column.width,
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                visible: column.visible && `theme.breakpoints.${column.visible}`,
                 pinned: column.pinned,
             };
         } else if (type == "combination") {
@@ -322,7 +351,9 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
+            sortBy: "sortBy" in column && column.sortBy,
         };
     });
 
@@ -371,7 +402,7 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton } from "@mui/material";
+    import { Alert, Button, Box, IconButton, useTheme } from "@mui/material";
     import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -504,6 +535,7 @@ export function generateGrid(
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -522,7 +554,12 @@ export function generateGrid(
                         width: column.width,
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,
+                        visible: column.visible,
                     };
+
+                    if ("sortBy" in column && column.sortBy) {
+                        columnDefinition["sortBy"] = getSortByValue(column.sortBy);
+                    }
 
                     if (typeof column.width === "undefined") {
                         const defaultMinWidth = 150;
@@ -555,6 +592,7 @@ export function generateGrid(
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
                               width: actionsColumnWidth,
+                              visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (

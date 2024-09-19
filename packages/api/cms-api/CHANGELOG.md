@@ -1,5 +1,48 @@
 # @comet/cms-api
 
+## 7.4.1
+
+### Patch Changes
+
+-   @comet/blocks-api@7.4.1
+
+## 7.4.0
+
+### Minor Changes
+
+-   f1d9e449b: Support filtering for document types in the `paginatedPageTreeNodes` query
+
+    **Example**
+
+    ```graphql
+    query PredefinedPages($scope: PageTreeNodeScopeInput!) {
+        paginatedPageTreeNodes(scope: $scope, documentType: "PredefinedPage") {
+            nodes {
+                id
+            }
+        }
+    }
+    ```
+
+-   cab7c427a: Add support for downloading previously uploaded files to `FileUploadField`
+-   bfb8f04e6: Add `VimeoVideoBlock` to support Vimeo videos
+-   a97019016: File Uploads: Add download endpoint
+
+    The endpoint can be enabled by providing the `download` option in the module config:
+
+    ```ts
+    FileUploadsModule.register({
+      /* ... */,
+      download: {
+        secret: "your secret",
+      },
+    })
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@7.4.0
+
 ## 7.3.2
 
 ### Patch Changes

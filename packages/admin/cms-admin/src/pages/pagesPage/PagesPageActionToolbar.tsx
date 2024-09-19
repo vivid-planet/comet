@@ -2,7 +2,7 @@ import { useApolloClient } from "@apollo/client";
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
 import { Button, Checkbox, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
@@ -35,31 +35,31 @@ export interface PagesPageActionToolbarProps {
     onCollapseAllPressed: () => void;
 }
 
-export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionToolbarProps> = ({
+export const PagesPageActionToolbar = ({
     selectedState,
     selectedTree,
     onSelectAllPressed,
     collapseAllDisabled,
     onCollapseAllPressed,
-}) => {
-    const [showCanNotDeleteDialog, setShowCanNotDeleteDialog] = React.useState(false);
-    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-    const [confirmAction, setConfirmAction] = React.useState<ConfirmActionState | null>(null);
+}: PagesPageActionToolbarProps) => {
+    const [showCanNotDeleteDialog, setShowCanNotDeleteDialog] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<ConfirmActionState | null>(null);
 
     const { tree } = usePageTreeContext();
-    const [publishLoading, setPublishLoading] = React.useState(false);
-    const [unpublishLoading, setUnpublishLoading] = React.useState(false);
-    const [archiveLoading, setArchiveLoading] = React.useState(false);
-    const [copyLoading, setCopyLoading] = React.useState(false);
-    const [pasteLoading, setPasteLoading] = React.useState(false);
-    const [deleting, setDeleting] = React.useState(false);
+    const [publishLoading, setPublishLoading] = useState(false);
+    const [unpublishLoading, setUnpublishLoading] = useState(false);
+    const [archiveLoading, setArchiveLoading] = useState(false);
+    const [copyLoading, setCopyLoading] = useState(false);
+    const [pasteLoading, setPasteLoading] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages, progressDialog } = useCopyPastePages();
 
     const theme = useTheme();
     const client = useApolloClient();
     const snackbarApi = useSnackbarApi();
 
-    const showUndoSnackbar = (pageTreeNodes: GQLPageTreePageFragment[], message: React.ReactNode) => {
+    const showUndoSnackbar = (pageTreeNodes: GQLPageTreePageFragment[], message: ReactNode) => {
         snackbarApi.showSnackbar(
             <UndoSnackbar
                 message={message}

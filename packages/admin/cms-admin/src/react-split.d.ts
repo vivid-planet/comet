@@ -1,8 +1,8 @@
 declare module "react-split" {
-    import React, { ReactElement, ReactNode } from "react";
+    import { HTMLProps, ReactElement, ReactNode } from "react";
     import { CSSStyleDeclarationPartial } from "split.js";
 
-    export interface SplitProps extends Omit<React.HTMLProps<HTMLDivElement>, "sizes"> {
+    export interface SplitProps extends Omit<HTMLProps<HTMLDivElement>, "sizes"> {
         // Initial sizes of each element in percents or CSS values.
         sizes?: number[];
 

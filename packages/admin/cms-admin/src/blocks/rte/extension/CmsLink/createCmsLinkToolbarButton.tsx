@@ -8,7 +8,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { EditorState, EntityInstance, RichUtils } from "draft-js";
-import * as React from "react";
+import { MouseEvent, ReactElement, useCallback, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ENTITY_TYPE } from "./Decorator";
@@ -22,9 +22,9 @@ interface CreateCmsLinkToolbarButtonOptions {
     link: BlockInterface;
 }
 
-export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToolbarButtonOptions): (props: IProps) => React.ReactElement {
-    function ToolbarButton({ editorState, setEditorState }: IProps): React.ReactElement {
-        const [open, setOpen] = React.useState(false);
+export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToolbarButtonOptions): (props: IProps) => ReactElement {
+    function ToolbarButton({ editorState, setEditorState }: IProps) {
+        const [open, setOpen] = useState(false);
         const { entity: linkEntity, entitySelection: linkSelection } = findEntityInCurrentSelection(editorState, ENTITY_TYPE);
         const selection = editorState.getSelection();
         const linkEditCreateDisabled = !linkEntity && (selection.isCollapsed() || !selectionIsInOneBlock(editorState)); // when a link entity is found it is always editable, when no entity is found, creating a link is disabled when no char is selected (selection.isCollapsed()) or when the selection exceeds a block (a link over multiple blocks is normally not intended)
@@ -68,7 +68,7 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
     function LinkDialog({ onClose, linkEntity, editorState, setEditorState, selectedText }: ILinkDialogProps) {
         // provides the form inputs
 
-        const linkState: BlockState<typeof LinkBlock> = React.useMemo(() => {
+        const linkState: BlockState<typeof LinkBlock> = useMemo(() => {
             if (linkEntity) {
                 // editing link, create a clone to edit in dialog (as the user might cancel editing)
                 return linkEntity.getData() as BlockState<typeof LinkBlock>;
@@ -78,15 +78,15 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
             }
         }, [linkEntity]);
 
-        const [newLinkState, setNewLinkState] = React.useState<BlockState<typeof LinkBlock>>(linkState);
+        const [newLinkState, setNewLinkState] = useState<BlockState<typeof LinkBlock>>(linkState);
 
         const handleClose = () => {
             onClose();
         };
 
         // removes the selected link entity
-        const handleRemove = React.useCallback(
-            (e: React.MouseEvent) => {
+        const handleRemove = useCallback(
+            (e: MouseEvent) => {
                 e.preventDefault();
 
                 const selection = editorState.getSelection();
@@ -99,8 +99,8 @@ export function createCmsLinkToolbarButton({ link: LinkBlock }: CreateCmsLinkToo
         );
 
         // creates or updates the draft link entity
-        const handleUpdate = React.useCallback(
-            (e: React.MouseEvent) => {
+        const handleUpdate = useCallback(
+            (e: MouseEvent) => {
                 e.preventDefault();
                 const selection = editorState.getSelection();
                 // update the data in the entity

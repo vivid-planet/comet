@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { useRouteMatch } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
@@ -11,11 +11,11 @@ import { useDamScope } from "./config/useDamScope";
 import { DamTable } from "./DamTable";
 
 type Props = {
-    renderContentScopeIndicator?: (scope: ContentScopeInterface) => React.ReactNode;
+    renderContentScopeIndicator?: (scope: ContentScopeInterface) => ReactNode;
     /**
      * @deprecated Use `additionalToolbarItems` option in `DamConfigProvider` instead
      */
-    additionalToolbarItems?: React.ReactNode;
+    additionalToolbarItems?: ReactNode;
 };
 
 const DefaultContentScopeIndicator = () => {
@@ -35,7 +35,7 @@ const DamTableWrapper = styled("div")`
     grid-template-rows: max-content;
 `;
 
-function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props): React.ReactElement {
+function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props) {
     const { scope, match } = useContentScope();
     const routeMatch = useRouteMatch();
     const damRouteLocation = routeMatch.url.replace(match.url, "");

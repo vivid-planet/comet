@@ -2,7 +2,7 @@ import { Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
 import { Box, Button, FormControlLabel, Switch, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -19,7 +19,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
         values: { focalPoint },
     } = useFormState<EditImageFormValues>();
 
-    const handleSmartFocalPointChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSmartFocalPointChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
             form.change("focalPoint", "SMART");
         } else {
