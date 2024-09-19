@@ -29,13 +29,6 @@ export const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, Owne
             color: ${theme.palette.primary.main};
             font-weight: ${theme.typography.fontWeightMedium};
         `}
-
-        ${ownerState.subMenuOpen &&
-        ownerState.variant === "temporary" &&
-        ownerState.menuOpen &&
-        css`
-            background-color: ${theme.palette.grey[50]};
-        `}
     `,
 );
 
@@ -44,10 +37,24 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
     slotName: "menuItem",
 })(
     ({ theme, ownerState }) => css`
+        background-color: ${theme.palette.common.white};
         ${!ownerState.menuOpen &&
         ownerState.level === 1 &&
         css`
             justify-content: space-between;
+        `}
+
+        ${ownerState.level === 2 &&
+        ownerState.menuOpen &&
+        ownerState.variant === "temporary" &&
+        ownerState.subMenuOpen &&
+        css`
+            border-top: 1px solid ${theme.palette.grey[100]};
+            background-color: ${theme.palette.grey[50]};
+
+            :hover {
+                background-color: ${theme.palette.grey[100]} !important;
+            }
         `}
 
         ${ownerState.childSelected &&
@@ -56,22 +63,12 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
             .CometAdminMenuItem-icon {
                 color: ${theme.palette.primary.main};
             }
+
             .CometAdminMenuItem-primary {
                 ${(ownerState.level === 2 || ownerState.level === 3) &&
                 css`
                     font-weight: 600;
                 `};
-            }
-        `}
-
-        ${ownerState.subMenuOpen &&
-        ownerState.variant === "temporary" &&
-        ownerState.menuOpen &&
-        css`
-            background-color: ${theme.palette.grey[50]};
-
-            :hover {
-                background-color: rgba(0, 0, 0, 0.04);
             }
         `}
     `,

@@ -84,8 +84,6 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             padding: 16px 22px;
             background-color: ${!ownerState.open && ownerState.collapsibleOpen
                 ? `${theme.palette.primary.main} !important`
-                : ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
-                ? theme.palette.grey[50]
                 : theme.palette.common.white};
 
             .${listItemIconClasses.root} {
@@ -93,7 +91,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             }
 
             :hover {
-                background-color: ${!ownerState.open ? `${theme.palette.primary.main} !important` : theme.palette.grey[50]};
+                background-color: ${!ownerState.open ? `${theme.palette.primary.main} !important` : ""};
                 color: ${!ownerState.open ? `${theme.palette.common.white}` : ""};
 
                 .${listItemIconClasses.root} {
@@ -115,7 +113,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
 
                 :hover {
                     color: ${!ownerState.open ? theme.palette.common.white : theme.palette.primary.main};
-                    background-color: ${ownerState.collapsibleOpen ? "rgba(0, 0, 0, 0.04) !important" : theme.palette.grey[50]};
+                    background-color: ${theme.palette.grey[50]};
 
                     .${listItemIconClasses.root} {
                         color: ${!ownerState.open ? theme.palette.common.white : theme.palette.primary.main};
@@ -154,9 +152,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             }
 
             &.Mui-selected {
-                background-color: ${ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
-                    ? theme.palette.grey[50]
-                    : theme.palette.common.white};
+                background-color: ${theme.palette.common.white};
                 color: ${theme.palette.primary.main};
                 font-weight: ${theme.typography.fontWeightMedium};
 
@@ -165,7 +161,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                 }
 
                 :hover {
-                    background-color: rgba(0, 0, 0, 0.04);
+                    background-color: ${theme.palette.grey[50]};
                 }
 
                 .${listItemTextClasses.primary} {
@@ -192,6 +188,16 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
             position: relative;
             width: ${ownerState.open ? "initial" : 240}px;
 
+            background-color: ${ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
+                ? theme.palette.grey[50]
+                : theme.palette.common.white};
+
+            :hover {
+                background-color: ${ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
+                    ? theme.palette.grey[100]
+                    : theme.palette.grey[50]};
+            }
+
             :last-child {
                 border-bottom: ${ownerState.open ? `1px solid ${theme.palette.grey[50]}` : "initial"};
                 box-sizing: border-box;
@@ -205,7 +211,9 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                 font-weight: ${theme.typography.fontWeightMedium};
 
                 :hover {
-                    background-color: rgba(0, 0, 0, 0.04);
+                    background-color: ${ownerState.open && ownerState.collapsibleOpen && ownerState.variant === "temporary"
+                        ? theme.palette.grey[100]
+                        : theme.palette.grey[50]};
                 }
 
                 .${listItemTextClasses.primary} {
@@ -241,7 +249,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                             width: 1px;
                             height: 100%;
                             top: 0;
-                            background-color: ${theme.palette.grey[100]};
+                            background-color: ${theme.palette.grey[200]};
                         }
 
                         &:after {
@@ -251,7 +259,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                             height: 1px;
                             top: 50%;
                             transform: translateY(-50%);
-                            background-color: ${theme.palette.grey[100]};
+                            background-color: ${theme.palette.grey[200]};
                         }
                     }
 
@@ -276,7 +284,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                             width: 1px;
                             height: 50%;
                             top: 0;
-                            background-color: ${theme.palette.grey[100]};
+                            background-color: ${theme.palette.grey[200]};
                         }
 
                         &:after {
@@ -286,7 +294,7 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
                             height: 1px;
                             top: 50%;
                             transform: translateY(-50%);
-                            background-color: ${theme.palette.grey[100]};
+                            background-color: ${theme.palette.grey[200]};
                         }
                     }
 
