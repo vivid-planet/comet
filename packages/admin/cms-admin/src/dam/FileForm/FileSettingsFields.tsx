@@ -110,6 +110,8 @@ export const FileSettingsFields = ({ file }: SettingsFormProps) => {
                         }
                     }}
                     onBlur={() => {
+                        formApi.blur("name");
+
                         const filename: string | undefined = formApi.getFieldState("name")?.value;
                         const nameWithoutExtension = filename?.split(".").slice(0, -1).join(".");
                         const extension = file.name.split(".").pop();
