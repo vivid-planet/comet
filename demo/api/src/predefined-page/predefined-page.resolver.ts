@@ -1,23 +1,11 @@
-import {
-    AffectedEntity,
-    PageTreeNodeInterface,
-    PageTreeNodeVisibility,
-    PageTreeService,
-    RequestContext,
-    RequestContextInterface,
-    RequiredPermission,
-    validateNotModified,
-} from "@comet/cms-api";
+import { AffectedEntity, PageTreeNodeVisibility, PageTreeService, RequiredPermission, validateNotModified } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
-import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
 import { PredefinedPageInput } from "./dto/predefined-page.input";
 import { PredefinedPage } from "./entities/predefined-page.entity";
-import { PredefinedPageService } from "./predefined-page.service";
 
 @Resolver(() => PredefinedPage)
 @RequiredPermission("pageTree")
@@ -25,7 +13,6 @@ export class PredefinedPageResolver {
     constructor(
         @InjectRepository(PredefinedPage) private readonly repository: EntityRepository<PredefinedPage>,
         private readonly pageTreeService: PageTreeService,
-        private readonly predefinedPageService: PredefinedPageService,
     ) {}
 
     @Query(() => PredefinedPage, { nullable: true })
@@ -73,14 +60,5 @@ export class PredefinedPageResolver {
         await this.repository.flush();
 
         return this.repository.findOneOrFail(id);
-    }
-
-    @Query(() => PageTreeNode, { nullable: true })
-    async pageTreeNodeForPredefinedPage(
-        @Args("type") type: string,
-        @Args("scope", { type: () => PageTreeNodeScope }) scope: PageTreeNodeScope,
-        @RequestContext() { includeInvisiblePages }: RequestContextInterface,
-    ): Promise<PageTreeNodeInterface | null> {
-        return this.predefinedPageService.pageTreeNodeForPredefinedPage(type, scope, includeInvisiblePages);
     }
 }
