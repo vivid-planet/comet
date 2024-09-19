@@ -29,10 +29,13 @@ type NumberField<FieldName extends string> = AbstractField<FieldName> &
 
 type StaticSelectField<FieldName extends string> = AbstractField<FieldName> & {
     type: "staticSelect";
-    options: Array<{
-        value: string | number | boolean;
-        label: string;
-    }>;
+    values: Array<
+        | string
+        | {
+              value: string | number | boolean;
+              label: string;
+          }
+    >;
 };
 
 // type FieldGroup<FieldName extends string> = {
@@ -124,9 +127,11 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
         const emptyMessageVariableName = `${target}EmptyMessage`;
         const emptyMessage = `const ${emptyMessageVariableName} = ${emptyText};`;
 
-        const labelMapping = textConfig.options
-            .map((option) => {
-                return `${option.value}: ${getFormattedMessageNode(`${messageIdPrefix}.${option.value}`, option.label)}`;
+        const labelMapping = textConfig.values
+            .map((valueOption) => {
+                const value = typeof valueOption === "string" ? valueOption : valueOption.value;
+                const label = typeof valueOption === "string" ? valueOption : valueOption.label;
+                return `${value}: ${getFormattedMessageNode(`${messageIdPrefix}.${value}`, label)}`;
             })
             .join(", ");
 

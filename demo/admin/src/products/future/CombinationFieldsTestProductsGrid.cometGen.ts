@@ -26,11 +26,7 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
             primaryText: {
                 type: "staticSelect",
                 field: "type",
-                options: [
-                    { value: "Cap", label: "This is a cap" },
-                    { value: "Shirt", label: "Look at this shirt" },
-                    { value: "Tie", label: "Wow, a tie" },
-                ],
+                values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
             },
             secondaryText: "type",
         },
@@ -42,7 +38,7 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
                 type: "staticSelect",
                 field: "inStock",
                 emptyValue: "No stock info",
-                options: [
+                values: [
                     { value: true, label: "It's in stock :D" },
                     { value: false, label: "No longer available :(" },
                 ],

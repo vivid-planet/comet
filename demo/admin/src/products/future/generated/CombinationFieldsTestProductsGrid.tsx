@@ -126,9 +126,9 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             renderCell: ({ row }) => {
                 const primaryEmptyMessage = "-";
                 const typePrimaryLabels: Record<string, React.ReactNode> = {
-                    Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="This is a cap" />,
-                    Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Look at this shirt" />,
-                    Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Wow, a tie" />,
+                    Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
                 };
                 return (
                     <GridCellContent
