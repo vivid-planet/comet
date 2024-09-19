@@ -15,10 +15,11 @@ export class PredefinedPageResolver {
         private readonly pageTreeService: PageTreeService,
     ) {}
 
-    @Query(() => PredefinedPage, { nullable: true })
+    @Query(() => PredefinedPage)
     @AffectedEntity(PredefinedPage)
-    async predefinedPage(@Args("id", { type: () => ID }) id: string): Promise<PredefinedPage | null> {
-        return this.repository.findOneOrFail(id);
+    async predefinedPage(@Args("id", { type: () => ID }) id: string): Promise<PredefinedPage> {
+        const predefinedPage = await this.repository.findOneOrFail(id);
+        return predefinedPage;
     }
 
     @Mutation(() => PredefinedPage)

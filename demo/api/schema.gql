@@ -770,7 +770,7 @@ type Query {
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
-  predefinedPage(id: ID!): PredefinedPage
+  predefinedPage(id: ID!): PredefinedPage!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
