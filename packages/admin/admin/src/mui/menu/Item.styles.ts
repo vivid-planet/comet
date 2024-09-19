@@ -1,4 +1,4 @@
-import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses, svgIconClasses } from "@mui/material";
+import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { IMenuContext } from "./Context";
