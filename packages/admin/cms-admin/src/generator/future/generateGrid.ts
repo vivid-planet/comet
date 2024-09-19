@@ -395,7 +395,7 @@ export function generateGrid(
                 })
                 .join(" ")}]`;
 
-            renderCell = `renderCellUsingValueOptions`;
+            renderCell = `renderCellFromValueOptions`;
 
             return {
                 name,
@@ -473,7 +473,7 @@ export function generateGrid(
         GridFilterButton,
         GridCellContent,
         GridColDef,
-        renderCellUsingValueOptions,
+        renderCellFromValueOptions,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
