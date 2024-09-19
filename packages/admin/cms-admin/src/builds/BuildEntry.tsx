@@ -121,7 +121,7 @@ export function BuildEntry(): React.ReactElement {
 
     return (
         <AppHeaderDropdown startIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />} dropdownArrow={null}>
-            <Content py={1}>
+            <Content>
                 <List>
                     <ListItem dense={false}>
                         <Typography variant="body2">
@@ -145,6 +145,7 @@ export function BuildEntry(): React.ReactElement {
 }
 
 const Content = styled(Box)`
+    padding: 4px 0;
     width: 300px;
     min-height: 40px;
 `;
