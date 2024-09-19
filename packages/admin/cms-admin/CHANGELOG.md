@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 6.17.8
+
+### Patch Changes
+
+-   1132fc626: Display validation errors of file name field in DAM
+    -   @comet/admin@6.17.8
+    -   @comet/admin-date-time@6.17.8
+    -   @comet/admin-icons@6.17.8
+    -   @comet/admin-rte@6.17.8
+    -   @comet/admin-theme@6.17.8
+    -   @comet/blocks-admin@6.17.8
+
 ## 6.17.7
 
 ### Patch Changes
