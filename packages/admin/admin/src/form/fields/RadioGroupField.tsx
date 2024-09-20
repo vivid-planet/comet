@@ -17,21 +17,20 @@ export type RadioGroupFieldProps<Value extends string> = FieldProps<Value, HTMLI
 
 export const RadioGroupField = <Value extends string>({ options, layout = "row", ...restProps }: RadioGroupFieldProps<Value>) => {
     return (
-        <Field<Value> type="radio" {...restProps}>
-            {(props) => {
-                const {
-                    input: { checked, value, onBlur, onFocus, ...restInput },
-                } = props;
-                return (
-                    <RadioGroup {...restInput} row={layout === "row"}>
-                        {options.map(({ value, label, disabled = false }) => (
-                            <Field name={value} key={value}>
-                                {() => <FormControlLabel key={value} label={label} value={value} disabled={disabled} control={<MuiRadio />} />}
-                            </Field>
-                        ))}
-                    </RadioGroup>
-                );
-            }}
+        <Field<Value> {...restProps}>
+            {({ input: { checked, value: formValue, onBlur, onFocus, ...restInput } }) => (
+                <RadioGroup {...restInput} row={layout === "row"}>
+                    {options.map(({ value, label, disabled = false }) => (
+                        <FormControlLabel
+                            key={value}
+                            label={label}
+                            value={value}
+                            disabled={disabled}
+                            control={<MuiRadio checked={formValue === value} />}
+                        />
+                    ))}
+                </RadioGroup>
+            )}
         </Field>
     );
 };
