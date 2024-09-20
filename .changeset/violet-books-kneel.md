@@ -6,7 +6,7 @@ Make it easier to render DataGrid cell content based on the cell's `valueOptions
 
 Objects inside a cell's `valueOptions` now support an optional `cellContent` property to allow defining a react node in addition to the `label`, which can only be a string.
 
-When using the new `renderCellFromValueOptions` helper as the `renderCell` function in the column definition, the helper will render the `cellContent` node of the selected option if defined.
+When using the new `renderStaticSelectCell` helper as the `renderCell` function in the column definition, the helper will render the `cellContent` node of the selected option if defined.
 The `label` or the string value of the option will be used as the cell's content if no `cellContent` node is provided.
 
 The following example would behave as follows:
@@ -35,6 +35,6 @@ The following example would behave as follows:
         },
         "Tie",
     ],
-    renderCell: renderCellUsingValueOptions,
+    renderCell: renderStaticSelectCell,
 }
 ```
