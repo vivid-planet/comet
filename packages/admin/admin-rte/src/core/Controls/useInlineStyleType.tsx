@@ -1,7 +1,7 @@
 import { RteBold, RteItalic, RteStrikethrough, RteSub, RteSup, RteUnderlined } from "@comet/admin-icons";
 import * as detectBrowser from "detect-browser";
 import { Editor, EditorState, RichUtils } from "draft-js";
-import * as React from "react";
+import { RefObject, useCallback, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { SupportedThings } from "../Rte";
@@ -13,7 +13,7 @@ interface IProps {
     editorState: EditorState;
     setEditorState: (editorState: EditorState) => void;
     supportedThings: SupportedThings[];
-    editorRef: React.RefObject<Editor>;
+    editorRef: RefObject<Editor>;
     customInlineStyles?: CustomInlineStyles;
 }
 
@@ -70,7 +70,7 @@ const defaultFeatures: Array<IFeatureConfig<InlineStyleType>> = [
 
 export default function useInlineStyleType({ editorState, setEditorState, supportedThings, editorRef, customInlineStyles }: IProps) {
     // can check if inlineStyleType is supported by the editor
-    const supports = React.useCallback(
+    const supports = useCallback(
         (inlineStyle: InlineStyleType) => {
             switch (inlineStyle) {
                 case "BOLD":
@@ -92,7 +92,7 @@ export default function useInlineStyleType({ editorState, setEditorState, suppor
         [supportedThings],
     );
 
-    const inlineStyleActive = React.useCallback(
+    const inlineStyleActive = useCallback(
         (draftInlineStyleType: InlineStyleType) => {
             const currentStyle = editorState.getCurrentInlineStyle();
             return currentStyle.has(draftInlineStyleType);
@@ -100,15 +100,15 @@ export default function useInlineStyleType({ editorState, setEditorState, suppor
         [editorState],
     );
 
-    const handleInlineStyleButtonClick = React.useCallback(
-        (draftInlineStyleType: InlineStyleType, e: React.MouseEvent) => {
+    const handleInlineStyleButtonClick = useCallback(
+        (draftInlineStyleType: InlineStyleType, e: MouseEvent) => {
             e.preventDefault();
             setEditorState(RichUtils.toggleInlineStyle(editorState, draftInlineStyleType));
         },
         [setEditorState, editorState],
     );
 
-    const features: Array<IFeatureConfig<InlineStyleType>> = React.useMemo(
+    const features: Array<IFeatureConfig<InlineStyleType>> = useMemo(
         () => [
             ...defaultFeatures
                 .filter((c) => supports(c.name))

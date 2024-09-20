@@ -1,6 +1,6 @@
 import { AddNoCircle } from "@comet/admin-icons";
 import { Button } from "@mui/material";
-import * as React from "react";
+import { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
@@ -13,7 +13,7 @@ interface IProps {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export class TableAddButton extends React.Component<IProps> {
+export class TableAddButton extends Component<IProps> {
     public render() {
         return (
             <Button onClick={this.handleAddClick} startIcon={<AddNoCircle />}>

@@ -1,5 +1,5 @@
 import { CircularProgress, InputAdornment, MenuItem, Select, SelectProps } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -9,7 +9,7 @@ import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
-    children?: React.ReactNode;
+    children?: ReactNode;
     required?: boolean;
 }
 
@@ -47,7 +47,7 @@ export const FinalFormSelect = <T,>({
     const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
-            hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
+            hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value !== undefined) : value !== undefined)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
     ) : null;

@@ -1,5 +1,84 @@
 # @comet/cms-site
 
+## 7.4.2
+
+### Patch Changes
+
+-   d95b0cb8d: Fix Next peer dependency
+
+    The peer dependency was incorrectly set to `14`.
+    We require `14.2.0` or later due to relying on [optimizePackageImports](https://nextjs.org/docs/app/api-reference/next-config-js/optimizePackageImports).
+
+## 7.4.1
+
+## 7.4.0
+
+### Minor Changes
+
+-   bfb8f04e6: Add `VimeoVideoBlock` to support Vimeo videos
+-   b132010e2: Add helper functions and components to prevent loading third-party cookies until explicit user consent
+
+    See the docs for information on usage and configuration: https://docs.comet-dxp.com/docs/working-with-cookies/
+
+-   53d896b56: Add optional `icon` prop to `VideoPreviewImage` to enable setting a custom play icon
+
+## 7.3.2
+
+## 7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   f2e10ec21: Fix a bug where a block's hover-overlay element in the admin preview might persist after the underlying element is moved or resized
+
+## 7.2.1
+
+## 7.2.0
+
+### Minor Changes
+
+-   381aa71c7: Add `ErrorHandlerProvider`
+
+    Each block in `BlocksBlock`, `OneOfBlock` and `ListBlock` is wrapped with an error boundary to prevent the whole page from crashing when a single block throws an error.
+    In production, the broken block is hidden. The application should take care of reporting the error to an error tracking service (e.g., Sentry). In local development, the error is re-thrown.
+
+    Add an `ErrorHandler` to the root layout:
+
+    ```tsx
+    // In src/app/layout.tsx
+    <html>
+        <body className={inter.className}>
+            {/* Other Providers */}
+            <ErrorHandler>{children}</ErrorHandler>
+        </body>
+    </html>
+    ```
+
+    The `ErrorHandler` receives the errors in the application and can report them to the error tracking service.
+
+    **Example ErrorHandler**
+
+    ```tsx
+    "use client";
+
+    import { ErrorHandlerProvider } from "@comet/cms-site";
+    import { PropsWithChildren } from "react";
+
+    export function ErrorHandler({ children }: PropsWithChildren) {
+        function onError(error: Error, errorInfo: ErrorInfo) {
+            console.error("Error caught by error handler", error, errorInfo.componentStack);
+            if (process.env.NODE_ENV === "development") {
+                throw error;
+            } else {
+                // Report the error to the error tracking service
+            }
+        }
+
+        return <ErrorHandlerProvider onError={onError}>{children}</ErrorHandlerProvider>;
+    }
+    ```
+
 ## 7.1.0
 
 ### Minor Changes

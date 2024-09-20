@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
-import { ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
-import { commonErrorMessages } from "@comet/admin/src/form/file/commonErrorMessages";
-import React from "react";
+import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
+import { useMemo, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -13,6 +12,7 @@ export const finalFormFileUploadFragment = gql`
         id
         name
         size
+        downloadUrl
     }
 `;
 
@@ -24,6 +24,7 @@ type SuccessfulApiResponse = {
     size: number;
     mimetype: string;
     contentHash: string;
+    downloadUrl?: string;
 };
 
 type FailedApiResponse = {
@@ -52,15 +53,15 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     maxFiles,
     ...restProps
 }: FinalFormFileUploadProps<Multiple>) => {
-    const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
-    const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
+    const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
+    const [uploadingFiles, setUploadingFiles] = useState<LoadingFileSelectItem[]>([]);
+    const [failedUploads, setFailedUploads] = useState<ErrorFileSelectItem[]>([]);
     const {
         damConfig: { apiUrl }, // TODO: Think of a better solution to get the apiUrl, as this has nothing to do with DAM
     } = useCmsBlockContext();
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
-    const inputValue = React.useMemo(() => (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []), [fieldValue]);
+    const inputValue = useMemo(() => (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []), [fieldValue]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
@@ -79,11 +80,11 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                     };
 
                     if (rejection.errors.some((error) => error.code === "file-too-large")) {
-                        failedFile.error = commonErrorMessages.fileTooLarge;
+                        failedFile.error = commonFileErrorMessages.fileTooLarge;
                     }
 
                     if (rejection.errors.some((error) => error.code === "file-invalid-type")) {
-                        failedFile.error = commonErrorMessages.invalidFileType;
+                        failedFile.error = commonFileErrorMessages.invalidFileType;
                     }
 
                     setFailedUploads((existing) => [...existing, failedFile]);
@@ -116,6 +117,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             id: jsonResponse.id,
                             name: jsonResponse.name,
                             size: jsonResponse.size,
+                            downloadUrl: jsonResponse.downloadUrl ?? null,
                         };
 
                         if (singleFile) {
@@ -128,7 +130,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                         let errorMessage = <FormattedMessage id="comet.finalFormFileUpload.uploadFailed" defaultMessage="Upload failed." />;
 
                         if (jsonResponse.message === "Unsupported mime type") {
-                            errorMessage = commonErrorMessages.invalidFileType;
+                            errorMessage = commonFileErrorMessages.invalidFileType;
                         }
 
                         setUploadingFiles((existing) => existing.filter((loadingFile) => loadingFile.name !== file.name));
@@ -158,7 +160,8 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             files={files}
             multiple={multiple}
             maxFiles={maxFiles}
-            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonErrorMessages.tooManyFiles(maxFiles) : undefined}
+            error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles) : undefined}
+            getDownloadUrl={(file) => (file.downloadUrl ? `${apiUrl}${file.downloadUrl}` : undefined)}
             {...restProps}
         />
     );

@@ -1,7 +1,7 @@
 import { Filter } from "@comet/admin-icons";
 import { ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren, ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
@@ -38,13 +38,13 @@ export interface FilterBarMoreFiltersProps
         root: "div";
         button: typeof FilterBarButton;
     }> {
-    icon?: React.ReactNode;
+    icon?: ReactNode;
 }
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export function FilterBarMoreFilters(inProps: React.PropsWithChildren<FilterBarMoreFiltersProps>) {
+export function FilterBarMoreFilters(inProps: PropsWithChildren<FilterBarMoreFiltersProps>) {
     const {
         children,
         icon = <Filter />,
@@ -54,7 +54,7 @@ export function FilterBarMoreFilters(inProps: React.PropsWithChildren<FilterBarM
         props: inProps,
         name: "CometAdminFilterBarMoreFilters",
     });
-    const [hasExtended, setHasExtended] = React.useState(false);
+    const [hasExtended, setHasExtended] = useState(false);
 
     if (hasExtended) {
         return <>{children}</>;

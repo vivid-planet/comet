@@ -1,6 +1,6 @@
 import { Link, Typography as MuiTypography, TypographyTypeMap } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { forwardRef, Fragment } from "react";
 import { Link as RouterLink, LinkProps as RouterLinkProps } from "react-router-dom";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
@@ -66,7 +66,7 @@ const Separator = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
     `,
 );
 
-const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
+const BreadcrumbLink = forwardRef<HTMLAnchorElement, RouterLinkProps>(({ href, to, ...rest }, ref) => (
     <RouterLink innerRef={ref} to={to ?? href} {...rest} />
 ));
 
@@ -99,7 +99,7 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                             };
 
                             return (
-                                <React.Fragment key={id}>
+                                <Fragment key={id}>
                                     <Item {...slotProps?.item}>
                                         <TypographyRoot ownerState={ownerState} {...typographyProps} {...slotProps?.typographyRoot}>
                                             <Link to={url} component={BreadcrumbLink} color="inherit">
@@ -112,7 +112,7 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                                             <Separator {...slotProps?.separator} />
                                         </SeparatorContainer>
                                     )}
-                                </React.Fragment>
+                                </Fragment>
                             );
                         })}
                     </>

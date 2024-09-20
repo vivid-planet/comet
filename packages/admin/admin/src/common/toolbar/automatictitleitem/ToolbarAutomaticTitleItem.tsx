@@ -1,6 +1,5 @@
 import { ComponentsOverrides, Typography, TypographyTypeMap } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
