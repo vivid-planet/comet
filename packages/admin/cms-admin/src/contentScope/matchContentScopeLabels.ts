@@ -5,10 +5,9 @@ import { TextMatch } from "../common/MarkedMatches";
 interface MatchContentScopeLabelsParams {
     item: string;
     query: string;
-    isFirstMatch: boolean;
 }
 
-export const matchContentScopeLabels = ({ item, query, isFirstMatch }: MatchContentScopeLabelsParams): Array<TextMatch> => {
+export const matchContentScopeLabels = ({ item, query }: MatchContentScopeLabelsParams): Array<TextMatch> => {
     const matches: Array<TextMatch> = [];
     if (!query) {
         return matches;
@@ -22,7 +21,7 @@ export const matchContentScopeLabels = ({ item, query, isFirstMatch }: MatchCont
         matches.push({
             start: match.index,
             end: match.index + query.length - 1,
-            focused: isFirstMatch,
+            focused: false,
         });
     }
 

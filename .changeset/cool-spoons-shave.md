@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Add Search Highlighting for ContentScope Select
+Add search results highlighting to `ContentScopeSelect`

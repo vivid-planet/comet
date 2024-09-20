@@ -133,6 +133,32 @@ storiesOf("@comet/cms-admin/Content Scope Select", module)
             />
         );
     })
+    .add("Custom renderOption with Search Highlighting", function () {
+        const [value, setValue] = useState({ domain: "main", language: "en" });
+        return (
+            <ContentScopeSelect
+                value={value}
+                searchable
+                onChange={(value) => {
+                    setValue(value);
+                }}
+                options={[
+                    { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
+                    { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
+                    { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
+                    { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                ]}
+                renderOption={(option, addSearchHighlighting) => (
+                    <>
+                        <ListItemIcon>
+                            <Domain />
+                        </ListItemIcon>
+                        <ListItemText primary={<>{addSearchHighlighting(`${option.domain.label} – ${option.language.label}`)}</>} />
+                    </>
+                )}
+            />
+        );
+    })
     .add("Custom renderSelectedOption", function () {
         const [value, setValue] = useState({ domain: "main", language: "en" });
         return (
