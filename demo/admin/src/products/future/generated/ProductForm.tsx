@@ -9,12 +9,12 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
-    FinalFormSelect,
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
     MainContent,
     messages,
+    RadioGroupField,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -31,7 +31,7 @@ import {
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
+import { FormControlLabel, InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -235,27 +235,27 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="description"
                                 label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                             />
-                            <Field
+                            <RadioGroupField
                                 required
                                 variant="horizontal"
                                 fullWidth
                                 name="type"
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
-                            >
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Cap">
-                                            <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />
-                                        </MenuItem>
-                                        <MenuItem value="Shirt">
-                                            <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
-                                        </MenuItem>
-                                        <MenuItem value="Tie">
-                                            <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
-                                        </MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                                options={[
+                                    {
+                                        label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />,
+                                        value: "Cap",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />,
+                                        value: "Shirt",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.tie" defaultMessage="Tie" />,
+                                        value: "Tie",
+                                    },
+                                ]}
+                            />
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth

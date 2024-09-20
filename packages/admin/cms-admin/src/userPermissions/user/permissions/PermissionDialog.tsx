@@ -2,7 +2,6 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormInput, FinalFormSelect, FormSection, Loading, SaveButton } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
@@ -24,7 +23,7 @@ interface FormProps {
     permissionId: string | "add";
     handleDialogClose: () => void;
 }
-export const PermissionDialog: React.FC<FormProps> = ({ userId, permissionId, handleDialogClose }) => {
+export const PermissionDialog = ({ userId, permissionId, handleDialogClose }: FormProps) => {
     const client = useApolloClient();
     const submit = async (submitData: GQLUserPermissionDialogFragment) => {
         const { source, __typename, ...data } = submitData; // Remove source and __typename from data

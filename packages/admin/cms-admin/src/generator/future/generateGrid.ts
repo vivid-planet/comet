@@ -1,3 +1,4 @@
+import { GridColDef } from "@comet/admin";
 import {
     IntrospectionEnumType,
     IntrospectionInputObjectType,
@@ -8,6 +9,7 @@ import {
 } from "graphql";
 import { plural } from "pluralize";
 
+import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
@@ -74,6 +76,18 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
         gridPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: Props`,
     };
 }
+
+const getSortByValue = (sortBy: GridColDef["sortBy"]) => {
+    if (Array.isArray(sortBy)) {
+        return `[${sortBy.map((i) => `"${i}"`).join(", ")}]`;
+    }
+
+    if (typeof sortBy === "string") {
+        return `"${sortBy}"`;
+    }
+
+    return sortBy;
+};
 
 export function generateGrid(
     {
@@ -151,8 +165,10 @@ export function generateGrid(
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
+    const toolbar = config.toolbar ?? true;
+
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
-    const hasFilter = !!filterArg;
+    const hasFilter = !!filterArg && toolbar;
     let hasFilterProp = false;
     let filterFields: string[] = [];
     if (filterArg) {
@@ -169,8 +185,6 @@ export function generateGrid(
         imports.push(...filterPropImports);
         props.push(...filterPropProps);
     }
-
-    const toolbar = config.toolbar ?? true;
 
     const forwardToolbarAction = allowAdding && toolbar && config.toolbarActionProp;
     if (forwardToolbarAction) {
@@ -236,10 +250,15 @@ export function generateGrid(
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
         width: actionsColumnWidth = 84,
+        visible: actionsColumnVisible = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
-    const gridColumnFields = (config.columns.filter((column) => column.type !== "actions") as GridColumnConfig<unknown>[]).map((column) => {
+    const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
+
+    const gridColumnFields = (
+        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
+    ).map((column) => {
         const type = column.type;
         const name = String(column.name);
 
@@ -290,18 +309,33 @@ export function generateGrid(
                     return `{value: ${JSON.stringify(i.value)}, label: ${label}}, `;
                 })
                 .join(" ")}]`;
+            renderCell = `({ row, colDef }) => {
+                if (colDef.valueOptions && Array.isArray(colDef.valueOptions)) {
+                    const selectedOption = colDef.valueOptions.find((option) => typeof option === "object" && option.value === row.${name});
+
+                    if (selectedOption && typeof selectedOption === "object") {
+                        return selectedOption.label;
+                    }
+                }
+
+                return row.${name};
+            }`;
 
             return {
                 name,
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
+                renderCell,
                 width: column.width,
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                visible: column.visible && `theme.breakpoints.${column.visible}`,
                 pinned: column.pinned,
             };
+        } else if (type == "combination") {
+            renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
         //TODO suppoort n:1 relation with singleSelect
@@ -317,7 +351,9 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
+            sortBy: "sortBy" in column && column.sortBy,
         };
     });
 
@@ -352,6 +388,7 @@ export function generateGrid(
         DataGridToolbar,
         filterByFragment,
         GridFilterButton,
+        GridCellContent,
         GridColDef,
         muiGridFilterToGql,
         muiGridSortToGql,
@@ -365,7 +402,7 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton } from "@mui/material";
+    import { Alert, Button, Box, IconButton, useTheme } from "@mui/material";
     import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -378,7 +415,7 @@ export function generateGrid(
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
     import * as React from "react";
-    import { FormattedMessage, useIntl } from "react-intl";
+    import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
 
     ${Object.entries(rootBlocks)
@@ -399,7 +436,7 @@ export function generateGrid(
         ...[`$offset: Int!`, `$limit: Int!`],
         ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
         ...(hasSearch ? [`$search: String`] : []),
-        ...(hasFilter ? [`$filter: ${gqlType}Filter`] : []),
+        ...(filterArg && (hasFilter || hasFilterProp) ? [`$filter: ${gqlType}Filter`] : []),
         ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
     ].join(", ")}) {
     ${gridQuery}(${[
@@ -407,7 +444,7 @@ export function generateGrid(
         ...[`offset: $offset`, `limit: $limit`],
         ...(hasSort ? [`sort: $sort`] : []),
         ...(hasSearch ? [`search: $search`] : []),
-        ...(hasFilter ? [`filter: $filter`] : []),
+        ...(filterArg && (hasFilter || hasFilterProp) ? [`filter: $filter`] : []),
         ...(hasScope ? [`scope: $scope`] : []),
     ].join(", ")}) {
                 nodes {
@@ -498,6 +535,7 @@ export function generateGrid(
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -516,7 +554,12 @@ export function generateGrid(
                         width: column.width,
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,
+                        visible: column.visible,
                     };
+
+                    if ("sortBy" in column && column.sortBy) {
+                        columnDefinition["sortBy"] = getSortByValue(column.sortBy);
+                    }
 
                     if (typeof column.width === "undefined") {
                         const defaultMinWidth = 150;
@@ -549,6 +592,7 @@ export function generateGrid(
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
                               width: actionsColumnWidth,
+                              visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (
@@ -643,7 +687,15 @@ export function generateGrid(
                 ${[
                     ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
                     ...(hasScope ? ["scope"] : []),
-                    ...(hasFilter ? (hasFilterProp ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"] : ["filter: gqlFilter"]) : []),
+                    ...(filterArg
+                        ? hasFilter && hasFilterProp
+                            ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"]
+                            : hasFilter
+                            ? ["filter: gqlFilter"]
+                            : hasFilterProp
+                            ? ["filter"]
+                            : []
+                        : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
                     ...[
                         `offset: dataGridProps.page * dataGridProps.pageSize`,

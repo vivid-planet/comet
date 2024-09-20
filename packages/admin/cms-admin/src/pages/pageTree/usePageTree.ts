@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { useStoredState } from "@comet/admin";
-import * as React from "react";
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
 
 import { PageSearchMatch } from "../pageSearch/usePageSearch";
 import { arrayToTreeMap, subTreeFromNodes, TreeMap } from "./treemap/TreeMapUtils";
@@ -43,12 +43,12 @@ interface UsePageTreeApi {
     pagesToRender: PageTreePage[];
     tree: TreeMap<GQLPageTreePageFragment>;
     selectedTree: TreeMap<GQLPageTreePageFragment>;
-    setExpandedIds: React.Dispatch<React.SetStateAction<string[]>>;
+    setExpandedIds: Dispatch<SetStateAction<string[]>>;
     expandedIds: string[];
     toggleExpand: (pageId: string) => void;
     onSelectChanged: (pageId: string, value: boolean) => void;
     selectState: PageTreeSelectionState;
-    setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>;
+    setSelectedIds: Dispatch<SetStateAction<string[]>>;
     expandPage: (pageId: string) => void; // includes all its parents
 }
 
@@ -58,11 +58,11 @@ export function usePageTree({
     filter = () => true,
 }: UsePageTreeProps): UsePageTreeApi {
     const [expandedIds, setExpandedIds] = useStoredState<string[]>(storageKeyExpandedIds, [], window.sessionStorage);
-    const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-    const pages = React.useMemo(() => passedPages.filter(filter), [passedPages, filter]);
+    const pages = useMemo(() => passedPages.filter(filter), [passedPages, filter]);
 
-    const { children: tree, parents } = React.useMemo(() => {
+    const { children: tree, parents } = useMemo(() => {
         const sortedPages = [...pages].sort((pageA, pageB) => pageA.pos - pageB.pos);
         const tree = arrayToTreeMap(sortedPages);
         const parentsMap = new Map<string, string | null>();
@@ -75,11 +75,11 @@ export function usePageTree({
         return { children: tree, parents: parentsMap };
     }, [pages]);
 
-    const selectedTree = React.useMemo(() => {
+    const selectedTree = useMemo(() => {
         return subTreeFromNodes(selectedIds, tree);
     }, [selectedIds, tree]);
 
-    const pagesToRender = React.useMemo(() => {
+    const pagesToRender = useMemo(() => {
         const buildPagesForParent = (parentId = "root", level = 0, ancestorIds: string[] = []) => {
             const pages = tree.get(parentId) || [];
             const ret: PageTreePage[] = [];
@@ -108,14 +108,14 @@ export function usePageTree({
         return buildPagesForParent();
     }, [tree, selectedIds, expandedIds]);
 
-    const toggleExpand = React.useCallback(
+    const toggleExpand = useCallback(
         (pageId: string) => {
             setExpandedIds((expandedIds) => (expandedIds.includes(pageId) ? expandedIds.filter((id) => id !== pageId) : [...expandedIds, pageId]));
         },
         [setExpandedIds],
     );
 
-    const onSelectChanged = React.useCallback(
+    const onSelectChanged = useCallback(
         (pageId: string, selected: boolean) => {
             const pagesToModify = [...resolveFlatChildrenForPage(pageId, passedPages), ...passedPages.filter((page) => page.id === pageId)];
             let tempSelectedIds = [...selectedIds];
@@ -140,7 +140,7 @@ export function usePageTree({
     );
 
     // Expands page with all its parent pages
-    const expandPage = React.useCallback(
+    const expandPage = useCallback(
         (pageId: string) => {
             function selfWithParents(pageId: string): string[] {
                 const parentId = parents.get(pageId);

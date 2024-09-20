@@ -104,7 +104,7 @@ export { CheckboxListField, CheckboxListFieldProps } from "./form/fields/Checkbo
 export { NumberField, NumberFieldProps } from "./form/fields/NumberField";
 export { RadioGroupField, RadioGroupFieldProps } from "./form/fields/RadioGroupField";
 export { SearchField, SearchFieldProps } from "./form/fields/SearchField";
-export { SelectField, SelectFieldProps } from "./form/fields/SelectField";
+export { SelectField, SelectFieldOption, SelectFieldProps } from "./form/fields/SelectField";
 export { SwitchField, SwitchFieldProps } from "./form/fields/SwitchField";
 export { TextAreaField, TextAreaFieldProps } from "./form/fields/TextAreaField";
 export { TextField, TextFieldProps } from "./form/fields/TextField";

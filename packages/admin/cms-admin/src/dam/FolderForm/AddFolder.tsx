@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import { FinalForm, ISelectionApi } from "@comet/admin";
-import React from "react";
 
 import { useDamScope } from "../config/useDamScope";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
@@ -13,7 +12,7 @@ interface AddFolderProps {
     selectionApi: ISelectionApi;
 }
 
-const AddFolder = ({ parentId, selectionApi }: AddFolderProps): React.ReactElement => {
+const AddFolder = ({ parentId, selectionApi }: AddFolderProps) => {
     const scope = useDamScope();
     const [createDamFolder] = useMutation<GQLCreateDamFolderMutation, GQLCreateDamFolderMutationVariables>(createDamFolderMutation, {
         refetchQueries: ["DamItemsList"],

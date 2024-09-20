@@ -1,13 +1,12 @@
 import { ContentState } from "draft-js";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 interface IProps {
     contentState: ContentState;
     entityKey: string;
-    children?: React.ReactNode;
 }
 
-export function EditorComponent(props: IProps): React.ReactElement {
+export function EditorComponent(props: PropsWithChildren<IProps>) {
     return (
         <a
             href="#"

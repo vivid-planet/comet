@@ -1,5 +1,18 @@
 # @comet/cli
 
+## 7.4.2
+
+## 7.4.1
+
+## 7.4.0
+
+### Patch Changes
+
+-   a101ed6f5: inject-site-configs: Add sane defaults for preloginEnabled
+
+    When `preloginEnabled` is `undefined` or `null` set it to `true`
+    on environments != `prod` or `local`.
+
 ## 7.3.2
 
 ## 7.3.1
