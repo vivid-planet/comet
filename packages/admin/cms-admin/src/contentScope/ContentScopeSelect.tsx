@@ -35,7 +35,6 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     renderSelectedOption,
 }: Props<Value>) {
     const intl = useIntl();
-    const values: string[] = [];
     const [searchValue, setSearchValue] = React.useState<string>("");
 
     const hasMultipleDimensions = Object.keys(value).length > 1;
@@ -80,13 +79,12 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     }
 
     if (!renderOption) {
-        renderOption = (option) => {
+        renderOption = (option, addSearchHighlighting) => {
             const text = Object.entries(option)
                 .filter(([dimension]) => (hasMultipleDimensions && groupBy ? dimension !== groupBy : true))
                 .map(([, option]) => option.label ?? option.value)
                 .join(" – ");
-            values.push(text);
-            return <ListItemText primaryTypographyProps={{ variant: "body2" }} sx={{ margin: 0 }} primary={text} />;
+            return <ListItemText primaryTypographyProps={{ variant: "body2" }} sx={{ margin: 0 }} primary={addSearchHighlighting(text)} />;
         };
     }
 
