@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { ChangeEvent } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -68,7 +68,7 @@ const DialogContent = styled(MuiDialogContent)`
     padding-left: 40px;
 `;
 
-export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings, damFileId }: Props): React.ReactElement {
+export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings, damFileId }: Props) {
     const contentScope = useContentScope();
     const apolloClient = useApolloClient();
     const dependencyMap = useDependenciesConfig();
@@ -220,10 +220,10 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
 
 interface YesNoSwitchProps {
     checked?: boolean;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const YesNoSwitch = ({ checked, onChange }: YesNoSwitchProps): React.ReactElement => {
+const YesNoSwitch = ({ checked, onChange }: YesNoSwitchProps) => {
     return (
         <FormControlLabel
             control={<Switch checked={checked} onChange={onChange} />}

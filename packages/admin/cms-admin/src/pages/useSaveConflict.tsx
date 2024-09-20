@@ -1,6 +1,6 @@
 import { Alert, useSnackbarApi } from "@comet/admin";
 import { Snackbar } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { SaveConflictDialog } from "./SaveConflictDialog";
@@ -13,7 +13,7 @@ export interface SaveConflictOptions {
 }
 
 export interface SaveConflictHookReturn {
-    dialogs: React.ReactNode;
+    dialogs: ReactNode;
     checkForConflicts: () => Promise<boolean>;
     hasConflict: boolean;
 }
@@ -21,12 +21,12 @@ export interface SaveConflictHookReturn {
 export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookReturn {
     const { checkConflict, hasChanges, loadLatestVersion, onDiscardButtonPressed } = options;
     const snackbarApi = useSnackbarApi();
-    const pollingIntervalId = React.useRef<number | undefined>();
+    const pollingIntervalId = useRef<number | undefined>();
 
-    const [showDialog, setShowDialog] = React.useState(false);
-    const [hasConflict, setHasConflict] = React.useState(false);
+    const [showDialog, setShowDialog] = useState(false);
+    const [hasConflict, setHasConflict] = useState(false);
 
-    const checkChanges = React.useCallback(async () => {
+    const checkChanges = useCallback(async () => {
         const newHasConflict = await checkConflict();
         //we don't need setHasConflict as that is used during save only
         if (newHasConflict) {
@@ -56,19 +56,19 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
         }
     }, [checkConflict, hasChanges, hasConflict, loadLatestVersion, snackbarApi]);
 
-    const startPolling = React.useCallback(() => {
+    const startPolling = useCallback(() => {
         if (!hasConflict) {
             window.clearInterval(pollingIntervalId.current);
             pollingIntervalId.current = window.setInterval(checkChanges, 10000);
         }
     }, [checkChanges, hasConflict]);
 
-    const stopPolling = React.useCallback(() => {
+    const stopPolling = useCallback(() => {
         window.clearInterval(pollingIntervalId.current);
         pollingIntervalId.current = undefined;
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const handleFocus = () => {
             if (!hasConflict) {
                 checkChanges();
@@ -95,7 +95,7 @@ export function useSaveConflict(options: SaveConflictOptions): SaveConflictHookR
         };
     }, [checkConflict, snackbarApi, loadLatestVersion, hasChanges, checkChanges, startPolling, stopPolling, hasConflict]);
 
-    const checkForConflicts = React.useCallback(async () => {
+    const checkForConflicts = useCallback(async () => {
         const newHasConflict = await checkConflict();
         if (newHasConflict) {
             setShowDialog(true);

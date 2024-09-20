@@ -2,7 +2,6 @@ import { Alert, messages } from "@comet/admin";
 import { Clear, Delete, OpenNewTab } from "@comet/admin-icons";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 interface SaveConflictDialogProps {
@@ -11,7 +10,7 @@ interface SaveConflictDialogProps {
     onDiscardChangesPressed: () => void;
 }
 
-function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: SaveConflictDialogProps): React.ReactElement {
+function SaveConflictDialog({ open, onClosePressed, onDiscardChangesPressed }: SaveConflictDialogProps) {
     return (
         <Dialog open={open} onClose={onClosePressed} maxWidth="md">
             <DialogTitle>

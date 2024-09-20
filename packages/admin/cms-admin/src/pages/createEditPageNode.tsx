@@ -6,7 +6,7 @@ import { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
 import { DocumentNode } from "graphql";
 import debounce from "p-debounce";
-import React from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 import slugify from "slugify";
@@ -36,7 +36,7 @@ export interface EditPageNodeFinalFormValues {
 }
 
 interface CreateEditPageNodeProps {
-    additionalFormFields?: React.ReactNode;
+    additionalFormFields?: ReactNode;
     nodeFragment?: { name: string; fragment: DocumentNode };
     valuesToInput?: (values: EditPageNodeFinalFormValues) => EditPageNodeFinalFormValues;
     disableHideInMenu?: boolean;
@@ -97,7 +97,7 @@ export function createEditPageNode({
         ${nodeFragment ? nodeFragment?.fragment : ""}
     `;
 
-    function EditPageNode({ id, mode, category, documentTypes }: EditPageNodeProps): React.ReactElement {
+    function EditPageNode({ id, mode, category, documentTypes }: EditPageNodeProps) {
         const { pos, parent } = unserializeInitialValues(id);
 
         const intl = useIntl();
@@ -105,7 +105,7 @@ export function createEditPageNode({
         const { scope } = useContentScope();
         const locale = useLocale({ scope });
 
-        const [manuallyChangedSlug, setManuallyChangedSlug] = React.useState<boolean>(mode === "edit");
+        const [manuallyChangedSlug, setManuallyChangedSlug] = useState<boolean>(mode === "edit");
 
         const { loading, data } = useQuery<GQLEditPageNodeQuery, GQLEditPageNodeQueryVariables>(editPageNodeQuery, {
             variables: {
@@ -140,11 +140,11 @@ export function createEditPageNode({
             label: documentTypes[type].displayName,
         }));
 
-        React.useEffect(() => {
+        useEffect(() => {
             apollo.cache.evict({ fieldName: "pageTreeNodeSlugAvailable" });
         }, [apollo.cache]);
 
-        const isPathAvailable = React.useCallback(
+        const isPathAvailable = useCallback(
             async (newSlug: string): Promise<GQLSlugAvailability> => {
                 if (slug === newSlug) {
                     // The unchanged slug is expected to be available

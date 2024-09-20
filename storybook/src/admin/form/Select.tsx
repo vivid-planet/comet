@@ -1,4 +1,4 @@
-import { Field, FinalFormSelect } from "@comet/admin";
+import { Field, FinalFormSelect, SelectField, SelectFieldOption } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { Card, CardContent, InputAdornment, MenuItem } from "@mui/material";
 import { storiesOf } from "@storybook/react";
@@ -6,12 +6,7 @@ import * as React from "react";
 import { Form } from "react-final-form";
 
 function Story() {
-    interface Option {
-        value: string;
-        label: string;
-    }
-
-    const options: Option[] = [
+    const options: SelectFieldOption[] = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
         { value: "raspberry", label: "Raspberry" },
@@ -40,7 +35,7 @@ function Story() {
                                     <Field name="flavor" label="Flavor" fullWidth>
                                         {(props) => (
                                             <FinalFormSelect {...props} fullWidth>
-                                                {options.map((option: Option) => (
+                                                {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}
                                                     </MenuItem>
@@ -49,17 +44,7 @@ function Story() {
                                         )}
                                     </Field>
 
-                                    <Field name="flavorOptions" label="Flavor with Options as prop" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect
-                                                {...props}
-                                                options={options}
-                                                getOptionLabel={(option: Option) => option.label}
-                                                getOptionSelected={(option: Option, value: Option) => option.value === value.value}
-                                                fullWidth
-                                            />
-                                        )}
-                                    </Field>
+                                    <SelectField name="flavorOptions" label="Flavor with Options as prop" options={options} fullWidth />
 
                                     <Field name="flavorRequired" label="Required Flavor" fullWidth>
                                         {(props) => (
@@ -101,7 +86,7 @@ function Story() {
                                                     </InputAdornment>
                                                 }
                                             >
-                                                {options.map((option: Option) => (
+                                                {options.map((option) => (
                                                     <MenuItem value={option.value} key={option.value}>
                                                         {option.label}
                                                     </MenuItem>

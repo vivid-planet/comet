@@ -22,7 +22,6 @@ import { BlockInterface, BlockPreviewContent } from "@comet/blocks-admin";
 import { Button, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, getGridSingleSelectOperators, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import RedirectActiveness from "./RedirectActiveness";

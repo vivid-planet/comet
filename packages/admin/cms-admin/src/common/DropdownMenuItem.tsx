@@ -1,13 +1,13 @@
 import { ChevronDown, ChevronUp } from "@comet/admin-icons";
 import { ClickAwayListener, Grow, Paper, useTheme } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, ReactElement, ReactNode, SetStateAction, useRef, useState } from "react";
 
 import * as sc from "./DropdownMenuItem.sc";
 
 interface DropdownMenuItemProps {
-    children: React.ReactElement;
+    children: ReactElement;
     buttonText?: string;
-    buttonIcon?: React.ReactNode;
+    buttonIcon?: ReactNode;
     disableArrow?: boolean;
     scrollable?: boolean;
     customShowDropdownState?: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -22,8 +22,8 @@ export function DropdownMenuItem({
     scrollable = false,
     customShowDropdownState,
     disabled,
-}: DropdownMenuItemProps): React.ReactElement {
-    const defaultShowDropdownState = React.useState<boolean>(false);
+}: DropdownMenuItemProps) {
+    const defaultShowDropdownState = useState<boolean>(false);
 
     let showDropdown = defaultShowDropdownState[0];
     let setShowDropdown = defaultShowDropdownState[1];
@@ -34,7 +34,7 @@ export function DropdownMenuItem({
     }
 
     const theme = useTheme();
-    const anchorRef = React.useRef<HTMLDivElement>(null);
+    const anchorRef = useRef<HTMLDivElement>(null);
 
     const DropdownContainer = scrollable ? sc.ScrollablePaper : Paper;
 
