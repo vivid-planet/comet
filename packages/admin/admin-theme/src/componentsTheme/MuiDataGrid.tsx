@@ -26,6 +26,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
     ...component,
     defaultProps: {
         components: {
+            /* @TODO: add FilterPanelAddIcon to display Comet Add Icon once MUI Datagrid is updated to v6 or higher  */
             QuickFilterIcon: Search,
             QuickFilterClearIcon: Clear,
             FilterPanelDeleteIcon: Delete,
@@ -100,7 +101,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         filterForm: {
             margin: spacing(5, 4, 0, 4),
-            padding: "10px 5px",
+            padding: spacing(2, 1),
             gap: "4px",
             borderBottom: `1px solid ${palette.grey[50]}`,
             "&:last-child": {
