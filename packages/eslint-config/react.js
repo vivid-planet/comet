@@ -1,7 +1,7 @@
 const core = require("./core");
 
 module.exports = {
-    extends: [require.resolve("./core.js"), "plugin:react/recommended", "plugin:react-hooks/recommended"],
+    extends: [require.resolve("./core.js"), "plugin:react/recommended", "plugin:react-hooks/recommended", "plugin:react/jsx-runtime"],
     env: {
         browser: true,
         es6: true,
@@ -30,6 +30,10 @@ module.exports = {
             "error",
             {
                 paths: [
+                    {
+                        name: "react",
+                        importNames: ["default"],
+                    },
                     {
                         name: "@mui/material",
                         importNames: ["styled"],

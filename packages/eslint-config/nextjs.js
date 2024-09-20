@@ -1,5 +1,5 @@
 module.exports = {
-    extends: [require.resolve("./core.js"), "next/core-web-vitals"],
+    extends: [require.resolve("./core.js"), "next/core-web-vitals", "plugin:react/jsx-runtime"],
     rules: {
         "react/display-name": "off",
         "react/jsx-curly-brace-presence": "error",
@@ -11,6 +11,10 @@ module.exports = {
             "error",
             {
                 paths: [
+                    {
+                        name: "react",
+                        importNames: ["default"],
+                    },
                     {
                         name: "next/image",
                         importNames: ["default"],
