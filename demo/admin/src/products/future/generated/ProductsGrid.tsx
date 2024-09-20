@@ -113,7 +113,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                return <GridCellContent primaryText={row.title} secondaryText={row.description} />;
+                return <GridCellContent primaryText={row.title ?? "-"} secondaryText={row.description ?? "-"} />;
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),
