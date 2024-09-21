@@ -2,12 +2,21 @@
 import NextImage, { ImageLoaderProps, ImageProps as NextImageProps } from "next/image";
 
 // Fallback to 1 / 1 aspect ratio for invalid value format
-export function parseAspectRatio(value: string): number {
-    const [width = 1, height = 1] = value.split("x").map((v) => {
-        let ret: number | undefined = Number(v);
-        if (isNaN(ret)) ret = undefined;
-        return ret;
-    });
+export function parseAspectRatio(value: string | number): number {
+    let width, height;
+    if (!Number(value)) {
+        [width, height] = String(value)
+            .split(/[x/:]/)
+            .map((v) => {
+                let ret: number | undefined = Number(v);
+                if (isNaN(ret)) ret = undefined;
+                return ret;
+            });
+    } else {
+        width = Number(value);
+        height = 1;
+    }
+    if (!width || !height) throw Error(`An Error occured trying to parse the AspectRatio: ${value}`);
     return width / height;
 }
 
