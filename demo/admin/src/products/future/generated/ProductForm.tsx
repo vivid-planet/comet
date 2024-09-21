@@ -331,7 +331,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
-                            <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />} name="inStock" fullWidth />
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                fullWidth
+                                variant="horizontal"
+                            />
 
                             <Field
                                 variant="horizontal"

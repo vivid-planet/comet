@@ -242,10 +242,10 @@ export function generateForm(
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
         AsyncSelectField,
+        CheckboxField,
         Field,
         filterByFragment,
         FinalForm,
-        FinalFormCheckbox,
         FinalFormInput,
         FinalFormSelect,
         FinalFormSubmitEvent,

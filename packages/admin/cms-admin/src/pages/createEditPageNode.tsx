@@ -1,18 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import {
-    CheckboxField,
-    ErrorScope,
-    Field,
-    FieldContainer,
-    FinalForm,
-    FinalFormCheckbox,
-    FinalFormInput,
-    FinalFormSelect,
-    Loading,
-    Tooltip,
-} from "@comet/admin";
+import { CheckboxField, ErrorScope, Field, FieldContainer, FinalForm, FinalFormInput, FinalFormSelect, Loading, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
-import { Box, Divider, FormControlLabel, IconButton, MenuItem, Typography } from "@mui/material";
+import { Box, Divider, IconButton, MenuItem, Typography } from "@mui/material";
 import { Mutator } from "final-form";
 import setFieldTouched from "final-form-set-field-touched";
 import { DocumentNode } from "graphql";
@@ -460,25 +449,18 @@ export function createEditPageNode({
                                     )}
                                 </Field>
                                 {!disableHideInMenu && (
-                                    <Field
-                                        label={intl.formatMessage({
+                                    <CheckboxField
+                                        fieldLabel={intl.formatMessage({
                                             id: "comet.pages.pages.page.menuVisibility",
                                             defaultMessage: "Menu Visibility",
                                         })}
+                                        label={intl.formatMessage({
+                                            id: "comet.pages.pages.page.hideInMenu",
+                                            defaultMessage: "Hide in Menu",
+                                        })}
                                         name="hideInMenu"
-                                        type="checkbox"
                                         variant="horizontal"
-                                    >
-                                        {(props) => (
-                                            <FormControlLabel
-                                                label={intl.formatMessage({
-                                                    id: "comet.pages.pages.page.hideInMenu",
-                                                    defaultMessage: "Hide in Menu",
-                                                })}
-                                                control={<FinalFormCheckbox {...props} />}
-                                            />
-                                        )}
-                                    </Field>
+                                    />
                                 )}
 
                                 {additionalFormFields}
