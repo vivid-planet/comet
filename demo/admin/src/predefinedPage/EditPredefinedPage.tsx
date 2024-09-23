@@ -1,20 +1,22 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { PageName } from "@comet/cms-admin";
 import { IconButton, MenuItem } from "@mui/material";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import {
     GQLPredefinedPageQuery,
     GQLPredefinedPageQueryVariables,
-    GQLUpdatePredefinedPageMutation,
-    GQLUpdatePredefinedPageMutationVariables,
+    GQLSavePredefinedPageMutation,
+    GQLSavePredefinedPageMutationVariables,
 } from "./EditPredefinedPage.generated";
 
 const getQuery = gql`
-    query PredefinedPage($id: ID!) {
-        page: pageTreeNode(id: $id) {
+    query PredefinedPage($pageTreeNodeId: ID!) {
+        pageTreeNode(id: $pageTreeNodeId) {
             id
             name
             slug
@@ -34,42 +36,64 @@ const getQuery = gql`
     }
 `;
 
-const updateMutation = gql`
-    mutation UpdatePredefinedPage($pageId: ID!, $input: PredefinedPageInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID!) {
-        savePredefinedPage(id: $pageId, input: $input, lastUpdatedAt: $lastUpdatedAt, attachedPageTreeNodeId: $attachedPageTreeNodeId) {
+const savePredefinedPageMutation = gql`
+    mutation SavePredefinedPage($id: ID!, $input: PredefinedPageInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID!) {
+        savePredefinedPage(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt, attachedPageTreeNodeId: $attachedPageTreeNodeId) {
             id
             type
         }
     }
 `;
 
+type FormValues = {
+    type?: string;
+};
+
 interface Props {
     id: string;
 }
 
-export const EditPredefinedPage = ({ id }: Props) => {
+export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
     const stackApi = useStackApi();
+    const client = useApolloClient();
 
     const { data, loading } = useQuery<GQLPredefinedPageQuery, GQLPredefinedPageQueryVariables>(getQuery, {
-        variables: { id },
+        variables: { pageTreeNodeId },
     });
 
-    const [mutation] = useMutation<GQLUpdatePredefinedPageMutation, GQLUpdatePredefinedPageMutationVariables>(updateMutation, {
-        refetchQueries: ["PredefinedPage"],
-    });
+    const initialValues = useMemo<Partial<FormValues>>(() => {
+        if (data?.pageTreeNode?.document) {
+            if (data.pageTreeNode.document.__typename !== "PredefinedPage") {
+                throw new Error(`Invalid document type: ${data.pageTreeNode.document.__typename}`);
+            }
+
+            return {
+                type: data.pageTreeNode.document.type ?? undefined,
+            };
+        }
+
+        return {};
+    }, [data]);
+
+    const handleSubmit = async (formValues: FormValues) => {
+        const output = {
+            type: formValues.type ?? null,
+        };
+
+        const id = data?.pageTreeNode?.document?.id ?? uuid();
+
+        await client.mutate<GQLSavePredefinedPageMutation, GQLSavePredefinedPageMutationVariables>({
+            mutation: savePredefinedPageMutation,
+            variables: { id, input: output, attachedPageTreeNodeId: pageTreeNodeId },
+        });
+    };
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
     }
 
     return (
-        <FinalForm
-            mode="edit"
-            initialValues={{ type: data?.page?.document?.__typename === "PredefinedPage" ? data.page.document.type : undefined }}
-            onSubmit={() => {
-                mutation({ variables: { pageId: id, input: { type: "News" }, attachedPageTreeNodeId: id } });
-            }}
-        >
+        <FinalForm mode="edit" onSubmit={handleSubmit} initialValues={initialValues}>
             {({ pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => {
                 return (
                     <>
@@ -79,7 +103,7 @@ export const EditPredefinedPage = ({ id }: Props) => {
                                     <ArrowLeft />
                                 </IconButton>
                             </ToolbarItem>
-                            <PageName pageId={id} />
+                            <PageName pageId={pageTreeNodeId} />
                             <ToolbarFillSpace />
                             <ToolbarItem>
                                 <FinalFormSaveButton />

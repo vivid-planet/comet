@@ -1,6 +1,6 @@
 import { AffectedEntity, PageTreeNodeVisibility, PageTreeService, RequiredPermission, validateNotModified } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { UnauthorizedException } from "@nestjs/common";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 
@@ -11,6 +11,7 @@ import { PredefinedPage } from "./entities/predefined-page.entity";
 @RequiredPermission("pageTree")
 export class PredefinedPageResolver {
     constructor(
+        private readonly entityManager: EntityManager,
         @InjectRepository(PredefinedPage) private readonly repository: EntityRepository<PredefinedPage>,
         private readonly pageTreeService: PageTreeService,
     ) {}
@@ -29,7 +30,7 @@ export class PredefinedPageResolver {
         @Args("input", { type: () => PredefinedPageInput }) input: PredefinedPageInput,
         @Args("attachedPageTreeNodeId", { type: () => ID }) attachedPageTreeNodeId: string,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
-    ): Promise<PredefinedPage | null> {
+    ): Promise<PredefinedPage> {
         // all pageTypes need this is-archived-page-check
         // TODO: maybe implemented in a base-(document|page)-service which lives in @comet/cms-api
         const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
@@ -52,14 +53,12 @@ export class PredefinedPageResolver {
                 id,
                 type: input.type,
             });
-
-            this.repository.persist(predefinedPage);
         }
 
         await this.pageTreeService.attachDocument({ id, type: "PredefinedPage" }, attachedPageTreeNodeId);
 
-        await this.repository.flush();
+        await this.entityManager.flush();
 
-        return this.repository.findOneOrFail(id);
+        return predefinedPage;
     }
 }
