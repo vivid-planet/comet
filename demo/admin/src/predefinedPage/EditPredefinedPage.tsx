@@ -41,7 +41,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
     const client = useApolloClient();
     const formApiRef = useFormApiRef<FormValues>();
 
-    const { data, loading, refetch } = useQuery<GQLPredefinedPageQuery, GQLPredefinedPageQueryVariables>(predefinedPageQuery, {
+    const { data, error, loading, refetch } = useQuery<GQLPredefinedPageQuery, GQLPredefinedPageQueryVariables>(predefinedPageQuery, {
         variables: { pageTreeNodeId },
     });
 
@@ -86,6 +86,10 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
             variables: { id, input: output, attachedPageTreeNodeId: pageTreeNodeId },
         });
     };
+
+    if (error) {
+        throw error;
+    }
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
