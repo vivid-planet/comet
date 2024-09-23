@@ -1,7 +1,18 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import {
+    FinalForm,
+    FinalFormSaveButton,
+    Loading,
+    MainContent,
+    SelectField,
+    Toolbar,
+    ToolbarFillSpace,
+    ToolbarItem,
+    useFormApiRef,
+    useStackApi,
+} from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { ContentScopeIndicator, PageName } from "@comet/cms-admin";
+import { ContentScopeIndicator, PageName, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { GQLPredefinedPageType } from "@src/graphql.generated";
 import { useMemo } from "react";
@@ -28,8 +39,9 @@ interface Props {
 export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
     const stackApi = useStackApi();
     const client = useApolloClient();
+    const formApiRef = useFormApiRef<FormValues>();
 
-    const { data, loading } = useQuery<GQLPredefinedPageQuery, GQLPredefinedPageQueryVariables>(predefinedPageQuery, {
+    const { data, loading, refetch } = useQuery<GQLPredefinedPageQuery, GQLPredefinedPageQueryVariables>(predefinedPageQuery, {
         variables: { pageTreeNodeId },
     });
 
@@ -47,7 +59,22 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
         return {};
     }, [data]);
 
+    const saveConflict = useFormSaveConflict({
+        checkConflict: async () => {
+            const updatedAt = await queryUpdatedAt(client, "predefinedPage", data?.pageTreeNode?.document?.id);
+            return resolveHasSaveConflict(data?.pageTreeNode?.document?.updatedAt, updatedAt);
+        },
+        formApiRef,
+        loadLatestVersion: async () => {
+            await refetch();
+        },
+    });
+
     const handleSubmit = async (formValues: FormValues) => {
+        if (await saveConflict.checkForConflicts()) {
+            throw new Error("Conflicts detected");
+        }
+
         const output = {
             type: formValues.type ?? null,
         };
@@ -65,9 +92,10 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
     }
 
     return (
-        <FinalForm mode="edit" onSubmit={handleSubmit} initialValues={initialValues}>
+        <FinalForm apiRef={formApiRef} onSubmit={handleSubmit} mode="edit" initialValues={initialValues}>
             {() => (
                 <>
+                    {saveConflict.dialogs}
                     <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                         <ToolbarItem>
                             <IconButton onClick={stackApi?.goBack}>
@@ -77,7 +105,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
                         <PageName pageId={pageTreeNodeId} />
                         <ToolbarFillSpace />
                         <ToolbarItem>
-                            <FinalFormSaveButton />
+                            <FinalFormSaveButton hasConflict={saveConflict.hasConflict} />
                         </ToolbarItem>
                     </Toolbar>
                     <MainContent>
