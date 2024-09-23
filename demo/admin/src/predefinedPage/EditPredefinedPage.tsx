@@ -1,4 +1,4 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { PageName } from "@comet/cms-admin";
@@ -7,43 +7,13 @@ import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { predefinedPageQuery, savePredefinedPageMutation } from "./EditPredefinedPage.gql";
 import {
     GQLPredefinedPageQuery,
     GQLPredefinedPageQueryVariables,
     GQLSavePredefinedPageMutation,
     GQLSavePredefinedPageMutationVariables,
-} from "./EditPredefinedPage.generated";
-
-const getQuery = gql`
-    query PredefinedPage($pageTreeNodeId: ID!) {
-        pageTreeNode(id: $pageTreeNodeId) {
-            id
-            name
-            slug
-            parentId
-            document {
-                __typename
-                ... on DocumentInterface {
-                    id
-                    updatedAt
-                }
-                ... on PredefinedPage {
-                    id
-                    type
-                }
-            }
-        }
-    }
-`;
-
-const savePredefinedPageMutation = gql`
-    mutation SavePredefinedPage($id: ID!, $input: PredefinedPageInput!, $lastUpdatedAt: DateTime, $attachedPageTreeNodeId: ID!) {
-        savePredefinedPage(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt, attachedPageTreeNodeId: $attachedPageTreeNodeId) {
-            id
-            type
-        }
-    }
-`;
+} from "./EditPredefinedPage.gql.generated";
 
 type FormValues = {
     type?: string;
@@ -57,7 +27,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
     const stackApi = useStackApi();
     const client = useApolloClient();
 
-    const { data, loading } = useQuery<GQLPredefinedPageQuery, GQLPredefinedPageQueryVariables>(getQuery, {
+    const { data, loading } = useQuery<GQLPredefinedPageQuery, GQLPredefinedPageQueryVariables>(predefinedPageQuery, {
         variables: { pageTreeNodeId },
     });
 
