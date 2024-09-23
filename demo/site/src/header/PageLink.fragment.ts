@@ -12,9 +12,6 @@ export const pageLinkFragment = gql`
             ... on Link {
                 content
             }
-            ... on PredefinedPage {
-                type
-            }
         }
     }
 `;
