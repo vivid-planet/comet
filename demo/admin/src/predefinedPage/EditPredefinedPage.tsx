@@ -64,33 +64,31 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
 
     return (
         <FinalForm mode="edit" onSubmit={handleSubmit} initialValues={initialValues}>
-            {({ pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => {
-                return (
-                    <>
-                        <Toolbar>
-                            <ToolbarItem>
-                                <IconButton onClick={stackApi?.goBack}>
-                                    <ArrowLeft />
-                                </IconButton>
-                            </ToolbarItem>
-                            <PageName pageId={pageTreeNodeId} />
-                            <ToolbarFillSpace />
-                            <ToolbarItem>
-                                <FinalFormSaveButton />
-                            </ToolbarItem>
-                        </Toolbar>
-                        <MainContent>
-                            <SelectField label={<FormattedMessage id="structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
-                                {predefinedPageOptions.map((item, index) => (
-                                    <MenuItem value={item.value} key={index}>
-                                        {item.name}
-                                    </MenuItem>
-                                ))}
-                            </SelectField>
-                        </MainContent>
-                    </>
-                );
-            }}
+            {() => (
+                <>
+                    <Toolbar>
+                        <ToolbarItem>
+                            <IconButton onClick={stackApi?.goBack}>
+                                <ArrowLeft />
+                            </IconButton>
+                        </ToolbarItem>
+                        <PageName pageId={pageTreeNodeId} />
+                        <ToolbarFillSpace />
+                        <ToolbarItem>
+                            <FinalFormSaveButton />
+                        </ToolbarItem>
+                    </Toolbar>
+                    <MainContent>
+                        <SelectField label={<FormattedMessage id="structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
+                            {predefinedPageOptions.map((item, index) => (
+                                <MenuItem value={item.value} key={index}>
+                                    {item.name}
+                                </MenuItem>
+                            ))}
+                        </SelectField>
+                    </MainContent>
+                </>
+            )}
         </FinalForm>
     );
 };
