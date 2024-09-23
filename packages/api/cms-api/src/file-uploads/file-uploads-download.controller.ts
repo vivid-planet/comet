@@ -5,7 +5,8 @@ import { Response } from "express";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
-import { calculatePartialRanges, createHashedPath } from "../dam/files/files.utils";
+import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
+import { calculatePartialRanges } from "../dam/files/files.utils";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { DownloadParams, HashDownloadParams } from "./dto/file-uploads-download.params";
 import { FileUpload } from "./entities/file-upload.entity";
