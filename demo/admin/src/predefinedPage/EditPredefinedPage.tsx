@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { PageName } from "@comet/cms-admin";
+import { ContentScopeIndicator, PageName } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { GQLPredefinedPageType } from "@src/graphql.generated";
 import { useMemo } from "react";
@@ -68,7 +68,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
         <FinalForm mode="edit" onSubmit={handleSubmit} initialValues={initialValues}>
             {() => (
                 <>
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                         <ToolbarItem>
                             <IconButton onClick={stackApi?.goBack}>
                                 <ArrowLeft />
