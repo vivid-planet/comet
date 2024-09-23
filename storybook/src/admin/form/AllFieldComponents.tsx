@@ -53,7 +53,7 @@ function Story() {
             render={({ handleSubmit, values }) => (
                 <form onSubmit={handleSubmit}>
                     <Box maxWidth={1024}>
-                        <FieldSet title="Common Field-Components">
+                        <FieldSet title="Common Field-Components" initiallyExpanded={false}>
                             <TextField name="text" label="Text" variant={fieldVariant} fullWidth />
                             <TextAreaField name="textarea" label="TextArea" variant={fieldVariant} fullWidth />
                             <SearchField name="search" label="Search" variant={fieldVariant} fullWidth />
@@ -123,6 +123,7 @@ function Story() {
                                 />
                             </FormSection>
                             <FormSection title="Checkbox Lists">
+                                <TextField name="checkboxListTextField" label="TextField inside CheckboxListField" variant={fieldVariant} fullWidth />
                                 <CheckboxListField
                                     label="Required"
                                     name="requiredCheckboxList"
@@ -140,6 +141,7 @@ function Story() {
                                         },
                                     ]}
                                 />
+                                <TextField name="checkboxListTextField" label="TextField inside CheckboxListField" variant={fieldVariant} fullWidth />
                                 <CheckboxListField
                                     label="Many Options"
                                     name="checkboxListManyOptions"
@@ -176,6 +178,101 @@ function Story() {
                                     label="Column Layout"
                                     name="checkboxListColumnLayout"
                                     variant={fieldVariant}
+                                    layout="column"
+                                    fullWidth
+                                    options={[
+                                        {
+                                            label: "Option One",
+                                            value: "option-one",
+                                        },
+                                        {
+                                            label: "Option Two",
+                                            value: "option-two",
+                                        },
+                                        {
+                                            label: "Option Three",
+                                            value: "option-three",
+                                        },
+                                    ]}
+                                />
+                            </FormSection>
+                        </FieldSet>{" "}
+                        <FieldSet title="Checkboxes">
+                            <FormSection title="Individual Checkboxes">
+                                <CheckboxField name="requiredCheckbox" fieldLabel="Required Checkbox" variant="vertical" required fullWidth />
+                                <CheckboxField
+                                    name="checkboxWithAdditionalLabel"
+                                    fieldLabel="Checkbox with additional label"
+                                    label={
+                                        <>
+                                            This label has a{" "}
+                                            <Link href="https://www.comet-dxp.com" target="_blank">
+                                                link
+                                            </Link>{" "}
+                                            inside of it.
+                                        </>
+                                    }
+                                    variant="vertical"
+                                    fullWidth
+                                />
+                                <CheckboxField name="checkboxWithoutFieldLabel" label="Checkbox without a field label" variant="vertical" fullWidth />
+                            </FormSection>
+                            <FormSection title="Checkbox Lists">
+                                <TextField name="checkboxListTextField" label="TextField inside CheckboxListField" variant="vertical" fullWidth />
+                                <CheckboxListField
+                                    label="Required"
+                                    name="requiredCheckboxList"
+                                    variant="vertical"
+                                    fullWidth
+                                    required
+                                    options={[
+                                        {
+                                            label: "Option One",
+                                            value: "option-one",
+                                        },
+                                        {
+                                            label: "Option Two",
+                                            value: "option-two",
+                                        },
+                                    ]}
+                                />
+                                <TextField name="checkboxListTextField" label="TextField inside CheckboxListField" variant="vertical" fullWidth />
+                                <CheckboxListField
+                                    label="Many Options"
+                                    name="checkboxListManyOptions"
+                                    variant="vertical"
+                                    fullWidth
+                                    options={[
+                                        {
+                                            label: "Option One",
+                                            value: "option-one",
+                                        },
+                                        {
+                                            label: "Option Two",
+                                            value: "option-two",
+                                        },
+                                        {
+                                            label: "Option Three",
+                                            value: "option-three",
+                                        },
+                                        {
+                                            label: "Option Four",
+                                            value: "option-four",
+                                        },
+                                        {
+                                            label: "Option Five",
+                                            value: "option-five",
+                                        },
+                                        {
+                                            label: "Option Six",
+                                            value: "option-six",
+                                        },
+                                    ]}
+                                />
+                                <CheckboxListField
+                                    label="Column Layout"
+                                    name="checkboxListColumnLayout"
+                                    variant="vertical"
                                     layout="column"
                                     fullWidth
                                     options={[

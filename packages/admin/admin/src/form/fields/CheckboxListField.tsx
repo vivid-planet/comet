@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup, styled } from "@mui/material";
 import { ReactNode } from "react";
 
 import { Field, FieldProps } from "../Field";
@@ -18,9 +18,9 @@ export const CheckboxListField = <Value extends string>({ options, layout = "row
     return (
         <Field<[Value]> required={required} {...restProps}>
             {({ input: { value, onBlur, onFocus, onChange, name, ...restInput } }) => (
-                <FormGroup row={layout === "row"} {...restInput}>
+                <ItemsContainer row={layout === "row"} {...restInput}>
                     {options.map((option) => (
-                        <FormControlLabel
+                        <Label
                             key={option.value}
                             label={option.label}
                             value={option.value}
@@ -38,8 +38,25 @@ export const CheckboxListField = <Value extends string>({ options, layout = "row
                             control={<Checkbox required={required} />}
                         />
                     ))}
-                </FormGroup>
+                </ItemsContainer>
             )}
         </Field>
     );
 };
+
+const ItemsContainer = styled(FormGroup)`
+    margin-bottom: ${({ theme }) => theme.spacing(2)};
+    background: magenta;
+`;
+
+const Label = styled(FormControlLabel)`
+    margin-right: ${({ theme }) => theme.spacing(4)};
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: 40px;
+
+    .CometAdminFormFieldContainer-horizontal &,
+    .CometAdminFormFieldContainer-vertical & {
+        margin-bottom: ${({ theme }) => theme.spacing(-2)};
+    }
+`;
