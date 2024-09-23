@@ -82,6 +82,7 @@ class App extends Component {
                                     generateAltText: true,
                                     generateImageTitle: true,
                                 },
+                                enableLicenseFeature: true,
                             }}
                         >
                             <DependenciesConfigProvider
