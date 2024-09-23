@@ -1,4 +1,5 @@
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { getFormattedMessageNode } from "../utils/intl";
 
 type Options = {
     renderToolbar: boolean;
@@ -34,8 +35,7 @@ export const generateGridToolbar = ({
                 ${renderToolbarActions(
                     allowAdding,
                     forwardToolbarAction,
-                    `${instanceGqlType}.new${gqlType}`,
-                    `New ${camelCaseToHumanReadable(gqlType)}`,
+                    getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
                 )}
             </DataGridToolbar>
         );
@@ -62,7 +62,7 @@ const renderFilterItem = (hasFilter: boolean) => {
     </ToolbarItem>`;
 };
 
-const renderToolbarActions = (allowAdding: boolean, forwardToolbarAction: boolean | undefined, addMessageId: string, addDefaultMessage: string) => {
+const renderToolbarActions = (allowAdding: boolean, forwardToolbarAction: boolean | undefined, addItemText: string) => {
     if (!allowAdding) {
         return "";
     }
@@ -73,7 +73,7 @@ const renderToolbarActions = (allowAdding: boolean, forwardToolbarAction: boolea
 
     return `<ToolbarActions>
         <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-            <FormattedMessage id="${addMessageId}" defaultMessage="${addDefaultMessage}" />
+            ${addItemText}
         </Button>
     </ToolbarActions>`;
 };
