@@ -1,6 +1,6 @@
-import { Field, FinalFormSelect, SelectField, SelectFieldOption } from "@comet/admin";
+import { Field, FieldSet, FinalFormSelect, SelectField, SelectFieldOption } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
-import { Card, CardContent, InputAdornment, MenuItem } from "@mui/material";
+import { Box, Checkbox, InputAdornment, ListItemIcon, ListItemText, MenuItem } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
@@ -10,109 +10,128 @@ function Story() {
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
         { value: "raspberry", label: "Raspberry" },
-        { value: "vanilla", label: "Vanilla" },
+        { value: "vanilla", label: "Vanilla", disabled: true },
         { value: "mango", label: "Mango" },
     ];
 
+    const numberOptions: SelectFieldOption[] = [
+        { value: 0, label: "Zero" },
+        { value: 1, label: "One" },
+        { value: 2, label: "Two" },
+        { value: 3, label: "Three" },
+        { value: 4, label: "Four", disabled: true },
+        { value: 5, label: "Five" },
+    ];
+
     return (
-        <div style={{ maxWidth: "800px" }}>
-            <p>
-                If an options-prop or the props from the useAsyncOptionsProps-Hook are passed, FinalFormSelect automatically renders the options by
-                itself and uses objects as values.
-            </p>
-            <div style={{ width: 350 }}>
-                <Form
-                    initialValues={{
-                        multipleFlavours: [],
-                    }}
-                    onSubmit={() => {
-                        //
-                    }}
-                    render={({ handleSubmit }) => (
-                        <form onSubmit={handleSubmit}>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Field name="flavor" label="Flavor" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect {...props} fullWidth>
-                                                {options.map((option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
+        <Box width={500}>
+            <Form
+                initialValues={{
+                    multipleFlavors: [],
+                    multipleNumbers: [],
+                    multipleRequiredFlavors: [],
+                }}
+                onSubmit={() => {
+                    //
+                }}
+                render={({ handleSubmit, values }) => (
+                    <form onSubmit={handleSubmit}>
+                        <FieldSet title="Basic selects">
+                            <SelectField name="flavor" label="Select a flavor" options={options} fullWidth />
+                            <SelectField name="number" label="Select a number" options={numberOptions} fullWidth />
+                            <Box component="pre">{JSON.stringify({ flavor: values.flavor, number: values.number }, null, 2)}</Box>
+                        </FieldSet>
 
-                                    <SelectField name="flavorOptions" label="Flavor with Options as prop" options={options} fullWidth />
+                        <FieldSet title="Multi selects">
+                            <SelectField name="multipleFlavors" label="Select multiple flavors" options={options} multiple fullWidth />
+                            <SelectField name="multipleNumbers" label="Select multiple numbers" options={numberOptions} multiple fullWidth />
+                            <Box component="pre">
+                                {JSON.stringify({ multipleFlavors: values.multipleFlavors, multipleNumbers: values.multipleNumbers }, null, 2)}
+                            </Box>
+                        </FieldSet>
 
-                                    <Field name="flavorRequired" label="Required Flavor" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect {...props} fullWidth required>
-                                                {options.map((option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
+                        <FieldSet title="Required selects">
+                            <SelectField name="requiredFlavor" label="Select a flavor" options={options} fullWidth required />
+                            <SelectField name="requiredNumber" label="Select a number" options={numberOptions} fullWidth required />
+                            <SelectField
+                                name="multipleRequiredFlavors"
+                                label="Select multiple flavors"
+                                options={options}
+                                multiple
+                                fullWidth
+                                required
+                            />
+                            <Box component="pre">
+                                {JSON.stringify(
+                                    {
+                                        requiredFlavor: values.requiredFlavor,
+                                        requiredNumber: values.requiredNumber,
+                                        multipleRequiredFlavors: values.multipleRequiredFlavors,
+                                    },
+                                    null,
+                                    2,
+                                )}
+                            </Box>
+                        </FieldSet>
 
-                                    <Field name="flavorDisabled" label="Disabled Flavor" fullWidth disabled>
-                                        {(props) => (
-                                            <FinalFormSelect {...props} fullWidth>
-                                                {options.map((option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
+                        <FieldSet title="Customization">
+                            {/* TODO: Make this work with SelectField */}
+                            <Field name="flavorMultipleAdornments" label="Flavor with adornments" fullWidth>
+                                {(props) => (
+                                    <FinalFormSelect
+                                        {...props}
+                                        fullWidth
+                                        startAdornment={
+                                            <InputAdornment position="start">
+                                                <Account />
+                                            </InputAdornment>
+                                        }
+                                    >
+                                        {options.map((option) => (
+                                            <MenuItem value={option.value} key={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </FinalFormSelect>
+                                )}
+                            </Field>
 
-                                    <Field name="flavorMultipleAdornments" label="Flavor with adornments" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect
-                                                {...props}
-                                                fullWidth
-                                                startAdornment={
-                                                    <InputAdornment position="start">
-                                                        <Account />
-                                                    </InputAdornment>
-                                                }
-                                                endAdornment={
-                                                    <InputAdornment position="end" disablePointerEvents sx={{ width: 24 }}>
-                                                        <Account />
-                                                    </InputAdornment>
-                                                }
-                                            >
-                                                {options.map((option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
+                            {/* TODO: Make this work with SelectField */}
+                            <Field name="flavorWithCustomOptionsRendering" label="Flavor with adornments" fullWidth>
+                                {(props) => (
+                                    <FinalFormSelect
+                                        {...props}
+                                        renderValue={(value) => options.find((option) => option.value === value)?.label}
+                                        fullWidth
+                                    >
+                                        {options.map((option) => (
+                                            <MenuItem value={option.value} key={option.value}>
+                                                <Checkbox checked={option.value === values.flavorWithCustomOptionsRendering} />
+                                                <ListItemText primary={option.label} secondary={`The value is ${option.value}`} />
+                                                <ListItemIcon>
+                                                    <Account />
+                                                </ListItemIcon>
+                                            </MenuItem>
+                                        ))}
+                                    </FinalFormSelect>
+                                )}
+                            </Field>
 
-                                    <Field name="multipleFlavours" label="Multiple Flavours" fullWidth>
-                                        {(props) => (
-                                            <FinalFormSelect {...props} multiple>
-                                                {options.map((option) => (
-                                                    <MenuItem value={option.value} key={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </FinalFormSelect>
-                                        )}
-                                    </Field>
-                                </CardContent>
-                            </Card>
-                        </form>
-                    )}
-                />
-            </div>
-        </div>
+                            <Box component="pre">
+                                {JSON.stringify(
+                                    {
+                                        flavorMultipleAdornments: values.flavorMultipleAdornments,
+                                        flavorWithCustomOptionsRendering: values.flavorWithCustomOptionsRendering,
+                                    },
+                                    null,
+                                    2,
+                                )}
+                            </Box>
+                        </FieldSet>
+                    </form>
+                )}
+            />
+        </Box>
     );
 }
 
