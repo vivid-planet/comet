@@ -3,6 +3,7 @@ import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Tool
 import { ArrowLeft } from "@comet/admin-icons";
 import { PageName } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
+import { GQLPredefinedPageType } from "@src/graphql.generated";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
@@ -17,7 +18,7 @@ import {
 import { predefinedPageLabels } from "./predefinedPageLabels";
 
 type FormValues = {
-    type?: string;
+    type?: GQLPredefinedPageType;
 };
 
 interface Props {

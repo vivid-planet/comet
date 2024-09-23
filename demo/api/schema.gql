@@ -339,7 +339,11 @@ type PredefinedPage implements DocumentInterface {
   id: ID!
   updatedAt: DateTime!
   createdAt: DateTime!
-  type: String
+  type: PredefinedPageType
+}
+
+enum PredefinedPageType {
+  News
 }
 
 type DamScope {
@@ -1383,7 +1387,7 @@ input FooterInput {
 scalar FooterContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input PredefinedPageInput {
-  type: String
+  type: PredefinedPageType
 }
 
 input ProductInput {

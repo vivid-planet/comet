@@ -1,10 +1,12 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsOptional, IsString } from "class-validator";
+import { IsEnum, IsOptional } from "class-validator";
+
+import { PredefinedPageType } from "../entities/predefined-page.entity";
 
 @InputType()
 export class PredefinedPageInput {
-    @Field(() => String, { nullable: true })
-    @IsString()
+    @Field(() => PredefinedPageType, { nullable: true })
+    @IsEnum(PredefinedPageType)
     @IsOptional()
-    type?: string;
+    type?: PredefinedPageType;
 }
