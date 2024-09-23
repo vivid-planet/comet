@@ -314,7 +314,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                 Toolbar: ProductsGridToolbar,
             }}
             componentsProps={{
-                toolbar: { toolbarAction: toolbarAction },
+                toolbar: { toolbarAction },
             }}
         />
     );
