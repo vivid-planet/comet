@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { FileData, FileDataNotMenu } from "@comet/admin-icons";
 import { DocumentInterface } from "@comet/cms-admin";
+import { Chip } from "@mui/material";
 import { GQLPredefinedPage, GQLPredefinedPageInput } from "@src/graphql.generated";
 import { EditPredefinedPage } from "@src/predefinedPage/EditPredefinedPage";
 import gql from "graphql-tag";
@@ -64,7 +65,7 @@ export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, 
 
         if (data?.page?.document != null) {
             const { type } = data.page.document as GQLPredefinedPage;
-            return type ? <>{type}</> : null;
+            return type ? <Chip label={type} /> : null;
         } else {
             return null;
         }
