@@ -79,7 +79,7 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
                         </ToolbarItem>
                     </Toolbar>
                     <MainContent>
-                        <SelectField label={<FormattedMessage id="structuredContent.type" defaultMessage="Type" />} name="type" fullWidth>
+                        <SelectField label={<FormattedMessage id="predefinedPages.type.label" defaultMessage="Type" />} name="type" fullWidth>
                             {predefinedPageOptions.map((item, index) => (
                                 <MenuItem value={item.value} key={index}>
                                     {item.name}
@@ -93,4 +93,4 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
     );
 };
 
-const predefinedPageOptions = [{ value: "News", name: <FormattedMessage id="structuredContent.news" defaultMessage="News" /> }];
+const predefinedPageOptions = [{ value: "News", name: <FormattedMessage id="predefinedPages.news" defaultMessage="News" /> }];

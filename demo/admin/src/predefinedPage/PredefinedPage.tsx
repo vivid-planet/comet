@@ -23,7 +23,7 @@ const predefinedPageInfoTagQuery = gql`
 `;
 
 export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, GQLPredefinedPageInput> = {
-    displayName: <FormattedMessage id="predefinedPage" defaultMessage="Predefined Page" />,
+    displayName: <FormattedMessage id="predefinedPages.displayName" defaultMessage="Predefined Page" />,
     editComponent: EditPredefinedPage,
     getQuery: gql`
         query PredefinedPageDocument($id: ID!) {
