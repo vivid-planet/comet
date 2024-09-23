@@ -2,7 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import { FinalForm, FinalFormSaveButton, Loading, MainContent, SelectField, Toolbar, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { PageName } from "@comet/cms-admin";
-import { IconButton, MenuItem } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
@@ -14,6 +14,7 @@ import {
     GQLSavePredefinedPageMutation,
     GQLSavePredefinedPageMutationVariables,
 } from "./EditPredefinedPage.gql.generated";
+import { predefinedPageLabels } from "./predefinedPageLabels";
 
 type FormValues = {
     type?: string;
@@ -79,18 +80,15 @@ export const EditPredefinedPage = ({ id: pageTreeNodeId }: Props) => {
                         </ToolbarItem>
                     </Toolbar>
                     <MainContent>
-                        <SelectField label={<FormattedMessage id="predefinedPages.type.label" defaultMessage="Type" />} name="type" fullWidth>
-                            {predefinedPageOptions.map((item, index) => (
-                                <MenuItem value={item.value} key={index}>
-                                    {item.name}
-                                </MenuItem>
-                            ))}
-                        </SelectField>
+                        <SelectField
+                            name="type"
+                            label={<FormattedMessage id="predefinedPages.type.label" defaultMessage="Type" />}
+                            options={[{ value: "News", label: predefinedPageLabels.News }]}
+                            fullWidth
+                        />
                     </MainContent>
                 </>
             )}
         </FinalForm>
     );
 };
-
-const predefinedPageOptions = [{ value: "News", name: <FormattedMessage id="predefinedPages.news" defaultMessage="News" /> }];

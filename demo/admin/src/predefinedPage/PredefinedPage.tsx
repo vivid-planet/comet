@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import { GQLPredefinedPageInfoTagQuery, GQLPredefinedPageInfoTagQueryVariables } from "./PredefinedPage.generated";
+import { predefinedPageLabels } from "./predefinedPageLabels";
 
 const predefinedPageInfoTagQuery = gql`
     query PredefinedPageInfoTag($id: ID!) {
@@ -65,7 +66,7 @@ export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, 
 
         if (data?.page?.document != null) {
             const { type } = data.page.document as GQLPredefinedPage;
-            return type ? <Chip label={type} /> : null;
+            return type ? <Chip label={predefinedPageLabels[type]} /> : null;
         } else {
             return null;
         }
