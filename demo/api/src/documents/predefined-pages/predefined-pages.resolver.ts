@@ -9,7 +9,7 @@ import { PredefinedPage } from "./entities/predefined-page.entity";
 
 @Resolver(() => PredefinedPage)
 @RequiredPermission("pageTree")
-export class PredefinedPageResolver {
+export class PredefinedPagesResolver {
     constructor(
         private readonly entityManager: EntityManager,
         @InjectRepository(PredefinedPage) private readonly repository: EntityRepository<PredefinedPage>,

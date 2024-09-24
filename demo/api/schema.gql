@@ -335,17 +335,6 @@ enum UserGroup {
 
 union PageContentUnion = Page | Link | PredefinedPage
 
-type PredefinedPage implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  createdAt: DateTime!
-  type: PredefinedPageType
-}
-
-enum PredefinedPageType {
-  News
-}
-
 type DamScope {
   domain: String!
 }
@@ -386,6 +375,17 @@ type DamFile {
   duplicates: [DamFile!]!
   damPath: String!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+type PredefinedPage implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  type: PredefinedPageType
+}
+
+enum PredefinedPageType {
+  News
 }
 
 type FooterContentScope {

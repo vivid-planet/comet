@@ -2,10 +2,10 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { Module } from "@nestjs/common";
 
 import { PredefinedPage } from "./entities/predefined-page.entity";
-import { PredefinedPageResolver } from "./predefined-page.resolver";
+import { PredefinedPagesResolver } from "./predefined-pages.resolver";
 
 @Module({
     imports: [MikroOrmModule.forFeature([PredefinedPage])],
-    providers: [PredefinedPageResolver],
+    providers: [PredefinedPagesResolver],
 })
-export class PredefinedPageModule {}
+export class PredefinedPagesModule {}
