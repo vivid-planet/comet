@@ -1344,7 +1344,7 @@ input NewsInput {
   title: String!
   status: NewsStatus! = Active
   date: DateTime!
-  category: NewsCategory! = Awards
+  category: NewsCategory!
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
