@@ -1,5 +1,28 @@
 # @comet/cms-admin
 
+## 7.4.2
+
+### Patch Changes
+
+-   @comet/admin@7.4.2
+-   @comet/admin-date-time@7.4.2
+-   @comet/admin-icons@7.4.2
+-   @comet/admin-rte@7.4.2
+-   @comet/admin-theme@7.4.2
+-   @comet/blocks-admin@7.4.2
+
+## 7.4.1
+
+### Patch Changes
+
+-   fa31e0856: Display validation errors of file name field in DAM
+    -   @comet/admin@7.4.1
+    -   @comet/admin-date-time@7.4.1
+    -   @comet/admin-icons@7.4.1
+    -   @comet/admin-rte@7.4.1
+    -   @comet/admin-theme@7.4.1
+    -   @comet/blocks-admin@7.4.1
+
 ## 7.4.0
 
 ### Minor Changes
