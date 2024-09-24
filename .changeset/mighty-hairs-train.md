@@ -2,11 +2,12 @@
 "@comet/admin": minor
 ---
 
-Add a crud more actions menu helper component
+Add a `CrudMoreActionsMenu` component
 
-This is done to provide a simple api to create a more actions menu for a list of items.
+The component can be used to create a "More actions" menu for a list of items.
+It is typically used in a toolbar above a Data Grid.
 
-**Example:**
+**Example**
 
 ```tsx
 <CrudMoreActionsMenu
