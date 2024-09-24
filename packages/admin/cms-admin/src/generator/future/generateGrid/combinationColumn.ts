@@ -8,8 +8,8 @@ type AbstractField<FieldName extends string> = {
     emptyValue?: string;
 };
 
-type StringField<FieldName extends string> = AbstractField<FieldName> & {
-    type: "string";
+type TextField<FieldName extends string> = AbstractField<FieldName> & {
+    type: "text";
 };
 
 type StaticText = {
@@ -47,7 +47,7 @@ type NumberField<FieldName extends string> = AbstractField<FieldName> &
 
 // type TextConfig<FieldName extends string> = Field<FieldName> | FieldGroup<FieldName>;
 
-type Field<FieldName extends string> = StaticText | FieldName | StringField<FieldName> | NumberField<FieldName>;
+type Field<FieldName extends string> = StaticText | FieldName | TextField<FieldName> | NumberField<FieldName>;
 
 type TextConfig<FieldName extends string> = Field<FieldName>;
 
