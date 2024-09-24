@@ -125,6 +125,23 @@ Component that can be rendered as ContextMenu in a row that has some basic CRUD 
     <Story id="stories-components-datagrid--crudcontextmenu" />
 </Canvas>
 
+## CrudMoreActionsMenu
+
+This component is a button with a context menu, that can also display of the number of items selected. It has been designed to enable CRUD actions for batch processing and general actions for a DataGrid table. It is normally placed in a toolbar above the DataGrid.
+
+- `selectionSize?: number`: Number of selected items, used to determine if selective actions should be enabled. The number will be displayed in the button.
+- `overallActions?: Maybe<ActionItem>[]`: An array of actions that can be executed, if no items are selected (`selectionSize` is `0` or `undefined`).
+- `selectiveActions?: Maybe<ActionItem>[]`: An array of actions that can be executed, if items are selected (`selectionSize` is greater than `0`).
+
+The `ActionItem` type has the following properties:
+- `label: React.ReactNode`: The label of the action.
+- `icon?: React.ReactNode`: The icon of the action displayed at the start of an action.
+- `divider?: boolean`: If true, a divider will be displayed below the action.
+
+<Canvas>
+    <Story id="stories-components-datagrid--crudmoreactionsmenu" />
+</Canvas>
+
 ## DataGrid to Comet Graphl API Converter
 
 Comet Admin comes with three helpers that convert MUI DataGrid state to standard Comet GraphQL API variables.
