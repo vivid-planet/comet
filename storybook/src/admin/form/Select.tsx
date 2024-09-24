@@ -1,4 +1,4 @@
-import { Field, FieldSet, FinalFormSelect, SelectField, SelectFieldOption } from "@comet/admin";
+import { FieldSet, SelectField, SelectFieldOption } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { Box, Checkbox, InputAdornment, ListItemIcon, ListItemText, MenuItem } from "@mui/material";
 import { storiesOf } from "@storybook/react";
@@ -75,48 +75,41 @@ function Story() {
                         </FieldSet>
 
                         <FieldSet title="Customization">
-                            {/* TODO: Make this work with SelectField */}
-                            <Field name="flavorMultipleAdornments" label="Flavor with adornments" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect
-                                        {...props}
-                                        fullWidth
-                                        startAdornment={
+                            <SelectField
+                                name="flavorMultipleAdornments"
+                                label="Flavor with adornments"
+                                options={options}
+                                fullWidth
+                                componentsProps={{
+                                    finalFormSelect: {
+                                        startAdornment: (
                                             <InputAdornment position="start">
                                                 <Account />
                                             </InputAdornment>
-                                        }
-                                    >
-                                        {options.map((option) => (
-                                            <MenuItem value={option.value} key={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
-
-                            {/* TODO: Make this work with SelectField */}
-                            <Field name="flavorWithCustomOptionsRendering" label="Flavor with adornments" fullWidth>
-                                {(props) => (
-                                    <FinalFormSelect
-                                        {...props}
-                                        renderValue={(value) => options.find((option) => option.value === value)?.label}
-                                        fullWidth
-                                    >
-                                        {options.map((option) => (
-                                            <MenuItem value={option.value} key={option.value}>
-                                                <Checkbox checked={option.value === values.flavorWithCustomOptionsRendering} />
-                                                <ListItemText primary={option.label} secondary={`The value is ${option.value}`} />
-                                                <ListItemIcon>
-                                                    <Account />
-                                                </ListItemIcon>
-                                            </MenuItem>
-                                        ))}
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
-
+                                        ),
+                                    },
+                                }}
+                            />
+                            <SelectField
+                                name="flavorWithCustomOptionsRendering"
+                                label="Flavor with adornments"
+                                fullWidth
+                                componentsProps={{
+                                    finalFormSelect: {
+                                        renderValue: (value: string) => options.find((option) => option.value === value)?.label,
+                                    },
+                                }}
+                            >
+                                {options.map((option) => (
+                                    <MenuItem value={option.value} key={option.value}>
+                                        <Checkbox checked={option.value === values.flavorWithCustomOptionsRendering} />
+                                        <ListItemText primary={option.label} secondary={`The value is ${option.value}`} />
+                                        <ListItemIcon>
+                                            <Account />
+                                        </ListItemIcon>
+                                    </MenuItem>
+                                ))}
+                            </SelectField>
                             <Box component="pre">
                                 {JSON.stringify(
                                     {
