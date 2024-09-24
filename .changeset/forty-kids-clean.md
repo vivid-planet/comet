@@ -2,12 +2,12 @@
 "@comet/cms-site": minor
 ---
 
-PixelImageBlock: Allow different AspectRatio Formats
+PixelImageBlock: Allow different aspect ratio formats
 
-AspectRatio now supports values in the following formats:
+The `aspectRatio` prop now supports values in the following formats:
 
--   x as a seperator: `aspectRatio="3x1"`
--   : as a seperator: `aspectRatio="16:9"`
--   / as a seperator: `aspectRatio="4/3"`
+-   x as seperator: `aspectRatio="3x1"`
+-   : as seperator: `aspectRatio="16:9"`
+-   / as seperator: `aspectRatio="4/3"`
 -   Numbers: `aspectRatio={1.5}`
--   Simple Strings: `aspectRatio="3"`
+-   Strings: `aspectRatio="3"`
