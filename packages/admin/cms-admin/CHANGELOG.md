@@ -1,5 +1,17 @@
 # @comet/cms-admin
 
+## 6.17.9
+
+### Patch Changes
+
+-   bb4aa326b: Support numbers as content scope values in User Permissions administration panel
+    -   @comet/admin@6.17.9
+    -   @comet/admin-date-time@6.17.9
+    -   @comet/admin-icons@6.17.9
+    -   @comet/admin-rte@6.17.9
+    -   @comet/admin-theme@6.17.9
+    -   @comet/blocks-admin@6.17.9
+
 ## 6.17.8
 
 ### Patch Changes
