@@ -1,8 +1,7 @@
 import { GridColDef } from "@comet/admin";
-import { ArrowRight } from "@comet/admin-icons";
+import { ArrowRight, Reload } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid, DataGridProps } from "@mui/x-data-grid";
-import * as React from "react";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 
@@ -65,7 +64,10 @@ export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
     ];
 
     return (
-        <DashboardWidgetRoot header={<FormattedMessage id="dashboard.latestContentUpdatesWidget.title" defaultMessage="Latest Content Updates" />}>
+        <DashboardWidgetRoot
+            icon={<Reload />}
+            header={<FormattedMessage id="dashboard.latestContentUpdatesWidget.title" defaultMessage="Latest Content Updates" />}
+        >
             <DataGrid disableSelectionOnClick disableColumnMenu hideFooter autoHeight columns={columns} rows={rows} loading={loading} error={error} />
         </DashboardWidgetRoot>
     );

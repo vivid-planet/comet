@@ -1,6 +1,6 @@
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 const FooterBar = styled(Paper)`
     position: fixed;
@@ -31,7 +31,7 @@ interface DamFooterProps {
     open: boolean;
 }
 
-export const DamFooter: React.FunctionComponent<DamFooterProps> = ({ children }) => {
+export const DamFooter = ({ children, open }: PropsWithChildren<DamFooterProps>) => {
     if (!open) {
         return null;
     }

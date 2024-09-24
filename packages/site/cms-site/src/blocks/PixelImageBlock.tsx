@@ -1,7 +1,6 @@
 "use client";
 // eslint-disable-next-line no-restricted-imports
 import NextImage, { ImageProps } from "next/image";
-import * as React from "react";
 import styled from "styled-components";
 
 import { PixelImageBlockData } from "../blocks.generated";

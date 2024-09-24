@@ -10,7 +10,6 @@ import {
     withAdditionalBlockAttributes,
 } from "@comet/blocks-admin";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";

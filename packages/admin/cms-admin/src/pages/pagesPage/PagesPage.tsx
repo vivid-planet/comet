@@ -16,7 +16,7 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import * as React from "react";
+import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
@@ -39,8 +39,8 @@ interface Props {
     path: string;
     allCategories: AllCategories;
     documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
-    editPageNode?: React.ComponentType<EditPageNodeProps>;
-    renderContentScopeIndicator: (scope: ContentScopeInterface) => React.ReactNode;
+    editPageNode?: ComponentType<EditPageNodeProps>;
+    renderContentScopeIndicator: (scope: ContentScopeInterface) => ReactNode;
 }
 
 const DefaultEditPageNode = createEditPageNode({});
@@ -52,17 +52,17 @@ export function PagesPage({
     documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
-}: Props): React.ReactElement {
+}: Props) {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
     const { additionalPageTreeNodeFragment } = useCmsBlockContext();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
-    const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
+    const pagesQuery = useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
     const documentTypes = typeof passedDocumentTypes === "function" ? passedDocumentTypes(category) : passedDocumentTypes;
 
-    React.useEffect(() => {
+    useEffect(() => {
         setRedirectPathAfterChange(path);
         return () => {
             setRedirectPathAfterChange(undefined);
@@ -85,7 +85,7 @@ export function PagesPage({
         stopPolling,
     });
 
-    const isInitialLoad = React.useRef(true);
+    const isInitialLoad = useRef(true);
 
     if (error) {
         const isPollingError = !isInitialLoad.current;
@@ -103,10 +103,10 @@ export function PagesPage({
 
     const [EditDialog, editDialogSelection, editDialogApi] = useEditDialog();
 
-    const refPageTree = React.useRef<PageTreeRefApi>(null);
+    const refPageTree = useRef<PageTreeRefApi>(null);
     const [showArchive, setShowArchive] = useStoredState<boolean>("pageTreeShowArchive", false, window.sessionStorage);
 
-    const ignorePages = React.useCallback((page: GQLPageTreePageFragment) => (showArchive ? true : page.visibility !== "Archived"), [showArchive]);
+    const ignorePages = useCallback((page: GQLPageTreePageFragment) => (showArchive ? true : page.visibility !== "Archived"), [showArchive]);
 
     const { tree, pagesToRender, setExpandedIds, expandedIds, toggleExpand, onSelectChanged, setSelectedIds, selectState, selectedTree } =
         usePageTree({

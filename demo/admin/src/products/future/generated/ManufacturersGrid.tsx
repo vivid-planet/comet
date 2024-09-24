@@ -13,13 +13,14 @@ import {
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
+    Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -137,7 +138,25 @@ export function ManufacturersGrid(): React.ReactElement {
         },
         {
             field: "address_alternativeAddress_street",
-            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" }),
+            renderHeader: () => (
+                <>
+                    <GridColumnHeaderTitle
+                        label={intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" })}
+                        columnWidth={150}
+                    />
+                    <Tooltip
+                        trigger="hover"
+                        title={
+                            <FormattedMessage
+                                id="manufacturer.address.alternativeAddress.street.tooltip"
+                                defaultMessage="Street of alternative address"
+                            />
+                        }
+                    >
+                        <Info sx={{ marginLeft: 1 }} />
+                    </Tooltip>
+                </>
+            ),
             filterable: false,
             sortable: false,
             valueGetter: ({ row }) => row.address?.alternativeAddress?.street,
@@ -146,7 +165,28 @@ export function ManufacturersGrid(): React.ReactElement {
         },
         {
             field: "address_alternativeAddress_streetNumber",
-            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" }),
+            renderHeader: () => (
+                <>
+                    <GridColumnHeaderTitle
+                        label={intl.formatMessage({
+                            id: "manufacturer.address.alternativeAddress.streetNumber",
+                            defaultMessage: "Alt-Street number",
+                        })}
+                        columnWidth={150}
+                    />
+                    <Tooltip
+                        trigger="hover"
+                        title={
+                            <FormattedMessage
+                                id="manufacturer.address.alternativeAddress.streetNumber.tooltip"
+                                defaultMessage="Street number of alternative address"
+                            />
+                        }
+                    >
+                        <Info sx={{ marginLeft: 1 }} />
+                    </Tooltip>
+                </>
+            ),
             type: "number",
             filterable: false,
             sortable: false,
@@ -194,6 +234,8 @@ export function ManufacturersGrid(): React.ReactElement {
             filterable: false,
             type: "actions",
             align: "right",
+            pinned: "right",
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>

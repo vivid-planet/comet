@@ -1,6 +1,6 @@
 import { ComponentsOverrides, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
@@ -44,8 +44,8 @@ export interface FormSectionProps
         title: "div";
         children: "div";
     }> {
-    children: React.ReactNode;
-    title?: React.ReactNode;
+    children: ReactNode;
+    title?: ReactNode;
     disableMarginBottom?: boolean;
     disableTypography?: boolean;
 }

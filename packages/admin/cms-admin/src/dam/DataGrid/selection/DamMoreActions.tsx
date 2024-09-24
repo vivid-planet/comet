@@ -3,7 +3,7 @@ import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, U
 import { Slide, Snackbar } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { SlideProps } from "@mui/material/Slide/Slide";
-import * as React from "react";
+import { useRef } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -20,7 +20,7 @@ interface DamMoreActionsProps {
     };
 }
 
-export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps): React.ReactElement => {
+export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps) => {
     const damSelectionActionsApi = useDamSelectionApi();
     const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
@@ -28,7 +28,7 @@ export const DamMoreActions = ({ transformOrigin, anchorOrigin, folderId, filter
     const intl = useIntl();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    const folderInputRef = React.useRef<HTMLInputElement>(null);
+    const folderInputRef = useRef<HTMLInputElement>(null);
 
     const selectionSize = selectionMap.size;
     const selectionMapValues = Array.from(selectionMap.values());

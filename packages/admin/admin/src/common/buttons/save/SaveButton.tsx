@@ -1,7 +1,7 @@
 import { Check, Error, Error as ErrorIcon, Save, ThreeDotSaving } from "@comet/admin-icons";
 import { Button, ButtonClassKey, buttonGroupClasses, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
@@ -74,15 +74,15 @@ export interface SaveButtonProps extends ButtonProps {
     saving?: boolean;
     hasErrors?: boolean;
     hasConflict?: boolean;
-    savingItem?: React.ReactNode;
-    successItem?: React.ReactNode;
-    errorItem?: React.ReactNode;
-    conflictItem?: React.ReactNode;
-    saveIcon?: React.ReactNode;
-    savingIcon?: React.ReactNode;
-    successIcon?: React.ReactNode;
-    errorIcon?: React.ReactNode;
-    conflictIcon?: React.ReactNode;
+    savingItem?: ReactNode;
+    successItem?: ReactNode;
+    errorItem?: ReactNode;
+    conflictItem?: ReactNode;
+    saveIcon?: ReactNode;
+    savingIcon?: ReactNode;
+    successIcon?: ReactNode;
+    errorIcon?: ReactNode;
+    conflictIcon?: ReactNode;
 }
 
 export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
@@ -111,7 +111,7 @@ export function SaveButton(inProps: SaveButtonProps) {
         name: "CometAdminSaveButton",
     });
 
-    const [displayState, setDisplayState] = React.useState<SaveButtonDisplayState>("idle");
+    const [displayState, setDisplayState] = useState<SaveButtonDisplayState>("idle");
     const saveSplitButton = useSplitButtonContext();
 
     const ownerState: OwnerState = {
@@ -120,7 +120,7 @@ export function SaveButton(inProps: SaveButtonProps) {
         color,
     };
 
-    const resolveIconForDisplayState = (displayState: SaveButtonDisplayState): React.ReactNode => {
+    const resolveIconForDisplayState = (displayState: SaveButtonDisplayState): ReactNode => {
         if (displayState === "saving") {
             return savingIcon;
         } else if (displayState === "success") {
@@ -133,7 +133,7 @@ export function SaveButton(inProps: SaveButtonProps) {
         return saveIcon;
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         let timeoutId: number | undefined;
 
         if ((displayState === "idle" || displayState === "conflict") && saving) {
@@ -175,7 +175,7 @@ export function SaveButton(inProps: SaveButtonProps) {
         };
     }, [displayState, saving, hasErrors, hasConflict]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (displayState === "idle") {
             saveSplitButton?.setShowSelectButton(undefined);
         } else if (displayState === "saving") {

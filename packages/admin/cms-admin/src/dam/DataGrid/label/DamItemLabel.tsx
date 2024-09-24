@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 
 import { MarkedMatches, TextMatch } from "../../../common/MarkedMatches";
 import { isFile } from "../../helpers/isFile";
@@ -54,7 +53,7 @@ const getFolderPath = (folder: GQLDamFolderTableFragment) => {
     return `/${pathArr.join("/")}`;
 };
 
-const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = false }: DamItemLabelProps): React.ReactElement => {
+const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = false }: DamItemLabelProps) => {
     return (
         <LabelWrapper>
             <DamThumbnail asset={asset} />

@@ -2,7 +2,7 @@ import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
 import { MoreHorizontal } from "@comet/admin-icons";
 import { ComponentsOverrides, css, ListItemIcon as MuiListItemIcon, Menu, MenuItem, Theme, Tooltip, useThemeProps } from "@mui/material";
 import { Editor } from "draft-js";
-import * as React from "react";
+import { MouseEvent, RefObject, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { IFeatureConfig } from "../types";
@@ -17,7 +17,7 @@ interface IProps
     }> {
     features: IFeatureConfig[];
     disabled?: boolean;
-    editorRef: React.RefObject<Editor>;
+    editorRef: RefObject<Editor>;
     maxVisible?: number;
 }
 
@@ -30,9 +30,9 @@ export function FeaturesButtonGroup(inProps: IProps) {
         slotProps,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminRteFeaturesButtonGroup" });
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const handleMoreOptionsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMoreOptionsClick = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 

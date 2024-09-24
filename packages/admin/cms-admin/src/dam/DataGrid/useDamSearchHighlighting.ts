@@ -1,5 +1,5 @@
 import escapeRegExp from "lodash.escaperegexp";
-import * as React from "react";
+import { useMemo } from "react";
 
 import { TextMatch } from "../../common/MarkedMatches";
 
@@ -16,7 +16,7 @@ interface UseDamSearchHighlightingParams {
 }
 
 export const useDamSearchHighlighting = ({ items, query }: UseDamSearchHighlightingParams): DamSearchHighlightingApi => {
-    const matches = React.useMemo(() => {
+    const matches = useMemo(() => {
         const matches = new Map<string, TextMatch[]>();
         if (!query) {
             return matches;
