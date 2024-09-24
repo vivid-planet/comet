@@ -1,7 +1,7 @@
 import { GridColDef } from "@comet/admin";
 import { FormattedNumber } from "react-intl";
 
-import { DataGridSettings } from "../generator";
+import { BaseColumnConfig } from "../generator";
 
 type AbstractField<FieldName extends string> = {
     field: FieldName;
@@ -56,7 +56,7 @@ export type GridCombinationColumnConfig<FieldName extends string> = {
     name: string;
     primaryText?: TextConfig<FieldName>;
     secondaryText?: TextConfig<FieldName>;
-} & DataGridSettings &
+} & BaseColumnConfig &
     Pick<GridColDef, "sortBy">;
 
 const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: string) => {
