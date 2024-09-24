@@ -21,13 +21,13 @@ This is done to provide a simple api to create a more actions menu for a list of
         {
             label: "move",
             onClick: handleMoveClick,
-            startAdornment: <Move />,
+            icon: <Move />,
             divider: true,
         },
         {
             label: "download",
             onClick: handleDownloadClick,
-            startAdornment: <Download />,
+            icon: <Download />,
         },
     ]}
 />
