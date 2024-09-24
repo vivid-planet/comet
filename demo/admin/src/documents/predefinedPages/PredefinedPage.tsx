@@ -3,10 +3,10 @@ import { FileData, FileDataNotMenu } from "@comet/admin-icons";
 import { DocumentInterface } from "@comet/cms-admin";
 import { Chip } from "@mui/material";
 import { GQLPredefinedPage, GQLPredefinedPageInput } from "@src/graphql.generated";
-import { EditPredefinedPage } from "@src/predefinedPage/EditPredefinedPage";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
+import { EditPredefinedPage } from "./EditPredefinedPage";
 import { GQLPredefinedPageInfoTagQuery, GQLPredefinedPageInfoTagQueryVariables } from "./PredefinedPage.generated";
 import { predefinedPageLabels } from "./predefinedPageLabels";
 
