@@ -1,10 +1,9 @@
 import { messages } from "@comet/admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-export const formatStrong = (chunks: string): React.ReactElement => <strong>{chunks}</strong>;
+export const formatStrong = (chunks: string) => <strong>{chunks}</strong>;
 
-export const NetworkError = (): React.ReactElement => (
+export const NetworkError = () => (
     <FormattedMessage
         {...messages.networkError}
         values={{
@@ -13,7 +12,7 @@ export const NetworkError = (): React.ReactElement => (
     />
 );
 
-export const UnknownError = (): React.ReactElement => (
+export const UnknownError = () => (
     <FormattedMessage
         {...messages.unknownError}
         values={{

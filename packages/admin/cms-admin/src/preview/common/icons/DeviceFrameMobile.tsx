@@ -1,6 +1,4 @@
-import * as React from "react";
-
-function DeviceFrameMobile(): React.ReactElement {
+function DeviceFrameMobile() {
     return (
         <svg width="406" height="763" viewBox="0 0 406 763" xmlns="http://www.w3.org/2000/svg">
             <defs>

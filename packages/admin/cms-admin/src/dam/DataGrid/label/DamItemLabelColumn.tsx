@@ -1,7 +1,7 @@
 import { IFilterApi, StackLink } from "@comet/admin";
 import { Box, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 
 import { TextMatch } from "../../../common/MarkedMatches";
@@ -37,7 +37,7 @@ export interface RenderDamLabelOptions {
 
 interface DamItemLabelColumnProps {
     item: GQLDamFileTableFragment | GQLDamFolderTableFragment;
-    renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: RenderDamLabelOptions) => React.ReactNode;
+    renderDamLabel?: (row: GQLDamFileTableFragment | GQLDamFolderTableFragment, options: RenderDamLabelOptions) => ReactNode;
     matches: DamItemMatches;
     isSearching: boolean;
     filterApi: IFilterApi<DamFilter>;
@@ -54,7 +54,7 @@ interface DamItemLabelColumnProps {
     scrollIntoView?: boolean;
 }
 
-export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnProps> = ({
+export const DamItemLabelColumn = ({
     item,
     renderDamLabel,
     matches,
@@ -64,11 +64,11 @@ export const DamItemLabelColumn: React.VoidFunctionComponent<DamItemLabelColumnP
     footerApi,
     hoverApi,
     scrollIntoView = false,
-}) => {
+}: DamItemLabelColumnProps) => {
     const damConfig = useDamConfig();
-    const columnRef = React.useRef<HTMLDivElement>();
+    const columnRef = useRef<HTMLDivElement>();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (scrollIntoView) {
             setTimeout(() => {
                 columnRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });

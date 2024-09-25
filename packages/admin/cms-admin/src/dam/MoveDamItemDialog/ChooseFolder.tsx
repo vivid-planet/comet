@@ -1,7 +1,7 @@
 import { ArrowRight, BallTriangle, PageTree, TreeCollapse, TreeExpand } from "@comet/admin-icons";
 import { ListItem, SvgIconProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useRef } from "react";
+import { ComponentType, CSSProperties, ReactNode, useEffect, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
@@ -32,7 +32,7 @@ export const ChooseFolder = ({
     onFolderClick,
     focusedFolderId,
 }: ChooseFolderProps) => {
-    React.useEffect(() => {
+    useEffect(() => {
         if (focusedFolderId === undefined) {
             return;
         }
@@ -150,13 +150,13 @@ const StyledListItem = styled(ListItem)<{ offset: number; isChosen?: boolean }>`
 `;
 
 interface ChooseFolderItemProps {
-    Icon?: React.ComponentType<SvgIconProps>;
+    Icon?: ComponentType<SvgIconProps>;
     onIconClick?: () => void;
     onClick?: () => void;
-    message: React.ReactNode;
+    message: ReactNode;
     offset: number;
     isChosen?: boolean;
-    style: React.CSSProperties;
+    style: CSSProperties;
 }
 const ChooseFolderItem = ({ Icon, onIconClick, onClick, message, offset, isChosen = false, style }: ChooseFolderItemProps) => {
     return (

@@ -22,7 +22,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
         { type: "text", name: "description", headerName: "Description", visible: "up('md')" },
-        { type: "number", name: "price", headerName: "Price", maxWidth: 150 },
+        { type: "number", name: "price", headerName: "Price", maxWidth: 150, headerInfoTooltip: "Price in EUR" },
         {
             type: "staticSelect",
             name: "inStock",

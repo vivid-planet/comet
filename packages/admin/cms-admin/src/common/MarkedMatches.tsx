@@ -1,15 +1,15 @@
 import { orange, yellow } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { Fragment, ReactNode } from "react";
 
 export type TextMatch = { start: number; end: number; focused: boolean };
 
-export const MarkedMatches: React.FunctionComponent<{ text: string; matches: TextMatch[] }> = ({ text, matches }) => {
+export const MarkedMatches = ({ text, matches }: { text: string; matches: TextMatch[] }) => {
     if (matches.length === 0) {
         return <>{text}</>;
     }
 
-    const textSegments: React.ReactNode[] = [text.substring(0, matches[0].start)];
+    const textSegments: ReactNode[] = [text.substring(0, matches[0].start)];
 
     for (let i = 0; i < matches.length - 1; i++) {
         const match = matches[i];
@@ -25,7 +25,7 @@ export const MarkedMatches: React.FunctionComponent<{ text: string; matches: Tex
     return (
         <Text>
             {textSegments.map((segment, index) => (
-                <React.Fragment key={index}>{segment}</React.Fragment>
+                <Fragment key={index}>{segment}</Fragment>
             ))}
         </Text>
     );

@@ -13,6 +13,14 @@ export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputEl
     required?: boolean;
 }
 
+const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
+    if (multiple && Array.isArray(value)) {
+        return value.length > 0;
+    }
+
+    return value !== undefined && value !== "";
+};
+
 export const FinalFormSelect = <T,>({
     input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
     meta,
@@ -47,7 +55,7 @@ export const FinalFormSelect = <T,>({
     const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
-            hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
+            hasClearableContent={getHasClearableContent(value, multiple)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
     ) : null;

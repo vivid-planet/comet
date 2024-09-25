@@ -1,7 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import { RowActionsItem, RowActionsMenu } from "@comet/admin";
 import { MovePage } from "@comet/admin-icons";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
@@ -14,7 +13,7 @@ interface Props {
     page: PageTreePage;
 }
 
-export function MovePageMenuItem({ page }: Props): React.ReactElement | null {
+export function MovePageMenuItem({ page }: Props) {
     const [updatePageTreeNodeCategory, { loading: submitting }] = useMutation<
         GQLUpdatePageTreeNodeCategoryMutation,
         GQLUpdatePageTreeNodeCategoryMutationVariables

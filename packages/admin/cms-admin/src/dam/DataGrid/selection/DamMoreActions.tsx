@@ -3,7 +3,7 @@ import { AddFolder as AddFolderIcon, Archive, Delete, Download, Move, Restore, U
 import { Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Slide, Snackbar, Typography } from "@mui/material";
 import { PopoverOrigin } from "@mui/material/Popover/Popover";
 import { SlideProps } from "@mui/material/Slide/Slide";
-import * as React from "react";
+import { cloneElement, MouseEvent, ReactElement, useRef, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -15,14 +15,14 @@ import { SelectedItemsChip } from "./SelectedItemsChip";
 interface DamMoreActionsProps {
     transformOrigin?: PopoverOrigin;
     anchorOrigin?: PopoverOrigin;
-    button: React.ReactElement;
+    button: ReactElement;
     folderId?: string;
     filter?: {
         allowedMimetypes?: string[];
     };
 }
 
-export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps): React.ReactElement => {
+export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId, filter }: DamMoreActionsProps) => {
     const damSelectionActionsApi = useDamSelectionApi();
     const { selectionMap, archiveSelected, deleteSelected, downloadSelected, restoreSelected, moveSelected } = damSelectionActionsApi;
     const snackbarApi = useSnackbarApi();
@@ -30,9 +30,9 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     const intl = useIntl();
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    const folderInputRef = React.useRef<HTMLInputElement>(null);
+    const folderInputRef = useRef<HTMLInputElement>(null);
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const selectionSize = selectionMap.size;
     const itemsSelected = !!selectionSize;
@@ -40,7 +40,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
     const lengthOfSelectedFiles = selectionMapValues.filter((value) => value === "file").length;
     const onlyFoldersSelected = selectionMapValues.every((value) => value === "folder");
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
@@ -114,7 +114,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
 
     return (
         <>
-            {React.cloneElement(button, { onClick: handleClick })}
+            {cloneElement(button, { onClick: handleClick })}
             <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
