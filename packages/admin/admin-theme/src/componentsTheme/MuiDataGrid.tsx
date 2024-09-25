@@ -108,7 +108,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 border: "none",
                 marginBottom: spacing(2),
             },
-            "&:first-child": {
+            "&:first-of-type": {
                 marginTop: spacing(7),
             },
             [`.${formControlClasses.root}`]: {
