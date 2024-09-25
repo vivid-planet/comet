@@ -2,7 +2,7 @@ import { GridColDef } from "@comet/admin";
 import { pascalCase } from "change-case";
 import { FormattedNumber } from "react-intl";
 
-import { DataGridSettings } from "../generator";
+import { BaseColumnConfig } from "../generator";
 import { getFormattedMessageNode } from "../utils/intl";
 
 type AbstractField<FieldName extends string> = {
@@ -10,8 +10,8 @@ type AbstractField<FieldName extends string> = {
     emptyValue?: string;
 };
 
-type StringField<FieldName extends string> = AbstractField<FieldName> & {
-    type: "string";
+type TextField<FieldName extends string> = AbstractField<FieldName> & {
+    type: "text";
 };
 
 type StaticText = {
@@ -47,7 +47,7 @@ type FormattedMessage<FieldName extends string> = {
 type Field<FieldName extends string> =
     | StaticText
     | FieldName
-    | StringField<FieldName>
+    | TextField<FieldName>
     | NumberField<FieldName>
     | StaticSelectField<FieldName>
     | FormattedMessage<FieldName>;
@@ -57,7 +57,7 @@ export type GridCombinationColumnConfig<FieldName extends string> = {
     name: string;
     primaryText?: Field<FieldName>;
     secondaryText?: Field<FieldName>;
-} & DataGridSettings &
+} & BaseColumnConfig &
     Pick<GridColDef, "sortBy">;
 
 type CellContent = {
