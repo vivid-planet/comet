@@ -1,8 +1,7 @@
 import { MoreVertical } from "@comet/admin-icons";
 import { Button, Chip, css, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, MenuListProps, Typography } from "@mui/material";
 import { Maybe } from "graphql/jsutils/Maybe";
-import * as React from "react";
-import { PropsWithChildren } from "react";
+import { ComponentProps, MouseEvent, PropsWithChildren, ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -10,9 +9,9 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
 
-export interface ActionItem extends React.ComponentProps<typeof MenuItem> {
-    label: React.ReactNode;
-    icon?: React.ReactNode;
+export interface ActionItem extends ComponentProps<typeof MenuItem> {
+    label: ReactNode;
+    icon?: ReactNode;
     divider?: boolean;
 }
 
@@ -31,9 +30,9 @@ export interface CrudMoreActionsMenuProps
 }
 
 interface CrudMoreActionsGroupProps {
-    groupTitle: React.ReactNode;
+    groupTitle: ReactNode;
     menuListProps?: MenuListProps;
-    typographyProps?: React.ComponentProps<typeof Typography>;
+    typographyProps?: ComponentProps<typeof Typography>;
 }
 
 function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
@@ -98,9 +97,9 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
         chip: chipProps,
     } = slotProps ?? { menu: {}, button: {}, group: {}, divider: {}, chip: {} };
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
+    const handleClick = (event: MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
 
     const handleClose = () => setAnchorEl(null);
 
