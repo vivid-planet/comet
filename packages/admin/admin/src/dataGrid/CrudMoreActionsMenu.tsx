@@ -1,5 +1,19 @@
 import { MoreVertical } from "@comet/admin-icons";
-import { Button, Chip, css, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, MenuListProps, Typography } from "@mui/material";
+import {
+    Button,
+    Chip,
+    ComponentsOverrides,
+    css,
+    Divider,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    MenuList,
+    MenuListProps,
+    Theme,
+    Typography,
+} from "@mui/material";
 import { Maybe } from "graphql/jsutils/Maybe";
 import { ComponentProps, MouseEvent, PropsWithChildren, ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -189,4 +203,21 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
             </Menu>
         </>
     );
+}
+
+declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminCrudMoreActionsMenu: CrudMoreActionsMenuProps;
+    }
+
+    interface ComponentNameToClassKey {
+        CometAdminCrudMoreActionsMenu: CrudMoreActionsMenuClassKey;
+    }
+
+    interface Components {
+        CometAdminCrudMoreActionsMenu?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminCrudMoreActionsMenu"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminCrudMoreActionsMenu"];
+        };
+    }
 }
