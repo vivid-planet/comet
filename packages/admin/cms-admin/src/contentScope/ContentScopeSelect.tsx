@@ -5,8 +5,7 @@ import { capitalCase } from "change-case";
 import { Fragment, ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { MarkedMatches } from "../common/MarkedMatches";
-import { matchContentScopeLabels } from "./matchContentScopeLabels";
+import { findTextMatches, MarkedMatches } from "../common/MarkedMatches";
 import { ContentScopeInterface } from "./Provider";
 
 type Option<Value extends ContentScopeInterface = ContentScopeInterface> = {
@@ -20,7 +19,7 @@ interface Props<Value extends ContentScopeInterface> {
     searchable?: boolean;
     groupBy?: keyof Value;
     icon?: ReactNode;
-    renderOption?: (option: Option<Value>, addSearchHighlighting: (text: string) => ReactNode) => ReactNode;
+    renderOption?: (option: Option<Value>, query?: string) => ReactNode;
     renderSelectedOption?: (option: Option<Value>) => ReactNode;
 }
 
@@ -79,12 +78,19 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     }
 
     if (!renderOption) {
-        renderOption = (option, addSearchHighlighting) => {
+        renderOption = (option, query) => {
             const text = Object.entries(option)
                 .filter(([dimension]) => (hasMultipleDimensions && groupBy ? dimension !== groupBy : true))
                 .map(([, option]) => option.label ?? option.value)
                 .join(" – ");
-            return <ListItemText primaryTypographyProps={{ variant: "body2" }} sx={{ margin: 0 }} primary={addSearchHighlighting(text)} />;
+            const matches = findTextMatches(text, query);
+            return (
+                <ListItemText
+                    primaryTypographyProps={{ variant: "body2" }}
+                    sx={{ margin: 0 }}
+                    primary={<MarkedMatches text={text} matches={matches} />}
+                />
+            );
         };
     }
 
@@ -147,18 +153,15 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                         {groups.map((group, index) => {
                             const showGroupHeader = hasMultipleDimensions;
                             const showGroupDivider = showGroupHeader && index !== groups.length - 1;
-                            const matches = matchContentScopeLabels({ query: searchValue, item: humanReadableLabel(group) });
+                            const groupLabel = humanReadableLabel(group);
+                            const matches = findTextMatches(groupLabel, searchValue);
 
                             return (
                                 <Fragment key={group.value}>
                                     {showGroupHeader && (
                                         <ListSubheader sx={{ paddingX: (theme) => theme.spacing(3) }}>
                                             <Typography variant="overline">
-                                                {matches ? (
-                                                    <MarkedMatches text={humanReadableLabel(group)} matches={matches} />
-                                                ) : (
-                                                    humanReadableLabel(group)
-                                                )}
+                                                {matches ? <MarkedMatches text={groupLabel} matches={matches} /> : groupLabel}
                                             </Typography>
                                         </ListSubheader>
                                     )}
@@ -173,7 +176,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                             selected={option === selectedOption}
                                             sx={{ paddingX: (theme) => theme.spacing(6) }}
                                         >
-                                            {renderOption?.(option, addSearchHighlighting(searchValue))}
+                                            {renderOption?.(option, searchValue)}
                                         </ListItemButton>
                                     ))}
                                     {showGroupDivider && <Divider sx={{ margin: 2, borderColor: "grey.50" }} />}
@@ -204,14 +207,4 @@ function optionToValue<Value extends ContentScopeInterface = ContentScopeInterfa
 
 function humanReadableLabel({ label, value }: { label?: string; value: string }) {
     return label ?? capitalCase(value);
-}
-
-function addSearchHighlighting(searchValue: string) {
-    return (text: string) => {
-        const matches = matchContentScopeLabels({ query: searchValue, item: text });
-
-        if (matches) {
-            return <MarkedMatches text={text} matches={matches} />;
-        } else return text;
-    };
 }

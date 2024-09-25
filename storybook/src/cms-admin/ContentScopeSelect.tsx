@@ -1,6 +1,6 @@
 import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
 import { Domain, Language } from "@comet/admin-icons";
-import { ContentScopeSelect } from "@comet/cms-admin";
+import { ContentScopeSelect, findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import React, { useState } from "react";
@@ -148,14 +148,11 @@ storiesOf("@comet/cms-admin/Content Scope Select", module)
                     { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
                     { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
                 ]}
-                renderOption={(option, addSearchHighlighting) => (
-                    <>
-                        <ListItemIcon>
-                            <Domain />
-                        </ListItemIcon>
-                        <ListItemText primary={<>{addSearchHighlighting(`${option.domain.label} – ${option.language.label}`)}</>} />
-                    </>
-                )}
+                renderOption={(option, query) => {
+                    const text = `${option.domain.label} – ${option.language.label}`;
+                    const matches = findTextMatches(text, query);
+                    return <ListItemText primary={<MarkedMatches text={text} matches={matches} />} />;
+                }}
             />
         );
     })
