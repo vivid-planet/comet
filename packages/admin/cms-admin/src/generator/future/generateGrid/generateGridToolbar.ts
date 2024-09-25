@@ -2,7 +2,6 @@ import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { getFormattedMessageNode } from "../utils/intl";
 
 type Options = {
-    renderToolbar: boolean;
     gqlTypePlural: string;
     forwardToolbarAction: boolean | undefined;
     hasSearch: boolean;
