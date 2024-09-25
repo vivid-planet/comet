@@ -3,20 +3,20 @@ import NextImage, { ImageLoaderProps, ImageProps as NextImageProps } from "next/
 
 // Fallback to 1 / 1 aspect ratio for invalid value format
 export function parseAspectRatio(value: string | number): number {
+    value = String(value);
     let width, height;
     if (!Number(value)) {
-        [width, height] = String(value)
-            .split(/[x/:]/)
-            .map((v) => {
-                let ret: number | undefined = Number(v);
-                if (isNaN(ret)) ret = undefined;
-                return ret;
-            });
+        [width, height] = value.split(/[x/:]/).map((v) => {
+            let ret: number | undefined = parseFloat(v);
+            if (isNaN(ret)) ret = undefined;
+            return ret;
+        });
     } else {
-        width = Number(value);
+        width = parseFloat(value);
         height = 1;
     }
-    if (!width || !height) throw Error(`An Error occured trying to parse the AspectRatio: ${value}`);
+    if (!width || !height) throw Error(`An error occurred while parsing the aspect ratio: ${value}`);
+
     return width / height;
 }
 
