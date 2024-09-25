@@ -31,7 +31,7 @@ interface PageTreeModuleOptions {
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
     reservedPaths?: string[];
-    sitePreviewSecret: string;
+    sitePreviewSecret?: string;
 }
 
 @Global()
@@ -42,6 +42,13 @@ export class PageTreeModule {
 
         if (PageTreeNode.name !== PAGE_TREE_ENTITY) {
             throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
+        }
+
+        // TODO v8: Make sitePreviewSecret mandatory and remove this error
+        if (!options.sitePreviewSecret) {
+            throw new Error(
+                "BREAKING: this update of Comet v7 requires to have set sitePreviewSecret (which has to be the same value like possibly already set for site). Please refer to https://github.com/vivid-planet/comet-starter/pull/371 for more information on how to upgrade.",
+            );
         }
 
         const PageTreeResolver = createPageTreeResolver({
