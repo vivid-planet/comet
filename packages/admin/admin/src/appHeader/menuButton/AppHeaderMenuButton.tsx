@@ -19,8 +19,8 @@ export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     };
 
     const openIcons: Record<typeof drawerVariant, ReactNode> = {
-        permanent: <HamburgerOpen fontSize="large" />,
         temporary: <Hamburger />,
+        permanent: <HamburgerOpen fontSize="large" />,
     };
 
     const children = propChildren || (open ? closeIcons[drawerVariant] : openIcons[drawerVariant]);
