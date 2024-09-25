@@ -14,7 +14,7 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
             headerName: "Title and Category",
             primaryText: "title",
             secondaryText: {
-                type: "string",
+                type: "text",
                 field: "category.title",
                 emptyValue: "No category set",
             },

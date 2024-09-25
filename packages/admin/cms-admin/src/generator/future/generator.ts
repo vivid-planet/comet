@@ -1,6 +1,8 @@
 import { GridColDef } from "@comet/admin";
+import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { IconProps } from "@mui/material";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -80,8 +82,19 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+    headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
+};
+
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconName;
+};
+
+export type StaticSelectLabelCellContent = {
+    primaryText?: string;
+    secondaryText?: string;
+    icon?: IconName | IconObject | ImportReference;
 };
 
 export type GridColumnConfig<T> = (
@@ -90,11 +103,11 @@ export type GridColumnConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T> } & DataGridSettings;
+) & { name: UsableFields<T> } & BaseColumnConfig;
 
-export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & DataGridSettings;
+export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
 
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";

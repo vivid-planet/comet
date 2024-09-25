@@ -6,6 +6,7 @@ import JSZip from "jszip";
 import isEqual from "lodash.isequal";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { DamConfig } from "../dam.config";
@@ -15,7 +16,6 @@ import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.arg
 import { UpdateFolderInput } from "./dto/folder.input";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
-import { createHashedPath } from "./files.utils";
 
 export const withFoldersSelect = (
     qb: QueryBuilder<FolderInterface>,
