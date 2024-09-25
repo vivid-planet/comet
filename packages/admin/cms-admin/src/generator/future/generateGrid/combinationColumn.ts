@@ -1,5 +1,4 @@
 import { GridColDef } from "@comet/admin";
-import { pascalCase } from "change-case";
 import { FormattedNumber } from "react-intl";
 
 import { BaseColumnConfig } from "../generator";
@@ -65,7 +64,7 @@ type CellContent = {
     variableDefinitions?: string[];
 };
 
-const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: string, target: "primary" | "secondary"): CellContent => {
+const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: string): CellContent => {
     if (typeof textConfig !== "string" && textConfig.type === "static") {
         return {
             textContent: getFormattedMessageNode(messageIdPrefix, textConfig.text),
@@ -77,11 +76,7 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
 
         const values = Object.entries(textConfig.valueFields)
             .map(([key, value]) => {
-                const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(
-                    value,
-                    `${messageIdPrefix}.${key}`,
-                    target,
-                );
+                const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(value, `${messageIdPrefix}.${key}`);
 
                 if (cellVariableDefinitions?.length) {
                     variableDefinitions.push(...cellVariableDefinitions);
@@ -157,7 +152,7 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
     }
 
     if (textConfig.type === "staticSelect") {
-        const labelsVariableName = `${target}Text${pascalCase(textConfig.field)}Labels`;
+        const labelsVariableName = `${textConfig.field}Labels`;
 
         const labelMapping = textConfig.values
             .map((valueOption) => {
@@ -186,17 +181,13 @@ export const getCombinationColumnRenderCell = (column: GridCombinationColumnConf
     const allVariableDefinitions: string[] = [];
 
     if (column.primaryText) {
-        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`, "primary");
+        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`);
         gridCellContentProps.primaryText = textContent;
         allVariableDefinitions.push(...variableDefinitions);
     }
 
     if (column.secondaryText) {
-        const { textContent, variableDefinitions = [] } = getTextForCellContent(
-            column.secondaryText,
-            `${messageIdPrefix}.secondaryText`,
-            "secondary",
-        );
+        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.secondaryText, `${messageIdPrefix}.secondaryText`);
         gridCellContentProps.secondaryText = textContent;
         allVariableDefinitions.push(...variableDefinitions);
     }
