@@ -47,7 +47,7 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
 }
 
 const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuClassKey>({
-    componentName: "CrudMoreActionsDivider",
+    componentName: "CrudMoreActions",
     slotName: "divider",
 })(
     ({ theme }) => css`
@@ -57,7 +57,7 @@ const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuC
 );
 
 const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMenuClassKey>({
-    componentName: "MoreActionsSelectedItemsChip",
+    componentName: "CrudMoreActions",
     slotName: "chip",
 })(
     css`
@@ -70,7 +70,7 @@ const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMe
 );
 
 const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKey>({
-    componentName: "MoreActionsButton",
+    componentName: "CrudMoreActions",
     slotName: "button",
 })(
     css`
@@ -79,7 +79,7 @@ const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKe
 );
 
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
-    componentName: "MoreActionsMenuItem",
+    componentName: "CrudMoreActions",
     slotName: "menuItem",
 })(
     css`
