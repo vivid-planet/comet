@@ -151,11 +151,7 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
     }
 
     if (textConfig.type === "staticSelect") {
-        const variableNamePrefix = `${target}Text${pascalCase(textConfig.field)}`;
-        const labelsVariableName = `${variableNamePrefix}Labels`;
-        const emptyMessageVariableName = `${variableNamePrefix}EmptyMessage`;
-
-        const emptyMessage = `const ${emptyMessageVariableName} = ${emptyText};`;
+        const labelsVariableName = `${target}Text${pascalCase(textConfig.field)}Labels`;
 
         const labelMapping = textConfig.values
             .map((valueOption) => {
@@ -166,12 +162,11 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
             .join(", ");
 
         const labelMappingVar = `const ${labelsVariableName}: Record<string, React.ReactNode> = { ${labelMapping} };`;
-        const textContent =
-            `(${rowValue} == null ? ${emptyMessageVariableName} : ${labelsVariableName}[` + `\`\${${rowValue}}\`` + `] ?? ${rowValue})`;
+        const textContent = `(${rowValue} == null ? ${emptyText} : ${labelsVariableName}[` + `\`\${${rowValue}}\`` + `] ?? ${rowValue})`;
 
         return {
             textContent,
-            variableDefinitions: [emptyMessage, labelMappingVar],
+            variableDefinitions: [labelMappingVar],
         };
     }
 
