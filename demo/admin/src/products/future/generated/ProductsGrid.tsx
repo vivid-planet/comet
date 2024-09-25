@@ -13,16 +13,18 @@ import {
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
+    Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { Info } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { useTheme } from "@mui/material";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
@@ -115,16 +117,16 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             flex: 1,
             visible: theme.breakpoints.down("md"),
             sortBy: ["title", "description"],
-            maxWidth: 250,
             minWidth: 200,
+            maxWidth: 250,
         },
         {
             field: "title",
             headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
             flex: 1,
             visible: theme.breakpoints.up("md"),
-            maxWidth: 250,
             minWidth: 200,
+            maxWidth: 250,
         },
         {
             field: "description",
@@ -135,11 +137,18 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
         },
         {
             field: "price",
-            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
+            renderHeader: () => (
+                <>
+                    <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150} />
+                    <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
+                        <Info sx={{ marginLeft: 1 }} />
+                    </Tooltip>
+                </>
+            ),
             type: "number",
             flex: 1,
-            maxWidth: 150,
             minWidth: 150,
+            maxWidth: 150,
         },
         { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
         {
@@ -163,8 +172,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                 return row.type;
             },
             flex: 1,
-            maxWidth: 150,
             minWidth: 150,
+            maxWidth: 150,
         },
         {
             field: "availableSince",
