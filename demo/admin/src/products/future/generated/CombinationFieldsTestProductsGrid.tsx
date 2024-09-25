@@ -124,7 +124,6 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const primaryTextTypeEmptyMessage = "-";
                 const primaryTextTypeLabels: Record<string, React.ReactNode> = {
                     Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="great Cap" />,
                     Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Shirt" />,
@@ -132,7 +131,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                 };
                 return (
                     <GridCellContent
-                        primaryText={row.type == null ? primaryTextTypeEmptyMessage : primaryTextTypeLabels[`${row.type}`] ?? row.type}
+                        primaryText={row.type == null ? "-" : primaryTextTypeLabels[`${row.type}`] ?? row.type}
                         secondaryText={row.type}
                     />
                 );
@@ -146,16 +145,19 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const primaryTextInStockEmptyMessage = (
-                    <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />
-                );
                 const primaryTextInStockLabels: Record<string, React.ReactNode> = {
                     true: <FormattedMessage id="product.staticSelectInStock.primaryText.true" defaultMessage={`It's in stock :D`} />,
                     false: <FormattedMessage id="product.staticSelectInStock.primaryText.false" defaultMessage="No longer available :(" />,
                 };
                 return (
                     <GridCellContent
-                        primaryText={row.inStock == null ? primaryTextInStockEmptyMessage : primaryTextInStockLabels[`${row.inStock}`] ?? row.inStock}
+                        primaryText={
+                            row.inStock == null ? (
+                                <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />
+                            ) : (
+                                primaryTextInStockLabels[`${row.inStock}`] ?? row.inStock
+                            )
+                        }
                     />
                 );
             },
