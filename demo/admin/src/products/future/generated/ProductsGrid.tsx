@@ -116,12 +116,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const secondaryTextTypeLabels: Record<string, React.ReactNode> = {
+                const typeLabels: Record<string, React.ReactNode> = {
                     Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
                     Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
                 };
-                const secondaryTextInStockLabels: Record<string, React.ReactNode> = {
+                const inStockLabels: Record<string, React.ReactNode> = {
                     true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
                     false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
                 };
@@ -149,12 +149,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                                         row.type == null ? (
                                             <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
                                         ) : (
-                                            secondaryTextTypeLabels[`${row.type}`] ?? row.type
+                                            typeLabels[`${row.type}`] ?? row.type
                                         ),
                                     category: row.category?.title ?? (
                                         <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
                                     ),
-                                    inStock: row.inStock == null ? "-" : secondaryTextInStockLabels[`${row.inStock}`] ?? row.inStock,
+                                    inStock: row.inStock == null ? "-" : inStockLabels[`${row.inStock}`] ?? row.inStock,
                                 }}
                             />
                         }
