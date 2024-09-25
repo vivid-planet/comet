@@ -13,7 +13,7 @@ export interface CheckboxFieldProps extends FieldProps<string, HTMLInputElement>
 export const CheckboxField = ({ fieldLabel, label, componentsProps = {}, ...restProps }: CheckboxFieldProps) => {
     const { formControlLabel: formControlLabelProps, formCheckbox: formCheckboxProps } = componentsProps;
     return (
-        <Field label={fieldLabel} {...restProps}>
+        <Field type="checkbox" label={fieldLabel} {...restProps}>
             {({ input: { value, onChange, name } }) => (
                 <FormControlLabel
                     label={label}

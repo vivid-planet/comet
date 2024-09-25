@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Deprecated `FinalFormRadio` and `FinalFormCheckbox`
+Deprecate `FinalFormRadio` and `FinalFormCheckbox`
