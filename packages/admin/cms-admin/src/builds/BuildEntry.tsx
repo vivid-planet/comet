@@ -145,7 +145,7 @@ export function BuildEntry() {
 }
 
 const Content = styled(Box)`
-    padding: 4px 0;
+    padding: ${({ theme }) => theme.spacing(1, 0)};
     width: 300px;
     min-height: 40px;
 `;
