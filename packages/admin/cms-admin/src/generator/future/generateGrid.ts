@@ -492,7 +492,7 @@ export function generateGrid(
             : ""
     }
 
-    ${generateGridToolbar({ renderToolbar, gqlTypePlural, forwardToolbarAction, hasSearch, hasFilter, allowAdding, instanceGqlType, gqlType })}
+    ${renderToolbar ? generateGridToolbar({ gqlTypePlural, forwardToolbarAction, hasSearch, hasFilter, allowAdding, instanceGqlType, gqlType }) : ""}
 
     ${gridPropsTypeCode}
 

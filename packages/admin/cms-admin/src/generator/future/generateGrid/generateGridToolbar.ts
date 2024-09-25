@@ -13,7 +13,6 @@ type Options = {
 };
 
 export const generateGridToolbar = ({
-    renderToolbar,
     gqlTypePlural,
     forwardToolbarAction,
     hasSearch,
@@ -22,51 +21,34 @@ export const generateGridToolbar = ({
     instanceGqlType,
     gqlType,
 }: Options) => {
-    if (!renderToolbar) {
-        return "";
-    }
-
     return `function ${gqlTypePlural}GridToolbar(${forwardToolbarAction ? `{ toolbarAction }: { toolbarAction?: React.ReactNode }` : ``}) {
         return (
             <DataGridToolbar>
-                ${renderSearchItem(hasSearch)}
-                ${renderFilterItem(hasFilter)}
+                ${hasSearch ? searchItem : ""}
+                ${hasFilter ? filterItem : ""}
                 <ToolbarFillSpace />
-                ${renderToolbarActions(
-                    allowAdding,
-                    forwardToolbarAction,
-                    getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
-                )}
+                ${
+                    allowAdding
+                        ? renderToolbarActions(
+                              forwardToolbarAction,
+                              getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
+                          )
+                        : ""
+                }
             </DataGridToolbar>
         );
     }`;
 };
 
-const renderSearchItem = (hasSearch: boolean) => {
-    if (!hasSearch) {
-        return "";
-    }
+const searchItem = `<ToolbarItem>
+    <GridToolbarQuickFilter />
+</ToolbarItem>`;
 
-    return `<ToolbarItem>
-        <GridToolbarQuickFilter />
-    </ToolbarItem>`;
-};
+const filterItem = `<ToolbarItem>
+    <GridFilterButton />
+</ToolbarItem>`;
 
-const renderFilterItem = (hasFilter: boolean) => {
-    if (!hasFilter) {
-        return "";
-    }
-
-    return `<ToolbarItem>
-        <GridFilterButton />
-    </ToolbarItem>`;
-};
-
-const renderToolbarActions = (allowAdding: boolean, forwardToolbarAction: boolean | undefined, addItemText: string) => {
-    if (!allowAdding) {
-        return "";
-    }
-
+const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItemText: string) => {
     if (forwardToolbarAction) {
         return `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`;
     }
