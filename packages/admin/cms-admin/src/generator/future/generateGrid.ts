@@ -13,6 +13,7 @@ import { ReactNode } from "react";
 import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
+import { generateGridToolbar } from "./generateGrid/generateGridToolbar";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
 import { ActionsGridColumnConfig, GeneratorReturn, GridColumnConfig, GridConfig, StaticSelectLabelCellContent } from "./generator";
@@ -221,10 +222,10 @@ export function generateGrid(
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
-    const toolbar = config.toolbar ?? true;
+    const renderToolbar = config.toolbar ?? true;
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
-    const hasFilter = !!filterArg && toolbar;
+    const hasFilter = !!filterArg && renderToolbar;
     let hasFilterProp = false;
     let filterFields: string[] = [];
     if (filterArg) {
@@ -242,7 +243,7 @@ export function generateGrid(
         props.push(...filterPropProps);
     }
 
-    const forwardToolbarAction = allowAdding && toolbar && config.toolbarActionProp;
+    const forwardToolbarAction = allowAdding && renderToolbar && config.toolbarActionProp;
     if (forwardToolbarAction) {
         props.push({ name: "toolbarAction", type: "React.ReactNode", optional: true });
     }
@@ -578,42 +579,7 @@ export function generateGrid(
             : ""
     }
 
-    ${
-        toolbar
-            ? `function ${gqlTypePlural}GridToolbar(${forwardToolbarAction ? `{ toolbarAction }: { toolbarAction?: React.ReactNode }` : ``}) {
-        return (
-            <DataGridToolbar>
-                ${
-                    hasSearch
-                        ? `<ToolbarItem>
-                    <GridToolbarQuickFilter />
-                </ToolbarItem>`
-                        : ""
-                }
-                ${
-                    hasFilter
-                        ? `<ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>`
-                        : ""
-                }
-                <ToolbarFillSpace />
-                ${
-                    allowAdding
-                        ? forwardToolbarAction
-                            ? `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`
-                            : `<ToolbarActions>
-                           <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                               <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
-                           </Button>
-                       </ToolbarActions>`
-                        : ""
-                }
-            </DataGridToolbar>
-        );
-    }`
-            : ""
-    }
+    ${renderToolbar ? generateGridToolbar({ gqlTypePlural, forwardToolbarAction, hasSearch, hasFilter, allowAdding, instanceGqlType, gqlType }) : ""}
 
     ${gridPropsTypeCode}
 
@@ -839,7 +805,7 @@ export function generateGrid(
                 columns={columns}
                 loading={loading}
                 ${
-                    toolbar
+                    renderToolbar
                         ? `components={{
                                 Toolbar: ${gqlTypePlural}GridToolbar,
                             }}${
