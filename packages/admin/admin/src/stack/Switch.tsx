@@ -3,6 +3,7 @@ import {
     ComponentType,
     createContext,
     forwardRef,
+    isValidElement,
     ReactElement,
     ReactNode,
     RefForwardingComponent,
@@ -13,6 +14,7 @@ import {
     useRef,
     useState,
 } from "react";
+import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
 import { matchPath, RouteComponentProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
@@ -24,7 +26,7 @@ import { StackSwitchMeta } from "./SwitchMeta";
 
 interface IProps {
     initialPage?: string;
-    title?: ReactNode;
+    title?: string | ComponentType<typeof FormattedMessage>;
     children: Array<ReactElement<IStackPageProps>>;
 }
 
@@ -46,7 +48,7 @@ export function useStackSwitchApi() {
 export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string, subUrl?: string) => void;
     getTargetUrl: (pageName: string, payload: string, subUrl?: string) => string;
-    updatePageBreadcrumbTitle: (title?: ReactNode) => void;
+    updatePageBreadcrumbTitle: (title?: string | ComponentType<typeof FormattedMessage>) => void;
     id?: string;
 }
 interface IRouteParams {
@@ -82,7 +84,7 @@ export function useStackSwitch(): [ComponentType<IProps>, IStackSwitchApi] {
                 return "";
             }
         },
-        updatePageBreadcrumbTitle: (title?: ReactNode) => {
+        updatePageBreadcrumbTitle: (title?: string | ComponentType<typeof FormattedMessage>) => {
             apiRef.current?.updatePageBreadcrumbTitle(title);
         },
     };
@@ -98,6 +100,10 @@ interface IHookProps {
     id: string;
 }
 
+function isFormattedMessage(node: ReactNode): node is ReactElement<MessageDescriptor> {
+    return isValidElement(node) && node.type === FormattedMessage;
+}
+
 const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookProps> = (props, ref) => {
     const { id } = props;
     const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = useState<Record<string, string | undefined>>({});
@@ -105,8 +111,18 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
     const match = useRouteMatch<IRouteParams>();
     const subRoutePrefix = useSubRoutePrefix();
     const location = useLocation();
+    const intl = useIntl();
 
     let activePage: string | undefined;
+
+    const parseFormattedMessage = useCallback((message: ReactNode): string => {
+        if (typeof message === "string") return message;
+
+        if (isFormattedMessage(message)) return intl.formatMessage(message.props);
+
+        throw new Error("Invalid message type received");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const isInitialPage = useCallback(
         (pageName?: string) => {
@@ -146,11 +162,16 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
     );
 
     const api: IStackSwitchApi = useMemo(() => {
-        const updatePageBreadcrumbTitle = (t?: string) => {
+        const updatePageBreadcrumbTitle = (t?: string | ComponentType<typeof FormattedMessage>) => {
             if (activePage) {
-                const title = { ...pageBreadcrumbTitle };
-                title[activePage] = t;
-                setPageBreadcrumbTitle(title);
+                const newTitle = parseFormattedMessage(t);
+
+                if (pageBreadcrumbTitle[activePage] !== newTitle) {
+                    const title = { ...pageBreadcrumbTitle };
+                    title[activePage] = newTitle;
+
+                    setPageBreadcrumbTitle(title);
+                }
             }
         };
         return {
@@ -159,7 +180,7 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
             id,
             updatePageBreadcrumbTitle,
         };
-    }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle]);
+    }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle, parseFormattedMessage]);
     useImperativeHandle(ref, () => api);
 
     function renderRoute(page: ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {
