@@ -9,6 +9,7 @@ import { basename, extname, parse } from "path";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { FileUploadInput } from "../dam/files/dto/file-upload.input";
 import { slugifyFilename } from "../dam/files/files.utils";
+import { ALL_TYPES } from "../dam/images/images.constants";
 import { DownloadParams, ImageParams } from "./dto/file-uploads-download.params";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
@@ -76,7 +77,7 @@ export class FileUploadsService {
             throw new Error("File Uploads: Missing download configuration");
         }
 
-        if (!["image/webp", "image/png", "image/jpeg", "image/gif"].includes(file.mimetype)) {
+        if (!ALL_TYPES.includes(file.mimetype)) {
             return undefined;
         }
 

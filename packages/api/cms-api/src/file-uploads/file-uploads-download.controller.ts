@@ -1,4 +1,3 @@
-import { mediaType } from "@hapi/accept";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Controller, Get, GoneException, Headers, Inject, NotFoundException, Param, Res, Type, UnsupportedMediaTypeException } from "@nestjs/common";
@@ -12,6 +11,8 @@ import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage
 import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
 import { ScaledImagesCacheService } from "../dam/cache/scaled-images-cache.service";
 import { calculatePartialRanges } from "../dam/files/files.utils";
+import { ALL_TYPES, BASIC_TYPES, MODERN_TYPES } from "../dam/images/images.constants";
+import { getSupportedMimeType } from "../dam/images/images.util";
 import { Extension, ResizingType } from "../dam/imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../dam/imgproxy/imgproxy.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
@@ -20,18 +21,6 @@ import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
 import { FileUploadsService } from "./file-uploads.service";
-
-const WEBP = "image/webp";
-const PNG = "image/png";
-const JPEG = "image/jpeg";
-const GIF = "image/gif";
-const BASIC_TYPES = [JPEG, PNG, GIF];
-const MODERN_TYPES = [/* AVIF, */ WEBP];
-
-function getSupportedMimeType(options: string[], accept = ""): string {
-    const mimeType = mediaType(accept, options);
-    return accept.includes(mimeType) ? mimeType : "";
-}
 
 export function createFileUploadsDownloadController(options: { public: boolean }): Type<unknown> {
     @Controller("file-uploads")
@@ -127,7 +116,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
                 throw new NotFoundException();
             }
 
-            if (!["image/webp", "image/png", "image/jpeg", "image/gif"].includes(file.mimetype)) {
+            if (!ALL_TYPES.includes(file.mimetype)) {
                 throw new UnsupportedMediaTypeException();
             }
 
