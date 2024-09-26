@@ -23,7 +23,7 @@ type CurrentUser {
   name: String!
   email: String!
   permissions: [CurrentUserPermission!]!
-  impersonated: Boolean!
+  impersonated: Boolean
   authenticatedUser: User
   permissionsForScope(scope: JSONObject!): [String!]!
 }
