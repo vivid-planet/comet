@@ -4,7 +4,7 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { createHmac } from "crypto";
 import { addHours } from "date-fns";
 import hasha from "hasha";
-import { basename, extname } from "path";
+import { basename, extname, parse } from "path";
 
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { FileUploadInput } from "../dam/files/dto/file-upload.input";
@@ -50,7 +50,7 @@ export class FileUploadsService {
         let hash = `file-upload:${params.id}:${params.timeout}`;
 
         if (params instanceof ImageParams) {
-            hash += `:${params.resizeWidth}`;
+            hash += `:${params.resizeWidth}:${params.filename}`;
         }
 
         return createHmac("sha1", this.config.download.secret).update(hash).digest("hex");
@@ -88,6 +88,8 @@ export class FileUploadsService {
             resizeWidth,
         });
 
-        return ["/file-uploads", hash, file.id, timeout, resizeWidth].join("/");
+        const filename = parse(file.name).name;
+
+        return ["/file-uploads", hash, file.id, timeout, resizeWidth, filename].join("/");
     }
 }

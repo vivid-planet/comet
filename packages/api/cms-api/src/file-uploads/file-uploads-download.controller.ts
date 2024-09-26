@@ -111,7 +111,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             stream.pipe(res);
         }
 
-        @Get(":hash/:id/:timeout/:resizeWidth")
+        @Get(":hash/:id/:timeout/:resizeWidth/:filename")
         async image(@Param() { hash, ...params }: HashImageParams, @Res() res: Response, @Headers("Accept") accept: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
                 throw new NotFoundException();
