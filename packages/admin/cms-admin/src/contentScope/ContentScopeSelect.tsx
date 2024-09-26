@@ -2,7 +2,7 @@ import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Domain, Search } from "@comet/admin-icons";
 import { Box, Divider, InputAdornment, InputBase, List, ListItem, ListItemButton, ListItemText, ListSubheader, Typography } from "@mui/material";
 import { capitalCase } from "change-case";
-import React from "react";
+import { Fragment, ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeInterface } from "./Provider";
@@ -17,9 +17,9 @@ interface Props<Value extends ContentScopeInterface> {
     options: Array<Option<Value>>;
     searchable?: boolean;
     groupBy?: keyof Value;
-    icon?: React.ReactNode;
-    renderOption?: (option: Option<Value>) => React.ReactNode;
-    renderSelectedOption?: (option: Option<Value>) => React.ReactNode;
+    icon?: ReactNode;
+    renderOption?: (option: Option<Value>) => ReactNode;
+    renderSelectedOption?: (option: Option<Value>) => ReactNode;
 }
 
 export function ContentScopeSelect<Value extends ContentScopeInterface = ContentScopeInterface>({
@@ -33,7 +33,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     renderSelectedOption,
 }: Props<Value>) {
     const intl = useIntl();
-    const [searchValue, setSearchValue] = React.useState<string>("");
+    const [searchValue, setSearchValue] = useState<string>("");
 
     const hasMultipleDimensions = Object.keys(value).length > 1;
 
@@ -148,7 +148,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                             const showGroupDivider = showGroupHeader && index !== groups.length - 1;
 
                             return (
-                                <React.Fragment key={group.value}>
+                                <Fragment key={group.value}>
                                     {showGroupHeader && (
                                         <ListSubheader sx={{ paddingX: (theme) => theme.spacing(3) }}>
                                             <Typography variant="overline">{humanReadableLabel(group)}</Typography>
@@ -169,7 +169,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                         </ListItemButton>
                                     ))}
                                     {showGroupDivider && <Divider sx={{ margin: 2, borderColor: "grey.50" }} />}
-                                </React.Fragment>
+                                </Fragment>
                             );
                         })}
                         {filteredOptions.length === 0 && (

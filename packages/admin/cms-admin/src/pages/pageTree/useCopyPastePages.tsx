@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
 import { LocalErrorScopeApolloContext, messages, readClipboardText, useErrorDialog, writeClipboardText } from "@comet/admin";
-import * as React from "react";
+import { ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
@@ -31,7 +31,7 @@ function isPagesClipboard(pagesClipboard: PagesClipboard): pagesClipboard is Pag
  * Union return type from `getFromClipboard` function.
  * The union discriminator `canPaste` returns either a PagesClipboard data if it could be parsed, otherwise an localized error in form of a ReactNode
  */
-type GetFromClipboardResponse = { canPaste: true; content: PagesClipboard } | { canPaste: false; error: React.ReactNode };
+type GetFromClipboardResponse = { canPaste: true; content: PagesClipboard } | { canPaste: false; error: ReactNode };
 
 interface UseCopyPastePagesApi {
     /**
@@ -58,7 +58,7 @@ interface UseCopyPastePagesApi {
      */
     sendPages: (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => Promise<void>;
 
-    progressDialog: React.ReactNode;
+    progressDialog: ReactNode;
 }
 
 /**
@@ -73,7 +73,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     const progress = useProgressDialog({ title: <FormattedMessage id="comet.pages.insertingPages" defaultMessage="Inserting pages" /> });
     const errorDialog = useErrorDialog();
 
-    const prepareForClipboard = React.useCallback(
+    const prepareForClipboard = useCallback(
         async (pages: GQLPageTreePageFragment[]): Promise<PagesClipboard> => {
             const pagesWithDocuments: Array<PageClipboard> = [];
 
@@ -114,7 +114,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
         },
         [client, documentTypes, scope],
     );
-    const writeToClipboard = React.useCallback(async (pages: PagesClipboard) => {
+    const writeToClipboard = useCallback(async (pages: PagesClipboard) => {
         return writeClipboardText(JSON.stringify(pages));
     }, []);
 
@@ -169,7 +169,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
     };
 
     const updateProgress = progress.updateProgress;
-    const sendPagesCb = React.useCallback(
+    const sendPagesCb = useCallback(
         async (parentId: string | null, pages: PagesClipboard, options: SendPagesOptions) => {
             try {
                 await sendPages(parentId, pages, options, { client, scope, documentTypes, blockContext, damScope, currentCategory }, updateProgress);

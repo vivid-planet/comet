@@ -1,9 +1,9 @@
-import * as React from "react";
+import { useContext } from "react";
 
 import { DamScopeContext } from "./DamScopeContext";
 
 function useDamScope(): Record<string, unknown> {
-    return React.useContext(DamScopeContext);
+    return useContext(DamScopeContext);
 }
 
 export { useDamScope };

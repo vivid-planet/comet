@@ -3,7 +3,7 @@ import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin
 import { Account, Clear, Info, Logout } from "@comet/admin-icons";
 import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
@@ -34,19 +34,18 @@ const signOutMutation = gql`
 `;
 
 interface UserHeaderItemProps {
-    aboutModalLogo?: React.ReactElement;
+    aboutModalLogo?: ReactElement;
     buttonChildren?: AppHeaderDropdownProps["buttonChildren"];
-    children?: React.ReactNode;
 }
 
-export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
+export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     const { aboutModalLogo, buttonChildren, children } = props;
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
     const user = useCurrentUser();
-    const [showAboutModal, setShowAboutModal] = React.useState(false);
+    const [showAboutModal, setShowAboutModal] = useState(false);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     const AccountIcon = user.impersonated ? <Account color="info" /> : <Account />;

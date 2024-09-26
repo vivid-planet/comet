@@ -26,6 +26,7 @@ export const CheckboxListField = <Value extends string>({ options, layout = "row
                             value={option.value}
                             disabled={option.disabled}
                             name={name}
+                            checked={value.includes(option.value)}
                             onChange={(_, checked) => {
                                 if (checked) {
                                     onChange([...value, option.value]);

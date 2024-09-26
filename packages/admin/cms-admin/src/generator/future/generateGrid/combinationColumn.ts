@@ -1,14 +1,15 @@
+import { GridColDef } from "@comet/admin";
 import { FormattedNumber } from "react-intl";
 
-import { DataGridSettings } from "../generator";
+import { BaseColumnConfig } from "../generator";
 
 type AbstractField<FieldName extends string> = {
     field: FieldName;
     emptyValue?: string;
 };
 
-type StringField<FieldName extends string> = AbstractField<FieldName> & {
-    type: "string";
+type TextField<FieldName extends string> = AbstractField<FieldName> & {
+    type: "text";
 };
 
 type StaticText = {
@@ -46,7 +47,7 @@ type NumberField<FieldName extends string> = AbstractField<FieldName> &
 
 // type TextConfig<FieldName extends string> = Field<FieldName> | FieldGroup<FieldName>;
 
-type Field<FieldName extends string> = StaticText | FieldName | StringField<FieldName> | NumberField<FieldName>;
+type Field<FieldName extends string> = StaticText | FieldName | TextField<FieldName> | NumberField<FieldName>;
 
 type TextConfig<FieldName extends string> = Field<FieldName>;
 
@@ -55,7 +56,8 @@ export type GridCombinationColumnConfig<FieldName extends string> = {
     name: string;
     primaryText?: TextConfig<FieldName>;
     secondaryText?: TextConfig<FieldName>;
-} & DataGridSettings;
+} & BaseColumnConfig &
+    Pick<GridColDef, "sortBy">;
 
 const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: string) => {
     if (typeof textConfig === "string") {

@@ -2,7 +2,6 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { Loading, MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Box, Button, ButtonProps, CardContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
@@ -18,7 +17,7 @@ import {
     GQLUserPermissionsStopImpersonationMutation,
 } from "./UserPage.generated";
 
-export const StopImpersonationButton: React.FC<ButtonProps> = (buttonProps) => {
+export const StopImpersonationButton = (buttonProps: ButtonProps) => {
     const client = useApolloClient();
     const stopImpersonation = async () => {
         const result = await client.mutate<GQLUserPermissionsStopImpersonationMutation>({
@@ -40,7 +39,7 @@ export const StopImpersonationButton: React.FC<ButtonProps> = (buttonProps) => {
     );
 };
 
-const ImpersonationButton: React.FC<{ userId: string }> = ({ userId }) => {
+const ImpersonationButton = ({ userId }: { userId: string }) => {
     const currentUser = useCurrentUser();
     const client = useApolloClient();
     const startImpersonation = async () => {
@@ -74,7 +73,7 @@ const ImpersonationButton: React.FC<{ userId: string }> = ({ userId }) => {
     return null;
 };
 
-export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
+export const UserPage = ({ userId }: { userId: string }) => {
     const isAllowed = useUserPermissionCheck();
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
