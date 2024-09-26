@@ -22,7 +22,7 @@ export class CurrentUser {
     email: string;
     @Field(() => [CurrentUserPermission])
     permissions: CurrentUserPermission[];
-    @Field()
+    @Field({ nullable: true })
     impersonated?: boolean;
     @Field(() => User, { nullable: true })
     authenticatedUser?: User;

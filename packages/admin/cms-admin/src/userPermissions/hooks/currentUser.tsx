@@ -48,6 +48,7 @@ export const CurrentUserProvider: React.FC<{
     const context: CurrentUserContext = {
         currentUser: {
             ...data.currentUser,
+            impersonated: !!data.currentUser.impersonated,
             allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
         },
         isAllowed:
