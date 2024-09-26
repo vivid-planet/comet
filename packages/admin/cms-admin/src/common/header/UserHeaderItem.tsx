@@ -49,13 +49,10 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
     const [showAboutModal, setShowAboutModal] = React.useState(false);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
-    const AccountIcon = () => (user.impersonated ? <Account color="info" /> : <Account />);
+    const AccountIcon = user.impersonated ? <Account color="info" /> : <Account />;
 
     return (
-        <AppHeaderDropdown
-            buttonChildren={buttonChildren ?? (isMobile ? <AccountIcon /> : user.name)}
-            startIcon={isMobile ? undefined : <AccountIcon />}
-        >
+        <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)} startIcon={isMobile ? undefined : AccountIcon}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
