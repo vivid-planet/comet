@@ -3,7 +3,7 @@
 "@comet/cms-api": minor
 ---
 
-Add user impersonation feature
+Add support for user impersonation
 
 Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
 
