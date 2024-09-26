@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
-import React from "react";
+import { ReactNode } from "react";
 
 import { DateTime } from "./DateTime";
 import { DefaultGreeting } from "./DefaultGreeting";
@@ -11,7 +11,7 @@ export type DashboardHeaderProps = {
         "2x": string;
     };
     textColor?: "light" | "dark" | "inherit";
-    greeting?: React.ReactNode;
+    greeting?: ReactNode;
 };
 
 export const DashboardHeader = ({ backgroundImageUrl, textColor = "light", greeting = <DefaultGreeting /> }: DashboardHeaderProps) => {

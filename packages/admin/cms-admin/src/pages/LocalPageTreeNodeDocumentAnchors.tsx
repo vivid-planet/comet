@@ -1,23 +1,22 @@
-import * as React from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
 
 type PageTreeNodeId = string;
 
 type LocalPageTreeNodeDocumentAnchors = Record<PageTreeNodeId, string[] | undefined>;
 
-const LocalPageTreeNodeDocumentAnchorsContext = React.createContext<LocalPageTreeNodeDocumentAnchors>({});
+const LocalPageTreeNodeDocumentAnchorsContext = createContext<LocalPageTreeNodeDocumentAnchors>({});
 
 function LocalPageTreeNodeDocumentAnchorsProvider({
     children,
     localAnchors,
-}: {
-    children: React.ReactNode;
+}: PropsWithChildren<{
     localAnchors: LocalPageTreeNodeDocumentAnchors;
-}): JSX.Element {
+}>) {
     return <LocalPageTreeNodeDocumentAnchorsContext.Provider value={localAnchors}>{children}</LocalPageTreeNodeDocumentAnchorsContext.Provider>;
 }
 
 function useLocalPageTreeNodeAnchors(): LocalPageTreeNodeDocumentAnchors {
-    return React.useContext(LocalPageTreeNodeDocumentAnchorsContext);
+    return useContext(LocalPageTreeNodeDocumentAnchorsContext);
 }
 
 export { LocalPageTreeNodeDocumentAnchorsProvider, useLocalPageTreeNodeAnchors };

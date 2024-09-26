@@ -1,4 +1,4 @@
-import React from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 
 import { traversePreOrder, TreeMap } from "../../pages/pageTree/treemap/TreeMapUtils";
 import { GQLAllFoldersWithoutFiltersQuery } from "./ChooseFolder";
@@ -23,18 +23,18 @@ interface UseFolderTreeApi {
     tree: FolderTreeMap;
     foldersToRender: Array<FolderWithRenderInformation>;
     expandedIds: Set<string>;
-    setExpandedIds: React.Dispatch<React.SetStateAction<Set<string>>>;
+    setExpandedIds: Dispatch<SetStateAction<Set<string>>>;
     toggleExpand: (id: string) => void;
     selectedId: string | null | undefined;
-    setSelectedId: React.Dispatch<React.SetStateAction<string | null | undefined>>;
+    setSelectedId: Dispatch<SetStateAction<string | null | undefined>>;
 }
 
 export const useFolderTree = ({ damFoldersFlat }: UseFolderTreeProps): UseFolderTreeApi => {
-    const [selectedId, setSelectedId] = React.useState<string | null>();
-    const [expandedIds, setExpandedIds] = React.useState<Set<string>>(new Set());
-    const [foldersToRender, setFoldersToRender] = React.useState<Array<FolderWithRenderInformation>>([]);
+    const [selectedId, setSelectedId] = useState<string | null>();
+    const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+    const [foldersToRender, setFoldersToRender] = useState<Array<FolderWithRenderInformation>>([]);
 
-    const toggleExpand = React.useCallback((id: string) => {
+    const toggleExpand = useCallback((id: string) => {
         setExpandedIds((expandedIds) => {
             const newExpandedIds = new Set(expandedIds);
 
@@ -48,7 +48,7 @@ export const useFolderTree = ({ damFoldersFlat }: UseFolderTreeProps): UseFolder
         });
     }, []);
 
-    const tree = React.useMemo(() => {
+    const tree = useMemo(() => {
         const folderTreeMap: FolderTreeMap = new TreeMap();
         if (damFoldersFlat === undefined) {
             return folderTreeMap;
@@ -76,7 +76,7 @@ export const useFolderTree = ({ damFoldersFlat }: UseFolderTreeProps): UseFolder
         return folderTreeMap;
     }, [damFoldersFlat]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const newFoldersToRender: Array<FolderWithRenderInformation> = [];
 
         traversePreOrder(tree, (element, level) => {

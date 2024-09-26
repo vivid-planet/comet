@@ -3,7 +3,7 @@ import { Toolbar, ToolbarActions, ToolbarFillSpace, useFocusAwarePolling } from 
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
@@ -70,13 +70,13 @@ interface PageTreeSelectProps {
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
     const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
     const { scope } = useContentScope();
-    const [category, setCategory] = React.useState<string>(defaultCategory);
-    const refList = React.useRef<List>(null);
-    const [height, setHeight] = React.useState(200);
-    const refDialogContent = React.useRef<HTMLDivElement>(null);
+    const [category, setCategory] = useState<string>(defaultCategory);
+    const refList = useRef<List>(null);
+    const [height, setHeight] = useState(200);
+    const refDialogContent = useRef<HTMLDivElement>(null);
     const selectedPageId = value?.id;
 
-    const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
+    const pagesQuery = useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
 
     // Fetch data
     const { data, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
@@ -96,7 +96,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
     });
 
     // Exclude all archived pages from selectables, except if the selected page itself is archived
-    const ignorePages = React.useCallback(
+    const ignorePages = useCallback(
         (page: GQLPageTreePageFragment) => page.id === selectedPageId || page.visibility !== "Archived",
         [selectedPageId],
     );
@@ -122,7 +122,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
         },
     });
 
-    const handelOnEnterDialog = React.useCallback(() => {
+    const handelOnEnterDialog = useCallback(() => {
         // Sets height of virtual list to a maximum
         if (refDialogContent.current) {
             const dialogContentInnerStyle = window.getComputedStyle(refDialogContent.current, null);
@@ -140,7 +140,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
         }
     }, [selectedPageId, expandPage]);
 
-    const handelOnEnteredDialog = React.useCallback(() => {
+    const handelOnEnteredDialog = useCallback(() => {
         // When the selected page is expanded we scroll to the selected page
         if (selectedPageId) {
             const index = pagesToRender.findIndex((c) => c.id === selectedPageId);
@@ -154,7 +154,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
 
     const { pagesToRenderWithMatches, query, setQuery } = pageSearchApi;
 
-    const handleSelect = React.useCallback(
+    const handleSelect = useCallback(
         (page: PageTreePage) => {
             onChange({ id: page.id, name: page.name, path: page.path, documentType: page.documentType, scope });
             onClose();
@@ -162,7 +162,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
         [onChange, onClose, scope],
     );
 
-    const itemData = React.useMemo<ItemData>(
+    const itemData = useMemo<ItemData>(
         () => ({
             pages: pagesToRenderWithMatches,
             toggleExpand,
@@ -273,8 +273,8 @@ interface ItemData {
     onSelect: (page: PageTreePage) => void;
 }
 
-const Row = React.memo(({ index, style, data: { pages, selectedPage, toggleExpand, onSelect } }: ListChildComponentProps<ItemData>) => {
-    const [hover, setHover] = React.useState(false);
+const Row = memo(({ index, style, data: { pages, selectedPage, toggleExpand, onSelect } }: ListChildComponentProps<ItemData>) => {
+    const [hover, setHover] = useState(false);
 
     const page = pages[index];
 

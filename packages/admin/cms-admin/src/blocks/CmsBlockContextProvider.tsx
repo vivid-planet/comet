@@ -2,7 +2,7 @@ import { ApolloClient, NormalizedCacheObject, useApolloClient } from "@apollo/cl
 import { DocumentNode } from "@apollo/client/core";
 import { BlockContextProvider } from "@comet/blocks-admin";
 import { AxiosInstance } from "axios";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { DocumentInterface, DocumentType } from "../documents/types";
 import { AllCategories } from "../pages/pageTree/PageTreeContext";
@@ -25,10 +25,10 @@ export interface CmsBlockContext {
 }
 
 interface CmsBlockContextProviderProps extends Omit<CmsBlockContext, "apolloClient"> {
-    children: React.ReactNode;
+    children?: ReactNode;
 }
 
-export const CmsBlockContextProvider: React.FunctionComponent<CmsBlockContextProviderProps> = ({ children, ...values }): React.ReactElement => {
+export const CmsBlockContextProvider = ({ children, ...values }: CmsBlockContextProviderProps) => {
     const apolloClient = useApolloClient();
     return <BlockContextProvider value={{ ...values, apolloClient }}>{children}</BlockContextProvider>;
 };

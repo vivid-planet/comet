@@ -4,7 +4,7 @@ import { SsgRunning, SsgStandby } from "@comet/admin-icons";
 import { List, ListItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { differenceInMinutes, parseISO } from "date-fns";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage, FormattedTime } from "react-intl";
 
 import { DropdownMenuItem } from "../common/DropdownMenuItem";
@@ -30,8 +30,8 @@ const buildStatusQuery = gql`
     }
 `;
 
-const BuildStatusPopperContent: React.FunctionComponent<{ data: GQLBuildStatusQuery }> = ({ data: { autoBuildStatus, builds } }) => {
-    const content: React.ReactNode[] = [];
+const BuildStatusPopperContent = ({ data: { autoBuildStatus, builds } }: { data: GQLBuildStatusQuery }) => {
+    const content: ReactNode[] = [];
     const lastBuild = builds.length > 0 ? builds[0] : undefined;
 
     if (lastBuild) {
@@ -103,7 +103,7 @@ const BuildStatusPopperContent: React.FunctionComponent<{ data: GQLBuildStatusQu
     );
 };
 
-export function BuildEntry(): React.ReactElement {
+export function BuildEntry() {
     const { data, error, refetch, startPolling, stopPolling } = useQuery<GQLBuildStatusQuery>(buildStatusQuery, {
         skip: process.env.NODE_ENV === "development",
         fetchPolicy: "network-only",

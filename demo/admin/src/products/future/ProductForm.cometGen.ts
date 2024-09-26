@@ -23,7 +23,14 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "text", name: "slug" },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
-                { type: "staticSelect", name: "type", label: "Type", required: true, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
+                {
+                    type: "staticSelect",
+                    name: "type",
+                    label: "Type",
+                    required: true,
+                    inputType: "radio",
+                    values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
+                },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
                 {
                     type: "optionalNestedFields",

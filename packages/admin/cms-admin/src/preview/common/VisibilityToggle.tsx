@@ -1,5 +1,4 @@
 import { InvisibleItemHide, InvisibleItemShow } from "@comet/admin-icons";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { ToggleButton } from "./ToggleButton";
@@ -9,7 +8,7 @@ interface Props {
     onChange: (showOnlyVisible: boolean) => void;
 }
 
-function VisibilityToggle({ showOnlyVisible, onChange }: Props): React.ReactElement {
+function VisibilityToggle({ showOnlyVisible, onChange }: Props) {
     const intl = useIntl();
 
     const handleToggleVisibilityClick = () => {

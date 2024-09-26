@@ -15,7 +15,6 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FileUploadValidationError } from "./useDamFileUpload";
@@ -36,7 +35,7 @@ interface FileUploadErrorDialogProps {
     validationErrors?: FileUploadValidationError[];
 }
 
-export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors }: FileUploadErrorDialogProps): React.ReactElement | null => {
+export const FileUploadErrorDialog = ({ open = false, onClose, validationErrors }: FileUploadErrorDialogProps) => {
     if (validationErrors === undefined) {
         return null;
     }
