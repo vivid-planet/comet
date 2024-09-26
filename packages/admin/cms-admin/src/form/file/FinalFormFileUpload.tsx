@@ -13,7 +13,7 @@ export const finalFormFileUploadFragment = gql`
         name
         size
         downloadUrl
-        previewUrlTemplate
+        imageUrl(resizeWidth: 640)
     }
 `;
 
@@ -26,7 +26,6 @@ type SuccessfulApiResponse = {
     mimetype: string;
     contentHash: string;
     downloadUrl?: string;
-    previewUrlTemplate?: string;
 };
 
 type FailedApiResponse = {
@@ -48,14 +47,11 @@ type FinalFormFileUploadMultipleFilesProps = FieldRenderProps<GQLFinalFormFileUp
 export type FinalFormFileUploadProps<Multiple extends boolean | undefined> = (Multiple extends true
     ? FinalFormFileUploadMultipleFilesProps
     : FinalFormFileUploadSingleFileProps) &
-    Partial<FileSelectProps<GQLFinalFormFileUploadFragment>> & {
-        previewImageWidth?: number;
-    };
+    Partial<FileSelectProps<GQLFinalFormFileUploadFragment>>;
 
 export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     input: { onChange, value: fieldValue, multiple },
     maxFiles,
-    previewImageWidth = 640,
     ...restProps
 }: FinalFormFileUploadProps<Multiple>) => {
     const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
@@ -71,13 +67,13 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
         return files.map((file) => {
             let previewUrl: string | undefined = undefined;
 
-            if (file.previewUrlTemplate) {
-                const isNewlyUploadedFile = file.previewUrlTemplate.startsWith("blob:");
+            if (file.imageUrl) {
+                const isNewlyUploadedFile = file.imageUrl.startsWith("blob:");
 
                 if (isNewlyUploadedFile) {
-                    previewUrl = file.previewUrlTemplate;
+                    previewUrl = file.imageUrl;
                 } else {
-                    previewUrl = `${apiUrl}${file.previewUrlTemplate.replace(":resizeWidth", String(previewImageWidth))}`;
+                    previewUrl = `${apiUrl}${file.imageUrl}`;
                 }
             }
 
@@ -86,7 +82,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                 previewUrl,
             };
         });
-    }, [fieldValue, apiUrl, previewImageWidth]);
+    }, [fieldValue, apiUrl]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
@@ -143,7 +139,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             name: jsonResponse.name,
                             size: jsonResponse.size,
                             downloadUrl: jsonResponse.downloadUrl ?? null,
-                            previewUrlTemplate: ["image/png", "image/jpeg", "image/gif"].includes(file.type) ? URL.createObjectURL(file) : null,
+                            imageUrl: ["image/png", "image/jpeg", "image/gif"].includes(file.type) ? URL.createObjectURL(file) : null,
                         };
 
                         if (singleFile) {

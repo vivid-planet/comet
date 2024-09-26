@@ -182,7 +182,7 @@ type FileUpload {
   createdAt: DateTime!
   updatedAt: DateTime!
   downloadUrl: String
-  previewUrlTemplate: String
+  imageUrl(resizeWidth: Int!): String
 }
 
 type User {

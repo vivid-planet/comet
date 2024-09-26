@@ -10,7 +10,6 @@ import { FileUploadsResolver } from "./file-uploads.resolver";
 import { FileUploadsService } from "./file-uploads.service";
 import { createFileUploadsDownloadController } from "./file-uploads-download.controller";
 import { createFileUploadsUploadController } from "./file-uploads-upload.controller";
-import { IsAllowedResizeWidthConstraint } from "./validators/is-allowed-resize-width.validator";
 
 @Global()
 @Module({})
@@ -39,7 +38,6 @@ export class FileUploadsModule {
 
             const FileUploadsDownloadController = createFileUploadsDownloadController({ public: options.download.public ?? false });
             controllers.push(FileUploadsDownloadController);
-            providers.push(IsAllowedResizeWidthConstraint);
         }
 
         return {

@@ -6,13 +6,11 @@ import { GQLFinalFormFileUploadFragment } from "./FinalFormFileUpload.generated"
 type SingleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment, HTMLInputElement> & {
     multiple?: false;
     maxFiles?: 1;
-    previewImageWidth?: number;
 };
 
 type MultipleFileUploadProps = FieldProps<GQLFinalFormFileUploadFragment[], HTMLInputElement> & {
     multiple: true;
     maxFiles?: number;
-    previewImageWidth?: number;
 };
 
 export type FileUploadFieldProps<Multiple extends boolean | undefined> = Multiple extends true ? MultipleFileUploadProps : SingleFileUploadProps;

@@ -1,7 +1,5 @@
 import { Type } from "class-transformer";
-import { IsHash, IsNumber, IsUUID } from "class-validator";
-
-import { IsAllowedResizeWidth } from "../validators/is-allowed-resize-width.validator";
+import { IsHash, IsInt, IsNumber, IsUUID } from "class-validator";
 
 export class DownloadParams {
     @IsUUID()
@@ -17,8 +15,13 @@ export class HashDownloadParams extends DownloadParams {
     hash: string;
 }
 
-export class PreviewParams extends HashDownloadParams {
+export class ImageParams extends DownloadParams {
     @Type(() => Number)
-    @IsAllowedResizeWidth()
+    @IsInt()
     resizeWidth: number;
+}
+
+export class HashImageParams extends ImageParams {
+    @IsHash("sha1")
+    hash: string;
 }

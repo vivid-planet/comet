@@ -9,7 +9,7 @@ import { basename, extname } from "path";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
 import { FileUploadInput } from "../dam/files/dto/file-upload.input";
 import { slugifyFilename } from "../dam/files/files.utils";
-import { DownloadParams } from "./dto/file-uploads-download.params";
+import { DownloadParams, ImageParams } from "./dto/file-uploads-download.params";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
@@ -42,12 +42,16 @@ export class FileUploadsService {
         return fileUpload;
     }
 
-    createHash(params: DownloadParams): string {
+    createHash(params: DownloadParams | ImageParams): string {
         if (!this.config.download) {
             throw new Error("File Uploads: Missing download configuration");
         }
 
-        const hash = `file-upload:${params.id}:${params.timeout}`;
+        let hash = `file-upload:${params.id}:${params.timeout}`;
+
+        if (params instanceof ImageParams) {
+            hash += `:${params.resizeWidth}`;
+        }
 
         return createHmac("sha1", this.config.download.secret).update(hash).digest("hex");
     }
@@ -67,11 +71,23 @@ export class FileUploadsService {
         return ["/file-uploads", hash, file.id, timeout].join("/");
     }
 
-    createPreviewUrlTemplate(file: FileUpload): string | undefined {
+    createImageUrl(file: FileUpload, resizeWidth: number): string | undefined {
+        if (!this.config.download) {
+            throw new Error("File Uploads: Missing download configuration");
+        }
+
         if (!["image/webp", "image/png", "image/jpeg", "image/gif"].includes(file.mimetype)) {
             return undefined;
         }
 
-        return `${this.createDownloadUrl(file)}/:resizeWidth`;
+        const timeout = addHours(new Date(), 1).getTime();
+
+        const hash = this.createHash({
+            id: file.id,
+            timeout,
+            resizeWidth,
+        });
+
+        return ["/file-uploads", hash, file.id, timeout, resizeWidth].join("/");
     }
 }

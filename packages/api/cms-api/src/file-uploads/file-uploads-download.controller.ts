@@ -15,7 +15,7 @@ import { calculatePartialRanges } from "../dam/files/files.utils";
 import { Extension, ResizingType } from "../dam/imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../dam/imgproxy/imgproxy.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
-import { DownloadParams, HashDownloadParams, PreviewParams } from "./dto/file-uploads-download.params";
+import { DownloadParams, HashDownloadParams, HashImageParams, ImageParams } from "./dto/file-uploads-download.params";
 import { FileUpload } from "./entities/file-upload.entity";
 import { FileUploadsConfig } from "./file-uploads.config";
 import { FILE_UPLOADS_CONFIG } from "./file-uploads.constants";
@@ -112,11 +112,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
         }
 
         @Get(":hash/:id/:timeout/:resizeWidth")
-        async preview(
-            @Param() { hash, resizeWidth, ...params }: PreviewParams,
-            @Res() res: Response,
-            @Headers("Accept") accept: string,
-        ): Promise<void> {
+        async image(@Param() { hash, ...params }: HashImageParams, @Res() res: Response, @Headers("Accept") accept: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
                 throw new NotFoundException();
             }
@@ -144,7 +140,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
 
             const path = this.imgproxyService
                 .builder()
-                .resize(ResizingType.AUTO, resizeWidth)
+                .resize(ResizingType.AUTO, params.resizeWidth)
                 .format(
                     (mime.getExtension(
                         getSupportedMimeType(MODERN_TYPES, accept) || getSupportedMimeType(BASIC_TYPES, file.mimetype),
@@ -179,7 +175,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
             }
         }
 
-        private isValidHash(hash: string, params: DownloadParams): boolean {
+        private isValidHash(hash: string, params: DownloadParams | ImageParams): boolean {
             return hash === this.fileUploadsService.createHash(params);
         }
     }

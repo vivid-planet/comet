@@ -8,6 +8,5 @@ export interface FileUploadsConfig {
     download?: {
         public?: boolean;
         secret: string;
-        allowedImageSizes: number[];
     };
 }
