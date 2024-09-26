@@ -2,7 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { ChevronDown } from "@comet/admin-icons";
 import { Chip, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import * as React from "react";
+import { MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLPageTreeNodeVisibility } from "../../graphql.generated";
@@ -27,15 +27,16 @@ interface PageVisibilityProps {
     page: PageTreePage;
 }
 
-const PageVisibility = ({ page }: PageVisibilityProps): React.ReactElement => {
+const PageVisibility = ({ page }: PageVisibilityProps) => {
     const { tree } = usePageTreeContext();
     const snackbarApi = useSnackbarApi();
     const [updatePageVisibility] = useMutation<GQLUpdatePageVisibilityMutation, GQLUpdatePageVisibilityMutationVariables>(
         updatePageVisibilityMutation,
     );
-    const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
 
-    const handleMenuOpen = (event: React.MouseEvent) => {
+    const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+
+    const handleMenuOpen = (event: MouseEvent) => {
         setAnchorEl(event.currentTarget);
     };
 

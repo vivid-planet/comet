@@ -2,14 +2,13 @@ import { messages } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Button, Divider } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 interface Props {
     onClick: () => void;
 }
 
-export default function BottomAddLink({ onClick }: Props): React.ReactElement {
+export default function BottomAddLink({ onClick }: Props) {
     return (
         <>
             <Divider />

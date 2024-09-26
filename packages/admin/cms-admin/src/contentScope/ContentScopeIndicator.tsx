@@ -2,7 +2,7 @@ import { messages } from "@comet/admin";
 import { Domain } from "@comet/admin-icons";
 import { SvgIconProps, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ContentScopeInterface, useContentScope } from "./Provider";
@@ -16,7 +16,7 @@ interface ContentScopeIndicatorProps {
     scope?: ContentScopeInterface;
 }
 
-export const ContentScopeIndicator = ({ global = false, scope: passedScope, children }: React.PropsWithChildren<ContentScopeIndicatorProps>) => {
+export const ContentScopeIndicator = ({ global = false, scope: passedScope, children }: PropsWithChildren<ContentScopeIndicatorProps>) => {
     const theme = useTheme();
     const { scope: contentScope, values } = useContentScope();
     const scope = passedScope ?? contentScope;
@@ -29,7 +29,7 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
         return label ?? capitalizeString(scope[scopePart]);
     };
 
-    let content: React.ReactNode;
+    let content: ReactNode;
     if (global) {
         content = <FormattedMessage {...messages.globalContentScope} />;
     } else {

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import escapeRegExp from "lodash.escaperegexp";
-import * as React from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 
 import { TextMatch } from "../../common/MarkedMatches";
 import { PageTreePage } from "../pageTree/usePageTree";
@@ -19,7 +19,7 @@ export const pageSearchFragment = gql`
 export interface PageSearchApi {
     pagesToRenderWithMatches: PageTreePage[];
     query: string;
-    setQuery: React.Dispatch<React.SetStateAction<string>>;
+    setQuery: Dispatch<SetStateAction<string>>;
     currentMatch?: number;
     totalMatches?: number;
     jumpToNextMatch?: () => void;
@@ -30,16 +30,16 @@ interface UsePageSearchOptions {
     tree: Map<string, GQLPageSearchFragment[]>;
     pagesToRender: PageTreePage[];
     domain: string;
-    setExpandedIds: React.Dispatch<React.SetStateAction<string[]>>;
+    setExpandedIds: Dispatch<SetStateAction<string[]>>;
     onUpdateCurrentMatch: (pageId: string, pages: PageTreePage[]) => void;
 }
 
 const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pagesToRender }: UsePageSearchOptions): PageSearchApi => {
-    const [matches, setMatches] = React.useState<PageSearchMatch[] | null>(null);
-    const [currentMatchIndex, setCurrentMatchIndex] = React.useState<number | null>(null);
-    const [query, setQuery] = React.useState("");
+    const [matches, setMatches] = useState<PageSearchMatch[] | null>(null);
+    const [currentMatchIndex, setCurrentMatchIndex] = useState<number | null>(null);
+    const [query, setQuery] = useState("");
 
-    const inorderPages = React.useMemo(() => {
+    const inorderPages = useMemo(() => {
         const buildPagesForParent = (parentId = "root", ancestorIds: string[] = []) => {
             const returnValue: Array<{ id: string; parentId: string | null; name: string; ancestorIds: string[]; path: string }> = [];
 
@@ -67,7 +67,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
         return buildPagesForParent();
     }, [tree]);
 
-    const expandTreeForMatches = React.useCallback(
+    const expandTreeForMatches = useCallback(
         (matches: PageSearchMatch[]) => {
             setExpandedIds((previousExpandedIds) => {
                 const expandedIds = [...previousExpandedIds];
@@ -82,7 +82,7 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
         [setExpandedIds],
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!query) {
             setMatches(null);
             setCurrentMatchIndex(null);
@@ -143,12 +143,12 @@ const usePageSearch = ({ tree, domain, setExpandedIds, onUpdateCurrentMatch, pag
         expandTreeForMatches(matches);
     }, [query, inorderPages, domain, expandTreeForMatches]);
 
-    const pagesToRenderWithMatches = React.useMemo(
+    const pagesToRenderWithMatches = useMemo(
         () => pagesToRender.map((c) => ({ ...c, matches: matches?.filter((match) => match.page.id === c.id) ?? [] })),
         [matches, pagesToRender],
     );
 
-    const pageSearchPartialApi = React.useMemo(() => {
+    const pageSearchPartialApi = useMemo(() => {
         if (matches === null || currentMatchIndex === null) {
             return {};
         }

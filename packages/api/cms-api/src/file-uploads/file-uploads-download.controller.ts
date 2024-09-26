@@ -9,8 +9,9 @@ import { PassThrough } from "stream";
 
 import { DisableCometGuards } from "../auth/decorators/disable-comet-guards.decorator";
 import { BlobStorageBackendService } from "../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../blob-storage/utils/create-hashed-path.util";
 import { ScaledImagesCacheService } from "../dam/cache/scaled-images-cache.service";
-import { calculatePartialRanges, createHashedPath } from "../dam/files/files.utils";
+import { calculatePartialRanges } from "../dam/files/files.utils";
 import { Extension, ResizingType } from "../dam/imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../dam/imgproxy/imgproxy.service";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";

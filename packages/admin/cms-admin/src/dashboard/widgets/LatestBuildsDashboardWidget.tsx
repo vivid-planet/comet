@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import { GridColDef } from "@comet/admin";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { JobRuntime } from "../../cronJobs/JobRuntime";

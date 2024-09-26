@@ -10,19 +10,22 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderStaticSelectCell,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
+    Tooltip,
     useBufferedRowCount,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { useTheme } from "@mui/material";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
@@ -114,16 +117,17 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),
-            maxWidth: 250,
+            sortBy: ["title", "description"],
             minWidth: 200,
+            maxWidth: 250,
         },
         {
             field: "title",
             headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
             flex: 1,
             visible: theme.breakpoints.up("md"),
-            maxWidth: 250,
             minWidth: 200,
+            maxWidth: 250,
         },
         {
             field: "description",
@@ -134,36 +138,71 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
         },
         {
             field: "price",
-            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
+            renderHeader: () => (
+                <>
+                    <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150} />
+                    <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
+                        <Info sx={{ marginLeft: 1 }} />
+                    </Tooltip>
+                </>
+            ),
             type: "number",
             flex: 1,
-            maxWidth: 150,
             minWidth: 150,
+            maxWidth: 150,
         },
-        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
+        {
+            field: "inStock",
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            type: "singleSelect",
+            valueOptions: [
+                {
+                    value: "true",
+                    label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
+                            icon={<StateFilledIcon color="success" />}
+                        />
+                    ),
+                },
+                {
+                    value: "false",
+                    label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
+                            icon={<StateFilledIcon color="error" />}
+                        />
+                    ),
+                },
+            ],
+            renderCell: renderStaticSelectCell,
+            flex: 1,
+            minWidth: 80,
+        },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
-                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
-                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                {
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                },
+                {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
             ],
-            renderCell: ({ row, colDef }) => {
-                if (colDef.valueOptions && Array.isArray(colDef.valueOptions)) {
-                    const selectedOption = colDef.valueOptions.find((option) => typeof option === "object" && option.value === row.type);
-
-                    if (selectedOption && typeof selectedOption === "object") {
-                        return selectedOption.label;
-                    }
-                }
-
-                return row.type;
-            },
+            renderCell: renderStaticSelectCell,
             flex: 1,
-            maxWidth: 150,
             minWidth: 150,
+            maxWidth: 150,
         },
         {
             field: "availableSince",

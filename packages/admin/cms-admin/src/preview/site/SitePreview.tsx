@@ -1,6 +1,6 @@
 import { CometColor, Domain, DomainLocked } from "@comet/admin-icons";
 import { Grid, Tooltip, Typography } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { RouteComponentProps, useHistory, useLocation } from "react-router";
 
@@ -19,7 +19,7 @@ import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLin
 //TODO v4 remove RouteComponentProps
 interface Props extends RouteComponentProps {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
-    logo?: React.ReactNode;
+    logo?: ReactNode;
 }
 
 function useSearchState<ParseFunction extends (value: string | undefined) => ReturnType<ParseFunction>>(
@@ -31,7 +31,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     const queryParams = new URLSearchParams(location.search);
     const strValue = queryParams.get(name);
     const value = parseValue(strValue !== null ? strValue : undefined);
-    const setValue = React.useCallback(
+    const setValue = useCallback(
         (newValue: string) => {
             const newQueryParams = new URLSearchParams(location.search);
             newQueryParams.set(name, newValue);
@@ -41,7 +41,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     );
     return [value, setValue];
 }
-function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
+function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props) {
     const { scope } = useContentScope();
 
     //initialPath: path the preview is intialized with; WITHOUT resolvePath called, might be not the path actually used in site
@@ -63,7 +63,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     //needed to prevent the iframe from reloading on every change
     //doesn't change during navigation within site
     //changed when settings (showOnlyVisible) change
-    const [iframePath, setIframePath] = React.useState(sitePath);
+    const [iframePath, setIframePath] = useState(sitePath);
 
     const [device, setDevice] = useSearchState("device", (v) => {
         if (![Device.Responsive, Device.Mobile, Device.Tablet, Device.Desktop].includes(Number(v))) {
@@ -73,7 +73,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     });
     const [showOnlyVisible, setShowOnlyVisible] = useSearchState("showOnlyVisible", (v) => !v || v === "true");
 
-    const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
+    const [linkToOpen, setLinkToOpen] = useState<ExternalLinkBlockData | undefined>(undefined);
 
     const siteConfig = useSiteConfig({ scope });
 
@@ -81,7 +81,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
 
     // the site in the iframe notifies us about it's current location
     // we sync the location back to our admin-url, so we have it and can reload the page without loosing
-    const handlePreviewLocationChange = React.useCallback(
+    const handlePreviewLocationChange = useCallback(
         (message: SitePrevewIFrameLocationMessage) => {
             if (sitePath !== message.data.pathname) {
                 setSitePath(message.data.pathname);

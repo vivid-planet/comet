@@ -14,7 +14,7 @@ import {
 import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { SvgImageBlockData, SvgImageBlockInput } from "../blocks.generated";
@@ -125,7 +125,7 @@ export const SvgImageBlock: BlockInterface<SvgImageBlockData, SvgImageBlockState
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+        const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const context = useCmsBlockContext();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
