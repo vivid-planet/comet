@@ -1,4 +1,5 @@
-import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from "react";
+import { ComponentType, PropsWithChildren, ReactNode, useCallback, useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 import { Route, RouteComponentProps, useHistory, useLocation } from "react-router";
 
 import { StackApiContext } from "./Api";
@@ -55,7 +56,7 @@ export interface BreadcrumbItem {
     id: string;
     parentId: string;
     url: string;
-    title: ReactNode;
+    title: string | ComponentType<typeof FormattedMessage>;
     locationUrl?: string;
 }
 
@@ -91,7 +92,7 @@ export const Stack = (props: PropsWithChildren<StackProps>) => {
         history.push(breadcrumbs[0].url);
     }, [history, breadcrumbs]);
 
-    const addBreadcrumb = useCallback((id: string, parentId: string, url: string, title: ReactNode) => {
+    const addBreadcrumb = useCallback((id: string, parentId: string, url: string, title: string | ComponentType<typeof FormattedMessage>) => {
         setBreadcrumbs((old) => {
             return [
                 ...old,
@@ -105,7 +106,7 @@ export const Stack = (props: PropsWithChildren<StackProps>) => {
         });
     }, []);
 
-    const updateBreadcrumb = useCallback((id: string, parentId: string, url: string, title: ReactNode) => {
+    const updateBreadcrumb = useCallback((id: string, parentId: string, url: string, title: string | ComponentType<typeof FormattedMessage>) => {
         setBreadcrumbs((old) => {
             return old.map((crumb) => {
                 return crumb.id === id ? { ...crumb, parentId, url, title } : crumb;

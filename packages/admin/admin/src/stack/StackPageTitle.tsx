@@ -1,9 +1,10 @@
-import { Component, ReactNode } from "react";
+import { Component, ComponentType } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { StackSwitchApiContext } from "./Switch";
 
 interface IProps {
-    title?: ReactNode;
+    title?: string | ComponentType<typeof FormattedMessage>;
 }
 
 export class StackPageTitle extends Component<IProps> {
