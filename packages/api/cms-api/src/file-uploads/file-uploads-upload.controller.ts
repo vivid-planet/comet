@@ -13,7 +13,6 @@ import { FileUploadsFileInterceptor } from "./file-uploads-file.interceptor";
 
 type FileUploadsUploadResponse = Pick<FileUpload, "id" | "name" | "size" | "mimetype" | "contentHash" | "createdAt" | "updatedAt"> & {
     downloadUrl?: string;
-    previewUrlTemplate?: string;
 };
 
 export function createFileUploadsUploadController(options: { public: boolean }): Type<unknown> {
@@ -39,17 +38,14 @@ export function createFileUploadsUploadController(options: { public: boolean }):
             });
 
             let downloadUrl: string | undefined;
-            let previewUrlTemplate: string | undefined;
 
             if (this.config.download) {
                 downloadUrl = this.fileUploadsService.createDownloadUrl(fileUpload);
-                previewUrlTemplate = this.fileUploadsService.createPreviewUrlTemplate(fileUpload);
             }
 
             return {
                 ...fileUpload,
                 downloadUrl,
-                previewUrlTemplate,
             };
         }
     }

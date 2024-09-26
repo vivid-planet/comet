@@ -68,12 +68,24 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
     const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment>[]>(() => {
         const files = Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : [];
-        return files.map((file) => ({
-            ...file,
-            previewUrl: file.previewUrlTemplate
-                ? `${apiUrl}${file.previewUrlTemplate.replace(":resizeWidth", String(previewImageWidth))}`
-                : undefined,
-        }));
+        return files.map((file) => {
+            let previewUrl: string | undefined = undefined;
+
+            if (file.previewUrlTemplate) {
+                const isNewlyUploadedFile = file.previewUrlTemplate.startsWith("blob:");
+
+                if (isNewlyUploadedFile) {
+                    previewUrl = file.previewUrlTemplate;
+                } else {
+                    previewUrl = `${apiUrl}${file.previewUrlTemplate.replace(":resizeWidth", String(previewImageWidth))}`;
+                }
+            }
+
+            return {
+                ...file,
+                previewUrl,
+            };
+        });
     }, [fieldValue, apiUrl, previewImageWidth]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
@@ -131,7 +143,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             name: jsonResponse.name,
                             size: jsonResponse.size,
                             downloadUrl: jsonResponse.downloadUrl ?? null,
-                            previewUrlTemplate: jsonResponse.previewUrlTemplate ?? null,
+                            previewUrlTemplate: ["image/png", "image/jpeg", "image/gif"].includes(file.type) ? URL.createObjectURL(file) : null,
                         };
 
                         if (singleFile) {
