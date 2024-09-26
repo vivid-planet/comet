@@ -1,10 +1,10 @@
 import { Grid, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren, ReactNode } from "react";
 
-export type DashboardWidgetRootProps = React.PropsWithChildren<{
-    header: React.ReactNode;
-    icon?: React.ReactNode;
+export type DashboardWidgetRootProps = PropsWithChildren<{
+    header: ReactNode;
+    icon?: ReactNode;
 }>;
 
 export const DashboardWidgetRoot = ({ header, icon, children }: DashboardWidgetRootProps) => {

@@ -16,7 +16,7 @@ import {
 } from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DamVideoBlockData, DamVideoBlockInput } from "../blocks.generated";
@@ -127,7 +127,7 @@ export const DamVideoBlock: BlockInterface<DamVideoBlockData, State, DamVideoBlo
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+        const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const isInPaper = useAdminComponentPaper();
         const contentScope = useContentScope();
         const apolloClient = useApolloClient();

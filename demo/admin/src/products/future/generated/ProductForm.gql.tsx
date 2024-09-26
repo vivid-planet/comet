@@ -27,6 +27,10 @@ export const productFormFragment = gql`
                 country
             }
         }
+        manufacturer {
+            id
+            name
+        }
         inStock
         availableSince
         image

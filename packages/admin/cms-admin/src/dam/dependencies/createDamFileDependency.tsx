@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { messages } from "@comet/admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DependencyInterface } from "../../dependencies/types";

@@ -3,7 +3,6 @@ import { Field, FinalForm, FinalFormCheckbox, Loading, SaveButton, ToolbarAction
 import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
@@ -21,9 +20,7 @@ type ContentScope = {
     [key: string]: string;
 };
 
-export const ContentScopeGrid: React.FC<{
-    userId: string;
-}> = ({ userId }) => {
+export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const client = useApolloClient();
 
     const submit = async (data: FormValues) => {

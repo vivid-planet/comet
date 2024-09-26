@@ -1,6 +1,6 @@
-import { HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
+import { Close, Hamburger, HamburgerClose, HamburgerOpen } from "@comet/admin-icons";
 import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonProps, Theme, useThemeProps } from "@mui/material";
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { MenuContext } from "../../mui/menu/Context";
@@ -11,9 +11,19 @@ export type AppHeaderMenuButtonClassKey = IconButtonClassKey;
 
 export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     const { children: propChildren, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderMenuButton" });
-    const { toggleOpen, open } = useContext(MenuContext);
+    const { toggleOpen, open, drawerVariant } = useContext(MenuContext);
 
-    const children = !propChildren ? open ? <HamburgerClose fontSize="large" /> : <HamburgerOpen fontSize="large" /> : propChildren;
+    const closeIcons: Record<typeof drawerVariant, ReactNode> = {
+        temporary: <Close />,
+        permanent: <HamburgerClose fontSize="large" />,
+    };
+
+    const openIcons: Record<typeof drawerVariant, ReactNode> = {
+        temporary: <Hamburger />,
+        permanent: <HamburgerOpen fontSize="large" />,
+    };
+
+    const children = propChildren || (open ? closeIcons[drawerVariant] : openIcons[drawerVariant]);
 
     return (
         <Root onClick={toggleOpen} size="large" {...restProps}>

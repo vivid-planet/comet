@@ -1,6 +1,8 @@
 import { GridColDef } from "@comet/admin";
+import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { IconProps } from "@mui/material";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -9,7 +11,9 @@ import { basename, dirname } from "path";
 import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { UsableFields } from "./generateGrid/usableFields";
+import { ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -33,7 +37,7 @@ export type FormFieldConfig<T> = (
     | { type: "boolean"; name: keyof T }
     | { type: "date"; name: keyof T }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string> }
+    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
     | {
           type: "asyncSelect";
           name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect
@@ -42,6 +46,7 @@ export type FormFieldConfig<T> = (
           initQueryLabelPath?: string; // if label is not on first level of gqlField-object; dot-separated
           rootQuery: string;
           labelField?: string; // should be the field used as option-label of the rootQuery
+          filterField?: { name: string; gqlName?: string };
       }
     | { type: "block"; name: keyof T; block: ImportReference }
     | SingleFileFormFieldConfig<T>
@@ -86,7 +91,20 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned">;
+export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+    headerInfoTooltip?: string;
+    visible?: ColumnVisibleOption;
+};
+
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconName;
+};
+
+export type StaticSelectLabelCellContent = {
+    primaryText?: string;
+    secondaryText?: string;
+    icon?: IconName | IconObject | ImportReference;
+};
 
 export type GridColumnConfig<T> = (
     | { type: "text" }
@@ -94,18 +112,18 @@ export type GridColumnConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T> } & DataGridSettings;
+) & { name: UsableFields<T> } & BaseColumnConfig;
 
-export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & DataGridSettings;
+export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
 
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
-    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig>;
+    columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;

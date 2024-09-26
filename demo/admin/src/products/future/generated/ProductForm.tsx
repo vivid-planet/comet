@@ -9,12 +9,13 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
-    FinalFormSelect,
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
     MainContent,
     messages,
+    OnChangeField,
+    RadioGroupField,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -31,7 +32,7 @@ import {
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { FormControlLabel, InputAdornment, MenuItem } from "@mui/material";
+import { FormControlLabel, InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -42,6 +43,8 @@ import { validateTitle } from "../validateTitle";
 import {
     GQLManufacturerCountriesSelectQuery,
     GQLManufacturerCountriesSelectQueryVariables,
+    GQLManufacturersSelectQuery,
+    GQLManufacturersSelectQueryVariables,
     GQLProductCategoriesSelectQuery,
     GQLProductCategoriesSelectQueryVariables,
 } from "./ProductForm.generated";
@@ -149,6 +152,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                           depth: parseFloat(formValues.dimensions.depth),
                       }
                     : null,
+            manufacturer: formValues.manufacturer?.id,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
@@ -189,9 +193,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{}}
+            subscription={{ values: true }}
         >
-            {() => (
+            {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
                     <MainContent>
@@ -251,27 +255,27 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="description"
                                 label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                             />
-                            <Field
+                            <RadioGroupField
                                 required
                                 variant="horizontal"
                                 fullWidth
                                 name="type"
                                 label={<FormattedMessage id="product.type" defaultMessage="Type" />}
-                            >
-                                {(props) => (
-                                    <FinalFormSelect {...props}>
-                                        <MenuItem value="Cap">
-                                            <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />
-                                        </MenuItem>
-                                        <MenuItem value="Shirt">
-                                            <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />
-                                        </MenuItem>
-                                        <MenuItem value="Tie">
-                                            <FormattedMessage id="product.type.tie" defaultMessage="Tie" />
-                                        </MenuItem>
-                                    </FinalFormSelect>
-                                )}
-                            </Field>
+                                options={[
+                                    {
+                                        label: <FormattedMessage id="product.type.cap" defaultMessage="great Cap" />,
+                                        value: "Cap",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.shirt" defaultMessage="Shirt" />,
+                                        value: "Shirt",
+                                    },
+                                    {
+                                        label: <FormattedMessage id="product.type.tie" defaultMessage="Tie" />,
+                                        value: "Tie",
+                                    },
+                                ]}
+                            />
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth
@@ -372,6 +376,37 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 }}
                                 getOptionLabel={(option) => option.label}
                             />
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
+                                name="manufacturer"
+                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
+                                        query: gql`
+                                            query ManufacturersSelect($filter: ManufacturerFilter) {
+                                                manufacturers(filter: $filter) {
+                                                    nodes {
+                                                        id
+                                                        name
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.manufacturerCountry?.id } } },
+                                    });
+                                    return data.manufacturers.nodes;
+                                }}
+                                getOptionLabel={(option) => option.name}
+                                disabled={!values?.manufacturerCountry}
+                            />
+                            <OnChangeField name="manufacturerCountry">
+                                {(value, previousValue) => {
+                                    if (value.id !== previousValue.id) {
+                                        form.change("manufacturer", undefined);
+                                    }
+                                }}
+                            </OnChangeField>
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel
