@@ -13,29 +13,29 @@ import { PermissionGrid } from "./permissions/PermissionGrid";
 import {
     GQLUserPageQuery,
     GQLUserPageQueryVariables,
-    GQLUserPermissionsImpersonateMutation,
-    GQLUserPermissionsImpersonateMutationVariables,
-    GQLUserPermissionsStopImpersonateMutation,
+    GQLUserPermissionsStartImpersonationMutation,
+    GQLUserPermissionsStartImpersonationMutationVariables,
+    GQLUserPermissionsStopImpersonationMutation,
 } from "./UserPage.generated";
 
-export const StopImpersonateButton: React.FC<ButtonProps> = (buttonProps) => {
+export const StopImpersonationButton: React.FC<ButtonProps> = (buttonProps) => {
     const client = useApolloClient();
-    const stopImpersonate = async () => {
-        const result = await client.mutate<GQLUserPermissionsStopImpersonateMutation>({
+    const stopImpersonation = async () => {
+        const result = await client.mutate<GQLUserPermissionsStopImpersonationMutation>({
             mutation: gql`
-                mutation UserPermissionsStopImpersonate {
-                    userPermissionsStopImpersonate
+                mutation UserPermissionsStopImpersonation {
+                    userPermissionsStopImpersonation
                 }
             `,
         });
-        if (result.data?.userPermissionsStopImpersonate) {
+        if (result.data?.userPermissionsStopImpersonation) {
             location.href = "/";
         }
     };
 
     return (
-        <Button onClick={stopImpersonate} {...buttonProps}>
-            <FormattedMessage id="comet.stopImpersonate" defaultMessage="Exit Impersonation" />
+        <Button onClick={stopImpersonation} {...buttonProps}>
+            <FormattedMessage id="comet.stopImpersonation" defaultMessage="Stop Impersonation" />
         </Button>
     );
 };
@@ -43,32 +43,32 @@ export const StopImpersonateButton: React.FC<ButtonProps> = (buttonProps) => {
 const ImpersonationButton: React.FC<{ userId: string }> = ({ userId }) => {
     const currentUser = useCurrentUser();
     const client = useApolloClient();
-    const impersonate = async () => {
-        const result = await client.mutate<GQLUserPermissionsImpersonateMutation, GQLUserPermissionsImpersonateMutationVariables>({
+    const startImpersonation = async () => {
+        const result = await client.mutate<GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables>({
             mutation: gql`
-                mutation UserPermissionsImpersonate($userId: String!) {
-                    userPermissionsImpersonate(userId: $userId)
+                mutation UserPermissionsStartImpersonation($userId: String!) {
+                    userPermissionsStartImpersonation(userId: $userId)
                 }
             `,
             variables: {
                 userId,
             },
         });
-        if (result.data?.userPermissionsImpersonate) {
+        if (result.data?.userPermissionsStartImpersonation) {
             location.href = "/";
         }
     };
 
     if (currentUser.id !== userId && !currentUser.impersonated) {
         return (
-            <Button onClick={impersonate} variant="contained">
-                <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
+            <Button onClick={startImpersonation} variant="contained">
+                <FormattedMessage id="comet.userPermissions.startImpersonation" defaultMessage="Start Impersonation" />
             </Button>
         );
     }
 
     if (currentUser.impersonated && currentUser.id === userId) {
-        return <StopImpersonateButton variant="contained" />;
+        return <StopImpersonationButton variant="contained" />;
     }
 
     return null;

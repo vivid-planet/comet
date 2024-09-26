@@ -28,14 +28,14 @@ export class UserResolver {
 
     @Mutation(() => Boolean)
     @RequiredPermission("impersonation", { skipScopeCheck: true })
-    async userPermissionsImpersonate(@Args("userId", { type: () => String }) userId: string, @Context() request: Request): Promise<boolean> {
+    async userPermissionsStartImpersonation(@Args("userId", { type: () => String }) userId: string, @Context() request: Request): Promise<boolean> {
         this.userService.setImpersonatedUser(userId, request);
         return true;
     }
 
     @Mutation(() => Boolean)
     @RequiredPermission(DisablePermissionCheck)
-    async userPermissionsStopImpersonate(@Context() request: Request): Promise<boolean> {
+    async userPermissionsStopImpersonation(@Context() request: Request): Promise<boolean> {
         this.userService.unsetImpersonatedUser(request);
         return true;
     }

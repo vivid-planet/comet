@@ -7,7 +7,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
-import { StopImpersonateButton } from "../../userPermissions/user/UserPage";
+import { StopImpersonationButton } from "../../userPermissions/user/UserPage";
 import { AboutModal } from "./about/AboutModal";
 import { GQLSignOutMutation } from "./UserHeaderItem.generated";
 
@@ -71,7 +71,13 @@ export function UserHeaderItem(props: UserHeaderItemProps): React.ReactElement {
                 <Separator />
                 {user.impersonated && (
                     <>
-                        <StopImpersonateButton startIcon={<Clear />} fullWidth variant="outlined" color="primary" sx={{ justifyContent: "center" }} />
+                        <StopImpersonationButton
+                            startIcon={<Clear />}
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                            sx={{ justifyContent: "center" }}
+                        />
                         <Separator />
                     </>
                 )}
