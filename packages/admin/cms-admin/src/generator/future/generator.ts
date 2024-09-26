@@ -38,7 +38,12 @@ export type FormFieldConfig<T> = (
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
-    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
+    | {
+          type: "asyncSelect";
+          rootQuery: string;
+          labelField?: string;
+          filterField?: { name: string; gqlName?: string };
+      }
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
