@@ -139,7 +139,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             name: jsonResponse.name,
                             size: jsonResponse.size,
                             downloadUrl: jsonResponse.downloadUrl ?? null,
-                            imageUrl: ["image/png", "image/jpeg", "image/gif"].includes(file.type) ? URL.createObjectURL(file) : null,
+                            imageUrl: ["image/png", "image/jpeg", "image/gif", "image/webp"].includes(file.type) ? URL.createObjectURL(file) : null,
                         };
 
                         if (singleFile) {
