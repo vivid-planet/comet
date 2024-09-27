@@ -1,7 +1,7 @@
 import { CancelButton } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import React from "react";
+import { ComponentType } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PageAction } from "./PagesPageActionToolbar";
@@ -12,8 +12,8 @@ interface ContentProps {
 
 type PageActionMessages = {
     [key in PageAction]: {
-        title: React.ComponentType;
-        content: React.ComponentType<ContentProps>;
+        title: ComponentType;
+        content: ComponentType<ContentProps>;
     };
 };
 
@@ -57,12 +57,7 @@ interface ConfirmPageActionDialogProps {
     selectedPagesCount: number;
 }
 
-export const ConfirmPageActionDialog: React.VoidFunctionComponent<ConfirmPageActionDialogProps> = ({
-    open,
-    onCloseDialog,
-    action,
-    selectedPagesCount,
-}) => {
+export const ConfirmPageActionDialog = ({ open, onCloseDialog, action, selectedPagesCount }: ConfirmPageActionDialogProps) => {
     const Title = action ? Messages[action].title : undefined;
     const Content = action ? Messages[action].content : undefined;
 

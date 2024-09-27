@@ -4,7 +4,7 @@ import { SaveButton } from "@comet/admin";
 import { Move, Reset } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { TextMatch } from "../../common/MarkedMatches";
@@ -84,7 +84,7 @@ const MoveDamItemDialogInner = ({
         setExpandedIds,
     });
 
-    const moveSelected = React.useCallback(async () => {
+    const moveSelected = useCallback(async () => {
         if (selectedId === undefined) {
             return;
         }

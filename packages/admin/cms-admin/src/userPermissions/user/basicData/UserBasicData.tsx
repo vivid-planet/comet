@@ -2,14 +2,11 @@ import { gql, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, Loading, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables } from "./UserBasicData.generated";
 
-export const UserBasicData: React.FC<{
-    id: string;
-}> = ({ id }) => {
+export const UserBasicData = ({ id }: { id: string }) => {
     const { data, error, loading } = useQuery<GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables>(
         gql`
             query UserBasicData($id: String!) {

@@ -280,6 +280,7 @@ export function generateFormField({
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+
         const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
             if (typeof value === "string") {
                 return {
@@ -290,7 +291,29 @@ export function generateFormField({
                 return value;
             }
         });
-        code = `<Field
+
+        const renderAsRadio = config.inputType === "radio" || (required && values.length <= 5 && config.inputType !== "select");
+        if (renderAsRadio) {
+            code = `<RadioGroupField
+             ${required ? "required" : ""}
+              variant="horizontal"
+             fullWidth
+             name="${name}"
+             label={<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />}
+             options={[
+                  ${values
+                      .map((value) => {
+                          return `{
+                                label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
+                              value.value.charAt(0).toLowerCase() + value.value.slice(1)
+                          }" defaultMessage="${value.label}" />,
+                                value: "${value.value}",
+                            }`;
+                      })
+                      .join(",")}
+            ]}/>`;
+        } else {
+            code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
             fullWidth
@@ -316,6 +339,7 @@ export function generateFormField({
                 </FinalFormSelect>
             }
         </Field>`;
+        }
     } else if (config.type == "asyncSelect") {
         if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
         const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
@@ -375,46 +399,44 @@ export function generateFormField({
                   const gqlName = config.filter.gqlName ?? config.filter.name;
 
                   // try to find arg used to filter by checking names of root-props and filter-prop-fields
-                  let gqlVarType = getTypeInfo(
-                      rootQueryType.args.find((arg) => arg.name === gqlName),
-                      gqlIntrospection,
-                  );
-                  let gqlVarName = undefined;
-                  let gqlVarAssignment = undefined;
+                  const rootArgForName = rootQueryType.args.find((arg) => arg.name === gqlName);
+                  let filterType = rootArgForName ? getTypeInfo(rootArgForName, gqlIntrospection) : undefined;
+                  let filterVarName = undefined;
+                  let filterVarValue = undefined;
+
                   const filterVar = filterField
                       ? `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`
                       : `${config.filter.name}`;
                   let filterVarType = "unknown";
 
-                  if (gqlVarType) {
+                  if (filterType) {
                       // there is a root-prop with same name, so the dev probably wants to filter with this prop
-                      gqlVarName = gqlName;
-                      gqlVarAssignment = filterVar;
-                      if (gqlVarType.typeKind === "INPUT_OBJECT" || gqlVarType.typeKind === "ENUM") {
-                          filterVarType = `GQL${gqlVarType.typeClass}`;
+                      filterVarName = gqlName;
+                      filterVarValue = filterVar;
+                      if (filterType.typeKind === "INPUT_OBJECT" || filterType.typeKind === "ENUM") {
+                          filterVarType = `GQL${filterType.typeClass}`;
                           imports.push({
                               name: filterVarType,
                               importPath: "@src/graphql.generated",
                           });
-                      } else if (gqlVarType.typeKind === "SCALAR") {
-                          filterVarType = convertGqlScalarToTypescript(gqlVarType.typeClass);
+                      } else if (filterType.typeKind === "SCALAR") {
+                          filterVarType = convertGqlScalarToTypescript(filterType.typeClass);
                       }
                   } else {
                       // no root-prop with same name, check filter-prop-fields
-                      gqlVarType = getTypeInfo(
-                          rootQueryType.args.find((arg) => arg.name === "filter"),
-                          gqlIntrospection,
-                      );
-                      if (gqlVarType) {
-                          gqlVarName = "filter";
-                          gqlVarAssignment = `{ ${gqlName}: { equal: ${filterVar} } }`;
+                      const rootArgFilter = rootQueryType.args.find((arg) => arg.name === "filter");
+                      filterType = rootArgFilter ? getTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
+
+                      if (filterType) {
+                          filterVarName = "filter";
+                          filterVarValue = `{ ${gqlName}: { equal: ${filterVar} } }`;
 
                           // get type of field.equal in filter-arg used for filtering
-                          if (!gqlVarType.introspectedType || gqlVarType.introspectedType.kind !== "INPUT_OBJECT") {
+                          if (!filterType.introspectedType || filterType.introspectedType.kind !== "INPUT_OBJECT") {
                               throw new Error(`Field ${String(config.name)}: Type of filter is no object-type.`);
                           }
                           const gqlFilterInputType = getTypeInfo(
-                              gqlVarType.introspectedType.inputFields.find((inputField) => inputField.name === gqlName),
+                              filterType.introspectedType.inputFields.find((inputField) => inputField.name === gqlName),
                               gqlIntrospection,
                           );
                           if (!gqlFilterInputType?.introspectedType || gqlFilterInputType.introspectedType.kind !== "INPUT_OBJECT") {
@@ -436,7 +458,7 @@ export function generateFormField({
                           filterVarType = convertGqlScalarToTypescript(equalFieldType.typeClass);
                       } else {
                           throw new Error(
-                              `Neither filter-prop nor root-prop with name: ${gqlName} for asyncSelect-query not found. Consider setting filterField.gqlVarName explicitly.`,
+                              `Neither filter-prop nor root-prop with name: ${gqlName} for asyncSelect-query not found. Consider setting filterField.gqlName explicitly.`,
                           );
                       }
                   }
@@ -451,9 +473,9 @@ export function generateFormField({
 
                   return {
                       filterField,
-                      gqlVarType,
-                      gqlVarName,
-                      gqlVarAssignment,
+                      filterType,
+                      filterVarName,
+                      filterVarValue,
                   };
               })()
             : undefined;
@@ -482,9 +504,9 @@ export function generateFormField({
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName}${
-            filterConfig ? `($${filterConfig.gqlVarName}: ${filterConfig.gqlVarType.typeClass}${filterConfig.gqlVarType.required ? `!` : ``})` : ``
+            filterConfig ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})` : ``
         } {
-                            ${rootQuery}${filterConfig ? `(${filterConfig.gqlVarName}: $${filterConfig.gqlVarName})` : ``} {
+                            ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
                                 nodes {
                                     id
                                     ${labelField}
@@ -493,9 +515,9 @@ export function generateFormField({
                         }\`${
                             filterConfig
                                 ? `, variables: { ${
-                                      filterConfig.gqlVarName == filterConfig.gqlVarAssignment
-                                          ? filterConfig.gqlVarName
-                                          : `${filterConfig.gqlVarName}: ${filterConfig.gqlVarAssignment}`
+                                      filterConfig.filterVarName == filterConfig.filterVarValue
+                                          ? filterConfig.filterVarName
+                                          : `${filterConfig.filterVarName}: ${filterConfig.filterVarValue}`
                                   } }`
                                 : ``
                         }
