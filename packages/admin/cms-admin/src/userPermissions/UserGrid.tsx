@@ -14,15 +14,15 @@ import { Edit } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import React from "react";
+import { useContext } from "react";
 import { useIntl } from "react-intl";
 
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
-export const UserGrid: React.FC = () => {
+export const UserGrid = () => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
     const intl = useIntl();
-    const stackApi = React.useContext(StackSwitchApiContext);
+    const stackApi = useContext(StackSwitchApiContext);
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {

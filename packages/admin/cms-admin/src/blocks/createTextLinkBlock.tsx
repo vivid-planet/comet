@@ -11,7 +11,6 @@ import {
     withAdditionalBlockAttributes,
 } from "@comet/blocks-admin";
 import { Box } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";

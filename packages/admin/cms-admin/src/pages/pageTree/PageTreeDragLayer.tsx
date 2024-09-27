@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import React from "react";
 import { useDragLayer, XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl/lib";
 
@@ -24,7 +23,7 @@ interface PageTreeDragLayerProps {
     numberSelectedPages: number;
 }
 
-const PageTreeDragLayer: React.VoidFunctionComponent<PageTreeDragLayerProps> = ({ numberSelectedPages }): React.ReactElement | null => {
+const PageTreeDragLayer = ({ numberSelectedPages }: PageTreeDragLayerProps) => {
     const { item, isAcceptedItemType, initialOffset, currentOffset, isDragging } = useDragLayer((monitor) => ({
         item: monitor.getItem() as PageTreePage,
         isAcceptedItemType: monitor.getItemType() === "row",

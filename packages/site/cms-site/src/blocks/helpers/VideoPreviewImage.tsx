@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ReactNode } from "react";
 import styled, { css } from "styled-components";
 
 import { PixelImageBlockData } from "../../blocks.generated";
@@ -10,15 +10,14 @@ export interface VideoPreviewImageProps {
     aspectRatio: string;
     sizes?: string;
     fill?: boolean;
+    icon?: ReactNode;
 }
 
-export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill }: VideoPreviewImageProps) => {
+export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw", fill, icon = <PlayIcon /> }: VideoPreviewImageProps) => {
     return (
         <Root $fill={fill}>
             <PixelImageBlock data={image} aspectRatio={aspectRatio} sizes={sizes} fill={fill} />
-            <IconWrapper onClick={onPlay}>
-                <PlayIcon />
-            </IconWrapper>
+            <IconWrapper onClick={onPlay}>{icon}</IconWrapper>
         </Root>
     );
 };

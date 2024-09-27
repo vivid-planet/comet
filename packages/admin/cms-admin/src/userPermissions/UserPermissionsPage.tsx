@@ -1,5 +1,4 @@
 import { MainContent, Stack, StackPage, StackSwitch, Toolbar } from "@comet/admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
@@ -9,7 +8,7 @@ import { LabelsContext, LabelsContextType } from "./utils/LabelsContext";
 
 type UserPermissionsPageProps = LabelsContextType;
 
-export const UserPermissionsPage = ({ permissionLabels }: UserPermissionsPageProps): React.ReactElement => (
+export const UserPermissionsPage = ({ permissionLabels }: UserPermissionsPageProps) => (
     <LabelsContext.Provider
         value={{
             permissionLabels: {

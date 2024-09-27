@@ -2,7 +2,6 @@ import { PrettyBytes } from "@comet/admin";
 import { BallTriangle } from "@comet/admin-icons";
 import { Dialog, LinearProgress, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 const ProgressDialogContent = styled("div")`
@@ -32,7 +31,7 @@ interface ProgressDialogProps {
     loadedSize?: number;
 }
 
-export const ProgressDialog = ({ open, totalSize, loadedSize }: ProgressDialogProps): React.ReactElement => {
+export const ProgressDialog = ({ open, totalSize, loadedSize }: ProgressDialogProps) => {
     return (
         <Dialog open={open}>
             <ProgressDialogContent>

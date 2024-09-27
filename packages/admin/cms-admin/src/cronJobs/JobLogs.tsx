@@ -2,7 +2,6 @@ import { gql, useQuery } from "@apollo/client";
 import { Loading, MainContent, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLKubernetesJobWithLogsQuery, GQLKubernetesJobWithLogsQueryVariables } from "./JobLogs.generated";

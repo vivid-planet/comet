@@ -2,7 +2,6 @@ import { messages } from "@comet/admin";
 import { ArrowLeft, File, Folder } from "@comet/admin-icons";
 import { List, ListItem, ListItemIcon } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 export interface PageListItem {

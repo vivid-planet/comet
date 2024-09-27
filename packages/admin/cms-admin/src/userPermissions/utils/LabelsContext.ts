@@ -1,6 +1,6 @@
-import React from "react";
+import { createContext } from "react";
 
 export type LabelsContextType = {
     permissionLabels?: Record<string, React.ReactNode>;
 };
-export const LabelsContext = React.createContext<LabelsContextType>({});
+export const LabelsContext = createContext<LabelsContextType>({});

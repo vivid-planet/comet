@@ -17,8 +17,8 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { Button, IconButton } from "@mui/material";
+import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateManufacturerMutation,
     GQLCreateManufacturerMutationVariables,
@@ -28,7 +28,6 @@ import {
     GQLManufacturersListQueryVariables,
 } from "@src/products/ManufacturersGrid.generated";
 import gql from "graphql-tag";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 function ManufacturersGridToolbar() {
@@ -63,19 +62,15 @@ export function ManufacturersGrid() {
             field: "id",
             width: 150,
             renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" })}
-                    </Typography>
+                <>
+                    <GridColumnHeaderTitle label={intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" })} columnWidth={150} />
                     <Tooltip
-                        trigger="click"
+                        trigger="hover"
                         title={<FormattedMessage id="comet.manufacturers.id.info" defaultMessage="The id of the manufacturer" />}
                     >
-                        <IconButton>
-                            <Info />
-                        </IconButton>
+                        <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
-                </div>
+                </>
             ),
         },
         {
@@ -128,6 +123,8 @@ export function ManufacturersGrid() {
             headerName: "",
             sortable: false,
             filterable: false,
+            pinned: "right",
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>

@@ -1,5 +1,112 @@
 # @comet/admin-color-picker
 
+## 7.4.2
+
+### Patch Changes
+
+-   @comet/admin@7.4.2
+-   @comet/admin-icons@7.4.2
+
+## 7.4.1
+
+### Patch Changes
+
+-   @comet/admin@7.4.1
+-   @comet/admin-icons@7.4.1
+
+## 7.4.0
+
+### Patch Changes
+
+-   Updated dependencies [22863c202]
+-   Updated dependencies [cab7c427a]
+-   Updated dependencies [48d1403d7]
+-   Updated dependencies [1ca46e8da]
+-   Updated dependencies [1ca46e8da]
+-   Updated dependencies [bef162a60]
+-   Updated dependencies [bc1ed880a]
+-   Updated dependencies [3e013b05d]
+    -   @comet/admin@7.4.0
+    -   @comet/admin-icons@7.4.0
+
+## 7.3.2
+
+### Patch Changes
+
+-   Updated dependencies [2286234e5]
+    -   @comet/admin@7.3.2
+    -   @comet/admin-icons@7.3.2
+
+## 7.3.1
+
+### Patch Changes
+
+-   Updated dependencies [91bfda996]
+    -   @comet/admin@7.3.1
+    -   @comet/admin-icons@7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   6a1310cf6: Deprecate FinalForm components where a Field component exists as a simpler alternative
+
+    -   Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
+    -   Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
+    -   Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
+    -   Use `<AsyncSelectField />` instead of `<Field component={FinalFormAsyncSelect} />`
+    -   Use `<NumberField />` instead of `<Field component={FinalFormNumberInput} />`
+    -   Use `<SearchField />` instead of `<Field component={FinalFormSearchTextField} />`
+    -   Use `<SelectField />` instead of `<Field />` with `<FinalFormSelect />`
+    -   Use `<SwitchField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormSwitch />`
+    -   Use `<DateField />` instead of `<Field component={FinalFormDatePicker} />`
+    -   Use `<DateRangeField />` instead of `<Field component={FinalFormDateRangePicker} />`
+    -   Use `<DateTimeField />` instead of `<Field component={FinalFormDateTimePicker} />`
+    -   Use `<TimeField />` instead of `<Field component={FinalFormTimePicker} />`
+    -   Use `<TimeRangeField />` instead of `<Field component={FinalFormTimeRangePicker} />`
+    -   Use `<ColorField />` instead of `<Field component={FinalFormColorPicker} />`
+
+-   Updated dependencies [6a1310cf6]
+-   Updated dependencies [5364ecb37]
+-   Updated dependencies [a1f4c0dec]
+-   Updated dependencies [2ab7b688e]
+    -   @comet/admin@7.3.0
+    -   @comet/admin-icons@7.3.0
+
+## 7.2.1
+
+### Patch Changes
+
+-   @comet/admin@7.2.1
+-   @comet/admin-icons@7.2.1
+
+## 7.2.0
+
+### Patch Changes
+
+-   Updated dependencies [0fb8d9a26]
+-   Updated dependencies [4b267f90d]
+    -   @comet/admin@7.2.0
+    -   @comet/admin-icons@7.2.0
+
+## 7.1.0
+
+### Patch Changes
+
+-   Updated dependencies [04844d39e]
+-   Updated dependencies [dfc4a7fff]
+-   Updated dependencies [b1bbd6a0c]
+-   Updated dependencies [c0488eb84]
+-   Updated dependencies [39ab15616]
+-   Updated dependencies [c1ab2b340]
+-   Updated dependencies [99a1f0ae6]
+-   Updated dependencies [edf14d066]
+-   Updated dependencies [2b68513be]
+-   Updated dependencies [374f383ba]
+-   Updated dependencies [c050f2242]
+    -   @comet/admin@7.1.0
+    -   @comet/admin-icons@7.1.0
+
 ## 7.0.0
 
 ### Major Changes

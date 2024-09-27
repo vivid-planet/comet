@@ -24,6 +24,7 @@ import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
+import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
@@ -32,7 +33,6 @@ import { ProductsPage } from "@src/products/generated/ProductsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 
@@ -245,6 +245,15 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/products-with-low-price-future",
                             component: FutureProductsWithLowPricePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.combinationFieldsTest" defaultMessage="Combination Fields Test" />,
+                        secondary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                        route: {
+                            path: "/combination-fields-test-products-future",
+                            component: CombinationFieldsTestProductsPage,
                         },
                     },
                 ],

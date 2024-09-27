@@ -1,7 +1,6 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { CancelButton, Field, FinalForm, FinalFormCheckbox, FinalFormSwitch, SaveButton } from "@comet/admin";
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
@@ -26,7 +25,7 @@ type ContentScope = {
     [key: string]: string;
 };
 
-export const OverrideContentScopesDialog: React.FC<FormProps> = ({ permissionId, userId, handleDialogClose }) => {
+export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialogClose }: FormProps) => {
     const client = useApolloClient();
 
     const submit = async (data: FormSubmitData) => {

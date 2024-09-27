@@ -3,7 +3,7 @@ import { RowActionsItem, RowActionsMenu, useEditDialogApi, useErrorDialog, useSt
 import { Archive, Delete, Download, Edit, Move, Restore } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
 import { saveAs } from "file-saver";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
@@ -27,13 +27,13 @@ interface FolderInnerMenuProps {
     openMoveDialog: (itemToMove: { id: string; type: "file" | "folder" }) => void;
 }
 
-const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps): React.ReactElement => {
+const FolderInnerMenu = ({ folder, openMoveDialog }: FolderInnerMenuProps) => {
     const editDialogApi = useEditDialogApi();
     const errorDialog = useErrorDialog();
     const apolloClient = useApolloClient();
     const context = useCmsBlockContext();
 
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
     const handleFolderDelete = async () => {
         const { data } = await apolloClient.mutate<GQLDeleteDamFolderMutation, GQLDeleteDamFolderMutationVariables>({
@@ -119,11 +119,11 @@ interface FileInnerMenuProps {
     openMoveDialog: (itemToMove: { id: string; type: "file" | "folder" }) => void;
 }
 
-const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps): React.ReactElement => {
+const FileInnerMenu = ({ file, openMoveDialog }: FileInnerMenuProps) => {
     const client = useApolloClient();
     const stackApi = useStackSwitchApi();
 
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
     return (
         <>
@@ -217,7 +217,7 @@ interface DamContextMenuProps {
     openMoveDialog: (itemToMove: { id: string; type: "file" | "folder" }) => void;
 }
 
-const DamContextMenu = ({ file, folder, openMoveDialog }: DamContextMenuProps): React.ReactElement | null => {
+const DamContextMenu = ({ file, folder, openMoveDialog }: DamContextMenuProps) => {
     if (folder !== undefined) {
         return <FolderInnerMenu folder={folder} openMoveDialog={openMoveDialog} />;
     } else if (file !== undefined) {
