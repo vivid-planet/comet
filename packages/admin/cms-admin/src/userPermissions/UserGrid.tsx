@@ -11,7 +11,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Edit, ImpersonateUser } from "@comet/admin-icons";
+import { Edit, ImpersonateUser, Reset } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -28,7 +28,7 @@ export const UserGrid = () => {
     const stackApi = useContext(StackSwitchApiContext);
     const isAllowed = useUserPermissionCheck();
     const currentUser = useCurrentUser();
-    const { startImpersonation } = useImpersonation();
+    const { startImpersonation, stopImpersonation } = useImpersonation();
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -56,30 +56,33 @@ export const UserGrid = () => {
             filterable: false,
             renderCell: (params) => {
                 const isCurrentUser = params.row.id === currentUser.id;
+                const isImpersonated = currentUser.impersonated;
                 return (
                     <>
                         {isAllowed("impersonation") && (
                             <Tooltip
                                 title={
                                     isCurrentUser ? (
-                                        <FormattedMessage
-                                            id="comet.userPermissions.cannotImpersonate"
-                                            defaultMessage="You can't impersonate yourself"
-                                        />
+                                        isImpersonated ? (
+                                            <FormattedMessage id="comet.impersonate.regainIdentity" defaultMessage="Regain original identity" />
+                                        ) : (
+                                            <FormattedMessage id="comet.impersonate.self" defaultMessage="You can't impersonate yourself" />
+                                        )
                                     ) : (
-                                        <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
+                                        <FormattedMessage id="comet.impersonate" defaultMessage="Impersonate" />
                                     )
                                 }
                             >
                                 {/* span is needed for the tooltip to trigger even if the button is disabled*/}
                                 <span>
                                     <IconButton
-                                        disabled={isCurrentUser}
+                                        disabled={isCurrentUser && !isImpersonated}
                                         onClick={() => {
                                             !isCurrentUser && startImpersonation(params.row.id.toString());
+                                            isCurrentUser && isImpersonated && stopImpersonation();
                                         }}
                                     >
-                                        <ImpersonateUser />
+                                        {isCurrentUser && isImpersonated ? <Reset /> : <ImpersonateUser />}
                                     </IconButton>
                                 </span>
                             </Tooltip>
