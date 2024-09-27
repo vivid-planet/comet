@@ -3,7 +3,6 @@ import {
     ComponentType,
     createContext,
     forwardRef,
-    isValidElement,
     ReactElement,
     ReactNode,
     RefForwardingComponent,
@@ -14,7 +13,7 @@ import {
     useRef,
     useState,
 } from "react";
-import { FormattedMessage, MessageDescriptor, useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { matchPath, RouteComponentProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
@@ -22,6 +21,7 @@ import { ForcePromptRoute } from "../router/ForcePromptRoute";
 import { SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
 import { StackBreadcrumb } from "./Breadcrumb";
 import { IStackPageProps } from "./Page";
+import { parseFormattedMessage } from "./stackHelpers";
 import { StackSwitchMeta } from "./SwitchMeta";
 
 interface IProps {
@@ -100,10 +100,6 @@ interface IHookProps {
     id: string;
 }
 
-function isFormattedMessage(node: ReactNode): node is ReactElement<MessageDescriptor> {
-    return isValidElement(node) && node.type === FormattedMessage;
-}
-
 const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookProps> = (props, ref) => {
     const { id } = props;
     const [pageBreadcrumbTitle, setPageBreadcrumbTitle] = useState<Record<string, string | undefined>>({});
@@ -115,14 +111,8 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
 
     let activePage: string | undefined;
 
-    const parseFormattedMessage = useCallback((message: ReactNode): string => {
-        if (typeof message === "string") return message;
-
-        if (isFormattedMessage(message)) return intl.formatMessage(message.props);
-
-        throw new Error("Invalid message type received");
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const parseFormattedMessageCallback = useCallback((message: ReactNode) => parseFormattedMessage(intl, message), []);
 
     const isInitialPage = useCallback(
         (pageName?: string) => {
@@ -164,7 +154,7 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
     const api: IStackSwitchApi = useMemo(() => {
         const updatePageBreadcrumbTitle = (t?: string | ComponentType<typeof FormattedMessage>) => {
             if (activePage) {
-                const newTitle = parseFormattedMessage(t);
+                const newTitle = parseFormattedMessageCallback(t);
 
                 if (pageBreadcrumbTitle[activePage] !== newTitle) {
                     const title = { ...pageBreadcrumbTitle };
@@ -180,7 +170,7 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
             id,
             updatePageBreadcrumbTitle,
         };
-    }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle, parseFormattedMessage]);
+    }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle, parseFormattedMessageCallback]);
     useImperativeHandle(ref, () => api);
 
     function renderRoute(page: ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {
