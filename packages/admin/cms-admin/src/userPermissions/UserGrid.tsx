@@ -1,4 +1,4 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
     GridColDef,
@@ -19,7 +19,7 @@ import { useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { useCurrentUser, useUserPermissionCheck } from "./hooks/currentUser";
-import { GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables } from "./user/UserPage.generated";
+import { useImpersonation } from "./hooks/useImpersonation";
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
 export const UserGrid = () => {
@@ -27,24 +27,8 @@ export const UserGrid = () => {
     const intl = useIntl();
     const stackApi = useContext(StackSwitchApiContext);
     const isAllowed = useUserPermissionCheck();
-    const client = useApolloClient();
     const currentUser = useCurrentUser();
-
-    const startImpersonation = async (userId: string) => {
-        const result = await client.mutate<GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables>({
-            mutation: gql`
-                mutation UserPermissionsStartImpersonation($userId: String!) {
-                    userPermissionsStartImpersonation(userId: $userId)
-                }
-            `,
-            variables: {
-                userId,
-            },
-        });
-        if (result.data?.userPermissionsStartImpersonation) {
-            location.href = "/";
-        }
-    };
+    const { startImpersonation } = useImpersonation();
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
