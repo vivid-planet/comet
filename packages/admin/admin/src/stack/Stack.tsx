@@ -1,9 +1,10 @@
 import { ComponentType, PropsWithChildren, ReactNode, useCallback, useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Route, RouteComponentProps, useHistory, useLocation } from "react-router";
 
 import { StackApiContext } from "./Api";
 import { StackBreadcrumb } from "./Breadcrumb";
+import { parseFormattedMessage } from "./stackHelpers";
 
 interface SortNode {
     id: string;
@@ -72,6 +73,10 @@ export const Stack = (props: PropsWithChildren<StackProps>) => {
     const [switches, setSwitches] = useState<SwitchItem[]>([]);
     const history = useHistory();
     const location = useLocation();
+    const intl = useIntl();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const parseFormattedMessageCallback = useCallback((message: ReactNode) => parseFormattedMessage(intl, message), []);
 
     const getVisibleBreadcrumbs = useCallback(() => {
         return sortByParentId(breadcrumbs).map((i) => {
@@ -100,18 +105,20 @@ export const Stack = (props: PropsWithChildren<StackProps>) => {
                     id,
                     parentId,
                     url,
-                    title,
+                    title: parseFormattedMessageCallback(title),
                 },
             ];
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const updateBreadcrumb = useCallback((id: string, parentId: string, url: string, title: string | ComponentType<typeof FormattedMessage>) => {
         setBreadcrumbs((old) => {
             return old.map((crumb) => {
-                return crumb.id === id ? { ...crumb, parentId, url, title } : crumb;
+                return crumb.id === id ? { ...crumb, parentId, url, title: parseFormattedMessageCallback(title) } : crumb;
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const removeBreadcrumb = useCallback((id: string) => {

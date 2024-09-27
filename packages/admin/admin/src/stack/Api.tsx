@@ -1,10 +1,11 @@
-import { ComponentType, createContext, ReactNode, SFC, useContext } from "react";
+import { ComponentType, createContext, SFC, useContext } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { BreadcrumbItem, SwitchItem } from "./Stack";
 
 export interface IStackApi {
-    addBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode, invisible: boolean) => void;
-    updateBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode, invisible: boolean) => void;
+    addBreadcrumb: (id: string, parentId: string, url: string, title: string | ComponentType<typeof FormattedMessage>, invisible: boolean) => void;
+    updateBreadcrumb: (id: string, parentId: string, url: string, title: string | ComponentType<typeof FormattedMessage>, invisible: boolean) => void;
     removeBreadcrumb: (id: string) => void;
     goBack: () => void;
     goAllBack: () => void;
