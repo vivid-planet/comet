@@ -1,21 +1,28 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Loading, MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
-import { Box, Button, ButtonProps, CardContent } from "@mui/material";
+import {
+    CrudMoreActionsMenu,
+    Loading,
+    MainContent,
+    RouterTab,
+    RouterTabs,
+    Toolbar,
+    ToolbarBackButton,
+    ToolbarFillSpace,
+    ToolbarTitleItem,
+} from "@comet/admin";
+import { ImpersonateUser, Reset } from "@comet/admin-icons";
+import { Box, Button, ButtonProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
+import { useImpersonation } from "../hooks/useImpersonation";
+import { GQLUserPermissionsStopImpersonationMutation } from "../hooks/useImpersonation.generated";
 import { UserBasicData } from "./basicData/UserBasicData";
 import { ContentScopeGrid } from "./permissions/ContentScopeGrid";
 import { PermissionGrid } from "./permissions/PermissionGrid";
-import {
-    GQLUserPageQuery,
-    GQLUserPageQueryVariables,
-    GQLUserPermissionsStartImpersonationMutation,
-    GQLUserPermissionsStartImpersonationMutationVariables,
-    GQLUserPermissionsStopImpersonationMutation,
-} from "./UserPage.generated";
+import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPage.generated";
 
 export const StopImpersonationButton = (buttonProps: ButtonProps) => {
     const client = useApolloClient();
@@ -39,42 +46,10 @@ export const StopImpersonationButton = (buttonProps: ButtonProps) => {
     );
 };
 
-const ImpersonationButton = ({ userId }: { userId: string }) => {
-    const currentUser = useCurrentUser();
-    const client = useApolloClient();
-    const startImpersonation = async () => {
-        const result = await client.mutate<GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables>({
-            mutation: gql`
-                mutation UserPermissionsStartImpersonation($userId: String!) {
-                    userPermissionsStartImpersonation(userId: $userId)
-                }
-            `,
-            variables: {
-                userId,
-            },
-        });
-        if (result.data?.userPermissionsStartImpersonation) {
-            location.href = "/";
-        }
-    };
-
-    if (currentUser.id !== userId && !currentUser.impersonated) {
-        return (
-            <Button onClick={startImpersonation} variant="contained">
-                <FormattedMessage id="comet.userPermissions.startImpersonation" defaultMessage="Start Impersonation" />
-            </Button>
-        );
-    }
-
-    if (currentUser.impersonated && currentUser.id === userId) {
-        return <StopImpersonationButton variant="contained" />;
-    }
-
-    return null;
-};
-
 export const UserPage = ({ userId }: { userId: string }) => {
     const isAllowed = useUserPermissionCheck();
+    const currentUser = useCurrentUser();
+    const { stopImpersonation, startImpersonation } = useImpersonation();
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
             query UserPage($id: String!) {
@@ -107,10 +82,30 @@ export const UserPage = ({ userId }: { userId: string }) => {
                     <SupportText>{data.user.email}</SupportText>
                 </ToolbarTitleItem>
                 <ToolbarFillSpace />
-                {isAllowed("impersonation") && (
-                    <CardContent>
-                        <ImpersonationButton userId={userId} />
-                    </CardContent>
+                {/* TODO: remove this condition once more actions are added to that menu */}
+                {userId !== currentUser.id && isAllowed("impersonation") && (
+                    <CrudMoreActionsMenu
+                        slotProps={{
+                            group: { groupTitle: null },
+                        }}
+                        overallActions={[
+                            isAllowed("impersonation")
+                                ? {
+                                      label: <FormattedMessage id="comet.impersonate" defaultMessage="Impersonate" />,
+                                      icon: <ImpersonateUser />,
+                                      disabled: userId === currentUser.id,
+                                      onClick: () => startImpersonation(userId),
+                                  }
+                                : null,
+                            currentUser.impersonated
+                                ? {
+                                      icon: <Reset />,
+                                      label: <FormattedMessage id="comet.impersonate.stop" defaultMessage="Impersonate" />,
+                                      onClick: stopImpersonation,
+                                  }
+                                : null,
+                        ]}
+                    />
                 )}
             </Toolbar>
             <MainContent>
