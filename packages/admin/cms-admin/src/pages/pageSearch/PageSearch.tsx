@@ -1,5 +1,4 @@
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 import { SearchInput } from "../../common/SearchInput";
 import { PageSearchApi } from "./usePageSearch";
@@ -10,7 +9,7 @@ interface PageSearchProps {
     pageSearchApi: PageSearchApi;
 }
 
-export function PageSearch({ query, onQueryChange, pageSearchApi }: PageSearchProps): React.ReactElement {
+export function PageSearch({ query, onQueryChange, pageSearchApi }: PageSearchProps) {
     return (
         <Root>
             <SearchInput

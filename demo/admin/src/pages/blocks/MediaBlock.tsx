@@ -1,6 +1,5 @@
 import { BlockCategory, createOneOfBlock } from "@comet/blocks-admin";
-import { DamImageBlock, DamVideoBlock, YouTubeVideoBlock } from "@comet/cms-admin";
-import * as React from "react";
+import { DamImageBlock, DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-admin";
 import { FormattedMessage } from "react-intl";
 
 export const MediaBlock = createOneOfBlock({
@@ -9,5 +8,5 @@ export const MediaBlock = createOneOfBlock({
     category: BlockCategory.Media,
     allowEmpty: false,
     variant: "toggle",
-    supportedBlocks: { image: DamImageBlock, damVideo: DamVideoBlock, youTubeVideo: YouTubeVideoBlock },
+    supportedBlocks: { image: DamImageBlock, damVideo: DamVideoBlock, youTubeVideo: YouTubeVideoBlock, vimeoVideo: VimeoVideoBlock },
 });

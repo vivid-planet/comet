@@ -1,6 +1,5 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { DemoSpaceBlockData } from "@src/blocks.generated";
-import * as React from "react";
 
 const SpaceMapping: Record<string, number> = {
     d150: 10,
@@ -15,7 +14,7 @@ const SpaceMapping: Record<string, number> = {
     d600: 300,
 };
 
-const SpaceBlock: React.FC<PropsWithData<DemoSpaceBlockData>> = ({ data: { spacing } }) => {
+const SpaceBlock = ({ data: { spacing } }: PropsWithData<DemoSpaceBlockData>) => {
     return <div style={{ height: `${SpaceMapping[spacing]}px` }} />;
 };
 

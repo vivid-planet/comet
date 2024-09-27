@@ -1,13 +1,19 @@
 import { GridColDef } from "@comet/admin";
+import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { IconProps } from "@mui/material";
+import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
 
+import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { UsableFields } from "./generateGrid/usableFields";
+import { ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -15,33 +21,59 @@ type ImportReference = {
     import: string;
 };
 
+type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1 } & Pick<
+    Partial<FinalFormFileUploadProps<false>>,
+    "maxFileSize" | "readOnly" | "layout" | "accept"
+>;
+
+type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number } & Pick<
+    Partial<FinalFormFileUploadProps<true>>,
+    "maxFileSize" | "readOnly" | "layout" | "accept"
+>;
+
 export type FormFieldConfig<T> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
     | { type: "boolean" }
     | { type: "date" }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
-    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
+    | {
+          type: "asyncSelect";
+          rootQuery: string;
+          labelField?: string;
+          filterField?: { name: string; gqlName?: string };
+      }
     | { type: "block"; block: ImportReference }
+    | SingleFileFormFieldConfig
+    | MultiFileFormFieldConfig
 ) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
 }
 
-export type FormLayoutConfig<T> = {
-    type: "fieldSet";
-    name: string;
-    title?: string;
-    supportText?: string; // can contain field-placeholder
-    collapsible?: boolean; // default true
-    initiallyExpanded?: boolean; // default false
-    fields: FormFieldConfig<T>[];
+type OptionalNestedFieldsConfig<T> = {
+    type: "optionalNestedFields";
+    name: keyof T; // object name containing fields
+    checkboxLabel?: string;
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    fields: FormFieldConfig<any>[];
 };
+export type FormLayoutConfig<T> =
+    | {
+          type: "fieldSet";
+          name: string;
+          title?: string;
+          supportText?: string; // can contain field-placeholder
+          collapsible?: boolean; // default true
+          initiallyExpanded?: boolean; // default false
+          fields: (FormFieldConfig<T> | OptionalNestedFieldsConfig<T>)[];
+      }
+    | OptionalNestedFieldsConfig<T>;
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormLayoutConfig<T>(arg: any): arg is FormLayoutConfig<T> {
-    return arg.type !== undefined && arg.type == "fieldSet";
+    return arg.type !== undefined && ["fieldSet", "optionalNestedFields"].includes(arg.type);
 }
 
 export type FormConfig<T extends { __typename?: string }> = {
@@ -55,7 +87,20 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex">;
+export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+    headerInfoTooltip?: string;
+    visible?: ColumnVisibleOption;
+};
+
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconName;
+};
+
+export type StaticSelectLabelCellContent = {
+    primaryText?: string;
+    secondaryText?: string;
+    icon?: IconName | IconObject | ImportReference;
+};
 
 export type GridColumnConfig<T> = (
     | { type: "text" }
@@ -63,15 +108,18 @@ export type GridColumnConfig<T> = (
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T> } & DataGridSettings;
+) & { name: UsableFields<T> } & BaseColumnConfig;
+
+export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
-    columns: GridColumnConfig<T>[];
+    columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
@@ -103,6 +151,11 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
         const configs = await import(`${process.cwd()}/${file.replace(/\.ts$/, "")}`);
         //const configs = await import(`${process.cwd()}/${file}`);
 
+        const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
+        await fs.rm(codeOuputFilename, { force: true });
+        // eslint-disable-next-line no-console
+        console.log(`generating ${file}`);
+
         for (const exportName in configs) {
             const config = configs[exportName] as GeneratorConfig;
             let generated: GeneratorReturn;
@@ -119,16 +172,15 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
             }
         }
 
-        {
-            const codeOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.tsx`;
-            await writeGenerated(codeOuputFilename, outputCode);
-        }
+        await writeGenerated(codeOuputFilename, outputCode);
 
         if (gqlDocumentsOutputCode != "") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
+            await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
+                import { finalFormFileUploadFragment } from "@comet/cms-admin";
 
-            ${gqlDocumentsOutputCode}
+                ${gqlDocumentsOutputCode}
             `;
             await writeGenerated(gqlDocumentsOuputFilename, gqlDocumentsOutputCode);
         }

@@ -1,14 +1,13 @@
 import { Stack, StackBreadcrumbs } from "@comet/admin";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface Props {
-    children: React.ReactNode;
-    title?: React.ReactNode;
+    title?: ReactNode;
 }
 
-function AdminComponentRoot(props: Props): React.ReactElement {
+const AdminComponentRoot = (props: PropsWithChildren<Props>) => {
     const { children, title = <FormattedMessage id="comet.blocks" defaultMessage="Blocks" /> } = props;
 
     return (
@@ -27,13 +26,12 @@ function AdminComponentRoot(props: Props): React.ReactElement {
             <ChildrenContainer>{children}</ChildrenContainer>
         </Stack>
     );
-}
+};
 
 export { AdminComponentRoot };
 
 const ChildrenContainer = styled("div")`
-    // TODO: Find another way to access this element, other than the className
-    .CometAdminRteToolbar-root {
+    > .CometAdminRte-root > .CometAdminRteToolbar-root {
         top: 70px;
     }
 `;

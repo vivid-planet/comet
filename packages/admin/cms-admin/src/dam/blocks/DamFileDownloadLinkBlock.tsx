@@ -3,7 +3,6 @@ import { Field, FinalFormSelect, messages } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";

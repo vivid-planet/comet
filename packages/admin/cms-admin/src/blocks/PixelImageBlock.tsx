@@ -15,7 +15,7 @@ import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import * as React from "react";
+import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PixelImageBlockData, PixelImageBlockInput } from "../blocks.generated";
@@ -156,8 +156,8 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
-        const [open, setOpen] = React.useState(false);
-        const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+        const [open, setOpen] = useState(false);
+        const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
         const context = useCmsBlockContext();
         const { filteredAcceptedMimeTypes } = useDamAcceptedMimeTypes();
         const contentScope = useContentScope();
@@ -166,7 +166,7 @@ export const PixelImageBlock: BlockInterface<PixelImageBlockData, ImageBlockStat
 
         // useSyncImageAttributes({ state, updateState });
 
-        const handleClose = React.useCallback(() => {
+        const handleClose = useCallback(() => {
             setOpen(false);
         }, [setOpen]);
 

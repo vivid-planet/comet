@@ -33,7 +33,7 @@ const FormToolbar = () => (
     </StackToolbar>
 );
 
-const ProductCategoriesPage: React.FC = () => {
+const ProductCategoriesPage = () => {
     const intl = useIntl();
 
     return (

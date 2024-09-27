@@ -17,7 +17,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
@@ -120,11 +120,13 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             filterable: false,
             type: "actions",
             align: "right",
+            pinned: "right",
+            width: 84,
             renderCell: (params) => {
                 return (
                     <>
                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                            <EditIcon color="primary" />
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {

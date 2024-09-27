@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { BreadcrumbItem } from "../Stack";
 import { BreadcrumbsEntry } from "./BreadcrumbsEntry";
@@ -16,9 +16,9 @@ const useNumberOfItemsToBeHidden = (
     showBackButton: boolean,
     itemWidths: number[] | undefined,
 ): number | undefined => {
-    const [numberOfItemsToBeHidden, setNumberOfItemsToBeHidden] = React.useState<number | undefined>();
+    const [numberOfItemsToBeHidden, setNumberOfItemsToBeHidden] = useState<number | undefined>();
 
-    React.useEffect(() => {
+    useEffect(() => {
         let allVisibleItemsFitIntoContainer = false;
         let newNumberOfItemsToBeHidden = 0;
 
@@ -58,10 +58,10 @@ export const useItemsToRender = (
     items: BreadcrumbItem[],
     containerWidth: number,
     itemWidths: number[] | undefined,
-    overflowLinkText: React.ReactNode,
+    overflowLinkText: ReactNode,
     backButtonUrl: string | undefined,
     slotProps: StackBreadcrumbsProps["slotProps"],
-): React.ReactNode[] => {
+): ReactNode[] => {
     const numberOfItemsToBeHidden = useNumberOfItemsToBeHidden(items, containerWidth, Boolean(backButtonUrl), itemWidths);
 
     if (!items.length) return [];

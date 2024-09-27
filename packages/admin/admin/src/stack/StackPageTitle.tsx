@@ -1,13 +1,12 @@
-import * as React from "react";
+import { Component, ReactNode } from "react";
 
 import { StackSwitchApiContext } from "./Switch";
 
 interface IProps {
-    title?: React.ReactNode;
-    children: React.ReactNode;
+    title?: ReactNode;
 }
 
-export class StackPageTitle extends React.Component<IProps> {
+export class StackPageTitle extends Component<IProps> {
     public static contextType = StackSwitchApiContext;
     public render() {
         return this.props.children;

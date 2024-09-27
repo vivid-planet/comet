@@ -1,5 +1,6 @@
 "use client";
-import * as React from "react";
+
+import { createContext } from "react";
 import { UrlObject } from "url";
 
 export type Url = string | UrlObject;
@@ -14,4 +15,4 @@ export const defaultPreviewContextValue: PreviewContextOptions = {
     showPreviewSkeletons: false,
 };
 
-export const PreviewContext = React.createContext<PreviewContextOptions>(defaultPreviewContextValue);
+export const PreviewContext = createContext<PreviewContextOptions>(defaultPreviewContextValue);

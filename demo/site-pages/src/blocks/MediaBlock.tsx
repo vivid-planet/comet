@@ -1,6 +1,5 @@
 import { DamVideoBlock, OneOfBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { MediaBlockData } from "@src/blocks.generated";
-import * as React from "react";
 
 import { DamImageBlock } from "./DamImageBlock";
 

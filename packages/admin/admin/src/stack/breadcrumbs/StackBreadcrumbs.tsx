@@ -2,7 +2,7 @@ import { ChevronRight } from "@comet/admin-icons";
 import { Link } from "@mui/material";
 import { ComponentsOverrides, css, Theme, useTheme, useThemeProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -86,26 +86,26 @@ export interface StackBreadcrumbsProps
         backButton: typeof Link;
         backButtonSeparator: "div";
     }> {
-    separator?: React.ReactNode;
-    overflowLinkText?: React.ReactNode;
+    separator?: ReactNode;
+    overflowLinkText?: ReactNode;
 }
 
 export function StackBreadcrumbs(inProps: StackBreadcrumbsProps) {
     const { separator, overflowLinkText = ". . .", slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminStackBreadcrumbs" });
     const stackApi = useStackApi();
     const { palette } = useTheme();
-    const breadcrumbsRef = React.useRef<HTMLDivElement>(null);
+    const breadcrumbsRef = useRef<HTMLDivElement>(null);
     const containerWidth = useObservedWidth(breadcrumbsRef);
-    const [itemWidths, setItemWidths] = React.useState<number[] | undefined>();
+    const [itemWidths, setItemWidths] = useState<number[] | undefined>();
 
-    const breadcrumbItems = React.useMemo(() => stackApi?.breadCrumbs ?? [], [stackApi]);
+    const breadcrumbItems = useMemo(() => stackApi?.breadCrumbs ?? [], [stackApi]);
     const combinedTitlesOfBreadcrumbs = breadcrumbItems.map(({ title }) => title).join("");
 
-    React.useEffect(() => {
+    useEffect(() => {
         setItemWidths(undefined);
     }, [breadcrumbItems?.length, combinedTitlesOfBreadcrumbs]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (breadcrumbItems?.length && !itemWidths?.length) {
             const listItems = breadcrumbsRef.current?.children;
             const newItemWidths = listItems ? Object.values(listItems).map((listItem) => getElementOuterWidth(listItem)) : [];

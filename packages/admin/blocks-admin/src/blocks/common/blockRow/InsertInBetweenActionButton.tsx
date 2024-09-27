@@ -1,7 +1,6 @@
 import { AddNoCircle } from "@comet/admin-icons";
 import { ButtonBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 
 const IconWrapper = styled("div")`
     && {
@@ -37,7 +36,7 @@ interface Props {
 }
 
 // renders one ore two insert-buttons
-export default function InsertInBetweenActionButton({ onClick }: Props): React.ReactElement {
+export default function InsertInBetweenActionButton({ onClick }: Props) {
     return (
         <Root onClick={onClick}>
             <IconWrapper>
