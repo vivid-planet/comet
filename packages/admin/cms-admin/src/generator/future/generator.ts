@@ -1,6 +1,8 @@
 import { GridColDef } from "@comet/admin";
+import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
+import { IconProps } from "@mui/material";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -36,7 +38,12 @@ export type FormFieldConfig<T> = (
     | { type: "date" }
     // TODO | { type: "dateTime" }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
-    | { type: "asyncSelect"; rootQuery: string; labelField?: string }
+    | {
+          type: "asyncSelect";
+          rootQuery: string;
+          labelField?: string;
+          filterField?: { name: string; gqlName?: string };
+      }
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
@@ -85,13 +92,23 @@ export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWid
     visible?: ColumnVisibleOption;
 };
 
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconName;
+};
+
+export type StaticSelectLabelCellContent = {
+    primaryText?: string;
+    secondaryText?: string;
+    icon?: IconName | IconObject | ImportReference;
+};
+
 export type GridColumnConfig<T> = (
     | { type: "text" }
     | { type: "number" }
     | { type: "boolean" }
     | { type: "date" }
     | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string> }
+    | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
 ) & { name: UsableFields<T> } & BaseColumnConfig;
 
