@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
     GridColDef,
@@ -7,22 +7,44 @@ import {
     muiGridSortToGql,
     StackSwitchApiContext,
     ToolbarItem,
+    Tooltip,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
+import { Edit, ImpersonateUser } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useContext } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
+import { useCurrentUser, useUserPermissionCheck } from "./hooks/currentUser";
+import { GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables } from "./user/UserPage.generated";
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
 export const UserGrid = () => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
     const intl = useIntl();
     const stackApi = useContext(StackSwitchApiContext);
+    const isAllowed = useUserPermissionCheck();
+    const client = useApolloClient();
+    const currentUser = useCurrentUser();
+
+    const startImpersonation = async (userId: string) => {
+        const result = await client.mutate<GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables>({
+            mutation: gql`
+                mutation UserPermissionsStartImpersonation($userId: String!) {
+                    userPermissionsStartImpersonation(userId: $userId)
+                }
+            `,
+            variables: {
+                userId,
+            },
+        });
+        if (result.data?.userPermissionsStartImpersonation) {
+            location.href = "/";
+        }
+    };
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -48,15 +70,46 @@ export const UserGrid = () => {
             sortable: false,
             pinnable: false,
             filterable: false,
-            renderCell: (params) => (
-                <IconButton
-                    onClick={() => {
-                        stackApi.activatePage("edit", params.id.toString());
-                    }}
-                >
-                    <Edit color="primary" />
-                </IconButton>
-            ),
+            renderCell: (params) => {
+                const isCurrentUser = params.row.id === currentUser.id;
+                return (
+                    <>
+                        {isAllowed("impersonation") && (
+                            <Tooltip
+                                title={
+                                    isCurrentUser ? (
+                                        <FormattedMessage
+                                            id="comet.userPermissions.cannotImpersonate"
+                                            defaultMessage="You can't impersonate yourself"
+                                        />
+                                    ) : (
+                                        <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
+                                    )
+                                }
+                            >
+                                {/* span is needed for the tooltip to trigger even if the button is disabled*/}
+                                <span>
+                                    <IconButton
+                                        disabled={isCurrentUser}
+                                        onClick={() => {
+                                            !isCurrentUser && startImpersonation(params.row.id.toString());
+                                        }}
+                                    >
+                                        <ImpersonateUser />
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
+                        )}
+                        <IconButton
+                            onClick={() => {
+                                stackApi.activatePage("edit", params.id.toString());
+                            }}
+                        >
+                            <Edit color="primary" />
+                        </IconButton>
+                    </>
+                );
+            },
         },
     ];
 
