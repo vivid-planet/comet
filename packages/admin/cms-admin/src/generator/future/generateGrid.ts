@@ -469,6 +469,7 @@ export function generateGrid(
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
         CrudContextMenu,
+        CrudMoreActionsMenu,
         DataGridToolbar,
         ExportApi,
         filterByFragment,
