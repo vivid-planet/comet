@@ -870,9 +870,8 @@ const generateGridExportApi = (excelExport: boolean | undefined, gqlTypePlural: 
         return "";
     }
 
-    return `const exportApi = useDataGridExcelExport<GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0], GQL${gqlTypePlural}GridQuery, GQL${gqlTypePlural}GridQueryVariables>({
+    return `const exportApi = useDataGridExcelExport<GQL${gqlTypePlural}GridQuery["${gridQuery}"]["nodes"][0], GQL${gqlTypePlural}GridQuery, Omit<GQL${gqlTypePlural}GridQueryVariables, "offset" | "limit">>({
         columns,
-        // @ts-expect-error TODO: Figure out why this works in the handmade demo and fix it
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
         },

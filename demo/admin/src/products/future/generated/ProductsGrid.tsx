@@ -305,9 +305,12 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     if (error) throw error;
     const rows = data?.products.nodes ?? [];
 
-    const exportApi = useDataGridExcelExport<GQLProductsGridQuery["products"]["nodes"][0], GQLProductsGridQuery, GQLProductsGridQueryVariables>({
+    const exportApi = useDataGridExcelExport<
+        GQLProductsGridQuery["products"]["nodes"][0],
+        GQLProductsGridQuery,
+        Omit<GQLProductsGridQueryVariables, "offset" | "limit">
+    >({
         columns,
-        // @ts-expect-error TODO: Figure out why this works in the handmade demo and fix it
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
         },
