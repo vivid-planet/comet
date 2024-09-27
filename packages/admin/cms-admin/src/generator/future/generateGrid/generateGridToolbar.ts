@@ -25,19 +25,12 @@ export const generateGridToolbar = ({
     const showMoreActionsMenu = excelExport;
 
     return `function ${componentName}(${getGridToolbarProps(!!forwardToolbarAction, !!excelExport)}) {
-    ${
-        showMoreActionsMenu
-            ? `const [showMoreActionsMenu, setShowMoreActionsMenu] = React.useState(false);
-                const moreActionsMenuRef = React.useRef<HTMLButtonElement>(null);`
-            : ""
-    }
-
         return (
             <DataGridToolbar>
                 ${hasSearch ? searchItem : ""}
                 ${hasFilter ? filterItem : ""}
                 <ToolbarFillSpace />
-                ${renderMoreActionsMenuButton(showMoreActionsMenu, getFormattedMessageNode(`${instanceGqlType}.moreActions`, `More actions`))}
+                ${showMoreActionsMenu ? renderMoreActionsMenu(instanceGqlType, excelExport) : ""}
               ${
                   allowAdding
                       ? renderToolbarActions(
@@ -46,23 +39,40 @@ export const generateGridToolbar = ({
                         )
                       : ""
               }
-                ${renderMoreActionsMenu(instanceGqlType, showMoreActionsMenu, excelExport)}
             </DataGridToolbar>
         );
     }`.replace(/^\s+\n/gm, "");
 };
 
 const getGridToolbarProps = (toolbarAction: boolean, exportApi: boolean) => {
-    if (!toolbarAction && !exportApi) {
+    const props: Array<{
+        destructured: string;
+        typeDefinition: string;
+    }> = [];
+
+    if (toolbarAction) {
+        props.push({
+            destructured: "toolbarAction",
+            typeDefinition: "toolbarAction?: React.ReactNode",
+        });
+    }
+
+    if (exportApi) {
+        props.push({
+            destructured: "exportApi",
+            typeDefinition: "exportApi: ExportApi",
+        });
+    }
+
+    if (!props.length) {
         return "";
     }
+
     return `{
-            ${toolbarAction ? `toolbarAction,` : ""}
-            ${exportApi ? `exportApi,` : ""}
-        }: {
-            ${toolbarAction ? `toolbarAction?: React.ReactNode,` : ""}
-            ${exportApi ? `exportApi: ExportApi,` : ""}
-        }`;
+        ${props.map((prop) => `${prop.destructured}`).join(",")}
+    }: {
+        ${props.map((prop) => prop.typeDefinition).join(";")}
+    }`;
 };
 
 const searchItem = `<ToolbarItem>
@@ -73,48 +83,21 @@ const filterItem = `<ToolbarItem>
     <GridFilterButton />
 </ToolbarItem>`;
 
-const renderMoreActionsMenuButton = (showMoreActionsMenu: boolean | undefined, buttonText: string) => {
-    if (!showMoreActionsMenu) {
-        return "";
-    }
-
-    return `<ToolbarItem>
-        <Button
-            color="info"
-            ref={moreActionsMenuRef}
-            onClick={() => {
-                setShowMoreActionsMenu(true);
-            }}
-            endIcon={<MoreVertical />}
-        >
-            ${buttonText}
-        </Button>
-    </ToolbarItem>`;
-};
-
-const renderMoreActionsMenu = (formattedMessageIdPrefix: string, showMoreActionsMenu: boolean | undefined, excelExport: boolean | undefined) => {
-    if (!showMoreActionsMenu) {
-        return "";
-    }
-
-    return `<Menu
-        open={showMoreActionsMenu}
-        onClose={() => setShowMoreActionsMenu(false)}
-        anchorEl={moreActionsMenuRef.current}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
-        ${
-            excelExport
-                ? `<MenuItem onClick={() => exportApi.exportGrid()} disabled={exportApi.loading}>
-                   <ListItemIcon>
-                        {exportApi.loading ? <CircularProgress size={20} /> : <Excel />}
-                    </ListItemIcon>
-                    <ListItemText>
-                        ${getFormattedMessageNode(`${formattedMessageIdPrefix}.downloadAsExcel`, `Download as Excel`)}
-                    </ListItemText>
-                </MenuItem>`
-                : ""
-        }
-    </Menu>`;
+const renderMoreActionsMenu = (formattedMessageIdPrefix: string, excelExport: boolean | undefined) => {
+    return `<CrudMoreActionsMenu
+        overallActions={[
+            ${
+                excelExport
+                    ? `{
+                label: ${getFormattedMessageNode(`${formattedMessageIdPrefix}.downloadAsExcel`, `Download as Excel`)},
+                icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                onClick: () => exportApi.exportGrid(),
+                disabled: exportApi.loading,
+            }`
+                    : ""
+            }
+        ]}
+    />`;
 };
 
 const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItemText: string) => {
