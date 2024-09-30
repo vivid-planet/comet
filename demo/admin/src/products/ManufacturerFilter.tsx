@@ -50,7 +50,7 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
             }}
             onChange={(event, value, reason) => {
                 // value can't be "{ id: value.id, name: value.name }" because value is sent to api
-                applyValue({ id: item.id, operatorValue: "equals", value: value.id, columnField: "manufacturer" });
+                applyValue({ id: item.id, operatorValue: "equals", value: value ? value.id : undefined, columnField: "manufacturer" });
             }}
             renderInput={(params) => (
                 <TextField
