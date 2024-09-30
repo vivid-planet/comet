@@ -17,13 +17,28 @@ export type GenerateFieldsReturn = GeneratorReturn & {
         initializationCode?: string;
         defaultInitializationCode?: string;
     }[];
+    finalFormConfig?: {
+        subscription?: { values?: true };
+        renderProps?: { values?: true; form?: true };
+    };
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function findFieldByName(name: string, fields: FormConfig<any>["fields"]): FormConfig<any>["fields"][0] | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return fields.reduce<FormConfig<any>["fields"][0] | undefined>((acc, field) => {
+        return acc ? acc : field.name === name ? field : isFormLayoutConfig(field) ? findFieldByName(name, field.fields) : undefined;
+    }, undefined);
+}
 
 export function generateFields({
     gqlIntrospection,
     baseOutputFilename,
     fields,
+    formFragmentName,
     formConfig,
+    gqlType,
+    namePrefix,
 }: {
     gqlIntrospection: IntrospectionQuery;
     baseOutputFilename: string;
@@ -31,6 +46,9 @@ export function generateFields({
     fields: FormConfig<any>["fields"];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
+    formFragmentName: string;
+    gqlType: string;
+    namePrefix?: string;
 }): GenerateFieldsReturn {
     const gqlDocuments: Record<string, string> = {};
     let hooksCode = "";
@@ -38,14 +56,31 @@ export function generateFields({
     const formFragmentFields: string[] = [];
     const imports: Imports = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
+    const finalFormConfig = { subscription: {}, renderProps: {} };
 
     const code = fields
         .map((field) => {
             let generated: GenerateFieldsReturn;
             if (isFormFieldConfig(field)) {
-                generated = generateFormField({ gqlIntrospection, baseOutputFilename, config: field, formConfig });
+                generated = generateFormField({
+                    gqlIntrospection,
+                    baseOutputFilename,
+                    formFragmentName,
+                    config: field,
+                    formConfig,
+                    gqlType,
+                    namePrefix,
+                });
             } else if (isFormLayoutConfig(field)) {
-                generated = generateFormLayout({ gqlIntrospection, baseOutputFilename, config: field, formConfig });
+                generated = generateFormLayout({
+                    gqlIntrospection,
+                    baseOutputFilename,
+                    formFragmentName,
+                    config: field,
+                    formConfig,
+                    gqlType,
+                    namePrefix,
+                });
             } else {
                 throw new Error("Not supported config");
             }
@@ -58,6 +93,10 @@ export function generateFields({
             formValueToGqlInputCode += generated.formValueToGqlInputCode;
             formFragmentFields.push(...generated.formFragmentFields);
             formValuesConfig.push(...generated.formValuesConfig);
+
+            finalFormConfig.subscription = { ...finalFormConfig.subscription, ...generated.finalFormConfig?.subscription };
+            finalFormConfig.renderProps = { ...finalFormConfig.renderProps, ...generated.finalFormConfig?.renderProps };
+
             return generated.code;
         })
         .join("\n");
@@ -70,5 +109,6 @@ export function generateFields({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

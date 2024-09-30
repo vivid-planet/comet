@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import axios, { AxiosError, CancelTokenSource } from "axios";
 import * as mimedb from "mime-db";
-import * as React from "react";
+import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import { Accept, FileRejection } from "react-dropzone";
 
 import { useCmsBlockContext } from "../../..";
@@ -61,7 +61,7 @@ export interface FileUploadApi {
     ) => Promise<{ hasError: boolean; rejectedFiles: RejectedFile[]; uploadedItems: NewlyUploadedItem[] }>;
     validationErrors?: FileUploadValidationError[];
     maxFileSizeInBytes: number;
-    dialogs: React.ReactNode;
+    dialogs: ReactNode;
     dropzoneConfig: {
         accept: Accept;
         multiple: boolean;
@@ -72,7 +72,7 @@ export interface FileUploadApi {
 
 export interface FileUploadValidationError {
     file: Pick<FileWithFolderPath, "name" | "path">;
-    message: React.ReactNode;
+    message: ReactNode;
 }
 
 interface RejectedFile {
@@ -119,7 +119,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
     const scope = useDamScope();
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
-    const accept: Accept = React.useMemo(() => {
+    const accept: Accept = useMemo(() => {
         const acceptObj: Accept = {};
         const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
 
@@ -143,20 +143,20 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
 
     const { newlyUploadedItems, addNewlyUploadedItems } = useFileUploadContext();
 
-    const [progressDialogOpen, setProgressDialogOpen] = React.useState<boolean>(false);
-    const [validationErrors, setValidationErrors] = React.useState<FileUploadValidationError[] | undefined>();
-    const [errorDialogOpen, setErrorDialogOpen] = React.useState<boolean>(false);
-    const [totalSizes, setTotalSizes] = React.useState<{ [key: string]: number }>({});
-    const [uploadedSizes, setUploadedSizes] = React.useState<{ [key: string]: number }>({});
+    const [progressDialogOpen, setProgressDialogOpen] = useState<boolean>(false);
+    const [validationErrors, setValidationErrors] = useState<FileUploadValidationError[] | undefined>();
+    const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+    const [totalSizes, setTotalSizes] = useState<{ [key: string]: number }>({});
+    const [uploadedSizes, setUploadedSizes] = useState<{ [key: string]: number }>({});
 
     const totalSize = Object.values(totalSizes).length > 0 ? Object.values(totalSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
     const uploadedSize = Object.values(uploadedSizes).length > 0 ? Object.values(uploadedSizes).reduce((prev, curr) => prev + curr, 0) : undefined;
 
     const maxFileSizeInMegabytes = context.damConfig.maxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
-    const cancelUpload = React.useRef<CancelTokenSource>();
+    const cancelUpload = useRef<CancelTokenSource>();
 
-    const addValidationError = (file: FileWithFolderPath, newError: React.ReactNode) => {
+    const addValidationError = (file: FileWithFolderPath, newError: ReactNode) => {
         setValidationErrors((prevErrors) => {
             const existingErrors = prevErrors ?? [];
             return [...existingErrors, { file, message: newError }];
@@ -167,7 +167,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         setUploadedSizes((prev) => ({ ...prev, [path]: value }));
     };
 
-    const generateValidationErrorsForRejectedFiles = React.useCallback(
+    const generateValidationErrorsForRejectedFiles = useCallback(
         (fileRejections: FileRejection[]) => {
             for (const fileRejection of fileRejections) {
                 if (fileRejection.file.size > maxFileSizeInBytes) {
@@ -183,7 +183,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         [accept, maxFileSizeInBytes],
     );
 
-    const lookupDamFolder = React.useCallback(
+    const lookupDamFolder = useCallback(
         async (folderName: string, parentId?: string) => {
             const { data } = await client.query<GQLDamFolderByNameAndParentIdQuery, GQLDamFolderByNameAndParentIdQueryVariables>({
                 query: damFolderByNameAndParentId,
@@ -200,7 +200,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         [client, scope],
     );
 
-    const createDamFolder = React.useCallback(
+    const createDamFolder = useCallback(
         async (folderName: string, parentId?: string) => {
             const { data } = await client.mutate<GQLDamFolderForFolderUploadMutation, GQLDamFolderForFolderUploadMutationVariables>({
                 mutation: createDamFolderForFolderUpload,
@@ -220,7 +220,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         [client, scope],
     );
 
-    const createInitialFolderIdMap = React.useCallback(
+    const createInitialFolderIdMap = useCallback(
         async (files: FileWithFolderPath[], currFolderId?: string) => {
             const folderIdMap = new Map<string, string>();
             const lookupCache = new Map<string, string | undefined>();
@@ -274,7 +274,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         [lookupDamFolder],
     );
 
-    const createFoldersIfNecessary = React.useCallback(
+    const createFoldersIfNecessary = useCallback(
         async (externalFolderIdMap: Map<string, string>, file: FileWithFolderPath, currFolderId?: string) => {
             const newlyCreatedFolderIds: Array<{ id: string; parentId?: string }> = [];
             const folderIdMap = new Map(externalFolderIdMap);
@@ -324,7 +324,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
         return filesToUpload;
     };
 
-    const handleDuplicatedFilenames = React.useCallback(
+    const handleDuplicatedFilenames = useCallback(
         async (
             filesWithFolderPaths: FileWithFolderPath[],
             currentFolderId: string | undefined,

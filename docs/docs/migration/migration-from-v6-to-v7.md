@@ -1198,7 +1198,7 @@ Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
 
 ```diff
 - import { Link } from "@comet/cms-site";
-+ import { Link } from "next/link";
++ import Link from "next/link";
 ```
 
 Remove the preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters).

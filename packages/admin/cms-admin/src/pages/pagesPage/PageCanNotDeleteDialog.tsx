@@ -1,6 +1,5 @@
 import { messages } from "@comet/admin";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 export interface PageCanNotDeleteDialogProps {
@@ -8,7 +7,7 @@ export interface PageCanNotDeleteDialogProps {
     onClosePressed: () => void;
 }
 
-export const PageCanNotDeleteDialog: React.FunctionComponent<PageCanNotDeleteDialogProps> = (props) => {
+export const PageCanNotDeleteDialog = (props: PageCanNotDeleteDialogProps) => {
     const { dialogOpen, onClosePressed } = props;
 
     return (

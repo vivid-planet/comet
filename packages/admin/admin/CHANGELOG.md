@@ -1,5 +1,156 @@
 # @comet/admin
 
+## 7.4.2
+
+### Patch Changes
+
+-   @comet/admin-icons@7.4.2
+-   @comet/admin-theme@7.4.2
+
+## 7.4.1
+
+### Patch Changes
+
+-   @comet/admin-icons@7.4.1
+-   @comet/admin-theme@7.4.1
+
+## 7.4.0
+
+### Minor Changes
+
+-   22863c202: Add an `options` prop to `SelectField` as an alternative to `children`
+
+    Note: the behavior of the `options` prop differs from `FinalFormSelect` and is only intended to work with static options.
+    Use the existing `AsyncSelectField` for dynamic options.
+
+    -   Each option must have the `value` and `label` properties. A custom structure is not supported.
+    -   There are no `getOptionLabel` and `getOptionValue` props. The `label` and `value` properties are used directly.
+    -   The value stored in the form state is the `value` property, not the whole option object.
+
+    ```tsx
+    const options: SelectFieldOption[] = [
+        { value: "chocolate", label: "Chocolate" },
+        { value: "strawberry", label: "Strawberry" },
+        { value: "raspberry", label: "Raspberry", disabled: true },
+    ];
+
+    // ...
+
+    <SelectField name="flavor" label="Select a flavor" options={options} fullWidth />;
+    ```
+
+-   cab7c427a: Add support for downloading previously uploaded files to `FileUploadField`
+-   1ca46e8da: Add support for `badgeContent` prop in `MenuItemRouterLink`
+
+    **Example usage in `masterMenuData`:**
+
+    ```ts
+    const masterMenuData = [
+        // ...
+        {
+            type: "route",
+            primary: "Some Route",
+            to: "/someRoute",
+            badgeContent: 2,
+        },
+        // ...
+    ];
+    ```
+
+    **Example usage as element:**
+
+    ```tsx
+    <MenuItemRouterLink primary="Some Route" to="/someRoute" badgeContent={2} />
+    ```
+
+-   1ca46e8da: Extend `MenuItemAnchorLink` to define a correctly styled `LinkExternal` icon if no `secondaryAction` is passed
+-   bef162a60: Add possibility for uncontrolled (promise-based) behavior to `FeedbackButton`
+
+    Previously the `FeedbackButton` was controlled by the props `loading` and `hasErrors`. To enable more use cases and easier usage, a promise-based way was added. If neither of the mentioned props are passed, the component uses the promise returned by `onClick` to evaluate the idle, loading and error state.
+
+-   3e013b05d: Add the ability to disable individual `CheckboxListField` and `RadioGroupField` options
+
+    ```tsx
+    const options = [
+        {
+            label: "Selectable",
+            value: "selectable",
+        },
+        {
+            label: "Disabled",
+            value: "disabled",
+            disabled: true,
+        },
+    ];
+
+    const FormFields = () => (
+        <>
+            <CheckboxListField label="Checkbox List" name="checkboxList" options={options} />
+            <RadioGroupField label="Radio Group" name="radioGroup" fullWdth options={options} />
+        </>
+    );
+    ```
+
+### Patch Changes
+
+-   48d1403d7: Fix `FieldContainer` layout on first render
+
+    Previously, `FieldContainer` displayed vertically on desktop instead of horizontally due to the container width not being available during the first render (because `ref.current` was null).
+    The layout corrected itself after interacting with the field, triggering a rerender.
+
+    Now, the rerender is triggered automatically when `ref.current` is set resulting in the correct layout from the start.
+
+-   bc1ed880a: FinalFormSelect: Fix value `0` and `false` not being clearable
+    -   @comet/admin-icons@7.4.0
+    -   @comet/admin-theme@7.4.0
+
+## 7.3.2
+
+### Patch Changes
+
+-   2286234e5: Update required validator in `Field` to correctly handle falsey values
+
+    Previously, the validator incorrectly returned errors for all falsey values, e.g. the number `0`.
+    Now, it only returns an error for `undefined`, `null`, `false` and empty strings.
+
+    -   @comet/admin-icons@7.3.2
+    -   @comet/admin-theme@7.3.2
+
+## 7.3.1
+
+### Patch Changes
+
+-   91bfda996: Fix validation for `NumberField` and `FinalFormNumberInput` by calling the `onBlur` event, passed in by the `Field`
+    -   @comet/admin-icons@7.3.1
+    -   @comet/admin-theme@7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   6a1310cf6: Deprecate FinalForm components where a Field component exists as a simpler alternative
+
+    -   Use `<AutocompleteField />` instead of `<Field component={FinalFormAutocomplete} />`
+    -   Use `<CheckboxField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormCheckbox />`
+    -   Use `<AsyncAutocompleteField />` instead of `<Field component={FinalFormAsyncAutocomplete} />`
+    -   Use `<AsyncSelectField />` instead of `<Field component={FinalFormAsyncSelect} />`
+    -   Use `<NumberField />` instead of `<Field component={FinalFormNumberInput} />`
+    -   Use `<SearchField />` instead of `<Field component={FinalFormSearchTextField} />`
+    -   Use `<SelectField />` instead of `<Field />` with `<FinalFormSelect />`
+    -   Use `<SwitchField />` instead of `<Field />` with `<FormControlLabel />` and `<FinalFormSwitch />`
+    -   Use `<DateField />` instead of `<Field component={FinalFormDatePicker} />`
+    -   Use `<DateRangeField />` instead of `<Field component={FinalFormDateRangePicker} />`
+    -   Use `<DateTimeField />` instead of `<Field component={FinalFormDateTimePicker} />`
+    -   Use `<TimeField />` instead of `<Field component={FinalFormTimePicker} />`
+    -   Use `<TimeRangeField />` instead of `<Field component={FinalFormTimeRangePicker} />`
+    -   Use `<ColorField />` instead of `<Field component={FinalFormColorPicker} />`
+
+-   Updated dependencies [5364ecb37]
+-   Updated dependencies [a1f4c0dec]
+-   Updated dependencies [2ab7b688e]
+    -   @comet/admin-icons@7.3.0
+    -   @comet/admin-theme@7.3.0
+
 ## 7.2.1
 
 ### Patch Changes
