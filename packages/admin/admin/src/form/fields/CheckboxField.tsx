@@ -1,4 +1,5 @@
-import { Checkbox, CheckboxProps, FormControlLabel, FormControlLabelProps } from "@mui/material";
+import { Checkbox, FormControlLabel, FormControlLabelProps } from "@mui/material";
+import { FinalFormCheckboxProps } from "form/Checkbox";
 
 import { Field, FieldProps } from "../Field";
 
@@ -6,12 +7,12 @@ export interface CheckboxFieldProps extends FieldProps<string, HTMLInputElement>
     fieldLabel?: string;
     componentsProps?: {
         formControlLabel?: FormControlLabelProps;
-        formCheckbox?: CheckboxProps;
+        finalFormCheckbox?: FinalFormCheckboxProps;
     };
 }
 
 export const CheckboxField = ({ fieldLabel, label, componentsProps = {}, ...restProps }: CheckboxFieldProps) => {
-    const { formControlLabel: formControlLabelProps, formCheckbox: formCheckboxProps } = componentsProps;
+    const { formControlLabel: formControlLabelProps, finalFormCheckbox: formCheckboxProps } = componentsProps;
     return (
         <Field type="checkbox" label={fieldLabel} {...restProps}>
             {({ input: { value, onChange, name } }) => (
