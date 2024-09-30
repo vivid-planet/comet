@@ -236,7 +236,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             />
 
                             <TextAreaField
-                                required
                                 variant="horizontal"
                                 fullWidth
                                 name="description"

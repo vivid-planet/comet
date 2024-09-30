@@ -93,13 +93,13 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field()
     slug: string;
 
-    @Property()
-    @Field()
-    description: string;
+    @Property({ nullable: true })
+    @Field({ nullable: true })
+    description?: string;
 
-    @Enum({ items: () => ProductType })
-    @Field(() => ProductType)
-    type: ProductType;
+    @Enum({ items: () => ProductType, nullable: true })
+    @Field(() => ProductType, { nullable: true })
+    type?: ProductType;
 
     @Field(() => [ProductType])
     @Enum({ items: () => ProductType, array: true })

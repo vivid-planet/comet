@@ -15,6 +15,7 @@ import {
 import { ContentScope } from "@src/common/ContentScopeProvider";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
+import { ExamplePage } from "@src/examples/ExamplePage";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
@@ -55,6 +56,15 @@ export const masterMenuData: MasterMenuData = [
         route: {
             path: "/dashboard",
             component: Dashboard,
+        },
+    },
+    {
+        type: "route",
+        primary: <FormattedMessage id="menu.generatorExample" defaultMessage="Generator Example" />,
+        icon: <>🔥</>,
+        route: {
+            path: "/generator-example-page",
+            component: ExamplePage,
         },
     },
     {

@@ -17,7 +17,6 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { FormControlLabel } from "@mui/material";
-import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -40,11 +39,7 @@ type FormValues = GQLCreateCapProductFormDetailsFragment & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-interface FormProps {
-    type: GQLProductType;
-}
-
-export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
+export function CreateCapProductForm(): React.ReactElement {
     const client = useApolloClient();
 
     const formApiRef = useFormApiRef<FormValues>();
@@ -64,7 +59,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
 
         const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
             mutation: createProductMutation,
-            variables: { input: { ...output, type } },
+            variables: { input: output },
         });
         if (!event.navigatingBack) {
             const id = mutationResponse?.createProduct.id;
@@ -105,7 +100,6 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                     />
 
                     <TextAreaField
-                        required
                         variant="horizontal"
                         fullWidth
                         name="description"

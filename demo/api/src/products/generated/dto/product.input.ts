@@ -31,15 +31,15 @@ export class ProductInput {
     @Field()
     slug: string;
 
-    @IsNotEmpty()
+    @IsNullable()
     @IsString()
-    @Field()
-    description: string;
+    @Field({ nullable: true, defaultValue: null })
+    description?: string;
 
-    @IsNotEmpty()
+    @IsNullable()
     @IsEnum(ProductType)
-    @Field(() => ProductType)
-    type: ProductType;
+    @Field(() => ProductType, { nullable: true, defaultValue: null })
+    type?: ProductType;
 
     @IsEnum(ProductType, { each: true })
     @Field(() => [ProductType], { defaultValue: [] })

@@ -186,7 +186,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             label={<FormattedMessage id="product.slug" defaultMessage="Slug" />}
                         />
                         <TextField
-                            required
                             variant="horizontal"
                             fullWidth
                             name="description"
