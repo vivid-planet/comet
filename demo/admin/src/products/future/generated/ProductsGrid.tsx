@@ -10,6 +10,7 @@ import {
     GridCellContent,
     GridColDef,
     GridFilterButton,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
@@ -93,7 +94,7 @@ function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: Rea
             <CrudMoreActionsMenu
                 overallActions={[
                     {
-                        label: <FormattedMessage id="product.downloadAsExcel" defaultMessage="Download as Excel" />,
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
                         icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
                         onClick: () => exportApi.exportGrid(),
                         disabled: exportApi.loading,
