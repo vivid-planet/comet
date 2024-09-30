@@ -214,7 +214,7 @@ export function AssignedProductsGrid({ filter, toolbarAction, rowAction }: Props
             renderCell: (params) => {
                 return (
                     <>
-                        <ProductsGridPreviewAction product={params.row} />
+                        <ProductsGridPreviewAction {...params} />
                         {rowAction && rowAction(params)}
                     </>
                 );
