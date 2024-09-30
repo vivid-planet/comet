@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import gql, { useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
     GridCellContent,
@@ -17,7 +17,6 @@ import { useTheme } from "@mui/material";
 import { GridCallbackDetails } from "@mui/x-data-grid/models/api";
 import { GridInputSelectionModel, GridSelectionModel } from "@mui/x-data-grid/models/gridSelectionModel";
 import { DataGridPro, GridFilterInputSingleSelect, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import gql from "graphql-tag";
 import * as React from "react";
 import { FormattedNumber, useIntl } from "react-intl";
 
