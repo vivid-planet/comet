@@ -89,7 +89,7 @@ const renderMoreActionsMenu = (formattedMessageIdPrefix: string, excelExport: bo
             ${
                 excelExport
                     ? `{
-                label: ${getFormattedMessageNode(`${formattedMessageIdPrefix}.downloadAsExcel`, `Download as Excel`)},
+                label: <FormattedMessage {...messages.downloadAsExcel} />,
                 icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
                 onClick: () => exportApi.exportGrid(),
                 disabled: exportApi.loading,

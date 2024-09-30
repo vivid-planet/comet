@@ -494,6 +494,7 @@ export function generateGrid(
         GridCellContent,
         GridColDef,
         renderStaticSelectCell,
+        messages,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
