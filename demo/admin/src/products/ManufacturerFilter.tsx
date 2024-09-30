@@ -38,7 +38,7 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
             size="small"
             options={data?.manufacturers.nodes ?? []}
             autoHighlight
-            value={item.value}
+            value={item.value ? item.value : null}
             filterOptions={(x) => x} // disable local filtering
             isOptionEqualToValue={(option, value) => {
                 // does only highlight the selected value in options-list but does not trigger getOptionLabel-Call
@@ -56,7 +56,7 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
                 <TextField
                     {...params}
                     placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
-                    value={search}
+                    value={search ? search : null}
                     onChange={(event) => {
                         setSearch(event.target.value);
                     }}
