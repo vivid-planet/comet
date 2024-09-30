@@ -2,12 +2,9 @@ import { parseAspectRatio } from "./Image";
 
 describe("Image: parseAspectRatio", () => {
     it("should throw Error if invalid value", () => {
-        try {
-            expect(parseAspectRatio("xy")).toThrowError();
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            expect(error.message).toBe("An error occurred while parsing the aspect ratio: xy");
-        }
+        expect(() => {
+            parseAspectRatio("xy");
+        }).toThrowError("An error occurred while parsing the aspect ratio: xy");
     });
     it("should work with single integer value", () => {
         expect(parseAspectRatio(4)).toBeCloseTo(4 / 1);
@@ -28,17 +25,18 @@ describe("Image: parseAspectRatio", () => {
         expect(parseAspectRatio("4:3")).toBeCloseTo(4 / 3);
     });
     it("should not work with Infinity", () => {
-        try {
-            expect(parseAspectRatio("Infinity")).toThrowError();
-        } catch (error) {
-            /* empty */
-        }
+        expect(() => {
+            parseAspectRatio("Infinity");
+        }).toThrowError();
     });
     it("should not work with -Infinity", () => {
-        try {
-            expect(parseAspectRatio(-Infinity)).toThrowError();
-        } catch (error) {
-            /* empty */
-        }
+        expect(() => {
+            parseAspectRatio(-Infinity);
+        }).toThrowError();
+    });
+    it("should not work with Infinity string value with x", () => {
+        expect(() => {
+            parseAspectRatio("Infinityx2");
+        }).toThrowError();
     });
 });
