@@ -4,11 +4,10 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
 import { IconButton, InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ReactNode, useCallback } from "react";
+import { useCallback } from "react";
 import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLLicenseType } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
@@ -22,6 +21,7 @@ import {
     GQLGenerateImageTitleMutation,
     GQLGenerateImageTitleMutationVariables,
 } from "./FileSettingsFields.gql.generated";
+import { LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
 
 interface SettingsFormProps {
     file: DamFileDetails;
@@ -32,16 +32,6 @@ const damIsFilenameOccupiedQuery = gql`
         damIsFilenameOccupied(filename: $filename, folderId: $folderId, scope: $scope)
     }
 `;
-
-export type LicenseType = GQLLicenseType | "NO_LICENSE";
-
-const licenseTypeArray: readonly LicenseType[] = ["NO_LICENSE", "ROYALTY_FREE", "RIGHTS_MANAGED"];
-
-export const licenseTypeLabels: { [key in LicenseType]: ReactNode } = {
-    NO_LICENSE: "-",
-    ROYALTY_FREE: <FormattedMessage id="comet.dam.file.licenseType.royaltyFree" defaultMessage="Royalty free" />,
-    RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
-};
 
 export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const folderId = file.folder?.id ?? null;

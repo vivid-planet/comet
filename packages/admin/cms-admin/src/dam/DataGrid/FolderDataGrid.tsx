@@ -23,7 +23,7 @@ import { useDamAcceptedMimeTypes } from "../config/useDamAcceptedMimeTypes";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { DamConfig, DamFilter } from "../DamTable";
-import { licenseTypeLabels } from "../FileForm/FileSettingsFields";
+import { licenseTypeLabels } from "../FileForm/licenseType";
 import AddFolder from "../FolderForm/AddFolder";
 import EditFolder from "../FolderForm/EditFolder";
 import { isFile } from "../helpers/isFile";
