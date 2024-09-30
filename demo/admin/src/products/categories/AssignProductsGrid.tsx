@@ -9,7 +9,7 @@ import {
 } from "@src/products/categories/AssignProductsGrid.generated";
 import { ProductsSelectGrid } from "@src/products/categories/ProductsSelectGrid";
 import isEqual from "lodash.isequal";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 const setProductCategoryMutation = gql`
@@ -44,13 +44,10 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
         },
     );
 
-    const initialValues = useMemo(() => {
-        return data?.products.nodes ? data.products.nodes.map((product) => product.id) : [];
-    }, [data]);
-    const [values, setValues] = useState<string[]>(initialValues);
+    const [values, setValues] = useState<string[]>(data?.products.nodes ? data.products.nodes.map((product) => product.id) : []);
     useEffect(() => {
-        setValues(initialValues);
-    }, [initialValues]);
+        if (data?.products.nodes) setValues(data.products.nodes.map((product) => product.id));
+    }, [data?.products.nodes]);
 
     if (error) return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
     if (loading) return <CircularProgress />;
@@ -66,9 +63,9 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
                     });
                     return true;
                 }}
-                hasChanges={!isEqual(initialValues.sort(), values.sort())}
+                hasChanges={!isEqual((data?.products.nodes.map((product) => product.id) ?? []).sort(), values.sort())}
                 doReset={() => {
-                    setValues(initialValues);
+                    setValues(data?.products.nodes.map((product) => product.id) ?? []);
                 }}
             />
             <ProductsSelectGrid
