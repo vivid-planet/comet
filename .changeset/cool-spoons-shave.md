@@ -4,13 +4,14 @@
 
 Add search results highlighting to `ContentScopeSelect`
 
-Add helper function `findTextMatches`to `"@comet/cms-admin"`
-This helper can be used to add Search Highlighting to Custom render options:
+Also, add the helper function `findTextMatches`, which can be used to add search highlighting to a custom `renderOption` implementation:
 
-```
-renderOption={(option, query) => {
-    const text =`${option.domain.label} – ${option.language.label}`;
-    const matches = findTextMatches(text, query);
-    return <ListItemText primary={<MarkedMatches text={text} matches={matches} />} />;
-}}
+```tsx
+<ContentScopeSelect
+    renderOption={(option, query) => {
+        const text = `${option.domain.label} – ${option.language.label}`;
+        const matches = findTextMatches(text, query);
+        return <ListItemText primary={<MarkedMatches text={text} matches={matches} />} />;
+    }}
+/>
 ```
