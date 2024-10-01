@@ -169,7 +169,9 @@ export function generateFormField({
             : `String(data.${dataRootName}.${nameWithPrefix})`;
         if (!required) {
             initializationAssignment = optionalRender
-                ? `show${name[0].toUpperCase() + name.substring(1)} && data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`
+                ? `show${
+                      name[0].toUpperCase() + name.substring(1)
+                  } && data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`
                 : `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
         }
         formValuesConfig = [
