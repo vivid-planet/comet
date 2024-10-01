@@ -172,11 +172,13 @@ The following files should be copied:
 
 We use a combination of a redirect and a rewrite in the middleware to ensure that a predefined page can be viewed at the expected location in the page tree.
 
-**Example:** The news page in the code at `https://example.com/news` should be rendered in the page tree at `https://example.com/company/news`.
-We need the following redirect and rewrite:
+For example, consider a Comet website that is available in English and German.
+For the German site, the news page should be located at `https://example.com/de/aktuelles`.
+However, in code, the news page is located at `/app/[language]/news`, resulting in `https://example.com/de/news`.
+To ensure that the page can be viewed at the expected location, we need the following redirect and rewrite:
 
--   A **rewrite** from `/company/news` to `/news` (to ensure that the page can be viewed at the expected location)
--   A **redirect** from `/news` to `/company/news` (to avoid duplicate content)
+-   A **rewrite** from `/de/aktuelles` to `/de/news` (to ensure that the page can be viewed at the expected location)
+-   A **redirect** from `/de/news` to `/de/aktuelles` (to avoid duplicate content)
 
 Perform the following changes in the middleware:
 
