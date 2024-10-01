@@ -52,5 +52,6 @@ export const messages = defineMessages({
     columns: { id: "comet.generic.columns", defaultMessage: "Columns" },
     copyUrl: { id: "comet.generic.copyUrl", defaultMessage: "Copy URL" },
     deleteItem: { id: "comet.generic.deleteItem", defaultMessage: "Delete Item" },
+    downloadAsExcel: { id: "comet.generic.downloadAsExcel", defaultMessage: "Download as Excel" },
     empty: { id: "comet.generic.empty", defaultMessage: "Empty" },
 });

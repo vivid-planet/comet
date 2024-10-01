@@ -1,6 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    CrudMoreActionsMenu,
     CrudVisibility,
     DataGridToolbar,
     ExportApi,
@@ -10,6 +11,7 @@ import {
     GridColumnsButton,
     GridFilterButton,
     MainContent,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
@@ -21,12 +23,11 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, Excel, MoreVertical, StateFilled as StateFilledIcon } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, Excel, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, CircularProgress, IconButton, Menu, MenuItem, useTheme } from "@mui/material";
+import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
-import { useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -45,9 +46,6 @@ import {
 import { ProductsGridPreviewAction } from "./ProductsGridPreviewAction";
 
 function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
-    const [showMoreMenu, setShowMoreMenu] = useState<boolean>(false);
-    const moreMenuRef = useRef<HTMLButtonElement>(null);
-
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -61,30 +59,18 @@ function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
                 <GridColumnsButton />
             </ToolbarItem>
             <ToolbarItem>
-                <Button
-                    variant="text"
-                    ref={moreMenuRef}
-                    onClick={() => {
-                        setShowMoreMenu(true);
-                    }}
-                    endIcon={<MoreVertical />}
-                >
-                    <FormattedMessage id="products.moreActions" defaultMessage="More actions" />
-                </Button>
-                <Menu
-                    open={showMoreMenu}
-                    onClose={() => setShowMoreMenu(false)}
-                    anchorEl={moreMenuRef.current}
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                    }}
-                >
-                    <MenuItem onClick={() => exportApi.exportGrid()} disabled={exportApi.loading}>
-                        {exportApi.loading ? <CircularProgress size={20} sx={{ marginRight: "10px" }} /> : <Excel sx={{ marginRight: "10px" }} />}
-                        <FormattedMessage id="products.downloadAsExcel" defaultMessage="Download as Excel" />
-                    </MenuItem>
-                </Menu>
+                <CrudMoreActionsMenu
+                    overallActions={[
+                        {
+                            icon: <Excel sx={{ marginRight: "10px" }} />,
+                            label: <FormattedMessage {...messages.downloadAsExcel} />,
+                            disabled: exportApi.loading,
+                            onClick: () => {
+                                exportApi.exportGrid();
+                            },
+                        },
+                    ]}
+                />
             </ToolbarItem>
             <ToolbarItem>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
@@ -355,7 +341,7 @@ export function ProductsGrid() {
                     Toolbar: ProductsGridToolbar,
                 }}
                 componentsProps={{
-                    toolbar: { exportApi: exportApi },
+                    toolbar: { exportApi },
                 }}
             />
         </MainContent>
