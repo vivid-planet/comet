@@ -26,7 +26,6 @@ import { DamImageBlock } from "@comet/cms-admin";
 import { Button, CircularProgress, IconButton, Menu, MenuItem, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
-import * as React from "react";
 import { useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
