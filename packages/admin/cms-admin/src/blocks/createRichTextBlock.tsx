@@ -11,7 +11,6 @@ import {
     RawDraftContentState,
 } from "draft-js";
 import isEqual from "lodash.isequal";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";

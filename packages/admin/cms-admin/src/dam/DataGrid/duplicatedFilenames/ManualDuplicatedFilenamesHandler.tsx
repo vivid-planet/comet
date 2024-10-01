@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import * as React from "react";
+import { createContext, ReactNode, useCallback, useContext, useState } from "react";
 
 import { GQLFilenameResponse } from "../../../graphql.generated";
 import { useDamScope } from "../../config/useDamScope";
@@ -17,21 +17,21 @@ export interface FilenameData {
     folderId?: string;
 }
 
-export const ManualDuplicatedFilenamesHandlerContext = React.createContext<ManualDuplicatedFilenamesHandlerApi | undefined>(undefined);
+export const ManualDuplicatedFilenamesHandlerContext = createContext<ManualDuplicatedFilenamesHandlerApi | undefined>(undefined);
 
 export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenamesHandlerApi | undefined => {
-    return React.useContext(ManualDuplicatedFilenamesHandlerContext);
+    return useContext(ManualDuplicatedFilenamesHandlerContext);
 };
 
-export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComponent = ({ children }) => {
+export const ManualDuplicatedFilenamesHandlerContextProvider = ({ children }: { children?: ReactNode }) => {
     const client = useApolloClient();
     const scope = useDamScope();
 
-    const [occupiedFilenames, setOccupiedFilenames] = React.useState<FilenameData[]>([]);
-    const [unoccupiedFilenames, setUnoccupiedFilenames] = React.useState<FilenameData[]>([]);
-    const [callback, setCallback] = React.useState<(newFilenames: FilenameData[]) => unknown>();
+    const [occupiedFilenames, setOccupiedFilenames] = useState<FilenameData[]>([]);
+    const [unoccupiedFilenames, setUnoccupiedFilenames] = useState<FilenameData[]>([]);
+    const [callback, setCallback] = useState<(newFilenames: FilenameData[]) => unknown>();
 
-    const checkForDuplicates = React.useCallback(
+    const checkForDuplicates = useCallback(
         async (filenameData: FilenameData[]) => {
             const { data } = await client.query<GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables>({
                 query: damAreFilenamesOccupied,
@@ -50,7 +50,7 @@ export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComp
         [client, scope],
     );
 
-    const letUserHandleDuplicates = React.useCallback(
+    const letUserHandleDuplicates = useCallback(
         async (fileData: FilenameData[]): Promise<FilenameData[]> => {
             const potentialDuplicates = await checkForDuplicates(fileData);
 
