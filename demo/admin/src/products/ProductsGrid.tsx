@@ -25,7 +25,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Excel, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { Button, IconButton, useTheme } from "@mui/material";
+import { Button, CircularProgress, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -62,12 +62,10 @@ function ProductsGridToolbar({ exportApi }: { exportApi: ExportApi }) {
                 <CrudMoreActionsMenu
                     overallActions={[
                         {
-                            icon: <Excel sx={{ marginRight: "10px" }} />,
                             label: <FormattedMessage {...messages.downloadAsExcel} />,
+                            icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                            onClick: () => exportApi.exportGrid(),
                             disabled: exportApi.loading,
-                            onClick: () => {
-                                exportApi.exportGrid();
-                            },
                         },
                     ]}
                 />
