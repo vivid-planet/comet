@@ -1,5 +1,5 @@
 import { RouteWithErrorBoundary } from "@comet/admin";
-import * as React from "react";
+import { ReactNode } from "react";
 import { Redirect, RouteProps, Switch, useRouteMatch } from "react-router-dom";
 
 import { useUserPermissionCheck } from "../userPermissions/hooks/currentUser";
@@ -9,7 +9,7 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
     const isAllowed = useUserPermissionCheck();
     const checkPermission = (item: MasterMenuItem): boolean => !item.requiredPermission || isAllowed(item.requiredPermission);
 
-    const flat = (routes: RouteProps[], item: MasterMenuItem & { icon?: React.ReactNode }): RouteProps[] => {
+    const flat = (routes: RouteProps[], item: MasterMenuItem & { icon?: ReactNode }): RouteProps[] => {
         if (item.type === "externalLink") {
             return routes;
         }
@@ -20,7 +20,7 @@ export function useRoutePropsFromMasterMenuData(items: MasterMenuData): RoutePro
             routes.push(item.route);
         }
         if (item.type === "collapsible" && !!item.items?.length) {
-            routes.concat((item.items as Array<MasterMenuItem & { icon?: React.ReactNode }>).reduce(flat, routes));
+            routes.concat((item.items as Array<MasterMenuItem & { icon?: ReactNode }>).reduce(flat, routes));
         }
         return routes;
     };
@@ -31,7 +31,7 @@ export interface MasterMenuRoutesProps {
     menu: MasterMenuData;
 }
 
-export const MasterMenuRoutes: React.FC<MasterMenuRoutesProps> = ({ menu }) => {
+export const MasterMenuRoutes = ({ menu }: MasterMenuRoutesProps) => {
     const routes = useRoutePropsFromMasterMenuData(menu);
     const match = useRouteMatch();
 

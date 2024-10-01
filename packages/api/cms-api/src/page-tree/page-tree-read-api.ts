@@ -1,4 +1,4 @@
-import { FilterQuery, NotFoundError } from "@mikro-orm/core";
+import { NotFoundError } from "@mikro-orm/core";
 import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import opentelemetry from "@opentelemetry/api";
 import { compareAsc, compareDesc, isEqual } from "date-fns";
@@ -311,12 +311,6 @@ export function createReadApi(
         },
 
         async getNodeByPath(path, options = {}) {
-            const where: FilterQuery<PageTreeNodeInterface> = { visibility: visibilityFilter };
-
-            if (options.scope) {
-                where.scope = options.scope;
-            }
-
             if (path === "/") {
                 const nodes = await queryNodes(options.scope, {
                     slug: "home",

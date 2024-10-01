@@ -1,10 +1,37 @@
-import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormFieldConfig } from "../generator";
+import { FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
-import { GenerateFieldsReturn } from "./generateFields";
+import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
+
+function getTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
+    let typeKind = undefined;
+    let typeClass = "unknown";
+    let required = false;
+    let type = arg.type;
+
+    if (type.kind === "NON_NULL") {
+        required = true;
+        type = type.ofType;
+    }
+    if (type.kind === "INPUT_OBJECT") {
+        typeClass = type.name;
+        typeKind = type.kind;
+    } else if (type.kind === "ENUM") {
+        typeClass = type.name;
+        typeKind = type.kind;
+    } else {
+        throw new Error(`Resolving kind ${type.kind} currently not supported.`);
+    }
+    return {
+        required,
+        typeKind,
+        typeClass,
+    };
+}
 
 export function generateFormField({
     gqlIntrospection,
@@ -57,6 +84,7 @@ export function generateFormField({
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
+    let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
 
     let validateCode = "";
     if (config.validate) {
@@ -225,6 +253,7 @@ export function generateFormField({
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+
         const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
             if (typeof value === "string") {
                 return {
@@ -235,7 +264,29 @@ export function generateFormField({
                 return value;
             }
         });
-        code = `<Field
+
+        const renderAsRadio = config.inputType === "radio" || (required && values.length <= 5 && config.inputType !== "select");
+        if (renderAsRadio) {
+            code = `<RadioGroupField
+             ${required ? "required" : ""}
+              variant="horizontal"
+             fullWidth
+             name="${name}"
+             label={<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />}
+             options={[
+                  ${values
+                      .map((value) => {
+                          return `{
+                                label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
+                              value.value.charAt(0).toLowerCase() + value.value.slice(1)
+                          }" defaultMessage="${value.label}" />,
+                                value: "${value.value}",
+                            }`;
+                      })
+                      .join(",")}
+            ]}/>`;
+        } else {
+            code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
             fullWidth
@@ -261,6 +312,7 @@ export function generateFormField({
                 </FinalFormSelect>
             }
         </Field>`;
+        }
     } else if (config.type == "asyncSelect") {
         if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
         const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
@@ -295,9 +347,69 @@ export function generateFormField({
 
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
+        const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
 
         formFragmentField = `${name} { id ${labelField} }`;
+
+        const filterConfig = config.filterField
+            ? (() => {
+                  const filterField = findFieldByName(config.filterField.name, formConfig.fields);
+                  if (!filterField) {
+                      throw new Error(
+                          `Field ${String(config.name)}: No field with name "${
+                              config.filterField?.name
+                          }" referenced as filterField found in form-config.`,
+                      );
+                  }
+                  if (!isFormFieldConfig(filterField)) {
+                      throw new Error(
+                          `Field ${String(config.name)}: Field with name "${config.filterField?.name}" referenced as filterField is no FormField.`,
+                      );
+                  }
+
+                  const gqlName = config.filterField.gqlName ?? config.filterField.name;
+
+                  // try to find arg used to filter by checking names of root-props and filter-prop-fields
+                  const rootArgForName = rootQueryType.args.find((arg) => arg.name === gqlName);
+                  let filterType = rootArgForName ? getTypeInfo(rootArgForName, gqlIntrospection) : undefined;
+                  let filterVarName = undefined;
+                  let filterVarValue = undefined;
+
+                  if (filterType) {
+                      // there is a root-prop with same name, so the dev probably wants to filter with this prop
+                      filterVarName = gqlName;
+                      filterVarValue = `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
+                  } else {
+                      // no root-prop with same name, check filter-prop-fields
+                      const rootArgFilter = rootQueryType.args.find((arg) => arg.name === "filter");
+                      filterType = rootArgFilter ? getTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
+                      if (filterType) {
+                          filterVarName = "filter";
+                          filterVarValue = `{ ${gqlName}: { equal: values.${
+                              filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
+                          } } }`;
+                      } else {
+                          throw new Error(
+                              `Neither filter-prop nor root-prop with name: ${gqlName} for asyncSelect-query not found. Consider setting filterField.gqlVarName explicitly.`,
+                          );
+                      }
+                  }
+
+                  return {
+                      filterField,
+                      filterType,
+                      filterVarName,
+                      filterVarValue,
+                  };
+              })()
+            : undefined;
+        if (filterConfig) {
+            imports.push({ name: "OnChangeField", importPath: "@comet/admin" });
+            finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
+        }
+
         formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
+
         imports.push({
             name: `GQL${queryName}Query`,
             importPath: `./${baseOutputFilename}.generated`,
@@ -315,19 +427,32 @@ export function generateFormField({
                 label={${fieldLabel}}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
-                        query: gql\`query ${queryName} {
-                            ${rootQuery} {
+                        query: gql\`query ${queryName}${
+            filterConfig ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})` : ``
+        } {
+                            ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
                                 nodes {
                                     id
                                     ${labelField}
                                 }
                             }
-                        }\`
+                        }\`${filterConfig ? `, variables: { ${filterConfig.filterVarName}: ${filterConfig.filterVarValue} }` : ``}
                     });
                     return data.${rootQuery}.nodes;
                 }}
                 getOptionLabel={(option) => option.${labelField}}
-            />`;
+                ${filterConfig ? `disabled={!values?.${String(filterConfig.filterField.name)}}` : ``}
+            />${
+                filterConfig
+                    ? `<OnChangeField name="${String(filterConfig.filterField.name)}">
+                            {(value, previousValue) => {
+                                if (value.id !== previousValue.id) {
+                                    form.change("${String(config.name)}", undefined);
+                                }
+                            }}
+                        </OnChangeField>`
+                    : ``
+            }`;
     } else {
         throw new Error(`Unsupported type`);
     }
@@ -339,5 +464,6 @@ export function generateFormField({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

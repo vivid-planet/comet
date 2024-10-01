@@ -1,5 +1,4 @@
 import { PrettyBytes } from "@comet/admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { formatStrong } from "../../../common/errors/errorMessages";
@@ -8,7 +7,7 @@ interface FileSizeErrorProps {
     maxFileSizeInBytes: number;
 }
 
-export const FileSizeError = ({ maxFileSizeInBytes }: FileSizeErrorProps): React.ReactElement => (
+export const FileSizeError = ({ maxFileSizeInBytes }: FileSizeErrorProps) => (
     <FormattedMessage
         id="comet.file.errors.fileSize"
         defaultMessage="<strong>File is too big.</strong> The maximum permitted file size is {maxFileSizeInMegabytes}. Please compress the file and try again."
@@ -23,7 +22,7 @@ interface UnsupportedTypeErrorProps {
     extension: string;
 }
 
-export const UnsupportedTypeError = ({ extension }: UnsupportedTypeErrorProps): React.ReactElement => (
+export const UnsupportedTypeError = ({ extension }: UnsupportedTypeErrorProps) => (
     <FormattedMessage
         id="comet.file.errors.unsupportedType"
         defaultMessage="<strong>Unsupported file type.</strong> Files with {extension} extension are not permitted. Please use a different file format and try again."
@@ -38,7 +37,7 @@ interface MaxResolutionErrorProps {
     maxResolution: number;
 }
 
-export const MaxResolutionError = ({ maxResolution }: MaxResolutionErrorProps): React.ReactElement => (
+export const MaxResolutionError = ({ maxResolution }: MaxResolutionErrorProps) => (
     <FormattedMessage
         id="comet.file.errors.maxResolution"
         defaultMessage="<strong>Image resolution is too big.</strong> The maximum permitted resolution is {maxResolution} megapixels. Please reduce the image resolution and try again."
@@ -49,7 +48,7 @@ export const MaxResolutionError = ({ maxResolution }: MaxResolutionErrorProps): 
     />
 );
 
-export const MissingFileExtensionError = (): React.ReactElement => (
+export const MissingFileExtensionError = () => (
     <FormattedMessage
         id="comet.file.errors.missingFileExtension"
         defaultMessage="<strong>File has no extension.</strong> Please add a correct file extension and try again."
@@ -64,7 +63,7 @@ interface FileExtensionTypeMismatchErrorProps {
     mimetype: string;
 }
 
-export const FileExtensionTypeMismatchError = ({ extension, mimetype }: FileExtensionTypeMismatchErrorProps): React.ReactElement => (
+export const FileExtensionTypeMismatchError = ({ extension, mimetype }: FileExtensionTypeMismatchErrorProps) => (
     <FormattedMessage
         id="comet.file.errors.fileExtensionTypeMismatch"
         defaultMessage="<strong>File extension does not match file type.</strong> File type is {mimetype}, which does not match its {extension} extension. Please use a file extension compatible to the file type."
@@ -76,7 +75,7 @@ export const FileExtensionTypeMismatchError = ({ extension, mimetype }: FileExte
     />
 );
 
-export const SvgContainsJavaScriptError = (): React.ReactElement => (
+export const SvgContainsJavaScriptError = () => (
     <FormattedMessage
         id="comet.file.errors.svgContainsJavaScript"
         defaultMessage="<strong>The SVG contains JavaScript.</strong> JavaScript is not allowed inside SVG files. Please remove all JavaScript code from the file."

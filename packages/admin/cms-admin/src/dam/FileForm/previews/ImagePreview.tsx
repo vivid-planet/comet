@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { ImageCrop } from "../../../common/image/ImageCrop";
 import { DamFileDetails } from "../EditFile";
 
