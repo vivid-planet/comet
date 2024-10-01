@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudVisibility,
     DataGridToolbar,
@@ -20,7 +20,6 @@ import { useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import { ProductsGridPreviewAction } from "@src/products/ProductsGridPreviewAction";
-import { gql } from "@apollo/client";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
