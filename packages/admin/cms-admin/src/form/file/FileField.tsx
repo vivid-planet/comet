@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { Assets } from "@comet/admin-icons";
 import { AdminComponentButton } from "@comet/blocks-admin";
-import * as React from "react";
+import { useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -16,8 +16,8 @@ interface FileFieldProps extends FieldRenderProps<GQLDamFileFieldFileFragment, H
     allowedMimetypes?: string[];
 }
 
-const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps): React.ReactElement => {
-    const [chooseFileDialogOpen, setChooseFileDialogOpen] = React.useState<boolean>(false);
+const FileField = ({ buttonText, input, allowedMimetypes }: FileFieldProps) => {
+    const [chooseFileDialogOpen, setChooseFileDialogOpen] = useState<boolean>(false);
     const client = useApolloClient();
 
     return (

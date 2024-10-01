@@ -23,14 +23,40 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "text", name: "slug" },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
-                { type: "staticSelect", name: "type", label: "Type", required: true, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
+                {
+                    type: "staticSelect",
+                    name: "type",
+                    label: "Type",
+                    required: true,
+                    inputType: "radio",
+                    values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
+                },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+                {
+                    type: "optionalNestedFields",
+                    name: "dimensions",
+                    checkboxLabel: "Configure dimensions",
+                    fields: [
+                        { type: "number", name: "width", label: "Width" },
+                        { type: "number", name: "height", label: "Height" },
+                        { type: "number", name: "depth", label: "Depth" },
+                    ],
+                },
             ],
         },
         {
             type: "fieldSet",
             name: "additionalData",
             fields: [
+                {
+                    type: "asyncSelect",
+                    name: "manufacturer",
+                    rootQuery: "manufacturers",
+                    filterField: {
+                        name: "type",
+                        gqlName: "addressAsEmbeddable_country",
+                    },
+                },
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince" },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },

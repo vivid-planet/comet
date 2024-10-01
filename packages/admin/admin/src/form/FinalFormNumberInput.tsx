@@ -43,6 +43,7 @@ export function FinalFormNumberInput({ meta, input, innerRef, clearable, endAdor
     );
 
     const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+        input.onBlur(event);
         const { value } = event.target;
         const numberParts = intl.formatNumberToParts(1111.111);
         const decimalSymbol = numberParts.find(({ type }) => type === "decimal")?.value;

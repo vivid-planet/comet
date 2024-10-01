@@ -7,6 +7,7 @@ import { Field, FieldProps } from "../../form/Field";
 type RadioGroupFieldOption<Value extends string> = {
     label: ReactNode;
     value: Value;
+    disabled?: boolean;
 };
 
 export type RadioGroupFieldProps<Value extends string> = FieldProps<Value, HTMLInputElement> & {
@@ -18,9 +19,9 @@ export const RadioGroupField = <Value extends string>({ options, layout = "row",
     return (
         <Field<Value> {...restProps}>
             {({ input: { checked, value, onBlur, onFocus, ...restInput } }) => (
-                <RadioGroup {...restInput} row={layout === "row"}>
-                    {options.map(({ value, label }) => (
-                        <FormControlLabel key={value} label={label} value={value} control={<MuiRadio />} />
+                <RadioGroup {...restInput} row={layout === "row"} value={value}>
+                    {options.map(({ value, label, disabled }) => (
+                        <FormControlLabel key={value} label={label} value={value} disabled={disabled} control={<MuiRadio />} />
                     ))}
                 </RadioGroup>
             )}
