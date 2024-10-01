@@ -7,22 +7,28 @@ import {
     muiGridSortToGql,
     StackSwitchApiContext,
     ToolbarItem,
+    Tooltip,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
+import { Edit, ImpersonateUser, Reset } from "@comet/admin-icons";
 import { IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useContext } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
+import { useCurrentUser, useUserPermissionCheck } from "./hooks/currentUser";
+import { useImpersonation } from "./hooks/useImpersonation";
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
 export const UserGrid = () => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
     const intl = useIntl();
     const stackApi = useContext(StackSwitchApiContext);
+    const isAllowed = useUserPermissionCheck();
+    const currentUser = useCurrentUser();
+    const { startImpersonation, stopImpersonation } = useImpersonation();
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -48,15 +54,49 @@ export const UserGrid = () => {
             sortable: false,
             pinnable: false,
             filterable: false,
-            renderCell: (params) => (
-                <IconButton
-                    onClick={() => {
-                        stackApi.activatePage("edit", params.id.toString());
-                    }}
-                >
-                    <Edit color="primary" />
-                </IconButton>
-            ),
+            renderCell: (params) => {
+                const isCurrentUser = params.row.id === currentUser.id;
+                const isImpersonated = currentUser.impersonated;
+                return (
+                    <>
+                        {isAllowed("impersonation") && (
+                            <Tooltip
+                                title={
+                                    isCurrentUser ? (
+                                        isImpersonated ? (
+                                            <FormattedMessage id="comet.impersonate.regainIdentity" defaultMessage="Regain original identity" />
+                                        ) : (
+                                            <FormattedMessage id="comet.impersonate.self" defaultMessage="You can't impersonate yourself" />
+                                        )
+                                    ) : (
+                                        <FormattedMessage id="comet.impersonate" defaultMessage="Impersonate" />
+                                    )
+                                }
+                            >
+                                {/* span is needed for the tooltip to trigger even if the button is disabled*/}
+                                <span>
+                                    <IconButton
+                                        disabled={isCurrentUser && !isImpersonated}
+                                        onClick={() => {
+                                            !isCurrentUser && startImpersonation(params.row.id.toString());
+                                            isCurrentUser && isImpersonated && stopImpersonation();
+                                        }}
+                                    >
+                                        {isCurrentUser && isImpersonated ? <Reset /> : <ImpersonateUser />}
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
+                        )}
+                        <IconButton
+                            onClick={() => {
+                                stackApi.activatePage("edit", params.id.toString());
+                            }}
+                        >
+                            <Edit color="primary" />
+                        </IconButton>
+                    </>
+                );
+            },
         },
     ];
 
