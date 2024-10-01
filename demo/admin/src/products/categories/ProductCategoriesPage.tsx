@@ -14,7 +14,6 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import { Box } from "@mui/material";
 import { AssignedProductsTab } from "@src/products/categories/AssignedProductsTab";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -65,9 +64,9 @@ const ProductCategoriesPage = () => {
                                         defaultMessage: "Assigned Products",
                                     })}
                                 >
-                                    <Box sx={{ height: "100vh" }}>
+                                    <MainContent fullHeight disablePadding>
                                         <AssignedProductsTab productCategoryId={selectedId} />
-                                    </Box>
+                                    </MainContent>
                                 </RouterTab>
                             </RouterTabs>
                         </SaveBoundary>
