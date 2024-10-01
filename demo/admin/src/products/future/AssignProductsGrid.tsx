@@ -1,6 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Savable } from "@comet/admin";
-import { CircularProgress } from "@mui/material";
+import { Loading, Savable } from "@comet/admin";
 import {
     GQLGetProductIdsForProductCategoryQuery,
     GQLGetProductIdsForProductCategoryQueryVariables,
@@ -50,7 +49,7 @@ export function AssignProductsGrid({ productCategoryId }: FormProps): React.Reac
     }, [data?.products.nodes]);
 
     if (error) return <FormattedMessage id="common.error" defaultMessage="An error has occured. Please try again at later" />;
-    if (loading) return <CircularProgress />;
+    if (loading) return <Loading />;
 
     return (
         <>
