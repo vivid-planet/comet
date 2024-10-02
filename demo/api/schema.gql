@@ -186,6 +186,7 @@ type FileUpload {
   createdAt: DateTime!
   updatedAt: DateTime!
   downloadUrl: String
+  imageUrl(resizeWidth: Int!): String
 }
 
 type User {
@@ -469,6 +470,7 @@ type ProductCategory {
   id: ID!
   title: String!
   slug: String!
+  position: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   products: [Product!]!
@@ -1066,6 +1068,7 @@ input ProductCategorySort {
 enum ProductCategorySortField {
   title
   slug
+  position
   createdAt
   updatedAt
 }
@@ -1345,7 +1348,7 @@ input NewsInput {
   title: String!
   status: NewsStatus! = Active
   date: DateTime!
-  category: NewsCategory! = Awards
+  category: NewsCategory!
   image: DamImageBlockInput!
   content: NewsContentBlockInput!
 }
@@ -1455,11 +1458,13 @@ input ProductUpdateInput {
 input ProductCategoryInput {
   title: String!
   slug: String!
+  position: Int
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
+  position: Int
 }
 
 input ProductTagInput {

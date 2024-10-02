@@ -47,6 +47,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         id
                         name
                         fileUrl
+                        size
                     }
                 }
             `,
@@ -59,6 +60,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
             id: damFile.id,
             name: damFile.name,
             fileUrl: damFile.fileUrl,
+            size: damFile.size,
         };
 
         return ret;

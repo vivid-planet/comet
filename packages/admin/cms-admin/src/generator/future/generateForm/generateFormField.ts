@@ -217,7 +217,7 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "block") {
-        code = `<Field name="${nameWithPrefix}" isEqual={isEqual}>
+        code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;
