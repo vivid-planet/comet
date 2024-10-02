@@ -1,5 +1,5 @@
 /* eslint-disable @calm/react-intl/missing-formatted-message */
-import React from "react";
+
 import { Redirect, Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
 import { fireEvent, render, waitFor } from "test-utils";

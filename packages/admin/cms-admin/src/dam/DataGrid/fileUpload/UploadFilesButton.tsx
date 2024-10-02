@@ -1,6 +1,6 @@
 import { Upload } from "@comet/admin-icons";
 import { Button } from "@mui/material";
-import * as React from "react";
+import { useRef } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
@@ -14,10 +14,10 @@ interface UploadFilesButtonProps {
     };
 }
 
-export const UploadFilesButton = ({ folderId, filter }: UploadFilesButtonProps): React.ReactElement => {
+export const UploadFilesButton = ({ folderId, filter }: UploadFilesButtonProps) => {
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const {
         uploadFiles,

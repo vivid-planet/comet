@@ -2,7 +2,7 @@ import { useApolloClient } from "@apollo/client";
 import { IEditDialogApi, RowActionsItem, RowActionsMenu, useStackSwitchApi, writeClipboardText } from "@comet/admin";
 import { Add, Delete, Domain, Edit, Preview, PreviewUnavailable, Settings } from "@comet/admin-icons";
 import { Divider } from "@mui/material";
-import React from "react";
+import { PropsWithChildren, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useContentScope } from "../../contentScope/Provider";
@@ -19,18 +19,17 @@ import { usePageTreeContext } from "./usePageTreeContext";
 interface Props {
     page: PageTreePage;
     editDialog: IEditDialogApi;
-    children?: React.ReactNode[];
     siteUrl: string;
 }
 
-export default function PageActions({ page, editDialog, children, siteUrl }: Props): React.ReactElement {
+export default function PageActions({ page, editDialog, children, siteUrl }: PropsWithChildren<Props>) {
     const { tree } = usePageTreeContext();
     const { match: contentScopeMatch } = useContentScope();
     const { documentTypes } = usePageTreeContext();
     const stackSwitchApi = useStackSwitchApi();
     const client = useApolloClient();
 
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const documentType = documentTypes[page.documentType];
     const isEditable = !!(page.visibility !== "Archived" && documentType.editComponent);
 
@@ -57,7 +56,7 @@ export default function PageActions({ page, editDialog, children, siteUrl }: Pro
     return (
         <>
             <RowActionsMenu>
-                {children && children}
+                {children}
                 {page.visibility !== "Archived" && [
                     <RowActionsItem
                         key="edit"

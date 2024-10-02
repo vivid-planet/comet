@@ -140,10 +140,19 @@ export class AppModule {
                 FileUploadsModule.register({
                     maxFileSize: config.fileUploads.maxFileSize,
                     directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
-                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip", "image/png", "image/jpeg", "image/gif"],
+                    acceptedMimeTypes: [
+                        "application/pdf",
+                        "application/x-zip-compressed",
+                        "application/zip",
+                        "image/png",
+                        "image/jpeg",
+                        "image/gif",
+                        "image/webp",
+                    ],
                     upload: {
                         public: true,
                     },
+                    download: { public: true, ...config.fileUploads.download },
                 }),
                 ...(config.contentGeneration
                     ? [

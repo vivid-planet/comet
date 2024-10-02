@@ -1,3 +1,4 @@
+import { GridColDef } from "@comet/admin";
 import {
     IntrospectionEnumType,
     IntrospectionInputObjectType,
@@ -7,14 +8,18 @@ import {
     IntrospectionQuery,
 } from "graphql";
 import { plural } from "pluralize";
+import { ReactNode } from "react";
 
+import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
+import { generateGridToolbar } from "./generateGrid/generateGridToolbar";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { ActionsGridColumnConfig, GeneratorReturn, GridColumnConfig, GridConfig } from "./generator";
+import { ActionsGridColumnConfig, GeneratorReturn, GridColumnConfig, GridConfig, StaticSelectLabelCellContent } from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
+import { findQueryTypeOrThrow } from "./utils/findQueryType";
 import { findRootBlocks } from "./utils/findRootBlocks";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
@@ -25,20 +30,6 @@ function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
         .join("\n")}}`;
-}
-
-function findQueryType(queryName: string, schema: IntrospectionQuery) {
-    const queryType = schema.__schema.types.find((type) => type.name === schema.__schema.queryType.name) as IntrospectionObjectType | undefined;
-    if (!queryType) throw new Error("Can't find Query type in gql schema");
-    const ret = queryType.fields.find((field) => field.name === queryName);
-    if (!ret) throw new Error(`Can't find query ${queryName} in gql schema`);
-    return ret;
-}
-
-function findQueryTypeOrThrow(queryName: string, schema: IntrospectionQuery) {
-    const ret = findQueryType(queryName, schema);
-    if (!ret) throw new Error(`Can't find query ${queryName} in gql schema`);
-    return ret;
 }
 
 export type Prop = { type: string; optional: boolean; name: string };
@@ -75,6 +66,72 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
     };
 }
 
+const getSortByValue = (sortBy: GridColDef["sortBy"]) => {
+    if (Array.isArray(sortBy)) {
+        return `[${sortBy.map((i) => `"${i}"`).join(", ")}]`;
+    }
+
+    if (typeof sortBy === "string") {
+        return `"${sortBy}"`;
+    }
+
+    return sortBy;
+};
+
+type LabelData = {
+    textLabel: string;
+    gridCellContent?: ReactNode;
+};
+
+const getValueOptionsLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
+    if (typeof label === "string") {
+        return {
+            textLabel: `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`,
+        };
+    }
+
+    const textLabelParts: string[] = [];
+    const gridCellContentProps: Record<string, string> = {};
+
+    if (label.primaryText) {
+        const primaryMessageId = `${messageId}.primary`;
+        textLabelParts.push(`intl.formatMessage({ id: "${primaryMessageId}", defaultMessage: "${label.primaryText}" })`);
+        gridCellContentProps.primaryText = `<FormattedMessage id="${primaryMessageId}" defaultMessage="${label.primaryText}" />`;
+    }
+
+    if (label.secondaryText) {
+        const secondaryMessageId = `${messageId}.secondary`;
+        textLabelParts.push(`intl.formatMessage({ id: "${secondaryMessageId}", defaultMessage: "${label.secondaryText}" })`);
+        gridCellContentProps.secondaryText = `<FormattedMessage id="${secondaryMessageId}" defaultMessage="${label.secondaryText}" />`;
+    }
+
+    if (typeof label.icon === "string") {
+        gridCellContentProps.icon = `<${label.icon}Icon />`;
+    } else if (typeof label.icon === "object") {
+        if ("import" in label.icon) {
+            gridCellContentProps.icon = `<${label.icon.name} />`;
+        } else {
+            const { name, ...iconProps } = label.icon;
+            gridCellContentProps.icon = `<${name}Icon
+                ${Object.entries(iconProps)
+                    .map(([key, value]) => `${key}="${value}"`)
+                    .join("\n")}
+            />`;
+        }
+    }
+
+    const gridCellContent = `<GridCellContent
+        ${Object.entries(gridCellContentProps)
+            .map(([key, value]) => `${key}={${value}}`)
+            .join("\n")}
+    />`;
+
+    return {
+        textLabel: textLabelParts.join(" + ' ' + "),
+        gridCellContent,
+    };
+};
+
 export function generateGrid(
     {
         exportName,
@@ -93,6 +150,7 @@ export function generateGrid(
     const gridQuery = config.query ? config.query : instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
+    const iconsToImport: string[] = ["Add", "Edit"];
     const props: Prop[] = [];
 
     const fieldList = generateGqlFieldList({
@@ -151,8 +209,10 @@ export function generateGrid(
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
+    const renderToolbar = config.toolbar ?? true;
+
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
-    const hasFilter = !!filterArg;
+    const hasFilter = !!filterArg && renderToolbar;
     let hasFilterProp = false;
     let filterFields: string[] = [];
     if (filterArg) {
@@ -170,9 +230,7 @@ export function generateGrid(
         props.push(...filterPropProps);
     }
 
-    const toolbar = config.toolbar ?? true;
-
-    const forwardToolbarAction = allowAdding && toolbar && config.toolbarActionProp;
+    const forwardToolbarAction = allowAdding && renderToolbar && config.toolbarActionProp;
     if (forwardToolbarAction) {
         props.push({ name: "toolbarAction", type: "React.ReactNode", optional: true });
     }
@@ -235,10 +293,16 @@ export function generateGrid(
         type: actionsColumnType,
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
+        width: actionsColumnWidth = 84,
+        visible: actionsColumnVisible = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
-    const gridColumnFields = (config.columns.filter((column) => column.type !== "actions") as GridColumnConfig<unknown>[]).map((column) => {
+    const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
+
+    const gridColumnFields = (
+        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
+    ).map((column) => {
         const type = column.type;
         const name = String(column.name);
 
@@ -269,9 +333,35 @@ export function generateGrid(
             const enumType = gqlIntrospection.__schema.types.find(
                 (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
             ) as IntrospectionEnumType | undefined;
-            if (!enumType) throw new Error(`Enum type not found`);
 
-            const values = (column.values ? column.values : enumType.enumValues.map((i) => i.name)).map((value) => {
+            column.values?.forEach((value) => {
+                if (typeof value === "object" && typeof value.label === "object" && typeof value.label.icon !== "undefined") {
+                    if (typeof value.label.icon === "string") {
+                        iconsToImport.push(value.label.icon);
+                    } else if (typeof value.label.icon?.name === "string") {
+                        if ("import" in value.label.icon) {
+                            imports.push({
+                                name: value.label.icon.name,
+                                importPath: value.label.icon.import,
+                            });
+                        } else {
+                            iconsToImport.push(value.label.icon.name);
+                        }
+                    }
+                }
+            });
+
+            let columnValues = [];
+
+            if (column.values) {
+                columnValues = column.values;
+            } else if (enumType) {
+                columnValues = enumType.enumValues.map((i) => i.name);
+            } else {
+                throw new Error(`Enum type not found`);
+            }
+
+            const values = columnValues.map((value) => {
                 if (typeof value === "string") {
                     return {
                         value,
@@ -283,24 +373,34 @@ export function generateGrid(
             });
 
             const valueOptions = `[${values
-                .map((i) => {
-                    const id = `${instanceGqlType}.${name}.${i.value.charAt(0).toLowerCase() + i.value.slice(1)}`;
-                    const label = `intl.formatMessage({ id: "${id}", defaultMessage: "${i.label}" })`;
-                    return `{value: ${JSON.stringify(i.value)}, label: ${label}}, `;
+                .map(({ value, label }) => {
+                    const labelData = getValueOptionsLabelData(`${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`, label);
+                    return `{
+                        value: ${JSON.stringify(value)},
+                        label: ${labelData.textLabel},
+                        ${labelData.gridCellContent !== undefined ? `cellContent: ${labelData.gridCellContent},` : ""}
+                    },`;
                 })
                 .join(" ")}]`;
+
+            renderCell = `renderStaticSelectCell`;
 
             return {
                 name,
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
+                renderCell,
                 width: column.width,
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
+                headerInfoTooltip: column.headerInfoTooltip,
+                visible: column.visible && `theme.breakpoints.${column.visible}`,
                 pinned: column.pinned,
             };
+        } else if (type == "combination") {
+            renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
         //TODO suppoort n:1 relation with singleSelect
@@ -316,8 +416,18 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
+            headerInfoTooltip: column.headerInfoTooltip,
+            visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
+            sortBy: "sortBy" in column && column.sortBy,
         };
+    });
+
+    iconsToImport.forEach((icon) => {
+        imports.push({
+            name: `${icon} as ${icon}Icon`,
+            importPath: "@comet/admin-icons",
+        });
     });
 
     let createMutationInputFields: readonly IntrospectionInputValue[] = [];
@@ -351,21 +461,24 @@ export function generateGrid(
         DataGridToolbar,
         filterByFragment,
         GridFilterButton,
+        GridCellContent,
         GridColDef,
+        renderStaticSelectCell,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
         ToolbarActions,
         ToolbarFillSpace,
         ToolbarItem,
+        Tooltip,
         useBufferedRowCount,
         useDataGridRemote,
         usePersistentColumnState,
     } from "@comet/admin";
-    import { Add as AddIcon, Edit } from "@comet/admin-icons";
+    import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, Box, IconButton } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { Alert, Button, Box, IconButton, Typography, useTheme } from "@mui/material";
+    import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -377,7 +490,7 @@ export function generateGrid(
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
     import * as React from "react";
-    import { FormattedMessage, useIntl } from "react-intl";
+    import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
 
     ${Object.entries(rootBlocks)
@@ -398,7 +511,7 @@ export function generateGrid(
         ...[`$offset: Int!`, `$limit: Int!`],
         ...(hasSort ? [`$sort: [${gqlType}Sort!]`] : []),
         ...(hasSearch ? [`$search: String`] : []),
-        ...(hasFilter ? [`$filter: ${gqlType}Filter`] : []),
+        ...(filterArg && (hasFilter || hasFilterProp) ? [`$filter: ${gqlType}Filter`] : []),
         ...(hasScope ? [`$scope: ${gqlType}ContentScopeInput!`] : []),
     ].join(", ")}) {
     ${gridQuery}(${[
@@ -406,7 +519,7 @@ export function generateGrid(
         ...[`offset: $offset`, `limit: $limit`],
         ...(hasSort ? [`sort: $sort`] : []),
         ...(hasSearch ? [`search: $search`] : []),
-        ...(hasFilter ? [`filter: $filter`] : []),
+        ...(filterArg && (hasFilter || hasFilterProp) ? [`filter: $filter`] : []),
         ...(hasScope ? [`scope: $scope`] : []),
     ].join(", ")}) {
                 nodes {
@@ -453,42 +566,7 @@ export function generateGrid(
             : ""
     }
 
-    ${
-        toolbar
-            ? `function ${gqlTypePlural}GridToolbar(${forwardToolbarAction ? `{ toolbarAction }: { toolbarAction?: React.ReactNode }` : ``}) {
-        return (
-            <DataGridToolbar>
-                ${
-                    hasSearch
-                        ? `<ToolbarItem>
-                    <GridToolbarQuickFilter />
-                </ToolbarItem>`
-                        : ""
-                }
-                ${
-                    hasFilter
-                        ? `<ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>`
-                        : ""
-                }
-                <ToolbarFillSpace />
-                ${
-                    allowAdding
-                        ? forwardToolbarAction
-                            ? `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`
-                            : `<ToolbarActions>
-                           <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                               <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
-                           </Button>
-                       </ToolbarActions>`
-                        : ""
-                }
-            </DataGridToolbar>
-        );
-    }`
-            : ""
-    }
+    ${renderToolbar ? generateGridToolbar({ gqlTypePlural, forwardToolbarAction, hasSearch, hasFilter, allowAdding, instanceGqlType, gqlType }) : ""}
 
     ${gridPropsTypeCode}
 
@@ -497,15 +575,59 @@ export function generateGrid(
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
+        ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
                 .map((column) => {
+                    const defaultMinWidth = 150;
+                    const defaultColumnFlex = 1;
+                    let minWidth;
+                    let maxWidth;
+                    let tooltipColumnWidth = column.width;
+
+                    if (typeof column.width === "undefined") {
+                        maxWidth = column.maxWidth;
+
+                        if (
+                            typeof column.minWidth === "undefined" &&
+                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
+                        ) {
+                            minWidth = defaultMinWidth;
+                            tooltipColumnWidth = defaultMinWidth;
+                        } else if (typeof column.minWidth !== "undefined") {
+                            minWidth = column.minWidth;
+                            tooltipColumnWidth = column.minWidth;
+                        }
+                    }
+
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
-                        headerName: `intl.formatMessage({ id: "${instanceGqlType}.${column.name}",  defaultMessage: "${
-                            column.headerName || camelCaseToHumanReadable(column.name)
-                        }" })`,
+                        renderHeader: column.headerInfoTooltip
+                            ? `() => (
+                                    <>
+                                        <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
+                                  column.name
+                              }",   defaultMessage: "${
+                                  column.headerName || camelCaseToHumanReadable(column.name)
+                              }"})} columnWidth= {${tooltipColumnWidth}}
+                              />
+                                        <Tooltip
+                                            trigger="hover"
+                                            title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
+                                  column.headerInfoTooltip
+                              }" />}
+                                        >
+                                            <Info sx={{ marginLeft: 1 }} />
+                                        </Tooltip>
+                                    </>
+                                )`
+                            : undefined,
+                        headerName: !column.headerInfoTooltip
+                            ? `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
+                                  column.headerName || camelCaseToHumanReadable(column.name)
+                              }" })`
+                            : undefined,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
                         filterable: !filterFields.includes(column.name) ? `false` : undefined,
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
@@ -515,21 +637,17 @@ export function generateGrid(
                         width: column.width,
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,
+                        visible: column.visible,
                     };
 
-                    if (typeof column.width === "undefined") {
-                        const defaultMinWidth = 150;
-                        columnDefinition.flex = 1;
-                        columnDefinition.maxWidth = column.maxWidth;
+                    if ("sortBy" in column && column.sortBy) {
+                        columnDefinition["sortBy"] = getSortByValue(column.sortBy);
+                    }
 
-                        if (
-                            typeof column.minWidth === "undefined" &&
-                            (typeof column.maxWidth === "undefined" || column.maxWidth >= defaultMinWidth)
-                        ) {
-                            columnDefinition.minWidth = defaultMinWidth;
-                        } else if (typeof column.minWidth !== "undefined") {
-                            columnDefinition.minWidth = column.minWidth;
-                        }
+                    if (typeof column.width === "undefined") {
+                        columnDefinition.flex = defaultColumnFlex;
+                        columnDefinition.minWidth = minWidth;
+                        columnDefinition.maxWidth = maxWidth;
                     }
 
                     return tsCodeRecordToString(columnDefinition);
@@ -547,6 +665,8 @@ export function generateGrid(
                               type: '"actions"',
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
+                              width: actionsColumnWidth,
+                              visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (
@@ -557,7 +677,7 @@ export function generateGrid(
                                           ? `{rowAction && rowAction(params)}`
                                           : `
                                         <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                            <Edit color="primary" />
+                                            <EditIcon color="primary" />
                                         </IconButton>`
                                       : ""
                               }${
@@ -641,7 +761,15 @@ export function generateGrid(
                 ${[
                     ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((arg) => arg.name),
                     ...(hasScope ? ["scope"] : []),
-                    ...(hasFilter ? (hasFilterProp ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"] : ["filter: gqlFilter"]) : []),
+                    ...(filterArg
+                        ? hasFilter && hasFilterProp
+                            ? ["filter: filter ? { and: [gqlFilter, filter] } : gqlFilter"]
+                            : hasFilter
+                            ? ["filter: gqlFilter"]
+                            : hasFilterProp
+                            ? ["filter"]
+                            : []
+                        : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
                     ...[
                         `offset: dataGridProps.page * dataGridProps.pageSize`,
@@ -664,7 +792,7 @@ export function generateGrid(
                 columns={columns}
                 loading={loading}
                 ${
-                    toolbar
+                    renderToolbar
                         ? `components={{
                                 Toolbar: ${gqlTypePlural}GridToolbar,
                             }}${

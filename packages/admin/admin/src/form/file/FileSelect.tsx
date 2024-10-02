@@ -1,7 +1,7 @@
 import { Error as ErrorIcon } from "@comet/admin-icons";
 import { ComponentsOverrides, FormHelperText, Typography } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import * as React from "react";
+import { ReactNode } from "react";
 import { Accept, DropzoneOptions } from "react-dropzone";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -47,17 +47,17 @@ export type FileSelectProps<AdditionalValidFileValues = Record<string, unknown>>
     onDrop?: DropzoneOptions["onDrop"];
     onRemove?: (file: ValidFileSelectItem<AdditionalValidFileValues> | ErrorFileSelectItem) => void;
     onDownload?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => void;
-    getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string;
+    getDownloadUrl?: (file: ValidFileSelectItem<AdditionalValidFileValues>) => string | undefined;
     disabled?: boolean;
     readOnly?: boolean;
     accept?: Accept;
     maxFileSize?: number;
     maxFiles?: number;
     multiple?: boolean;
-    error?: React.ReactNode;
+    error?: ReactNode;
     layout?: Layout;
     iconMapping?: {
-        error?: React.ReactNode;
+        error?: ReactNode;
     };
 } & ThemeProps;
 
@@ -135,6 +135,17 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                         <>
                             {files.map((file, index) => {
                                 const isValidFile = !("error" in file) && !("loading" in file);
+                                let filePreview: string | boolean;
+
+                                if (layout === "grid") {
+                                    if (isValidFile && file.previewUrl) {
+                                        filePreview = file.previewUrl;
+                                    } else {
+                                        filePreview = true;
+                                    }
+                                } else {
+                                    filePreview = false;
+                                }
 
                                 return (
                                     <FileListItem
@@ -149,7 +160,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                                         }
                                         downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
                                         onClickDelete={readOnly || !onRemove || "loading" in file ? undefined : () => onRemove(file)}
-                                        filePreview={layout === "grid"}
+                                        filePreview={filePreview}
                                         {...slotProps?.fileListItem}
                                     />
                                 );

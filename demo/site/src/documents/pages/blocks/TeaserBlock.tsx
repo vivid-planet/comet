@@ -1,3 +1,4 @@
+"use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { TeaserBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/blocks/DamImageBlock";

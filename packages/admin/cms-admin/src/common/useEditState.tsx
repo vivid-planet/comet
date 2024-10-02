@@ -1,7 +1,7 @@
 import { ApolloError, ApolloQueryResult, OperationVariables, useQuery } from "@apollo/client";
 import { DocumentNode } from "graphql";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 
 interface EditStateOptions<TData, TVariables, TState, TOutput> {
     query: DocumentNode;
@@ -15,7 +15,7 @@ interface EditStateOptions<TData, TVariables, TState, TOutput> {
 interface EditStateReturn<TData, TVariables, TState, TOutput> {
     hasChanges: boolean;
     state?: TState;
-    setState: React.Dispatch<React.SetStateAction<TState | undefined>>;
+    setState: Dispatch<SetStateAction<TState | undefined>>;
     updateReferenceContent: (data: TData) => void;
     output?: TOutput;
     query: {
@@ -30,10 +30,10 @@ interface EditStateReturn<TData, TVariables, TState, TOutput> {
 export function useEditState<TData = any, TVariables = OperationVariables, TState = any, TOutput = any>(
     options: EditStateOptions<TData, TVariables, TState, TOutput>,
 ): EditStateReturn<TData, TVariables, TState, TOutput> {
-    const [referenceContent, setReferenceContent] = React.useState<TOutput | undefined>(
+    const [referenceContent, setReferenceContent] = useState<TOutput | undefined>(
         options.mode === "add" ? options.state2Output(options.defaultState) : undefined,
     );
-    const [state, setState] = React.useState<TState | undefined>(options.mode === "add" ? options.defaultState : undefined);
+    const [state, setState] = useState<TState | undefined>(options.mode === "add" ? options.defaultState : undefined);
 
     const {
         data: queryData,
@@ -45,7 +45,7 @@ export function useEditState<TData = any, TVariables = OperationVariables, TStat
         skip: options.mode === "add",
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (queryData) {
             const state = options.input2State(queryData);
             setState(state);
@@ -55,7 +55,7 @@ export function useEditState<TData = any, TVariables = OperationVariables, TStat
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryData, options.mode]);
 
-    const updateReferenceContent = React.useCallback(
+    const updateReferenceContent = useCallback(
         (data: TData) => {
             const state = options.input2State(data);
             setReferenceContent(options.state2Output(state));

@@ -1,7 +1,8 @@
 import { ComponentsOverrides, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, Theme, useThemeProps } from "@mui/material";
-import * as React from "react";
+import { ReactElement, ReactNode, useContext } from "react";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { MenuContext } from "./Context";
 import { Icon, MenuItemClassKey, OwnerState, Root, Text } from "./Item.styles";
 
 export type MenuItemLevel = 1 | 2 | 3;
@@ -14,10 +15,10 @@ export interface MenuItemProps
         }>,
         ListItemButtonProps {
     level?: MenuItemLevel;
-    primary: React.ReactNode;
-    secondary?: React.ReactNode;
-    icon?: React.ReactElement;
-    secondaryAction?: React.ReactNode;
+    primary: ReactNode;
+    secondary?: ReactNode;
+    icon?: ReactElement;
+    secondaryAction?: ReactNode;
     isMenuOpen?: boolean;
     isCollapsibleOpen?: boolean;
     hasSubitems?: boolean;
@@ -37,6 +38,8 @@ export const MenuItem = (inProps: MenuItemProps) => {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMenuItem" });
 
+    const { drawerVariant } = useContext(MenuContext);
+
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
     const showIcon = !!icon && level === 1;
@@ -49,6 +52,7 @@ export const MenuItem = (inProps: MenuItemProps) => {
         hasSecondaryText: Boolean(secondary),
         hasSecondaryAction: Boolean(secondaryAction),
         hasSubItems: Boolean(hasSubitems),
+        variant: drawerVariant,
     };
 
     return (

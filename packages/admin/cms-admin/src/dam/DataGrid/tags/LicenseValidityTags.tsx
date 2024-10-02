@@ -1,11 +1,10 @@
 import { WarningSolid } from "@comet/admin-icons";
 import { formatDistanceToNow } from "date-fns";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { Tag } from "./Tag";
 
-export const LicenseNotValidYetTag: React.VoidFunctionComponent = () => {
+export const LicenseNotValidYetTag = () => {
     return (
         <Tag type="error">
             <WarningSolid />
@@ -14,7 +13,7 @@ export const LicenseNotValidYetTag: React.VoidFunctionComponent = () => {
     );
 };
 
-export const LicenseExpiredTag: React.VoidFunctionComponent = () => {
+export const LicenseExpiredTag = () => {
     return (
         <Tag type="error">
             <WarningSolid />

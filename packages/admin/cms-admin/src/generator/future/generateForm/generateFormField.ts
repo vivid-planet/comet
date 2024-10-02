@@ -1,28 +1,62 @@
-import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormFieldConfig } from "../generator";
+import { FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
-import { GenerateFieldsReturn } from "./generateFields";
+import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
+
+function getTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
+    let typeKind = undefined;
+    let typeClass = "unknown";
+    let required = false;
+    let type = arg.type;
+
+    if (type.kind === "NON_NULL") {
+        required = true;
+        type = type.ofType;
+    }
+    if (type.kind === "INPUT_OBJECT") {
+        typeClass = type.name;
+        typeKind = type.kind;
+    } else if (type.kind === "ENUM") {
+        typeClass = type.name;
+        typeKind = type.kind;
+    } else {
+        throw new Error(`Resolving kind ${type.kind} currently not supported.`);
+    }
+    return {
+        required,
+        typeKind,
+        typeClass,
+    };
+}
 
 export function generateFormField({
     gqlIntrospection,
     baseOutputFilename,
     config,
     formConfig,
+    gqlType,
+    namePrefix,
 }: {
     gqlIntrospection: IntrospectionQuery;
     baseOutputFilename: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: FormFieldConfig<any>;
+    formFragmentName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
+    gqlType: string;
+    namePrefix?: string;
 }): GenerateFieldsReturn {
-    const gqlType = formConfig.gqlType;
-    const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
+    const rootGqlType = formConfig.gqlType;
+    const formattedMessageRootId = rootGqlType[0].toLowerCase() + rootGqlType.substring(1);
+    const dataRootName = rootGqlType[0].toLowerCase() + rootGqlType.substring(1); // TODO should probably be deteced via query
 
     const name = String(config.name);
+    const nameWithPrefix = `${namePrefix ? `${namePrefix}.` : ``}${name}`;
     const label = config.label ?? camelCaseToHumanReadable(name);
 
     const introspectionObject = gqlIntrospection.__schema.types.find((type) => type.kind === "OBJECT" && type.name === gqlType) as
@@ -46,10 +80,11 @@ export function generateFormField({
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
     };
-    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig];
+    let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
+    let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
 
     let validateCode = "";
     if (config.validate) {
@@ -65,7 +100,7 @@ export function generateFormField({
         validateCode = `validate={${config.validate.name}}`;
     }
 
-    const fieldLabel = `<FormattedMessage id="${instanceGqlType}.${name}" defaultMessage="${label}" />`;
+    const fieldLabel = `<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />`;
 
     let code = "";
     let formValueToGqlInputCode = "";
@@ -78,11 +113,13 @@ export function generateFormField({
             ${config.readOnly ? readOnlyPropsWithLock : ""}
             variant="horizontal"
             fullWidth
-            name="${name}"
+            name="${nameWithPrefix}"
             label={${fieldLabel}}
             ${
                 config.helperText
-                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    ? `helperText={<FormattedMessage id=` +
+                      `"${formattedMessageRootId}.${name}.helperText" ` +
+                      `defaultMessage="${config.helperText}" />}`
                     : ""
             }
             ${validateCode}
@@ -94,29 +131,29 @@ export function generateFormField({
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
                 fullWidth
-                name="${name}"
+                name="${nameWithPrefix}"
                 component={FinalFormInput}
                 type="number"
                 label={${fieldLabel}}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
-                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `"${formattedMessageRootId}.${name}.helperText" ` +
                           `defaultMessage="${config.helperText}" />}`
                         : ""
                 }
                 ${validateCode}
             />`;
         //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
-        let assignment = `parseFloat(formValues.${String(name)})`;
+        let assignment = `parseFloat(formValues.${nameWithPrefix})`;
         if (isFieldOptional({ config, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
-            assignment = `formValues.${name} ? ${assignment} : null`;
+            assignment = `formValues.${nameWithPrefix} ? ${assignment} : null`;
         }
         formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
 
-        let initializationAssignment = `String(data.${instanceGqlType}.${name})`;
+        let initializationAssignment = `String(data.${dataRootName}.${nameWithPrefix})`;
         if (!required) {
-            initializationAssignment = `data.${instanceGqlType}.${name} ? ${initializationAssignment} : undefined`;
+            initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
         }
         formValuesConfig = [
             {
@@ -129,7 +166,7 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "boolean") {
-        code = `<Field name="${name}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
+        code = `<Field name="${nameWithPrefix}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
                 <FormControlLabel
                     label={${fieldLabel}}
@@ -137,7 +174,7 @@ export function generateFormField({
                     ${
                         config.helperText
                             ? `helperText={<FormattedMessage id=` +
-                              `"${instanceGqlType}.${name}.helperText" ` +
+                              `"${formattedMessageRootId}.${name}.helperText" ` +
                               `defaultMessage="${config.helperText}" />}`
                             : ""
                     }
@@ -159,13 +196,13 @@ export function generateFormField({
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
                 fullWidth
-                name="${name}"
+                name="${nameWithPrefix}"
                 component={FinalFormDatePicker}
                 label={${fieldLabel}}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
-                          `"${instanceGqlType}.${name}.helperText" ` +
+                          `"${formattedMessageRootId}.${name}.helperText" ` +
                           `defaultMessage="${config.helperText}" />}`
                         : ""
                 }
@@ -175,21 +212,21 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    initializationCode: `${name}: data.${instanceGqlType}.${name} ? new Date(data.${instanceGqlType}.${name}) : undefined`,
+                    initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
                 },
             },
         ];
     } else if (config.type == "block") {
-        code = `<Field name="${name}" isEqual={isEqual}>
+        code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
-        formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${name}),` : ``;
+        formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,
                 ...{
                     typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
-                    initializationCode: `${name}: rootBlocks.${name}.input2State(data.${instanceGqlType}.${name})`,
+                    initializationCode: `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
                     defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
                 },
             },
@@ -197,6 +234,7 @@ export function generateFormField({
     } else if (config.type === "fileUpload") {
         const multiple = config.multiple || (typeof config.maxFiles === "number" && config.maxFiles > 1);
         code = `<FileUploadField name="${name}" label={${fieldLabel}}
+            variant="horizontal"
             ${config.multiple ? "multiple" : ""}
             ${config.maxFiles ? `maxFiles={${config.maxFiles}}` : ""}
             ${config.maxFileSize ? `maxFileSize={${config.maxFileSize}}` : ""}
@@ -215,6 +253,7 @@ export function generateFormField({
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
         ) as IntrospectionEnumType | undefined;
         if (!enumType) throw new Error(`Enum type ${(introspectionFieldType as IntrospectionNamedTypeRef).name} not found for field ${name}`);
+
         const values = (config.values ? config.values : enumType.enumValues.map((i) => i.name)).map((value) => {
             if (typeof value === "string") {
                 return {
@@ -225,15 +264,39 @@ export function generateFormField({
                 return value;
             }
         });
-        code = `<Field
+
+        const renderAsRadio = config.inputType === "radio" || (required && values.length <= 5 && config.inputType !== "select");
+        if (renderAsRadio) {
+            code = `<RadioGroupField
+             ${required ? "required" : ""}
+              variant="horizontal"
+             fullWidth
+             name="${name}"
+             label={<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />}
+             options={[
+                  ${values
+                      .map((value) => {
+                          return `{
+                                label: <FormattedMessage id="${formattedMessageRootId}.${name}.${
+                              value.value.charAt(0).toLowerCase() + value.value.slice(1)
+                          }" defaultMessage="${value.label}" />,
+                                value: "${value.value}",
+                            }`;
+                      })
+                      .join(",")}
+            ]}/>`;
+        } else {
+            code = `<Field
             ${required ? "required" : ""}
             variant="horizontal"
             fullWidth
-            name="${name}"
+            name="${nameWithPrefix}"
             label={${fieldLabel}}>
             ${
                 config.helperText
-                    ? `helperText={<FormattedMessage id=` + `"${instanceGqlType}.${name}.helperText" ` + `defaultMessage="${config.helperText}" />}`
+                    ? `helperText={<FormattedMessage id=` +
+                      `"${formattedMessageRootId}.${name}.helperText" ` +
+                      `defaultMessage="${config.helperText}" />}`
                     : ""
             }
             ${validateCode}
@@ -241,7 +304,7 @@ export function generateFormField({
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
                     .map((value) => {
-                        const id = `${instanceGqlType}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
+                        const id = `${formattedMessageRootId}.${name}.${value.value.charAt(0).toLowerCase() + value.value.slice(1)}`;
                         const label = `<FormattedMessage id="${id}" defaultMessage="${value.label}" />`;
                         return `<MenuItem value="${value.value}">${label}</MenuItem>`;
                     })
@@ -249,6 +312,7 @@ export function generateFormField({
                 </FinalFormSelect>
             }
         </Field>`;
+        }
     } else if (config.type == "asyncSelect") {
         if (introspectionFieldType.kind !== "OBJECT") throw new Error(`asyncSelect only supports OBJECT types`);
         const objectType = gqlIntrospection.__schema.types.find((t) => t.kind === "OBJECT" && t.name === introspectionFieldType.name) as
@@ -283,9 +347,69 @@ export function generateFormField({
 
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
+        const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
 
         formFragmentField = `${name} { id ${labelField} }`;
+
+        const filterConfig = config.filterField
+            ? (() => {
+                  const filterField = findFieldByName(config.filterField.name, formConfig.fields);
+                  if (!filterField) {
+                      throw new Error(
+                          `Field ${String(config.name)}: No field with name "${
+                              config.filterField?.name
+                          }" referenced as filterField found in form-config.`,
+                      );
+                  }
+                  if (!isFormFieldConfig(filterField)) {
+                      throw new Error(
+                          `Field ${String(config.name)}: Field with name "${config.filterField?.name}" referenced as filterField is no FormField.`,
+                      );
+                  }
+
+                  const gqlName = config.filterField.gqlName ?? config.filterField.name;
+
+                  // try to find arg used to filter by checking names of root-props and filter-prop-fields
+                  const rootArgForName = rootQueryType.args.find((arg) => arg.name === gqlName);
+                  let filterType = rootArgForName ? getTypeInfo(rootArgForName, gqlIntrospection) : undefined;
+                  let filterVarName = undefined;
+                  let filterVarValue = undefined;
+
+                  if (filterType) {
+                      // there is a root-prop with same name, so the dev probably wants to filter with this prop
+                      filterVarName = gqlName;
+                      filterVarValue = `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
+                  } else {
+                      // no root-prop with same name, check filter-prop-fields
+                      const rootArgFilter = rootQueryType.args.find((arg) => arg.name === "filter");
+                      filterType = rootArgFilter ? getTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
+                      if (filterType) {
+                          filterVarName = "filter";
+                          filterVarValue = `{ ${gqlName}: { equal: values.${
+                              filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
+                          } } }`;
+                      } else {
+                          throw new Error(
+                              `Neither filter-prop nor root-prop with name: ${gqlName} for asyncSelect-query not found. Consider setting filterField.gqlVarName explicitly.`,
+                          );
+                      }
+                  }
+
+                  return {
+                      filterField,
+                      filterType,
+                      filterVarName,
+                      filterVarValue,
+                  };
+              })()
+            : undefined;
+        if (filterConfig) {
+            imports.push({ name: "OnChangeField", importPath: "@comet/admin" });
+            finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
+        }
+
         formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
+
         imports.push({
             name: `GQL${queryName}Query`,
             importPath: `./${baseOutputFilename}.generated`,
@@ -299,23 +423,36 @@ export function generateFormField({
                 ${required ? "required" : ""}
                 variant="horizontal"
                 fullWidth
-                name="${name}"
+                name="${nameWithPrefix}"
                 label={${fieldLabel}}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
-                        query: gql\`query ${queryName} {
-                            ${rootQuery} {
+                        query: gql\`query ${queryName}${
+            filterConfig ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})` : ``
+        } {
+                            ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
                                 nodes {
                                     id
                                     ${labelField}
                                 }
                             }
-                        }\`
+                        }\`${filterConfig ? `, variables: { ${filterConfig.filterVarName}: ${filterConfig.filterVarValue} }` : ``}
                     });
                     return data.${rootQuery}.nodes;
                 }}
                 getOptionLabel={(option) => option.${labelField}}
-            />`;
+                ${filterConfig ? `disabled={!values?.${String(filterConfig.filterField.name)}}` : ``}
+            />${
+                filterConfig
+                    ? `<OnChangeField name="${String(filterConfig.filterField.name)}">
+                            {(value, previousValue) => {
+                                if (value.id !== previousValue.id) {
+                                    form.change("${String(config.name)}", undefined);
+                                }
+                            }}
+                        </OnChangeField>`
+                    : ``
+            }`;
     } else {
         throw new Error(`Unsupported type`);
     }
@@ -327,5 +464,6 @@ export function generateFormField({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

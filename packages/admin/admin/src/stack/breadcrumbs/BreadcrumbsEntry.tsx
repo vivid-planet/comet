@@ -1,7 +1,6 @@
 import { LevelUp } from "@comet/admin-icons";
 import { IconButton as MuiIconButton, Link as MuiLink, Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
-import * as React from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { BreadcrumbItem } from "../Stack";

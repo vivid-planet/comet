@@ -1,7 +1,5 @@
 "use client";
 import { LinkBlock } from "@src/blocks/LinkBlock";
-import { GQLPredefinedPage } from "@src/graphql.generated";
-import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
@@ -41,14 +39,8 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
             </Link>
         );
     } else if (page.documentType === "PredefinedPage") {
-        if (!page.document) {
-            return null;
-        }
-
-        const type = (page.document as GQLPredefinedPage).type;
-
         return (
-            <Link href={type && predefinedPagePaths[type] ? `/${page.scope.language}${predefinedPagePaths[type]}` : ""} className={className}>
+            <Link href={`/${page.scope.language}${page.path}`} className={className}>
                 {children}
             </Link>
         );

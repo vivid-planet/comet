@@ -1,7 +1,7 @@
 import { Warning } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { Fragment } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { FilenameData } from "./ManualDuplicatedFilenamesHandler";
@@ -34,12 +34,7 @@ interface DuplicateFilenameDialogProps {
     onUpload: () => void;
 }
 
-export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
-    open,
-    filenameData,
-    onSkip,
-    onUpload,
-}) => {
+export const ManuallyHandleDuplicatedFilenamesDialog = ({ open, filenameData, onSkip, onUpload }: DuplicateFilenameDialogProps) => {
     return (
         <Dialog open={open}>
             <DialogTitle>
@@ -63,13 +58,13 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                 <StyledList>
                     {filenameData.map((data, index) => {
                         return (
-                            <React.Fragment key={data.name}>
+                            <Fragment key={data.name}>
                                 {index === 0 && <Divider component="li" />}
                                 <StyledListItem key={data.name}>
                                     <ListItemText primary={<Typography variant="body1">{data.name}</Typography>} />
                                 </StyledListItem>
                                 <Divider component="li" />
-                            </React.Fragment>
+                            </Fragment>
                         );
                     })}
                 </StyledList>

@@ -100,10 +100,12 @@ export function createPageTreeResolver({
         }
 
         @Query(() => PaginatedPageTreeNodes)
-        async paginatedPageTreeNodes(@Args() { scope, category, sort, offset, limit }: PaginatedPageTreeNodesArgs): Promise<PaginatedPageTreeNodes> {
+        async paginatedPageTreeNodes(
+            @Args() { scope, category, sort, offset, limit, documentType }: PaginatedPageTreeNodesArgs,
+        ): Promise<PaginatedPageTreeNodes> {
             await this.pageTreeReadApi.preloadNodes(scope);
-            const nodes = await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category, offset, limit, sort });
-            const count = await this.pageTreeReadApi.getNodesCount({ scope: nonEmptyScopeOrNothing(scope), category });
+            const nodes = await this.pageTreeReadApi.getNodes({ scope: nonEmptyScopeOrNothing(scope), category, offset, limit, sort, documentType });
+            const count = await this.pageTreeReadApi.getNodesCount({ scope: nonEmptyScopeOrNothing(scope), category, documentType });
 
             return new PaginatedPageTreeNodes(nodes, count);
         }

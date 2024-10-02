@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronRight, ChevronUp } from "@comet/admin-icons";
 import { Collapse, ComponentsOverrides, Fade, List, Menu, Theme, Typography, useThemeProps } from "@mui/material";
-import React from "react";
+import { Children, cloneElement, MouseEvent, ReactElement, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { matchPath, useLocation } from "react-router";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
@@ -9,7 +9,7 @@ import { MenuContext } from "./Context";
 import { MenuItem as CometMenuItem, MenuItemLevel, MenuItemProps } from "./Item";
 import { MenuItemRouterLinkProps } from "./ItemRouterLink";
 
-export type MenuChild = React.ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>;
+export type MenuChild = ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>;
 
 export interface MenuCollapsibleItemProps
     extends Omit<MenuItemProps, "slotProps">,
@@ -23,10 +23,10 @@ export interface MenuCollapsibleItemProps
     openByDefault?: boolean;
     isMenuOpen?: boolean;
     iconMapping?: {
-        openDropdown?: React.ReactNode;
-        closeDropdown?: React.ReactNode;
-        firstLevelHoverIndicator?: React.ReactNode;
-        secondLevelHoverIndicator?: React.ReactNode;
+        openDropdown?: ReactNode;
+        closeDropdown?: ReactNode;
+        firstLevelHoverIndicator?: ReactNode;
+        secondLevelHoverIndicator?: ReactNode;
     };
 }
 
@@ -55,26 +55,26 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
         secondLevelHoverIndicator: secondLevelHoverIndicatorIcon = <ChevronRight color="inherit" fontSize="inherit" />,
     } = iconMapping ?? {};
 
-    const { drawerVariant } = React.useContext(MenuContext);
+    const { drawerVariant } = useContext(MenuContext);
     const itemLevel: MenuItemLevel = level ?? 1;
-    const hasSelectedChild = React.useRef(false);
+    const hasSelectedChild = useRef(false);
     const location = useLocation();
 
-    const [isSubmenuOpen, setIsSubmenuOpen] = React.useState<boolean>(openByDefault || hasSelectedChild.current);
-    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const [isSubmenuOpen, setIsSubmenuOpen] = useState<boolean>(openByDefault || hasSelectedChild.current);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         // set open state manually to false to avoid a menu opening when isMenuOpen state changes
         if (!isMenuOpen) setIsSubmenuOpen(false);
     }, [isMenuOpen]);
 
-    const childElements = React.useMemo(() => {
-        function checkIfPathInLocation(child: React.ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>) {
+    const childElements = useMemo(() => {
+        function checkIfPathInLocation(child: ReactElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>) {
             return "to" in child.props && matchPath(location.pathname, { path: child.props.to, strict: true });
         }
         hasSelectedChild.current = false;
 
-        return React.Children.map(children, (child: MenuChild) => {
+        return Children.map(children, (child: MenuChild) => {
             // child is selected
             if (checkIfPathInLocation(child)) {
                 hasSelectedChild.current = true;
@@ -82,14 +82,14 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
 
             // sub child is selected
             const subChildElements =
-                "children" in child.props ? React.Children.map(child?.props?.children, (child: MenuChild) => child) : ([] as MenuChild[]);
+                "children" in child.props ? Children.map(child?.props?.children, (child: MenuChild) => child) : ([] as MenuChild[]);
             if (subChildElements?.some((child: MenuChild) => child.props && checkIfPathInLocation(child))) {
                 hasSelectedChild.current = true;
             }
 
             const newItemLevel = itemLevel + 1;
 
-            return React.cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
+            return cloneElement<MenuCollapsibleItemProps | MenuItemRouterLinkProps | MenuItemProps>(child, {
                 level: newItemLevel === 1 || newItemLevel === 2 || newItemLevel === 3 ? newItemLevel : undefined,
                 isMenuOpen,
                 isCollapsibleOpen: isSubmenuOpen,
@@ -102,7 +102,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
         setIsSubmenuOpen(false);
     };
 
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    const handlePopoverOpen = (event: MouseEvent<HTMLElement>) => {
         if (isMenuOpen) return;
         if (anchorEl !== event.currentTarget) {
             setAnchorEl(event.currentTarget);
@@ -110,7 +110,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
         }
     };
 
-    const handlePopoverClose = (e: React.MouseEvent<HTMLElement>) => {
+    const handlePopoverClose = (e: MouseEvent<HTMLElement>) => {
         if (isMenuOpen) return;
         const el = e.currentTarget;
         const rect = el.getBoundingClientRect();
@@ -134,9 +134,10 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
         menuOpen: Boolean(isMenuOpen),
         subMenuOpen: Boolean(isSubmenuOpen),
         level: itemLevel,
+        variant: drawerVariant,
     };
 
-    let collapsibleIndicatorIcon: React.ReactNode = null;
+    let collapsibleIndicatorIcon: ReactNode = null;
 
     if (isMenuOpen) {
         if (isSubmenuOpen) {
