@@ -266,14 +266,6 @@ export const masterMenuData: MasterMenuData = [
                     },
                     {
                         type: "route",
-                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
-                        route: {
-                            path: "/product-categories",
-                            component: ProductCategoriesPage,
-                        },
-                    },
-                    {
-                        type: "route",
                         primary: <FormattedMessage id="menu.productTags" defaultMessage="Tags" />,
                         route: {
                             path: "/product-tags",
@@ -301,6 +293,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/manufacturers-handmade",
                             component: ManufacturersHandmadePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productCategories" defaultMessage="Categories" />,
+                        route: {
+                            path: "/product-categories",
+                            component: ProductCategoriesPage,
                         },
                     },
                 ],
