@@ -91,12 +91,15 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             height: "20px",
             marginRight: "10px",
         },
+        panel: {
+            ["@media (max-width: 900px)"]: {
+                width: "100%",
+                transform: "translate3d(0,0,0)",
+            },
+        },
         panelContent: {
             [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
                 display: "flex",
-                ["@media (max-width: 900px)"]: {
-                    display: "none",
-                },
             },
         },
         filterForm: {
@@ -104,6 +107,13 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             padding: spacing(2, 1),
             gap: "4px",
             borderBottom: `1px solid ${palette.grey[50]}`,
+            ["@media (max-width: 900px)"]: {
+                flexDirection: "row",
+                marginTop: spacing(6),
+                flexWrap: "wrap",
+                gap: 0,
+                padding: 0,
+            },
             "&:last-child": {
                 border: "none",
                 marginBottom: spacing(2),
@@ -131,16 +141,11 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`& .${inputAdornmentClasses.root}`]: {
                 padding: spacing(0, 1, 0, 0),
             },
-
-            ["@media (max-width: 900px)"]: {
-                flexDirection: "column",
-                padding: 0,
-            },
         },
         filterFormLinkOperatorInput: {
             ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 4),
-                width: "100%",
+                padding: spacing(2, 1),
+                width: "22.2%",
             },
         },
         filterFormDeleteIcon: {
@@ -152,9 +157,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
 
             ["@media (max-width: 900px)"]: {
-                marginTop: spacing(4),
-                marginRight: spacing(4),
-                alignItems: "flex-end",
+                padding: spacing(2, 1),
+                alignItems: "flex-start",
+                width: "11.1%",
             },
         },
         panelFooter: {
@@ -163,33 +168,40 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`.${buttonClasses.root}`]: {
                 color: palette.text.primary,
             },
+            ["@media (max-width: 900px)"]: {
+                justifyContent: "center",
+                boxShadow: shadows[4],
+            },
         },
         filterFormColumnInput: {
             marginRight: spacing(4),
 
             ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 4),
-                width: "100%",
+                padding: spacing(2, 1),
+                width: "66.6%",
             },
         },
         filterFormOperatorInput: {
             margin: spacing(0, 4, 0, 0),
 
             ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 4),
-                width: "100%",
+                padding: spacing(2, 1),
+                width: "33.3%",
             },
         },
         filterFormValueInput: {
             ["@media (max-width: 900px)"]: {
-                padding: spacing(2, 4),
-                width: "100%",
+                padding: spacing(2, 1),
+                width: "66.6%",
             },
         },
         paper: {
             boxShadow: shadows[4],
             border: `1px solid ${palette.divider}`,
             borderRadius: "4px",
+            ["@media (max-width: 900px)"]: {
+                height: "100%",
+            },
         },
         // @ts-expect-error This key exists but is missing in the types.
         toolbarQuickFilter: {
