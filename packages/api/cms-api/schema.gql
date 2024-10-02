@@ -379,6 +379,7 @@ type Query {
   userPermissionsAvailableContentScopes: [JSONObject!]!
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
+  sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
 }
 
 input RedirectScopeInput {
