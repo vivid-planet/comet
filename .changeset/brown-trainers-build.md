@@ -2,4 +2,4 @@
 "@comet/admin": minor
 ---
 
-Refactor styling and text of `DeleteDialog` in `CrudContextMenu`
+Adapt the `DeleteDialog` in `CrudContextMenu` to match the updated Comet CI
