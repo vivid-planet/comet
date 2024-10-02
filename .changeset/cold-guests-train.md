@@ -4,7 +4,7 @@
 "@comet/cms-api": minor
 ---
 
-Authenticate site preview without AuthProxy
+Create site preview JWT in the API
 
 With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
 
