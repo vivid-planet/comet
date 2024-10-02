@@ -33,6 +33,7 @@ function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
 }
 
 export type Prop = { type: string; optional: boolean; name: string };
+
 function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; gridPropsParamsCode: string } {
     if (!props.length) return { gridPropsTypeCode: "", gridPropsParamsCode: "" };
     const uniqueProps = props.reduce<Prop[]>((acc, prop) => {
@@ -453,6 +454,20 @@ export function generateGrid(
         });
     }
 
+    if (config.selectionProps) {
+        imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
+        props.push({
+            name: "selectionModel",
+            type: `DataGridProProps["selectionModel"]`,
+            optional: true,
+        });
+        props.push({
+            name: "onSelectionModelChange",
+            type: `DataGridProProps["onSelectionModelChange"]`,
+            optional: true,
+        });
+    }
+
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
@@ -573,7 +588,13 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        config.selectionProps === "multiSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+            : config.selectionProps === "singleSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
+            : ``
+    } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
