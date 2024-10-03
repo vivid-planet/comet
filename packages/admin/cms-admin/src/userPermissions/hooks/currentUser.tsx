@@ -6,18 +6,24 @@ import { ContentScopeInterface, useContentScope } from "../../contentScope/Provi
 import { GQLCurrentUserPermission } from "../../graphql.generated";
 import { GQLCurrentUserQuery } from "./currentUser.generated";
 
-type CurrentUserContext = {
-    currentUser: CurrentUserInterface;
-    isAllowed: (user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => boolean;
+type CurrentUserContext<ContentScope extends ContentScopeInterface = ContentScopeInterface> = {
+    currentUser: CurrentUserInterface<ContentScope>;
+    isAllowed: (user: CurrentUserInterface<ContentScope>, permission: string, contentScope?: ContentScope) => boolean;
 };
 export const CurrentUserContext = createContext<CurrentUserContext | undefined>(undefined);
 
-export interface CurrentUserInterface {
+export interface CurrentUserInterface<ContentScope extends ContentScopeInterface = ContentScopeInterface> {
     id: string;
     name: string;
     email: string;
     permissions: GQLCurrentUserPermission[];
-    allowedContentScopes: ContentScopeInterface[];
+    allowedContentScopes: ContentScope[];
+    allowedContentScopesWithLabels: {
+        [key in keyof ContentScope]: {
+            label: string;
+            value: string;
+        };
+    }[];
 }
 
 export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{ isAllowed?: CurrentUserContext["isAllowed"] }>) => {
@@ -31,6 +37,8 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                     permission
                     contentScopes
                 }
+                allowedContentScopes
+                allowedContentScopesWithLabels
             }
         }
     `);
@@ -42,10 +50,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
-        currentUser: {
-            ...data.currentUser,
-            allowedContentScopes: data.currentUser.permissions.flatMap((p) => p.contentScopes),
-        },
+        currentUser: data.currentUser,
         isAllowed:
             isAllowed ??
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {
@@ -61,10 +66,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     return <CurrentUserContext.Provider value={context}>{children}</CurrentUserContext.Provider>;
 };
 
-export function useCurrentUser(): CurrentUserInterface {
+export function useCurrentUser<ContentScope extends ContentScopeInterface>(): CurrentUserInterface<ContentScope> {
     const ret = useContext(CurrentUserContext);
     if (!ret || !ret.currentUser) throw new Error("CurrentUser not found. Make sure CurrentUserContext exists.");
-    return ret.currentUser;
+    return ret.currentUser as CurrentUserContext<ContentScope>["currentUser"];
 }
 
 export function useUserPermissionCheck(): (permission: string) => boolean {

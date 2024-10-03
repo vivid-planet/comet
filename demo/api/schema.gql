@@ -18,6 +18,8 @@ type CurrentUser {
   email: String!
   permissions: [CurrentUserPermission!]!
   permissionsForScope(scope: JSONObject!): [String!]!
+  allowedContentScopes: [JSONObject!]!
+  allowedContentScopesWithLabels: [JSONObject!]!
 }
 
 type UserPermission {

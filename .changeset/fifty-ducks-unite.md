@@ -5,5 +5,21 @@
 
 Allow setting labels for user permissions admin panel
 
--   Add `getLabelForContentScope` to options of `UserPermissionsModule`
+-   Support labels in `availableContentScopes`
+    It now possible to use the following format (the same like for `ContentScopeSelect` in the admin):
+    ```ts
+    availableContentScopes: [
+        {
+            domain: {
+                value: "main",
+                label: "MAIN",
+            },
+            language: {
+                value: "en",
+                label: "English",
+            },
+        },
+        // ...,
+    ];
+    ```
 -   Add `permissionLabels` prop to `UserPermissionsPage`

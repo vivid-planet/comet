@@ -7,7 +7,6 @@ import {
     BlocksTransformerMiddlewareFactory,
     BuildsModule,
     ContentGenerationModule,
-    ContentScope,
     CronJobsModule,
     DamModule,
     DependenciesModule,
@@ -92,13 +91,11 @@ export class AppModule {
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
                         availableContentScopes: [
-                            { domain: "main", language: "de" },
-                            { domain: "main", language: "en" },
-                            { domain: "secondary", language: "en" },
-                            { domain: "secondary", language: "de" },
+                            { domain: { value: "main", label: "MAIN" }, language: { value: "en", label: "English" } },
+                            { domain: { value: "main", label: "MAIN" }, language: { value: "de", label: "Deutsch" } },
+                            { domain: { value: "secondary", label: "SECONDARY" }, language: { value: "en", label: "English" } },
+                            { domain: { value: "secondary", label: "SECONDARY" }, language: { value: "de", label: "Deutsch" } },
                         ],
-                        getLabelForContentScope: (contentScope: ContentScope) =>
-                            `${contentScope.domain[0].toUpperCase()}${contentScope.domain.slice(1)} ${contentScope.language.toUpperCase()}`,
                         userService,
                         accessControlService,
                     }),

@@ -17,6 +17,7 @@ import { User } from "./interfaces/user";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS, USER_PERMISSIONS_USER_SERVICE } from "./user-permissions.constants";
 import {
     AccessControlServiceInterface,
+    ContentScopeWithLabel,
     UserPermissions,
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
@@ -35,13 +36,40 @@ export class UserPermissionsService {
     ) {}
 
     async getAvailableContentScopes(): Promise<ContentScope[]> {
+        return (await this.getAvailableContentScopesWithLabels()).map((contentScope) =>
+            Object.fromEntries(
+                Object.entries<{
+                    label: string;
+                    value: string;
+                }>(contentScope).map(([key, value]) => [key, value.value]),
+            ),
+        );
+    }
+
+    async getAvailableContentScopesWithLabels(): Promise<ContentScopeWithLabel[]> {
+        let contentScopes: ContentScope[] = [];
         if (this.options.availableContentScopes) {
             if (typeof this.options.availableContentScopes === "function") {
-                return this.options.availableContentScopes();
+                contentScopes = await this.options.availableContentScopes();
+            } else {
+                contentScopes = this.options.availableContentScopes;
             }
-            return this.options.availableContentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
         }
-        return [];
+        contentScopes = contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
+
+        function camelCaseToHumanReadable(s: string | number) {
+            const words = s.toString().match(/[A-Za-z0-9][a-z0-9]*/g) || [];
+            return words.map((word) => word.charAt(0).toUpperCase() + word.substring(1)).join(" ");
+        }
+
+        return contentScopes.map((contentScope) =>
+            Object.fromEntries(
+                Object.entries(contentScope).map(([key, value]) => [
+                    key,
+                    typeof value === "string" ? { value, label: camelCaseToHumanReadable(value) } : value,
+                ]),
+            ),
+        );
     }
 
     async getAvailablePermissions(): Promise<string[]> {
@@ -150,11 +178,6 @@ export class UserPermissionsService {
         return [...new Set(contentScopes.map((cs) => JSON.stringify(cs)))] // Make values unique
             .map((cs) => JSON.parse(cs))
             .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
-    }
-
-    getLabelForContentScope(contentScope: ContentScope): string | null {
-        if (this.options.getLabelForContentScope) return this.options.getLabelForContentScope(contentScope);
-        return null;
     }
 
     async createCurrentUser(user: User): Promise<CurrentUser> {
