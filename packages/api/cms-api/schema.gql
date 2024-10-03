@@ -196,10 +196,6 @@ type PaginatedUserList {
   totalCount: Int!
 }
 
-type UserPermissionsOptions {
-  showAllUsersButton: Boolean!
-}
-
 type PageTreeNode {
   id: ID!
   parentId: String
@@ -375,8 +371,7 @@ type Query {
   kubernetesJobLogs(name: String!): String!
   currentUser: CurrentUser!
   userPermissionsUserById(id: String!): User!
-  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!], showAllUsers: Boolean): PaginatedUserList!
-  userPermissionsOptions: UserPermissionsOptions!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!], includeUsersWithoutPermissions: Boolean): PaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!

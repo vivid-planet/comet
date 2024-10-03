@@ -15,7 +15,4 @@ export class UserService implements UserPermissionsUserServiceInterface {
         const users = staticUsers.filter((user) => !search || user.name.toLowerCase().includes(search) || user.email.toLowerCase().includes(search));
         return [users, users.length];
     }
-    options: UserPermissionsUserServiceInterface["options"] = {
-        filterUsersWithoutPermission: true,
-    };
 }

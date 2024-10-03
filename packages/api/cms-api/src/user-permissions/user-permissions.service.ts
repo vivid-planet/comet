@@ -9,7 +9,7 @@ import getUuid from "uuid-by-string";
 
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "./decorators/required-permission.decorator";
 import { CurrentUser } from "./dto/current-user";
-import { FindUsersArgs } from "./dto/paginated-user-list";
+import { FindUsersResolverArgs } from "./dto/paginated-user-list";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { UserPermission, UserPermissionSource } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
@@ -80,24 +80,20 @@ export class UserPermissionsService {
         return this.userService.getUser(id);
     }
 
-    async findUsers(args: FindUsersArgs): Promise<[User[], number]> {
+    async findUsers({ search, filter, sort, offset, limit, includeUsersWithoutPermissions }: FindUsersResolverArgs): Promise<[User[], number]> {
         if (!this.userService) throw new Error("For this functionality you need to define the userService in the UserPermissionsModule.");
 
-        if (this.userService.options && this.userService.options.filterUsersWithoutPermission && !args.showAllUsers) {
-            const [users] = await this.userService.findUsers(args);
+        if (includeUsersWithoutPermissions) {
+            return this.userService.findUsers({ search, filter, sort, offset, limit });
+        } else {
+            const [users] = await this.userService.findUsers({ search, filter, sort });
             const allowedUsers: User[] = [];
             for (let i = 0; i < users.length; i++) {
                 if ((await this.getPermissions(users[i])).length > 0) allowedUsers.push(users[i]);
             }
-            const paginatedUsers = allowedUsers.filter((_, index) => index >= args.offset && index < args.offset + args.limit);
+            const paginatedUsers = allowedUsers.filter((_, index) => index >= offset && index < offset + limit);
             return [paginatedUsers, allowedUsers.length];
         }
-
-        return this.userService.findUsers(args);
-    }
-
-    getOptions(): UserPermissionsOptions & UserPermissionsUserServiceInterface["options"] {
-        return { ...this.options, ...(this.userService && this.userService.options ? this.userService.options : []) };
     }
 
     async checkContentScopes(contentScopes: ContentScope[]): Promise<void> {

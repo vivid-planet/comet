@@ -1,4 +1,4 @@
-import { ArgsType, Field, InputType, registerEnumType } from "@nestjs/graphql";
+import { ArgsType, Field, InputType, OmitType, PartialType, registerEnumType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 
@@ -55,7 +55,7 @@ class UserSort {
 }
 
 @ArgsType()
-export class FindUsersArgs extends OffsetBasedPaginationArgs {
+export class FindUsersResolverArgs extends OffsetBasedPaginationArgs {
     @Field({ nullable: true })
     @IsOptional()
     @IsString()
@@ -74,5 +74,7 @@ export class FindUsersArgs extends OffsetBasedPaginationArgs {
     @Field({ nullable: true })
     @IsOptional()
     @IsBoolean()
-    showAllUsers?: boolean; // Only used when UserService.filterUsersWithoutPermission() returns true
+    includeUsersWithoutPermissions?: boolean;
 }
+
+export class FindUsersArgs extends OmitType(PartialType(FindUsersResolverArgs), ["includeUsersWithoutPermissions"]) {}

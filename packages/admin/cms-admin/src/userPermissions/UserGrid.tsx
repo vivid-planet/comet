@@ -23,7 +23,7 @@ export const UserGrid = () => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
     const intl = useIntl();
     const stackApi = useContext(StackSwitchApiContext);
-    const [showAllUsers, setShowAllUsers] = useState(false);
+    const [includeUsersWithoutPermissions, setIncludeUsersWithoutPermissions] = useState(false);
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -63,22 +63,26 @@ export const UserGrid = () => {
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
-            query UserGrid($offset: Int, $limit: Int, $filter: UserFilter, $sort: [UserSort!], $search: String, $showAllUsers: Boolean) {
+            query UserGrid(
+                $offset: Int
+                $limit: Int
+                $filter: UserFilter
+                $sort: [UserSort!]
+                $search: String
+                $includeUsersWithoutPermissions: Boolean
+            ) {
                 users: userPermissionsUsers(
                     offset: $offset
                     limit: $limit
                     filter: $filter
                     sort: $sort
                     search: $search
-                    showAllUsers: $showAllUsers
+                    includeUsersWithoutPermissions: $includeUsersWithoutPermissions
                 ) {
                     nodes {
                         ...UserForGrid
                     }
                     totalCount
-                }
-                options: userPermissionsOptions {
-                    showAllUsersButton
                 }
             }
             fragment UserForGrid on User {
@@ -93,7 +97,7 @@ export const UserGrid = () => {
                 offset: dataGridProps.page * dataGridProps.pageSize,
                 limit: dataGridProps.pageSize,
                 sort: muiGridSortToGql(dataGridProps.sortModel),
-                showAllUsers,
+                includeUsersWithoutPermissions,
             },
         },
     );
@@ -116,13 +120,18 @@ export const UserGrid = () => {
                         <ToolbarItem>
                             <GridFilterButton />
                         </ToolbarItem>
-                        {data?.options?.showAllUsersButton && (
-                            <ToolbarItem>
-                                <ToggleButton value="showAllUsers" selected={showAllUsers} onChange={() => setShowAllUsers(!showAllUsers)}>
-                                    <FormattedMessage id="comet.userPermissions.showAllUsers" defaultMessage="Show all Users" />
-                                </ToggleButton>
-                            </ToolbarItem>
-                        )}
+                        <ToolbarItem>
+                            <ToggleButton
+                                value="includeUsersWithoutPermissions"
+                                selected={includeUsersWithoutPermissions}
+                                onChange={() => setIncludeUsersWithoutPermissions(!includeUsersWithoutPermissions)}
+                            >
+                                <FormattedMessage
+                                    id="comet.userPermissions.includeUsersWithoutPermissions"
+                                    defaultMessage="Include users without permissions"
+                                />
+                            </ToggleButton>
+                        </ToolbarItem>
                     </DataGridToolbar>
                 ),
             }}
