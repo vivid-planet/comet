@@ -153,7 +153,6 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                     ...slotProps?.mobileMenu?.transformOrigin,
                 }}
                 MenuListProps={{
-                    // @ts-expect-error This works but the `component` prop seems to be missing in the type definitions
                     component: "div",
                     ...slotProps?.mobileMenu?.MenuListProps,
                 }}

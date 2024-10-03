@@ -17,7 +17,6 @@ export const MenuItemAnchorLink = ({ secondaryAction: passedSecondaryAction, isM
     return (
         <MenuItem
             selected={false}
-            // @ts-expect-error "component"-property is used as described in the documentation  https://mui.com/material-ui/react-list/, but type is missing in ListItemButtonProps
             component="a"
             secondaryAction={secondaryAction}
             isMenuOpen={isMenuOpen}
