@@ -38,13 +38,13 @@ export const HoverPreviewComponent = ({ children, componentSlug }: PropsWithChil
     return (
         <sc.Root
             ref={rootEl}
-            onMouseOver={(e) => {
+            onMouseOver={(e: React.MouseEvent<HTMLDivElement>) => {
                 if (iFrameBridge.iFrameReady) {
                     iFrameBridge.sendHoverComponent(componentRoute);
                     e.stopPropagation();
                 }
             }}
-            onMouseLeave={(e) => {
+            onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
                 if (iFrameBridge.iFrameReady) {
                     iFrameBridge.sendHoverComponent(null);
                     e.stopPropagation();
