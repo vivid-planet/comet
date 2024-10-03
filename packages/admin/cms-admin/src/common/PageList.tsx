@@ -1,6 +1,6 @@
 import { messages } from "@comet/admin";
 import { ArrowLeft, File, Folder } from "@comet/admin-icons";
-import { List, ListItem, ListItemIcon } from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
@@ -24,25 +24,24 @@ export function PageList({ items, showBackButton, onItemClick, onBackClick, site
     return (
         <Root>
             {showBackButton && (
-                <ListItem button divider onClick={onBackClick}>
+                <ListItemButton divider onClick={onBackClick}>
                     <ListItemIcon>
                         <ArrowLeft />
                     </ListItemIcon>
                     <FormattedMessage {...messages.back} />
-                </ListItem>
+                </ListItemButton>
             )}
             <ScrollableListSection>
                 {items.map((item) => (
-                    <ListItem
+                    <ListItemButton
                         key={`${item.id}-${item.type}`}
-                        button
                         onClick={() => onItemClick?.(item)}
                         selected={item.selected}
                         title={item.type === "page" ? `${siteUrl}${item.path}` : undefined}
                     >
                         <ListItemIcon>{item.type === "page" ? <File /> : <Folder />}</ListItemIcon>
                         {item.name}
-                    </ListItem>
+                    </ListItemButton>
                 ))}
                 {items.length === 0 && (
                     <ListItem>

@@ -10,7 +10,7 @@ import {
     InputAdornment,
     InputBase,
     List,
-    ListItem,
+    ListItemButton,
     ListItemIcon,
     Paper,
     Typography,
@@ -178,12 +178,12 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props) 
                             <Paper elevation={0}>
                                 <List disablePadding>
                                     {category.blocks.map(([type, block]) => (
-                                        <ListItem key={type} dense={false} button divider onClick={() => handleListItemClick(type)}>
+                                        <ListItemButton key={type} dense={false} divider onClick={() => handleListItemClick(type)}>
                                             <ListItemIcon>
                                                 <Dashboard />
                                             </ListItemIcon>
                                             {block.displayName}
-                                        </ListItem>
+                                        </ListItemButton>
                                     ))}
                                 </List>
                             </Paper>
