@@ -162,7 +162,6 @@ export class UserPermissionsService {
                     return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
                 } catch (e) {
                     this.unsetImpersonatedUser(request);
-                    request.res?.clearCookie("comet-impersonate-user-id");
                 }
             }
         }
