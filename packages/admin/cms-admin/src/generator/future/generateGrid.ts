@@ -32,7 +32,13 @@ function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
         .join("\n")}}`;
 }
 
-export type Prop = { type: string; optional: boolean; name: string };
+export type Prop = {
+    type: string;
+    optional: boolean;
+    name: string;
+    defaultValue?: string | number;
+};
+
 function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; gridPropsParamsCode: string } {
     if (!props.length) return { gridPropsTypeCode: "", gridPropsParamsCode: "" };
     const uniqueProps = props.reduce<Prop[]>((acc, prop) => {
@@ -62,7 +68,7 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
                 )
                 .join("\n")}
         };`,
-        gridPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: Props`,
+        gridPropsParamsCode: `{${uniqueProps.map((prop) => `${prop.name} ${prop.defaultValue ? `= ${prop.defaultValue}` : ""}`).join(", ")}}: Props`,
     };
 }
 
@@ -199,7 +205,13 @@ export function generateGrid(
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
 
+    const forwardRowAction = allowEditing && config.rowActionProp;
+
     const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
+    const showCrudContextMenuInActionsColumn = allowCopyPaste || allowDeleting;
+    const showEditInActionsColumn = allowEditing && !forwardRowAction;
+
+    const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
     const {
         imports: forwardedGqlArgsImports,
@@ -293,7 +305,7 @@ export function generateGrid(
         type: actionsColumnType,
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
-        width: actionsColumnWidth = 84,
+        width: actionsColumnWidth = defaultActionsColumnWidth,
         visible: actionsColumnVisible = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
@@ -444,12 +456,17 @@ export function generateGrid(
 
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
-    const forwardRowAction = allowEditing && config.rowActionProp;
     if (forwardRowAction) {
         props.push({
             name: "rowAction",
             type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => React.ReactNode`,
             optional: true,
+        });
+        props.push({
+            name: "actionsColumnWidth",
+            type: `number`,
+            optional: true,
+            defaultValue: defaultActionsColumnWidth,
         });
     }
 
@@ -571,7 +588,7 @@ export function generateGrid(
     ${gridPropsTypeCode}
 
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
-        ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
+        ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
@@ -665,7 +682,7 @@ export function generateGrid(
                               type: '"actions"',
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
-                              width: actionsColumnWidth,
+                              width: forwardRowAction ? "actionsColumnWidth" : actionsColumnWidth,
                               visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
@@ -681,7 +698,7 @@ export function generateGrid(
                                         </IconButton>`
                                       : ""
                               }${
-                                  allowCopyPaste || allowDeleting
+                                  showCrudContextMenuInActionsColumn
                                       ? `
                                         <CrudContextMenu
                                             ${
@@ -814,3 +831,20 @@ export function generateGrid(
         gqlDocuments,
     };
 }
+
+const getDefaultActionsColumnWidth = (showCrudContextMenu: boolean, showEdit: boolean) => {
+    let numberOfActions = 0;
+
+    if (showCrudContextMenu) {
+        numberOfActions += 1;
+    }
+
+    if (showEdit) {
+        numberOfActions += 1;
+    }
+
+    const widthOfSingleAction = 32;
+    const spacingAroundActions = 20;
+
+    return numberOfActions * widthOfSingleAction + spacingAroundActions;
+};

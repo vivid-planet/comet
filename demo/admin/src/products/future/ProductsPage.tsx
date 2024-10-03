@@ -61,6 +61,7 @@ export function ProductsPage() {
                                     <Edit color="primary" />
                                 </IconButton>
                             )}
+                            actionsColumnWidth={116}
                         />
                     </MainContent>
                 </StackPage>
