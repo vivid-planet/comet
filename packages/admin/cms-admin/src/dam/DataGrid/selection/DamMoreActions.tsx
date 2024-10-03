@@ -124,7 +124,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                 anchorOrigin={anchorOrigin}
             >
                 <Box px={3}>
-                    <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" mt={5}>
+                    <Typography variant="subtitle2" color="grey.500" fontWeight="bold" mt={5}>
                         <FormattedMessage id="comet.dam.moreActions.overallActions" defaultMessage="Overall actions" />
                     </Typography>
                     <MenuList>
@@ -143,7 +143,7 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                         </MenuItem>
                     </MenuList>
                     <Divider sx={{ my: 1, borderColor: (theme) => theme.palette.grey[50] }} />
-                    <Typography variant="subtitle2" color={(theme) => theme.palette.grey[500]} fontWeight="bold" mt={5}>
+                    <Typography variant="subtitle2" color="grey.500" fontWeight="bold" mt={5}>
                         <FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />
                     </Typography>
                     <MenuList>
