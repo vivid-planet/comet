@@ -32,8 +32,9 @@ import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
-import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
+import { FileSettingsFields } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
+import { LicenseType } from "./licenseType";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
