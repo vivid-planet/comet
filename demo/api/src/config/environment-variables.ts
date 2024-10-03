@@ -131,4 +131,13 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.SENTRY_DSN)
     @IsString()
     SENTRY_ENVIRONMENT?: string;
+
+    @IsString()
+    @MinLength(16)
+    FILE_UPLOADS_DOWNLOAD_SECRET: string;
+
+    @IsString()
+    @MinLength(16)
+    @ValidateIf(() => process.env.NODE_ENV === "production")
+    SITE_PREVIEW_SECRET: string;
 }

@@ -117,7 +117,9 @@ export class AppModule {
                     Documents: [Page, Link, PredefinedPage],
                     Scope: PageTreeNodeScope,
                     reservedPaths: ["/events"],
+                    sitePreviewSecret: config.sitePreviewSecret,
                 }),
+
                 RedirectsModule.register({ customTargets: { news: NewsLinkBlock }, Scope: RedirectScope }),
                 BlobStorageModule.register({
                     backend: config.blob.storage,
@@ -140,10 +142,19 @@ export class AppModule {
                 FileUploadsModule.register({
                     maxFileSize: config.fileUploads.maxFileSize,
                     directory: `${config.blob.storageDirectoryPrefix}-file-uploads`,
-                    acceptedMimeTypes: ["application/pdf", "application/x-zip-compressed", "application/zip", "image/png", "image/jpeg", "image/gif"],
+                    acceptedMimeTypes: [
+                        "application/pdf",
+                        "application/x-zip-compressed",
+                        "application/zip",
+                        "image/png",
+                        "image/jpeg",
+                        "image/gif",
+                        "image/webp",
+                    ],
                     upload: {
                         public: true,
                     },
+                    download: { public: true, ...config.fileUploads.download },
                 }),
                 ...(config.contentGeneration
                     ? [

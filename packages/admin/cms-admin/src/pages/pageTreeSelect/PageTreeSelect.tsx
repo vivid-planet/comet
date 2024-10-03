@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { Link } from "@comet/admin-icons";
 import { AdminComponentButton, AdminComponentNestedButton } from "@comet/blocks-admin";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
@@ -20,8 +20,8 @@ const pageTreeSelectDetail = gql`
     }
 `;
 
-export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps): JSX.Element {
-    const [open, setOpen] = React.useState(false);
+export default function PageTreeSelect({ value, onChange }: PageTreeSelectProps) {
+    const [open, setOpen] = useState(false);
 
     const { data, loading } = useQuery<GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables>(pageTreeSelectDetail, {
         variables: { id: value?.id as string },

@@ -2,7 +2,7 @@ import { Close } from "@comet/admin-icons";
 import { Dialog, DialogContent as MuiDialogContent, DialogTitle, IconButton, Link, Modal as MuiModal, Typography } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { ReactElement } from "react";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
 import { version } from "../../..";
@@ -12,10 +12,10 @@ import { CometDigitalExperienceLogo } from "./CometDigitalExperienceLogo";
 interface AboutModalProps {
     onClose?: () => void;
     open: boolean;
-    logo?: React.ReactElement;
+    logo?: ReactElement;
 }
 
-export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: AboutModalProps): React.ReactElement {
+export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /> }: AboutModalProps) {
     const buildInformation = useBuildInformation();
 
     return (

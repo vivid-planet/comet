@@ -2,7 +2,7 @@ import { Minimize } from "@comet/admin-icons";
 import { useIFrameBridge } from "@comet/blocks-admin";
 import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { useEffect } from "react";
 
 import { useContentScope } from "../../contentScope/Provider";
 import { DeviceToggle } from "../common/DeviceToggle";
@@ -16,15 +16,11 @@ interface Props {
     previewState: unknown;
 }
 
-function BlockPreview({
-    url,
-    previewState,
-    previewApi: { device, setDevice, showOnlyVisible, setShowOnlyVisible, setMinimized },
-}: Props): React.ReactElement {
+function BlockPreview({ url, previewState, previewApi: { device, setDevice, showOnlyVisible, setShowOnlyVisible, setMinimized } }: Props) {
     const iFrameBridge = useIFrameBridge();
     const { scope } = useContentScope();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (iFrameBridge.iFrameReady) {
             iFrameBridge.sendBlockState(previewState);
         }

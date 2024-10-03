@@ -1,5 +1,29 @@
 # @comet/cms-site
 
+## 7.5.0
+
+## 7.4.2
+
+### Patch Changes
+
+-   d95b0cb8d: Fix Next peer dependency
+
+    The peer dependency was incorrectly set to `14`.
+    We require `14.2.0` or later due to relying on [optimizePackageImports](https://nextjs.org/docs/app/api-reference/next-config-js/optimizePackageImports).
+
+## 7.4.1
+
+## 7.4.0
+
+### Minor Changes
+
+-   bfb8f04e6: Add `VimeoVideoBlock` to support Vimeo videos
+-   b132010e2: Add helper functions and components to prevent loading third-party cookies until explicit user consent
+
+    See the docs for information on usage and configuration: https://docs.comet-dxp.com/docs/working-with-cookies/
+
+-   53d896b56: Add optional `icon` prop to `VideoPreviewImage` to enable setting a custom play icon
+
 ## 7.3.2
 
 ## 7.3.1

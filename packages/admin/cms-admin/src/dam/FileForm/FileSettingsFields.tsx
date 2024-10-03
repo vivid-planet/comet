@@ -4,11 +4,10 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { ArtificialIntelligence, Calendar } from "@comet/admin-icons";
 import { IconButton, InputAdornment } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { useCallback } from "react";
 import { useForm } from "react-final-form";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLLicenseType } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { useDamScope } from "../config/useDamScope";
 import { slugifyFilename } from "../helpers/slugifyFilename";
@@ -22,6 +21,7 @@ import {
     GQLGenerateImageTitleMutation,
     GQLGenerateImageTitleMutationVariables,
 } from "./FileSettingsFields.gql.generated";
+import { LicenseType, licenseTypeArray, licenseTypeLabels } from "./licenseType";
 
 interface SettingsFormProps {
     file: DamFileDetails;
@@ -33,17 +33,7 @@ const damIsFilenameOccupiedQuery = gql`
     }
 `;
 
-export type LicenseType = GQLLicenseType | "NO_LICENSE";
-
-const licenseTypeArray: readonly LicenseType[] = ["NO_LICENSE", "ROYALTY_FREE", "RIGHTS_MANAGED"];
-
-const licenseTypeLabels: { [key in LicenseType]: React.ReactNode } = {
-    NO_LICENSE: "-",
-    ROYALTY_FREE: <FormattedMessage id="comet.dam.file.licenseType.royaltyFree" defaultMessage="Royalty free" />,
-    RIGHTS_MANAGED: <FormattedMessage id="comet.dam.file.licenseType.rightsManaged" defaultMessage="Rights managed" />,
-};
-
-export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElement => {
+export const FileSettingsFields = ({ file }: SettingsFormProps) => {
     const folderId = file.folder?.id ?? null;
     const isImage = !!file.image;
     const intl = useIntl();
@@ -52,7 +42,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
     const damConfig = useDamConfig();
     const formApi = useForm();
     const { contentGeneration } = useDamConfig();
-    const damIsFilenameOccupied = React.useCallback(
+    const damIsFilenameOccupied = useCallback(
         async (filename: string): Promise<boolean> => {
             const { data } = await apollo.query<GQLDamIsFilenameOccupiedQuery, GQLDamIsFilenameOccupiedQueryVariables>({
                 query: damIsFilenameOccupiedQuery,
@@ -69,7 +59,7 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
         [apollo, folderId, scope],
     );
 
-    const requiredValidator = React.useCallback(
+    const requiredValidator = useCallback(
         (value: unknown, allValues: object) => {
             const type = (allValues as EditFileFormValues).license?.type;
             const isRequired = type === "ROYALTY_FREE" ? false : damConfig.requireLicense;
@@ -110,6 +100,8 @@ export const FileSettingsFields = ({ file }: SettingsFormProps): React.ReactElem
                         }
                     }}
                     onBlur={() => {
+                        formApi.blur("name");
+
                         const filename: string | undefined = formApi.getFieldState("name")?.value;
                         const nameWithoutExtension = filename?.split(".").slice(0, -1).join(".");
                         const extension = file.name.split(".").pop();

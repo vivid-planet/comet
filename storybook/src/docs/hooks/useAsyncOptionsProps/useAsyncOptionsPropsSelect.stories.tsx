@@ -8,6 +8,9 @@ storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () =
         value: string;
         label: string;
     }
+    const initialValues = React.useMemo(() => {
+        return { selectAsync: { value: "strawberry", label: "Strawberry" } };
+    }, []);
 
     const selectAsyncProps = useAsyncOptionsProps<Option>(async () => {
         return new Promise((resolve) =>
@@ -23,7 +26,7 @@ storiesOf("stories/hooks/useAsyncOptionsPropsSelect", module).add("Select", () =
 
     return (
         <div style={{ minHeight: "50px" }}>
-            <Form onSubmit={() => {}} initialValues={{ selectAsync: { value: "strawberry", label: "Strawberry" } }}>
+            <Form onSubmit={() => {}} initialValues={initialValues}>
                 {() => (
                     <Field
                         name="selectAsync"

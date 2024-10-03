@@ -1,6 +1,5 @@
 import { Field } from "@comet/admin";
 import { BlockCategory, BlockInterface, BlocksFinalForm, createOneOfBlock, resolveNewState } from "@comet/blocks-admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PixelImageBlockData, SvgImageBlockData } from "../../blocks.generated";

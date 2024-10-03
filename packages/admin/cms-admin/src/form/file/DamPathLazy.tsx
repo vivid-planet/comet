@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client";
-import React from "react";
 
 import { GQLDamPathLazyQuery, GQLDamPathLazyQueryVariables } from "./DamPathLazy.generated";
 
@@ -14,7 +13,7 @@ const damPathLazyQuery = gql`
 interface DamPathLazyProps {
     fileId: string;
 }
-export const DamPathLazy = ({ fileId }: DamPathLazyProps): React.ReactElement => {
+export const DamPathLazy = ({ fileId }: DamPathLazyProps) => {
     const { data } = useQuery<GQLDamPathLazyQuery, GQLDamPathLazyQueryVariables>(damPathLazyQuery, { variables: { id: fileId } });
     if (!data) {
         return <> </>;

@@ -2,7 +2,7 @@ import { StackLink, SubRoute } from "@comet/admin";
 import { Close } from "@comet/admin-icons";
 import { Button, Dialog, DialogTitle, IconButton, Link } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import { SyntheticEvent } from "react";
 import { FormattedMessage } from "react-intl";
 import { MemoryRouter } from "react-router";
 
@@ -80,12 +80,12 @@ const renderDamLabel = (
 
 interface ChooseFileDialogProps {
     open: boolean;
-    onClose: (event: React.SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
+    onClose: (event: SyntheticEvent, reason: "backdropClick" | "escapeKeyDown") => void;
     onChooseFile: (fileId: string) => void;
     allowedMimetypes?: string[];
 }
 
-export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps): React.ReactElement => {
+export const ChooseFileDialog = ({ open, onClose, onChooseFile, allowedMimetypes }: ChooseFileDialogProps) => {
     const damConfig = useDamConfig();
     let stateKey = "choose-file-dam-location";
     const scope = useDamScope();
