@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: String!
+  name: String!
+  email: String!
+}
+
 type CurrentUserPermission {
   permission: String!
   contentScopes: [JSONObject!]!
@@ -17,6 +23,8 @@ type CurrentUser {
   name: String!
   email: String!
   permissions: [CurrentUserPermission!]!
+  impersonated: Boolean
+  authenticatedUser: User
   permissionsForScope(scope: JSONObject!): [String!]!
 }
 
@@ -187,12 +195,6 @@ type FileUpload {
   updatedAt: DateTime!
   downloadUrl: String
   imageUrl(resizeWidth: Int!): String
-}
-
-type User {
-  id: String!
-  name: String!
-  email: String!
 }
 
 type PaginatedUserList {
@@ -1156,6 +1158,8 @@ input ManufacturerCountryFilter {
 
 type Mutation {
   currentUserSignOut: String!
+  userPermissionsStartImpersonation(userId: String!): Boolean!
+  userPermissionsStopImpersonation: Boolean!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!
