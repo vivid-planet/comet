@@ -1,11 +1,12 @@
 import { ApolloClient, RefetchQueriesOptions, useApolloClient } from "@apollo/client";
-import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving, WarningSolid } from "@comet/admin-icons";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { readClipboardText } from "../clipboard/readClipboardText";
 import { writeClipboardText } from "../clipboard/writeClipboardText";
+import { CancelButton } from "../common/buttons/cancel/CancelButton";
 import { FeedbackButton } from "../common/buttons/feedback/FeedbackButton";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 import { messages } from "../messages";
@@ -22,25 +23,24 @@ const DeleteDialog = (props: DeleteDialogProps) => {
     const { dialogOpen, onDelete, onCancel } = props;
 
     return (
-        <Dialog open={dialogOpen} onClose={onDelete}>
+        <Dialog open={dialogOpen} onClose={onDelete} maxWidth="sm">
             <DialogTitle>
-                <FormattedMessage id="comet.table.deleteDialog.title" defaultMessage="Delete item?" />
+                <FormattedMessage id="comet.table.deleteDialog.title" defaultMessage="Attention. Please confirm." />
             </DialogTitle>
-            <DialogContent>
-                <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="WARNING: This cannot be undone!" />
+            <DialogContent sx={{ gap: (theme) => theme.spacing(2), display: "flex", alignItems: "center" }}>
+                <WarningSolid color="error" />
+                <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="You are about to delete this item permanently." />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel} color="primary">
-                    <FormattedMessage {...messages.no} />
-                </Button>
+                <CancelButton onClick={onCancel} />
                 <FeedbackButton
                     startIcon={<DeleteIcon />}
                     onClick={onDelete}
-                    color="primary"
-                    variant="contained"
+                    color="error"
+                    variant="outlined"
                     tooltipErrorMessage={<FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />}
                 >
-                    <FormattedMessage {...messages.yes} />
+                    <FormattedMessage {...messages.delete} />
                 </FeedbackButton>
             </DialogActions>
         </Dialog>

@@ -44,7 +44,7 @@ export class NewsContentScope {
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
 export class News extends BaseEntity<News, "id"> {
-    [OptionalProps]?: "createdAt" | "updatedAt" | "category" | "status"; // TODO remove "category" once CRUD generator supports enums
+    [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
@@ -72,7 +72,7 @@ export class News extends BaseEntity<News, "id"> {
 
     @Enum({ items: () => NewsCategory })
     @Field(() => NewsCategory)
-    category: NewsCategory = NewsCategory.Awards; // TODO remove default value once CRUD generator supports enums
+    category: NewsCategory;
 
     @RootBlock(DamImageBlock)
     @Property({ customType: new RootBlockType(DamImageBlock) })
