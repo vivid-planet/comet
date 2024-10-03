@@ -1,6 +1,5 @@
-import { CSSInterpolation, Theme } from "@mui/material";
-import { ComponentNameToClassKey, OverridesStyleRules } from "@mui/material/styles/overrides";
-import { ComponentsPropsList } from "@mui/material/styles/props";
+import { ComponentNameToClassKey, ComponentsPropsList, Theme } from "@mui/material/styles";
+import { OverridesStyleRules } from "@mui/material/styles/overrides";
 import { deepmerge } from "@mui/utils";
 
 type OwnerState<PropsName extends keyof ComponentsPropsList> = PropsName extends keyof ComponentsPropsList
@@ -11,10 +10,16 @@ type OverrideProps<PropsName extends keyof ComponentsPropsList> = OwnerState<Pro
 
 type ClassKey<ClassesName extends keyof ComponentNameToClassKey> = ComponentNameToClassKey[ClassesName];
 
+type StyleOverrideInterpolation<ClassKey extends string = string, ComponentName = keyof ComponentsPropsList, Theme = unknown> = OverridesStyleRules<
+    ClassKey,
+    ComponentName,
+    Theme
+>[ClassKey];
+
 const getOverridesInterpolation = <PropsName extends keyof ComponentsPropsList>(
     props: OverrideProps<PropsName>,
-    overrides?: CSSInterpolation | ((props: OverrideProps<PropsName>) => CSSInterpolation) | undefined,
-): CSSInterpolation => {
+    overrides?: StyleOverrideInterpolation<PropsName> | undefined,
+): StyleOverrideInterpolation => {
     if (typeof overrides === "undefined") {
         return {};
     }
@@ -34,7 +39,7 @@ export const mergeOverrideStyles = <ComponentName extends keyof ComponentNameToC
 
     Object.keys(passedIn).forEach((classKey: ClassKey<ComponentName>) => {
         mergedOverrides[classKey] = (props: OverrideProps<ComponentName>) => {
-            return deepmerge<CSSInterpolation>(
+            return deepmerge<StyleOverrideInterpolation>(
                 getOverridesInterpolation<ComponentName>(props, comet[classKey]),
                 getOverridesInterpolation<ComponentName>(props, passedIn[classKey]),
             );
