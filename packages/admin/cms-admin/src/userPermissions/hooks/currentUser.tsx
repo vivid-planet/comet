@@ -24,6 +24,7 @@ export interface CurrentUserInterface<ContentScope extends ContentScopeInterface
             value: string;
         };
     }[];
+    impersonated: boolean;
 }
 
 export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{ isAllowed?: CurrentUserContext["isAllowed"] }>) => {
@@ -39,6 +40,7 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
                 }
                 allowedContentScopes
                 allowedContentScopesWithLabels
+                impersonated
             }
         }
     `);
@@ -50,7 +52,10 @@ export const CurrentUserProvider = ({ isAllowed, children }: PropsWithChildren<{
     if (!data) return <Loading behavior="fillPageHeight" />;
 
     const context: CurrentUserContext = {
-        currentUser: data.currentUser,
+        currentUser: {
+            ...data.currentUser,
+            impersonated: !!data.currentUser.impersonated,
+        },
         isAllowed:
             isAllowed ??
             ((user: CurrentUserInterface, permission: string, contentScope?: ContentScopeInterface) => {

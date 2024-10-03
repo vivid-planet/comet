@@ -1,3 +1,9 @@
+type User {
+  id: String!
+  name: String!
+  email: String!
+}
+
 type CurrentUserPermission {
   permission: String!
   contentScopes: [JSONObject!]!
@@ -13,6 +19,8 @@ type CurrentUser {
   name: String!
   email: String!
   permissions: [CurrentUserPermission!]!
+  impersonated: Boolean
+  authenticatedUser: User
   permissionsForScope(scope: JSONObject!): [String!]!
   allowedContentScopes: [JSONObject!]!
   allowedContentScopesWithLabels: [JSONObject!]!
@@ -184,12 +192,7 @@ type FileUpload {
   createdAt: DateTime!
   updatedAt: DateTime!
   downloadUrl: String
-}
-
-type User {
-  id: String!
-  name: String!
-  email: String!
+  imageUrl(resizeWidth: Int!): String
 }
 
 type PaginatedUserList {
@@ -385,6 +388,7 @@ type Query {
   userPermissionsAvailableContentScopes: [AvailableContentScope!]!
   fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
+  sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
 }
 
 input RedirectScopeInput {
@@ -547,6 +551,8 @@ type Mutation {
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   currentUserSignOut: String!
+  userPermissionsStartImpersonation(userId: String!): Boolean!
+  userPermissionsStopImpersonation: Boolean!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!

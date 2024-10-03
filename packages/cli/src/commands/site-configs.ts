@@ -67,10 +67,9 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
                     ...filteredSiteConfigs.filter((d) => d.domains.additional).flatMap((d) => d.domains.additional),
                 ]);
             } else if (type === "prelogin") {
-                const filteredSiteConfigs = siteConfigs.filter((d) => d.preloginEnabled || d.domains.preliminary);
                 return JSON.stringify([
-                    ...filteredSiteConfigs.map((d) => d.domains.main),
-                    ...filteredSiteConfigs.filter((d) => d.domains.preliminary).map((d) => d.domains.preliminary),
+                    ...siteConfigs.filter((d) => d.preloginEnabled).map((d) => d.domains.main),
+                    ...siteConfigs.filter((d) => d.domains.preliminary).map((d) => d.domains.preliminary),
                 ]);
             }
             throw new Error('type must be "site", "prelogin"');
