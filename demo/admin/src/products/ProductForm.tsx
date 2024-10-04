@@ -5,6 +5,7 @@ import {
     Field,
     filterByFragment,
     FinalForm,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
@@ -35,6 +36,7 @@ import {
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
+import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -177,6 +179,17 @@ export function ProductForm({ id }: FormProps) {
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
+                        <Field
+                            name="priceRange"
+                            label={<FormattedMessage id="product.priceRange" defaultMessage="Price range" />}
+                            fullWidth
+                            required
+                            component={FinalFormRangeInput}
+                            min={5}
+                            max={100}
+                            startAdornment={<span>€</span>}
+                            disableSlider
+                        />
                         <TextAreaField
                             required
                             fullWidth
