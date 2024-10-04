@@ -8,6 +8,7 @@ import {
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
+    RowActionsItem,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -17,8 +18,8 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Delete, Download, MoreVertical, Move } from "@comet/admin-icons";
-import { Button, Menu, MenuItem, useTheme } from "@mui/material";
+import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
+import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
@@ -342,7 +343,12 @@ storiesOf("stories/components/DataGrid", module)
                                     lastName: params.row.lastName,
                                 };
                             }}
-                        />
+                        >
+                            <RowActionsItem icon={<Favorite />} onClick={() => alert(`Doing a custom action on ${params.row.firstName}`)}>
+                                Custom action
+                            </RowActionsItem>
+                            <Divider />
+                        </CrudContextMenu>
                     );
                 },
             },

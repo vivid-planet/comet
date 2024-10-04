@@ -56,6 +56,10 @@ export interface CrudContextMenuProps<CopyData>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     refetchQueries?: RefetchQueriesOptions<any, unknown>["include"];
     copyData?: () => Promise<CopyData> | CopyData;
+    /**
+     * Render custom `RowActionsItem` components to be added to the menu.
+     */
+    children?: ReactNode;
 }
 
 export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData>) {
@@ -68,6 +72,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
         slotProps,
         iconMapping = {},
         messagesMapping = {},
+        children,
         ...restProp
     } = useThemeProps({
         props: inProps,
@@ -161,6 +166,7 @@ export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData
         <>
             <Root {...slotProps?.root} {...restProp}>
                 <ItemsMenu {...slotProps?.itemsMenu}>
+                    {children}
                     {url && (
                         <CopyUrlItem
                             icon={copyUrlIcon}
