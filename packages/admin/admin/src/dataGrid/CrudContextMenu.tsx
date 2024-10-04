@@ -1,51 +1,16 @@
 import { ApolloClient, RefetchQueriesOptions, useApolloClient } from "@apollo/client";
-import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving, WarningSolid } from "@comet/admin-icons";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
+import { Divider } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { readClipboardText } from "../clipboard/readClipboardText";
 import { writeClipboardText } from "../clipboard/writeClipboardText";
-import { CancelButton } from "../common/buttons/cancel/CancelButton";
-import { FeedbackButton } from "../common/buttons/feedback/FeedbackButton";
+import { DeleteDialog } from "../common/DeleteDialog";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
 import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
 import { RowActionsMenu } from "../rowActions/RowActionsMenu";
-
-interface DeleteDialogProps {
-    dialogOpen: boolean;
-    onDelete: () => Promise<void>;
-    onCancel: () => void;
-}
-
-const DeleteDialog = (props: DeleteDialogProps) => {
-    const { dialogOpen, onDelete, onCancel } = props;
-
-    return (
-        <Dialog open={dialogOpen} onClose={onDelete} maxWidth="sm">
-            <DialogTitle>
-                <FormattedMessage id="comet.table.deleteDialog.title" defaultMessage="Attention. Please confirm." />
-            </DialogTitle>
-            <DialogContent sx={{ gap: (theme) => theme.spacing(2), display: "flex", alignItems: "center" }}>
-                <WarningSolid color="error" />
-                <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="You are about to delete this item permanently." />
-            </DialogContent>
-            <DialogActions>
-                <CancelButton onClick={onCancel} />
-                <FeedbackButton
-                    startIcon={<DeleteIcon />}
-                    onClick={onDelete}
-                    color="error"
-                    variant="outlined"
-                    tooltipErrorMessage={<FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />}
-                >
-                    <FormattedMessage {...messages.delete} />
-                </FeedbackButton>
-            </DialogActions>
-        </Dialog>
-    );
-};
 
 export interface CrudContextMenuProps<CopyData> {
     url?: string;
