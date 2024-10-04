@@ -18,27 +18,23 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             minWidth: 200,
             primaryText: "title",
             secondaryText: {
-                type: "formattedMessage",
-                message: "{price} • {type} • {category} • {inStock}",
-                valueFields: {
-                    price: {
+                type: "group",
+                fields: [
+                    {
                         type: "number",
                         field: "price",
                         currency: "EUR",
-                        emptyValue: "No price",
                     },
-                    type: {
+                    {
                         type: "staticSelect",
                         field: "type",
                         values: typeValues,
-                        emptyValue: "No type",
                     },
-                    category: {
+                    {
                         type: "text",
                         field: "category.title",
-                        emptyValue: "No category",
                     },
-                    inStock: {
+                    {
                         type: "staticSelect",
                         field: "inStock",
                         values: [
@@ -46,7 +42,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
                             { value: false, label: "Out of stock" },
                         ],
                     },
-                },
+                ],
             },
             visible: "down('md')",
             sortBy: ["title", "price", "type", "category", "inStock"],

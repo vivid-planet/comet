@@ -43,13 +43,19 @@ type FormattedMessage<FieldName extends string> = {
     valueFields: Record<string, Field<FieldName>>;
 };
 
+type GroupedField<FieldName extends string> = {
+    type: "group";
+    fields: Field<FieldName>[];
+};
+
 type Field<FieldName extends string> =
     | StaticText
     | FieldName
     | TextField<FieldName>
     | NumberField<FieldName>
     | StaticSelectField<FieldName>
-    | FormattedMessage<FieldName>;
+    | FormattedMessage<FieldName>
+    | GroupedField<FieldName>;
 
 export type GridCombinationColumnConfig<FieldName extends string> = {
     type: "combination";
@@ -96,6 +102,11 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
             textContent: getFormattedMessageNode(messageIdPrefix, textConfig.message, `{${values}}`),
             variableDefinitions,
         };
+    }
+
+    if (textConfig.type === "group") {
+        // TODO
+        throw new Error("Not implemented");
     }
 
     const emptyText = "emptyValue" in textConfig ? getFormattedMessageNode(`${messageIdPrefix}.empty`, textConfig.emptyValue) : "'-'";
@@ -207,6 +218,11 @@ const getFieldNamesFromText = (textConfig: Field<string>): string[] => {
 
     if (textConfig.type === "formattedMessage") {
         return Object.values(textConfig.valueFields).flatMap((value) => getFieldNamesFromText(value));
+    }
+
+    if (textConfig.type === "group") {
+        // TODO
+        throw new Error("Not implemented");
     }
 
     return [textConfig.field];
