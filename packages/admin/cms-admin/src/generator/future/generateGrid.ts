@@ -334,7 +334,6 @@ export function generateGrid(
             gridType = "date";
         } else if (type == "number") {
             gridType = "number";
-            valueFormatter = `({ value }) => typeof value === "number" ? value.toString() : ""`;
         } else if (type == "boolean") {
             gridType = "boolean";
             valueFormatter = `({ value }) => typeof value === "boolean" ? value.toString() : ""`;
