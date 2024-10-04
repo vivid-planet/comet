@@ -297,16 +297,20 @@ storiesOf("stories/components/DataGrid", module)
             {
                 field: "firstName",
                 headerName: "First name",
+                flex: 1,
             },
             {
                 field: "lastName",
                 headerName: "Last name",
+                flex: 1,
             },
             {
-                field: "action",
+                field: "actions",
                 headerName: "",
                 sortable: false,
                 filterable: false,
+                pinned: "right",
+                width: 52,
                 renderCell: (params) => {
                     return (
                         <CrudContextMenu
@@ -345,7 +349,7 @@ storiesOf("stories/components/DataGrid", module)
         ];
 
         return (
-            <Box sx={{ height: 400, width: "100%" }}>
+            <Box height={400}>
                 <DataGrid rows={exampleRows} columns={columns} />
             </Box>
         );
