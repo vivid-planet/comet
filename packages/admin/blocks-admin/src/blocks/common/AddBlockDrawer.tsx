@@ -137,7 +137,13 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props) 
         <Drawer open={open} onClose={onClose} anchor="right">
             <Header>
                 <FormattedMessage id="comet.blocks.drawer.header" defaultMessage="Add new block" />
-                <IconButton onClick={onClose} sx={{ color: (theme) => theme.palette.common.white }} size="large">
+                <IconButton
+                    onClick={onClose}
+                    sx={(theme) => ({
+                        color: theme.palette.common.white,
+                    })}
+                    size="large"
+                >
                     <Close />
                 </IconButton>
             </Header>

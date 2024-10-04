@@ -76,7 +76,13 @@ export const DamSelectionFooter = ({ open }: DamSelectionFooterProps) => {
                     loading={damSelectionActionsApi.deleting}
                     hasErrors={damSelectionActionsApi.hasDeletionErrors}
                 />
-                <Divider orientation="vertical" sx={{ borderColor: (theme) => theme.palette.grey.A200 }} flexItem={true} />
+                <Divider
+                    orientation="vertical"
+                    sx={(theme) => ({
+                        borderColor: theme.palette.grey.A200,
+                    })}
+                    flexItem={true}
+                />
                 <DamMoreActions
                     button={
                         <FooterActionButton

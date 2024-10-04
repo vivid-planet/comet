@@ -142,7 +142,12 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                             <FormattedMessage id="comet.pages.dam.addFolder" defaultMessage="Add Folder" />
                         </MenuItem>
                     </MenuList>
-                    <Divider sx={{ my: 1, borderColor: (theme) => theme.palette.grey[50] }} />
+                    <Divider
+                        sx={(theme) => ({
+                            my: 1,
+                            borderColor: theme.palette.grey[50],
+                        })}
+                    />
                     <Typography variant="subtitle2" color="grey.500" fontWeight="bold" mt={5}>
                         <FormattedMessage id="comet.dam.moreActions.selectiveActions" defaultMessage="Selective actions" />
                     </Typography>
@@ -158,7 +163,12 @@ export const DamMoreActions = ({ button, transformOrigin, anchorOrigin, folderId
                                     />
                                     <SelectedItemsChip>{lengthOfSelectedFiles}</SelectedItemsChip>
                                 </MenuItem>
-                                <Divider sx={{ my: 1, borderColor: (theme) => theme.palette.grey[50] }} />
+                                <Divider
+                                    sx={(theme) => ({
+                                        my: 1,
+                                        borderColor: theme.palette.grey[50],
+                                    })}
+                                />
                             </>
                         )}
                         <MenuItem disabled={!itemsSelected} onClick={handleMoveClick}>
