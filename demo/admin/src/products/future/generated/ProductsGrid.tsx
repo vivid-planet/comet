@@ -170,7 +170,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                 </>
             ),
             type: "number",
-            valueFormatter: ({ value }) => (typeof value === "number" ? value.toString() : ""),
             flex: 1,
             minWidth: 150,
             maxWidth: 150,
