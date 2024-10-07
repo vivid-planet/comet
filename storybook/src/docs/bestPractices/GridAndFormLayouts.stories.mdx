@@ -1,0 +1,100 @@
+import { Meta, Canvas, Story } from "@storybook/addon-docs";
+
+<Meta title="Docs/Best Practices/Grid and Form Layouts" />
+
+# Grid and Form Layouts
+
+These stories should be used as starting points when building admin interfaces to make sure the behavior and look is consistent throughout applications.
+
+## Forms
+
+Examples of small and large forms, used in pages directly and in dialogs.
+
+### Simple form on a page
+
+All fields of a form should be wrapped inside a `FieldSet`, unless the form is used inside a dialog or a sidebar. <br />
+A title for a single `FieldSet` is not necessary.
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--simple-form-on-a-page" height={600} />
+</Canvas>
+
+### Large form on a page
+
+Use multiple `FieldSet` components for large forms to separate into multiple sections. <br />
+It's recommended to set a title for each `FieldSet`.
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--large-form-on-a-page" height={600} />
+</Canvas>
+
+### Simple form in a dialog
+
+Do not use `FieldSet` for a form inside a dialog.
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--simple-form-in-a-dialog" height={600} />
+</Canvas>
+
+### Large form in a dialog
+
+For large forms, use multiple `FormSection` components to create separation. <br />
+Do not use `FieldSet` for a form inside a dialog.
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--large-form-in-a-dialog" height={600} />
+</Canvas>
+
+## Grids
+
+Examples of `DataGrid` used on pages and some special use cases.
+
+### Single Grid
+
+If only the grid is used on the page, wrap it in a `MainContent` with `fullHeight`.
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--single-grid-full-height" height={600} />
+</Canvas>
+
+### Single Grid (Auto Height)
+
+If you are sure that there will always only be very few items in the grid, you can use `autoHeight` on the `DataGrid` and skip the `fullHeight` prop on `MainContent`
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--single-grid-auto-height" height={600} />
+</Canvas>
+
+### Grid selection with more actions menu
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--grid-with-selection-and-more-actions-menu" height={600} />
+</Canvas>
+
+### Grid-Selection in dialog
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--grid-with-selection-in-dialog" height={600} />
+</Canvas>
+
+## Combinations of Grids and Forms
+
+Examples of how to combine grids and forms in different use cases, such as dialogs and tabs.
+
+### Grid with a Form in a Dialog
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--grid-with-form-dialog" height={600} />
+</Canvas>
+
+### Grid with a Form on a Page
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--grid-with-form-page" height={600} />
+</Canvas>
+
+### Nested Grids and Forms with Tabs
+
+<Canvas>
+    <Story id="stories-bestpractices-gridandformlayouts--nested-grids-and-forms-with-tabs" height={600} />
+</Canvas>
