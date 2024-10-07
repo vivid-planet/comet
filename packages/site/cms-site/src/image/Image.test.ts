@@ -24,19 +24,4 @@ describe("Image: parseAspectRatio", () => {
     it("should work with string value with :", () => {
         expect(parseAspectRatio("4:3")).toBeCloseTo(4 / 3);
     });
-    it("should not work with Infinity", () => {
-        expect(() => {
-            parseAspectRatio("Infinity");
-        }).toThrowError();
-    });
-    it("should not work with -Infinity", () => {
-        expect(() => {
-            parseAspectRatio(-Infinity);
-        }).toThrowError();
-    });
-    it("should not work with Infinity string value with x", () => {
-        expect(() => {
-            parseAspectRatio("Infinityx2");
-        }).toThrowError();
-    });
 });

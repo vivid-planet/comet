@@ -7,7 +7,7 @@ export function parseAspectRatio(value: string | number): number {
     if (typeof value === "string") {
         [width, height] = value.split(/[x/:]/).map((v) => {
             let ret: number | undefined = parseFloat(v);
-            if (isNaN(ret) || isNaN(parseInt(v))) ret = undefined;
+            if (isNaN(ret)) ret = undefined;
             return ret;
         });
         if (width && !height) {
@@ -15,10 +15,8 @@ export function parseAspectRatio(value: string | number): number {
         }
     } else {
         value = String(value);
-        if (!isNaN(parseInt(value))) {
-            width = parseFloat(value);
-            height = 1;
-        }
+        width = parseFloat(value);
+        height = 1;
     }
     if (!width || !height) throw Error(`An error occurred while parsing the aspect ratio: ${value}`);
 
