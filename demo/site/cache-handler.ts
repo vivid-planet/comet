@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { Redis } from "ioredis";
 import { LRUCache } from "lru-cache";
+import { CacheHandler as NextCacheHandler } from "next/dist/server/lib/incremental-cache";
 
 const REDIS_HOST = process.env.REDIS_HOST;
 if (!REDIS_HOST) {
@@ -33,7 +34,8 @@ const redis = new Redis({
     enableAutoPipelining: REDIS_ENABLE_AUTOPIPELINING, // https://github.com/redis/ioredis?tab=readme-ov-file#autopipelining
 });
 
-const fallbackCache = new LRUCache({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const fallbackCache = new LRUCache<string, any>({
     maxSize: 50 * 1024 * 1024, // 50MB
     ttl: CACHE_TTL_IN_S * 1000,
     ttlAutopurge: true,
@@ -54,8 +56,13 @@ function parseBody(body) {
     }
 }
 
-export default class CacheHandler {
-    async get(key) {
+export default class CacheHandler extends NextCacheHandler {
+    //constructor(_ctx: NextCacheHandlerContext) {}
+
+    async get(
+        key: string,
+        //ctx: Parameters<NextCacheHandler["get"]>[1]
+    ): ReturnType<NextCacheHandler["get"]> {
         if (redis.status === "ready") {
             try {
                 if (CACHE_HANDLER_DEBUG) {
@@ -86,16 +93,21 @@ export default class CacheHandler {
             isFallbackInUse = true;
         }
 
-        return fallbackCache.get(key);
+        return fallbackCache.get(key) ?? null;
     }
 
-    async set(key, value, ctx) {
-        const responseBody = parseBody(value?.data?.body);
-        if (responseBody?.errors) {
-            // Must not cache GraphQL errors
-            console.error("CacheHandler.set GraphQL Error: ", responseBody.error);
-
-            return;
+    async set(
+        key: string,
+        value: Parameters<NextCacheHandler["set"]>[1],
+        // ctx: Parameters<NextCacheHandler["set"]>[2],
+    ): Promise<void> {
+        if (value?.kind === "FETCH") {
+            const responseBody = parseBody(value.data.body);
+            if (responseBody?.errors) {
+                // Must not cache GraphQL errors
+                console.error("CacheHandler.set GraphQL Error: ", responseBody.error);
+                return;
+            }
         }
 
         const stringData = JSON.stringify({
@@ -108,7 +120,7 @@ export default class CacheHandler {
                 if (CACHE_HANDLER_DEBUG) {
                     console.log("CacheHandler.set redis", key);
                 }
-                return redis.set(key, stringData, "EX", CACHE_TTL_IN_S);
+                await redis.set(key, stringData, "EX", CACHE_TTL_IN_S);
             } catch (e) {
                 console.error("CacheHandler.set error", e);
             }
@@ -116,11 +128,11 @@ export default class CacheHandler {
         if (CACHE_HANDLER_DEBUG) {
             console.log("CacheHandler.set fallbackCache", key);
         }
-        return fallbackCache.set(key, value, { size: stringData.length });
+        fallbackCache.set(key, value, { size: stringData.length });
     }
 
-    async revalidateTag(tag) {
-        console.log("CacheHandler.revalidateTag", tag);
+    async revalidateTag(tags: string | string[]): Promise<void> {
+        console.log("CacheHandler.revalidateTag", tags);
         throw new Error("unsupported");
     }
 }
