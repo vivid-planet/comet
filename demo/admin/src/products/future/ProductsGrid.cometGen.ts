@@ -8,6 +8,10 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     filterProp: true,
     toolbarActionProp: true,
     rowActionProp: true,
+    initialSort: [
+        { field: "inStock", sort: "desc" },
+        { field: "price", sort: "asc" },
+    ],
     columns: [
         {
             type: "combination",
@@ -22,8 +26,30 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
         { type: "text", name: "description", headerName: "Description", visible: "up('md')" },
-        { type: "number", name: "price", headerName: "Price", maxWidth: 150 },
-        { type: "boolean", name: "inStock", headerName: "In stock", width: 90 },
+        { type: "number", name: "price", headerName: "Price", maxWidth: 150, headerInfoTooltip: "Price in EUR" },
+        {
+            type: "staticSelect",
+            name: "inStock",
+            headerName: "In stock",
+            flex: 1,
+            minWidth: 80,
+            values: [
+                {
+                    value: "true",
+                    label: {
+                        primaryText: "In stock",
+                        icon: { name: "StateFilled", color: "success" },
+                    },
+                },
+                {
+                    value: "false",
+                    label: {
+                        primaryText: "Out of stock",
+                        icon: { name: "StateFilled", color: "error" },
+                    },
+                },
+            ],
+        },
         { type: "staticSelect", name: "type", maxWidth: 150, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
         { type: "date", name: "availableSince", width: 140 },
         { type: "dateTime", name: "createdAt", width: 170 },

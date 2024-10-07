@@ -331,6 +331,7 @@ export function ProductForm({ id }: FormProps) {
                             multiple
                             maxFileSize={1024 * 1024 * 4} // 4 MB
                             fullWidth
+                            layout="grid"
                         />
                     </MainContent>
                 </>

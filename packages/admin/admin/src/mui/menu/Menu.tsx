@@ -94,6 +94,7 @@ export const Menu = (inProps: MenuProps) => {
                 onClose={toggleOpen}
                 open={variant === "temporary" && temporaryDrawerIsOpen}
                 ownerState={ownerState}
+                hideBackdrop
                 {...slotProps?.temporaryDrawer}
                 {...restProps}
             >

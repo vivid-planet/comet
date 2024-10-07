@@ -13,6 +13,7 @@ import probe from "probe-image-size";
 import * as rimraf from "rimraf";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
@@ -35,7 +36,7 @@ import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
 import { FileValidationService } from "./file-validation.service";
-import { createHashedPath, slugifyFilename } from "./files.utils";
+import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy, Type } from "@nestjs/passport";
+import { Request } from "express";
 import { Strategy } from "passport-custom";
 
 import { UserPermissionsService } from "../..//user-permissions/user-permissions.service";
@@ -18,12 +19,12 @@ export function createStaticAuthedUserStrategy(config: StaticAuthedUserStrategyC
             super();
         }
 
-        async validate(): Promise<CurrentUser> {
+        async validate(request: Request): Promise<CurrentUser> {
             if (typeof config.staticAuthedUser === "string") {
                 const user = await this.service.getUser(config.staticAuthedUser);
-                return this.service.createCurrentUser(user);
+                return this.service.createCurrentUser(user, request);
             }
-            return this.service.createCurrentUser(config.staticAuthedUser);
+            return this.service.createCurrentUser(config.staticAuthedUser, request);
         }
     }
     return StaticAuthedUserStrategy;

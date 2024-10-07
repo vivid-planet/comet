@@ -35,6 +35,7 @@ export function generateFormLayout({
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
+    const finalFormConfig = { subscription: {}, renderProps: {} };
 
     if (config.type === "fieldSet") {
         const title = config.title ?? camelCaseToHumanReadable(config.name);
@@ -57,6 +58,9 @@ export function generateFormLayout({
         }
         imports.push(...generatedFields.imports);
         formValuesConfig.push(...generatedFields.formValuesConfig);
+
+        finalFormConfig.subscription = { ...finalFormConfig.subscription, ...generatedFields.finalFormConfig?.subscription };
+        finalFormConfig.renderProps = { ...finalFormConfig.renderProps, ...generatedFields.finalFormConfig?.renderProps };
 
         imports.push({ name: "FieldSet", importPath: "@comet/admin" });
         const supportPlaceholder = config.supportText?.includes("{");
@@ -189,5 +193,6 @@ export function generateFormLayout({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

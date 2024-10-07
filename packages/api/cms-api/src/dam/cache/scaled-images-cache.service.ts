@@ -3,9 +3,9 @@ import hasha from "hasha";
 import { sep } from "path";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
-import { createHashedPath } from "../files/files.utils";
 import { FileCache } from "./dto/file-cache.interface";
 
 @Injectable()

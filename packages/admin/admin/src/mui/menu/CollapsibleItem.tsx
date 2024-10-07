@@ -134,6 +134,7 @@ export const MenuCollapsibleItem = (inProps: MenuCollapsibleItemProps) => {
         menuOpen: Boolean(isMenuOpen),
         subMenuOpen: Boolean(isSubmenuOpen),
         level: itemLevel,
+        variant: drawerVariant,
     };
 
     let collapsibleIndicatorIcon: ReactNode = null;

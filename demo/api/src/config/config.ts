@@ -88,6 +88,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
                 secret: envVars.FILE_UPLOADS_DOWNLOAD_SECRET,
             },
         },
+        sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
     };
 }
 

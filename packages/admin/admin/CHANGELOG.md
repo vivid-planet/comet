@@ -1,5 +1,109 @@
 # @comet/admin
 
+## 7.5.0
+
+### Minor Changes
+
+-   bb7c2de72: Adapt the `DeleteDialog` in `CrudContextMenu` to match the updated Comet CI
+-   c59a60023: Add a `CrudMoreActionsMenu` component
+
+    The component can be used to create a "More actions" menu for a list of items.
+    It is typically used in a toolbar above a Data Grid.
+
+    **Example**
+
+    ```tsx
+    <CrudMoreActionsMenu
+        selectionSize={selectionSize}
+        overallActions={[
+            {
+                label: "Export to excel",
+                onClick: handleExportToExcelClick,
+            },
+        ]}
+        selectiveActions={[
+            {
+                label: "move",
+                onClick: handleMoveClick,
+                icon: <Move />,
+                divider: true,
+            },
+            {
+                label: "download",
+                onClick: handleDownloadClick,
+                icon: <Download />,
+            },
+        ]}
+    />
+    ```
+
+-   4cea3e31b: Make it easier to render DataGrid cell content based on the cell's `valueOptions`
+
+    Objects inside a cell's `valueOptions` now support an optional `cellContent` property to allow defining a React node in addition to the `label`, which can only be a string.
+
+    When using the new `renderStaticSelectCell` helper as the `renderCell` function in the column definition, the helper will render the `cellContent` node of the selected option if defined.
+    The `label` or the string value of the option will be used as the cell's content if no `cellContent` node is provided.
+
+    The following example would behave as follows:
+
+    -   If the cell's value is "Shirt", it will render the `cellContent` node (the H2 Typography)
+    -   If the cell's value is "Cap", it will render the `label` (the string "This Cap")
+    -   If the cell's value is anything else, it will render the value as a string, e.g. "Tie"
+
+    ```tsx
+    {
+        headerName: "Category",
+        field: "category",
+        valueOptions: [
+            {
+                value: "Shirt",
+                label: "Shirt"
+                cellContent: (
+                    <Typography variant="h2">
+                        A Shirt
+                    </Typography>
+                ),
+            },
+            {
+                value: "Cap",
+                label: "This Cap",
+            },
+            "Tie",
+        ],
+        renderCell: renderStaticSelectCell,
+    }
+    ```
+
+-   216d93a10: File Uploads: Add image endpoint
+
+    Add support for viewing images in the browser.
+    This can be useful for file upload previews, profile pictures etc.
+    The image URL can be obtained by querying the `imageUrl` field of the `FileUpload` type.
+    A `resizeWidth` argument needs to be provided.
+
+    **Example**
+
+    ```graphql
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            updatedAt
+            priceList {
+                id
+                imageUrl(resizeWidth: 640)
+            }
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   9a6a64ef3: Fix a bug where the initial values of `RadioGroupField` and `CheckboxListField` would not be shown in the input
+-   b5838209b: Fix an issue where the clear button of `SelectField` would be shown, even if the value is `undefined`
+-   c8f37fbd1: Allow setting all props of `FinalFormSelect` via `componentsProps` in `SelectField`
+    -   @comet/admin-icons@7.5.0
+    -   @comet/admin-theme@7.5.0
+
 ## 7.4.2
 
 ### Patch Changes

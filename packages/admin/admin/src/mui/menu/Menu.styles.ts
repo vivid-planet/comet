@@ -3,13 +3,18 @@ import { css, Drawer as MuiDrawer, drawerClasses, DrawerProps, Theme } from "@mu
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { DEFAULT_DRAWER_WIDTH, DEFAULT_DRAWER_WIDTH_COLLAPSED } from "./Menu";
 
-const getOpenedAnimation = (theme: Theme, drawerWidth?: number) => css`
-    width: ${drawerWidth ?? DEFAULT_DRAWER_WIDTH}px;
+const getOpenedAnimation = (theme: Theme, drawerVariant: DrawerProps["variant"], drawerWidth: number = DEFAULT_DRAWER_WIDTH) => css`
+    width: ${drawerVariant === "temporary" ? "100%" : `${drawerWidth}px`};
     transition: width ${theme.transitions.easing.sharp} ${theme.transitions.duration.enteringScreen}ms;
 `;
 
-const getClosedAnimation = (theme: Theme, drawerVariant: DrawerProps["variant"], drawerWidth?: number, drawerWidthCollapsed?: number) => css`
-    width: ${drawerVariant === "temporary" ? drawerWidth ?? DEFAULT_DRAWER_WIDTH : drawerWidthCollapsed ?? DEFAULT_DRAWER_WIDTH_COLLAPSED}px;
+const getClosedAnimation = (
+    theme: Theme,
+    drawerVariant: DrawerProps["variant"],
+    drawerWidth: number = DEFAULT_DRAWER_WIDTH,
+    drawerWidthCollapsed: number = DEFAULT_DRAWER_WIDTH_COLLAPSED,
+) => css`
+    width: ${drawerVariant === "temporary" ? "100%" : `${drawerWidthCollapsed}px`};
     transition: width ${theme.transitions.easing.sharp} ${theme.transitions.duration.leavingScreen}ms;
 `;
 
@@ -22,9 +27,11 @@ export type OwnerState = {
     headerHeight: number;
 };
 
-const getSharedStyles = (theme: Theme) => css`
+const getSharedStyles = (theme: Theme, headerHeight: number) => css`
     background-color: ${theme.palette.common.white};
     overflow-x: hidden;
+    height: calc(100% - ${headerHeight}px);
+    top: ${headerHeight}px;
 
     .CometAdminMenuItemGroup-root + .CometAdminMenuItem-root {
         margin-top: ${theme.spacing(8)};
@@ -39,9 +46,18 @@ export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, Owne
     },
 })(
     ({ theme, ownerState }) => css`
+        height: calc(100% - ${ownerState.headerHeight}px);
+        top: ${ownerState.headerHeight}px;
+
+        ${drawerClasses.root} {
+            top: ${ownerState.headerHeight}px;
+        }
+
         .${drawerClasses.paper} {
-            ${getSharedStyles(theme)}
-            ${ownerState.open ? getOpenedAnimation(theme, ownerState.drawerWidth) : getClosedAnimation(theme, "temporary", ownerState.drawerWidth)}
+            ${getSharedStyles(theme, ownerState.headerHeight)}
+            ${ownerState.open
+                ? getOpenedAnimation(theme, "temporary", ownerState.drawerWidth)
+                : getClosedAnimation(theme, "temporary", ownerState.drawerWidth)}
         }
 
         .${drawerClasses.paperAnchorLeft} {
@@ -58,20 +74,19 @@ export const PermanentDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, Owne
     },
 })(
     ({ theme, ownerState }) => css`
-        ${getSharedStyles(theme)}
+        ${getSharedStyles(theme, ownerState.headerHeight)}
         flex-shrink: 0;
         white-space: nowrap;
         box-sizing: border-box;
         ${ownerState.open
-            ? getOpenedAnimation(theme, ownerState.drawerWidth)
+            ? getOpenedAnimation(theme, "permanent", ownerState.drawerWidth)
             : getClosedAnimation(theme, "permanent", ownerState.drawerWidthCollapsed)}
 
         .${drawerClasses.paper} {
-            ${getSharedStyles(theme)}
-            top: ${ownerState.headerHeight}px;
+            ${getSharedStyles(theme, ownerState.headerHeight)}
             height: calc(100% - ${ownerState.headerHeight}px);
             ${ownerState.open
-                ? getOpenedAnimation(theme, ownerState.drawerWidth)
+                ? getOpenedAnimation(theme, "permanent", ownerState.drawerWidth)
                 : getClosedAnimation(theme, "permanent", ownerState.drawerWidthCollapsed)}
         }
 

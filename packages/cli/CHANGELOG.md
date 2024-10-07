@@ -1,5 +1,11 @@
 # @comet/cli
 
+## 7.5.0
+
+### Patch Changes
+
+-   bc0570ff2: Fix setting prelogin domain for deployment with site-configs
+
 ## 7.4.2
 
 ## 7.4.1

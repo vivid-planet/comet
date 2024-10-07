@@ -182,6 +182,11 @@
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
                         }
                     ]
                 },

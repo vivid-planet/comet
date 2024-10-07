@@ -5,7 +5,6 @@ import { MarkedMatches, TextMatch } from "../../../common/MarkedMatches";
 import { isFile } from "../../helpers/isFile";
 import { GQLDamFileTableFragment, GQLDamFolderTableFragment } from "../FolderDataGrid";
 import { ArchivedTag } from "../tags/ArchivedTag";
-import { LicenseValidityTags } from "../tags/LicenseValidityTags";
 import { DamThumbnail } from "../thumbnail/DamThumbnail";
 
 const LabelWrapper = styled("div")`
@@ -62,14 +61,6 @@ const DamItemLabel = ({ asset, showPath = false, matches, showLicenseWarnings = 
                 {showPath && <Path variant="body2">{isFile(asset) ? getFilePath(asset) : getFolderPath(asset)}</Path>}
             </NameWrapper>
             {isFile(asset) && asset.archived && <ArchivedTag />}
-            {isFile(asset) && showLicenseWarnings && (
-                <LicenseValidityTags
-                    expirationDate={asset.license?.expirationDate ? new Date(asset.license.expirationDate) : undefined}
-                    isNotValidYet={asset.license?.isNotValidYet}
-                    expiresWithinThirtyDays={asset.license?.expiresWithinThirtyDays}
-                    hasExpired={asset.license?.hasExpired}
-                />
-            )}
         </LabelWrapper>
     );
 };

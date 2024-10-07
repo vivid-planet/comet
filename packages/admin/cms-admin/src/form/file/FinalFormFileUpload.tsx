@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
+import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem, ValidFileSelectItem } from "@comet/admin";
 import { useMemo, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -13,6 +13,7 @@ export const finalFormFileUploadFragment = gql`
         name
         size
         downloadUrl
+        imageUrl(resizeWidth: 640)
     }
 `;
 
@@ -61,7 +62,27 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     } = useCmsBlockContext();
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
-    const inputValue = useMemo(() => (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []), [fieldValue]);
+    const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment>[]>(() => {
+        const files = Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : [];
+        return files.map((file) => {
+            let previewUrl: string | undefined = undefined;
+
+            if (file.imageUrl) {
+                const isNewlyUploadedFile = file.imageUrl.startsWith("blob:");
+
+                if (isNewlyUploadedFile) {
+                    previewUrl = file.imageUrl;
+                } else {
+                    previewUrl = `${apiUrl}${file.imageUrl}`;
+                }
+            }
+
+            return {
+                ...file,
+                previewUrl,
+            };
+        });
+    }, [fieldValue, apiUrl]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
@@ -118,6 +139,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             name: jsonResponse.name,
                             size: jsonResponse.size,
                             downloadUrl: jsonResponse.downloadUrl ?? null,
+                            imageUrl: ["image/png", "image/jpeg", "image/gif", "image/webp"].includes(file.type) ? URL.createObjectURL(file) : null,
                         };
 
                         if (singleFile) {

@@ -1,3 +1,5 @@
+import { mediaType } from "@hapi/accept";
+
 import { FocalPoint } from "../common/enums/focal-point.enum";
 
 interface ImageDimensions {
@@ -86,4 +88,9 @@ export function calculateInheritAspectRatio(
 
         return (cropArea.width * imageDimensions.width) / 100 / ((cropArea.height * imageDimensions.height) / 100);
     }
+}
+
+export function getSupportedMimeType(options: string[], accept = ""): string {
+    const mimeType = mediaType(accept, options);
+    return accept.includes(mimeType) ? mimeType : "";
 }

@@ -11,6 +11,7 @@ import {
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderStaticSelectCell,
     StackLink,
     ToolbarFillSpace,
     ToolbarItem,
@@ -18,7 +19,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit, StateFilled } from "@comet/admin-icons";
+import { Add as AddIcon, Edit, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
@@ -160,22 +161,33 @@ export function ProductsGrid() {
         },
         {
             field: "inStock",
-            headerName: "In Stock",
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            type: "singleSelect",
+            valueOptions: [
+                {
+                    value: "true",
+                    label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
+                            icon={<StateFilledIcon color="success" />}
+                        />
+                    ),
+                },
+                {
+                    value: "false",
+                    label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
+                            icon={<StateFilledIcon color="error" />}
+                        />
+                    ),
+                },
+            ],
+            renderCell: renderStaticSelectCell,
             flex: 1,
             minWidth: 80,
-            visible: theme.breakpoints.up("md"),
-            renderCell: (params) => (
-                <GridCellContent
-                    icon={<StateFilled color={params.row.inStock ? "success" : "error"} />}
-                    primaryText={
-                        params.row.inStock ? (
-                            <FormattedMessage id="products.inStock" defaultMessage="In Stock" />
-                        ) : (
-                            <FormattedMessage id="products.outOfStock" defaultMessage="Out of Stock" />
-                        )
-                    }
-                />
-            ),
         },
         {
             field: "availableSince",

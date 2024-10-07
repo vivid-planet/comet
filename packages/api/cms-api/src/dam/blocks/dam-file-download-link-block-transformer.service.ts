@@ -9,6 +9,7 @@ type TransformResponse = {
         id: string;
         name: string;
         fileUrl: string;
+        size: number;
     };
 };
 
@@ -32,12 +33,14 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
                 id: file.id,
                 name: file.name,
                 fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
+                size: Number(file.size),
             };
         } else if (file && block.openFileType === "Download") {
             ret.file = {
                 id: file.id,
                 name: file.name,
                 fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls }),
+                size: Number(file.size),
             };
         }
 
