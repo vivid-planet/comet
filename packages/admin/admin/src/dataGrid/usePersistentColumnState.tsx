@@ -58,7 +58,7 @@ export function usePersistentColumnState(stateKey: string): GridProps {
     const columns = useGridColumns(apiRef);
     const match = useRouteMatch();
 
-    const storageKeyPrefix = `${btoa(match.path)}${stateKey}`;
+    const storageKeyPrefix = `${match.path}${stateKey}`;
 
     const mediaQueryColumnVisibilityModel = useVisibilityModelFromColumnMediaQueries(columns);
     const [storedColumnVisibilityModel, setStoredColumnVisibilityModel] = useStoredState<GridColumnVisibilityModel>(
