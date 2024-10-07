@@ -102,7 +102,15 @@ type Props = {
 export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            initialSort: [
+                { field: "inStock", sort: "desc" },
+                { field: "price", sort: "asc" },
+            ],
+        }),
+        ...usePersistentColumnState("ProductsGrid"),
+    };
 
     const theme = useTheme();
 

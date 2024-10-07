@@ -8,6 +8,10 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     filterProp: true,
     toolbarActionProp: true,
     rowActionProp: true,
+    initialSort: [
+        { field: "inStock", sort: "desc" },
+        { field: "price", sort: "asc" },
+    ],
     columns: [
         {
             type: "combination",
