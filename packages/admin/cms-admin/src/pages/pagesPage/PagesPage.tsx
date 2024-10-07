@@ -19,18 +19,18 @@ import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch }
 import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
-import { useContentScope } from "../../contentScope/Provider";
+import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { DocumentInterface, DocumentType } from "../../documents/types";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
-import { EditPageNodeProps } from "../createEditPageNode";
+import { createEditPageNode, EditPageNodeProps } from "../createEditPageNode";
 import { PageSearch } from "../pageSearch/PageSearch";
 import { usePageSearch } from "../pageSearch/usePageSearch";
 import { PageTree, PageTreeRefApi } from "../pageTree/PageTree";
 import { AllCategories, PageTreeContext } from "../pageTree/PageTreeContext";
 import { usePageTree } from "../pageTree/usePageTree";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { createPagesQuery, GQLPagesQuery, GQLPagesQueryVariables, GQLPageTreePageFragment } from "./createPagesQuery";
 import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
@@ -55,7 +55,7 @@ export function PagesPage({
 }: Props) {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
-    const { additionalPageTreeNodeFragment } = useCmsBlockContext();
+    const { additionalPageTreeNodeFragment } = usePageTreeConfig();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
@@ -158,9 +158,7 @@ export function PagesPage({
                         </Toolbar>
                         <PageTreeContext.Provider
                             value={{
-                                allCategories,
                                 currentCategory: category,
-                                documentTypes,
                                 getDocumentTypesByCategory: typeof passedDocumentTypes === "function" ? passedDocumentTypes : undefined,
                                 tree,
                                 query: pagesQuery,
