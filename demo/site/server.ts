@@ -2,6 +2,8 @@ import { createServer } from "http";
 import next from "next";
 import { parse } from "url";
 
+import { withMetrics } from "./opentelemetry-metrics";
+
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
 const port = parseInt(process.env.PORT || "3000", 10);
@@ -9,12 +11,15 @@ const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
 
 // when using middleware `hostname` and `port` must be provided below
 const app = next({ dev, hostname, port });
-const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-    if (process.env.TRACING_ENABLED) {
-        require("./tracing");
+    if (process.env.TRACING == "production") {
+        require("./tracing.production");
+    } else if (process.env.TRACING == "dev") {
+        require("./tracing.dev");
     }
+    const handle = withMetrics(app.getRequestHandler());
+
     createServer(async (req, res) => {
         try {
             // Be sure to pass `true` as the second argument to `url.parse`.
