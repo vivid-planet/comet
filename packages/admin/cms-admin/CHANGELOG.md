@@ -1,5 +1,23 @@
 # @comet/cms-admin
 
+## 6.17.10
+
+### Patch Changes
+
+-   cc70f27a3: Fix validation of empty `PhoneLinkBlock`
+
+    Previously, the default phone value was an empty string, meaning `@IsOptional()` didn't prevent validation.
+    Since an empty string is not a valid phone number, the validation failed.
+
+    This change sets the default value to `undefined`.
+
+    -   @comet/admin@6.17.10
+    -   @comet/admin-date-time@6.17.10
+    -   @comet/admin-icons@6.17.10
+    -   @comet/admin-rte@6.17.10
+    -   @comet/admin-theme@6.17.10
+    -   @comet/blocks-admin@6.17.10
+
 ## 6.17.9
 
 ### Patch Changes
