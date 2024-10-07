@@ -7,7 +7,6 @@ import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { ContentScopeInterface, useContentScope } from "../../contentScope/Provider";
 import { Maybe } from "../../graphql.generated";
 import { PageSearch } from "../pageSearch/PageSearch";
@@ -20,6 +19,7 @@ import { PageTreeContext } from "../pageTree/PageTreeContext";
 import { PageTreeRowDivider } from "../pageTree/PageTreeRowDivider";
 import { PageVisibilityIcon } from "../pageTree/PageVisibilityIcon";
 import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
 
@@ -68,7 +68,7 @@ interface PageTreeSelectProps {
 }
 
 export default function PageTreeSelectDialog({ value, onChange, open, onClose, defaultCategory }: PageTreeSelectProps): JSX.Element {
-    const { pageTreeCategories, pageTreeDocumentTypes, additionalPageTreeNodeFragment } = useCmsBlockContext();
+    const { categories, additionalPageTreeNodeFragment } = usePageTreeConfig();
     const { scope } = useContentScope();
     const [category, setCategory] = useState<string>(defaultCategory);
     const refList = useRef<List>(null);
@@ -197,14 +197,14 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             </StyledDialogTitle>
             <Toolbar>
                 <ToolbarActions>
-                    {pageTreeCategories && (
+                    {categories && (
                         <Select
                             value={category}
                             onChange={(event) => {
                                 setCategory(event.target.value as string);
                             }}
                         >
-                            {pageTreeCategories.map(({ category, label }) => (
+                            {categories.map(({ category, label }) => (
                                 <MenuItem key={category} value={category}>
                                     {label}
                                 </MenuItem>
@@ -220,9 +220,7 @@ export default function PageTreeSelectDialog({ value, onChange, open, onClose, d
             <DialogContent ref={refDialogContent}>
                 <PageTreeContext.Provider
                     value={{
-                        allCategories: pageTreeCategories,
                         currentCategory: category,
-                        documentTypes: pageTreeDocumentTypes,
                         tree,
                         query: pagesQuery,
                     }}

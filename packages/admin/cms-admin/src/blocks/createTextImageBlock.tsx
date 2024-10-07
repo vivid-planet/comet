@@ -13,9 +13,9 @@ import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/mate
 import { FormattedMessage } from "react-intl";
 
 import { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";
+import { useDamConfig } from "../dam/config/useDamConfig";
 import { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
 import { ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
-import { useCmsBlockContext } from "./useCmsBlockContext";
 
 interface State {
     text: RichTextBlockState;
@@ -57,7 +57,7 @@ const createTextImageBlock = ({
                 state,
                 updateState: decomposeUpdateStateAction(updateState, ["text", "image"]),
             });
-            const context = useCmsBlockContext();
+            const damConfig = useDamConfig();
 
             return (
                 <>
@@ -95,7 +95,7 @@ const createTextImageBlock = ({
                             }}
                             fullWidth
                         >
-                            {context.damConfig.allowedImageAspectRatios.map((aspectRatio) => (
+                            {damConfig.allowedImageAspectRatios.map((aspectRatio) => (
                                 <MenuItem key={aspectRatio} value={aspectRatio}>
                                     {aspectRatio}
                                 </MenuItem>

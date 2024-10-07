@@ -1,0 +1,24 @@
+import { DocumentNode } from "graphql";
+
+import { useCometConfig } from "../config/CometConfigContext";
+import { DocumentInterface, DocumentType } from "../documents/types";
+import { AllCategories } from "./pageTree/PageTreeContext";
+
+export interface PageTreeConfig {
+    categories: AllCategories;
+    documentTypes: Record<DocumentType, DocumentInterface>;
+    additionalPageTreeNodeFragment?: {
+        name: string;
+        fragment: DocumentNode;
+    };
+}
+
+export function usePageTreeConfig(): PageTreeConfig {
+    const cometConfig = useCometConfig();
+
+    if (!cometConfig.pageTree) {
+        throw new Error("No page tree configuration found. Make sure to set `pageTree` in `CometConfigProvider`.");
+    }
+
+    return cometConfig.pageTree;
+}

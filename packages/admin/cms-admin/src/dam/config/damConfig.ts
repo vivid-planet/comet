@@ -1,4 +1,4 @@
-import { createContext, ReactNode } from "react";
+import { ReactNode } from "react";
 
 export interface DamConfig {
     acceptedMimeTypes?: string[];
@@ -11,6 +11,7 @@ export interface DamConfig {
         generateAltText?: boolean;
         generateImageTitle?: boolean;
     };
+    uploadsMaxFileSize: number;
+    allowedImageSizes: number[];
+    allowedImageAspectRatios: string[];
 }
-
-export const DamConfigContext = createContext<DamConfig | undefined>(undefined);
