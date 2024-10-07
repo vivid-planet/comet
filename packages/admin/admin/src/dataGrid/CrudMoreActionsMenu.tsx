@@ -52,7 +52,7 @@ interface CrudMoreActionsGroupProps {
 function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
     return (
         <>
-            <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
+            <Typography variant="overline" color="grey.500" sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
                 {groupTitle}
             </Typography>
             <MenuList {...menuListProps}>{children}</MenuList>
