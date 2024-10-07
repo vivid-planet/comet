@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "build": "run-s intl:compile && run-p gql:types generate-block-types && next build",
-        "dev": "run-s intl:compile && run-p gql:types generate-block-types && NODE_OPTIONS='--inspect=localhost:9230' node server.js",
+        "build": "run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && next build",
+        "dev": "run-s intl:compile && run-p gql:types generate-block-types && NODE_OPTIONS='--inspect=localhost:9230' ts-node --project tsconfig.server.json server.ts",
         "export": "next export",
         "generate-block-types": "comet generate-block-types",
         "generate-block-types:watch": "chokidar -s \"**/block-meta.json\" -c \"$npm_execpath generate-block-types\"",
@@ -16,7 +16,7 @@
         "lint:eslint": "eslint --max-warnings 0 --config ./.eslintrc.cli.js --ext .ts,.tsx,.js,.jsx,.json,.md src/ package.json",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project .",
-        "serve": "NODE_ENV=production node server.js"
+        "serve": "NODE_ENV=production node dist/server.js"
     },
     "dependencies": {
         "@comet/cms-site": "workspace:*",

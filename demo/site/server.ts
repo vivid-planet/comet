@@ -1,12 +1,10 @@
-// server.js
-const { createServer } = require("http");
-const { parse } = require("url");
-const next = require("next");
-const fs = require("fs");
+import { createServer } from "http";
+import next from "next";
+import { parse } from "url";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
-const port = process.env.APP_PORT ?? 3000;
+const port = parseInt(process.env.PORT || "3000", 10);
 const cdnOriginCheckSecret = process.env.CDN_ORIGIN_CHECK_SECRET;
 
 // when using middleware `hostname` and `port` must be provided below
@@ -22,7 +20,8 @@ app.prepare()
             try {
                 // Be sure to pass `true` as the second argument to `url.parse`.
                 // This tells it to parse the query portion of the URL.
-                const parsedUrl = parse(req.url, true);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const parsedUrl = parse(req.url!, true);
 
                 if (cdnOriginCheckSecret) {
                     if (req.headers["x-cdn-origin-check"] !== cdnOriginCheckSecret) {
@@ -37,9 +36,9 @@ app.prepare()
                 res.statusCode = 500;
                 res.end("internal server error");
             }
-        }).listen(port, (err) => {
-            if (err) throw err;
-            console.log(`> Ready on http://localhost:${port}`);
-        });
+        }).listen(port);
+
+        // eslint-disable-next-line no-console
+        console.log(`> Ready on http://localhost:${port}`);
     })
     .catch((error) => console.error(error));
