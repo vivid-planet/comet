@@ -43,15 +43,13 @@ const fallbackCache = new LRUCache<string, any>({
 
 let isFallbackInUse = false;
 
-function parseBody(body) {
-    if (!body) {
-        return null;
-    }
-
+function parseBodyForGqlError(body: string) {
     try {
-        return JSON.parse(Buffer.from(body, "base64").toString("utf-8"));
+        const decodedBody = Buffer.from(body, "base64").toString("utf-8");
+        if (!decodedBody.startsWith("{")) return null; // Not a JSON response, ignore
+        return JSON.parse(decodedBody);
     } catch (error) {
-        console.error("CacheHandler.parseBodyData error", error);
+        console.error("CacheHandler.parseBodyForGqlError error", error);
         return null;
     }
 }
@@ -102,7 +100,7 @@ export default class CacheHandler extends NextCacheHandler {
         // ctx: Parameters<NextCacheHandler["set"]>[2],
     ): Promise<void> {
         if (value?.kind === "FETCH") {
-            const responseBody = parseBody(value.data.body);
+            const responseBody = parseBodyForGqlError(value.data.body);
             if (responseBody?.errors) {
                 // Must not cache GraphQL errors
                 console.error("CacheHandler.set GraphQL Error: ", responseBody.error);
