@@ -183,7 +183,6 @@ export function ProductForm({ id }: FormProps) {
                             name="priceRange"
                             label={<FormattedMessage id="product.priceRange" defaultMessage="Price range" />}
                             fullWidth
-                            required
                             component={FinalFormRangeInput}
                             min={5}
                             max={100}
