@@ -22,7 +22,6 @@ export const RadioGroupField = <Value extends string>({ options, layout = "row",
                 <RadioGroup {...restInput} row={layout === "row"} value={value}>
                     {options.map(({ value, label, disabled }) => (
                         <FormControlLabel key={value} label={label} value={value} disabled={disabled} control={<MuiRadio />} />
-
                     ))}
                 </RadioGroup>
             )}
