@@ -25,7 +25,7 @@ import {
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { MenuItem } from "@mui/material";
+import { InputAdornment, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import {
     GQLManufacturerCountriesQuery,
@@ -186,7 +186,7 @@ export function ProductForm({ id }: FormProps) {
                             component={FinalFormRangeInput}
                             min={5}
                             max={100}
-                            startAdornment={<span>€</span>}
+                            startAdornment={<InputAdornment position="start">€</InputAdornment>}
                             disableSlider
                         />
                         <TextAreaField
