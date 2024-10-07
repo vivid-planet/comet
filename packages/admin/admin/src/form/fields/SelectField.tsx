@@ -1,8 +1,8 @@
 import { MenuItem } from "@mui/material";
-import { ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 
 import { Field, FieldProps } from "../Field";
-import { FinalFormSelect, FinalFormSelectProps } from "../FinalFormSelect";
+import { FinalFormSelect } from "../FinalFormSelect";
 
 export type SelectFieldOption<Value extends string | number = string | number> = {
     label: ReactNode;
@@ -21,7 +21,7 @@ export interface SelectFieldProps<Value extends string | number> extends SelectF
     children?: ReturnType<Required<SelectFieldPropsToExtendFrom<Value>>["children"]>;
     options?: SelectFieldOption<Value>[];
     componentsProps?: {
-        finalFormSelect?: FinalFormSelectProps<Value>;
+        finalFormSelect?: Partial<ComponentProps<typeof FinalFormSelect<Value>>>;
     };
 }
 
