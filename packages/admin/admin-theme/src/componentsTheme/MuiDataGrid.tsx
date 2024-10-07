@@ -101,6 +101,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
                 display: "flex",
             },
+            ["@media (max-width: 900px)"]: {
+                maxHeight: "none",
+            },
         },
         filterForm: {
             margin: spacing(5, 4, 0, 4),
@@ -132,7 +135,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 transform: "translateY(-22px)",
                 fontSize: 14,
                 ["@media (max-width: 900px)"]: {
-                    display: "none",
+                    position: "relative",
+                    transform: "unset",
                 },
             },
             [`.${inputClasses.root}`]: {
@@ -145,7 +149,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         filterFormLinkOperatorInput: {
             ["@media (max-width: 900px)"]: {
                 padding: spacing(2, 1),
-                width: "22.2%",
+                width: "27.2%",
             },
         },
         filterFormDeleteIcon: {
@@ -159,6 +163,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ["@media (max-width: 900px)"]: {
                 padding: spacing(2, 1),
                 alignItems: "flex-start",
+                justifyContent: "flex-end",
                 width: "11.1%",
             },
         },
@@ -178,7 +183,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
             ["@media (max-width: 900px)"]: {
                 padding: spacing(2, 1),
-                width: "66.6%",
+                width: "61.6%",
             },
         },
         filterFormOperatorInput: {
@@ -186,13 +191,13 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
 
             ["@media (max-width: 900px)"]: {
                 padding: spacing(2, 1),
-                width: "33.3%",
+                width: "38.3%",
             },
         },
         filterFormValueInput: {
             ["@media (max-width: 900px)"]: {
                 padding: spacing(2, 1),
-                width: "66.6%",
+                width: "61.6%",
             },
         },
         paper: {
@@ -201,6 +206,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             borderRadius: "4px",
             ["@media (max-width: 900px)"]: {
                 height: "100%",
+                maxHeight: "none",
             },
         },
         // @ts-expect-error This key exists but is missing in the types.
