@@ -13,6 +13,7 @@ import {
     MenuListProps,
     Theme,
     Typography,
+    useTheme,
 } from "@mui/material";
 import { Maybe } from "graphql/jsutils/Maybe";
 import { ComponentProps, MouseEvent, PropsWithChildren, ReactNode, useState } from "react";
@@ -50,9 +51,10 @@ interface CrudMoreActionsGroupProps {
 }
 
 function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
+    const { palette } = useTheme();
     return (
         <>
-            <Typography variant="overline" color="grey.500" sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
+            <Typography variant="overline" color={palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
                 {groupTitle}
             </Typography>
             <MenuList {...menuListProps}>{children}</MenuList>
