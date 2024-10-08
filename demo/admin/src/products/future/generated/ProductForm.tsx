@@ -9,6 +9,7 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
@@ -66,7 +67,8 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
+type FormValues = Omit<ProductFormDetailsFragment, "priceRange" | "dimensions"> & {
+    priceRange?: { min: string; max: string };
     dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
@@ -97,6 +99,9 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
+                      priceRange: data.product.priceRange
+                          ? { min: String(data.product.priceRange.min), max: String(data.product.priceRange.max) }
+                          : undefined,
                       dimensionsEnabled: !!data.product.dimensions,
                       dimensions: data.product.dimensions
                           ? {
@@ -131,6 +136,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         const output = {
             ...formValues,
             category: formValues.category?.id,
+            priceRange: formValues.priceRange ? { min: parseFloat(formValues.priceRange.min), max: parseFloat(formValues.priceRange.max) } : null,
             dimensions:
                 dimensionsEnabled && formValues.dimensions
                     ? {
@@ -284,6 +290,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     return data.productCategories.nodes;
                                 }}
                                 getOptionLabel={(option) => option.title}
+                            />
+
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="priceRange"
+                                component={FinalFormRangeInput}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                min={25}
+                                max={500}
+                                disableSlider
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
                             />
                             <Field
                                 fullWidth
