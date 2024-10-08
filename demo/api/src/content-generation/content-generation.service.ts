@@ -12,4 +12,8 @@ export class ContentGenerationService implements ContentGenerationServiceInterfa
     async generateImageTitle(fileId: string) {
         return this.openAiContentGenerationService.generateImageTitle(fileId);
     }
+
+    async generateSeoTags(content: string) {
+        return this.openAiContentGenerationService.generateSeoTags(content);
+    }
 }
