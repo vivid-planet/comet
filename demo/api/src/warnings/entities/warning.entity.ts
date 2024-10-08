@@ -4,8 +4,8 @@ import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { WarningLevel } from "./warning-level.enum";
-import { WarningState } from "./warning-state.enum";
+import { WarningSeverity } from "./warning-severity.enum";
+import { WarningStatus } from "./warning-status.enum";
 
 @ObjectType()
 @Entity()
@@ -31,13 +31,13 @@ export class Warning extends BaseEntity<Warning, "id"> {
     @CrudField()
     type: string;
 
-    @Enum({ items: () => WarningLevel })
-    @Field(() => WarningLevel)
-    level: WarningLevel;
+    @Enum({ items: () => WarningSeverity })
+    @Field(() => WarningSeverity)
+    severity: WarningSeverity;
 
     // TODO: add blockInfos with COM-958
 
-    @Enum({ items: () => WarningState })
-    @Field(() => WarningState)
-    state: WarningState;
+    @Enum({ items: () => WarningStatus })
+    @Field(() => WarningStatus)
+    status: WarningStatus;
 }

@@ -8,8 +8,8 @@ export enum WarningSortField {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
     type = "type",
-    level = "level",
-    state = "state",
+    severity = "severity",
+    status = "status",
 }
 registerEnumType(WarningSortField, {
     name: "WarningSortField",

@@ -5,13 +5,13 @@ import { Field, InputType } from "@nestjs/graphql";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 
-import { WarningLevel } from "../../entities/warning-level.enum";
-import { WarningState } from "../../entities/warning-state.enum";
+import { WarningSeverity } from "../../entities/warning-severity.enum";
+import { WarningStatus } from "../../entities/warning-status.enum";
 
 @InputType()
-class WarningLevelEnumFilter extends createEnumFilter(WarningLevel) {}
+class WarningSeverityEnumFilter extends createEnumFilter(WarningSeverity) {}
 @InputType()
-class WarningStateEnumFilter extends createEnumFilter(WarningState) {}
+class WarningStatusEnumFilter extends createEnumFilter(WarningStatus) {}
 
 @InputType()
 export class WarningFilter {
@@ -33,17 +33,17 @@ export class WarningFilter {
     @Type(() => StringFilter)
     type?: StringFilter;
 
-    @Field(() => WarningLevelEnumFilter, { nullable: true })
+    @Field(() => WarningSeverityEnumFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => WarningLevelEnumFilter)
-    level?: WarningLevelEnumFilter;
+    @Type(() => WarningSeverityEnumFilter)
+    severity?: WarningSeverityEnumFilter;
 
-    @Field(() => WarningStateEnumFilter, { nullable: true })
+    @Field(() => WarningStatusEnumFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()
-    @Type(() => WarningStateEnumFilter)
-    state?: WarningStateEnumFilter;
+    @Type(() => WarningStatusEnumFilter)
+    status?: WarningStatusEnumFilter;
 
     @Field(() => [WarningFilter], { nullable: true })
     @Type(() => WarningFilter)

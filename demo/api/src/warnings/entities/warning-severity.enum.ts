@@ -1,10 +1,10 @@
 import { registerEnumType } from "@nestjs/graphql";
 
-export enum WarningLevel {
+export enum WarningSeverity {
     critical = "critical",
     high = "high",
     low = "low",
 }
-registerEnumType(WarningLevel, {
-    name: "WarningLevel",
+registerEnumType(WarningSeverity, {
+    name: "WarningSeverity",
 });

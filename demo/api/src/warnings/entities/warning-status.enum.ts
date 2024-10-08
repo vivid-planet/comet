@@ -1,10 +1,10 @@
 import { registerEnumType } from "@nestjs/graphql";
 
-export enum WarningState {
+export enum WarningStatus {
     open = "open",
     resolved = "resolved",
     ignored = "ignored",
 }
-registerEnumType(WarningState, {
-    name: "WarningState",
+registerEnumType(WarningStatus, {
+    name: "WarningStatus",
 });

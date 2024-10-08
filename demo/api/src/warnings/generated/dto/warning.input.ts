@@ -4,8 +4,8 @@ import { PartialType } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 
-import { WarningLevel } from "../../entities/warning-level.enum";
-import { WarningState } from "../../entities/warning-state.enum";
+import { WarningSeverity } from "../../entities/warning-severity.enum";
+import { WarningStatus } from "../../entities/warning-status.enum";
 
 @InputType()
 export class WarningInput {
@@ -15,14 +15,14 @@ export class WarningInput {
     type: string;
 
     @IsNotEmpty()
-    @IsEnum(WarningLevel)
-    @Field(() => WarningLevel)
-    level: WarningLevel;
+    @IsEnum(WarningSeverity)
+    @Field(() => WarningSeverity)
+    severity: WarningSeverity;
 
     @IsNotEmpty()
-    @IsEnum(WarningState)
-    @Field(() => WarningState)
-    state: WarningState;
+    @IsEnum(WarningStatus)
+    @Field(() => WarningStatus)
+    status: WarningStatus;
 }
 
 @InputType()

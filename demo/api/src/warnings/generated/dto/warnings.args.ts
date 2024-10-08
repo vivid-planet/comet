@@ -3,13 +3,18 @@
 import { OffsetBasedPaginationArgs } from "@comet/cms-api";
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 
+import { WarningStatus } from "../../entities/warning-status.enum";
 import { WarningFilter } from "./warning.filter";
 import { WarningSort } from "./warning.sort";
 
 @ArgsType()
 export class WarningsArgs extends OffsetBasedPaginationArgs {
+    @Field(() => [WarningStatus], { defaultValue: [undefined] })
+    @IsEnum(WarningStatus, { each: true })
+    status: WarningStatus[];
+
     @Field({ nullable: true })
     @IsOptional()
     @IsString()

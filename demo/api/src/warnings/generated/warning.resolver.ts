@@ -24,8 +24,9 @@ export class WarningResolver {
     }
 
     @Query(() => PaginatedWarnings)
-    async warnings(@Args() { search, filter, sort, offset, limit }: WarningsArgs): Promise<PaginatedWarnings> {
+    async warnings(@Args() { status, search, filter, sort, offset, limit }: WarningsArgs): Promise<PaginatedWarnings> {
         const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
+        where.status = { $in: status };
 
         const options: FindOptions<Warning> = { offset, limit };
 
