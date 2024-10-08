@@ -72,9 +72,11 @@ export class ApiMetricsMiddleware implements NestMiddleware {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     use(req: any, res: any, next: any) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         responseTime((req: any, res: any, time: any) => {
-            const { url } = req;
+            //const { url } = req;
 
             this.httpServerRequestCount.add(1, { method: req.method /*, url*/ });
 
