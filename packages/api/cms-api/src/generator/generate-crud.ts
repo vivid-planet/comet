@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityMetadata } from "@mikro-orm/core";
+import { EntityMetadata, ReferenceType } from "@mikro-orm/core";
 import * as path from "path";
 import { singular } from "pluralize";
 
@@ -462,7 +462,16 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
     const { hasPositionProp, positionGroupProps } = buildOptions(metadata, generatorOptions);
 
-    const positionGroupType = positionGroupProps.length ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${prop.type}`).join(",")} }` : false;
+    const positionGroupType = positionGroupProps.length
+        ? `{ ${positionGroupProps
+              .map(
+                  (prop) =>
+                      `${prop.name}${prop.nullable ? `?` : ``}: ${
+                          [ReferenceType.EMBEDDED, ReferenceType.SCALAR].includes(prop.reference) ? prop.type : "string"
+                      }`,
+              )
+              .join(",")} }`
+        : false;
 
     const serviceOut = `import { FilterQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
@@ -1207,7 +1216,16 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             if (input.position !== undefined) {
                 const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
                           positionGroupProps.length
-                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} }`
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} }`
                               : ``
                       });
                 if (input.position > lastPosition + 1) {
@@ -1216,13 +1234,31 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 if (${instanceNameSingular}.position < input.position) {
                     await this.${instanceNamePlural}Service.decrementPositions(${
                           positionGroupProps.length
-                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} },`
                               : ``
                       }${instanceNameSingular}.position, input.position);
                 } else if (${instanceNameSingular}.position > input.position) {
                     await this.${instanceNamePlural}Service.incrementPositions(${
                           positionGroupProps.length
-                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} },`
                               : ``
                       }input.position, ${instanceNameSingular}.position);
                 }
@@ -1251,7 +1287,16 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                       hasPositionProp
                           ? `await this.${instanceNamePlural}Service.decrementPositions(${
                                 positionGroupProps.length
-                                    ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                                    ? `{ ${positionGroupProps
+                                          .map(
+                                              (prop) =>
+                                                  `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                      [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                          ? `${prop.nullable ? `?` : ``}.id`
+                                                          : ``
+                                                  }`,
+                                          )
+                                          .join(",")} },`
                                     : ``
                             }${instanceNameSingular}.position);`
                           : ""
