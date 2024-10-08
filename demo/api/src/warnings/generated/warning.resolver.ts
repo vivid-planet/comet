@@ -12,7 +12,7 @@ import { WarningInput, WarningUpdateInput } from "./dto/warning.input";
 import { WarningsArgs } from "./dto/warnings.args";
 
 @Resolver(() => Warning)
-@RequiredPermission(["pageTree"], { skipScopeCheck: true })
+@RequiredPermission(["warnings"], { skipScopeCheck: true })
 export class WarningResolver {
     constructor(private readonly entityManager: EntityManager, @InjectRepository(Warning) private readonly repository: EntityRepository<Warning>) {}
 

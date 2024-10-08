@@ -10,7 +10,7 @@ import { WarningStatus } from "./warning-status.enum";
 @ObjectType()
 @Entity()
 @RootBlockEntity<Warning>()
-@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["pageTree"] })
+@CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["warnings"] })
 export class Warning extends BaseEntity<Warning, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
