@@ -14,7 +14,7 @@ import {
 import { WarningSolid } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { GQLWarningLevel } from "@src/graphql.generated";
+import { GQLWarningSeverity } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedDate, FormattedTime, useIntl } from "react-intl";
 
@@ -26,14 +26,14 @@ const warningsFragment = gql`
         createdAt
         updatedAt
         type
-        level
-        state
+        severity
+        status
     }
 `;
 
 const warningsQuery = gql`
     query WarningsGrid($offset: Int, $limit: Int, $sort: [WarningSort!], $search: String, $filter: WarningFilter) {
-        warnings(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
+        warnings(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, status: [open, resolved, ignored]) {
             nodes {
                 ...WarningsList
             }
@@ -76,17 +76,17 @@ export function WarningsGrid(): React.ReactElement {
             width: 200,
         },
         {
-            field: "level",
-            headerName: intl.formatMessage({ id: "warning.level", defaultMessage: "Level" }),
+            field: "severity",
+            headerName: intl.formatMessage({ id: "warning.severity", defaultMessage: "Severity" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "critical", label: intl.formatMessage({ id: "warning.level.critical", defaultMessage: "Critical" }) },
-                { value: "high", label: intl.formatMessage({ id: "warning.level.high", defaultMessage: "High" }) },
-                { value: "low", label: intl.formatMessage({ id: "warning.level.low", defaultMessage: "Low" }) },
+                { value: "critical", label: intl.formatMessage({ id: "warning.severity.critical", defaultMessage: "Critical" }) },
+                { value: "high", label: intl.formatMessage({ id: "warning.severity.high", defaultMessage: "High" }) },
+                { value: "low", label: intl.formatMessage({ id: "warning.severity.low", defaultMessage: "Low" }) },
             ],
             width: 150,
             renderCell: (params) => {
-                const colorMapping: Record<GQLWarningLevel, "error" | "warning" | "default"> = {
+                const colorMapping: Record<GQLWarningSeverity, "error" | "warning" | "default"> = {
                     critical: "error",
                     high: "warning",
                     low: "default",
@@ -94,7 +94,7 @@ export function WarningsGrid(): React.ReactElement {
                 return (
                     <Chip
                         icon={params.value === "critical" ? <WarningSolid /> : undefined}
-                        color={colorMapping[params.value as GQLWarningLevel]}
+                        color={colorMapping[params.value as GQLWarningSeverity]}
                         label={params.value}
                     />
                 );
@@ -107,13 +107,13 @@ export function WarningsGrid(): React.ReactElement {
             renderCell: (params) => <Chip label={params.value} />,
         },
         {
-            field: "state",
-            headerName: intl.formatMessage({ id: "warning.state", defaultMessage: "State" }),
+            field: "status",
+            headerName: intl.formatMessage({ id: "warning.status", defaultMessage: "Status" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "open", label: intl.formatMessage({ id: "warning.state.open", defaultMessage: "Open" }) },
-                { value: "resolved", label: intl.formatMessage({ id: "warning.state.resolved", defaultMessage: "Resolved" }) },
-                { value: "ignored", label: intl.formatMessage({ id: "warning.state.ignored", defaultMessage: "Ignored" }) },
+                { value: "open", label: intl.formatMessage({ id: "warning.status.open", defaultMessage: "Open" }) },
+                { value: "resolved", label: intl.formatMessage({ id: "warning.status.resolved", defaultMessage: "Resolved" }) },
+                { value: "ignored", label: intl.formatMessage({ id: "warning.status.ignored", defaultMessage: "Ignored" }) },
             ],
             width: 150,
         },

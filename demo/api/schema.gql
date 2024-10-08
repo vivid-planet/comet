@@ -610,17 +610,17 @@ type Warning {
   createdAt: DateTime!
   updatedAt: DateTime!
   type: String!
-  level: WarningLevel!
-  state: WarningState!
+  severity: WarningSeverity!
+  status: WarningStatus!
 }
 
-enum WarningLevel {
+enum WarningSeverity {
   critical
   high
   low
 }
 
-enum WarningState {
+enum WarningStatus {
   open
   resolved
   ignored
@@ -817,7 +817,7 @@ type Query {
   manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
   warning(id: ID!): Warning!
-  warnings(offset: Int! = 0, limit: Int! = 25, search: String, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [], search: String, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
 }
 
 input UserFilter {
@@ -1181,22 +1181,22 @@ input WarningFilter {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   type: StringFilter
-  level: WarningLevelEnumFilter
-  state: WarningStateEnumFilter
+  severity: WarningSeverityEnumFilter
+  status: WarningStatusEnumFilter
   and: [WarningFilter!]
   or: [WarningFilter!]
 }
 
-input WarningLevelEnumFilter {
-  isAnyOf: [WarningLevel!]
-  equal: WarningLevel
-  notEqual: WarningLevel
+input WarningSeverityEnumFilter {
+  isAnyOf: [WarningSeverity!]
+  equal: WarningSeverity
+  notEqual: WarningSeverity
 }
 
-input WarningStateEnumFilter {
-  isAnyOf: [WarningState!]
-  equal: WarningState
-  notEqual: WarningState
+input WarningStatusEnumFilter {
+  isAnyOf: [WarningStatus!]
+  equal: WarningStatus
+  notEqual: WarningStatus
 }
 
 input WarningSort {
@@ -1208,8 +1208,8 @@ enum WarningSortField {
   createdAt
   updatedAt
   type
-  level
-  state
+  severity
+  status
 }
 
 type Mutation {
@@ -1567,12 +1567,12 @@ input ManufacturerUpdateInput {
 
 input WarningInput {
   type: String!
-  level: WarningLevel!
-  state: WarningState!
+  severity: WarningSeverity!
+  status: WarningStatus!
 }
 
 input WarningUpdateInput {
   type: String
-  level: WarningLevel
-  state: WarningState
+  severity: WarningSeverity
+  status: WarningStatus
 }
