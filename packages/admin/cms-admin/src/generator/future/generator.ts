@@ -8,6 +8,7 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
+import { ReactNode } from "react";
 
 import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
@@ -35,6 +36,14 @@ type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?:
 export type FormFieldConfig<T> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
+    | {
+          type: "numberRange";
+          minValue: number;
+          maxValue: number;
+          disableSlider?: boolean;
+          startAdornment?: ReactNode;
+          endAdornment?: ReactNode;
+      }
     | { type: "boolean" }
     | { type: "date" }
     // TODO | { type: "dateTime" }

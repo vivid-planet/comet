@@ -250,6 +250,7 @@ export function generateForm(
         FinalForm,
         FinalFormCheckbox,
         FinalFormInput,
+        FinalFormRangeInput,
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
