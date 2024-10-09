@@ -2,4 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Add optional prop to `createTextLinkBlock` function to set a custom displayName
+Add `displayName` prop to `createTextLinkBlock` factory to support setting a custom display name
