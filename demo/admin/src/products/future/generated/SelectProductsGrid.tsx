@@ -94,6 +94,7 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
+            valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
                 {
                     value: "Cap",
@@ -121,6 +122,7 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
             valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             width: 140,
         },
         {
@@ -128,6 +130,8 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
             valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
+            valueFormatter: ({ value }) =>
+                value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
             width: 170,
         },
     ];

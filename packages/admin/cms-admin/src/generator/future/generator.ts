@@ -111,7 +111,7 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
 };
@@ -149,6 +149,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     query?: string;
     exportQuery?: boolean; // to refetch from outside
     columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
+    excelExport?: boolean;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
