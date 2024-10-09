@@ -1,17 +1,80 @@
-import { gql, useQuery } from "@apollo/client";
-import { Loading, MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
-import { Box } from "@mui/material";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { Loading, MainContent, RouterTab, RouterTabs, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { Box, Button, ButtonProps, CardContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
+import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 import { UserBasicData } from "./basicData/UserBasicData";
 import { ContentScopeGrid } from "./permissions/ContentScopeGrid";
 import { PermissionGrid } from "./permissions/PermissionGrid";
-import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPage.generated";
+import {
+    GQLUserPageQuery,
+    GQLUserPageQueryVariables,
+    GQLUserPermissionsStartImpersonationMutation,
+    GQLUserPermissionsStartImpersonationMutationVariables,
+    GQLUserPermissionsStopImpersonationMutation,
+} from "./UserPage.generated";
 
-export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
+export const StopImpersonationButton = (buttonProps: ButtonProps) => {
+    const client = useApolloClient();
+    const stopImpersonation = async () => {
+        const result = await client.mutate<GQLUserPermissionsStopImpersonationMutation>({
+            mutation: gql`
+                mutation UserPermissionsStopImpersonation {
+                    userPermissionsStopImpersonation
+                }
+            `,
+        });
+        if (result.data?.userPermissionsStopImpersonation) {
+            location.href = "/";
+        }
+    };
+
+    return (
+        <Button onClick={stopImpersonation} {...buttonProps}>
+            <FormattedMessage id="comet.stopImpersonation" defaultMessage="Stop Impersonation" />
+        </Button>
+    );
+};
+
+const ImpersonationButton = ({ userId }: { userId: string }) => {
+    const currentUser = useCurrentUser();
+    const client = useApolloClient();
+    const startImpersonation = async () => {
+        const result = await client.mutate<GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables>({
+            mutation: gql`
+                mutation UserPermissionsStartImpersonation($userId: String!) {
+                    userPermissionsStartImpersonation(userId: $userId)
+                }
+            `,
+            variables: {
+                userId,
+            },
+        });
+        if (result.data?.userPermissionsStartImpersonation) {
+            location.href = "/";
+        }
+    };
+
+    if (currentUser.id !== userId && !currentUser.impersonated) {
+        return (
+            <Button onClick={startImpersonation} variant="contained">
+                <FormattedMessage id="comet.userPermissions.startImpersonation" defaultMessage="Start Impersonation" />
+            </Button>
+        );
+    }
+
+    if (currentUser.impersonated && currentUser.id === userId) {
+        return <StopImpersonationButton variant="contained" />;
+    }
+
+    return null;
+};
+
+export const UserPage = ({ userId }: { userId: string }) => {
+    const isAllowed = useUserPermissionCheck();
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
             query UserPage($id: String!) {
@@ -43,6 +106,12 @@ export const UserPage: React.FC<{ userId: string }> = ({ userId }) => {
                     <TitleText>{data.user.name}</TitleText>
                     <SupportText>{data.user.email}</SupportText>
                 </ToolbarTitleItem>
+                <ToolbarFillSpace />
+                {isAllowed("impersonation") && (
+                    <CardContent>
+                        <ImpersonationButton userId={userId} />
+                    </CardContent>
+                )}
             </Toolbar>
             <MainContent>
                 <RouterTabs>

@@ -1,4 +1,5 @@
 import { GridColDef } from "@comet/admin";
+import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { IconProps } from "@mui/material";
@@ -7,11 +8,14 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
+import { ReactNode } from "react";
 
 import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
 import { generateGrid } from "./generateGrid";
+import { GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { UsableFields } from "./generateGrid/usableFields";
+import { ColumnVisibleOption } from "./utils/columnVisibility";
 import { writeGenerated } from "./utils/writeGenerated";
 
 type ImportReference = {
@@ -32,6 +36,15 @@ type MultiFileFormFieldConfig = { type: "fileUpload"; name: string; multiple: tr
 export type FormFieldConfig<T> = (
     | { type: "text"; name: keyof T; multiline?: boolean }
     | { type: "number"; name: keyof T }
+    | {
+          type: "numberRange";
+          name: keyof T;
+          minValue: number;
+          maxValue: number;
+          disableSlider?: boolean;
+          startAdornment?: ReactNode;
+          endAdornment?: ReactNode;
+      }
     | { type: "boolean"; name: keyof T }
     | { type: "date"; name: keyof T }
     // TODO | { type: "dateTime" }
@@ -98,18 +111,19 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type DataGridSettings = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & { tooltipMessage?: string };
-
-type IconKey = string; // TODO: Use `IconName` type from `@comet/admin-icons` after merged: https://github.com/vivid-planet/comet/pull/2421
+export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+    headerInfoTooltip?: string;
+    visible?: ColumnVisibleOption;
+};
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
-    name: IconKey;
+    name: IconName;
 };
 
 export type StaticSelectLabelCellContent = {
     primaryText?: string;
     secondaryText?: string;
-    icon?: IconKey | IconObject | ImportReference;
+    icon?: IconName | IconObject | ImportReference;
 };
 
 export type GridColumnConfig<T> = (
@@ -124,9 +138,9 @@ export type GridColumnConfig<T> = (
     name: UsableFields<T>;
     fieldName?: string; // this can be used to overwrite field-prop of column-config
     filterOperators?: ImportReference;
-} & DataGridSettings;
+} & BaseColumnConfig;
 
-export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & DataGridSettings;
+export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
 
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
@@ -134,7 +148,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     fragmentName?: string;
     query?: string;
     exportQuery?: boolean; // to refetch from outside
-    columns: Array<GridColumnConfig<T> | ActionsGridColumnConfig>;
+    columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;

@@ -82,6 +82,13 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
                       environment: envVars.SENTRY_ENVIRONMENT,
                   }
                 : undefined,
+        fileUploads: {
+            ...cometConfig.fileUploads,
+            download: {
+                secret: envVars.FILE_UPLOADS_DOWNLOAD_SECRET,
+            },
+        },
+        sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
     };
 }
 

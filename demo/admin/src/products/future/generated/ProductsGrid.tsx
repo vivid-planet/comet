@@ -10,6 +10,7 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderStaticSelectCell,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
@@ -20,6 +21,7 @@ import {
 } from "@comet/admin";
 import { Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
+import { useTheme } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
@@ -40,10 +42,10 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        inStock
         title
         description
         price
+        inStock
         type
         availableSince
         createdAt
@@ -99,9 +101,10 @@ type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
+    actionsColumnWidth?: number;
 };
 
-export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React.ReactElement {
+export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -114,40 +117,36 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
         ...usePersistentColumnState("ProductsGrid"),
     };
 
+    const theme = useTheme();
+
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
         {
-            field: "inStock",
-            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
-            type: "singleSelect",
-            valueOptions: [
-                { value: "true", label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }) },
-                { value: "false", label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }) },
-            ],
+            field: "overview",
+            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            filterable: false,
+            sortable: false,
             renderCell: ({ row }) => {
-                const valueLabels: Record<string, React.ReactNode> = {
-                    true: (
-                        <GridCellContent
-                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
-                            icon={<StateFilledIcon color="success" />}
-                        />
-                    ),
-                    false: (
-                        <GridCellContent
-                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
-                            icon={<StateFilledIcon color="error" />}
-                        />
-                    ),
-                };
-                return row.inStock.toString() in valueLabels ? valueLabels[row.inStock.toString()] : row.inStock.toString();
+                return <GridCellContent primaryText={row.title} secondaryText={row.description} />;
             },
             flex: 1,
-            minWidth: 80,
+            visible: theme.breakpoints.down("md"),
+            sortBy: ["title", "description"],
+            minWidth: 200,
+            maxWidth: 250,
         },
-        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, minWidth: 200, maxWidth: 250 },
+        {
+            field: "title",
+            headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
+            flex: 1,
+            visible: theme.breakpoints.up("md"),
+            minWidth: 200,
+            maxWidth: 250,
+        },
         {
             field: "description",
             headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
             flex: 1,
+            visible: theme.breakpoints.up("md"),
             minWidth: 150,
         },
         {
@@ -166,22 +165,57 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             maxWidth: 150,
         },
         {
+            field: "inStock",
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            type: "singleSelect",
+            valueOptions: [
+                {
+                    value: "true",
+                    label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
+                            icon={<StateFilledIcon color="success" />}
+                        />
+                    ),
+                },
+                {
+                    value: "false",
+                    label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
+                            icon={<StateFilledIcon color="error" />}
+                        />
+                    ),
+                },
+            ],
+            renderCell: renderStaticSelectCell,
+            flex: 1,
+            minWidth: 80,
+        },
+        {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
-                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
-                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                {
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                    cellContent: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                },
+                {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                    cellContent: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                    cellContent: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
             ],
-            renderCell: ({ row }) => {
-                const valueLabels: Record<string, React.ReactNode> = {
-                    Cap: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
-                    Shirt: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
-                    Tie: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
-                };
-                return row.type.toString() in valueLabels ? valueLabels[row.type.toString()] : row.type.toString();
-            },
+            renderCell: renderStaticSelectCell,
             flex: 1,
             minWidth: 150,
             maxWidth: 150,
@@ -217,7 +251,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             type: "actions",
             align: "right",
             pinned: "right",
-            width: 116,
+            width: actionsColumnWidth,
             renderCell: (params) => {
                 return (
                     <>

@@ -7,6 +7,7 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderStaticSelectCell,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -94,18 +95,23 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
-                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
-                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                {
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                    cellContent: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                },
+                {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                    cellContent: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                    cellContent: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
             ],
-            renderCell: ({ row }) => {
-                const valueLabels: Record<string, React.ReactNode> = {
-                    Cap: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
-                    Shirt: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
-                    Tie: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
-                };
-                return row.type.toString() in valueLabels ? valueLabels[row.type.toString()] : row.type.toString();
-            },
+            renderCell: renderStaticSelectCell,
             flex: 1,
             minWidth: 150,
             maxWidth: 150,

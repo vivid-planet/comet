@@ -1,3 +1,3 @@
-import * as React from "react";
+import { createContext } from "react";
 
-export const DamScopeContext = React.createContext<Record<string, unknown>>({});
+export const DamScopeContext = createContext<Record<string, unknown>>({});

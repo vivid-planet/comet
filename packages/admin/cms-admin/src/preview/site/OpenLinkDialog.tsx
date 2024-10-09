@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogTitle, Grid, Typography } from "@mui/mater
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData } from "../../blocks.generated";
@@ -18,7 +17,7 @@ interface OpenLinkDialogProps {
 const IconContainer = styled("div")`
     margin-right: 10px;
 `;
-function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps): React.ReactElement {
+function OpenLinkDialog({ open, onClose, link }: OpenLinkDialogProps) {
     return (
         <Dialog open={open} onClose={onClose} maxWidth={false}>
             <DialogTitle>

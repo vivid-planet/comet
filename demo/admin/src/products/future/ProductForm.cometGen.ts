@@ -34,32 +34,33 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
-                {
-                    type: "optionalNestedFields",
-                    name: "dimensions",
-                    checkboxLabel: "Configure dimensions",
-                    fields: [
-                        { type: "number", name: "width", label: "Width" },
-                        { type: "number", name: "height", label: "Height" },
-                        { type: "number", name: "depth", label: "Depth" },
-                    ],
-                },
+                { type: "numberRange", name: "priceRange", minValue: 25, maxValue: 500, disableSlider: true, startAdornment: "€" },
+                // {
+                //     type: "optionalNestedFields",
+                //     name: "dimensions",
+                //     checkboxLabel: "Configure dimensions",
+                //     fields: [
+                //         { type: "number", name: "width", label: "Width" },
+                //         { type: "number", name: "height", label: "Height" },
+                //         { type: "number", name: "depth", label: "Depth" },
+                //     ],
+                // },
             ],
         },
         {
             type: "fieldSet",
             name: "additionalData",
             fields: [
-                {
-                    type: "asyncSelect",
-                    virtual: true,
-                    name: "manufacturerCountry",
-                    gqlFieldName: "manufacturer",
-                    initQueryIdPath: "addressAsEmbeddable.country",
-                    initQueryLabelPath: "addressAsEmbeddable.country",
-                    rootQuery: "manufacturerCountries",
-                    labelField: "label",
-                },
+                // {
+                //     type: "asyncSelect",
+                //     virtual: true,
+                //     name: "manufacturerCountry",
+                //     gqlFieldName: "manufacturer",
+                //     initQueryIdPath: "addressAsEmbeddable.country",
+                //     initQueryLabelPath: "addressAsEmbeddable.country",
+                //     rootQuery: "manufacturerCountries",
+                //     labelField: "label",
+                // },
                 {
                     type: "asyncSelect",
                     name: "manufacturer",

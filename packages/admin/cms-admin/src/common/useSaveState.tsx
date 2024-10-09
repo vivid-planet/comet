@@ -1,11 +1,11 @@
 import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import React from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 interface SaveStateOptions<TData> {
     hasChanges: boolean;
     saveConflict: {
-        dialogs: React.ReactNode;
+        dialogs: ReactNode;
         checkForConflicts: () => Promise<boolean>;
     };
     mode: "edit" | "add";
@@ -22,10 +22,10 @@ interface SaveStateReturn {
 }
 
 export function useSaveState<TData>(options: SaveStateOptions<TData>): SaveStateReturn {
-    const [saving, setSaving] = React.useState(false);
-    const [saveError, setSaveError] = React.useState<"invalid" | "conflict" | "error" | undefined>();
+    const [saving, setSaving] = useState(false);
+    const [saveError, setSaveError] = useState<"invalid" | "conflict" | "error" | undefined>();
 
-    const handleSaveClick = React.useCallback(
+    const handleSaveClick = useCallback(
         async (canNavigate = false) => {
             setSaving(true);
             setSaveError(undefined);

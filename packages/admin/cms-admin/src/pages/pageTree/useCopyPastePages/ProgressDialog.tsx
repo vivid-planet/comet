@@ -1,9 +1,9 @@
 import { messages } from "@comet/admin";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-function LinearProgressWithLabel({ message, ...props }: LinearProgressProps & { value: number; message?: React.ReactNode }) {
+function LinearProgressWithLabel({ message, ...props }: LinearProgressProps & { value: number; message?: ReactNode }) {
     return (
         <Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -23,7 +23,7 @@ function LinearProgressWithLabel({ message, ...props }: LinearProgressProps & { 
     );
 }
 
-export function ProgressDialog(props: { title: React.ReactNode; progress: number | undefined; message?: React.ReactNode; onCancel?: () => void }) {
+export function ProgressDialog(props: { title: ReactNode; progress: number | undefined; message?: ReactNode; onCancel?: () => void }) {
     return (
         <>
             {props.progress !== undefined && (
@@ -45,16 +45,16 @@ export function ProgressDialog(props: { title: React.ReactNode; progress: number
     );
 }
 
-export function useProgressDialog(options: { title: React.ReactNode; onCancel?: () => void }) {
-    const [progress, setProgress] = React.useState<{
+export function useProgressDialog(options: { title: ReactNode; onCancel?: () => void }) {
+    const [progress, setProgress] = useState<{
         progress: number | undefined;
-        message?: React.ReactNode;
+        message?: ReactNode;
     }>({
         progress: undefined,
         message: undefined,
     });
 
-    const updateProgress = React.useCallback((progress: number | undefined, message?: React.ReactNode) => {
+    const updateProgress = useCallback((progress: number | undefined, message?: ReactNode) => {
         setProgress({ progress, message });
     }, []);
 

@@ -14,6 +14,20 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     ],
     columns: [
         {
+            type: "combination",
+            name: "overview",
+            headerName: "Overview",
+            minWidth: 200,
+            maxWidth: 250,
+            primaryText: "title",
+            secondaryText: "description",
+            visible: "down('md')",
+            sortBy: ["title", "description"],
+        },
+        { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
+        { type: "text", name: "description", headerName: "Description", visible: "up('md')" },
+        { type: "number", name: "price", headerName: "Price", maxWidth: 150, headerInfoTooltip: "Price in EUR" },
+        {
             type: "staticSelect",
             name: "inStock",
             headerName: "In stock",
@@ -36,9 +50,6 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
                 },
             ],
         },
-        { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250 },
-        { type: "text", name: "description", headerName: "Description" },
-        { type: "number", name: "price", headerName: "Price", maxWidth: 150, tooltipMessage: "Price in EUR" },
         { type: "staticSelect", name: "type", maxWidth: 150, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
         { type: "date", name: "availableSince", width: 140 },
         { type: "dateTime", name: "createdAt", width: 170 },
@@ -51,7 +62,6 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         },
         {
             type: "actions",
-            width: 116,
             component: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
         },
     ],

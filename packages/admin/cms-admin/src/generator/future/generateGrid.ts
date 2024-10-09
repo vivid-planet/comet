@@ -1,3 +1,4 @@
+import { GridColDef } from "@comet/admin";
 import {
     IntrospectionEnumType,
     IntrospectionInputObjectType,
@@ -9,8 +10,10 @@ import {
 import { plural } from "pluralize";
 import { ReactNode } from "react";
 
+import { getCombinationColumnRenderCell, GridCombinationColumnConfig } from "./generateGrid/combinationColumn";
 import { findInputObjectType } from "./generateGrid/findInputObjectType";
 import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
+import { generateGridToolbar } from "./generateGrid/generateGridToolbar";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
 import { ActionsGridColumnConfig, GeneratorReturn, GridColumnConfig, GridConfig, StaticSelectLabelCellContent } from "./generator";
@@ -29,7 +32,14 @@ function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
         .join("\n")}}`;
 }
 
-export type Prop = { type: string; optional: boolean; name: string; destructionAlias?: string };
+export type Prop = {
+    type: string;
+    optional: boolean;
+    name: string;
+    destructionAlias?: string;
+    defaultValue?: string | number;
+};
+
 function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; gridPropsParamsCode: string } {
     if (!props.length) return { gridPropsTypeCode: "", gridPropsParamsCode: "" };
     const uniqueProps = props.reduce<Prop[]>((acc, prop) => {
@@ -60,17 +70,32 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
                 .join("\n")}
         };`,
         gridPropsParamsCode: `{${uniqueProps
-            .map((prop) => `${prop.name}${prop.destructionAlias ? `: ${prop.destructionAlias}` : ``}`)
+            .map(
+                (prop) =>
+                    `${prop.name}${prop.destructionAlias ? `: ${prop.destructionAlias}` : ``} ${prop.defaultValue ? `= ${prop.defaultValue}` : ""}`,
+            )
             .join(", ")}}: Props`,
     };
 }
 
-type LabelData = {
-    textLabel: string;
-    gridCellContent: ReactNode;
+const getSortByValue = (sortBy: GridColDef["sortBy"]) => {
+    if (Array.isArray(sortBy)) {
+        return `[${sortBy.map((i) => `"${i}"`).join(", ")}]`;
+    }
+
+    if (typeof sortBy === "string") {
+        return `"${sortBy}"`;
+    }
+
+    return sortBy;
 };
 
-const getLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
+type LabelData = {
+    textLabel: string;
+    gridCellContent?: ReactNode;
+};
+
+const getValueOptionsLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
     if (typeof label === "string") {
         const labelText = `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`;
         return {
@@ -188,7 +213,13 @@ export function generateGrid(
     const allowEditing = (typeof config.edit === "undefined" || config.edit === true) && !config.readOnly;
     const allowDeleting = (typeof config.delete === "undefined" || config.delete === true) && !config.readOnly && hasDeleteMutation;
 
+    const forwardRowAction = allowEditing && config.rowActionProp;
+
     const showActionsColumn = allowCopyPaste || allowEditing || allowDeleting;
+    const showCrudContextMenuInActionsColumn = allowCopyPaste || allowDeleting;
+    const showEditInActionsColumn = allowEditing && !forwardRowAction;
+
+    const defaultActionsColumnWidth = getDefaultActionsColumnWidth(showCrudContextMenuInActionsColumn, showEditInActionsColumn);
 
     const {
         imports: forwardedGqlArgsImports,
@@ -198,10 +229,10 @@ export function generateGrid(
     imports.push(...forwardedGqlArgsImports);
     props.push(...forwardedGqlArgsProps);
 
-    const toolbar = config.toolbar ?? true;
+    const renderToolbar = config.toolbar ?? true;
 
     const filterArg = gridQueryType.args.find((arg) => arg.name === "filter");
-    const hasFilter = !!filterArg && toolbar;
+    const hasFilter = !!filterArg && renderToolbar;
     let hasFilterProp = false;
     let filterFields: string[] = [];
     if (filterArg) {
@@ -219,7 +250,7 @@ export function generateGrid(
         props.push(...filterPropProps);
     }
 
-    const forwardToolbarAction = allowAdding && toolbar && config.toolbarActionProp;
+    const forwardToolbarAction = allowAdding && renderToolbar && config.toolbarActionProp;
     if (forwardToolbarAction) {
         props.push({ name: "toolbarAction", type: "React.ReactNode", optional: true });
     }
@@ -282,11 +313,16 @@ export function generateGrid(
         type: actionsColumnType,
         headerName: actionsColumnHeaderName,
         pinned: actionsColumnPinned = "right",
-        width: actionsColumnWidth = 84,
+        width: actionsColumnWidth = defaultActionsColumnWidth,
+        visible: actionsColumnVisible = undefined,
         ...restActionsColumnConfig
     } = actionsColumnConfig ?? {};
 
-    const gridColumnFields = (config.columns.filter((column) => column.type !== "actions") as GridColumnConfig<unknown>[]).map((column) => {
+    const gridNeedsTheme = config.columns.some((column) => typeof column.visible === "string");
+
+    const gridColumnFields = (
+        config.columns.filter((column) => column.type !== "actions") as Array<GridColumnConfig<unknown> | GridCombinationColumnConfig<string>>
+    ).map((column) => {
         const type = column.type;
         const name = String(column.name);
 
@@ -296,7 +332,7 @@ export function generateGrid(
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         let filterOperators: string | undefined;
-        if (column.filterOperators) {
+        if (column.type !== "combination" && column.filterOperators) {
             let importPath = column.filterOperators.import;
             if (importPath.startsWith("./")) {
                 //go one level up as generated files are in generated subfolder
@@ -334,7 +370,7 @@ export function generateGrid(
             ) as IntrospectionEnumType | undefined;
 
             column.values?.forEach((value) => {
-                if (typeof value === "object" && typeof value.label === "object" && "icon" in value.label) {
+                if (typeof value === "object" && typeof value.label === "object" && typeof value.label.icon !== "undefined") {
                     if (typeof value.label.icon === "string") {
                         iconsToImport.push(value.label.icon);
                     } else if (typeof value.label.icon?.name === "string") {
@@ -371,23 +407,18 @@ export function generateGrid(
                 }
             });
 
-            const labelData = values.map(({ value, label }) => ({
-                value,
-                ...getLabelData(`${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`, label),
-            }));
-
-            const valueOptions = `[${labelData.map(({ value, textLabel }) => `{value: ${JSON.stringify(value)}, label: ${textLabel}}, `).join(" ")}]`;
-
-            const valueLabels = `{${labelData
-                .map(({ value, gridCellContent }) => {
-                    return `${JSON.stringify(value)}: ${gridCellContent},`;
+            const valueOptions = `[${values
+                .map(({ value, label }) => {
+                    const labelData = getValueOptionsLabelData(`${instanceGqlType}.${name}.${value.charAt(0).toLowerCase() + value.slice(1)}`, label);
+                    return `{
+                        value: ${JSON.stringify(value)},
+                        label: ${labelData.textLabel},
+                        ${labelData.gridCellContent !== undefined ? `cellContent: ${labelData.gridCellContent},` : ""}
+                    },`;
                 })
-                .join(" ")}}`;
+                .join(" ")}]`;
 
-            renderCell = `({ row }) => {
-                const valueLabels: Record<string, React.ReactNode> = ${valueLabels};
-                return row.${name}.toString() in valueLabels ? valueLabels[row.${name}.toString()] : row.${name}.toString();
-            }`;
+            renderCell = `renderStaticSelectCell`;
 
             return {
                 name,
@@ -399,16 +430,19 @@ export function generateGrid(
                 minWidth: column.minWidth,
                 maxWidth: column.maxWidth,
                 flex: column.flex,
-                tooltipMessage: column.tooltipMessage,
+                headerInfoTooltip: column.headerInfoTooltip,
+                visible: column.visible && `theme.breakpoints.${column.visible}`,
                 pinned: column.pinned,
             };
+        } else if (type == "combination") {
+            renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
         //TODO suppoort n:1 relation with singleSelect
 
         return {
             name,
-            fieldName: column.fieldName,
+            fieldName: column.type !== "combination" ? column.fieldName : undefined,
             headerName: column.headerName,
             type,
             gridType,
@@ -419,8 +453,10 @@ export function generateGrid(
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
             flex: column.flex,
-            tooltipMessage: column.tooltipMessage,
+            headerInfoTooltip: column.headerInfoTooltip,
+            visible: column.visible && `theme.breakpoints.${column.visible}`,
             pinned: column.pinned,
+            sortBy: "sortBy" in column && column.sortBy,
         };
     });
 
@@ -445,12 +481,17 @@ export function generateGrid(
 
     const fragmentName = config.fragmentName ?? `${gqlTypePlural}Form`;
 
-    const forwardRowAction = allowEditing && config.rowActionProp;
     if (forwardRowAction) {
         props.push({
             name: "rowAction",
             type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => React.ReactNode`,
             optional: true,
+        });
+        props.push({
+            name: "actionsColumnWidth",
+            type: `number`,
+            optional: true,
+            defaultValue: defaultActionsColumnWidth,
         });
     }
 
@@ -476,8 +517,9 @@ export function generateGrid(
         DataGridToolbar,
         filterByFragment,
         GridFilterButton,
-        GridColDef,
         GridCellContent,
+        GridColDef,
+        renderStaticSelectCell,
         muiGridFilterToGql,
         muiGridSortToGql,
         StackLink,
@@ -491,7 +533,7 @@ export function generateGrid(
     } from "@comet/admin";
     import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
-    import { Alert, Button, IconButton, Typography } from "@mui/material";
+    import { Alert, Button, Box, IconButton, Typography, useTheme } from "@mui/material";
     import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
@@ -504,7 +546,7 @@ export function generateGrid(
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
     import * as React from "react";
-    import { FormattedMessage, useIntl } from "react-intl";
+    import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
 
     ${Object.entries(rootBlocks)
@@ -580,47 +622,12 @@ export function generateGrid(
             : ""
     }
 
-    ${
-        toolbar
-            ? `function ${gqlTypePlural}GridToolbar(${forwardToolbarAction ? `{ toolbarAction }: { toolbarAction?: React.ReactNode }` : ``}) {
-        return (
-            <DataGridToolbar>
-                ${
-                    hasSearch
-                        ? `<ToolbarItem>
-                    <GridToolbarQuickFilter />
-                </ToolbarItem>`
-                        : ""
-                }
-                ${
-                    hasFilter
-                        ? `<ToolbarItem>
-                <GridFilterButton />
-            </ToolbarItem>`
-                        : ""
-                }
-                <ToolbarFillSpace />
-                ${
-                    allowAdding
-                        ? forwardToolbarAction
-                            ? `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`
-                            : `<ToolbarActions>
-                           <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                               <FormattedMessage id="${instanceGqlType}.new${gqlType}" defaultMessage="New ${camelCaseToHumanReadable(gqlType)}" />
-                           </Button>
-                       </ToolbarActions>`
-                        : ""
-                }
-            </DataGridToolbar>
-        );
-    }`
-            : ""
-    }
+    ${renderToolbar ? generateGridToolbar({ gqlTypePlural, forwardToolbarAction, hasSearch, hasFilter, allowAdding, instanceGqlType, gqlType }) : ""}
 
     ${gridPropsTypeCode}
 
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
-        ${allowCopyPaste || allowDeleting ? "const client = useApolloClient();" : ""}
+        ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(${
             config.initialSort
@@ -638,7 +645,7 @@ export function generateGrid(
             : ``
     } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
-        
+        ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
         const columns: GridColDef<GQL${fragmentName}Fragment>[] = [
             ${gridColumnFields
@@ -666,7 +673,7 @@ export function generateGrid(
 
                     const columnDefinition: TsCodeRecordToStringObject = {
                         field: column.fieldName ? `"${column.fieldName}"` : `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
-                        renderHeader: column.tooltipMessage
+                        renderHeader: column.headerInfoTooltip
                             ? `() => (
                                     <>
                                         <GridColumnHeaderTitle label={intl.formatMessage({ id: "${instanceGqlType}.${
@@ -678,7 +685,7 @@ export function generateGrid(
                                         <Tooltip
                                             trigger="hover"
                                             title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
-                                  column.tooltipMessage
+                                  column.headerInfoTooltip
                               }" />}
                                         >
                                             <Info sx={{ marginLeft: 1 }} />
@@ -686,7 +693,7 @@ export function generateGrid(
                                     </>
                                 )`
                             : undefined,
-                        headerName: !column.tooltipMessage
+                        headerName: !column.headerInfoTooltip
                             ? `intl.formatMessage({ id: "${instanceGqlType}.${column.name}", defaultMessage: "${
                                   column.headerName || camelCaseToHumanReadable(column.name)
                               }" })`
@@ -701,7 +708,12 @@ export function generateGrid(
                         width: column.width,
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,
+                        visible: column.visible,
                     };
+
+                    if ("sortBy" in column && column.sortBy) {
+                        columnDefinition["sortBy"] = getSortByValue(column.sortBy);
+                    }
 
                     if (typeof column.width === "undefined") {
                         columnDefinition.flex = defaultColumnFlex;
@@ -724,7 +736,8 @@ export function generateGrid(
                               type: '"actions"',
                               align: '"right"',
                               pinned: `"${actionsColumnPinned}"`,
-                              width: actionsColumnWidth,
+                              width: forwardRowAction ? "actionsColumnWidth" : actionsColumnWidth,
+                              visible: actionsColumnVisible && `theme.breakpoints.${actionsColumnVisible}`,
                               ...restActionsColumnConfig,
                               renderCell: `(params) => {
                             return (
@@ -739,7 +752,7 @@ export function generateGrid(
                                         </IconButton>`
                                       : ""
                               }${
-                                  allowCopyPaste || allowDeleting
+                                  showCrudContextMenuInActionsColumn
                                       ? `
                                         <CrudContextMenu
                                             ${
@@ -850,7 +863,7 @@ export function generateGrid(
                 columns={columns}
                 loading={loading}
                 ${
-                    toolbar
+                    renderToolbar
                         ? `components={{
                                 Toolbar: ${gqlTypePlural}GridToolbar,
                             }}${
@@ -872,3 +885,20 @@ export function generateGrid(
         gqlDocuments,
     };
 }
+
+const getDefaultActionsColumnWidth = (showCrudContextMenu: boolean, showEdit: boolean) => {
+    let numberOfActions = 0;
+
+    if (showCrudContextMenu) {
+        numberOfActions += 1;
+    }
+
+    if (showEdit) {
+        numberOfActions += 1;
+    }
+
+    const widthOfSingleAction = 32;
+    const spacingAroundActions = 20;
+
+    return numberOfActions * widthOfSingleAction + spacingAroundActions;
+};

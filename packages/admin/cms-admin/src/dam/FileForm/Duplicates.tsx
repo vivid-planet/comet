@@ -12,7 +12,6 @@ import {
     ListItemText,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
@@ -36,7 +35,7 @@ export const damFileDuplicatesQuery = gql`
     }
 `;
 
-const Duplicates: React.FC<{ fileId: string }> = ({ fileId }) => {
+const Duplicates = ({ fileId }: { fileId: string }) => {
     const stackApi = useStackApi();
     const { data, loading, refetch } = useQuery<GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables>(damFileDuplicatesQuery, {
         variables: {

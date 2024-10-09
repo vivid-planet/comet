@@ -1,6 +1,5 @@
 import { Video } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 
 const VideoThumbnailWrapper = styled("div")`
     display: flex;
@@ -18,7 +17,7 @@ const StyledVideoIcon = styled(Video)`
     color: ${({ theme }) => theme.palette.primary.main};
 `;
 
-export const VideoThumbnail = (): React.ReactElement => {
+export const VideoThumbnail = () => {
     return (
         <VideoThumbnailWrapper>
             <StyledVideoIcon />

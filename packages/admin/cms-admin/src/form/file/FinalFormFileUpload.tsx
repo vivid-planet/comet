@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
-import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem } from "@comet/admin";
-import React from "react";
+import { commonFileErrorMessages, ErrorFileSelectItem, FileSelect, FileSelectProps, LoadingFileSelectItem, ValidFileSelectItem } from "@comet/admin";
+import { useMemo, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -12,6 +12,8 @@ export const finalFormFileUploadFragment = gql`
         id
         name
         size
+        downloadUrl
+        imageUrl(resizeWidth: 640)
     }
 `;
 
@@ -23,6 +25,7 @@ type SuccessfulApiResponse = {
     size: number;
     mimetype: string;
     contentHash: string;
+    downloadUrl?: string;
 };
 
 type FailedApiResponse = {
@@ -51,15 +54,35 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
     maxFiles,
     ...restProps
 }: FinalFormFileUploadProps<Multiple>) => {
-    const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const [uploadingFiles, setUploadingFiles] = React.useState<LoadingFileSelectItem[]>([]);
-    const [failedUploads, setFailedUploads] = React.useState<ErrorFileSelectItem[]>([]);
+    const [tooManyFilesSelected, setTooManyFilesSelected] = useState(false);
+    const [uploadingFiles, setUploadingFiles] = useState<LoadingFileSelectItem[]>([]);
+    const [failedUploads, setFailedUploads] = useState<ErrorFileSelectItem[]>([]);
     const {
         damConfig: { apiUrl }, // TODO: Think of a better solution to get the apiUrl, as this has nothing to do with DAM
     } = useCmsBlockContext();
 
     const singleFile = (!multiple && typeof maxFiles === "undefined") || maxFiles === 1;
-    const inputValue = React.useMemo(() => (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []), [fieldValue]);
+    const inputValue = useMemo<ValidFileSelectItem<GQLFinalFormFileUploadFragment>[]>(() => {
+        const files = Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : [];
+        return files.map((file) => {
+            let previewUrl: string | undefined = undefined;
+
+            if (file.imageUrl) {
+                const isNewlyUploadedFile = file.imageUrl.startsWith("blob:");
+
+                if (isNewlyUploadedFile) {
+                    previewUrl = file.imageUrl;
+                } else {
+                    previewUrl = `${apiUrl}${file.imageUrl}`;
+                }
+            }
+
+            return {
+                ...file,
+                previewUrl,
+            };
+        });
+    }, [fieldValue, apiUrl]);
 
     const files = [...inputValue, ...failedUploads, ...uploadingFiles];
 
@@ -115,6 +138,8 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
                             id: jsonResponse.id,
                             name: jsonResponse.name,
                             size: jsonResponse.size,
+                            downloadUrl: jsonResponse.downloadUrl ?? null,
+                            imageUrl: ["image/png", "image/jpeg", "image/gif", "image/webp"].includes(file.type) ? URL.createObjectURL(file) : null,
                         };
 
                         if (singleFile) {
@@ -158,6 +183,7 @@ export const FinalFormFileUpload = <Multiple extends boolean | undefined>({
             multiple={multiple}
             maxFiles={maxFiles}
             error={typeof maxFiles !== "undefined" && tooManyFilesSelected ? commonFileErrorMessages.tooManyFiles(maxFiles) : undefined}
+            getDownloadUrl={(file) => (file.downloadUrl ? `${apiUrl}${file.downloadUrl}` : undefined)}
             {...restProps}
         />
     );

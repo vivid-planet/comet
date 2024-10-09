@@ -182,6 +182,16 @@
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
                         }
                     ]
                 },
@@ -982,7 +992,8 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo"
+                                "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -1011,7 +1022,8 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo"
+                                "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -1267,9 +1279,6 @@
                                 "headline": "Headline",
                                 "image": "DamImage",
                                 "textImage": "TextImage",
-                                "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo",
-                                "video": "Video",
                                 "linkList": "LinkList",
                                 "fullWidthImage": "FullWidthImage",
                                 "columns": "Columns",
@@ -1326,9 +1335,6 @@
                                 "headline": "Headline",
                                 "image": "DamImage",
                                 "textImage": "TextImage",
-                                "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo",
-                                "video": "Video",
                                 "linkList": "LinkList",
                                 "fullWidthImage": "FullWidthImage",
                                 "columns": "Columns",
@@ -2163,63 +2169,59 @@
         ]
     },
     {
-        "name": "Video",
+        "name": "VimeoVideo",
         "fields": [
             {
-                "name": "attachedBlocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": {
-                                "damVideo": "DamVideo",
-                                "youtubeVideo": "YouTubeVideo"
-                            },
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            },
-            {
-                "name": "activeType",
-                "kind": "String",
+                "name": "autoplay",
+                "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "block",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": {
-                                "damVideo": "DamVideo",
-                                "youtubeVideo": "YouTubeVideo"
-                            },
-                            "nullable": false
-                        }
-                    ]
-                },
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "activeType",
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "vimeoIdentifier",
                 "kind": "String",
                 "nullable": true
             }

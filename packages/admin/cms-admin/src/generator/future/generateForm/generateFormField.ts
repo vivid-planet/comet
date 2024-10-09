@@ -336,6 +336,54 @@ export function generateFormField({
                 },
             },
         ];
+    } else if (config.type === "numberRange") {
+        code = `
+            <Field
+                ${required ? "required" : ""}
+                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                variant="horizontal"
+                fullWidth
+                name="${nameWithPrefix}"
+                component={FinalFormRangeInput}
+                label={${fieldLabel}}
+                min={${config.minValue}}
+                max={${config.maxValue}}
+                ${config.disableSlider ? "disableSlider" : ""}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${config.startAdornment}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${config.endAdornment}</InputAdornment>}` : ""}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${formattedMessageRootId}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
+                ${validateCode}
+            />`;
+
+        //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
+        let assignment = `{min: parseFloat(formValues.${nameWithPrefix}.min), max: parseFloat(formValues.${nameWithPrefix}.max)}`;
+        if (isFieldOptional({ config, gqlFieldName, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
+            assignment = `formValues.${nameWithPrefix} ? ${assignment} : null`;
+        }
+        formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
+
+        let initializationAssignment = `{min: String(data.${dataRootName}.${nameWithPrefix}.min), max: String(data.${dataRootName}.${nameWithPrefix}.max)}`;
+        if (!required) {
+            initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
+        }
+        formValuesConfig = [
+            {
+                ...defaultFormValuesConfig,
+                ...{
+                    omitFromFragmentType: name,
+                    typeCode: `${name}${!required ? `?` : ``}: {min: string, max: string};`,
+                    initializationCode: `${name}: ${initializationAssignment}`,
+                },
+            },
+        ];
+
+        formFragmentField = `${name} { min max }`;
     } else if (config.type == "boolean") {
         code = `<Field name="${nameWithPrefix}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
@@ -435,7 +483,7 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "block") {
-        code = `<Field name="${nameWithPrefix}" isEqual={isEqual}>
+        code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;
@@ -507,11 +555,11 @@ export function generateFormField({
             }
         });
 
-        if (config.inputType === "radio") {
-            code = `
-            <RadioGroupField
+        const renderAsRadio = config.inputType === "radio" || (required && values.length <= 5 && config.inputType !== "select");
+        if (renderAsRadio) {
+            code = `<RadioGroupField
              ${required ? "required" : ""}
-             ${`` /* TODO wenn root-prop muss es bei edit auf readonly gesetzt werden, hier fehlt auch readonly?? */}
+            ${`` /* TODO wenn root-prop muss es bei edit auf readonly gesetzt werden, hier fehlt auch readonly?? */}
               variant="horizontal"
              fullWidth
              name="${name}"
@@ -527,8 +575,7 @@ export function generateFormField({
                             }`;
                       })
                       .join(",")}
-            ]}/>
-            `;
+            ]}/>`;
         } else {
             code = `<Field
             ${required ? "required" : ""}
@@ -626,46 +673,45 @@ export function generateFormField({
                   const gqlName = config.filter.gqlName ?? config.filter.name;
 
                   // try to find arg used to filter by checking names of root-props and filter-prop-fields
-                  let gqlVarType = getTypeInfo(
-                      rootQueryType.args.find((arg) => arg.name === gqlName),
-                      gqlIntrospection,
-                  );
-                  let gqlVarName = undefined;
-                  let gqlVarAssignment = undefined;
+                  const rootArgForName = rootQueryType.args.find((arg) => arg.name === gqlName);
+                  let filterType = rootArgForName ? getTypeInfo(rootArgForName, gqlIntrospection) : undefined;
+                  let filterVarName = undefined;
+                  let filterVarValue = undefined;
+
                   const filterVar = filterField
                       ? `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`
                       : `${config.filter.name}`;
                   let filterVarType = "unknown";
 
-                  if (gqlVarType) {
+                  if (filterType) {
                       // there is a root-prop with same name, so the dev probably wants to filter with this prop
-                      gqlVarName = gqlName;
-                      gqlVarAssignment = filterVar;
-                      if (gqlVarType.typeKind === "INPUT_OBJECT" || gqlVarType.typeKind === "ENUM") {
-                          filterVarType = `GQL${gqlVarType.typeClass}`;
+                      filterVarName = gqlName;
+                      filterVarValue = filterVar;
+                      if (filterType.typeKind === "INPUT_OBJECT" || filterType.typeKind === "ENUM") {
+                          filterVarType = `GQL${filterType.typeClass}`;
                           imports.push({
                               name: filterVarType,
                               importPath: "@src/graphql.generated",
                           });
-                      } else if (gqlVarType.typeKind === "SCALAR") {
-                          filterVarType = convertGqlScalarToTypescript(gqlVarType.typeClass);
+                      } else if (filterType.typeKind === "SCALAR") {
+                          filterVarType = convertGqlScalarToTypescript(filterType.typeClass);
                       }
                   } else {
                       // no root-prop with same name, check filter-prop-fields
-                      gqlVarType = getTypeInfo(
+                      filterType = getTypeInfo(
                           rootQueryType.args.find((arg) => arg.name === "filter"),
                           gqlIntrospection,
                       );
-                      if (gqlVarType) {
-                          gqlVarName = "filter";
-                          gqlVarAssignment = `{ ${gqlName}: { equal: ${filterVar} } }`;
+                      if (filterType) {
+                          filterVarName = "filter";
+                          filterVarValue = `{ ${gqlName}: { equal: ${filterVar} } }`;
 
                           // get type of field.equal in filter-arg used for filtering
-                          if (!gqlVarType.introspectedType || gqlVarType.introspectedType.kind !== "INPUT_OBJECT") {
+                          if (!filterType.introspectedType || filterType.introspectedType.kind !== "INPUT_OBJECT") {
                               throw new Error(`Field ${String(config.name)}: Type of filter is no object-type.`);
                           }
                           const gqlFilterInputType = getTypeInfo(
-                              gqlVarType.introspectedType.inputFields.find((inputField) => inputField.name === gqlName),
+                              filterType.introspectedType.inputFields.find((inputField) => inputField.name === gqlName),
                               gqlIntrospection,
                           );
                           if (!gqlFilterInputType?.introspectedType || gqlFilterInputType.introspectedType.kind !== "INPUT_OBJECT") {
@@ -702,9 +748,9 @@ export function generateFormField({
 
                   return {
                       filterField,
-                      gqlVarType,
-                      gqlVarName,
-                      gqlVarAssignment,
+                      filterType,
+                      filterVarName,
+                      filterVarValue,
                   };
               })()
             : undefined;
@@ -794,9 +840,9 @@ export function generateFormField({
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName}${
-            filterConfig ? `($${filterConfig.gqlVarName}: ${filterConfig.gqlVarType.typeClass}${filterConfig.gqlVarType.required ? `!` : ``})` : ``
+            filterConfig ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})` : ``
         } {
-                            ${rootQuery}${filterConfig ? `(${filterConfig.gqlVarName}: $${filterConfig.gqlVarName})` : ``} {
+                            ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
                                 nodes {
                                     id
                                     ${labelField}
@@ -805,9 +851,9 @@ export function generateFormField({
                         }\`${
                             filterConfig
                                 ? `, variables: { ${
-                                      filterConfig.gqlVarName == filterConfig.gqlVarAssignment
-                                          ? filterConfig.gqlVarName
-                                          : `${filterConfig.gqlVarName}: ${filterConfig.gqlVarAssignment}`
+                                      filterConfig.filterVarName == filterConfig.filterVarValue
+                                          ? filterConfig.filterVarName
+                                          : `${filterConfig.filterVarName}: ${filterConfig.filterVarValue}`
                                   } }`
                                 : ``
                         }
