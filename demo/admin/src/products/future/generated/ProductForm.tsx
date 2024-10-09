@@ -11,7 +11,6 @@ import {
     FinalFormRangeInput,
     FinalFormSubmitEvent,
     Loading,
-    MainContent,
     RadioGroupField,
     TextAreaField,
     TextField,
@@ -174,7 +173,7 @@ export function ProductForm({ showAvailableSince, availableSince, manufacturerCo
             {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
+                    <>
                         <FieldSet
                             initiallyExpanded
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
@@ -352,7 +351,7 @@ export function ProductForm({ showAvailableSince, availableSince, manufacturerCo
                                 maxFileSize={4194304}
                             />
                         </FieldSet>
-                    </MainContent>
+                    </>
                 </>
             )}
         </FinalForm>

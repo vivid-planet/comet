@@ -1,4 +1,5 @@
 import {
+    MainContent,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
@@ -25,7 +26,9 @@ export function CreateCapProductPage() {
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
                 </StackToolbar>
-                <CreateCapProductForm type="Cap" />
+                <MainContent>
+                    <CreateCapProductForm type="Cap" />
+                </MainContent>
             </SaveBoundary>
         </Stack>
     );

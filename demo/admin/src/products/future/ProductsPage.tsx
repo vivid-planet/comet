@@ -75,14 +75,18 @@ export function ProductsPage() {
                                     path=""
                                     label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                 >
-                                    <ProductForm id={selectedProductId} />
+                                    <MainContent>
+                                        <ProductForm id={selectedProductId} />
+                                    </MainContent>
                                 </RouterTab>
                                 <RouterTab
                                     forceRender={true}
                                     path="/price"
                                     label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
                                 >
-                                    <ProductPriceForm id={selectedProductId} />
+                                    <MainContent>
+                                        <ProductPriceForm id={selectedProductId} />
+                                    </MainContent>
                                 </RouterTab>
                             </RouterTabs>
                         </SaveBoundary>
@@ -107,7 +111,9 @@ export function ProductsPage() {
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ProductForm />
+                        <MainContent>
+                            <ProductForm />
+                        </MainContent>
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>
