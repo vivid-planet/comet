@@ -12,7 +12,6 @@ import {
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
-    MainContent,
     messages,
     OnChangeField,
     RadioGroupField,
@@ -185,7 +184,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
+                    <>
                         <FieldSet
                             initiallyExpanded
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
@@ -408,7 +407,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 maxFileSize={4194304}
                             />
                         </FieldSet>
-                    </MainContent>
+                    </>
                 </>
             )}
         </FinalForm>
