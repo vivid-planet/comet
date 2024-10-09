@@ -23,6 +23,7 @@ export class UserPermissionsGuard implements CanActivate {
 
         const requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
 
+        // Ignore field resolvers as they have no scopes and would overwrite the scopes of the root query.
         if (!this.isResolvingGraphQLField(context)) {
             const request = getRequestFromExecutionContext(context);
             request.contentScopes = this.contentScopeService.getUniqueScopes(requiredContentScopes);
