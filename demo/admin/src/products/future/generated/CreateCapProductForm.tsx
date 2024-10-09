@@ -7,7 +7,6 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormSubmitEvent,
-    MainContent,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -86,7 +85,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <MainContent>
+                <>
                     <TextField
                         required
                         variant="horizontal"
@@ -158,7 +157,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                     >
                         {createFinalFormBlock(rootBlocks.image)}
                     </Field>
-                </MainContent>
+                </>
             )}
         </FinalForm>
     );
