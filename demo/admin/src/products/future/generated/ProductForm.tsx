@@ -67,8 +67,7 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = Omit<ProductFormDetailsFragment, "priceRange" | "dimensions"> & {
-    priceRange?: { min: string; max: string };
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
     dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
@@ -99,9 +98,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
-                      priceRange: data.product.priceRange
-                          ? { min: String(data.product.priceRange.min), max: String(data.product.priceRange.max) }
-                          : undefined,
                       dimensionsEnabled: !!data.product.dimensions,
                       dimensions: data.product.dimensions
                           ? {
@@ -136,7 +132,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         const output = {
             ...formValues,
             category: formValues.category?.id,
-            priceRange: formValues.priceRange ? { min: parseFloat(formValues.priceRange.min), max: parseFloat(formValues.priceRange.max) } : null,
             dimensions:
                 dimensionsEnabled && formValues.dimensions
                     ? {
