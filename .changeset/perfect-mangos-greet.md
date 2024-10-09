@@ -10,7 +10,7 @@
 "@comet/admin": major
 ---
 
-Migrate to MUI v6
+Upgrade to MUI v6
 
 This only causes minimal breaking changes, see the official [migration guide](https://mui.com/material-ui/migration/upgrade-to-v6/) for details.
 
