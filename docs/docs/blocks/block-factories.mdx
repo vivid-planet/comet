@@ -75,56 +75,6 @@ export function PageContentBlock({ data }: PropsWithData<PageContentBlockData>) 
 };
 ```
 
-## ListBlock
-
-Similar to the BlocksBlock factory, the ListBlock factory is used to create a block that consists of multiple child blocks.
-The main difference is that the ListBlock factory only supports a single child block type.
-
-import ListBlock from "./images/list-block.png";
-
-<figure>
-
-<img src={ListBlock} width="500px" />
-
-<figcaption>A ListBlock based on a link block</figcaption>
-</figure>
-
-### API
-
-```ts title="link-list.block.ts"
-import { createListBlock } from "@comet/blocks-api";
-
-...
-
-export const LinkListBlock = createListBlock({ block: TextLinkBlock }, "LinkList");
-```
-
-### Admin
-
-```tsx title="LinkListBlock.tsx"
-import { createListBlock } from "@comet/blocks-admin";
-
-...
-
-export const LinkListBlock = createListBlock({
-    name: "LinkList",
-    block: TextLinkBlock,
-});
-```
-
-### Site
-
-```tsx title="LinkListBlock.tsx"
-import { ListBlock, PropsWithData } from "@comet/cms-site";
-import { LinkListBlockData } from "@src/blocks.generated";
-
-...
-
-export function LinkListBlock({ data }: PropsWithData<LinkListBlockData>) {
-    return <ListBlock data={data} block={(props) => <TextLinkBlock data={props} />} />;
-}
-```
-
 ## ColumnsBlock
 
 The ColumnsBlock factory is used to create a block that displays content in multiple columns.
@@ -252,130 +202,6 @@ export function ColumnsBlock({ data: { layout, columns } }: PropsWithData<Column
         </Root>
     );
 };
-```
-
-## OneOfBlock
-
-The OneOfBlock factory is used to create a block that can be one of several child blocks.
-Think of it as a switch or select.
-
-import OneOfBlock from "./images/one-of-block.png";
-
-<figure>
-
-<img src={OneOfBlock} width="500px" />
-
-<figcaption>A link block that is based on an OneOfBlock to support both internal and external links</figcaption>
-</figure>
-
-### API
-
-```ts title="link.block.ts"
-import { createOneOfBlock } from "@comet/blocks-api";
-
-...
-
-export const LinkBlock = createOneOfBlock(
-    { supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock }, allowEmpty: false },
-    "Link",
-);
-```
-
-### Admin
-
-```tsx title="LinkBlock.tsx"
-import { createOneOfBlock } from "@comet/blocks-admin";
-
-...
-
-export const LinkBlock = createOneOfBlock({
-    supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
-});
-```
-
-### Site
-
-```tsx title="LinkBlock.tsx"
-import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
-import { LinkBlockData } from "@src/blocks.generated";
-
-...
-
-const supportedBlocks: SupportedBlocks = {
-    internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
-    external: ({ children, ...props }) => <ExternalLinkBlock data={props}>{children}</ExternalLinkBlock>,
-    news: ({ children, ...props }) => <NewsLinkBlock data={props}>{children}</NewsLinkBlock>,
-};
-
-interface LinkBlockProps extends PropsWithData<LinkBlockData> {
-    children: React.ReactElement;
-}
-
-export function LinkBlock({ data, children }: LinkBlockProps) {
-    return (
-        <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
-            {children}
-        </OneOfBlock>
-    );
-}
-```
-
-## OptionalBlock
-
-The OptionalBlock factory is used to make a block optional.
-Use it when some content is optional.
-
-:::note
-
-Prefer reacting to empty states (e.g., hiding a block when no image is selected) over using an OptionalBlock.
-Using an OptionalBlock adds additional complexity for users by requiring them to toggle the visibility.
-:::
-
-import OptionalBlock from "./images/optional-block.png";
-
-<figure>
-
-<img src={OptionalBlock} width="500px" />
-
-<figcaption>A full-width image block with optional content using an OptionalBlock</figcaption>
-</figure>
-
-### API
-
-```ts title="optional-image.block.ts"
-import { createOptionalBlock } from "@comet/blocks-api";
-
-...
-
-export const OptionalImageBlock = createOptionalBlock(ImageBlock);
-```
-
-### Admin
-
-```tsx title="OptionalImageBlock.tsx"
-import { createOptionalBlock } from "@comet/blocks-admin";
-
-...
-
-export const OptionalImageBlock = createOptionalBlock(ImageBlock);
-```
-
-### Site
-
-```tsx title="LinkBlock.tsx"
-import { OptionalBlock, PropsWithData } from "@comet/cms-site";
-import { OptionalImageBlockData } from "@src/blocks.generated";
-
-...
-
-export function OptionalImageBlock({ data }: PropsWithData<OptionalImageBlockData>) {
-    return (
-        <OptionalBlock
-            block={(props) => <ImageBlock data={props} />}
-            data={data}
-        />
-    );
-}
 ```
 
 ## CompositeBlock (Admin only)
@@ -558,6 +384,180 @@ export function LinkBlock({ data, children, className }: LinkBlockProps) {
         <OneOfBlock data={data} supportedBlocks={supportedBlocks} className={className}>
             {children}
         </OneOfBlock>
+    );
+}
+```
+
+## ListBlock
+
+Similar to the BlocksBlock factory, the ListBlock factory is used to create a block that consists of multiple child blocks.
+The main difference is that the ListBlock factory only supports a single child block type.
+
+import ListBlock from "./images/list-block.png";
+
+<figure>
+
+<img src={ListBlock} width="500px" />
+
+<figcaption>A ListBlock based on a link block</figcaption>
+</figure>
+
+### API
+
+```ts title="link-list.block.ts"
+import { createListBlock } from "@comet/blocks-api";
+
+...
+
+export const LinkListBlock = createListBlock({ block: TextLinkBlock }, "LinkList");
+```
+
+### Admin
+
+```tsx title="LinkListBlock.tsx"
+import { createListBlock } from "@comet/blocks-admin";
+
+...
+
+export const LinkListBlock = createListBlock({
+    name: "LinkList",
+    block: TextLinkBlock,
+});
+```
+
+### Site
+
+```tsx title="LinkListBlock.tsx"
+import { ListBlock, PropsWithData } from "@comet/cms-site";
+import { LinkListBlockData } from "@src/blocks.generated";
+
+...
+
+export function LinkListBlock({ data }: PropsWithData<LinkListBlockData>) {
+    return <ListBlock data={data} block={(props) => <TextLinkBlock data={props} />} />;
+}
+```
+
+## OneOfBlock
+
+The OneOfBlock factory is used to create a block that can be one of several child blocks.
+Think of it as a switch or select.
+
+import OneOfBlock from "./images/one-of-block.png";
+
+<figure>
+
+<img src={OneOfBlock} width="500px" />
+
+<figcaption>A link block that is based on an OneOfBlock to support both internal and external links</figcaption>
+</figure>
+
+### API
+
+```ts title="link.block.ts"
+import { createOneOfBlock } from "@comet/blocks-api";
+
+...
+
+export const LinkBlock = createOneOfBlock(
+    { supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock }, allowEmpty: false },
+    "Link",
+);
+```
+
+### Admin
+
+```tsx title="LinkBlock.tsx"
+import { createOneOfBlock } from "@comet/blocks-admin";
+
+...
+
+export const LinkBlock = createOneOfBlock({
+    supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+});
+```
+
+### Site
+
+```tsx title="LinkBlock.tsx"
+import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
+import { LinkBlockData } from "@src/blocks.generated";
+
+...
+
+const supportedBlocks: SupportedBlocks = {
+    internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
+    external: ({ children, ...props }) => <ExternalLinkBlock data={props}>{children}</ExternalLinkBlock>,
+    news: ({ children, ...props }) => <NewsLinkBlock data={props}>{children}</NewsLinkBlock>,
+};
+
+interface LinkBlockProps extends PropsWithData<LinkBlockData> {
+    children: React.ReactElement;
+}
+
+export function LinkBlock({ data, children }: LinkBlockProps) {
+    return (
+        <OneOfBlock data={data} supportedBlocks={supportedBlocks}>
+            {children}
+        </OneOfBlock>
+    );
+}
+```
+
+## OptionalBlock
+
+The OptionalBlock factory is used to make a block optional.
+Use it when some content is optional.
+
+:::note
+
+Prefer reacting to empty states (e.g., hiding a block when no image is selected) over using an OptionalBlock.
+Using an OptionalBlock adds additional complexity for users by requiring them to toggle the visibility.
+:::
+
+import OptionalBlock from "./images/optional-block.png";
+
+<figure>
+
+<img src={OptionalBlock} width="500px" />
+
+<figcaption>A full-width image block with optional content using an OptionalBlock</figcaption>
+</figure>
+
+### API
+
+```ts title="optional-image.block.ts"
+import { createOptionalBlock } from "@comet/blocks-api";
+
+...
+
+export const OptionalImageBlock = createOptionalBlock(ImageBlock);
+```
+
+### Admin
+
+```tsx title="OptionalImageBlock.tsx"
+import { createOptionalBlock } from "@comet/blocks-admin";
+
+...
+
+export const OptionalImageBlock = createOptionalBlock(ImageBlock);
+```
+
+### Site
+
+```tsx title="LinkBlock.tsx"
+import { OptionalBlock, PropsWithData } from "@comet/cms-site";
+import { OptionalImageBlockData } from "@src/blocks.generated";
+
+...
+
+export function OptionalImageBlock({ data }: PropsWithData<OptionalImageBlockData>) {
+    return (
+        <OptionalBlock
+            block={(props) => <ImageBlock data={props} />}
+            data={data}
+        />
     );
 }
 ```
