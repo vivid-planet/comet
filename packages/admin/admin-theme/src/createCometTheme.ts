@@ -2,8 +2,7 @@ import { createTheme, Theme, ThemeOptions } from "@mui/material";
 import createPalette, { PaletteOptions } from "@mui/material/styles/createPalette";
 import createTypography, { TypographyOptions } from "@mui/material/styles/createTypography";
 import muiDefaultZIndex from "@mui/material/styles/zIndex";
-import { createBreakpoints, createSpacing } from "@mui/system";
-import { BreakpointsOptions } from "@mui/system/createTheme/createBreakpoints";
+import { BreakpointsOptions, createBreakpoints, createSpacing } from "@mui/system";
 import { deepmerge } from "@mui/utils";
 
 import { breakpointsOptions as cometBreakpointsOptions } from "./breakpointsOptions";

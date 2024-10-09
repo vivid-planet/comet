@@ -150,7 +150,11 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                             return (
                                 <Fragment key={group.value}>
                                     {showGroupHeader && (
-                                        <ListSubheader sx={{ paddingX: (theme) => theme.spacing(3) }}>
+                                        <ListSubheader
+                                            sx={(theme) => ({
+                                                paddingX: theme.spacing(3),
+                                            })}
+                                        >
                                             <Typography variant="overline">{humanReadableLabel(group)}</Typography>
                                         </ListSubheader>
                                     )}
@@ -163,7 +167,9 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                                 setSearchValue("");
                                             }}
                                             selected={option === selectedOption}
-                                            sx={{ paddingX: (theme) => theme.spacing(6) }}
+                                            sx={(theme) => ({
+                                                paddingX: theme.spacing(6),
+                                            })}
                                         >
                                             {renderOption?.(option)}
                                         </ListItemButton>

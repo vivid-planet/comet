@@ -1,6 +1,6 @@
 ---
 title: Migrating from v6 to v7
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Migrating from v6 to v7

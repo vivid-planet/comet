@@ -10,7 +10,7 @@ import {
     InputAdornment,
     InputBase,
     List,
-    ListItem,
+    ListItemButton,
     ListItemIcon,
     Paper,
     Typography,
@@ -137,7 +137,13 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props) 
         <Drawer open={open} onClose={onClose} anchor="right">
             <Header>
                 <FormattedMessage id="comet.blocks.drawer.header" defaultMessage="Add new block" />
-                <IconButton onClick={onClose} sx={{ color: (theme) => theme.palette.common.white }} size="large">
+                <IconButton
+                    onClick={onClose}
+                    sx={(theme) => ({
+                        color: theme.palette.common.white,
+                    })}
+                    size="large"
+                >
                     <Close />
                 </IconButton>
             </Header>
@@ -178,12 +184,12 @@ export function AddBlockDrawer({ open, onClose, blocks, onAddNewBlock }: Props) 
                             <Paper elevation={0}>
                                 <List disablePadding>
                                     {category.blocks.map(([type, block]) => (
-                                        <ListItem key={type} dense={false} button divider onClick={() => handleListItemClick(type)}>
+                                        <ListItemButton key={type} dense={false} divider onClick={() => handleListItemClick(type)}>
                                             <ListItemIcon>
                                                 <Dashboard />
                                             </ListItemIcon>
                                             {block.displayName}
-                                        </ListItem>
+                                        </ListItemButton>
                                     ))}
                                 </List>
                             </Paper>

@@ -16,9 +16,9 @@ export function GridFilterButton() {
             startIcon={<Filter />}
             variant="outlined"
             onClick={handleFilterClick}
-            sx={{
-                borderColor: (theme) => theme.palette.grey[100],
-            }}
+            sx={(theme) => ({
+                borderColor: theme.palette.grey[100],
+            })}
         >
             <FormattedMessage {...messages.filter} />
         </Button>
