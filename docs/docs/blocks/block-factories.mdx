@@ -25,8 +25,6 @@ import BlocksBlock from "./images/blocks-block.png";
 ```ts title="page-content.block.ts"
 import { createBlocksBlock } from "@comet/blocks-api";
 
-...
-
 export const PageContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
@@ -44,8 +42,6 @@ export const PageContentBlock = createBlocksBlock(
 ```tsx title="PageContentBlock.tsx"
 import { createBlocksBlock } from "@comet/blocks-admin";
 
-...
-
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
     supportedBlocks: {
@@ -62,8 +58,6 @@ export const PageContentBlock = createBlocksBlock({
 import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 
-...
-
 const supportedBlocks: SupportedBlocks = {
     richtext: (props) => <RichTextBlock data={props} />,
     image: (props) => <DamImageBlock data={props} />,
@@ -72,7 +66,7 @@ const supportedBlocks: SupportedBlocks = {
 
 export function PageContentBlock({ data }: PropsWithData<PageContentBlockData>) {
     return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
-};
+}
 ```
 
 ## ColumnsBlock
@@ -94,8 +88,6 @@ import ColumnsBlock from "./images/columns-block.png";
 
 ```ts title="columns.block.ts"
 import { ColumnsBlockFactory, createBlocksBlock } from "@comet/blocks-api";
-
-...
 
 const ColumnsContentBlock = createBlocksBlock(
     {
@@ -128,8 +120,6 @@ import {
     createBlocksBlock,
     createColumnsBlock,
 } from "@comet/blocks-admin";
-
-...
 
 const ColumnsContentBlock = createBlocksBlock({
     name: "ColumnsContent",
@@ -179,8 +169,6 @@ export const ColumnsBlock = createColumnsBlock({
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
 
-...
-
 const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
     richtext: (props) => <RichTextBlock data={props} />,
@@ -190,7 +178,7 @@ const supportedBlocks: SupportedBlocks = {
 
 function ColumnsContentBlock({ data }: PropsWithData<ColumnsContentBlockData>) {
     return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
-};
+}
 
 export function ColumnsBlock({ data: { layout, columns } }: PropsWithData<ColumnsBlockData>) {
     const Root = layout === "one-column" ? OneColumnRoot : TwoColumnRoot;
@@ -201,7 +189,7 @@ export function ColumnsBlock({ data: { layout, columns } }: PropsWithData<Column
             ))}
         </Root>
     );
-};
+}
 ```
 
 ## CompositeBlock (Admin only)
@@ -212,11 +200,11 @@ For most of your blocks, you will use this factory to create the block in the ad
 ```tsx title="FullWidthImageBlock.tsx"
 import { createCompositeBlock } from "@comet/blocks-admin";
 
-...
-
 export const FullWidthImageBlock = createCompositeBlock({
     name: "FullWidthImage",
-    displayName: <FormattedMessage id="cometDemo.blocks.fullWidthImage" defaultMessage="Full Width Image" />,
+    displayName: (
+        <FormattedMessage id="cometDemo.blocks.fullWidthImage" defaultMessage="Full Width Image" />
+    ),
     category: BlockCategory.Media,
     blocks: {
         image: {
@@ -407,8 +395,6 @@ import ListBlock from "./images/list-block.png";
 ```ts title="link-list.block.ts"
 import { createListBlock } from "@comet/blocks-api";
 
-...
-
 export const LinkListBlock = createListBlock({ block: TextLinkBlock }, "LinkList");
 ```
 
@@ -416,8 +402,6 @@ export const LinkListBlock = createListBlock({ block: TextLinkBlock }, "LinkList
 
 ```tsx title="LinkListBlock.tsx"
 import { createListBlock } from "@comet/blocks-admin";
-
-...
 
 export const LinkListBlock = createListBlock({
     name: "LinkList",
@@ -430,8 +414,6 @@ export const LinkListBlock = createListBlock({
 ```tsx title="LinkListBlock.tsx"
 import { ListBlock, PropsWithData } from "@comet/cms-site";
 import { LinkListBlockData } from "@src/blocks.generated";
-
-...
 
 export function LinkListBlock({ data }: PropsWithData<LinkListBlockData>) {
     return <ListBlock data={data} block={(props) => <TextLinkBlock data={props} />} />;
@@ -457,10 +439,15 @@ import OneOfBlock from "./images/one-of-block.png";
 ```ts title="link.block.ts"
 import { createOneOfBlock } from "@comet/blocks-api";
 
-...
-
 export const LinkBlock = createOneOfBlock(
-    { supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock }, allowEmpty: false },
+    {
+        supportedBlocks: {
+            internal: InternalLinkBlock,
+            external: ExternalLinkBlock,
+            news: NewsLinkBlock,
+        },
+        allowEmpty: false,
+    },
     "Link",
 );
 ```
@@ -470,10 +457,12 @@ export const LinkBlock = createOneOfBlock(
 ```tsx title="LinkBlock.tsx"
 import { createOneOfBlock } from "@comet/blocks-admin";
 
-...
-
 export const LinkBlock = createOneOfBlock({
-    supportedBlocks: { internal: InternalLinkBlock, external: ExternalLinkBlock, news: NewsLinkBlock },
+    supportedBlocks: {
+        internal: InternalLinkBlock,
+        external: ExternalLinkBlock,
+        news: NewsLinkBlock,
+    },
 });
 ```
 
@@ -483,11 +472,13 @@ export const LinkBlock = createOneOfBlock({
 import { OneOfBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { LinkBlockData } from "@src/blocks.generated";
 
-...
-
 const supportedBlocks: SupportedBlocks = {
-    internal: ({ children, ...props }) => <InternalLinkBlock data={props}>{children}</InternalLinkBlock>,
-    external: ({ children, ...props }) => <ExternalLinkBlock data={props}>{children}</ExternalLinkBlock>,
+    internal: ({ children, ...props }) => (
+        <InternalLinkBlock data={props}>{children}</InternalLinkBlock>
+    ),
+    external: ({ children, ...props }) => (
+        <ExternalLinkBlock data={props}>{children}</ExternalLinkBlock>
+    ),
     news: ({ children, ...props }) => <NewsLinkBlock data={props}>{children}</NewsLinkBlock>,
 };
 
@@ -529,8 +520,6 @@ import OptionalBlock from "./images/optional-block.png";
 ```ts title="optional-image.block.ts"
 import { createOptionalBlock } from "@comet/blocks-api";
 
-...
-
 export const OptionalImageBlock = createOptionalBlock(ImageBlock);
 ```
 
@@ -538,8 +527,6 @@ export const OptionalImageBlock = createOptionalBlock(ImageBlock);
 
 ```tsx title="OptionalImageBlock.tsx"
 import { createOptionalBlock } from "@comet/blocks-admin";
-
-...
 
 export const OptionalImageBlock = createOptionalBlock(ImageBlock);
 ```
@@ -550,15 +537,8 @@ export const OptionalImageBlock = createOptionalBlock(ImageBlock);
 import { OptionalBlock, PropsWithData } from "@comet/cms-site";
 import { OptionalImageBlockData } from "@src/blocks.generated";
 
-...
-
 export function OptionalImageBlock({ data }: PropsWithData<OptionalImageBlockData>) {
-    return (
-        <OptionalBlock
-            block={(props) => <ImageBlock data={props} />}
-            data={data}
-        />
-    );
+    return <OptionalBlock block={(props) => <ImageBlock data={props} />} data={data} />;
 }
 ```
 
