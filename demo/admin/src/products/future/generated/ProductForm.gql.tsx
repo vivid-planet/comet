@@ -14,10 +14,9 @@ export const productFormFragment = gql`
             id
             title
         }
-        dimensions {
-            width
-            height
-            depth
+        priceRange {
+            min
+            max
         }
         manufacturer {
             id

@@ -8,6 +8,7 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
+import { ReactNode } from "react";
 
 import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
@@ -22,33 +23,55 @@ type ImportReference = {
     import: string;
 };
 
-type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1 } & Pick<
+type SingleFileFormFieldConfig = { type: "fileUpload"; name: string; multiple?: false; maxFiles?: 1 } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number } & Pick<
+type MultiFileFormFieldConfig = { type: "fileUpload"; name: string; multiple: true; maxFiles?: number } & Pick<
     Partial<FinalFormFileUploadProps<true>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
 export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
+    | { type: "text"; name: keyof T; multiline?: boolean }
+    | { type: "number"; name: keyof T }
+    | {
+          type: "numberRange";
+          name: keyof T;
+          minValue: number;
+          maxValue: number;
+          disableSlider?: boolean;
+          startAdornment?: ReactNode;
+          endAdornment?: ReactNode;
+      }
+    | { type: "boolean"; name: keyof T }
+    | { type: "date"; name: keyof T }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
+    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
     | {
           type: "asyncSelect";
+          name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect
+          gqlFieldName?: keyof T;
+          initQueryIdPath?: string; // if gqlField-object does not have an id-field, or it's required to use any other field, e.g. asyncSelect is used for filtering; dot-separated
+          initQueryLabelPath?: string; // if label is not on first level of gqlField-object; dot-separated
           rootQuery: string;
-          labelField?: string;
-          filterField?: { name: string; gqlName?: string };
+          labelField?: string; // should be the field used as option-label of the rootQuery
+          filter?: { type: "field" | "prop"; name: string; gqlName?: string };
       }
-    | { type: "block"; block: ImportReference }
+    | { type: "block"; name: keyof T; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
-) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & {
+    label?: string;
+    required?: boolean;
+    initialValueProp?: boolean;
+    optionalRenderProp?: boolean;
+    virtual?: boolean;
+    validate?: ImportReference;
+    helperText?: string;
+    readOnly?: boolean;
+};
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
@@ -88,7 +111,7 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
 };
@@ -111,7 +134,11 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T> } & BaseColumnConfig;
+) & {
+    name: UsableFields<T>;
+    fieldName?: string; // this can be used to overwrite field-prop of column-config
+    filterOperators?: ImportReference;
+} & BaseColumnConfig;
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
 
@@ -120,7 +147,9 @@ export type GridConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
+    exportQuery?: boolean; // to refetch from outside
     columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
+    excelExport?: boolean;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
@@ -131,6 +160,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     toolbar?: boolean;
     toolbarActionProp?: boolean;
     rowActionProp?: boolean;
+    selectionProps?: "multiSelect" | "singleSelect";
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -138,7 +168,13 @@ export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
 export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
 
-export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
+export async function runFutureGenerate({
+    filePattern = "src/**/*.cometGen.ts",
+    deleteGeneratedFilesPreGeneration = false,
+}: {
+    filePattern?: string;
+    deleteGeneratedFilesPreGeneration?: boolean;
+}) {
     const schema = await loadSchema("./schema.gql", {
         loaders: [new GraphQLFileLoader()],
     });

@@ -8,13 +8,10 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormCheckbox,
-    FinalFormInput,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
-    FinalFormSwitch,
     Loading,
     MainContent,
-    messages,
-    OnChangeField,
     RadioGroupField,
     TextAreaField,
     TextField,
@@ -33,6 +30,7 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -66,21 +64,21 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
-    dimensionsEnabled: boolean;
-    dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
-        width: string;
-        height: string;
-        depth: string;
-    };
+type FormValues = Omit<ProductFormDetailsFragment, "priceRange"> & {
+    priceRange?: { min: string; max: string };
     image: BlockState<typeof rootBlocks.image>;
 };
 
 interface FormProps {
+    showAvailableSince?: boolean;
+    availableSince?: Date;
+    manufacturerCountry: string;
+    type?: GQLProductType;
+    title?: string;
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ showAvailableSince, availableSince, manufacturerCountry, type, title, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -97,22 +95,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
-                      dimensionsEnabled: !!data.product.dimensions,
-                      dimensions: data.product.dimensions
-                          ? {
-                                width: String(data.product.dimensions.width),
-                                height: String(data.product.dimensions.height),
-                                depth: String(data.product.dimensions.depth),
-                            }
+                      priceRange: data.product.priceRange
+                          ? { min: String(data.product.priceRange.min), max: String(data.product.priceRange.max) }
                           : undefined,
-                      availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
+                      availableSince: showAvailableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
+                      title: title,
+                      type: type,
                       inStock: false,
+                      availableSince: showAvailableSince ? availableSince : undefined,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data],
+        [data, title, type, showAvailableSince, availableSince],
     );
 
     const saveConflict = useFormSaveConflict({
@@ -126,19 +122,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
             category: formValues.category?.id,
-            dimensions:
-                dimensionsEnabled && formValues.dimensions
-                    ? {
-                          width: parseFloat(formValues.dimensions.width),
-                          height: parseFloat(formValues.dimensions.height),
-                          depth: parseFloat(formValues.dimensions.depth),
-                      }
-                    : null,
+            priceRange: formValues.priceRange ? { min: parseFloat(formValues.priceRange.min), max: parseFloat(formValues.priceRange.max) } : null,
             manufacturer: formValues.manufacturer?.id,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
@@ -154,7 +143,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: output },
+                variables: { input: { ...output } },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProduct.id;
@@ -285,56 +274,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 }}
                                 getOptionLabel={(option) => option.title}
                             />
+
                             <Field
+                                variant="horizontal"
                                 fullWidth
-                                name="dimensionsEnabled"
-                                type="checkbox"
-                                label={<FormattedMessage id="product.dimensions.dimensionsEnabled" defaultMessage="Configure dimensions" />}
-                            >
-                                {(props) => (
-                                    <FormControlLabel
-                                        control={<FinalFormSwitch {...props} />}
-                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
-                                    />
-                                )}
-                            </Field>
-                            <Field name="dimensionsEnabled" subscription={{ value: true }}>
-                                {({ input: { value } }) =>
-                                    value ? (
-                                        <>
-                                            <Field
-                                                required
-                                                variant="horizontal"
-                                                fullWidth
-                                                name="dimensions.width"
-                                                component={FinalFormInput}
-                                                type="number"
-                                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
-                                            />
-
-                                            <Field
-                                                required
-                                                variant="horizontal"
-                                                fullWidth
-                                                name="dimensions.height"
-                                                component={FinalFormInput}
-                                                type="number"
-                                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
-                                            />
-
-                                            <Field
-                                                required
-                                                variant="horizontal"
-                                                fullWidth
-                                                name="dimensions.depth"
-                                                component={FinalFormInput}
-                                                type="number"
-                                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
-                                            />
-                                        </>
-                                    ) : null
-                                }
-                            </Field>
+                                name="priceRange"
+                                component={FinalFormRangeInput}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                min={25}
+                                max={500}
+                                disableSlider
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                            />
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
@@ -355,20 +306,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                                 }
                                             }
                                         `,
-                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } },
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } } },
                                     });
                                     return data.manufacturers.nodes;
                                 }}
                                 getOptionLabel={(option) => option.name}
-                                disabled={!values?.type}
                             />
-                            <OnChangeField name="type">
-                                {(value, previousValue) => {
-                                    if (value.id !== previousValue.id) {
-                                        form.change("manufacturer", undefined);
-                                    }
-                                }}
-                            </OnChangeField>
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel
@@ -377,14 +320,15 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     />
                                 )}
                             </Field>
-
-                            <Field
-                                variant="horizontal"
-                                fullWidth
-                                name="availableSince"
-                                component={FinalFormDatePicker}
-                                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
-                            />
+                            {showAvailableSince && (
+                                <Field
+                                    variant="horizontal"
+                                    fullWidth
+                                    name="availableSince"
+                                    component={FinalFormDatePicker}
+                                    label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                />
+                            )}
                             <Field
                                 name="image"
                                 isEqual={isEqual}

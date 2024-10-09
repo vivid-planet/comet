@@ -33,8 +33,9 @@ program.addCommand(
 program.addCommand(
     new Command("future-generate")
         .option("-f, --file <file>", "path to config file or glob pattern to generate specific files")
-        .action(async ({ file: filePattern }: { file?: string }) => {
-            await runFutureGenerate(filePattern);
+        .option("-d, --delete", "delete ")
+        .action(async ({ file: filePattern, delete: deleteGeneratedFilesPreGeneration }: { file?: string; delete?: boolean }) => {
+            await runFutureGenerate({ filePattern, deleteGeneratedFilesPreGeneration });
         }),
 );
 

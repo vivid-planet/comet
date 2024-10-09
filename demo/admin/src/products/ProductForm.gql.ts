@@ -16,11 +16,6 @@ export const productFormFragment = gql`
         datasheets {
             ...FinalFormFileUpload
         }
-        manufacturerCountry: manufacturer {
-            addressAsEmbeddable {
-                country
-            }
-        }
         manufacturer {
             id
             name

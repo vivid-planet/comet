@@ -315,7 +315,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                 Toolbar: ProductsGridToolbar,
             }}
             componentsProps={{
-                toolbar: { toolbarAction: toolbarAction },
+                toolbar: { toolbarAction },
             }}
         />
     );
