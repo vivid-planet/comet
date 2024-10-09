@@ -323,6 +323,21 @@ export function generateGrid(
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
+        let filterOperators: string | undefined;
+        if (column.type !== "combination" && column.filterOperators) {
+            let importPath = column.filterOperators.import;
+            if (importPath.startsWith("./")) {
+                //go one level up as generated files are in generated subfolder
+                importPath = `.${importPath}`;
+            }
+            imports.push({
+                name: column.filterOperators.name,
+                importPath,
+            });
+
+            filterOperators = column.filterOperators.name;
+        }
+
         if (type == "dateTime") {
             valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
             gridType = "dateTime";
@@ -419,11 +434,13 @@ export function generateGrid(
 
         return {
             name,
+            fieldName: column.fieldName,
             headerName: column.headerName,
             type,
             gridType,
             renderCell,
             valueGetter,
+            filterOperators: filterOperators,
             width: column.width,
             minWidth: column.minWidth,
             maxWidth: column.maxWidth,
@@ -627,7 +644,7 @@ export function generateGrid(
                     }
 
                     const columnDefinition: TsCodeRecordToStringObject = {
-                        field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
+                        field: column.fieldName ? `"${column.fieldName}"` : `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         renderHeader: column.headerInfoTooltip
                             ? `() => (
                                     <>
@@ -654,11 +671,12 @@ export function generateGrid(
                               }" })`
                             : undefined,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
-                        filterable: !filterFields.includes(column.name) ? `false` : undefined,
+                        filterable: !column.filterOperators && !filterFields.includes(column.name) ? `false` : undefined,
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueOptions: column.valueOptions,
                         renderCell: column.renderCell,
+                        filterOperators: column.filterOperators,
                         width: column.width,
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,

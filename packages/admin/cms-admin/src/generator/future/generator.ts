@@ -91,6 +91,7 @@ export type TabsConfig = { type: "tabs"; tabs: { name: string; content: Generato
 export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
+    fieldName?: string; // this can be used to overwrite field-prop of column-config
 };
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
@@ -111,7 +112,7 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T> } & BaseColumnConfig;
+) & { name: UsableFields<T>; filterOperators?: ImportReference } & BaseColumnConfig;
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
 
