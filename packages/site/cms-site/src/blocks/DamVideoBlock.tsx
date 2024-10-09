@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactElement, useState } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { DamVideoBlockData } from "../blocks.generated";
@@ -14,6 +14,7 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     previewImageSizes?: string;
     renderPreviewImage?: (props: VideoPreviewImageProps) => ReactElement;
     fill?: boolean;
+    previewImageIcon?: ReactNode;
 }
 
 export const DamVideoBlock = withPreview(
@@ -23,6 +24,7 @@ export const DamVideoBlock = withPreview(
         previewImageSizes,
         renderPreviewImage,
         fill,
+        previewImageIcon,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
             return <PreviewSkeleton type="media" hasContent={false} />;
@@ -41,6 +43,7 @@ export const DamVideoBlock = withPreview(
                             aspectRatio,
                             sizes: previewImageSizes,
                             fill: fill,
+                            icon: previewImageIcon,
                         })
                     ) : (
                         <VideoPreviewImage
@@ -49,6 +52,7 @@ export const DamVideoBlock = withPreview(
                             aspectRatio={aspectRatio}
                             sizes={previewImageSizes}
                             fill={fill}
+                            icon={previewImageIcon}
                         />
                     )
                 ) : (
