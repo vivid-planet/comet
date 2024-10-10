@@ -19,6 +19,7 @@ import { ProductCategoryResolver } from "./generated/product-category.resolver";
 import { ProductTagResolver } from "./generated/product-tag.resolver";
 import { ProductToTagResolver } from "./generated/product-to-tag.resolver";
 import { ProductVariantResolver } from "./generated/product-variant.resolver";
+import { ProductResolver as ScaffoldedProductResolver } from "./product.resolver";
 
 @Module({
     imports: [
@@ -37,6 +38,7 @@ import { ProductVariantResolver } from "./generated/product-variant.resolver";
     ],
     providers: [
         ProductResolver,
+        ScaffoldedProductResolver,
         ProductCategoryResolver,
         ProductCategoriesService,
         ProductTagResolver,
