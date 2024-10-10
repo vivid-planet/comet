@@ -8,7 +8,6 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import { ReactNode } from "react";
 
 import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
@@ -41,8 +40,8 @@ export type FormFieldConfig<T> = (
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
-          startAdornment?: ReactNode;
-          endAdornment?: ReactNode;
+          startAdornment?: string;
+          endAdornment?: string;
       }
     | { type: "boolean" }
     | { type: "date" }
