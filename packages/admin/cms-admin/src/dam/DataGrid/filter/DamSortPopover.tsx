@@ -82,15 +82,13 @@ export const DamSortPopover = ({ onChoose, currentSort }: DamSortPopoverProps) =
                 color="info"
             >
                 <sc.LabelWrapper>
-                    <Typography variant="body1">
-                        <FormattedMessage
-                            id="comet.pages.dam.sorting"
-                            defaultMessage="Sorting: {sorting}"
-                            values={{
-                                sorting: sortings.find((sorting) => sorting.sortInfo.columnName === currentSort.columnName)?.label,
-                            }}
-                        />
-                    </Typography>
+                    <FormattedMessage
+                        id="comet.pages.dam.sorting"
+                        defaultMessage="Sorting: {sorting}"
+                        values={{
+                            sorting: sortings.find((sorting) => sorting.sortInfo.columnName === currentSort.columnName)?.label,
+                        }}
+                    />
                 </sc.LabelWrapper>
                 <ChevronDown />
             </sc.SortByButton>
