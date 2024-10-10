@@ -22,33 +22,37 @@ type ImportReference = {
     import: string;
 };
 
-type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1 } & Pick<
+type SingleFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple?: false; maxFiles?: 1 } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number } & Pick<
+type MultiFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple: true; maxFiles?: number } & Pick<
     Partial<FinalFormFileUploadProps<true>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
 export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
-    | { type: "boolean" }
-    | { type: "date" }
+    | { type: "text"; name: keyof T; multiline?: boolean }
+    | { type: "number"; name: keyof T }
+    | { type: "boolean"; name: keyof T }
+    | { type: "date"; name: keyof T }
     // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
+    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
     | {
           type: "asyncSelect";
+          name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect
+          gqlFieldName?: keyof T;
+          initQueryIdPath?: string; // if gqlField-object does not have an id-field, or it's required to use any other field, e.g. asyncSelect is used for filtering; dot-separated
+          initQueryLabelPath?: string; // if label is not on first level of gqlField-object; dot-separated
           rootQuery: string;
-          labelField?: string;
+          labelField?: string; // should be the field used as option-label of the rootQuery
           filterField?: { name: string; gqlName?: string };
       }
-    | { type: "block"; block: ImportReference }
-    | SingleFileFormFieldConfig
-    | MultiFileFormFieldConfig
-) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+    | { type: "block"; name: keyof T; block: ImportReference }
+    | SingleFileFormFieldConfig<T>
+    | MultiFileFormFieldConfig<T>
+) & { label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);

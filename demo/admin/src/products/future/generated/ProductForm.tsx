@@ -40,6 +40,8 @@ import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
 import {
+    GQLManufacturerCountriesSelectQuery,
+    GQLManufacturerCountriesSelectQueryVariables,
     GQLManufacturersSelectQuery,
     GQLManufacturersSelectQueryVariables,
     GQLProductCategoriesSelectQuery,
@@ -65,13 +67,14 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "manufacturerCountry"> & {
     dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
         depth: string;
     };
+    manufacturerCountry?: { id: string; label: string };
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -104,6 +107,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 depth: String(data.product.dimensions.depth),
                             }
                           : undefined,
+                      manufacturerCountry: data.product.manufacturerCountry
+                          ? {
+                                id: data.product.manufacturerCountry?.id.country,
+                                label: data.product.manufacturerCountry?.label.country,
+                            }
+                          : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -125,7 +134,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (
+        { dimensionsEnabled, manufacturerCountry, ...formValues }: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
@@ -340,6 +353,31 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth
+                                name="manufacturerCountry"
+                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<
+                                        GQLManufacturerCountriesSelectQuery,
+                                        GQLManufacturerCountriesSelectQueryVariables
+                                    >({
+                                        query: gql`
+                                            query ManufacturerCountriesSelect {
+                                                manufacturerCountries {
+                                                    nodes {
+                                                        id
+                                                        label
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                    });
+                                    return data.manufacturerCountries.nodes;
+                                }}
+                                getOptionLabel={(option) => option.label}
+                            />
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
                                 name="manufacturer"
                                 label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                                 loadOptions={async () => {
@@ -354,14 +392,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                                 }
                                             }
                                         `,
-                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } },
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.manufacturerCountry?.id } } },
                                     });
                                     return data.manufacturers.nodes;
                                 }}
                                 getOptionLabel={(option) => option.name}
-                                disabled={!values?.type}
+                                disabled={!values?.manufacturerCountry}
                             />
-                            <OnChangeField name="type">
+                            <OnChangeField name="manufacturerCountry">
                                 {(value, previousValue) => {
                                     if (value.id !== previousValue.id) {
                                         form.change("manufacturer", undefined);
