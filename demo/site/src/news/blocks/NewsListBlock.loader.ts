@@ -9,7 +9,7 @@ export const loader: BlockLoader<NewsListBlockData> = async ({ blockData, graphQ
     const newsList: LoadedData = [];
 
     // TODO create a require that allows loading multiple news by IDs at once?
-    for (const id of blockData.ids as string[]) {
+    for (const id of blockData.ids) {
         const data = await graphQLFetch<GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables>(
             gql`
                 query NewsListBlock($id: ID!) {

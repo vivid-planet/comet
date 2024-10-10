@@ -2,12 +2,12 @@ import { BlockData, BlockField, BlockInput, createBlock, inputToData } from "@co
 import { IsUUID } from "class-validator";
 
 export class NewsListBlockData extends BlockData {
-    @BlockField({ type: "json" })
+    @BlockField({ type: "string", array: true })
     ids: string[];
 }
 
 class NewsListBlockInput extends BlockInput {
-    @BlockField({ type: "json" })
+    @BlockField({ type: "string", array: true })
     @IsUUID(undefined, { each: true })
     ids: string[];
 
