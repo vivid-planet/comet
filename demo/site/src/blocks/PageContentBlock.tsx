@@ -4,6 +4,7 @@ import { PageContentBlockData } from "@src/blocks.generated";
 import { CookieSafeYouTubeVideoBlock } from "@src/blocks/CookieSafeYouTubeVideoBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
+import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
 
 import { AnchorBlock } from "./AnchorBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
@@ -33,6 +34,7 @@ const supportedBlocks: SupportedBlocks = {
     twoLists: (props) => <TwoListsBlock data={props} />,
     teaser: (props) => <TeaserBlock data={props} />,
     newsDetail: (props) => <NewsDetailBlock data={props} />,
+    newsList: (props) => <NewsListBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

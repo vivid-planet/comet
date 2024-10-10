@@ -1190,6 +1190,25 @@
         ]
     },
     {
+        "name": "NewsList",
+        "fields": [
+            {
+                "name": "ids",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "ids",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ]
+    },
+    {
         "name": "OptionalPixelImage",
         "fields": [
             {
@@ -1286,7 +1305,8 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "newsList": "NewsList"
                             },
                             "nullable": false
                         },
@@ -1342,7 +1362,8 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "newsList": "NewsList"
                             },
                             "nullable": false
                         },
