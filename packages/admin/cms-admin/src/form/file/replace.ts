@@ -11,7 +11,7 @@ interface UploadFileData {
     license?: GQLLicenseInput;
 }
 
-export function upload<ResponseData>(
+export function replace<ResponseData>(
     apiClient: AxiosInstance,
     data: UploadFileData,
     cancelToken: CancelToken,
@@ -30,7 +30,7 @@ export function upload<ResponseData>(
     if (data.folderId !== undefined) {
         formData.append("folderId", data.folderId);
     }
-    return apiClient.post<ResponseData>(`/dam/files/upload`, formData, {
+    return apiClient.post<ResponseData>(`/dam/files/replace`, formData, {
         ...options,
         cancelToken,
         headers: {
