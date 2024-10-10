@@ -9,6 +9,7 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
@@ -283,6 +284,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     return data.productCategories.nodes;
                                 }}
                                 getOptionLabel={(option) => option.title}
+                            />
+
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="priceRange"
+                                component={FinalFormRangeInput}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                min={25}
+                                max={500}
+                                disableSlider
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
                             />
                             <Field
                                 fullWidth

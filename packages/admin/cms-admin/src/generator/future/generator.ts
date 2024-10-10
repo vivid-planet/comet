@@ -35,6 +35,14 @@ type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?:
 export type FormFieldConfig<T> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
+    | {
+          type: "numberRange";
+          minValue: number;
+          maxValue: number;
+          disableSlider?: boolean;
+          startAdornment?: string;
+          endAdornment?: string;
+      }
     | { type: "boolean" }
     | { type: "date" }
     // TODO | { type: "dateTime" }
