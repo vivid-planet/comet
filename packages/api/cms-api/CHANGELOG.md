@@ -1,5 +1,33 @@
 # @comet/cms-api
 
+## 7.6.0
+
+### Minor Changes
+
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   3ea66fb38: Add support for user impersonation
+
+    Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
+
+    Adds an "Impersonation" button to the detail view of a user in the User Permissions admin panel. The impersonation can be exited by clicking the button in the user's info on the top right.
+
+### Patch Changes
+
+-   700ddc340: Fix copy/paste for documents containing a `DamFileDownloadLinkBlock`
+-   b03f3dfc1: Call `createUserFromRequest` before `createUserFromIdToken`
+
+    The latter is marked as deprecated and should only be used if the
+    first one is not defined.
+
+    -   @comet/blocks-api@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes

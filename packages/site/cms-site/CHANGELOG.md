@@ -1,5 +1,29 @@
 # @comet/cms-site
 
+## 7.6.0
+
+### Minor Changes
+
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   ec57e2dd7: Add support to set a custom preview image icon to `DamVideoBlock`, `VimeoVideoBlock`, and `YouTubeVideoBlock`
+
+    Use the `previewImageIcon` prop to pass the icon to the default `VideoPreviewImage` component:
+
+    ```diff
+    <DamVideoBlock
+      data={props}
+      fill={fill}
+    + previewImageIcon={<CustomPlayIcon />}
+    />
+    ```
+
 ## 7.5.0
 
 ## 7.4.2

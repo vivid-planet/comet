@@ -1,5 +1,37 @@
 # @comet/admin
 
+## 7.6.0
+
+### Minor Changes
+
+-   bc19fb18c: `useDataGridExcelExport`: Add support for `number` and `null` values in the Data Grid Excel export without the need for a `valueFormatter`
+
+### Patch Changes
+
+-   03afcd073: Allow customizing `CrudContextMenu`
+
+    Customize existing parts of `CrudContextMenu` using the `slotProps`, `iconMapping` and `messagesMapping` props.
+    Add custom actions by adding instances of `RowActionsItem` to the `children`:
+
+    ```tsx
+    <CrudContextMenu
+    // ...
+    >
+        <RowActionsItem
+            icon={<Favorite />}
+            onClick={() => {
+                // Do something
+            }}
+        >
+            Custom action
+        </RowActionsItem>
+        <Divider />
+    </CrudContextMenu>
+    ```
+
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-theme@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes
