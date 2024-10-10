@@ -32,6 +32,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+                { type: "numberRange", name: "priceRange", minValue: 25, maxValue: 500, disableSlider: true, startAdornment: "€" },
                 {
                     type: "optionalNestedFields",
                     name: "dimensions",

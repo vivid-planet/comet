@@ -13,7 +13,7 @@ export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockDa
 
     displayName: <FormattedMessage id="comet.blocks.link.phone" defaultMessage="Phone Number" />,
 
-    defaultValues: () => ({ phone: "" }),
+    defaultValues: () => ({ phone: undefined }),
 
     category: BlockCategory.Navigation,
 

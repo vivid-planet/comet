@@ -49,3 +49,4 @@ src/comet-config.json
 lang
 lang-extracted
 lang-compiled
+/dist

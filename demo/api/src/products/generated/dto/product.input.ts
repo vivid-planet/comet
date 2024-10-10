@@ -7,7 +7,7 @@ import { Transform, Type } from "class-transformer";
 import { IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, ValidateNested } from "class-validator";
 import { GraphQLDate } from "graphql-scalars";
 
-import { ProductDimensions, ProductDiscounts, ProductStatus } from "../../entities/product.entity";
+import { ProductDimensions, ProductDiscounts, ProductPriceRange, ProductStatus } from "../../entities/product.entity";
 import { ProductType } from "../../entities/product-type.enum";
 import { ProductNestedProductColorInput } from "./product-nested-product-color.input";
 import { ProductNestedProductStatisticsInput } from "./product-nested-product-statistics.input";
@@ -49,6 +49,12 @@ export class ProductInput {
     @IsNumber()
     @Field({ nullable: true, defaultValue: null })
     price?: number;
+
+    @IsNullable()
+    @ValidateNested()
+    @Type(() => ProductPriceRange)
+    @Field(() => ProductPriceRange, { nullable: true })
+    priceRange?: ProductPriceRange;
 
     @IsNotEmpty()
     @IsBoolean()

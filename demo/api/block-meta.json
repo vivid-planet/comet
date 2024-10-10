@@ -187,6 +187,11 @@
                             "name": "size",
                             "kind": "Number",
                             "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
                         }
                     ]
                 },

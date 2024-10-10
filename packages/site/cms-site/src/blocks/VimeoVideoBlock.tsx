@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { VimeoVideoBlockData } from "../blocks.generated";
@@ -29,6 +29,7 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     previewImageSizes?: string;
     renderPreviewImage?: (props: VideoPreviewImageProps) => React.ReactElement;
     fill?: boolean;
+    previewImageIcon?: ReactNode;
 }
 
 export const VimeoVideoBlock = withPreview(
@@ -38,6 +39,7 @@ export const VimeoVideoBlock = withPreview(
         previewImageSizes,
         renderPreviewImage,
         fill,
+        previewImageIcon,
     }: VimeoVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
@@ -72,6 +74,7 @@ export const VimeoVideoBlock = withPreview(
                             aspectRatio,
                             sizes: previewImageSizes,
                             fill: fill,
+                            icon: previewImageIcon,
                         })
                     ) : (
                         <VideoPreviewImage
@@ -80,6 +83,7 @@ export const VimeoVideoBlock = withPreview(
                             aspectRatio={aspectRatio}
                             sizes={previewImageSizes}
                             fill={fill}
+                            icon={previewImageIcon}
                         />
                     )
                 ) : (

@@ -34,6 +34,7 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
                 name: file.name,
                 fileUrl: await this.filesService.createFileUrl(file, { previewDamUrls, relativeDamUrls }),
                 size: Number(file.size),
+                scope: file.scope,
             };
         } else if (file && block.openFileType === "Download") {
             ret.file = {
@@ -41,6 +42,7 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
                 name: file.name,
                 fileUrl: await this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls }),
                 size: Number(file.size),
+                scope: file.scope,
             };
         }
 
