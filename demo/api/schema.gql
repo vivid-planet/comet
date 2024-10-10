@@ -529,6 +529,11 @@ type ProductDimensions {
   depth: Float!
 }
 
+type ProductPriceRange {
+  min: Float!
+  max: Float!
+}
+
 type Product {
   id: ID!
   title: String!
@@ -538,6 +543,7 @@ type Product {
   type: ProductType!
   additionalTypes: [ProductType!]!
   price: Float
+  priceRange: ProductPriceRange
   inStock: Boolean!
   soldCount: Int
   availableSince: Date
@@ -727,6 +733,11 @@ input ProductDimensionsInput {
   width: Float!
   height: Float!
   depth: Float!
+}
+
+input ProductPriceRangeInput {
+  min: Float!
+  max: Float!
 }
 
 input RedirectScopeInput {
@@ -1403,6 +1414,7 @@ input ProductInput {
   type: ProductType!
   additionalTypes: [ProductType!]! = []
   price: Float = null
+  priceRange: ProductPriceRangeInput
   inStock: Boolean! = true
   availableSince: Date = null
   lastCheckedAt: DateTime = null
@@ -1442,6 +1454,7 @@ input ProductUpdateInput {
   type: ProductType
   additionalTypes: [ProductType!]
   price: Float
+  priceRange: ProductPriceRangeInput
   inStock: Boolean
   availableSince: Date
   lastCheckedAt: DateTime

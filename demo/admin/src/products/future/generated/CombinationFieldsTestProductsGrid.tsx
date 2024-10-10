@@ -90,9 +90,10 @@ type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLCombinationFieldsTestProductsGridFutureFragment, any>) => React.ReactNode;
+    actionsColumnWidth?: number;
 };
 
-export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactElement {
+export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -253,7 +254,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             type: "actions",
             align: "right",
             pinned: "right",
-            width: 84,
+            width: actionsColumnWidth,
             renderCell: (params) => {
                 return (
                     <>
@@ -314,7 +315,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                 Toolbar: ProductsGridToolbar,
             }}
             componentsProps={{
-                toolbar: { toolbarAction: toolbarAction },
+                toolbar: { toolbarAction },
             }}
         />
     );

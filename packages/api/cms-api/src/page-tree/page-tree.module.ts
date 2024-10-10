@@ -47,7 +47,9 @@ export class PageTreeModule {
         // TODO v8: Make sitePreviewSecret mandatory and remove this error
         if (!options.sitePreviewSecret) {
             throw new Error(
-                "BREAKING: this update of Comet v7 requires to have set sitePreviewSecret (which has to be the same value like possibly already set for site). Please refer to https://github.com/vivid-planet/comet-starter/pull/371 for more information on how to upgrade.",
+                "This update of Comet v7 requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.\n" +
+                    "Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.\n" +
+                    "Changes to the deployment setup might still be necessary.",
             );
         }
 
