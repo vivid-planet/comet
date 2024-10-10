@@ -92,6 +92,37 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return { ...uploadedFile, fileUrl };
         }
 
+        @Post("replace")
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        async replace(
+            @UploadedFile() file: FileUploadInput,
+            @Body() body: UploadFileBodyInterface,
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
+        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
+            const transformedBody = plainToInstance(UploadFileBody, body);
+            const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
+
+            if (errors.length > 0) {
+                throw new CometValidationException("Validation failed", errors);
+            }
+            const scope = nonEmptyScopeOrNothing(transformedBody.scope);
+
+            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
+                throw new ForbiddenException();
+            }
+
+            const replacedFile = await this.filesService.replace(file, { ...transformedBody, scope });
+
+            const fileUrl = await this.filesService.createFileUrl(replacedFile, {
+                previewDamUrls: Boolean(previewDamUrls),
+                relativeDamUrls: Boolean(relativeDamUrls),
+            });
+
+            return { ...replacedFile, fileUrl };
+        }
+
         @Get(`/preview/${fileUrl}`)
         async previewFileUrl(
             @Param() { fileId }: FileParams,
