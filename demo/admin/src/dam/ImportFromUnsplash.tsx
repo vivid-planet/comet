@@ -2,11 +2,17 @@ import { CancelButton, messages, SaveButton } from "@comet/admin";
 import { useCurrentDamFolder, useDamAcceptedMimeTypes, useDamFileUpload } from "@comet/cms-admin";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { GQLLicenseInput } from "@src/graphql.generated";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { getRandomUnsplashImage, UnsplashImage } from "./getRandomUnsplashImage";
 import UnsplashIcon from "./UnsplashIcon";
+
+interface FileWithPathAndLicenseInfo extends File {
+    path?: string;
+    license?: GQLLicenseInput;
+}
 
 export const ImportFromUnsplash = () => {
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
@@ -30,8 +36,13 @@ export const ImportFromUnsplash = () => {
 
     const handleSave = async () => {
         if (unsplashImage === undefined) return;
+
+        // License change test
+        const x: FileWithPathAndLicenseInfo = unsplashImage.file;
+        x.license = { author: "Test 321", type: "RIGHTS_MANAGED" };
+
         await uploadFiles(
-            { acceptedFiles: [unsplashImage.file], fileRejections: [] },
+            { acceptedFiles: [x], fileRejections: [] },
             {
                 folderId,
                 importSource: {
