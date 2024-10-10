@@ -240,6 +240,95 @@ export class FilesService {
         );
     }
 
+    async replace(
+        file: FileUploadInput,
+        { folderId, scope, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
+    ): Promise<FileInterface> {
+        let result: FileInterface | undefined = undefined;
+        try {
+            const contentHash = await this.calculateHashForFile(file.path);
+            let image: probe.ProbeResult | undefined;
+            try {
+                image = await probe(createReadStream(file.path));
+                if (image.type == "svg") image = undefined;
+                if (image !== undefined && image.orientation !== undefined && [6, 8].includes(image.orientation)) {
+                    image = {
+                        ...image,
+                        width: image.height,
+                        height: image.width,
+                    };
+                }
+            } catch (e) {
+                // empty
+            }
+
+            if (
+                image !== undefined &&
+                image.width &&
+                image.height &&
+                Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
+            ) {
+                throw new CometImageResolutionException(`Maximal image resolution exceeded`);
+            }
+
+            if (folderId) {
+                const folder = await this.foldersService.findOneById(folderId);
+                if (!folder) throw new Error("Folder not found");
+                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                    throw new Error("Folder scope doesn't match passed scope");
+                }
+            }
+
+            let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
+            if (exifrSupportedMimetypes.includes(file.mimetype)) {
+                exifData = await exifr.parse(file.path);
+            }
+
+            const exisitingFile = await this.findOneByFilenameAndFolder({ filename: file.originalname, folderId });
+            if (!exisitingFile) throw new Error("File not found");
+
+            await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
+
+            // Check if the current file is the only one using the contentHash before deleting from blob storage
+            if (
+                (await withFilesSelect(this.filesRepository.createQueryBuilder("file"), { contentHash: exisitingFile.contentHash }).getResult())
+                    .length === 1
+            ) {
+                await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(exisitingFile.contentHash));
+            }
+
+            if (
+                image &&
+                image.width &&
+                image.height &&
+                exisitingFile.image &&
+                (image.height !== exisitingFile.image.height || image.width !== exisitingFile.image.width)
+            ) {
+                exisitingFile.image.width = image.width;
+                exisitingFile.image.height = image.height;
+                exisitingFile.image.exif = exifData;
+
+                if (exisitingFile.image.cropArea.focalPoint !== FocalPoint.SMART) {
+                    exisitingFile.image.cropArea = { focalPoint: FocalPoint.SMART };
+                }
+            }
+
+            Object.assign(exisitingFile, {
+                size: file.size,
+                mimetype: file.mimetype,
+                contentHash,
+                ...assignData,
+            });
+
+            result = await this.save(exisitingFile);
+        } catch (e) {
+            rimraf.sync(file.path);
+            throw e;
+        }
+
+        return result;
+    }
+
     async updateById(id: string, data: UpdateFileInput): Promise<FileInterface> {
         const file = await this.findOneById(id);
         if (!file) throw new CometEntityNotFoundException();
