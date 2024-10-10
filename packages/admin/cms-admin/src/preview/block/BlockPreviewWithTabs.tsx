@@ -1,5 +1,6 @@
 import { AdminComponentPart, AdminTabs, IFrameBridgeProvider } from "@comet/blocks-admin";
 
+import { BlockPreviewWithTabsContext } from "./BlockPreviewWithTabsContext";
 import { SplitPreview } from "./SplitPreview";
 import { BlockPreviewApi } from "./useBlockPreview";
 
@@ -22,11 +23,13 @@ function BlockPreviewWithTabs({ children, previewApi, previewState, previewUrl }
     }
 
     return (
-        <IFrameBridgeProvider key={previewUrl}>
-            <SplitPreview url={previewUrl} previewState={previewState} previewApi={previewApi}>
-                {pageContent}
-            </SplitPreview>
-        </IFrameBridgeProvider>
+        <BlockPreviewWithTabsContext.Provider value={{ previewState, previewApi }}>
+            <IFrameBridgeProvider key={previewUrl}>
+                <SplitPreview url={previewUrl} previewState={previewState} previewApi={previewApi}>
+                    {pageContent}
+                </SplitPreview>
+            </IFrameBridgeProvider>
+        </BlockPreviewWithTabsContext.Provider>
     );
 }
 
