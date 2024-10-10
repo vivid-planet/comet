@@ -3,11 +3,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    CrudMoreActionsMenu,
     DataGridToolbar,
+    ExportApi,
     filterByFragment,
     GridCellContent,
     GridColDef,
     GridFilterButton,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
@@ -16,12 +19,13 @@ import {
     ToolbarItem,
     Tooltip,
     useBufferedRowCount,
+    useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
+import { Excel, Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { useTheme } from "@mui/material";
+import { CircularProgress, useTheme } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
@@ -77,7 +81,7 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: React.ReactNode; exportApi: ExportApi }) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -87,6 +91,16 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNod
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
+            <CrudMoreActionsMenu
+                overallActions={[
+                    {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    },
+                ]}
+            />
             {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );
@@ -126,6 +140,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),
+            disableExport: true,
             sortBy: ["title", "description"],
             minWidth: 200,
             maxWidth: 250,
@@ -164,6 +179,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
             type: "singleSelect",
+            valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
                 {
                     value: "true",
@@ -194,6 +210,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
+            valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
                 {
                     value: "Cap",
@@ -218,6 +235,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
             valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             width: 140,
         },
         {
@@ -225,6 +243,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
             valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
+            valueFormatter: ({ value }) =>
+                value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
             width: 170,
         },
         {
@@ -236,6 +256,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             align: "right",
             pinned: "right",
             width: actionsColumnWidth,
+            disableExport: true,
             renderCell: (params) => {
                 return (
                     <>
@@ -285,6 +306,23 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     if (error) throw error;
     const rows = data?.products.nodes ?? [];
 
+    const exportApi = useDataGridExcelExport<
+        GQLProductsGridQuery["products"]["nodes"][0],
+        GQLProductsGridQuery,
+        Omit<GQLProductsGridQueryVariables, "offset" | "limit">
+    >({
+        columns,
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+        },
+        query: productsQuery,
+        resolveQueryNodes: (data) => data.products.nodes,
+        totalCount: data?.products.totalCount ?? 0,
+        exportOptions: {
+            fileName: "Products",
+        },
+    });
+
     return (
         <DataGridPro
             {...dataGridProps}
@@ -297,7 +335,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 Toolbar: ProductsGridToolbar,
             }}
             componentsProps={{
-                toolbar: { toolbarAction: toolbarAction },
+                toolbar: { toolbarAction, exportApi },
             }}
         />
     );
