@@ -1,5 +1,44 @@
 # @comet/cms-admin
 
+## 7.6.0
+
+### Minor Changes
+
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   3ea66fb38: Add support for user impersonation
+
+    Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
+
+    Adds an "Impersonation" button to the detail view of a user in the User Permissions admin panel. The impersonation can be exited by clicking the button in the user's info on the top right.
+
+-   0589ef554: Add `displayName` prop to `createTextLinkBlock` factory to support setting a custom display name
+
+### Patch Changes
+
+-   11ce320e9: Fix validation of empty `PhoneLinkBlock`
+
+    Previously, the default phone value was an empty string, meaning `@IsOptional()` didn't prevent validation.
+    Since an empty string is not a valid phone number, the validation failed.
+
+    This change sets the default value to `undefined`.
+
+-   700ddc340: Fix copy/paste for documents containing a `DamFileDownloadLinkBlock`
+-   Updated dependencies [bc19fb18c]
+-   Updated dependencies [03afcd073]
+    -   @comet/admin@7.6.0
+    -   @comet/admin-date-time@7.6.0
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-rte@7.6.0
+    -   @comet/admin-theme@7.6.0
+    -   @comet/blocks-admin@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes
