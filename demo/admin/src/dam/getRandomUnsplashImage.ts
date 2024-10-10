@@ -19,17 +19,21 @@ async function fetchUnsplashImage(url: string) {
 function extractFileNameFromUrl(url: string): string {
     const fileNameWithQuery = url.split("?")[0];
     const fileName = fileNameWithQuery.split("/").pop();
-    return fileName ? `${fileName}.jpeg` : "unnamed.jpeg";
+    return fileName ? `${fileName}.png` : "unnamed.png";
 }
 
 export async function getRandomUnsplashImage(): Promise<UnsplashImage> {
-    const imageUrl = "https://source.unsplash.com/all/";
+    const array = [
+        "http://localhost:4000/dam/files/preview/54903739-9aa5-4f70-bf75-e585ce69e7fe/image-01",
+        "http://localhost:4000/dam/files/preview/16ed8fe6-d3d1-4005-ad77-1acfe5eb2d4a/image-01",
+    ];
+    const imageUrl = array[Math.floor(Math.random() * array.length)];
 
     try {
         const image = await fetchUnsplashImage(imageUrl);
         const mimeType = image.blob.type;
 
-        if (mimeType !== "image/jpeg") {
+        if (mimeType !== "image/png") {
             return getRandomUnsplashImage();
         }
 
