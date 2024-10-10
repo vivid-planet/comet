@@ -1190,6 +1190,23 @@
         ]
     },
     {
+        "name": "NewsList",
+        "fields": [
+            {
+                "name": "ids",
+                "kind": "Json",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "ids",
+                "kind": "Json",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "OptionalPixelImage",
         "fields": [
             {
@@ -1286,7 +1303,8 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "newsList": "NewsList"
                             },
                             "nullable": false
                         },
@@ -1342,7 +1360,8 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "newsList": "NewsList"
                             },
                             "nullable": false
                         },
