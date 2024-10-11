@@ -2,7 +2,13 @@ import { GridColDef } from "@comet/admin";
 import { FormattedNumber } from "react-intl";
 
 import { BaseColumnConfig } from "../generator";
-import { getFormattedMessageNode } from "../utils/intl";
+import {
+    FormattedNumberOptions,
+    getFormattedMessageNode,
+    getFormattedMessageString,
+    getFormattedNumberNode,
+    getFormattedNumberString,
+} from "../utils/intl";
 
 type AbstractField<FieldName extends string> = {
     field: FieldName;
@@ -43,13 +49,19 @@ type FormattedMessage<FieldName extends string> = {
     valueFields: Record<string, Field<FieldName>>;
 };
 
+type GroupedField<FieldName extends string> = {
+    type: "group";
+    fields: Field<FieldName>[];
+};
+
 type Field<FieldName extends string> =
     | StaticText
     | FieldName
     | TextField<FieldName>
     | NumberField<FieldName>
     | StaticSelectField<FieldName>
-    | FormattedMessage<FieldName>;
+    | FormattedMessage<FieldName>
+    | GroupedField<FieldName>;
 
 export type GridCombinationColumnConfig<FieldName extends string> = {
     type: "combination";
@@ -64,10 +76,13 @@ type CellContent = {
     variableDefinitions?: string[];
 };
 
-const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: string): CellContent => {
+const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: string, requireStrings: boolean): CellContent => {
+    const formattedMessage = requireStrings ? getFormattedMessageString : getFormattedMessageNode;
+    const formattedNumber = requireStrings ? getFormattedNumberString : getFormattedNumberNode;
+
     if (typeof textConfig !== "string" && textConfig.type === "static") {
         return {
-            textContent: getFormattedMessageNode(messageIdPrefix, textConfig.text),
+            textContent: formattedMessage(messageIdPrefix, textConfig.text),
         };
     }
 
@@ -76,7 +91,11 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
 
         const values = Object.entries(textConfig.valueFields)
             .map(([key, value]) => {
-                const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(value, `${messageIdPrefix}.${key}`);
+                const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(
+                    value,
+                    `${messageIdPrefix}.${key}`,
+                    requireStrings,
+                );
 
                 if (cellVariableDefinitions?.length) {
                     variableDefinitions.push(...cellVariableDefinitions);
@@ -87,14 +106,37 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
             .join(", ");
 
         return {
-            textContent: getFormattedMessageNode(messageIdPrefix, textConfig.message, `{${values}}`),
+            textContent: formattedMessage(messageIdPrefix, textConfig.message, `{${values}}`),
+            variableDefinitions,
+        };
+    }
+
+    if (typeof textConfig !== "string" && textConfig.type === "group") {
+        const variableDefinitions: string[] = [];
+
+        const items = textConfig.fields.map((field) => {
+            const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(
+                field,
+                `${messageIdPrefix}.${typeof field !== "string" && "field" in field ? field.field : "__TODO__"}`, // TODO: Which value can we use here??
+                true,
+            );
+            if (cellVariableDefinitions?.length) {
+                variableDefinitions.push(...cellVariableDefinitions);
+            }
+            return textContent;
+        });
+
+        variableDefinitions.push(`const groupValues: string[] = [${items.join(", ")}];`); // TODO: Variable name should contain "primary" or "secondary"
+
+        return {
+            textContent: `groupValues.filter(Boolean).join(" • ")`,
             variableDefinitions,
         };
     }
 
     const emptyText =
         typeof textConfig !== "string" && "emptyValue" in textConfig
-            ? getFormattedMessageNode(`${messageIdPrefix}.empty`, textConfig.emptyValue)
+            ? formattedMessage(`${messageIdPrefix}.empty`, textConfig.emptyValue ?? "")
             : "'-'";
 
     const fieldName = typeof textConfig === "string" ? textConfig : textConfig.field;
@@ -108,7 +150,7 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
     }
 
     if (textConfig.type === "number") {
-        const { type, decimals: decimalsConfigValue, field, emptyValue, ...configForFormattedNumberProps } = textConfig;
+        const { type, decimals: decimalsConfigValue, field, emptyValue, ...numberOptionsFromConfig } = textConfig;
 
         const hasCurrency = Boolean(textConfig.currency);
         const hasUnit = Boolean(textConfig.unit);
@@ -117,37 +159,20 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
         let defaultStyleProp: string | undefined = undefined;
 
         if (hasCurrency) {
-            defaultStyleProp = '"currency"';
+            defaultStyleProp = "currency";
         } else if (hasUnit) {
-            defaultStyleProp = '"unit"';
+            defaultStyleProp = "unit";
         }
 
-        const formattedNumberProps: Record<string, unknown> = {
-            value: `{${rowValue}}`,
-            minimumFractionDigits: typeof defaultDecimalsProp !== "undefined" ? `{${defaultDecimalsProp}}` : undefined,
-            maximumFractionDigits: typeof defaultDecimalsProp !== "undefined" ? `{${defaultDecimalsProp}}` : undefined,
+        const numberOptions: FormattedNumberOptions = {
+            minimumFractionDigits: typeof defaultDecimalsProp !== "undefined" ? defaultDecimalsProp : undefined,
+            maximumFractionDigits: typeof defaultDecimalsProp !== "undefined" ? defaultDecimalsProp : undefined,
             style: typeof defaultStyleProp !== "undefined" ? defaultStyleProp : undefined,
+            ...numberOptionsFromConfig,
         };
 
-        Object.entries(configForFormattedNumberProps).forEach(([key, value]) => {
-            if (typeof value === "string") {
-                formattedNumberProps[key] = `"${value}"`;
-            } else {
-                formattedNumberProps[key] = `{${value}}`;
-            }
-        });
-
-        const formattedNumberPropsString = Object.entries(formattedNumberProps)
-            .map(([key, value]) => {
-                if (typeof value === "undefined") {
-                    return null;
-                }
-                return `${key}=${value}`;
-            })
-            .join(" ");
-
         return {
-            textContent: `typeof ${rowValue} === "undefined" || ${rowValue} === null ? ${emptyText} : <FormattedNumber ${formattedNumberPropsString} />`,
+            textContent: `typeof ${rowValue} === "undefined" || ${rowValue} === null ? ${emptyText} : ${formattedNumber(rowValue, numberOptions)}`,
         };
     }
 
@@ -158,11 +183,12 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
             .map((valueOption) => {
                 const value = typeof valueOption === "string" ? valueOption : valueOption.value;
                 const label = typeof valueOption === "string" ? valueOption : valueOption.label;
-                return `${value}: ${getFormattedMessageNode(`${messageIdPrefix}.${value}`, label)}`;
+                return `${value}: ${formattedMessage(`${messageIdPrefix}.${value}`, label)}`;
             })
             .join(", ");
 
-        const labelMappingVar = `const ${labelsVariableName}: Record<string, React.ReactNode> = { ${labelMapping} };`;
+        const labelMappingType = requireStrings ? "Record<string, string>" : "Record<string, React.ReactNode>";
+        const labelMappingVar = `const ${labelsVariableName}: ${labelMappingType} = { ${labelMapping} };`;
         const textContent = `(${rowValue} == null ? ${emptyText} : ${labelsVariableName}[` + `\`\${${rowValue}}\`` + `] ?? ${rowValue})`;
 
         return {
@@ -181,13 +207,13 @@ export const getCombinationColumnRenderCell = (column: GridCombinationColumnConf
     const allVariableDefinitions: string[] = [];
 
     if (column.primaryText) {
-        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`);
+        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`, false);
         gridCellContentProps.primaryText = textContent;
         allVariableDefinitions.push(...variableDefinitions);
     }
 
     if (column.secondaryText) {
-        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.secondaryText, `${messageIdPrefix}.secondaryText`);
+        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.secondaryText, `${messageIdPrefix}.secondaryText`, false);
         gridCellContentProps.secondaryText = textContent;
         allVariableDefinitions.push(...variableDefinitions);
     }
@@ -213,6 +239,10 @@ const getFieldNamesFromText = (textConfig: Field<string>): string[] => {
 
     if (textConfig.type === "formattedMessage") {
         return Object.values(textConfig.valueFields).flatMap((value) => getFieldNamesFromText(value));
+    }
+
+    if (textConfig.type === "group") {
+        return textConfig.fields.flatMap((field) => getFieldNamesFromText(field));
     }
 
     return [textConfig.field];

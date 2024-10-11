@@ -23,28 +23,26 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             minWidth: 200,
             primaryText: "title",
             secondaryText: {
-                // TODO: Change this to use the "group" type instead of "formattedMessage", once implemented (SVK-368)
-                type: "formattedMessage",
-                message: "{price} • {type} • {category} • {inStock}",
-                valueFields: {
-                    price: {
+                type: "group",
+                fields: [
+                    {
                         type: "number",
                         field: "price",
                         currency: "EUR",
-                        emptyValue: "No price",
+                        emptyValue: "", // The default value is currently "-". Should we change it to an empty string? Just for the "group" type or everywhere?
                     },
-                    type: {
+                    {
                         type: "staticSelect",
                         field: "type",
                         values: typeValues,
-                        emptyValue: "No type",
+                        emptyValue: "", // The default value is currently "-". Should we change it to an empty string? Just for the "group" type or everywhere?
                     },
-                    category: {
+                    {
                         type: "text",
                         field: "category.title",
-                        emptyValue: "No category",
+                        emptyValue: "", // The default value is currently "-". Should we change it to an empty string? Just for the "group" type or everywhere?
                     },
-                    inStock: {
+                    {
                         type: "staticSelect",
                         field: "inStock",
                         values: [
@@ -52,13 +50,13 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
                             { value: false, label: "Out of stock" },
                         ],
                     },
-                },
+                ],
             },
             visible: "down('md')",
             sortBy: ["title", "price", "type", "category", "inStock"],
             disableExport: true, // TODO: Implement `valueFormatter` for type "combination"
         },
-        { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
+        { type: "text", name: "title", headerName: "Title", minWidth: 200, maxWidth: 250, visible: "up('md')" },
         { type: "text", name: "description", headerName: "Description" },
         // TODO: Allow setting options for `intl.formatNumber` through `valueFormatter` (type "number")
         { type: "number", name: "price", headerName: "Price", maxWidth: 150, headerInfoTooltip: "Price in EUR", visible: "up('md')" },
