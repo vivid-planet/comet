@@ -1,14 +1,12 @@
-import { MainContent, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
-import { IconButton } from "@mui/material";
-import { FormattedMessage } from "react-intl";
+---
+"@comet/cms-admin": minor
+---
 
-import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { UserBasicData } from "./user/basicData/UserBasicData";
-import { UserPermissionsPanel } from "./user/permissions/PermissionsPanel";
-import { UserPageToolbar } from "./user/UserPageToolbar";
-import { UserGrid } from "./UserGrid";
+Export components to allow customization of User Permissions Admin panel
 
+The application can provide an own UserPermissionsPage based on the following code:
+
+```ts
 export const UserPermissionsPage = () => (
     <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Permissions" />}>
         <StackSwitch>
@@ -47,3 +45,4 @@ export const UserPermissionsPage = () => (
         </StackSwitch>
     </Stack>
 );
+```
