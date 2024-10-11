@@ -31,7 +31,7 @@ import { CircularProgress, useTheme } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import { ManufacturerFilterOperators } from "../ManufacturerFilter";
@@ -146,50 +146,24 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const typeLabels: Record<string, React.ReactNode> = {
-                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
-                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
-                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                const typeLabels: Record<string, string> = {
+                    Cap: intl.formatMessage({ id: "product.overview.secondaryText.type.Cap", defaultMessage: `great Cap` }),
+                    Shirt: intl.formatMessage({ id: "product.overview.secondaryText.type.Shirt", defaultMessage: `Shirt` }),
+                    Tie: intl.formatMessage({ id: "product.overview.secondaryText.type.Tie", defaultMessage: `Tie` }),
                 };
-                const inStockLabels: Record<string, React.ReactNode> = {
-                    true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
-                    false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
+                const inStockLabels: Record<string, string> = {
+                    true: intl.formatMessage({ id: "product.overview.secondaryText.inStock.true", defaultMessage: `In stock` }),
+                    false: intl.formatMessage({ id: "product.overview.secondaryText.inStock.false", defaultMessage: `Out of stock` }),
                 };
-                return (
-                    <GridCellContent
-                        primaryText={row.title ?? "-"}
-                        secondaryText={
-                            <FormattedMessage
-                                id="product.overview.secondaryText"
-                                defaultMessage="{price} • {type} • {category} • {inStock}"
-                                values={{
-                                    price:
-                                        typeof row.price === "undefined" || row.price === null ? (
-                                            <FormattedMessage id="product.overview.secondaryText.price.empty" defaultMessage="No price" />
-                                        ) : (
-                                            <FormattedNumber
-                                                value={row.price}
-                                                minimumFractionDigits={2}
-                                                maximumFractionDigits={2}
-                                                style="currency"
-                                                currency="EUR"
-                                            />
-                                        ),
-                                    type:
-                                        row.type == null ? (
-                                            <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
-                                        ) : (
-                                            typeLabels[`${row.type}`] ?? row.type
-                                        ),
-                                    category: row.category?.title ?? (
-                                        <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
-                                    ),
-                                    inStock: row.inStock == null ? "-" : inStockLabels[`${row.inStock}`] ?? row.inStock,
-                                }}
-                            />
-                        }
-                    />
-                );
+                const groupValues: string[] = [
+                    typeof row.price === "undefined" || row.price === null
+                        ? intl.formatMessage({ id: "product.overview.secondaryText.price.empty", defaultMessage: `Price unknown` })
+                        : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
+                    row.type == null ? "" : typeLabels[`${row.type}`] ?? row.type,
+                    row.category?.title ?? "",
+                    row.inStock == null ? "" : inStockLabels[`${row.inStock}`] ?? row.inStock,
+                ];
+                return <GridCellContent primaryText={row.title ?? ""} secondaryText={groupValues.filter(Boolean).join(" • ")} />;
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),
@@ -199,7 +173,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         },
         {
             field: "title",
-            headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
+            headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Title" }),
             flex: 1,
             visible: theme.breakpoints.up("md"),
             minWidth: 200,

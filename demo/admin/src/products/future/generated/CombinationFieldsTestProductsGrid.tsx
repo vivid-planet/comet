@@ -105,7 +105,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                return <GridCellContent primaryText={row.title ?? "-"} secondaryText={row.category?.title ?? "-"} />;
+                return <GridCellContent primaryText={row.title ?? ""} secondaryText={row.category?.title ?? ""} />;
             },
             flex: 1,
             minWidth: 150,
@@ -121,9 +121,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                     Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Shirt" />,
                     Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
                 };
-                return (
-                    <GridCellContent primaryText={row.type == null ? "-" : typeLabels[`${row.type}`] ?? row.type} secondaryText={row.type ?? "-"} />
-                );
+                return <GridCellContent primaryText={row.type == null ? "" : typeLabels[`${row.type}`] ?? row.type} secondaryText={row.type ?? ""} />;
             },
             flex: 1,
             minWidth: 150,
@@ -192,7 +190,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                         }
                         secondaryText={
                             typeof row.price === "undefined" || row.price === null ? (
-                                "-"
+                                ""
                             ) : (
                                 <FormattedNumber value={row.price} minimumFractionDigits={4} maximumFractionDigits={4} />
                             )
@@ -213,14 +211,14 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                     <GridCellContent
                         primaryText={
                             typeof row.price === "undefined" || row.price === null ? (
-                                "-"
+                                ""
                             ) : (
                                 <FormattedNumber value={row.price} style="unit" unit="kilogram" />
                             )
                         }
                         secondaryText={
                             typeof row.price === "undefined" || row.price === null ? (
-                                "-"
+                                ""
                             ) : (
                                 <FormattedNumber
                                     value={row.price}
@@ -250,7 +248,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                             <FormattedMessage
                                 id="product.combinedAndNestedValues.primaryText"
                                 defaultMessage={`This product is named "{title}" and is a "{type}"`}
-                                values={{ title: row.title ?? "-", type: row.type ?? "-" }}
+                                values={{ title: row.title ?? "", type: row.type ?? "" }}
                             />
                         }
                         secondaryText={
