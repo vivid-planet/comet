@@ -49,9 +49,9 @@ export class UserContentScopesResolver {
 
     @Query(() => [AvailableContentScope])
     async userPermissionsAvailableContentScopes(): Promise<AvailableContentScope[]> {
-        return (await this.service.getAvailableContentScopesWithLabels()).map((contentScope) => ({
-            contentScope: Object.fromEntries(Object.entries<{ value: string }>(contentScope).map(([key, value]) => [key, value.value])),
-            label: Object.values<{ label: string }>(contentScope)
+        return (await this.service.getAvailableContentScopesWithLabels()).map((contentScopeWithLabel) => ({
+            contentScope: this.service.removeLabelsFromContentScope(contentScopeWithLabel),
+            label: Object.values<{ label: string }>(contentScopeWithLabel)
                 .map((value) => value.label)
                 .join(" / "),
         }));

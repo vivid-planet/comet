@@ -36,15 +36,17 @@ export class UserPermissionsService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
-    async getAvailableContentScopes(): Promise<ContentScope[]> {
-        return (await this.getAvailableContentScopesWithLabels()).map((contentScope) =>
-            Object.fromEntries(
-                Object.entries<{
-                    label: string;
-                    value: string;
-                }>(contentScope).map(([key, value]) => [key, value.value]),
-            ),
+    removeLabelsFromContentScope(contentScope: ContentScopeWithLabel): ContentScope {
+        return Object.fromEntries(
+            Object.entries<{
+                label: string;
+                value: string;
+            }>(contentScope).map(([key, value]) => [key, value.value]),
         );
+    }
+
+    async getAvailableContentScopes(): Promise<ContentScope[]> {
+        return (await this.getAvailableContentScopesWithLabels()).map(this.removeLabelsFromContentScope);
     }
 
     async getAvailableContentScopesWithLabels(): Promise<ContentScopeWithLabel[]> {

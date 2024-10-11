@@ -68,10 +68,7 @@ export function createAuthResolver(config?: AuthResolverConfig): Type<unknown> {
             const allowedContentScopes = this.allowedContentScopes(user);
             return (await this.service.getAvailableContentScopesWithLabels()).filter((contentScopeWithLabels) =>
                 allowedContentScopes.some((allowedContentScope) =>
-                    isEqual(
-                        Object.fromEntries(Object.entries<{ value: string }>(contentScopeWithLabels).map(([key, value]) => [key, value.value])),
-                        allowedContentScope,
-                    ),
+                    isEqual(this.service.removeLabelsFromContentScope(contentScopeWithLabels), allowedContentScope),
                 ),
             );
         }
