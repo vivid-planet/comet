@@ -7,7 +7,6 @@ import {
     messages,
     RouterTab,
     RouterTabs,
-    Stack,
     TextField,
     ToolbarActions,
     ToolbarFillSpace,
@@ -71,46 +70,43 @@ function Toolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
 }
 
 function Story() {
-    const intl = useIntl();
     const editDialogApi = React.useRef<IEditDialogApi>(null);
     return (
         <>
             <RouterTabs>
                 <RouterTab path="" label="First Tab">
                     <MainContent fullHeight disablePadding>
-                        <Typography>Hello, I am the first Tab</Typography>
+                        <Typography>Hello, I am the first Tab. The Add Dialog in the second Tab navigates here.</Typography>
                     </MainContent>
                 </RouterTab>
                 <RouterTab path="/second" label="Second Tab">
                     <MainContent fullHeight disablePadding>
-                        <Stack topLevelTitle={intl.formatMessage({ id: "tabs.secondTab.title", defaultMessage: "Tab 2" })}>
-                            <MainContent fullHeight disablePadding>
-                                <DataGrid
-                                    columns={[
-                                        { field: "id", headerName: "ID", width: 90 },
-                                        { field: "name", headerName: "Name", flex: 1 },
-                                    ]}
-                                    rows={products}
-                                    components={{
-                                        Toolbar: Toolbar,
-                                    }}
-                                    componentsProps={{
-                                        toolbar: {
-                                            toolbarAction: (
-                                                <Button
-                                                    startIcon={<Add />}
-                                                    onClick={() => editDialogApi.current?.openAddDialog()}
-                                                    variant="contained"
-                                                    color="primary"
-                                                >
-                                                    <FormattedMessage {...messages.add} />
-                                                </Button>
-                                            ),
-                                        },
-                                    }}
-                                />
-                            </MainContent>
-                        </Stack>
+                        <MainContent fullHeight disablePadding>
+                            <DataGrid
+                                columns={[
+                                    { field: "id", headerName: "ID", width: 90 },
+                                    { field: "name", headerName: "Name", flex: 1 },
+                                ]}
+                                rows={products}
+                                components={{
+                                    Toolbar: Toolbar,
+                                }}
+                                componentsProps={{
+                                    toolbar: {
+                                        toolbarAction: (
+                                            <Button
+                                                startIcon={<Add />}
+                                                onClick={() => editDialogApi.current?.openAddDialog()}
+                                                variant="contained"
+                                                color="primary"
+                                            >
+                                                <FormattedMessage {...messages.add} />
+                                            </Button>
+                                        ),
+                                    },
+                                }}
+                            />
+                        </MainContent>
                     </MainContent>
                 </RouterTab>
             </RouterTabs>
