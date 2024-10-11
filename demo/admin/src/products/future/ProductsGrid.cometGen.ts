@@ -23,6 +23,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             minWidth: 200,
             primaryText: "title",
             secondaryText: {
+                // TODO: Change this to use the "group" type instead of "formattedMessage", once implemented (SVK-368)
                 type: "formattedMessage",
                 message: "{price} • {type} • {category} • {inStock}",
                 valueFields: {
