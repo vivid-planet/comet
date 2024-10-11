@@ -1,7 +1,7 @@
-import { css } from "@mui/material";
+import { Box, css } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const Root = styled("div")`
+export const Root = styled(Box)`
     position: relative;
 `;
 
