@@ -21,7 +21,7 @@ export class WarningInput {
 
     @IsNotEmpty()
     @IsEnum(WarningStatus)
-    @Field(() => WarningStatus)
+    @Field(() => WarningStatus, { defaultValue: WarningStatus.open })
     status: WarningStatus;
 }
 

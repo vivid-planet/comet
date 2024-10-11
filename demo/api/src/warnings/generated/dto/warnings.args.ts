@@ -11,7 +11,7 @@ import { WarningSort } from "./warning.sort";
 
 @ArgsType()
 export class WarningsArgs extends OffsetBasedPaginationArgs {
-    @Field(() => [WarningStatus], { defaultValue: [undefined] })
+    @Field(() => [WarningStatus], { defaultValue: [WarningStatus.open] })
     @IsEnum(WarningStatus, { each: true })
     status: WarningStatus[];
 

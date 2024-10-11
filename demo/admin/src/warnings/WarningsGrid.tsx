@@ -33,7 +33,7 @@ const warningsFragment = gql`
 
 const warningsQuery = gql`
     query WarningsGrid($offset: Int, $limit: Int, $sort: [WarningSort!], $search: String, $filter: WarningFilter) {
-        warnings(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter, status: [open, resolved, ignored]) {
+        warnings(offset: $offset, limit: $limit, sort: $sort, search: $search, filter: $filter) {
             nodes {
                 ...WarningsList
             }

@@ -39,5 +39,5 @@ export class Warning extends BaseEntity<Warning, "id"> {
 
     @Enum({ items: () => WarningStatus })
     @Field(() => WarningStatus)
-    status: WarningStatus;
+    status: WarningStatus = WarningStatus.open;
 }
