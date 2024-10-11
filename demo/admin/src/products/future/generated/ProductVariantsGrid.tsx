@@ -126,8 +126,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <EditIcon color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <EditIcon />
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
