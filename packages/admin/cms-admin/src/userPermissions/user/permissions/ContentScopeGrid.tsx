@@ -20,6 +20,27 @@ type ContentScope = {
     [key: string]: string;
 };
 
+type ContentScopeWithLabel = {
+    [key in keyof ContentScope]: {
+        label: string;
+        value: ContentScope[key];
+    };
+};
+
+type ContentScopeAndLabel = {
+    label: string;
+    contentScope: ContentScope;
+};
+
+export function getContentScopeAndLabel(contentScopes: ContentScopeWithLabel[]): ContentScopeAndLabel[] {
+    return contentScopes.map((contentScope) => ({
+        contentScope: Object.fromEntries(Object.entries<ContentScopeWithLabel[0]>(contentScope).map(([key, value]) => [key, value.value])),
+        label: Object.values<ContentScopeWithLabel[0]>(contentScope)
+            .map(({ label, value }) => label || camelCaseToHumanReadable(value))
+            .join(" / "),
+    }));
+}
+
 export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const client = useApolloClient();
 
@@ -43,10 +64,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     const { data, error } = useQuery<GQLContentScopesQuery, GQLContentScopesQueryVariables>(
         gql`
             query ContentScopes($userId: String!) {
-                availableContentScopes: userPermissionsAvailableContentScopes {
-                    contentScope
-                    label
-                }
+                availableContentScopes: userPermissionsAvailableContentScopes
                 userContentScopes: userPermissionsContentScopes(userId: $userId)
                 userContentScopesSkipManual: userPermissionsContentScopes(userId: $userId, skipManual: true)
             }
@@ -82,7 +100,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     </ToolbarActions>
                 </CardToolbar>
                 <CardContent>
-                    {data.availableContentScopes.map(({ contentScope, label }: { contentScope: ContentScope; label: string | null }) => (
+                    {getContentScopeAndLabel(data.availableContentScopes).map(({ contentScope, label }) => (
                         <Field
                             disabled={data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, contentScope))}
                             key={JSON.stringify(contentScope)}
@@ -92,15 +110,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                             type="checkbox"
                             component={FinalFormCheckbox}
                             value={JSON.stringify(contentScope)}
-                            label={
-                                label ||
-                                Object.entries(contentScope).map(([scope, value]) => (
-                                    <>
-                                        {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
-                                        <br />
-                                    </>
-                                ))
-                            }
+                            label={label}
                         />
                     ))}
                 </CardContent>

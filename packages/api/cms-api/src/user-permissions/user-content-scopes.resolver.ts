@@ -5,11 +5,11 @@ import { GraphQLJSONObject } from "graphql-scalars";
 
 import { SkipBuild } from "../builds/skip-build.decorator";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
-import { AvailableContentScope } from "./dto/available-content-scope";
 import { UserContentScopesInput } from "./dto/user-content-scopes.input";
 import { UserContentScopes } from "./entities/user-content-scopes.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
 import { UserPermissionsService } from "./user-permissions.service";
+import { ContentScopeWithLabel } from "./user-permissions.types";
 
 @Resolver()
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
@@ -47,13 +47,8 @@ export class UserContentScopesResolver {
         );
     }
 
-    @Query(() => [AvailableContentScope])
-    async userPermissionsAvailableContentScopes(): Promise<AvailableContentScope[]> {
-        return (await this.service.getAvailableContentScopesWithLabels()).map((contentScopeWithLabel) => ({
-            contentScope: this.service.removeLabelsFromContentScope(contentScopeWithLabel),
-            label: Object.values<{ label: string }>(contentScopeWithLabel)
-                .map((value) => value.label)
-                .join(" / "),
-        }));
+    @Query(() => [GraphQLJSONObject])
+    async userPermissionsAvailableContentScopes(): Promise<ContentScopeWithLabel[]> {
+        return this.service.getAvailableContentScopesWithLabels();
     }
 }

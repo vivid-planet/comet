@@ -3,7 +3,7 @@ import { CancelButton, Field, FinalForm, FinalFormCheckbox, FinalFormSwitch, Sav
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { camelCaseToHumanReadable } from "../../utils/camelCaseToHumanReadable";
+import { getContentScopeAndLabel } from "./ContentScopeGrid";
 import {
     GQLOverrideContentScopesMutation,
     GQLOverrideContentScopesMutationVariables,
@@ -21,9 +21,6 @@ interface FormProps {
     userId: string;
     handleDialogClose: () => void;
 }
-type ContentScope = {
-    [key: string]: string;
-};
 
 export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialogClose }: FormProps) => {
     const client = useApolloClient();
@@ -52,10 +49,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
     const { data, error } = useQuery<GQLPermissionContentScopesQuery, GQLPermissionContentScopesQueryVariables>(
         gql`
             query PermissionContentScopes($permissionId: ID!, $userId: String) {
-                availableContentScopes: userPermissionsAvailableContentScopes {
-                    contentScope
-                    label
-                }
+                availableContentScopes: userPermissionsAvailableContentScopes
                 permission: userPermissionsPermission(id: $permissionId, userId: $userId) {
                     source
                     overrideContentScopes
@@ -104,7 +98,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                 disabled={disabled}
                             />
                             {values.overrideContentScopes &&
-                                data.availableContentScopes.map(({ contentScope, label }: { contentScope: ContentScope; label: string | null }) => (
+                                getContentScopeAndLabel(data.availableContentScopes).map(({ contentScope, label }) => (
                                     <Field
                                         disabled={disabled}
                                         key={JSON.stringify(contentScope)}
@@ -114,15 +108,7 @@ export const OverrideContentScopesDialog = ({ permissionId, userId, handleDialog
                                         type="checkbox"
                                         component={FinalFormCheckbox}
                                         value={JSON.stringify(contentScope)}
-                                        label={
-                                            label ||
-                                            Object.entries(contentScope).map(([scope, value]) => (
-                                                <>
-                                                    {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
-                                                    <br />
-                                                </>
-                                            ))
-                                        }
+                                        label={label}
                                     />
                                 ))}
                         </DialogContent>
