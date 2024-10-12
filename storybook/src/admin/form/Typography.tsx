@@ -44,7 +44,7 @@ function Story() {
                                 <Typography>Of course you can use any formatting:</Typography>
                                 <FieldContainer label="Today">
                                     <Typography>
-                                        <FormattedDate value={new Date()} />
+                                        <FormattedDate value={new Date()} dateStyle="medium" />
                                     </Typography>
                                 </FieldContainer>
                             </CardContent>

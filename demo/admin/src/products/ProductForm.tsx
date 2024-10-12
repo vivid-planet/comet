@@ -16,6 +16,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
+import { DateField } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -194,6 +195,12 @@ export function ProductForm({ id }: FormProps) {
                             fullWidth
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
+                        />
+                        <DateField
+                            required
+                            fullWidth
+                            name="availableSince"
+                            label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                         />
                         <AsyncSelectField
                             name="manufacturerCountry"
