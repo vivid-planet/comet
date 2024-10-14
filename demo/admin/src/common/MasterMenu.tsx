@@ -33,6 +33,7 @@ import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/Ma
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
 import { type ContentScope } from "@src/site-configs";
+import { WarningsPage } from "@src/warnings/WarningsPage";
 import { FormattedMessage } from "react-intl";
 import { Redirect, type RouteComponentProps } from "react-router";
 
@@ -181,6 +182,15 @@ export const masterMenuData: MasterMenuData = [
                 route: {
                     path: "/system/redirects",
                     component: RedirectsPage,
+                },
+                requiredPermission: "pageTree",
+            },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.warnings" defaultMessage="Warnings" />,
+                route: {
+                    path: "/system/warnings",
+                    component: WarningsPage,
                 },
                 requiredPermission: "pageTree",
             },

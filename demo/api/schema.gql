@@ -627,6 +627,32 @@ type RedirectScope {
   domain: String!
 }
 
+type Warning {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  type: String!
+  severity: WarningSeverity!
+  status: WarningStatus!
+}
+
+enum WarningSeverity {
+  critical
+  high
+  low
+}
+
+enum WarningStatus {
+  open
+  resolved
+  ignored
+}
+
+type PaginatedWarnings {
+  nodes: [Warning!]!
+  totalCount: Int!
+}
+
 type PaginatedPageTreeNodes {
   nodes: [PageTreeNode!]!
   totalCount: Int!
@@ -819,6 +845,8 @@ type Query {
   manufacturers(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerFilter, sort: [ManufacturerSort!]): PaginatedManufacturers!
   manufacturerCountry(id: ID!): ManufacturerCountry!
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
+  warning(id: ID!): Warning!
+  warnings(offset: Int! = 0, limit: Int! = 25, status: [WarningStatus!]! = [open], search: String, filter: WarningFilter, sort: [WarningSort!]): PaginatedWarnings!
 }
 
 input UserPermissionsUserFilter {
@@ -1180,6 +1208,41 @@ input ManufacturerCountryFilter {
   or: [ManufacturerCountryFilter!]
 }
 
+input WarningFilter {
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  type: StringFilter
+  severity: WarningSeverityEnumFilter
+  status: WarningStatusEnumFilter
+  and: [WarningFilter!]
+  or: [WarningFilter!]
+}
+
+input WarningSeverityEnumFilter {
+  isAnyOf: [WarningSeverity!]
+  equal: WarningSeverity
+  notEqual: WarningSeverity
+}
+
+input WarningStatusEnumFilter {
+  isAnyOf: [WarningStatus!]
+  equal: WarningStatus
+  notEqual: WarningStatus
+}
+
+input WarningSort {
+  field: WarningSortField!
+  direction: SortDirection! = ASC
+}
+
+enum WarningSortField {
+  createdAt
+  updatedAt
+  type
+  severity
+  status
+}
+
 type Mutation {
   currentUserSignOut: String!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
@@ -1241,6 +1304,9 @@ type Mutation {
   updateManufacturer(id: ID!, input: ManufacturerUpdateInput!): Manufacturer!
   deleteManufacturer(id: ID!): Boolean!
   publishAllProducts: Boolean!
+  createWarning(input: WarningInput!): Warning!
+  updateWarning(id: ID!, input: WarningUpdateInput!): Warning!
+  deleteWarning(id: ID!): Boolean!
 }
 
 input UserPermissionInput {
@@ -1541,4 +1607,16 @@ input ManufacturerUpdateInput {
   name: String
   address: AddressInput
   addressAsEmbeddable: AddressAsEmbeddableInput
+}
+
+input WarningInput {
+  type: String!
+  severity: WarningSeverity!
+  status: WarningStatus! = open
+}
+
+input WarningUpdateInput {
+  type: String
+  severity: WarningSeverity
+  status: WarningStatus
 }
