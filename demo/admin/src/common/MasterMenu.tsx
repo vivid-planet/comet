@@ -32,6 +32,7 @@ import { ProductsPage } from "@src/products/generated/ProductsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
+import { WarningsPage } from "@src/warnings/WarningsPage";
 import { FormattedMessage } from "react-intl";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 
@@ -172,6 +173,15 @@ export const masterMenuData: MasterMenuData = [
                 route: {
                     path: "/system/redirects",
                     render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
+                },
+                requiredPermission: "pageTree",
+            },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.warnings" defaultMessage="Warnings" />,
+                route: {
+                    path: "/system/warnings",
+                    component: WarningsPage,
                 },
                 requiredPermission: "pageTree",
             },

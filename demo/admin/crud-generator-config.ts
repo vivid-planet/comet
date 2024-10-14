@@ -1,4 +1,5 @@
 import { CrudGeneratorConfig } from "@comet/cms-admin";
+
 export default [
     {
         target: "src/products/generated",
@@ -7,5 +8,9 @@ export default [
     {
         target: "src/news/generated",
         entityName: "News",
+    },
+    {
+        target: "src/warnings/generated",
+        entityName: "Warning",
     },
 ] satisfies CrudGeneratorConfig[];
