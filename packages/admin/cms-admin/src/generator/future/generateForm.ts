@@ -250,10 +250,10 @@ export function generateForm(
         FinalForm,
         FinalFormCheckbox,
         FinalFormInput,
+        FinalFormRangeInput,
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
-        MainContent,
         RadioGroupField,
         TextAreaField,
         TextField,
@@ -446,9 +446,9 @@ export function generateForm(
                 {(${finalFormRenderProps.length ? `{${finalFormRenderProps.join(", ")}}` : ``}) => (
                     ${editMode ? `<>` : ``}
                         ${editMode ? `{saveConflict.dialogs}` : ``}
-                        <MainContent>
+                        <>
                             ${fieldsCode}
-                        </MainContent>
+                        </>
                     ${editMode ? `</>` : ``}
                 )}
             </FinalForm>
