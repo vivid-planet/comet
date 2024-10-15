@@ -1,5 +1,5 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
-import { generatePath, match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
+import { generatePath, match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
 
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -141,10 +141,22 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
     const path = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
     const match = useRouteMatch<NonNullRecord<S>>(path);
-    const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
+    const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<string>();
+    const currentLocation = useLocation();
+
+    let defaultRedirectPathAfterChange: string | undefined;
+
+    if (match) {
+        // Location: /main/en/dashboard
+        // Match: /main/en
+        // Page: Location - Match = /dashboard
+        defaultRedirectPathAfterChange = currentLocation.pathname.replace(match.url, "");
+    }
 
     return (
-        <Context.Provider value={{ path, redirectPathAfterChange, setRedirectPathAfterChange, values }}>
+        <Context.Provider
+            value={{ path, redirectPathAfterChange: redirectPathAfterChange ?? defaultRedirectPathAfterChange, setRedirectPathAfterChange, values }}
+        >
             <Switch>
                 {match && (
                     <Route exact={false} strict={false} path={path}>
