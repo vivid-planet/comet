@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-Add redirect to the current page (important when changing the scope)
+Keep current location when changing scope on publisher and user permissions page
