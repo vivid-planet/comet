@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 
 import { GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables } from "./UserBasicData.generated";
 
-export const UserBasicData = ({ id }: { id: string }) => {
+export const UserBasicData = ({ userId }: { userId: string }) => {
     const { data, error, loading } = useQuery<GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables>(
         gql`
             query UserBasicData($id: String!) {
@@ -18,7 +18,7 @@ export const UserBasicData = ({ id }: { id: string }) => {
             }
         `,
         {
-            variables: { id },
+            variables: { id: userId },
         },
     );
 
