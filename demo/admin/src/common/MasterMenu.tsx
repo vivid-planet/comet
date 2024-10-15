@@ -77,7 +77,6 @@ export const masterMenuData: MasterMenuData = [
 
                 return (
                     <PagesPage
-                        path={`/pages/pagetree/${match.params.category}`}
                         allCategories={pageTreeCategories}
                         documentTypes={(category): Record<DocumentType, DocumentInterface> => {
                             if (category === "TopMenu") {
@@ -172,7 +171,7 @@ export const masterMenuData: MasterMenuData = [
                 primary: <FormattedMessage id="menu.redirects" defaultMessage="Redirects" />,
                 route: {
                     path: "/system/redirects",
-                    render: () => <RedirectsPage redirectPathAfterChange="/system/redirects" />,
+                    component: RedirectsPage,
                 },
                 requiredPermission: "pageTree",
             },

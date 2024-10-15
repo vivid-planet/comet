@@ -16,12 +16,11 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
+import { ComponentType, ReactNode, useCallback, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
 import { useContentScope } from "../../contentScope/Provider";
-import { useContentScopeConfig } from "../../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "../../dam/config/DamScopeProvider";
 import { DocumentInterface, DocumentType } from "../../documents/types";
 import { useSiteConfig } from "../../sitesConfig/useSiteConfig";
@@ -36,7 +35,6 @@ import { PagesPageActionToolbar } from "./PagesPageActionToolbar";
 
 interface Props {
     category: string;
-    path: string;
     allCategories: AllCategories;
     documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
     editPageNode?: ComponentType<EditPageNodeProps>;
@@ -47,27 +45,18 @@ const DefaultEditPageNode = createEditPageNode({});
 
 export function PagesPage({
     category,
-    path,
     allCategories,
     documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
 }: Props) {
     const intl = useIntl();
-    const { scope, setRedirectPathAfterChange } = useContentScope();
+    const { scope } = useContentScope();
     const { additionalPageTreeNodeFragment } = useCmsBlockContext();
-    useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
     const pagesQuery = useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
     const documentTypes = typeof passedDocumentTypes === "function" ? passedDocumentTypes(category) : passedDocumentTypes;
-
-    useEffect(() => {
-        setRedirectPathAfterChange(path);
-        return () => {
-            setRedirectPathAfterChange(undefined);
-        };
-    }, [setRedirectPathAfterChange, path]);
 
     const { loading, data, error, refetch, startPolling, stopPolling } = useQuery<GQLPagesQuery, GQLPagesQueryVariables>(pagesQuery, {
         fetchPolicy: "cache-and-network",
