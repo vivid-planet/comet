@@ -13,6 +13,7 @@ import {
     useRef,
     useState,
 } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import { matchPath, RouteComponentProps, useHistory, useLocation, useRouteMatch } from "react-router";
 import { v4 as uuid } from "uuid";
 
@@ -20,11 +21,12 @@ import { ForcePromptRoute } from "../router/ForcePromptRoute";
 import { SubRouteIndexRoute, useSubRoutePrefix } from "../router/SubRoute";
 import { StackBreadcrumb } from "./Breadcrumb";
 import { IStackPageProps } from "./Page";
+import { parseFormattedMessage } from "./stackHelpers";
 import { StackSwitchMeta } from "./SwitchMeta";
 
 interface IProps {
     initialPage?: string;
-    title?: ReactNode;
+    title?: string | ComponentType<typeof FormattedMessage>;
     children: Array<ReactElement<IStackPageProps>>;
 }
 
@@ -46,7 +48,7 @@ export function useStackSwitchApi() {
 export interface IStackSwitchApi {
     activatePage: (pageName: string, payload: string, subUrl?: string) => void;
     getTargetUrl: (pageName: string, payload: string, subUrl?: string) => string;
-    updatePageBreadcrumbTitle: (title?: ReactNode) => void;
+    updatePageBreadcrumbTitle: (title?: string | ComponentType<typeof FormattedMessage>) => void;
     id?: string;
 }
 interface IRouteParams {
@@ -82,7 +84,7 @@ export function useStackSwitch(): [ComponentType<IProps>, IStackSwitchApi] {
                 return "";
             }
         },
-        updatePageBreadcrumbTitle: (title?: ReactNode) => {
+        updatePageBreadcrumbTitle: (title?: string | ComponentType<typeof FormattedMessage>) => {
             apiRef.current?.updatePageBreadcrumbTitle(title);
         },
     };
@@ -105,8 +107,12 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
     const match = useRouteMatch<IRouteParams>();
     const subRoutePrefix = useSubRoutePrefix();
     const location = useLocation();
+    const intl = useIntl();
 
     let activePage: string | undefined;
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const parseFormattedMessageCallback = useCallback((message: ReactNode) => parseFormattedMessage(intl, message), []);
 
     const isInitialPage = useCallback(
         (pageName?: string) => {
@@ -146,11 +152,16 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
     );
 
     const api: IStackSwitchApi = useMemo(() => {
-        const updatePageBreadcrumbTitle = (t?: string) => {
+        const updatePageBreadcrumbTitle = (t?: string | ComponentType<typeof FormattedMessage>) => {
             if (activePage) {
-                const title = { ...pageBreadcrumbTitle };
-                title[activePage] = t;
-                setPageBreadcrumbTitle(title);
+                const newTitle = parseFormattedMessageCallback(t);
+
+                if (pageBreadcrumbTitle[activePage] !== newTitle) {
+                    const title = { ...pageBreadcrumbTitle };
+                    title[activePage] = newTitle;
+
+                    setPageBreadcrumbTitle(title);
+                }
             }
         };
         return {
@@ -159,7 +170,7 @@ const StackSwitchInner: RefForwardingComponent<IStackSwitchApi, IProps & IHookPr
             id,
             updatePageBreadcrumbTitle,
         };
-    }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle]);
+    }, [activatePage, activePage, getTargetUrl, id, pageBreadcrumbTitle, parseFormattedMessageCallback]);
     useImperativeHandle(ref, () => api);
 
     function renderRoute(page: ReactElement<IStackPageProps>, routeProps: RouteComponentProps<IRouteParams>) {
