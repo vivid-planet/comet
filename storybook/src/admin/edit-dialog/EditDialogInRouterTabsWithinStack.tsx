@@ -19,9 +19,10 @@ import {
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarFillSpace,
+    ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { storiesOf } from "@storybook/react";
 import React from "react";
@@ -124,6 +125,14 @@ const AddStocksDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
 function Toolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
         <DataGridToolbar>
+            <ToolbarItem>
+                <Typography>
+                    <FormattedMessage
+                        id="toolbar.helperText"
+                        defaultMessage="Navigate to the Router Tabs with the edit button. Try to add new Stocks there."
+                    />
+                </Typography>
+            </ToolbarItem>
             <ToolbarFillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
