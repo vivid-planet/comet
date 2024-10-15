@@ -6,11 +6,10 @@ import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { CmsBlockContext } from "../../../blocks/CmsBlockContextProvider";
 import { ContentScopeInterface } from "../../../contentScope/Provider";
-import { DocumentInterface, GQLDocument, GQLUpdatePageMutationVariables } from "../../../documents/types";
+import { DocumentInterface, DocumentType, GQLDocument, GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { GQLDamFile } from "../../../graphql.generated";
-import { PageTreeContext } from "../PageTreeContext";
+import { createHttpClient } from "../../../http/createHttpClient";
 import { arrayToTreeMap } from "../treemap/TreeMapUtils";
 import { PageClipboard, PagesClipboard } from "../useCopyPastePages";
 import { createInboxFolder } from "./createInboxFolder";
@@ -69,10 +68,10 @@ export interface SendPagesOptions {
 interface SendPagesDependencies {
     client: ApolloClient<unknown>;
     scope: ContentScopeInterface;
-    documentTypes: PageTreeContext["documentTypes"];
-    blockContext: CmsBlockContext;
+    documentTypes: Record<DocumentType, DocumentInterface>;
     damScope: Record<string, unknown>;
     currentCategory: string;
+    apiUrl: string;
 }
 
 /**
@@ -94,7 +93,7 @@ export async function sendPages(
     parentId: string | null,
     { pages, scope: sourceContentScope }: PagesClipboard,
     options: SendPagesOptions,
-    { client, scope: targetContentScope, documentTypes, blockContext, damScope: targetDamScope, currentCategory }: SendPagesDependencies,
+    { client, scope: targetContentScope, documentTypes, apiUrl, damScope: targetDamScope, currentCategory }: SendPagesDependencies,
     updateProgress: (progress: number, message: ReactNode) => void,
 ): Promise<void> {
     const dependencyReplacements = createPageTreeNodeIdReplacements(pages);
@@ -116,10 +115,7 @@ export async function sendPages(
                     //TODO use damFile.size; to build a progress bar for uploading/downloading files
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //file already handled (same file used multiple times on page)
-                    } else if (
-                        damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl) &&
-                        (!hasDamScope || isEqual(damFile.scope, targetDamScope))
-                    ) {
+                    } else if (damFile.fileUrl.startsWith(apiUrl) && (!hasDamScope || isEqual(damFile.scope, targetDamScope))) {
                         //same scope, same server, no need to copy
                     } else {
                         // TODO eventually handle multiple files in one request for better performance
@@ -275,7 +271,7 @@ export async function sendPages(
                 for (const damFile of fileDependenciesFromDocument(documentType, sourcePage.document)) {
                     if (dependencyReplacements.some((replacement) => replacement.type == "DamFile" && replacement.originalId === damFile.id)) {
                         //already copied
-                    } else if (damFile.fileUrl.startsWith(blockContext.damConfig.apiUrl)) {
+                    } else if (damFile.fileUrl.startsWith(apiUrl)) {
                         //our own api, no need to download&upload
                         if (!hasDamScope || isEqual(damFile.scope, targetDamScope)) {
                             //same scope, same server, no need to copy
@@ -299,7 +295,8 @@ export async function sendPages(
                             if (damFile.license) formData.append("license", JSON.stringify(damFile.license));
                             if (damFile.image?.cropArea) formData.append("imageCropArea", JSON.stringify(damFile.image.cropArea));
 
-                            const response: { data: { id: string } } = await blockContext.damConfig.apiClient.post(`/dam/files/upload`, formData, {
+                            const apiClient = createHttpClient(apiUrl);
+                            const response: { data: { id: string } } = await apiClient.post(`/dam/files/upload`, formData, {
                                 // cancelToken, //TODO support cancel?
                                 headers: {
                                     "Content-Type": "multipart/form-data",

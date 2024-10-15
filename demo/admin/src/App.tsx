@@ -7,11 +7,10 @@ import { ApolloProvider } from "@apollo/client";
 import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
+    CometConfigProvider,
     ContentScopeInterface,
     createDamFileDependency,
-    createHttpClient,
     CurrentUserProvider,
-    DamConfigProvider,
     DependenciesConfigProvider,
     LocaleProvider,
     MasterMenuRoutes,
@@ -52,7 +51,6 @@ const GlobalStyle = () => (
 
 const config = createConfig();
 const apolloClient = createApolloClient(config.apiUrl);
-const apiClient = createHttpClient(config.apiUrl);
 
 class App extends Component {
     public static render(baseEl: Element): void {
@@ -61,27 +59,35 @@ class App extends Component {
 
     public render(): JSX.Element {
         return (
-            <ConfigProvider config={config}>
-                <ApolloProvider client={apolloClient}>
-                    <SitesConfigProvider
-                        value={{
-                            configs: config.sitesConfig,
-                            resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
-                        }}
-                    >
-                        <DamConfigProvider
+            <CometConfigProvider
+                apiUrl={config.apiUrl}
+                adminUrl={config.adminUrl}
+                dam={{
+                    ...config.dam,
+                    scopeParts: ["domain"],
+                    additionalToolbarItems: <ImportFromUnsplash />,
+                    importSources: {
+                        unsplash: {
+                            label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                        },
+                    },
+                    contentGeneration: {
+                        generateAltText: true,
+                        generateImageTitle: true,
+                    },
+                }}
+                pageTree={{
+                    categories: pageTreeCategories,
+                    documentTypes: pageTreeDocumentTypes,
+                    additionalPageTreeNodeFragment: additionalPageTreeNodeFieldsFragment,
+                }}
+            >
+                <ConfigProvider config={config}>
+                    <ApolloProvider client={apolloClient}>
+                        <SitesConfigProvider
                             value={{
-                                scopeParts: ["domain"],
-                                additionalToolbarItems: <ImportFromUnsplash />,
-                                importSources: {
-                                    unsplash: {
-                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
-                                    },
-                                },
-                                contentGeneration: {
-                                    generateAltText: true,
-                                    generateImageTitle: true,
-                                },
+                                configs: config.sitesConfig,
+                                resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
                             }}
                         >
                             <DependenciesConfigProvider
@@ -100,18 +106,7 @@ class App extends Component {
                                                 <RouterBrowserRouter>
                                                     <DndProvider options={HTML5toTouch}>
                                                         <SnackbarProvider>
-                                                            <CmsBlockContextProvider
-                                                                damConfig={{
-                                                                    apiUrl: config.apiUrl,
-                                                                    apiClient,
-                                                                    maxFileSize: config.dam.uploadsMaxFileSize,
-                                                                    maxSrcResolution: config.imgproxy.maxSrcResolution,
-                                                                    allowedImageAspectRatios: config.dam.allowedImageAspectRatios,
-                                                                }}
-                                                                pageTreeCategories={pageTreeCategories}
-                                                                pageTreeDocumentTypes={pageTreeDocumentTypes}
-                                                                additionalPageTreeNodeFragment={additionalPageTreeNodeFieldsFragment}
-                                                            >
+                                                            <CmsBlockContextProvider>
                                                                 <Fragment>
                                                                     <GlobalStyle />
                                                                     <ContentScopeProvider>
@@ -155,10 +150,10 @@ class App extends Component {
                                     </LocaleProvider>
                                 </IntlProvider>
                             </DependenciesConfigProvider>
-                        </DamConfigProvider>
-                    </SitesConfigProvider>
-                </ApolloProvider>
-            </ConfigProvider>
+                        </SitesConfigProvider>
+                    </ApolloProvider>
+                </ConfigProvider>
+            </CometConfigProvider>
         );
     }
 }

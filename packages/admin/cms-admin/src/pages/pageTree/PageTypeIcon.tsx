@@ -1,8 +1,8 @@
 import { Home, Link as LinkIcon } from "@comet/admin-icons";
 import { SvgIconProps } from "@mui/material";
 
+import { usePageTreeConfig } from "../pageTreeConfig";
 import { PageTreePage } from "./usePageTree";
-import { usePageTreeContext } from "./usePageTreeContext";
 
 interface PageTypeIconProps {
     page: PageTreePage;
@@ -11,7 +11,7 @@ interface PageTypeIconProps {
 
 export function PageTypeIcon({ page, disabled }: PageTypeIconProps): JSX.Element {
     let iconColor: SvgIconProps["color"] = "primary";
-    const { documentTypes } = usePageTreeContext();
+    const { documentTypes } = usePageTreeConfig();
     const documentType = documentTypes[page.documentType];
     let Icon: (props: SvgIconProps<"svg">) => JSX.Element | null;
 

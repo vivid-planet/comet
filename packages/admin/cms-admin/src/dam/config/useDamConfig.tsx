@@ -1,8 +1,12 @@
-import { useContext } from "react";
-
-import { DamConfig, DamConfigContext } from "./DamConfigContext";
+import { useCometConfig } from "../../config/CometConfigContext";
+import { DamConfig } from "./damConfig";
 
 export function useDamConfig(): DamConfig {
-    const context = useContext(DamConfigContext);
-    return context ?? {};
+    const cometConfig = useCometConfig();
+
+    if (!cometConfig.dam) {
+        throw new Error("No DAM configuration found. Make sure to set `dam` in `CometConfigProvider`.");
+    }
+
+    return cometConfig.dam;
 }
