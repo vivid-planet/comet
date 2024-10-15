@@ -2,14 +2,11 @@ import {
     ContentScopeConfigProps,
     ContentScopeProvider as ContentScopeProviderLibrary,
     ContentScopeProviderProps,
-    ContentScopeValues,
     useContentScope as useContentScopeLibrary,
     UseContentScopeApi,
     useContentScopeConfig as useContentScopeConfigLibrary,
     useCurrentUser,
-    useSitesConfig,
 } from "@comet/cms-admin";
-import { SitesConfig } from "@src/config";
 
 type Domain = "main" | "secondary" | string;
 type Language = "en" | string;
@@ -30,24 +27,9 @@ export function useContentScopeConfig(p: ContentScopeConfigProps): void {
 }
 
 const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
-    const sitesConfig = useSitesConfig<SitesConfig>();
-    const user = useCurrentUser();
-
-    const allowedUserDomains = user.allowedContentScopes.map((scope) => scope.domain);
-
-    const allowedSiteConfigs = Object.fromEntries(
-        Object.entries(sitesConfig.configs).filter(([siteKey, siteConfig]) => allowedUserDomains.includes(siteKey)),
-    );
-
-    const values: ContentScopeValues<ContentScope> = Object.keys(allowedSiteConfigs).flatMap((key) => {
-        return [
-            { domain: { value: key }, language: { label: "English", value: "en" } },
-            { domain: { value: key }, language: { label: "German", value: "de" } },
-        ];
-    });
-
+    const user = useCurrentUser<ContentScope>();
     return (
-        <ContentScopeProviderLibrary<ContentScope> values={values} defaultValue={{ domain: Object.keys(allowedSiteConfigs)[0], language: "en" }}>
+        <ContentScopeProviderLibrary<ContentScope> values={user.allowedContentScopesWithLabels} defaultValue={user.allowedContentScopes[0]}>
             {children}
         </ContentScopeProviderLibrary>
     );
