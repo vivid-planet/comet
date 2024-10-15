@@ -56,7 +56,6 @@ export const MenuItem = (inProps: MenuItemProps) => {
     };
 
     return (
-        // @ts-expect-error The type of the `component` is missing when using `styled()`: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
         <Root component="div" ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {showIcon && (
                 <Icon ownerState={ownerState} {...slotProps?.icon}>

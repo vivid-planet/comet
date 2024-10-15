@@ -1,6 +1,6 @@
 import { ISortInformation, SortDirection } from "@comet/admin";
 import { Check, ChevronDown } from "@comet/admin-icons";
-import { List, ListItem, Typography } from "@mui/material";
+import { List, ListItemButton, Typography } from "@mui/material";
 import { PropsWithChildren, ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -42,12 +42,12 @@ interface SortListItemProps {
 
 const SortListItem = ({ children, selected, onClick }: PropsWithChildren<SortListItemProps>) => {
     return (
-        <ListItem button selected={selected} onClick={onClick}>
+        <ListItemButton selected={selected} onClick={onClick}>
             <sc.InnerListItem>
                 <div>{children}</div>
                 {selected && <Check />}
             </sc.InnerListItem>
-        </ListItem>
+        </ListItemButton>
     );
 };
 
