@@ -50,13 +50,8 @@ function parseBodyForGqlError(body: string) {
     }
 }
 
-export default class CacheHandler extends NextCacheHandler {
-    //constructor(_ctx: NextCacheHandlerContext) {}
-
-    async get(
-        key: string,
-        //ctx: Parameters<NextCacheHandler["get"]>[1]
-    ): ReturnType<NextCacheHandler["get"]> {
+export default class CacheHandler {
+    async get(key: string): ReturnType<NextCacheHandler["get"]> {
         if (redis.status === "ready") {
             try {
                 if (CACHE_HANDLER_DEBUG) {
@@ -90,11 +85,7 @@ export default class CacheHandler extends NextCacheHandler {
         return fallbackCache.get(key) ?? null;
     }
 
-    async set(
-        key: string,
-        value: Parameters<NextCacheHandler["set"]>[1],
-        // ctx: Parameters<NextCacheHandler["set"]>[2],
-    ): Promise<void> {
+    async set(key: string, value: Parameters<NextCacheHandler["set"]>[1]): Promise<void> {
         if (value?.kind === "FETCH") {
             const responseBody = parseBodyForGqlError(value.data.body);
             if (responseBody?.errors) {
