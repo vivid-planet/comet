@@ -1,5 +1,4 @@
-import { BlocksBlockFixturesGeneratorMap, ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { FileInterface } from "@comet/cms-api";
+import { BlocksBlockFixturesGeneratorMap, ExtractBlockInput, ExtractBlockInputFactoryProps, FileInterface } from "@comet/cms-api";
 import { Config } from "@src/config/config";
 import { PageContentBlock } from "@src/pages/blocks/page-content.block";
 import faker from "faker";

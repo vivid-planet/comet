@@ -1,18 +1,17 @@
+import { IsOptional, IsString } from "class-validator";
+
+import { Block, BlockDataInterface, BlockInputInterface } from "./block";
+import { BlockField } from "./decorators/field";
 import {
     BaseOneOfBlockData,
     BaseOneOfBlockInput,
     BaseOneOfBlockItemData,
     BaseOneOfBlockItemInput,
-    Block,
-    BlockDataInterface,
-    BlockFactoryNameOrOptions,
-    BlockField,
-    BlockInputInterface,
     createOneOfBlock,
     CreateOneOfBlockOptions,
     OneOfBlock,
-} from "@comet/blocks-api";
-import { IsOptional, IsString } from "class-validator";
+} from "./factories/createOneOfBlock";
+import { BlockFactoryNameOrOptions } from "./factories/types";
 
 function createLinkBlock<BlockMap extends Record<string, Block<BlockDataInterface, BlockInputInterface>>>(
     { supportedBlocks, allowEmpty = false }: CreateOneOfBlockOptions<BlockMap>,

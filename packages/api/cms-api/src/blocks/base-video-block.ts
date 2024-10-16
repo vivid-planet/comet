@@ -1,16 +1,10 @@
-import {
-    BlockData,
-    BlockDataInterface,
-    BlockField,
-    BlockInput,
-    ChildBlock,
-    ChildBlockInput,
-    ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
 import { IsBoolean, IsOptional } from "class-validator";
 
 import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
+import { BlockData, BlockDataInterface, BlockInput, ExtractBlockInput, inputToData } from "./block";
+import { ChildBlock } from "./decorators/child-block";
+import { ChildBlockInput } from "./decorators/child-block-input";
+import { BlockField } from "./decorators/field";
 
 export class BaseVideoBlockData extends BlockData {
     @BlockField({ nullable: true })

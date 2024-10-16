@@ -1,5 +1,14 @@
-import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, EntityInfo, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
+import {
+    BlockDataInterface,
+    CrudField,
+    CrudGenerator,
+    DamImageBlock,
+    EntityInfo,
+    RootBlock,
+    RootBlockDataScalar,
+    RootBlockEntity,
+    RootBlockType,
+} from "@comet/cms-api";
 import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";

@@ -8,7 +8,7 @@ import {
     createBlock,
     ExtractBlockInput,
     inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 

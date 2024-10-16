@@ -1,17 +1,9 @@
-import {
-    AnnotationBlockMeta,
-    BlockDataInterface,
-    BlockField,
-    BlockIndexData,
-    BlockMetaField,
-    BlockMetaFieldKind,
-    createBlock,
-    inputToData,
-    typesafeMigrationPipe,
-} from "@comet/blocks-api";
 import { IsOptional, IsUUID } from "class-validator";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "../../../blocks/base-video-block";
+import { BlockDataInterface, BlockIndexData, BlockMetaField, BlockMetaFieldKind, createBlock, inputToData } from "../../../blocks/block";
+import { AnnotationBlockMeta, BlockField } from "../../../blocks/decorators/field";
+import { typesafeMigrationPipe } from "../../../blocks/migrations/typesafeMigrationPipe";
 import { FILE_ENTITY } from "../../files/entities/file.entity";
 import { DamVideoBlockTransformerService } from "./dam-video-block-transformer.service";
 import { AddPreviewImageMigration } from "./migrations/1-add-preview-image.migration";

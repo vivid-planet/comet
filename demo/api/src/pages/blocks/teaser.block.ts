@@ -5,11 +5,11 @@ import {
     ChildBlock,
     ChildBlockInput,
     createBlock,
+    DamImageBlock,
     ExtractBlockData,
     ExtractBlockInput,
     inputToData,
-} from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
+} from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 
 import { HeadlineBlock } from "./headline.block";

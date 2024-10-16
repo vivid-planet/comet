@@ -1,19 +1,18 @@
+import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 import {
     Block,
     BlockData,
     BlockDataInterface,
-    BlockFactoryNameOrOptions,
     BlockInput,
     BlockInputInterface,
-    ChildBlock,
-    ChildBlockInput,
     createBlock,
     ExtractBlockInput,
     inputToData,
     SimpleBlockInputInterface,
-} from "@comet/blocks-api";
-
-import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
+} from "./block";
+import { ChildBlock } from "./decorators/child-block";
+import { ChildBlockInput } from "./decorators/child-block-input";
+import { BlockFactoryNameOrOptions } from "./factories/types";
 
 interface CreateImageLinkBlockOptions<LinkBlock extends Block, ImageBlock extends Block> {
     image?: ImageBlock;

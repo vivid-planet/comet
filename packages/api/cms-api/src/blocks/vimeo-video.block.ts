@@ -1,7 +1,8 @@
-import { BlockDataInterface, BlockField, createBlock, inputToData } from "@comet/blocks-api";
 import { IsOptional, IsString, Matches } from "class-validator";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "./base-video-block";
+import { BlockDataInterface, createBlock, inputToData } from "./block";
+import { BlockField } from "./decorators/field";
 
 class VimeoVideoBlockData extends BaseVideoBlockData {
     @BlockField({ nullable: true })

@@ -1,4 +1,3 @@
-import { createOneOfBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
 import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
@@ -7,11 +6,13 @@ import { printSchema } from "graphql";
 import {
     BuildsResolver,
     createAuthResolver,
+    createOneOfBlock,
     createPageTreeResolver,
     createRedirectsResolver,
     DependenciesResolverFactory,
     DependentsResolverFactory,
     DocumentInterface,
+    ExternalLinkBlock,
     FileImagesResolver,
     FileUpload,
     InternalLinkBlock,

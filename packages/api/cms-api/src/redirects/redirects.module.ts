@@ -1,7 +1,9 @@
-import { Block, createOneOfBlock, ExternalLinkBlock, OneOfBlock } from "@comet/blocks-api";
 import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { DynamicModule, Global, Module, Type, ValueProvider } from "@nestjs/common";
 
+import { Block } from "../blocks/block";
+import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
+import { createOneOfBlock, OneOfBlock } from "../blocks/factories/createOneOfBlock";
 import { DependenciesResolverFactory } from "../dependencies/dependencies.resolver.factory";
 import { InternalLinkBlock, InternalLinkBlockData, InternalLinkBlockInput } from "../page-tree/blocks/internal-link.block";
 import { RedirectInputFactory } from "./dto/redirect-input.factory";

@@ -25,7 +25,6 @@
         "start:prod": "node dist/main"
     },
     "dependencies": {
-        "@comet/blocks-api": "workspace:*",
         "@comet/cms-api": "workspace:*",
         "@hapi/accept": "^5.0.0",
         "@kubernetes/client-node": "^0.18.0",

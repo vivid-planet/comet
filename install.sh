@@ -11,7 +11,7 @@ npm i -g pnpm@8
 pnpm install
 
 # admin Blocks
-ln -sf ../../api/blocks-api/block-meta.json ./packages/admin/blocks-admin/block-meta.json
+ln -sf ../../api/cms-api/block-meta.json ./packages/admin/blocks-admin/block-meta.json
 
 # admin CMS
 ln -sf ../../api/cms-api/schema.gql ./packages/admin/cms-admin/schema.gql

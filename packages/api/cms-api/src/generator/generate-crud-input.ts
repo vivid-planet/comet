@@ -413,9 +413,8 @@ export async function generateCrudInput(
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt, Min } from "class-validator";
-import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
+import { IsSlug, RootBlockInputScalar, IsNullable, PartialType, BlockInputInterface, isBlockInputInterface } from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-scalars";
-import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 import { GraphQLDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 

@@ -1,22 +1,22 @@
-import {
-    Block,
-    BlockData,
-    BlockDataInterface,
-    BlockField,
-    BlockInput,
-    BlockInputInterface,
-    ChildBlock,
-    ChildBlockInput,
-    createBlock,
-    ExtractBlockInput,
-    inputToData,
-    SimpleBlockInputInterface,
-} from "@comet/blocks-api";
 import { Type } from "class-transformer";
 import { IsEnum, IsString } from "class-validator";
 
 import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 import { IsAllowedImageAspectRatio } from "../dam/images/validators/is-allowed-aspect-ratio.validator";
+import {
+    Block,
+    BlockData,
+    BlockDataInterface,
+    BlockInput,
+    BlockInputInterface,
+    createBlock,
+    ExtractBlockInput,
+    inputToData,
+    SimpleBlockInputInterface,
+} from "./block";
+import { ChildBlock } from "./decorators/child-block";
+import { ChildBlockInput } from "./decorators/child-block-input";
+import { BlockField } from "./decorators/field";
 
 export enum ImagePosition {
     Left = "left",

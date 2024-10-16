@@ -1,4 +1,4 @@
-import { BlockData, BlockField, BlockIndexData, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
+import { BlockData, BlockField, BlockIndexData, BlockInput, createBlock, inputToData } from "@comet/cms-api";
 import { IsOptional, IsUUID } from "class-validator";
 
 class NewsDetailBlockData extends BlockData {

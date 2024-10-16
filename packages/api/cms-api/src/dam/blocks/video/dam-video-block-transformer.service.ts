@@ -1,6 +1,6 @@
-import { BlockContext, BlockTransformerServiceInterface, TraversableTransformResponse } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
+import { BlockContext, BlockTransformerServiceInterface, TraversableTransformResponse } from "../../../blocks/block";
 import { FilesService } from "../../files/files.service";
 import { DamScopeInterface } from "../../types";
 import { DamVideoBlockData } from "./dam-video.block";

@@ -1,27 +1,25 @@
-import {
-    AnnotationBlockMeta,
-    Block,
-    BlockData,
-    BlockDataInterface,
-    BlockField,
-    BlockInput,
-    BlockInputInterface,
-    BlockMetaField,
-    BlockMetaFieldKind,
-    ChildBlock,
-    ChildBlockInput,
-    createBlock,
-    createOptionalBlock,
-    ExtractBlockInput,
-    inputToData,
-    OptionalBlockInputInterface,
-    SimpleBlockInputInterface,
-    TraversableTransformResponse,
-} from "@comet/blocks-api";
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
 import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
+import {
+    Block,
+    BlockData,
+    BlockDataInterface,
+    BlockInput,
+    BlockInputInterface,
+    BlockMetaField,
+    BlockMetaFieldKind,
+    createBlock,
+    ExtractBlockInput,
+    inputToData,
+    SimpleBlockInputInterface,
+    TraversableTransformResponse,
+} from "./block";
+import { ChildBlock } from "./decorators/child-block";
+import { ChildBlockInput } from "./decorators/child-block-input";
+import { AnnotationBlockMeta, BlockField } from "./decorators/field";
+import { createOptionalBlock, OptionalBlockInputInterface } from "./factories/createOptionalBlock";
 
 export enum SitemapPagePriority {
     _0_0 = "0_0",

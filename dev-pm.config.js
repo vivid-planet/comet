@@ -8,7 +8,6 @@ const packageFolderMapping = {
     "@comet/admin-theme": "packages/admin/admin-theme",
     "@comet/blocks-admin": "packages/admin/blocks-admin",
     "@comet/cms-admin": "packages/admin/cms-admin",
-    "@comet/blocks-api": "packages/api/blocks-api",
     "@comet/cms-api": "packages/api/cms-api",
     "@comet/cms-site": "packages/site/cms-site",
 };
@@ -122,32 +121,19 @@ module.exports = {
 
         //group cms-api
         {
-            name: "blocks-api",
-            script: "pnpm --filter @comet/blocks-api run dev",
-            group: ["cms-api", "cms"],
-        },
-        {
-            name: "blocks-api-codegen-block-meta",
-            script: "pnpm --filter @comet/blocks-api run generate-block-meta:watch",
-            group: ["cms-api", "cms"],
-        },
-        {
             name: "cms-api",
             script: "pnpm --filter @comet/cms-api run dev",
             group: ["cms-api", "cms"],
-            waitOn: waitOnPackages("@comet/blocks-api"),
         },
         {
             name: "cms-api-codegen-schema",
             script: "pnpm --filter @comet/cms-api run generate-schema:watch",
             group: ["cms-api", "cms"],
-            waitOn: waitOnPackages("@comet/blocks-api"),
         },
         {
             name: "cms-api-codegen-block-meta",
             script: "pnpm --filter @comet/cms-api run generate-block-meta:watch",
             group: ["cms-api", "cms"],
-            waitOn: waitOnPackages("@comet/blocks-api"),
         },
 
         //group cms-site
@@ -203,7 +189,7 @@ module.exports = {
             name: "demo-api",
             script: "pnpm --filter comet-demo-api run start:dev",
             group: ["demo-api", "demo"],
-            waitOn: [...waitOnPackages("@comet/blocks-api", "@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
+            waitOn: [...waitOnPackages("@comet/cms-api"), "tcp:$POSTGRESQL_PORT", "tcp:$IMGPROXY_PORT"],
         },
 
         //group demo site

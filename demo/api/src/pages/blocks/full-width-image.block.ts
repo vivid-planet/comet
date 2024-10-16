@@ -6,11 +6,11 @@ import {
     ChildBlockInput,
     createBlock,
     createOptionalBlock,
+    DamImageBlock,
     ExtractBlockData,
     ExtractBlockInput,
     inputToData,
-} from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
+} from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { ValidateNested } from "class-validator";
 

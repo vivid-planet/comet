@@ -1,5 +1,4 @@
-import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlockType } from "@comet/cms-api";
+import { BlockDataInterface, CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlock, RootBlockEntity, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
