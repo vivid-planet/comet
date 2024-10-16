@@ -1,4 +1,4 @@
-import { InternalLinkBlock } from "../page-tree/blocks/internal-link.block";
+import { InternalLinkBlock } from "../../page-tree/blocks/internal-link.block";
 import { createImageLinkBlock } from "./createImageLinkBlock";
 
 describe("createImageLinkBlock", () => {

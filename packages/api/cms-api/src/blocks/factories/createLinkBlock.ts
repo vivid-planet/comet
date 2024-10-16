@@ -1,7 +1,8 @@
 import { IsOptional, IsString } from "class-validator";
 
-import { Block, BlockDataInterface, BlockInputInterface } from "./block";
-import { BlockField } from "./decorators/field";
+import { Block, BlockDataInterface, BlockInputInterface } from "../block";
+import { BlockField } from "../decorators/field";
+import { BlockFactoryNameOrOptions } from ".//types";
 import {
     BaseOneOfBlockData,
     BaseOneOfBlockInput,
@@ -10,8 +11,7 @@ import {
     createOneOfBlock,
     CreateOneOfBlockOptions,
     OneOfBlock,
-} from "./factories/createOneOfBlock";
-import { BlockFactoryNameOrOptions } from "./factories/types";
+} from "./createOneOfBlock";
 
 function createLinkBlock<BlockMap extends Record<string, Block<BlockDataInterface, BlockInputInterface>>>(
     { supportedBlocks, allowEmpty = false }: CreateOneOfBlockOptions<BlockMap>,

@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
-import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
+import { PixelImageBlock } from "../../dam/blocks/pixel-image.block";
 import {
     Block,
     BlockData,
@@ -15,11 +15,11 @@ import {
     inputToData,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
-} from "./block";
-import { ChildBlock } from "./decorators/child-block";
-import { ChildBlockInput } from "./decorators/child-block-input";
-import { AnnotationBlockMeta, BlockField } from "./decorators/field";
-import { createOptionalBlock, OptionalBlockInputInterface } from "./factories/createOptionalBlock";
+} from "../block";
+import { ChildBlock } from "../decorators/child-block";
+import { ChildBlockInput } from "../decorators/child-block-input";
+import { AnnotationBlockMeta, BlockField } from "../decorators/field";
+import { createOptionalBlock, OptionalBlockInputInterface } from "./createOptionalBlock";
 
 export enum SitemapPagePriority {
     _0_0 = "0_0",

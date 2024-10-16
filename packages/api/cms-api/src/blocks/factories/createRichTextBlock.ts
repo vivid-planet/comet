@@ -11,14 +11,14 @@ import {
     BlockInputInterface,
     ExtractBlockInput,
     registerBlock,
-} from "./block";
-import { AnnotationBlockMeta, BlockField } from "./decorators/field";
-import { BlockFactoryNameOrOptions } from "./factories/types";
-import { strictBlockDataFactoryDecorator } from "./helpers/strictBlockDataFactoryDecorator";
-import { strictBlockInputFactoryDecorator } from "./helpers/strictBlockInputFactoryDecorator";
-import { createAppliedMigrationsBlockDataFactoryDecorator } from "./migrations/createAppliedMigrationsBlockDataFactoryDecorator";
-import { BlockDataMigrationVersion } from "./migrations/decorators/BlockDataMigrationVersion";
-import { SearchText } from "./search/get-search-text";
+} from "../block";
+import { AnnotationBlockMeta, BlockField } from "../decorators/field";
+import { strictBlockDataFactoryDecorator } from "../helpers/strictBlockDataFactoryDecorator";
+import { strictBlockInputFactoryDecorator } from "../helpers/strictBlockInputFactoryDecorator";
+import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
+import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
+import { SearchText } from "../search/get-search-text";
+import { BlockFactoryNameOrOptions } from "./types";
 
 interface CreateRichTextBlockOptions {
     link: Block;

@@ -51,13 +51,6 @@ export { BlocksModule } from "./blocks/blocks.module";
 export { getBlocksMeta } from "./blocks/blocks-meta";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
-export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
-export { createLinkBlock } from "./blocks/createLinkBlock";
-export { createRichTextBlock } from "./blocks/createRichTextBlock";
-export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
-export { createSpaceBlock } from "./blocks/createSpaceBlock";
-export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
-export { createTextLinkBlock } from "./blocks/createTextLinkBlock";
 export { ChildBlock } from "./blocks/decorators/child-block";
 export { ChildBlockInput } from "./blocks/decorators/child-block-input";
 export { AnnotationBlockMeta, BlockField, getFieldKeys } from "./blocks/decorators/field";
@@ -72,6 +65,8 @@ export {
     BlocksBlockFixturesGeneratorMap,
     createBlocksBlock,
 } from "./blocks/factories/createBlocksBlock";
+export { createImageLinkBlock } from "./blocks/factories/createImageLinkBlock";
+export { createLinkBlock } from "./blocks/factories/createLinkBlock";
 export { BaseListBlockItemData, BaseListBlockItemInput, createListBlock } from "./blocks/factories/createListBlock";
 export {
     BaseOneOfBlockData,
@@ -83,6 +78,11 @@ export {
     OneOfBlock,
 } from "./blocks/factories/createOneOfBlock";
 export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
+export { createRichTextBlock } from "./blocks/factories/createRichTextBlock";
+export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
+export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
+export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
+export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
 export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
 export { FlatBlocks } from "./blocks/flat-blocks/flat-blocks";
 export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates } from "./blocks/get-preview-image-url-templates";
