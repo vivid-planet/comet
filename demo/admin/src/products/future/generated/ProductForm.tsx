@@ -22,7 +22,7 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Lock } from "@comet/admin-icons";
+import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -295,7 +295,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 min={25}
                                 max={500}
                                 disableSlider
-                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <FormattedMessage id="priceRange.startAdornment" defaultMessage="€" />
+                                    </InputAdornment>
+                                }
                             />
                             <Field
                                 fullWidth
@@ -396,6 +400,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="availableSince"
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
                             />
                             <Field
                                 name="image"
