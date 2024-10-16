@@ -55,13 +55,13 @@ export type FormFieldConfig<T> = (
           type: "staticSelect";
           values?: Array<{ value: string; label: string } | string>;
           inputType?: "select" | "radio";
-      } // TODO with adornments?
+      }
     | {
           type: "asyncSelect";
           rootQuery: string;
           labelField?: string;
           filterField?: { name: string; gqlName?: string };
-      } // TODO with adornments?
+      }
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
