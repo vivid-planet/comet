@@ -17,21 +17,17 @@ if (!REDIS_PASSWORD) {
 
 const REDIS_KEY_PREFIX = process.env.REDIS_KEY_PREFIX || "";
 
-const REDIS_ENABLE_AUTOPIPELINING = process.env.REDIS_ENABLE_AUTOPIPELINING === "true";
-
 const CACHE_HANDLER_DEBUG = process.env.CACHE_HANDLER_DEBUG === "true";
 
 const CACHE_TTL_IN_S = 24 * 60 * 60; // 1 day
 
 const redis = new Redis({
-    commandTimeout: 1000,
     enableOfflineQueue: false,
     host: REDIS_HOST,
     keyPrefix: REDIS_KEY_PREFIX,
     password: REDIS_PASSWORD,
     port: REDIS_PORT,
-    socketTimeout: 1000,
-    enableAutoPipelining: REDIS_ENABLE_AUTOPIPELINING, // https://github.com/redis/ioredis?tab=readme-ov-file#autopipelining
+    enableAutoPipelining: true,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
