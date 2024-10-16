@@ -2,8 +2,8 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
 import { ClearInputAdornment, InputWithPopperProps } from "@comet/admin";
-import { Calendar as CalendarIcon } from "@comet/admin-icons";
-import { ComponentsOverrides } from "@mui/material";
+import { Calendar as CalendarIcon, IconName } from "@comet/admin-icons";
+import { ComponentsOverrides, IconProps } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import { FormatDateOptions, useIntl } from "react-intl";
 
@@ -11,6 +11,15 @@ import { DatePickerNavigation } from "../DatePickerNavigation";
 import { useDateFnsLocale } from "../utils/DateFnsLocaleProvider";
 import { defaultMaxDate, defaultMinDate, getIsoDateString } from "../utils/datePickerHelpers";
 import { Calendar, DatePickerClassKey, Root, SlotProps, StartAdornment } from "./DatePicker.slots";
+
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconName;
+};
+
+type ImportReference = {
+    name: string;
+    import: string;
+};
 
 export interface DatePickerProps extends Omit<InputWithPopperProps, "children" | "value" | "onChange" | "slotProps"> {
     onChange?: (date?: string) => void;
@@ -21,6 +30,8 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
     maxDate?: Date;
     minDate?: Date;
     slotProps?: SlotProps;
+    startAdornment?: string | IconName | IconObject | ImportReference;
+    endAdornment?: string | IconName | IconObject | ImportReference;
 }
 
 export const DatePicker = (inProps: DatePickerProps) => {
@@ -28,13 +39,14 @@ export const DatePicker = (inProps: DatePickerProps) => {
         onChange,
         value,
         formatDateOptions,
-        endAdornment,
         required,
         placeholder,
         monthsToShow,
         minDate = defaultMinDate,
         maxDate = defaultMaxDate,
         slotProps,
+        startAdornment,
+        endAdornment,
         ...inputWithPopperProps
     } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
     const intl = useIntl();
@@ -46,7 +58,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
             value={value ? intl.formatDate(value, formatDateOptions) : ""}
             startAdornment={
                 <StartAdornment position="start" disablePointerEvents {...slotProps?.startAdornment}>
-                    <CalendarIcon />
+                    {startAdornment ? startAdornment : <CalendarIcon />}
                 </StartAdornment>
             }
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.datePicker.selectDate", defaultMessage: "Select date" })}
