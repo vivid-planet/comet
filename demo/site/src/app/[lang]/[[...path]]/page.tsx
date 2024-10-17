@@ -31,13 +31,14 @@ async function fetchPageTreeNode(params: { path: string[]; lang: string }) {
     const skipPage = !languages.includes(params.lang);
     const { scope, previewData } = (await previewParams()) || { scope: { domain, language: params.lang }, previewData: undefined };
     const graphQLFetch = createGraphQLFetch(previewData);
+    const path = `/${(params.path ?? []).join("/")}`;
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
         {
             skipPage,
-            path: `/${(params.path ?? []).join("/")}`,
+            path,
             scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
-            redirectSource: `/${params.lang}${params.path ? `/${params.path.join("/")}` : ""}`,
+            redirectSource: `/${params.lang}${path != "" ? path : ""}`,
             redirectScope: { domain: scope.domain },
         },
         { method: "GET" }, //for request memoization
