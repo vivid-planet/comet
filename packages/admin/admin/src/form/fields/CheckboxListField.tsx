@@ -36,7 +36,7 @@ export const CheckboxListField = <Value extends string>({ options, layout = "row
                                     onChange(undefined);
                                 }
                             }}
-                            control={<Checkbox required={required} />}
+                            control={<Checkbox disabled={option.disabled} checked={value.includes(option.value)} required={required} />}
                         />
                     ))}
                 </FormGroup>

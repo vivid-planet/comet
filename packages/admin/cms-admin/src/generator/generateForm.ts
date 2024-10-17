@@ -113,6 +113,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     const out = `
     import { useApolloClient, useQuery } from "@apollo/client";
     import {
+        CheckboxField,
         DateTimeField,
         Field,
         filterByFragment,
@@ -132,7 +133,6 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         useFormApiRef,
         useStackApi,
         useStackSwitchApi,
-        FinalFormCheckbox,
     } from "@comet/admin";
     import { DateField } from "@comet/admin-date-time";
     import { ArrowLeft } from "@comet/admin-icons";
@@ -344,14 +344,12 @@ function generateField({ entityName, ...generatorConfig }: CrudGeneratorConfig, 
             }
         </Field>`;
     } else if (type.kind === "SCALAR" && type.name === "Boolean") {
-        return `<Field name="${field.name}" label="" type="checkbox" variant="horizontal" fullWidth>
-                {(props) => (
-                    <FormControlLabel
+        return `<CheckboxField
                         label={<FormattedMessage id="${instanceEntityName}.${field.name}" defaultMessage="${label}" />}
-                        control={<FinalFormCheckbox {...props} />}
-                    />
-                )}
-            </Field>`;
+                        name="${field.name}"
+                        fullWidth
+                        variant="horizontal"
+                    />`;
     } else if (type.kind === "SCALAR" && type.name === "String") {
         return `<TextField ${field.type.kind === "NON_NULL" ? "required" : ""} variant="horizontal" fullWidth name="${
             field.name
