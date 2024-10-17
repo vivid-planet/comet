@@ -94,6 +94,12 @@ export class ProductFilter {
     @Type(() => DateTimeFilter)
     lastCheckedAt?: DateTimeFilter;
 
+    @Field(() => DateTimeFilter, { nullable: true })
+    @ValidateNested()
+    @IsOptional()
+    @Type(() => DateTimeFilter)
+    nextNotificationEmail?: DateTimeFilter;
+
     @Field(() => OneToManyFilter, { nullable: true })
     @ValidateNested()
     @IsOptional()

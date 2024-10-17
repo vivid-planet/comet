@@ -145,6 +145,15 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field({ nullable: true })
     lastCheckedAt?: Date = undefined;
 
+    // @Property({ type: types.datetime, nullable: true }) // types.datetime does not get generated into input
+    // @Field(() => GraphQLDate, { nullable: true }) // GraphQLDateTime leads to schema error. why?
+    // @Field(() => GraphQLDateTime, { nullable: true }) // GraphQLDateTime leads to schema error. why?
+    // nextNotificationEmail?: Date = undefined;
+
+    @Property({ nullable: true })
+    @Field({ nullable: true })
+    nextNotificationEmail?: Date = undefined;
+
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
