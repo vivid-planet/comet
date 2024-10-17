@@ -64,20 +64,26 @@ type CellContent = {
 };
 
 const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: string, target: "primary" | "secondary"): CellContent => {
-    if (typeof textConfig === "string") {
-        return {
-            textContent: `row.${textConfig}`,
-        };
-    }
-
-    if (textConfig.type === "static") {
+    if (typeof textConfig !== "string" && textConfig.type === "static") {
         return {
             textContent: getFormattedMessageNode(messageIdPrefix, textConfig.text),
         };
     }
 
-    const emptyText = "emptyValue" in textConfig ? getFormattedMessageNode(`${messageIdPrefix}.empty`, textConfig.emptyValue) : "'-'";
-    const rowValue = `row.${textConfig.field.replace(/\./g, "?.")}`;
+    const emptyText =
+        typeof textConfig !== "string" && "emptyValue" in textConfig
+            ? getFormattedMessageNode(`${messageIdPrefix}.empty`, textConfig.emptyValue)
+            : "'-'";
+
+    const fieldName = typeof textConfig === "string" ? textConfig : textConfig.field;
+    const rowValue = `row.${fieldName.replace(/\./g, "?.")}`;
+    const stringTextContent = `${rowValue} ?? ${emptyText}`;
+
+    if (typeof textConfig === "string") {
+        return {
+            textContent: stringTextContent,
+        };
+    }
 
     if (textConfig.type === "number") {
         const { type, decimals: decimalsConfigValue, field, emptyValue, ...configForFormattedNumberProps } = textConfig;
@@ -147,7 +153,7 @@ const getTextForCellContent = (textConfig: TextConfig<string>, messageIdPrefix: 
     }
 
     return {
-        textContent: `${rowValue} ?? ${emptyText}`,
+        textContent: stringTextContent,
     };
 };
 
