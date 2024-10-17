@@ -95,11 +95,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
                         component={FinalFormInput}
                         type="number"
                         label={<FormattedMessage id="product.price" defaultMessage="Price" />}
-                        startAdornment={
-                            <InputAdornment position="start">
-                                <FormattedMessage id="price.startAdornment" defaultMessage="€" />
-                            </InputAdornment>
-                        }
+                        startAdornment={<InputAdornment position="start">€</InputAdornment>}
                         helperText={<FormattedMessage id="product.price.helperText" defaultMessage="Enter price in this format: 123,45" />}
                     />
                 </>

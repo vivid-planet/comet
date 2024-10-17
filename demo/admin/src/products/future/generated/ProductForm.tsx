@@ -295,11 +295,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 min={25}
                                 max={500}
                                 disableSlider
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <FormattedMessage id="priceRange.startAdornment" defaultMessage="€" />
-                                    </InputAdornment>
-                                }
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
                             />
                             <Field
                                 fullWidth

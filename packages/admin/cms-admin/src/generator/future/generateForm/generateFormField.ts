@@ -12,12 +12,12 @@ type AdornmentData = {
     adornmentImport?: { name: string; importPath: string };
 };
 
-const getAdornmentData = ({ messageId, adornmentData }: { messageId: string; adornmentData: Adornment }): AdornmentData => {
+const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): AdornmentData => {
     let adornmentString = "";
     let adornmentImport = { name: "", importPath: "" };
 
     if (typeof adornmentData === "string") {
-        return { adornmentString: `<FormattedMessage id="${messageId}" defaultMessage="${adornmentData}" />` };
+        return { adornmentString: adornmentData };
     }
 
     if (typeof adornmentData.icon === "string") {
@@ -150,7 +150,6 @@ export function generateFormField({
 
     if (config.startAdornment) {
         startAdornment = getAdornmentData({
-            messageId: `${nameWithPrefix}.startAdornment`,
             adornmentData: config.startAdornment,
         });
         if (startAdornment.adornmentImport) {
@@ -160,7 +159,6 @@ export function generateFormField({
 
     if (config.endAdornment) {
         endAdornment = getAdornmentData({
-            messageId: `${nameWithPrefix}.endAdornment`,
             adornmentData: config.endAdornment,
         });
         if (endAdornment.adornmentImport) {
