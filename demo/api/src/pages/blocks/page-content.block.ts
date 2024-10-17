@@ -10,6 +10,7 @@ import { IsEnum } from "class-validator";
 import { ColumnsBlock } from "./columns.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
+import { ImageLinkBlock } from "./image-link.block";
 import { MediaBlock } from "./media.block";
 import { TeaserBlock } from "./teaser.block";
 import { TextImageBlock } from "./TextImageBlock";
@@ -29,6 +30,7 @@ const supportedBlocks = {
     media: MediaBlock,
     teaser: TeaserBlock,
     newsDetail: NewsDetailBlock,
+    imageLink: ImageLinkBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
