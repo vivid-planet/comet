@@ -36,7 +36,7 @@ const createInternalRedirects = async (): Promise<Map<string, Redirect>> => {
 
 async function* fetchApiRedirects(scope: GQLRedirectScope) {
     let offset = 0;
-    const limit = 100;
+    const limit = 1000;
 
     while (true) {
         const { paginatedRedirects } = await graphQLFetch<GQLRedirectsQuery, GQLRedirectsQueryVariables>(redirectsQuery, {
@@ -63,6 +63,9 @@ const createApiRedirects = async (scope: GQLRedirectScope): Promise<Map<string, 
         // escape ":" and "?", otherwise it is used for next.js regex path matching  (https://nextjs.org/docs/pages/api-reference/next-config-js/redirects#regex-path-matching)
         return value.replace(/[:?]/g, "\\$&");
     }
+
+    // eslint-disable-next-line no-console
+    console.time("createApiRedirects");
 
     for await (const redirect of fetchApiRedirects(scope)) {
         let source: string | undefined;
@@ -110,6 +113,8 @@ const createApiRedirects = async (scope: GQLRedirectScope): Promise<Map<string, 
             redirects.set(source, { destination, permanent: true });
         }
     }
+    // eslint-disable-next-line no-console
+    console.timeEnd("createApiRedirects");
     return redirects;
 };
 

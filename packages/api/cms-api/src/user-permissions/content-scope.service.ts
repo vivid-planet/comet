@@ -43,7 +43,19 @@ export class ContentScopeService {
     }
 
     async inferScopesFromExecutionContext(context: ExecutionContext): Promise<ContentScope[]> {
-        return [...new Set((await this.getScopesForPermissionCheck(context)).flat())];
+        return this.getUniqueScopes(await this.getScopesForPermissionCheck(context));
+    }
+
+    getUniqueScopes(scopes: ContentScope[][]): ContentScope[] {
+        const uniqueScopes: ContentScope[] = [];
+
+        scopes.flat().forEach((incomingScope) => {
+            if (!uniqueScopes.some((existingScope) => this.scopesAreEqual(existingScope, incomingScope))) {
+                uniqueScopes.push(incomingScope);
+            }
+        });
+
+        return uniqueScopes;
     }
 
     private async getContentScopesFromEntity(affectedEntity: AffectedEntityMeta, args: Record<string, string>): Promise<ContentScope[][]> {
