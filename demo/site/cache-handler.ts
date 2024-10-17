@@ -3,7 +3,7 @@ import { Redis } from "ioredis";
 import { LRUCache } from "lru-cache";
 import { CacheHandler as NextCacheHandler } from "next/dist/server/lib/incremental-cache";
 
-import { getOrCreateCounter } from "./opentelemetry-metrics";
+import { getOrCreateCounter, getOrCreateHistogram } from "./opentelemetry-metrics";
 
 const REDIS_HOST = process.env.REDIS_HOST;
 if (!REDIS_HOST) {
@@ -61,6 +61,10 @@ const cacheFallbackCount = getOrCreateCounter("nextcache.get.fallback", {
     description: "NextJS ISR Cache in-memory fallback gets",
     unit: "requests",
 });
+const cacheGetAge = getOrCreateHistogram("nextcache.get.age", {
+    description: "NextJS ISR Cache cache age when retrieved",
+    unit: "s",
+});
 
 function parseBodyForGqlError(body: string) {
     try {
@@ -93,7 +97,11 @@ export default class CacheHandler extends NextCacheHandler {
                     return null;
                 }
                 cacheHitCount.add(1);
-                return JSON.parse(redisResponse);
+                const response = JSON.parse(redisResponse);
+                if (response.lastModified) {
+                    cacheGetAge.record((new Date().getTime() - response.lastModified) / 1000);
+                }
+                return response;
             } catch (e) {
                 console.error("CacheHandler.get error", e);
             }
