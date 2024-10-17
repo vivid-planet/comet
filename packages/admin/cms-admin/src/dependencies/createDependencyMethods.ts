@@ -1,11 +1,13 @@
-import { gql } from "@apollo/client";
+import { DocumentNode, gql } from "@apollo/client";
 import { BlockInputApi, BlockInterface } from "@comet/blocks-admin";
+import { FragmentDefinitionNode } from "graphql/language/ast";
 
+import { ContentScopeInterface } from "../contentScope/Provider";
 import { Maybe } from "../graphql.generated";
 import { DependencyInterface } from "./types";
 
 interface Query<RootBlocks extends Record<string, BlockInterface>> {
-    node: Maybe<{ id: string } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> }>;
+    node: Maybe<{ id: string } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> } & { scope?: ContentScopeInterface }>;
 }
 
 interface QueryVariables {
@@ -15,12 +17,20 @@ interface QueryVariables {
 export function createDependencyMethods<RootBlocks extends Record<string, BlockInterface>>({
     rootQueryName,
     rootBlocks,
+    scopeFragment,
     basePath,
 }: {
     rootQueryName: string;
     rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
+    scopeFragment?: DocumentNode;
     basePath: string | ((node: NonNullable<Query<RootBlocks>["node"]>) => string);
 }): Pick<DependencyInterface, "resolvePath"> {
+    const scopeFragmentName = (scopeFragment?.definitions?.[0] as FragmentDefinitionNode | undefined)?.name.value;
+
+    if (scopeFragment && !scopeFragmentName) {
+        throw new Error("Can't determine scope fragment name");
+    }
+
     return {
         resolvePath: async ({ rootColumnName, jsonPath, apolloClient, id }) => {
             const { data, error } = await apolloClient.query<Query<RootBlocks>, QueryVariables>({
@@ -29,8 +39,16 @@ export function createDependencyMethods<RootBlocks extends Record<string, BlockI
                         node: ${rootQueryName}(id: $id) {
                             id
                             ${Object.keys(rootBlocks).join("\n")}
+                            ${
+                                scopeFragment
+                                    ? `scope {
+                                        ...${scopeFragmentName}
+                                    }`
+                                    : ""
+                            }
                         }    
                     }    
+                    ${scopeFragment ?? ""}
                 `,
                 variables: {
                     id,

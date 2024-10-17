@@ -4,6 +4,7 @@ import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, Depen
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
+import { ContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { GQLPage, GQLPageInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
@@ -66,6 +67,17 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             content: PageContentBlock,
             seo: { block: SeoBlock, path: "/config" },
         },
-        basePath: ({ pageTreeNode }) => `/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${pageTreeNode.id}/edit`,
+        scopeFragment: gql`
+            fragment PageDependencyScope on PageTreeNodeScope {
+                domain
+                language
+            }
+        `,
+        basePath: ({ pageTreeNode, scope }) => {
+            const contentScope = scope as ContentScope;
+            return `/${contentScope.domain}/${contentScope.language}/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${
+                pageTreeNode.id
+            }/edit`;
+        },
     }),
 };
