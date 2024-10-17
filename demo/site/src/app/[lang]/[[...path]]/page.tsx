@@ -94,7 +94,7 @@ export default async function Page({ params }: Props) {
                         break;
                 }
             }
-            if (destination && destination !== `/${params.lang}${params.path ? `/${params.path.join("/")}` : ""}`) {
+            if (destination) {
                 redirect(destination);
             }
         }
