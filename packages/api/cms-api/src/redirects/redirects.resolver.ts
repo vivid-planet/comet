@@ -1,4 +1,4 @@
-import { FindOptions, wrap } from "@mikro-orm/core";
+import { FilterQuery, FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
@@ -17,6 +17,7 @@ import { RedirectInputInterface } from "./dto/redirect-input.factory";
 import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input";
 import { RedirectsArgsFactory } from "./dto/redirects-args.factory";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
+import { RedirectSourceTypeValues } from "./redirects.enum";
 import { RedirectsService } from "./redirects.service";
 import { RedirectScopeInterface } from "./types";
 
@@ -101,10 +102,24 @@ export function createRedirectsResolver({
             return new PaginatedRedirects(entities, totalCount);
         }
 
-        @Query(() => Redirect)
+        @Query(() => Redirect, { nullable: true })
         @AffectedEntity(Redirect)
         async redirect(@Args("id", { type: () => ID }) id: string): Promise<RedirectInterface | null> {
             const redirect = await this.repository.findOne(id);
+            return redirect ?? null;
+        }
+
+        @Query(() => Redirect, { nullable: true })
+        async redirectBySource(
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+            @Args("source", { type: () => String }) source: string,
+            @Args("sourceType", { type: () => RedirectSourceTypeValues }) sourceType: RedirectSourceTypeValues,
+        ): Promise<RedirectInterface | null> {
+            const where: FilterQuery<RedirectInterface> = { source, sourceType };
+            if (hasNonEmptyScope) {
+                where.scope = scope;
+            }
+            const redirect = await this.repository.findOne(where);
             return redirect ?? null;
         }
 
