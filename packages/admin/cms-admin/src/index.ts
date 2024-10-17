@@ -29,6 +29,7 @@ export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
 export type { TextMatch } from "./common/MarkedMatches";
 export { MarkedMatches } from "./common/MarkedMatches";
+export { findTextMatches } from "./common/MarkedMatches";
 export type { MasterMenuData, MasterMenuProps } from "./common/MasterMenu";
 export { MasterMenu, useMenuFromMasterMenuData } from "./common/MasterMenu";
 export type { MasterMenuRoutesProps } from "./common/MasterMenuRoutes";
@@ -115,6 +116,7 @@ export { useSitesConfig } from "./sitesConfig/useSitesConfig";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
 export { CurrentUserInterface, CurrentUserProvider, useCurrentUser, useUserPermissionCheck } from "./userPermissions/hooks/currentUser";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
