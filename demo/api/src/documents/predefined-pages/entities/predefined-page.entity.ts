@@ -38,5 +38,5 @@ export class PredefinedPage extends BaseEntity<PredefinedPage, "id"> implements 
 
     @Property({ columnType: "text", nullable: true })
     @Field(() => PredefinedPageType, { nullable: true })
-    type?: PredefinedPageType;
+    type?: PredefinedPageType | null;
 }

@@ -1,5 +1,6 @@
+import { IsNullable, IsUndefinable } from "@comet/cms-api";
 import { Field, InputType } from "@nestjs/graphql";
-import { IsEnum, IsOptional } from "class-validator";
+import { IsEnum } from "class-validator";
 
 import { PredefinedPageType } from "../entities/predefined-page.entity";
 
@@ -7,6 +8,7 @@ import { PredefinedPageType } from "../entities/predefined-page.entity";
 export class PredefinedPageInput {
     @Field(() => PredefinedPageType, { nullable: true })
     @IsEnum(PredefinedPageType)
-    @IsOptional()
-    type?: PredefinedPageType;
+    @IsUndefinable()
+    @IsNullable()
+    type?: PredefinedPageType | null;
 }
