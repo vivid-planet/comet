@@ -7,6 +7,7 @@ import {
     GridCellContent,
     GridColDef,
     GridColumnsButton,
+    gridColumnTypes,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -190,11 +191,10 @@ export function ProductsGrid() {
             minWidth: 80,
         },
         {
+            ...gridColumnTypes.date(intl),
             field: "availableSince",
             headerName: "Available Since",
             width: 130,
-            type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
         },
         {
             field: "status",
