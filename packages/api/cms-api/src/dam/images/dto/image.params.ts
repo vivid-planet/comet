@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsHash, IsInt, IsNumber, IsString, IsUUID, Max, Min, ValidateIf } from "class-validator";
+import { IsEnum, IsHash, IsInt, IsNumber, IsOptional, IsString, IsUUID, Max, Min, ValidateIf } from "class-validator";
 
 import { FocalPoint } from "../../common/enums/focal-point.enum";
 import { ImageCropArea } from "../entities/image-crop-area.entity";
@@ -54,6 +54,10 @@ export class ImageParams {
     @IsString()
     filename: string;
 
+    @IsOptional()
+    @IsHash("md5")
+    contentHash?: string;
+
     get cropArea(): ImageCropArea {
         return {
             focalPoint: this.focalPoint,
@@ -68,4 +72,8 @@ export class ImageParams {
 export class HashImageParams extends ImageParams {
     @IsHash("sha1")
     hash: string;
+
+    @IsOptional()
+    @IsHash("md5")
+    contentHash?: string;
 }
