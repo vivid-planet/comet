@@ -1,6 +1,7 @@
-import { getBlocksMeta } from "@comet/blocks-api";
 import { Logger, OnModuleInit } from "@nestjs/common";
 import { promises as fs } from "fs";
+
+import { getBlocksMeta } from "./blocks-meta";
 
 export class BlocksMetaService implements OnModuleInit {
     private readonly logger = new Logger(BlocksMetaService.name);

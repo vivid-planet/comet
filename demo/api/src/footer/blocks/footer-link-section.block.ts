@@ -8,7 +8,7 @@ import {
     createBlock,
     ExtractBlockInput,
     inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { IsOptional, IsString, ValidateNested } from "class-validator";
 

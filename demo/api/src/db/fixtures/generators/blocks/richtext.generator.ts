@@ -1,4 +1,4 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
+import { ExtractBlockInputFactoryProps } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 
 export const generateRichtextBlock = (): ExtractBlockInputFactoryProps<typeof RichTextBlock> => {

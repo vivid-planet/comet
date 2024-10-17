@@ -9,7 +9,7 @@ import {
     ExtractBlockData,
     ExtractBlockInput,
     inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 
 import { HeadlineBlock } from "./headline.block";
 

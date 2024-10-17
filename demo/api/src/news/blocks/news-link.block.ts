@@ -8,7 +8,7 @@ import {
     BlockMetaFieldKind,
     createBlock,
     inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { IsOptional, IsUUID } from "class-validator";
 
 import { NewsLinkBlockTransformerService } from "./news-link-block-transformer.service";

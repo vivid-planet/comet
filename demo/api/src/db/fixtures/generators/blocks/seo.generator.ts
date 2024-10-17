@@ -1,5 +1,4 @@
-import { BlockInputInterface } from "@comet/blocks-api";
-import { SitemapPageChangeFrequency, SitemapPagePriority } from "@comet/cms-api";
+import { BlockInputInterface, SitemapPageChangeFrequency, SitemapPagePriority } from "@comet/cms-api";
 import { SeoBlock } from "@src/pages/blocks/seo.block";
 
 export const generateSeoBlock = (): BlockInputInterface => {

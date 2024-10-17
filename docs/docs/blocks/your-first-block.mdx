@@ -59,7 +59,7 @@ Once we have defined the block data, we also need to define the block input. The
 <!-- TODO: ein vergleich mit einem DTO und/oder GraphQL Input Type kann vielleicht helfen -->
 
 ```ts title="headline.block.ts"
-import { inputToData } from "@comet/blocks-api";
+import { inputToData } from "@comet/cms-api";
 
 class HeadlineBlockInput extends BlockInput {
     @IsOptional()
@@ -127,7 +127,7 @@ The complete code for our Headline API block (including all necessary imports) c
     createBlock,
     ExtractBlockInput,
     inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";\n
 export enum HeadlineLevel {

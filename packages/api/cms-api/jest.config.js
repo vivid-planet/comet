@@ -4,4 +4,5 @@ module.exports = {
     testEnvironment: "node",
     reporters: ["default", "jest-junit"],
     rootDir: "./src",
+    setupFiles: ["../jest-setup-file.ts"],
 };

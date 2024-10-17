@@ -1,16 +1,7 @@
-import {
-    AnnotationBlockMeta,
-    BlockData,
-    BlockField,
-    BlockIndexData,
-    BlockInput,
-    BlockMetaField,
-    BlockMetaFieldKind,
-    createBlock,
-    inputToData,
-} from "@comet/blocks-api";
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
+import { BlockData, BlockIndexData, BlockInput, BlockMetaField, BlockMetaFieldKind, createBlock, inputToData } from "../../blocks/block";
+import { AnnotationBlockMeta, BlockField } from "../../blocks/decorators/field";
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageExists } from "../validators/page-exists.validator";
 import { InternalLinkBlockTransformerService } from "./internal-link-block-transformer.service";

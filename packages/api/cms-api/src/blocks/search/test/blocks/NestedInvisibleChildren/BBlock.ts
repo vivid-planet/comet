@@ -1,0 +1,36 @@
+import { IsNotEmpty, IsString } from "class-validator";
+
+import { BlockData, BlockInput, createBlock, ExtractBlockData, ExtractBlockInput, inputToData } from "../../../../block";
+import { ChildBlock } from "../../../../decorators/child-block";
+import { ChildBlockInput } from "../../../../decorators/child-block-input";
+import { BlockField } from "../../../../decorators/field";
+import { SearchText } from "../../../get-search-text";
+import { CBlock } from "./CBlock";
+
+export class BBlockData extends BlockData {
+    @BlockField()
+    titleB: string;
+
+    @ChildBlock(CBlock)
+    c: ExtractBlockData<typeof CBlock>;
+
+    searchText(): SearchText[] {
+        return [this.titleB];
+    }
+}
+
+export class BBlockInput extends BlockInput {
+    @IsString()
+    @IsNotEmpty()
+    @BlockField()
+    titleB: string;
+
+    @ChildBlockInput(CBlock)
+    c: ExtractBlockInput<typeof CBlock>;
+
+    transformToBlockData(): BBlockData {
+        return inputToData(BBlockData, this);
+    }
+}
+
+export const BBlock = createBlock(BBlockData, BBlockInput, "BTestBlock");

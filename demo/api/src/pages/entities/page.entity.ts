@@ -1,10 +1,12 @@
-import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
 import {
+    BlockDataInterface,
     DocumentInterface,
     EntityInfo,
     PageTreeNodeDocumentEntityInfoService,
     PageTreeNodeDocumentEntityScopeService,
+    RootBlock,
     RootBlockDataScalar,
+    RootBlockEntity,
     RootBlockType,
     ScopedEntity,
 } from "@comet/cms-api";

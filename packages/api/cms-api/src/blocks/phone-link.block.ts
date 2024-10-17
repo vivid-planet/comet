@@ -1,7 +1,8 @@
-import { BlockData, BlockField, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
 import { IsOptional } from "class-validator";
 
 import { IsPhoneNumber } from "../common/validators/is-phone-number";
+import { BlockData, BlockInput, createBlock, inputToData } from "./block";
+import { BlockField } from "./decorators/field";
 
 class PhoneLinkBlockData extends BlockData {
     @BlockField({ nullable: true })
