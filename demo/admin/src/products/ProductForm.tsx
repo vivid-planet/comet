@@ -58,6 +58,7 @@ import {
 
 interface FormProps {
     id?: string;
+    manufacturerCountry?: string;
 }
 
 const rootBlocks = {
@@ -75,7 +76,7 @@ type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry
     manufacturerCountry?: { id: string };
 };
 
-export function ProductForm({ id }: FormProps) {
+export function ProductForm({ id, manufacturerCountry }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -99,13 +100,14 @@ export function ProductForm({ id }: FormProps) {
         return {
             ...filteredData,
             image: rootBlocks.image.input2State(filteredData.image),
-            manufacturerCountry: filteredData.manufacturerCountry
-                ? {
-                      id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
-                  }
-                : undefined,
+            manufacturerCountry:
+                !manufacturerCountry && filteredData.manufacturerCountry
+                    ? {
+                          id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
+                      }
+                    : undefined,
         };
-    }, [data]);
+    }, [data, manufacturerCountry]);
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -118,6 +120,7 @@ export function ProductForm({ id }: FormProps) {
         },
     });
 
+    // if field was not virtual it would not require destructuring manufacturerCountry here
     const handleSubmit = async ({ manufacturerCountry, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
 
@@ -132,6 +135,7 @@ export function ProductForm({ id }: FormProps) {
             statistics: { views: 0 },
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
+            // if field was not virtual: manufacturerCountry: manufacturerCountry ?? formValues.manufacturerCountry.id,
             manufacturer: formValues.manufacturer?.id,
         };
 
@@ -170,7 +174,7 @@ export function ProductForm({ id }: FormProps) {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{ values: true }} // values required because disable and loadOptions of manufacturer-select depends on values
+            subscription={{ values: !manufacturerCountry }} // values required because disable and loadOptions of manufacturer-select depends on values
         >
             {({ values, form }) => (
                 <>
@@ -195,28 +199,30 @@ export function ProductForm({ id }: FormProps) {
                             name="description"
                             label={<FormattedMessage id="product.description" defaultMessage="Description" />}
                         />
-                        <AsyncSelectField
-                            name="manufacturerCountry"
-                            loadOptions={async () => {
-                                const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
-                                    query: gql`
-                                        query ManufacturerCountries {
-                                            manufacturerCountries {
-                                                nodes {
-                                                    id
-                                                    used
+                        {!manufacturerCountry && (
+                            <AsyncSelectField
+                                name="manufacturerCountry"
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturerCountriesQuery, GQLManufacturerCountriesQueryVariables>({
+                                        query: gql`
+                                            query ManufacturerCountries {
+                                                manufacturerCountries {
+                                                    nodes {
+                                                        id
+                                                        used
+                                                    }
                                                 }
                                             }
-                                        }
-                                    `,
-                                });
+                                        `,
+                                    });
 
-                                return data.manufacturerCountries.nodes;
-                            }}
-                            getOptionLabel={(option) => option.id}
-                            label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
-                            fullWidth
-                        />
+                                    return data.manufacturerCountries.nodes;
+                                }}
+                                getOptionLabel={(option) => option.id}
+                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
+                                fullWidth
+                            />
+                        )}
                         <AsyncSelectField
                             name="manufacturer"
                             loadOptions={async () => {
@@ -234,7 +240,7 @@ export function ProductForm({ id }: FormProps) {
                                     variables: {
                                         filter: {
                                             addressAsEmbeddable_country: {
-                                                equal: values.manufacturerCountry?.id,
+                                                equal: manufacturerCountry ?? values.manufacturerCountry?.id,
                                             },
                                         },
                                     },
@@ -245,15 +251,17 @@ export function ProductForm({ id }: FormProps) {
                             getOptionLabel={(option) => option.name}
                             label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                             fullWidth
-                            disabled={!values?.manufacturerCountry}
+                            disabled={!manufacturerCountry && !values?.manufacturerCountry}
                         />
-                        <OnChangeField name="manufacturerCountry">
-                            {(value, previousValue) => {
-                                if (value.id !== previousValue.id) {
-                                    form.change("manufacturer", undefined);
-                                }
-                            }}
-                        </OnChangeField>
+                        {!manufacturerCountry && (
+                            <OnChangeField name="manufacturerCountry">
+                                {(value, previousValue) => {
+                                    if (value.id !== previousValue.id) {
+                                        form.change("manufacturer", undefined);
+                                    }
+                                }}
+                            </OnChangeField>
+                        )}
                         <SelectField name="type" label={<FormattedMessage id="product.type" defaultMessage="Type" />} required fullWidth>
                             <MenuItem value="Cap">
                                 <FormattedMessage id="product.type.cap" defaultMessage="Cap" />
