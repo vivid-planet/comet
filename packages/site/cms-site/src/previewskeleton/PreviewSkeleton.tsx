@@ -53,6 +53,11 @@ const PreviewSkeleton = ({
             );
         }
     }
+
+    if (!hasContent) {
+        return null;
+    }
+
     return <>{children}</>;
 };
 

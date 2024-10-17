@@ -39,6 +39,8 @@ const productsFragment = gql`
         category {
             title
         }
+        type
+        inStock
         price
     }
 `;
@@ -88,9 +90,10 @@ type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLCombinationFieldsTestProductsGridFutureFragment, any>) => React.ReactNode;
+    actionsColumnWidth?: number;
 };
 
-export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactElement {
+export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
@@ -110,6 +113,48 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                                 <FormattedMessage id="product.titleAndCategory.secondaryText.empty" defaultMessage="No category set" />
                             )
                         }
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "staticSelectType",
+            headerName: intl.formatMessage({ id: "product.staticSelectType", defaultMessage: "Type (static select)" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                const primaryEmptyMessage = "-";
+                const typePrimaryLabels: Record<string, React.ReactNode> = {
+                    Cap: <FormattedMessage id="product.staticSelectType.primaryText.Cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.staticSelectType.primaryText.Shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.staticSelectType.primaryText.Tie" defaultMessage="Tie" />,
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.type == null ? primaryEmptyMessage : typePrimaryLabels[`${row.type}`] ?? row.type}
+                        secondaryText={row.type}
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "staticSelectInStock",
+            headerName: intl.formatMessage({ id: "product.staticSelectInStock", defaultMessage: "In stock (static select)" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                const primaryEmptyMessage = <FormattedMessage id="product.staticSelectInStock.primaryText.empty" defaultMessage="No stock info" />;
+                const inStockPrimaryLabels: Record<string, React.ReactNode> = {
+                    true: <FormattedMessage id="product.staticSelectInStock.primaryText.true" defaultMessage={`It's in stock :D`} />,
+                    false: <FormattedMessage id="product.staticSelectInStock.primaryText.false" defaultMessage="No longer available :(" />,
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.inStock == null ? primaryEmptyMessage : inStockPrimaryLabels[`${row.inStock}`] ?? row.inStock}
                     />
                 );
             },
@@ -209,7 +254,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
             type: "actions",
             align: "right",
             pinned: "right",
-            width: 84,
+            width: actionsColumnWidth,
             renderCell: (params) => {
                 return (
                     <>
@@ -270,7 +315,7 @@ export function ProductsGrid({ toolbarAction, rowAction }: Props): React.ReactEl
                 Toolbar: ProductsGridToolbar,
             }}
             componentsProps={{
-                toolbar: { toolbarAction: toolbarAction },
+                toolbar: { toolbarAction },
             }}
         />
     );
