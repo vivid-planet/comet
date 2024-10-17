@@ -32,6 +32,8 @@ app.prepare().then(() => {
             if (
                 parsedUrl.pathname?.startsWith("/assets/") || // TODO move public/* files into public/assets folder
                 parsedUrl.pathname == "/favicon.ico" ||
+                parsedUrl.pathname == "/apple-icon.png" ||
+                parsedUrl.pathname == "/icon.svg" ||
                 parsedUrl.pathname == "/robots.txt" ||
                 parsedUrl.pathname == "/sitemap.xml"
             ) {
