@@ -548,6 +548,7 @@ type Product {
   soldCount: Int
   availableSince: Date
   lastCheckedAt: DateTime
+  nextNotificationEmail: DateTime
   discounts: [ProductDiscounts!]!
   articleNumbers: [String!]!
   dimensions: ProductDimensions
@@ -980,6 +981,7 @@ input ProductFilter {
   soldCount: NumberFilter
   availableSince: DateFilter
   lastCheckedAt: DateTimeFilter
+  nextNotificationEmail: DateTimeFilter
   colors: OneToManyFilter
   variants: OneToManyFilter
   category: ManyToOneFilter
@@ -1056,6 +1058,7 @@ enum ProductSortField {
   soldCount
   availableSince
   lastCheckedAt
+  nextNotificationEmail
   category
   createdAt
   updatedAt
@@ -1418,6 +1421,7 @@ input ProductInput {
   inStock: Boolean! = true
   availableSince: Date = null
   lastCheckedAt: DateTime = null
+  nextNotificationEmail: DateTime = null
   image: DamImageBlockInput!
   discounts: [ProductDiscountsInput!]! = []
   articleNumbers: [String!]! = []
@@ -1458,6 +1462,7 @@ input ProductUpdateInput {
   inStock: Boolean
   availableSince: Date
   lastCheckedAt: DateTime
+  nextNotificationEmail: DateTime
   image: DamImageBlockInput
   discounts: [ProductDiscountsInput!]
   articleNumbers: [String!]

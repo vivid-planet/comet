@@ -37,6 +37,7 @@ export const productFormFragment = gql`
             min
             max
         }
+        nextNotificationEmail
     }
     ${finalFormFileUploadFragment}
 `;

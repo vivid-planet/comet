@@ -48,6 +48,7 @@ const productsFragment = gql`
         soldCount
         availableSince
         lastCheckedAt
+        nextNotificationEmail
         createdAt
         updatedAt
         image
@@ -148,6 +149,13 @@ export function ProductsGrid(): React.ReactElement {
             width: 150,
         },
         {
+            field: "nextNotificationEmail",
+            headerName: intl.formatMessage({ id: "product.nextNotificationEmail", defaultMessage: "Next Notification Email" }),
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
+        {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
@@ -196,6 +204,7 @@ export function ProductsGrid(): React.ReactElement {
                                     inStock: row.inStock,
                                     availableSince: row.availableSince,
                                     lastCheckedAt: row.lastCheckedAt,
+                                    nextNotificationEmail: row.nextNotificationEmail,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
                                 };
                             }}
