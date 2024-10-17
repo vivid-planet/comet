@@ -642,7 +642,7 @@ export class FilesService {
             baseUrl.push(hash);
         }
 
-        return [...baseUrl, file.id, filename].join("/");
+        return [...baseUrl, file.contentHash, file.id, filename].join("/");
     }
 
     async getFileAsBase64String(file: FileInterface) {
@@ -673,7 +673,7 @@ export class FilesService {
             baseUrl.push(hash);
         }
 
-        return [...baseUrl, file.id, filename].join("/");
+        return [...baseUrl, file.contentHash, file.id, filename].join("/");
     }
 
     createHash(params: FileParams): string {
