@@ -782,6 +782,7 @@ type Query {
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsListByIds(ids: [ID!]!): [News!]!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!

@@ -54,6 +54,7 @@ function extractFromBlockMeta(blockMeta: BlockMetaInterface): BlockMetaField[] {
                 name: field.name,
                 kind: field.kind,
                 nullable: field.nullable,
+                array: field.array,
             };
         } else if (field.kind === BlockMetaFieldKind.Enum) {
             return {
