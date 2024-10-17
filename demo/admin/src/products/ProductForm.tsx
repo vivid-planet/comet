@@ -16,6 +16,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
+import { FinalFormDateTimePicker } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -33,6 +34,7 @@ import {
     GQLManufacturersQuery,
     GQLManufacturersQueryVariables,
 } from "@src/products/ProductForm.generated";
+import { parseISO } from "date-fns";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -104,6 +106,7 @@ export function ProductForm({ id }: FormProps) {
                       id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
                   }
                 : undefined,
+            nextNotificationEmail: parseISO(filteredData.nextNotificationEmail),
         };
     }, [data]);
 
@@ -133,6 +136,7 @@ export function ProductForm({ id }: FormProps) {
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
             manufacturer: formValues.manufacturer?.id,
+            nextNotificationEmail: formValues.nextNotificationEmail.toISOString(),
         };
 
         if (mode === "edit") {
@@ -344,6 +348,12 @@ export function ProductForm({ id }: FormProps) {
                             maxFileSize={1024 * 1024 * 4} // 4 MB
                             fullWidth
                             layout="grid"
+                        />
+                        <Field
+                            label={<FormattedMessage id="product.nextNotificationEmail" defaultMessage="Next notification email" />}
+                            name="nextNotificationEmail"
+                            component={FinalFormDateTimePicker}
+                            fullWidth
                         />
                     </MainContent>
                 </>
