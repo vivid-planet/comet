@@ -102,11 +102,11 @@ export function createRedirectsResolver({
             return new PaginatedRedirects(entities, totalCount);
         }
 
-        @Query(() => Redirect, { nullable: true })
+        @Query(() => Redirect)
         @AffectedEntity(Redirect)
-        async redirect(@Args("id", { type: () => ID }) id: string): Promise<RedirectInterface | null> {
-            const redirect = await this.repository.findOne(id);
-            return redirect ?? null;
+        async redirect(@Args("id", { type: () => ID }) id: string): Promise<RedirectInterface> {
+            const redirect = await this.repository.findOneOrFail(id);
+            return redirect;
         }
 
         @Query(() => Redirect, { nullable: true })
