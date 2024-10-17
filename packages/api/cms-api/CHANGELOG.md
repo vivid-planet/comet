@@ -1,5 +1,67 @@
 # @comet/cms-api
 
+## 7.6.0
+
+### Minor Changes
+
+-   73c07ea6e: Set content scopes in request object
+
+    This allows accessing the affected content scopes inside a block's transformer service.
+
+    **Example**
+
+    ```ts
+    import { Inject, Injectable } from "@nestjs/common";
+    import { CONTEXT } from "@nestjs/graphql";
+
+    /* ... */
+
+    @Injectable()
+    export class PixelImageBlockTransformerService implements BlockTransformerServiceInterface<PixelImageBlockData, TransformResponse> {
+        constructor(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            @Inject(CONTEXT) private readonly context: any,
+        ) {}
+
+        async transformToPlain(block: PixelImageBlockData) {
+            // Get the affected content scopes
+            const contentScopes = this.context.req.contentScopes;
+
+            // Do something with the content scopes
+
+            /* ... */
+        }
+    }
+    ```
+
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   3ea66fb38: Add support for user impersonation
+
+    Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
+
+    Adds an "Impersonation" button to the detail view of a user in the User Permissions admin panel. The impersonation can be exited by clicking the button in the user's info on the top right.
+
+### Patch Changes
+
+-   700ddc340: Fix copy/paste for documents containing a `DamFileDownloadLinkBlock`
+-   b03f3dfc1: Call `createUserFromRequest` before `createUserFromIdToken`
+
+    The latter is marked as deprecated and should only be used if the
+    first one is not defined.
+
+-   cc2a11781: Redirects: Improve GraphQL API performance by preloading the page tree to speed up target page lookup
+
+    Also, increase the maximum limit from 100 to 1000.
+
+    -   @comet/blocks-api@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes
