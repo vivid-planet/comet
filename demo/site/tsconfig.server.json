@@ -8,5 +8,5 @@
         "isolatedModules": false,
         "noEmit": false
     },
-    "include": ["server.ts", "tracing.ts"]
+    "include": ["server.ts", "tracing.ts", "cache-handler.ts"]
 }

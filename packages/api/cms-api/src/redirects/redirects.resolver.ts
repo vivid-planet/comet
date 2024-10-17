@@ -8,6 +8,7 @@ import { CometValidationException } from "../common/errors/validation.exception"
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DynamicDtoValidationPipe } from "../common/validation/dynamic-dto-validation.pipe";
 import { validateNotModified } from "../document/validateNotModified";
+import { PageTreeReadApiService } from "../page-tree/page-tree-read-api.service";
 import { AffectedEntity } from "../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { EmptyRedirectScope } from "./dto/empty-redirect-scope";
@@ -55,6 +56,7 @@ export function createRedirectsResolver({
         constructor(
             private readonly redirectService: RedirectsService,
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
+            private readonly pageTreeReadApi: PageTreeReadApiService,
         ) {}
 
         @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })
@@ -69,6 +71,8 @@ export function createRedirectsResolver({
             if (sortColumnName) {
                 options.orderBy = { [sortColumnName]: sortDirection };
             }
+
+            await this.pageTreeReadApi.preloadNodes(scope);
 
             return this.repository.find(where, options);
         }
@@ -90,6 +94,8 @@ export function createRedirectsResolver({
                     };
                 });
             }
+
+            await this.pageTreeReadApi.preloadNodes(scope);
 
             const [entities, totalCount] = await this.repository.findAndCount(where, options);
             return new PaginatedRedirects(entities, totalCount);
