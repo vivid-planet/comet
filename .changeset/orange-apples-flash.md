@@ -2,6 +2,6 @@
 "@comet/cms-api": patch
 ---
 
-Redirects: Improve gql api by preloading PageTree to speed up looking up target pages
+Redirects: Improve GraphQL API performance by preloading the page tree to speed up target page lookup
 
-also increase the max limit from 100 to 1000
+Also, increase the maximum limit from 100 to 1000.
