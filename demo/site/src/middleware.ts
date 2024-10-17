@@ -3,20 +3,11 @@ import { NextResponse } from "next/server";
 
 import { domain } from "./config";
 import { getPredefinedPageRedirect, getPredefinedPageRewrite } from "./middleware/predefinedPages";
-import { createRedirects } from "./middleware/redirects";
 
 export async function middleware(request: NextRequest) {
     const { pathname } = new URL(request.url);
 
     const scope = { domain };
-
-    const redirects = await createRedirects(scope);
-
-    const redirect = redirects.get(pathname);
-    if (redirect) {
-        const destination: string = redirect.destination;
-        return NextResponse.redirect(new URL(destination, request.url), redirect.permanent ? 308 : 307);
-    }
 
     const predefinedPageRedirect = await getPredefinedPageRedirect(scope, pathname);
 

@@ -19,6 +19,20 @@ const nextConfig = {
             },
         ];
     },
+    async redirects() {
+        const adminUrl = process.env.ADMIN_URL;
+
+        if (!adminUrl) {
+            throw Error("ADMIN_URL is not defined");
+        }
+        return [
+            {
+                source: "/admin",
+                destination: adminUrl,
+                permanent: false,
+            },
+        ];
+    },
     images: {
         deviceSizes: cometConfig.dam.allowedImageSizes,
     },
