@@ -22,8 +22,8 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
     maxDate?: Date;
     minDate?: Date;
     slotProps?: SlotProps;
-    startAdornment?: string | ReactNode;
-    endAdornment?: string | ReactNode;
+    startAdornment?: ReactNode;
+    endAdornment?: ReactNode;
 }
 
 export const DatePicker = (inProps: DatePickerProps) => {
