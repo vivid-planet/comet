@@ -3,8 +3,9 @@ import "react-date-range/dist/theme/default.css";
 
 import { ClearInputAdornment, InputWithPopperProps } from "@comet/admin";
 import { Calendar as CalendarIcon } from "@comet/admin-icons";
-import { ComponentsOverrides } from "@mui/material";
+import { ComponentsOverrides, InputAdornment } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
+import { ReactNode } from "react";
 import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
@@ -21,6 +22,8 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
     maxDate?: Date;
     minDate?: Date;
     slotProps?: SlotProps;
+    startAdornment?: ReactNode;
+    endAdornment?: ReactNode;
 }
 
 export const DatePicker = (inProps: DatePickerProps) => {
@@ -28,13 +31,14 @@ export const DatePicker = (inProps: DatePickerProps) => {
         onChange,
         value,
         formatDateOptions,
-        endAdornment,
         required,
         placeholder,
         monthsToShow,
         minDate = defaultMinDate,
         maxDate = defaultMaxDate,
         slotProps,
+        startAdornment,
+        endAdornment,
         ...inputWithPopperProps
     } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
     const intl = useIntl();
@@ -46,7 +50,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
             value={value ? intl.formatDate(value, formatDateOptions) : ""}
             startAdornment={
                 <StartAdornment position="start" disablePointerEvents {...slotProps?.startAdornment}>
-                    <CalendarIcon />
+                    {startAdornment ? startAdornment : <CalendarIcon />}
                 </StartAdornment>
             }
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.datePicker.selectDate", defaultMessage: "Select date" })}
@@ -56,12 +60,12 @@ export const DatePicker = (inProps: DatePickerProps) => {
             required={required}
             endAdornment={
                 !required ? (
-                    <>
+                    <InputAdornment position="end">
                         <ClearInputAdornment position="end" hasClearableContent={Boolean(value)} onClick={() => onChange && onChange(undefined)} />
                         {endAdornment}
-                    </>
+                    </InputAdornment>
                 ) : (
-                    endAdornment
+                    <InputAdornment position="end">{endAdornment}</InputAdornment>
                 )
             }
         >
