@@ -1,3 +1,4 @@
+import { Tooltip } from "@comet/admin";
 import { Warning } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -32,9 +33,16 @@ interface DuplicateFilenameDialogProps {
     filenameData: FilenameData[];
     onSkip: () => void;
     onUpload: () => void;
+    onReplace: () => void;
 }
 
-export const ManuallyHandleDuplicatedFilenamesDialog = ({ open, filenameData, onSkip, onUpload }: DuplicateFilenameDialogProps) => {
+export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponent<DuplicateFilenameDialogProps> = ({
+    open,
+    filenameData,
+    onSkip,
+    onUpload,
+    onReplace,
+}) => {
     return (
         <Dialog open={open}>
             <DialogTitle>
@@ -78,6 +86,26 @@ export const ManuallyHandleDuplicatedFilenamesDialog = ({ open, filenameData, on
                             count: filenameData.length,
                         }}
                     />
+                </Button>
+                <Button variant="contained" color="warning" onClick={onReplace}>
+                    <FormattedMessage
+                        id="comet.dam.duplicateFilenameDialog.action.replaceFiles"
+                        defaultMessage="Replace {count, plural, one {file} other {files}}"
+                        values={{
+                            count: filenameData.length,
+                        }}
+                    />
+                    <Tooltip
+                        trigger="hover"
+                        title={
+                            <FormattedMessage
+                                id="comet.dam.duplicateWarning"
+                                defaultMessage="This will not modify the cropping where the image file is currently used."
+                            />
+                        }
+                    >
+                        <Warning sx={{ marginLeft: 1 }} />
+                    </Tooltip>
                 </Button>
                 <Button variant="contained" color="primary" onClick={onUpload}>
                     <FormattedMessage
