@@ -108,7 +108,7 @@ Use this option only when you are sure that checking the scope is not necessary 
 :::
 
 :::note
-Try to avoid using the `@GetCurrentUser` decorator. Instead, you should explicitly send all the data needed in an operation. In the following example, this requires adding `userId` as a scope part as well as passing the data throughout the client. Nevertheless, this leads to a cleaner API design.
+Also, try to avoid using the `@GetCurrentUser` decorator (which often leads to use `skipScopeCheck`). Instead, you should explicitly send all the data needed in an operation. In the following example, this requires adding `userId` as a scope part as well as passing the data throughout the client. In general, this leads to a cleaner API design.
 
 ```diff
 - @RequiredPermission("products", {skipScopeCheck: true})
