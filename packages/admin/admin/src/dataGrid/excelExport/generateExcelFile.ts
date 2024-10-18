@@ -1,6 +1,7 @@
-import { GridColDef, GridValidRowModel } from "@mui/x-data-grid";
+import { GridValidRowModel } from "@mui/x-data-grid";
 import * as Excel from "exceljs";
 
+import { GridColDef } from "../GridColDef";
 import { applyDefaultStyling } from "./applyDefaultStyling";
 
 export interface ExcelGenerationOptions {
@@ -51,8 +52,8 @@ export function generateExcelFile<Row extends GridValidRowModel>(
                         // @ts-expect-error `valueFormatter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
                         value = column.valueFormatter({ value });
                     }
-                    if (typeof value !== "string") {
-                        throw new Error("Provided value is not a string");
+                    if (typeof value !== "string" && typeof value !== "number" && value !== null) {
+                        throw new Error(`Provided value must be of type string, number or null but is "${typeof value}"`);
                     }
 
                     excelRow[column.field + columnIndex] = value;

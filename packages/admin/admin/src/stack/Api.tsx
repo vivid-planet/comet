@@ -1,10 +1,10 @@
-import * as React from "react";
+import { ComponentType, createContext, ReactNode, SFC, useContext } from "react";
 
 import { BreadcrumbItem, SwitchItem } from "./Stack";
 
 export interface IStackApi {
-    addBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode) => void;
-    updateBreadcrumb: (id: string, parentId: string, url: string, title: React.ReactNode) => void;
+    addBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode, invisible: boolean) => void;
+    updateBreadcrumb: (id: string, parentId: string, url: string, title: ReactNode, invisible: boolean) => void;
     removeBreadcrumb: (id: string) => void;
     goBack: () => void;
     goAllBack: () => void;
@@ -14,14 +14,14 @@ export interface IStackApi {
     switches: SwitchItem[];
     breadCrumbs: BreadcrumbItem[];
 }
-export const StackApiContext = React.createContext<IStackApi | undefined>(undefined);
+export const StackApiContext = createContext<IStackApi | undefined>(undefined);
 export function useStackApi() {
-    return React.useContext(StackApiContext);
+    return useContext(StackApiContext);
 }
 
 /*
-export function withStackApi(WrappedComponent: React.ComponentClass) {
-    return React.forwardRef((props, ref) => {
+export function withStackApi(WrappedComponent: ComponentClass) {
+    return forwardRef((props, ref) => {
         return (
             <StackApiContext.Consumer>
                 {stackApi => <WrappedComponent {...props} stackApi={stackApi} ref={ref} />}
@@ -39,6 +39,6 @@ type Subtract<T, K> = Omit<T, keyof K>;
 
 // TODO implement ref forwarding with typescript
 export const withStackApi =
-    <P extends IWithApiProps>(WrappedComponent: React.ComponentType<P>): React.SFC<Subtract<P, IWithApiProps>> =>
+    <P extends IWithApiProps>(WrappedComponent: ComponentType<P>): SFC<Subtract<P, IWithApiProps>> =>
     (props: any) =>
         <StackApiContext.Consumer>{(stackApi) => <WrappedComponent {...props} stackApi={stackApi} />}</StackApiContext.Consumer>;

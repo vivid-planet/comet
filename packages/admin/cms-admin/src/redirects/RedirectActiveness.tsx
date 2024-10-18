@@ -2,7 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { Invisible, Visible } from "@comet/admin-icons";
 import { Button, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { green } from "@mui/material/colors";
-import * as React from "react";
+import { MouseEvent, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -35,9 +35,9 @@ const RedirectActiveness = ({ redirect }: RedirectActivenessProps): JSX.Element 
     const [updateRedirectActiveness] = useMutation<GQLUpdateRedirectActivenessMutation, GQLUpdateRedirectActivenessMutationVariables>(
         updateRedirectActivenessMutation,
     );
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 

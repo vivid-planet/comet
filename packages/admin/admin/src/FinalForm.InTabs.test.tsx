@@ -1,7 +1,6 @@
 /* eslint-disable @calm/react-intl/missing-formatted-message */
 import { createTheme } from "@mui/material/styles";
 import { fireEvent, render, waitFor } from "@testing-library/react";
-import * as React from "react";
 import { IntlProvider } from "react-intl";
 
 import { FinalForm } from "./FinalForm";
@@ -210,6 +209,6 @@ test("Form DirtyPrompt for inner Stack", async () => {
 
     await waitFor(() => {
         const dirtyDialog = rendered.queryAllByText("Do you want to save your changes?");
-        expect(dirtyDialog.length).toBe(0);
+        expect(dirtyDialog.length).toBe(2); // 2 because text is shown twice in dialog (title+content)
     });
 });

@@ -1,39 +1,98 @@
 import { ChevronDown } from "@comet/admin-icons";
-import { Button, ButtonGroup, ButtonGroupProps, MenuItem, MenuList, Popover, PopoverProps } from "@mui/material";
-import { withStyles } from "@mui/styles";
-import * as React from "react";
-import { PropsWithChildren } from "react";
+import {
+    Button,
+    ButtonGroup as MuiButtonGroup,
+    ButtonGroupProps,
+    MenuItem as MuiMenuItem,
+    MenuList as MuiMenuList,
+    Popover as MuiPopover,
+    PopoverProps,
+} from "@mui/material";
+import { useThemeProps } from "@mui/material/styles";
+import { Children, isValidElement, MouseEvent, PropsWithChildren, ReactElement, ReactNode, useRef, useState } from "react";
 
+import { createComponentSlot } from "../../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useStoredState } from "../../../hooks/useStoredState";
 import { SplitButtonContext } from "./SplitButtonContext";
 
-export interface SplitButtonProps extends ButtonGroupProps<any> {
-    selectIcon?: React.ReactNode;
+/**
+ * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
+ */
+export type SplitButtonClassKey = "root" | "activeButton" | "popover" | "menuList" | "menuItem";
+
+/**
+ * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
+ */
+export interface SplitButtonProps
+    extends ButtonGroupProps<any>,
+        ThemedComponentBaseProps<{
+            root: typeof MuiButtonGroup;
+            activeButton: typeof Button;
+            popover: typeof MuiPopover;
+            menuList: typeof MuiMenuList;
+            menuItem: typeof MuiMenuItem;
+        }> {
+    selectIcon?: ReactNode;
     selectedIndex?: number;
-    onSelectIndex?: (index: number, item: React.ReactElement) => void;
+    onSelectIndex?: (index: number, item: ReactElement) => void;
     showSelectButton?: boolean;
     localStorageKey?: string;
     autoClickOnSelect?: boolean;
     storage?: Storage;
+    /**
+     * @deprecated Use `slotProps` instead.
+     */
     popoverProps?: Partial<PopoverProps>;
 }
 
-// Based on https://v4.mui.com/components/button-group/#split-button
-const SplitBtn = ({
-    selectIcon = <ChevronDown />,
-    selectedIndex,
-    onSelectIndex,
-    children,
-    showSelectButton,
-    localStorageKey,
-    storage,
-    autoClickOnSelect = true,
-    popoverProps,
-    ...restProps
-}: PropsWithChildren<SplitButtonProps>) => {
-    const [showSelectButtonState, setShowSelectButtonState] = React.useState<boolean | undefined>(undefined);
+const Root = createComponentSlot(MuiButtonGroup)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "root",
+})();
 
-    const childrenArray = React.Children.toArray(children);
+const ActiveButton = createComponentSlot(Button)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "activeButton",
+})();
+
+const Popover = createComponentSlot(MuiPopover)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "popover",
+})();
+
+const MenuList = createComponentSlot(MuiMenuList)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "menuList",
+})();
+
+const MenuItem = createComponentSlot(MuiMenuItem)<SplitButtonClassKey>({
+    componentName: "SplitButton",
+    slotName: "menuItem",
+})();
+
+// Based on https://v4.mui.com/components/button-group/#split-button
+/**
+ * @deprecated Use a simple `SaveButton` instead as we are retiring the SplitButton pattern.
+ */
+export function SplitButton(inProps: PropsWithChildren<SplitButtonProps>) {
+    const {
+        selectIcon = <ChevronDown />,
+        selectedIndex,
+        onSelectIndex,
+        children,
+        showSelectButton,
+        localStorageKey,
+        storage,
+        autoClickOnSelect = true,
+        popoverProps,
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminSplitButton" });
+
+    const [showSelectButtonState, setShowSelectButtonState] = useState<boolean | undefined>(undefined);
+
+    const childrenArray = Children.toArray(children);
     const [uncontrolledSelectedIndex, setUncontrolledIndex] = useStoredState<number>(localStorageKey || false, 0, storage);
     const _selectedIndex = selectedIndex ?? uncontrolledSelectedIndex;
     const _onSelectIndex = onSelectIndex
@@ -42,10 +101,14 @@ const SplitBtn = ({
               setUncontrolledIndex(index);
           };
 
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef<HTMLDivElement>(null);
 
-    const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number, child: React.ReactElement) => {
+    const handleMenuItemClick: (event: MouseEvent, index: number, child: ReactElement) => void = (
+        event: MouseEvent,
+        index: number,
+        child: ReactElement,
+    ) => {
         _onSelectIndex(index, child);
         setOpen(false);
         if (autoClickOnSelect) {
@@ -57,7 +120,7 @@ const SplitBtn = ({
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleClose = (event: React.MouseEvent<Document, MouseEvent>) => {
+    const handleClose = (event: MouseEvent) => {
         if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
             return;
         }
@@ -65,31 +128,32 @@ const SplitBtn = ({
         setOpen(false);
     };
 
-    if (!React.isValidElement(childrenArray[_selectedIndex])) {
+    if (!isValidElement(childrenArray[_selectedIndex])) {
         return null;
     }
 
-    const ActiveChild = childrenArray[_selectedIndex] as React.ReactElement;
+    const ActiveChild = childrenArray[_selectedIndex] as ReactElement;
 
     const { variant: activeChildVariant, color: activeChildColor } = ActiveChild.props;
 
     const showSelect = showSelectButtonState != null ? showSelectButtonState : showSelectButton;
     return (
         <SplitButtonContext.Provider value={{ setShowSelectButton: setShowSelectButtonState }}>
-            <ButtonGroup variant={activeChildVariant} color={activeChildColor} {...restProps} ref={anchorRef}>
+            <Root variant={activeChildVariant} color={activeChildColor} {...slotProps?.root} {...restProps} ref={anchorRef}>
                 {ActiveChild}
                 {(showSelect ?? childrenArray.length > 1) && (
-                    <Button
+                    <ActiveButton
                         variant={activeChildVariant}
                         color={activeChildColor}
                         size="small"
                         classes={ActiveChild.props.classes}
                         onClick={handleToggle}
+                        {...slotProps?.activeButton}
                     >
                         {selectIcon}
-                    </Button>
+                    </ActiveButton>
                 )}
-            </ButtonGroup>
+            </Root>
             <Popover
                 open={open}
                 anchorEl={anchorRef.current}
@@ -97,15 +161,17 @@ const SplitBtn = ({
                 transformOrigin={{ vertical: "top", horizontal: "center" }}
                 onClose={handleClose}
                 {...popoverProps}
+                {...slotProps?.popover}
             >
-                <MenuList>
-                    {childrenArray.map((child: React.ReactElement, index) => {
+                <MenuList {...slotProps?.menuList}>
+                    {childrenArray.map((child: ReactElement, index) => {
                         return (
                             <MenuItem
                                 key={index}
                                 selected={index === selectedIndex}
                                 onClick={(event) => handleMenuItemClick(event, index, child)}
                                 disabled={child.props.disabled}
+                                {...slotProps?.menuItem}
                             >
                                 {child.props.children}
                             </MenuItem>
@@ -115,9 +181,7 @@ const SplitBtn = ({
             </Popover>
         </SplitButtonContext.Provider>
     );
-};
-
-export const SplitButton = withStyles({}, { name: "CometAdminSplitButton" })(SplitBtn);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
@@ -126,7 +190,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminSplitButton?: {
-            defaultProps?: ComponentsPropsList["CometAdminSplitButton"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminSplitButton"]>;
         };
     }
 }

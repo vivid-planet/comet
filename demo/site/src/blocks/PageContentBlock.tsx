@@ -1,7 +1,9 @@
-import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks, YouTubeVideoBlock } from "@comet/cms-site";
+"use client";
+import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
+import { CookieSafeYouTubeVideoBlock } from "@src/blocks/CookieSafeYouTubeVideoBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
-import * as React from "react";
+import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 
 import { AnchorBlock } from "./AnchorBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
@@ -19,10 +21,10 @@ const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
     richtext: (props) => <RichTextBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />,
-    image: (props) => <DamImageBlock data={props} />,
+    image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     textImage: (props) => <TextImageBlock data={props} />,
     damVideo: (props) => <DamVideoBlock data={props} />,
-    youTubeVideo: (props) => <YouTubeVideoBlock data={props} />,
+    youTubeVideo: (props) => <CookieSafeYouTubeVideoBlock data={props} />,
     linkList: (props) => <LinkListBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,
@@ -30,8 +32,9 @@ const supportedBlocks: SupportedBlocks = {
     media: (props) => <MediaBlock data={props} />,
     twoLists: (props) => <TwoListsBlock data={props} />,
     teaser: (props) => <TeaserBlock data={props} />,
+    newsDetail: (props) => <NewsDetailBlock data={props} />,
 };
 
-export const PageContentBlock: React.FC<PropsWithData<PageContentBlockData>> = ({ data }) => {
+export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {
     return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
 };

@@ -182,6 +182,16 @@
                             "name": "fileUrl",
                             "kind": "String",
                             "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
                         }
                     ]
                 },
@@ -286,14 +296,20 @@
                 "nullable": true
             },
             {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
                 "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
             },
             {
                 "name": "damFile",
@@ -357,12 +373,12 @@
         ],
         "inputFields": [
             {
-                "name": "damFileId",
-                "kind": "String",
+                "name": "autoplay",
+                "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "autoplay",
+                "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
             },
@@ -372,8 +388,14 @@
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "damFileId",
+                "kind": "String",
                 "nullable": true
             }
         ]
@@ -445,6 +467,23 @@
                 "kind": "Block",
                 "block": "Link",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "EmailLink",
+        "fields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -749,6 +788,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
                             "name": "documentType",
                             "kind": "String",
                             "nullable": false
@@ -796,7 +840,9 @@
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
                                 "news": "NewsLink",
-                                "damFileDownload": "DamFileDownloadLink"
+                                "damFileDownload": "DamFileDownloadLink",
+                                "phone": "PhoneLink",
+                                "email": "EmailLink"
                             },
                             "nullable": false
                         }
@@ -826,7 +872,9 @@
                                 "internal": "InternalLink",
                                 "external": "ExternalLink",
                                 "news": "NewsLink",
-                                "damFileDownload": "DamFileDownloadLink"
+                                "damFileDownload": "DamFileDownloadLink",
+                                "phone": "PhoneLink",
+                                "email": "EmailLink"
                             },
                             "nullable": false
                         }
@@ -943,7 +991,9 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "image": "DamImage",
-                                "video": "DamVideo"
+                                "damVideo": "DamVideo",
+                                "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -971,7 +1021,9 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "image": "DamImage",
-                                "video": "DamVideo"
+                                "damVideo": "DamVideo",
+                                "youTubeVideo": "YouTubeVideo",
+                                "vimeoVideo": "VimeoVideo"
                             },
                             "nullable": false
                         }
@@ -1015,7 +1067,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"
@@ -1052,7 +1104,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "heading": "Headline",
+                                "headline": "Headline",
                                 "richtext": "RichText",
                                 "image": "DamImage",
                                 "textImage": "TextImage"
@@ -1066,11 +1118,66 @@
         ]
     },
     {
+        "name": "NewsDetail",
+        "fields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "id",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "NewsLink",
         "fields": [
             {
                 "name": "id",
                 "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "news",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "slug",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "NestedObject",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "domain",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "language",
+                                        "kind": "String",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
                 "nullable": true
             }
         ],
@@ -1172,16 +1279,14 @@
                                 "headline": "Headline",
                                 "image": "DamImage",
                                 "textImage": "TextImage",
-                                "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo",
-                                "video": "Video",
                                 "linkList": "LinkList",
                                 "fullWidthImage": "FullWidthImage",
                                 "columns": "Columns",
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },
@@ -1230,16 +1335,14 @@
                                 "headline": "Headline",
                                 "image": "DamImage",
                                 "textImage": "TextImage",
-                                "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo",
-                                "video": "Video",
                                 "linkList": "LinkList",
                                 "fullWidthImage": "FullWidthImage",
                                 "columns": "Columns",
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
                                 "media": "Media",
-                                "teaser": "Teaser"
+                                "teaser": "Teaser",
+                                "newsDetail": "NewsDetail"
                             },
                             "nullable": false
                         },
@@ -1256,6 +1359,23 @@
                     ]
                 },
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "PhoneLink",
+        "fields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -2049,63 +2169,59 @@
         ]
     },
     {
-        "name": "Video",
+        "name": "VimeoVideo",
         "fields": [
             {
-                "name": "attachedBlocks",
-                "kind": "NestedObjectList",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": {
-                                "damVideo": "DamVideo",
-                                "youtubeVideo": "YouTubeVideo"
-                            },
-                            "nullable": false
-                        }
-                    ]
-                },
-                "nullable": false
-            },
-            {
-                "name": "activeType",
-                "kind": "String",
+                "name": "autoplay",
+                "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "block",
-                "kind": "NestedObject",
-                "object": {
-                    "fields": [
-                        {
-                            "name": "type",
-                            "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "props",
-                            "kind": "OneOfBlocks",
-                            "blocks": {
-                                "damVideo": "DamVideo",
-                                "youtubeVideo": "YouTubeVideo"
-                            },
-                            "nullable": false
-                        }
-                    ]
-                },
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "activeType",
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "vimeoIdentifier",
                 "kind": "String",
                 "nullable": true
             }
@@ -2115,20 +2231,6 @@
         "name": "YouTubeVideo",
         "fields": [
             {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
-            {
                 "name": "autoplay",
                 "kind": "Boolean",
                 "nullable": true
@@ -2141,25 +2243,22 @@
             {
                 "name": "loop",
                 "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": true
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
-            {
                 "name": "autoplay",
                 "kind": "Boolean",
                 "nullable": true
@@ -2172,6 +2271,17 @@
             {
                 "name": "loop",
                 "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ]

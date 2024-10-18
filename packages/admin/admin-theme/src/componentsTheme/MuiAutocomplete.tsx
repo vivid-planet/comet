@@ -1,6 +1,5 @@
 import { Clear } from "@comet/admin-icons";
 import { autocompleteClasses } from "@mui/material";
-import * as React from "react";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
@@ -17,6 +16,7 @@ export const getMuiAutocomplete: GetMuiComponentTheme<"MuiAutocomplete"> = (comp
             bottom: 0,
             right: spacing(2),
             display: "flex",
+            transform: "none",
         },
         hasPopupIcon: {
             [`&.${autocompleteClasses.root} .${autocompleteClasses.inputRoot}`]: {

@@ -51,15 +51,17 @@ Regarding user permissions, `MasterMenuData` also provides a `requiredPermission
 // src/common/MasterMenu.tsx
 export const masterMenuData: MasterMenuData = [
     {
+        type: "route",
         primary: "Demo",
         icon: <Snips />,
         route: ...,
         requiredPermission: "demo",
     },
     {
+        type: "collapsible",
         primary: "Project Snips",
         icon: <Snips />,
-        submenu: [
+        items: [
             {
                 primary: "Main Menu",
                 route: {
@@ -73,17 +75,17 @@ export const masterMenuData: MasterMenuData = [
     // ...
 ];
 
-// src/common/Master.tsx
-export const Master: React.FC = () => (
-    <MasterLayout headerComponent={MasterHeader} menuComponent={() => <MasterMenu menu={masterMenuData} />}>
-        <MasterMenuRoutes menu={masterMenuData} />
-    </MasterLayout>
-);
+export const AppMasterMenu = () => <MasterMenu menu={masterMenuData} />;
 
 // src/App.tsx
-{({ match }) => (
-    <Switch>
-        <Route render={() => <Master />} />
-    </Switch>
-)}
+<Route
+    render={() => (
+        <MasterLayout
+            headerComponent={MasterHeader}
+            menuComponent={AppMasterMenu}
+        >
+            <MasterMenuRoutes menu={masterMenuData} />
+        </MasterLayout>
+    )}
+/>
 ```

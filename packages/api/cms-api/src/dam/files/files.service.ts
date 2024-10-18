@@ -7,12 +7,13 @@ import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
@@ -34,7 +35,8 @@ import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { createHashedPath, slugifyFilename } from "./files.utils";
+import { FileValidationService } from "./file-validation.service";
+import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
@@ -116,6 +118,7 @@ export class FilesService {
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+        private readonly fileValidationService: FileValidationService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -251,10 +254,11 @@ export class FilesService {
             entity.image.cropArea = image.cropArea;
         }
 
-        const entityWithSameName = await this.findOneByFilenameAndFolder({ filename: entity.name, folderId }, entity.scope);
-
-        if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
-            throw new Error(`Entity with name '${entity.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
+        if (input.name) {
+            const entityWithSameName = await this.findOneByFilenameAndFolder({ filename: input.name, folderId }, entity.scope);
+            if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
+                throw new Error(`Entity with name '${input.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
+            }
         }
 
         const file = Object.assign(entity, {
@@ -530,11 +534,13 @@ export class FilesService {
         }
     }
 
-    async createFileUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
+    async createFileUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
         const filename = parse(file.name).name;
 
-        // Use CDN url only if available and not in preview as preview requires auth
-        const baseUrl = [this.config.cdnEnabled && !previewDamUrls ? `${this.config.cdnDomain}/files` : this.config.filesBaseUrl];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");
@@ -550,13 +556,22 @@ export class FilesService {
         return [...baseUrl, file.id, filename].join("/");
     }
 
-    async createFileDownloadUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
+    async getFileAsBase64String(file: FileInterface) {
+        const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
+
+        const buffer = await new Response(fileStream).buffer();
+        const base64String = buffer.toString("base64");
+
+        return `data:${file.mimetype};base64,${base64String}`;
+    }
+
+    async createFileDownloadUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
         const filename = parse(file.name).name;
 
-        // Use CDN url only if available and not in preview as preview requires auth
-        const baseUrl = [
-            this.config.cdnEnabled && !previewDamUrls ? `${this.config.cdnDomain}/files/download` : `${this.config.filesBaseUrl}/download`,
-        ];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

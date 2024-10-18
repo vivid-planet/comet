@@ -1,33 +1,40 @@
-import * as React from "react";
+"use client";
+
+import { cloneElement, ReactElement } from "react";
 
 import { DamFileDownloadLinkBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PropsWithData } from "./PropsWithData";
 
 interface Props extends PropsWithData<DamFileDownloadLinkBlockData> {
-    children: React.ReactNode;
+    children: ReactElement;
     title?: string;
+    className?: string;
+    legacyBehavior?: boolean;
 }
 
 export const DamFileDownloadLinkBlock = withPreview(
-    ({ data: { file, openFileType }, children, title }: Props) => {
-        if (file === undefined) {
-            return <>{children}</>;
+    ({ data: { file, openFileType }, children, title, className, legacyBehavior }: Props) => {
+        if (!file) {
+            if (legacyBehavior) {
+                return children;
+            }
+
+            return <span className={className}>{children}</span>;
         }
 
-        if (openFileType === "Download") {
-            return (
-                <a href={file.fileUrl} title={title}>
-                    {children}
-                </a>
-            );
-        } else {
-            return (
-                <a href={file.fileUrl} target="_blank" rel="noreferrer" title={title}>
-                    {children}
-                </a>
-            );
+        const href = file.fileUrl;
+        const target = openFileType === "NewTab" ? "_blank" : undefined;
+
+        if (legacyBehavior) {
+            return cloneElement(children, { href, target, title });
         }
+
+        return (
+            <a href={href} target={target} title={title} className={className}>
+                {children}
+            </a>
+        );
     },
     { label: "DamFileDownloadLink" },
 );

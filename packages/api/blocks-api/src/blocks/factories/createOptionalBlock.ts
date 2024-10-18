@@ -18,7 +18,6 @@ import {
     TraversableTransformResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
-import { TransformDependencies } from "../dependencies";
 import { BlockFactoryNameOrOptions } from "./types";
 
 export interface OptionalBlockInputInterface<DecoratedBlockInput extends BlockInputInterface> extends SimpleBlockInputInterface {
@@ -38,7 +37,7 @@ export function createOptionalBlock<DecoratedBlock extends Block>(
         @BlockField()
         visible: boolean;
 
-        async transformToPlain(deps: TransformDependencies, { includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
             return {
                 block: (includeInvisibleContent || this.visible) && this.block ? this.block : null,
                 visible: this.visible,

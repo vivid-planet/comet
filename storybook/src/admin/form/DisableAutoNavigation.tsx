@@ -100,20 +100,18 @@ const SampleForm: React.FunctionComponent = () => {
 
 function Story() {
     return (
-        <>
-            <Switch>
-                <Stack topLevelTitle="Sample">
-                    <StackSwitch initialPage="table">
-                        <StackPage name="table">
-                            <SampleTable />
-                        </StackPage>
-                        <StackPage name="edit" title="Edit">
-                            <SampleForm />
-                        </StackPage>
-                    </StackSwitch>
-                </Stack>
-            </Switch>
-        </>
+        <Switch>
+            <Stack topLevelTitle="Sample">
+                <StackSwitch initialPage="table">
+                    <StackPage name="table">
+                        <SampleTable />
+                    </StackPage>
+                    <StackPage name="edit" title="Edit">
+                        <SampleForm />
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
+        </Switch>
     );
 }
 

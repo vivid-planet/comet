@@ -27,4 +27,4 @@ Other core libraries in use:
 
 Consumer for the data. This part is optional because we are headless. Also, multiple sites for different clients (e.g., website and mobile app) can coexist.
 
-While any technology can be used, we focus on [NextJS](https://nextjs.org/). With NextJS we can use Typescript and React for building our sites. NextJS provides Server Side Rendering (SSR), Client Side Rendering (CSR), and [Static Generation](https://nextjs.org/docs/basic-features/pages#pre-rendering) (SG). We focus on SG to optimize for speed while avoiding maintaining a cache.
+While any technology can be used, we focus on [NextJS](https://nextjs.org/). With NextJS we can use Typescript and React for building our sites. NextJS provides Server Side Rendering (SSR), Client Side Rendering (CSR), and [Static Generation](https://nextjs.org/docs/basic-features/pages#pre-rendering) (SG).

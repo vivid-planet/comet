@@ -3,6 +3,7 @@ import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable, Optional } from "@nestjs/common";
 import { isFuture, isPast } from "date-fns";
+import { Request } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import isEqual from "lodash.isequal";
 import getUuid from "uuid-by-string";
@@ -21,6 +22,7 @@ import {
     UserPermissionsOptions,
     UserPermissionsUserServiceInterface,
 } from "./user-permissions.types";
+import { sortContentScopeKeysAlphabetically } from "./utils/sort-content-scope-keys-alphabetically";
 
 @Injectable()
 export class UserPermissionsService {
@@ -38,7 +40,7 @@ export class UserPermissionsService {
             if (typeof this.options.availableContentScopes === "function") {
                 return this.options.availableContentScopes();
             }
-            return this.options.availableContentScopes;
+            return this.options.availableContentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
         }
         return [];
     }
@@ -53,20 +55,21 @@ export class UserPermissionsService {
                     ...(await this.discoveryService.controllersWithMetaAtKey<RequiredPermissionMetadata>("requiredPermission")),
                 ]
                     .flatMap((p) => p.meta.requiredPermission)
+                    .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
                     .filter((p) => p !== DisablePermissionCheck)
                     .sort(),
             ),
         ];
     }
 
-    async createUserFromIdToken(idToken: JwtPayload): Promise<User> {
+    async createUser(request: Request, idToken: JwtPayload): Promise<User> {
+        if (this.userService?.createUserFromRequest) return this.userService.createUserFromRequest(request, idToken);
         if (this.userService?.createUserFromIdToken) return this.userService.createUserFromIdToken(idToken);
         if (!idToken.sub) throw new Error("JwtPayload does not contain sub.");
         return {
             id: idToken.sub,
             name: idToken.name,
             email: idToken.email,
-            language: idToken.locale || idToken.language,
         };
     }
 
@@ -142,7 +145,7 @@ export class UserPermissionsService {
             }
         }
 
-        return contentScopes;
+        return contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
     }
 
     normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
@@ -151,7 +154,34 @@ export class UserPermissionsService {
             .sort((a, b) => availableContentScopes.indexOf(a) - availableContentScopes.indexOf(b)); // Order by availableContentScopes
     }
 
-    async createCurrentUser(user: User): Promise<CurrentUser> {
+    async getImpersonatedUser(authenticatedUser: User, request: Request): Promise<User | undefined> {
+        if (request?.cookies["comet-impersonate-user-id"]) {
+            const permissions = await this.getPermissions(authenticatedUser);
+            if (permissions.find((permission) => permission.permission === "impersonation")) {
+                try {
+                    return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
+                } catch (e) {
+                    this.unsetImpersonatedUser(request);
+                }
+            }
+        }
+    }
+
+    async setImpersonatedUser(userId: string, request: Request) {
+        if (!(await this.getUser(userId))) {
+            throw new Error("User not found.");
+        }
+        request.res?.cookie("comet-impersonate-user-id", userId);
+    }
+
+    unsetImpersonatedUser(request: Request) {
+        request.res?.clearCookie("comet-impersonate-user-id");
+    }
+
+    async createCurrentUser(authenticatedUser: User, request?: Request): Promise<CurrentUser> {
+        const impersonatedUser = request && (await this.getImpersonatedUser(authenticatedUser, request));
+        const user = impersonatedUser || authenticatedUser;
+
         const availableContentScopes = await this.getAvailableContentScopes();
         const userContentScopes = await this.getContentScopes(user);
         const permissions = (await this.getPermissions(user))
@@ -177,6 +207,8 @@ export class UserPermissionsService {
         return {
             ...user,
             permissions,
+            impersonated: !!impersonatedUser,
+            authenticatedUser: impersonatedUser ? authenticatedUser : undefined,
         };
     }
 }

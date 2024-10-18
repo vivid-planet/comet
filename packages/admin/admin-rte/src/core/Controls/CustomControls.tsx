@@ -1,5 +1,4 @@
 import ButtonGroup from "@mui/material/ButtonGroup";
-import * as React from "react";
 
 import { IControlProps } from "../types";
 

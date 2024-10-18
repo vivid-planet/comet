@@ -1,45 +1,57 @@
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import * as React from "react";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
+import { ReactNode } from "react";
+
+import { createComponentSlot } from "../../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
 export type FilterBarClassKey = "root" | "barWrapper";
 
+const Root = createComponentSlot("div")<FilterBarClassKey>({
+    componentName: "FilterBar",
+    slotName: "root",
+})(css`
+    .CometAdminFormFieldContainer-root {
+        margin-bottom: 0;
+    }
+`);
+
+const BarWrapper = createComponentSlot("div")<FilterBarClassKey>({
+    componentName: "FilterBar",
+    slotName: "barWrapper",
+})(css`
+    flex-wrap: wrap;
+    display: flex;
+`);
+
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export interface FilterBarProps {
-    children?: React.ReactNode;
+export interface FilterBarProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        barWrapper: "div";
+    }> {
+    children?: ReactNode;
 }
 
-const styles = () => {
-    return createStyles<FilterBarClassKey, FilterBarProps>({
-        root: {
-            "& [class*='CometAdminFormFieldContainer-root']": {
-                marginBottom: 0,
-            },
-        },
-        barWrapper: {
-            flexWrap: "wrap",
-            display: "flex",
-        },
+/**
+ * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
+ */
+export function FilterBar(inProps: FilterBarProps) {
+    const { children, slotProps, ...restProps } = useThemeProps({
+        props: inProps,
+        name: "CometAdminFilterBar",
     });
-};
 
-function Bar({ children, classes }: FilterBarProps & WithStyles<typeof styles>): React.ReactElement {
     return (
-        <div className={classes.root}>
-            <div className={classes.barWrapper}>{children}</div>
-        </div>
+        <Root {...slotProps?.root} {...restProps}>
+            <BarWrapper {...slotProps?.barWrapper}>{children}</BarWrapper>
+        </Root>
     );
 }
-
-/**
- * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
- */
-export const FilterBar = withStyles(styles, { name: "CometAdminFilterBar" })(Bar);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -52,7 +64,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminFilterBar?: {
-            defaultProps?: ComponentsPropsList["CometAdminFilterBar"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminFilterBar"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminFilterBar"];
         };
     }

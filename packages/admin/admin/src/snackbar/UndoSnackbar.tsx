@@ -1,13 +1,13 @@
 import { Button, Slide, Snackbar, SnackbarProps } from "@mui/material";
 import { SlideProps } from "@mui/material/Slide/Slide";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
 import { useSnackbarApi } from "./SnackbarProvider";
 
 export interface UndoSnackbarProps<Payload> extends Omit<SnackbarProps, "action"> {
-    message: React.ReactNode;
+    message: ReactNode;
     onUndoClick: (payload?: Payload) => void;
     payload?: Payload;
 }

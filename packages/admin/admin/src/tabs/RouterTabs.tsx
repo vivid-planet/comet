@@ -1,14 +1,43 @@
-import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps, Theme } from "@mui/material";
-import { WithStyles, withStyles } from "@mui/styles";
-import * as React from "react";
+import { ComponentsOverrides, Tab as MuiTab, TabProps as MuiTabProps, Tabs, TabsProps } from "@mui/material";
+import { css, Theme, useThemeProps } from "@mui/material/styles";
+import { Children, ComponentType, isValidElement, ReactElement, ReactNode, SyntheticEvent } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { useSubRoutePrefix } from "../router/SubRoute";
 import { useStackApi } from "../stack/Api";
-import { StackBreadcrumb } from "../stack/Breadcrumb";
 import { useStackSwitchApi } from "../stack/Switch";
-import { RouterTabsClassKey, styles } from "./RouterTabs.styles";
 import { TabScrollButton } from "./TabScrollButton";
+
+export type RouterTabsClassKey = "root" | "tabs" | "content" | "contentHidden";
+
+type OwnerState = { contentHidden?: boolean };
+
+const Root = createComponentSlot("div")<RouterTabsClassKey>({
+    componentName: "RouterTabs",
+    slotName: "root",
+})();
+
+const StyledTabs = createComponentSlot(Tabs)<RouterTabsClassKey>({
+    componentName: "RouterTabs",
+    slotName: "tabs",
+})();
+
+const Content = createComponentSlot("div")<RouterTabsClassKey, OwnerState>({
+    componentName: "RouterTabs",
+    slotName: "content",
+    classesResolver(ownerState) {
+        return [ownerState.contentHidden && "contentHidden"];
+    },
+})(
+    ({ ownerState }) => css`
+        ${ownerState.contentHidden &&
+        css`
+            display: none;
+        `}
+    `,
+);
 
 function deduplicateSlashesInUrl(url: string) {
     return url.replace(/\/+/g, "/");
@@ -16,46 +45,54 @@ function deduplicateSlashesInUrl(url: string) {
 
 interface TabProps extends Omit<MuiTabProps, "children"> {
     path: string;
-    label: React.ReactNode;
+    label: ReactNode;
     forceRender?: boolean;
-    children: React.ReactNode;
+    children: ReactNode;
 }
 
-export const RouterTab: React.FunctionComponent<TabProps> = () => null;
+export const RouterTab = (props: TabProps) => null;
 
-type RouterTabsChild = React.ReactElement<TabProps> | boolean | null | undefined;
+type RouterTabsChild = ReactElement<TabProps> | boolean | null | undefined;
 type RouterTabsChildren = RouterTabsChild | Array<RouterTabsChild | Array<RouterTabsChild>>;
 
-export interface Props {
+export interface Props
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        tabs: typeof Tabs;
+        content: "div";
+    }> {
     children: RouterTabsChildren;
-    tabComponent?: React.ComponentType<MuiTabProps>;
+    tabComponent?: ComponentType<MuiTabProps>;
     tabsProps?: Partial<TabsProps>;
 }
 
-function RouterTabsComponent({
-    children,
-    tabComponent: TabComponent = MuiTab,
-    tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
-    classes,
-}: Props & WithStyles<typeof styles>) {
+export function RouterTabs(inProps: Props) {
+    const {
+        children,
+        tabComponent: TabComponent = MuiTab,
+        tabsProps: { ScrollButtonComponent = TabScrollButton, ...tabsProps } = {},
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminRouterTabs" });
+
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
     const history = useHistory();
     const subRoutePrefix = useSubRoutePrefix();
     const routeMatch = useRouteMatch();
 
-    const childrenArr = React.Children.toArray(children);
+    const childrenArr = Children.toArray(children);
 
-    const handleChange = (event: React.SyntheticEvent, value: number) => {
+    const handleChange = (event: SyntheticEvent, value: number) => {
         const paths = childrenArr.map((child) => {
-            return React.isValidElement<TabProps>(child) ? child.props.path : null;
+            return isValidElement<TabProps>(child) ? child.props.path : null;
         });
         history.push(deduplicateSlashesInUrl(subRoutePrefix + paths[value]));
     };
 
     const paths = childrenArr.map((child) => {
         // as seen in https://github.com/mui-org/material-ui/blob/v4.11.0/packages/material-ui/src/Tabs/Tabs.js#L390
-        if (!React.isValidElement<TabProps>(child)) {
+        if (!isValidElement<TabProps>(child)) {
             return null;
         }
 
@@ -65,7 +102,7 @@ function RouterTabsComponent({
         return child.props.path;
     });
 
-    const rearrangedChildren = React.Children.toArray(children);
+    const rearrangedChildren = Children.toArray(children);
     const defaultPathIndex = paths.indexOf("");
 
     if (defaultPathIndex >= 0) {
@@ -91,70 +128,66 @@ function RouterTabsComponent({
     let foundFirstMatch = false;
 
     return (
-        <div className={classes.root}>
+        <Root {...slotProps?.root} {...restProps}>
             {shouldShowTabBar && (
                 <Route path={deduplicateSlashesInUrl(`${subRoutePrefix}/:tab`)}>
                     {({ match }) => {
                         const routePath = match ? `/${match.params.tab}` : "";
                         const value = paths.includes(routePath) ? paths.indexOf(routePath) : defaultPathIndex;
                         return (
-                            <Tabs
-                                classes={{ root: classes.tabs }}
+                            <StyledTabs
                                 value={value}
                                 onChange={handleChange}
                                 ScrollButtonComponent={ScrollButtonComponent}
                                 scrollButtons="auto"
                                 variant="scrollable"
+                                {...slotProps?.tabs}
                                 {...tabsProps}
                             >
-                                {React.Children.map(children, (child) => {
-                                    if (!React.isValidElement<TabProps>(child)) {
+                                {Children.map(children, (child) => {
+                                    if (!isValidElement<TabProps>(child)) {
                                         return null;
                                     }
                                     const { path, forceRender, children, label, ...restTabProps } = child.props;
                                     return <TabComponent label={label} {...restTabProps} />;
                                 })}
-                            </Tabs>
+                            </StyledTabs>
                         );
                     }}
                 </Route>
             )}
-            {React.Children.map(rearrangedChildren, (child) => {
-                if (!React.isValidElement<TabProps>(child)) {
+            {Children.map(rearrangedChildren, (child) => {
+                if (!isValidElement<TabProps>(child)) {
                     return null;
                 }
                 const path = child.props.path != "" ? deduplicateSlashesInUrl(`${subRoutePrefix}/${child.props.path}`) : routeMatch.path;
                 return (
                     <Route path={path}>
                         {({ match }) => {
-                            let ret = null;
                             if (match && !foundFirstMatch) {
                                 foundFirstMatch = true;
-                                ret = <div className={classes.content}>{child.props.children}</div>;
-                            } else if (child.props.forceRender) {
-                                ret = <div className={`${classes.content} ${classes.contentHidden}`}>{child.props.children}</div>;
-                            } else {
-                                // don't render tab contents, return early as we don't need StackBreadcrumb either
-                                return null;
-                            }
-                            if (stackApi && stackSwitchApi) {
                                 return (
-                                    <StackBreadcrumb url={path} title={child.props.label} invisible={true}>
-                                        {ret}
-                                    </StackBreadcrumb>
+                                    <Content ownerState={{ contentHidden: false }} {...slotProps?.content}>
+                                        {child.props.children}
+                                    </Content>
+                                );
+                            } else if (child.props.forceRender) {
+                                return (
+                                    <Content ownerState={{ contentHidden: true }} {...slotProps?.content}>
+                                        {child.props.children}
+                                    </Content>
                                 );
                             } else {
-                                return ret;
+                                // don't render tab contents
+                                return null;
                             }
                         }}
                     </Route>
                 );
             })}
-        </div>
+        </Root>
     );
 }
-
-export const RouterTabs = withStyles(styles, { name: "CometAdminRouterTabs" })(RouterTabsComponent);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

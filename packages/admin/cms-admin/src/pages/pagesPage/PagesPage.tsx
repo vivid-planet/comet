@@ -16,8 +16,7 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, Divider, FormControlLabel, LinearProgress, Paper, Switch } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
-import * as React from "react";
+import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeInterface, createEditPageNode, useCmsBlockContext } from "../..";
@@ -39,9 +38,9 @@ interface Props {
     category: string;
     path: string;
     allCategories: AllCategories;
-    documentTypes: Record<DocumentType, DocumentInterface>;
-    editPageNode?: React.ComponentType<EditPageNodeProps>;
-    renderContentScopeIndicator: (scope: ContentScopeInterface) => React.ReactNode;
+    documentTypes: Record<DocumentType, DocumentInterface> | ((category: string) => Record<DocumentType, DocumentInterface>);
+    editPageNode?: ComponentType<EditPageNodeProps>;
+    renderContentScopeIndicator: (scope: ContentScopeInterface) => ReactNode;
 }
 
 const DefaultEditPageNode = createEditPageNode({});
@@ -50,19 +49,20 @@ export function PagesPage({
     category,
     path,
     allCategories,
-    documentTypes,
+    documentTypes: passedDocumentTypes,
     editPageNode: EditPageNode = DefaultEditPageNode,
     renderContentScopeIndicator,
-}: Props): React.ReactElement {
+}: Props) {
     const intl = useIntl();
     const { scope, setRedirectPathAfterChange } = useContentScope();
     const { additionalPageTreeNodeFragment } = useCmsBlockContext();
     useContentScopeConfig({ redirectPathAfterChange: path });
 
     const siteConfig = useSiteConfig({ scope });
-    const pagesQuery = React.useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
+    const pagesQuery = useMemo(() => createPagesQuery({ additionalPageTreeNodeFragment }), [additionalPageTreeNodeFragment]);
+    const documentTypes = typeof passedDocumentTypes === "function" ? passedDocumentTypes(category) : passedDocumentTypes;
 
-    React.useEffect(() => {
+    useEffect(() => {
         setRedirectPathAfterChange(path);
         return () => {
             setRedirectPathAfterChange(undefined);
@@ -85,7 +85,7 @@ export function PagesPage({
         stopPolling,
     });
 
-    const isInitialLoad = React.useRef(true);
+    const isInitialLoad = useRef(true);
 
     if (error) {
         const isPollingError = !isInitialLoad.current;
@@ -103,10 +103,10 @@ export function PagesPage({
 
     const [EditDialog, editDialogSelection, editDialogApi] = useEditDialog();
 
-    const refPageTree = React.useRef<PageTreeRefApi>(null);
+    const refPageTree = useRef<PageTreeRefApi>(null);
     const [showArchive, setShowArchive] = useStoredState<boolean>("pageTreeShowArchive", false, window.sessionStorage);
 
-    const ignorePages = React.useCallback((page: GQLPageTreePageFragment) => (showArchive ? true : page.visibility !== "Archived"), [showArchive]);
+    const ignorePages = useCallback((page: GQLPageTreePageFragment) => (showArchive ? true : page.visibility !== "Archived"), [showArchive]);
 
     const { tree, pagesToRender, setExpandedIds, expandedIds, toggleExpand, onSelectChanged, setSelectedIds, selectState, selectedTree } =
         usePageTree({
@@ -137,8 +137,7 @@ export function PagesPage({
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
                 <StackSwitch>
                     <StackPage name="table">
-                        {renderContentScopeIndicator(scope)}
-                        <Toolbar>
+                        <Toolbar scopeIndicator={renderContentScopeIndicator(scope)}>
                             <PageSearch query={query} onQueryChange={setQuery} pageSearchApi={pageSearchApi} />
                             <FormControlLabel
                                 control={<Switch checked={showArchive} color="primary" onChange={handleArchiveToggleClick} />}
@@ -157,9 +156,18 @@ export function PagesPage({
                                 </Button>
                             </ToolbarActions>
                         </Toolbar>
-                        <PageTreeContext.Provider value={{ allCategories, currentCategory: category, documentTypes, tree, query: pagesQuery }}>
-                            <PageTreeContent fullHeight>
-                                <ActionToolbarBox>
+                        <PageTreeContext.Provider
+                            value={{
+                                allCategories,
+                                currentCategory: category,
+                                documentTypes,
+                                getDocumentTypesByCategory: typeof passedDocumentTypes === "function" ? passedDocumentTypes : undefined,
+                                tree,
+                                query: pagesQuery,
+                            }}
+                        >
+                            <MainContent fullHeight sx={{ display: "flex", flexDirection: "column" }}>
+                                <Box>
                                     <PagesPageActionToolbar
                                         selectedState={selectState}
                                         onSelectAllPressed={() => {
@@ -179,8 +187,8 @@ export function PagesPage({
                                             setExpandedIds([]);
                                         }}
                                     />
-                                </ActionToolbarBox>
-                                <FullHeightPaper variant="outlined">
+                                </Box>
+                                <Paper variant="outlined" sx={{ flex: 1 }}>
                                     {loading && isInitialLoad.current ? (
                                         <Loading behavior="fillParent" />
                                     ) : (
@@ -203,8 +211,8 @@ export function PagesPage({
                                             />
                                         </>
                                     )}
-                                </FullHeightPaper>
-                            </PageTreeContent>
+                                </Paper>
+                            </MainContent>
                         </PageTreeContext.Provider>
 
                         <EditDialog>
@@ -272,24 +280,3 @@ export function PagesPage({
         </DamScopeProvider>
     );
 }
-
-const PageTreeContent = withStyles({
-    root: {
-        display: "flex",
-        flexDirection: "column",
-    },
-})(MainContent);
-
-const FullHeightPaper = withStyles({
-    root: {
-        flex: 1,
-    },
-})(Paper);
-
-const ActionToolbarBox = withStyles({
-    root: {
-        width: "100%",
-        paddingLeft: 24,
-        paddingRight: 50,
-    },
-})(Box);

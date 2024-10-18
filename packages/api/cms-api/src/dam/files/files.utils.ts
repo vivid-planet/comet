@@ -1,15 +1,24 @@
 import { XMLParser } from "fast-xml-parser";
+import FileType from "file-type";
+import fs from "fs";
 import { unlink } from "fs/promises";
-import { sep } from "path";
+import got from "got";
+import * as mimedb from "mime-db";
+import os from "os";
 import slugify from "slugify";
+import stream from "stream";
+import { promisify } from "util";
+import { v4 as uuid } from "uuid";
 
 import { FileUploadInput } from "./dto/file-upload.input";
+import { FilesService } from "./files.service";
+
+const pipeline = promisify(stream.pipeline);
 
 export function slugifyFilename(filename: string, extension: string): string {
-    return `${slugify(filename, { locale: "de", lower: true, strict: true })}${extension}`;
+    const extensionWithDot = extension.startsWith(".") ? extension : `.${extension}`;
+    return `${slugify(filename)}${extensionWithDot}`;
 }
-
-export const createHashedPath = (contentHash: string): string => [contentHash.substr(0, 2), contentHash.substr(2, 2), contentHash].join(sep);
 
 export const calculatePartialRanges = (size: number, range: string): { start: number; end: number; contentLength: number } => {
     let [start, end] = range.replace(/bytes=/, "").split("-") as Array<string | number>;
@@ -79,3 +88,44 @@ export const removeMulterTempFile = async (file: FileUploadInput) => {
 
     await unlink(path);
 };
+
+export const getValidExtensionsForMimetype = (mimetype: string) => {
+    let supportedExtensions: readonly string[] | undefined;
+    if (mimetype === "application/x-zip-compressed") {
+        // zip files in Windows, not supported by mime-db
+        // see https://github.com/jshttp/mime-db/issues/245
+        supportedExtensions = ["zip"];
+    } else {
+        supportedExtensions = mimedb[mimetype]?.extensions;
+    }
+
+    return supportedExtensions;
+};
+
+export async function createFileUploadInputFromUrl(url: string): Promise<FileUploadInput> {
+    const tempDir = fs.mkdtempSync(`${os.tmpdir()}/download`);
+    const fakeName = uuid();
+    const tempFile = `${tempDir}/${fakeName}`;
+
+    if (url.substring(0, 4) === "http") {
+        await pipeline(got.stream(url), fs.createWriteStream(tempFile));
+        //TODO when downloading the file from http use mime type from response header
+    } else {
+        fs.copyFileSync(url, tempFile);
+    }
+
+    const fileType = await FileType.fromFile(tempFile);
+    const stats = fs.statSync(tempFile); // TODO don't use sync
+    const filename = url.substring(url.lastIndexOf("/") + 1);
+
+    return {
+        fieldname: FilesService.UPLOAD_FIELD,
+        originalname: `${filename}.${fileType?.ext}`,
+        encoding: "utf8",
+        mimetype: fileType?.mime as string,
+        size: stats.size,
+        destination: tempDir,
+        filename: fakeName,
+        path: tempFile,
+    };
+}

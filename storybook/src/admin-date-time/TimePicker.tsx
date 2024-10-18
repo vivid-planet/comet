@@ -24,7 +24,7 @@ const Story = () => {
                         <Card>
                             <CardContent>
                                 <Field name="timeOne" label="Time" fullWidth component={FinalFormTimePicker} />
-                                <Field name="timeTwo" label="Clearable" fullWidth clearable component={FinalFormTimePicker} />
+                                <Field name="timeTwo" label="Required" fullWidth required component={FinalFormTimePicker} />
                             </CardContent>
                         </Card>
                         <pre>{JSON.stringify(values, null, 4)}</pre>

@@ -1,9 +1,17 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect, messages } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
-import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
+import {
+    AdminComponentButton,
+    AdminComponentPaper,
+    BlockCategory,
+    BlockDependency,
+    BlockInterface,
+    BlocksFinalForm,
+    createBlockSkeleton,
+} from "@comet/blocks-admin";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
-import * as React from "react";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
@@ -48,6 +56,7 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         id
                         name
                         fileUrl
+                        size
                     }
                 }
             `,
@@ -60,9 +69,37 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
             id: damFile.id,
             name: damFile.name,
             fileUrl: damFile.fileUrl,
+            size: damFile.size,
         };
 
         return ret;
+    },
+
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.file?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "DamFile",
+                id: state.file.id,
+                data: {
+                    damFile: state.file,
+                },
+            });
+        }
+
+        return dependencies;
+    },
+
+    replaceDependenciesInOutput: (output, replacements) => {
+        const clonedOutput: DamFileDownloadLinkBlockInput = deepClone(output);
+        const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.fileId);
+
+        if (replacement) {
+            clonedOutput.fileId = replacement.replaceWithId;
+        }
+
+        return clonedOutput;
     },
 
     definesOwnPadding: true,
@@ -108,19 +145,14 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                         label={<FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType" defaultMessage="Open file" />}
                     >
                         {(props) => (
-                            <>
-                                <FinalFormSelect {...props}>
-                                    <MenuItem value="Download">
-                                        <FormattedMessage
-                                            id="comet.blocks.damFileDownloadLink.openFileType.download"
-                                            defaultMessage="as a download"
-                                        />
-                                    </MenuItem>
-                                    <MenuItem value="NewTab">
-                                        <FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
-                                    </MenuItem>
-                                </FinalFormSelect>
-                            </>
+                            <FinalFormSelect {...props}>
+                                <MenuItem value="Download">
+                                    <FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType.download" defaultMessage="as a download" />
+                                </MenuItem>
+                                <MenuItem value="NewTab">
+                                    <FormattedMessage id="comet.blocks.damFileDownloadLink.openFileType.newTab" defaultMessage="in a new tab" />
+                                </MenuItem>
+                            </FinalFormSelect>
                         )}
                     </Field>
                 </AdminComponentPaper>

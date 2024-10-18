@@ -1,21 +1,40 @@
-import * as React from "react";
+"use client";
+import Link from "next/link";
+import { PropsWithChildren } from "react";
 
 import { InternalLinkBlockData } from "../blocks.generated";
-import { Link } from "../link/Link";
 import { PropsWithData } from "./PropsWithData";
 
-interface InternalLinkBlockProps extends PropsWithData<InternalLinkBlockData> {
-    children: React.ReactElement;
+interface InternalLinkBlockProps extends PropsWithChildren<PropsWithData<InternalLinkBlockData>> {
     title?: string;
+    className?: string;
+    legacyBehavior?: boolean;
 }
 
-export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title }: InternalLinkBlockProps): React.ReactElement {
+/**
+ * @deprecated There should be a copy of this component in the application for flexibility (e.g. multi language support)
+ */
+export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, children, title, className, legacyBehavior }: InternalLinkBlockProps) {
     if (!targetPage) {
-        return children;
+        if (legacyBehavior) {
+            return <>{children}</>;
+        }
+
+        return <span className={className}>{children}</span>;
+    }
+
+    const href = targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path;
+
+    if (legacyBehavior) {
+        return (
+            <Link href={href} title={title} passHref legacyBehavior>
+                {children}
+            </Link>
+        );
     }
 
     return (
-        <Link href={targetPageAnchor !== undefined ? `${targetPage.path}#${targetPageAnchor}` : targetPage.path} passHref title={title}>
+        <Link href={href} title={title} className={className}>
             {children}
         </Link>
     );

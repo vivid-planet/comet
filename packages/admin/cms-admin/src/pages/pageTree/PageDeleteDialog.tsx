@@ -2,7 +2,7 @@ import { DeleteButton, messages } from "@comet/admin";
 import { ArrowRight, Clear, Delete } from "@comet/admin-icons";
 import { AdminComponentPaper } from "@comet/blocks-admin";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
-import * as React from "react";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLPageTreePageFragment } from "../pageTree/usePageTree";
@@ -25,10 +25,10 @@ interface DeleteDialogInformation {
     totalPageCount: number;
 }
 
-export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
+export const PageDeleteDialog = (props: PageDeleteDialogProps) => {
     const { dialogOpen, handleCancelClick, handleDeleteClick } = props;
 
-    const dialogInformation = React.useMemo<DeleteDialogInformation | undefined>(() => {
+    const dialogInformation = useMemo<DeleteDialogInformation | undefined>(() => {
         if (props.selectedNodes) {
             const dialogInformation = {
                 hasSubpages: props.selectedNodes.find((element) => element.parentId !== props.selectedNodes[0].parentId) !== undefined,
@@ -56,7 +56,7 @@ export const PageDeleteDialog: React.FC<PageDeleteDialogProps> = (props) => {
                         <WarningIconWrapper>
                             <WarningIcon color="inherit" fontSize="large" />
                         </WarningIconWrapper>
-                        <Typography variant="h6">
+                        <Typography variant="subtitle1">
                             {dialogInformation?.hasSubpages ? (
                                 <FormattedMessage
                                     id="comet.pages.pages.page.deleteDialog.contentIncludingSubpages"

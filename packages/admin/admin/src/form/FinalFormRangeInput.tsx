@@ -1,69 +1,139 @@
-import { ComponentsOverrides, FormControl, InputBase, Slider, SliderProps, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
-import * as React from "react";
+import { FormControl, InputBase, Slider, SliderProps } from "@mui/material";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material/styles";
+import { ReactNode, useEffect, useState } from "react";
 import { FieldRenderProps } from "react-final-form";
+import { FormattedMessage } from "react-intl";
 
-export type FinalFormRangeInputClassKey = "root" | "inputsWrapper" | "inputFieldsSeparatorContainer" | "sliderWrapper" | "inputFieldContainer";
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-const styles = () => {
-    return createStyles<FinalFormRangeInputClassKey, FinalFormRangeInputProps>({
-        root: {
-            boxSizing: "border-box",
-            padding: "0 20px",
-            width: "100%",
-        },
-        inputsWrapper: {
-            justifyContent: "space-between",
-            marginBottom: "15px",
-            alignItems: "center",
-            display: "flex",
-        },
-        inputFieldsSeparatorContainer: {
-            textAlign: "center",
-            minWidth: "20%",
-        },
-        sliderWrapper: {},
-        inputFieldContainer: {
-            textAlign: "center",
-            flexBasis: 0,
-            flexGrow: 1,
-        },
-    });
+export type FinalFormRangeInputClassKey =
+    | "root"
+    | "disableSlider"
+    | "inputsWrapper"
+    | "inputFieldsSeparatorContainer"
+    | "sliderWrapper"
+    | "inputFieldContainer";
+
+type OwnerState = {
+    disableSlider: boolean;
 };
 
-export interface FinalFormRangeInputProps extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement> {
+const Root = createComponentSlot("div")<FinalFormRangeInputClassKey, OwnerState>({
+    componentName: "FinalFormRangeInput",
+    slotName: "root",
+    classesResolver: ({ disableSlider }) => [disableSlider && "disableSlider"],
+})();
+
+const InputsWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey, OwnerState>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputsWrapper",
+})(
+    ({ theme, ownerState }) => css`
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+
+        ${!ownerState.disableSlider &&
+        css`
+            margin-bottom: ${theme.spacing(3)};
+        `}
+    `,
+);
+
+const InputFieldsSeparatorContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputFieldsSeparatorContainer",
+})(
+    ({ theme }) => css`
+        text-align: center;
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+    `,
+);
+
+const SliderWrapper = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "sliderWrapper",
+})(
+    ({ theme }) => css`
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+    `,
+);
+
+const InputFieldContainer = createComponentSlot("div")<FinalFormRangeInputClassKey>({
+    componentName: "FinalFormRangeInput",
+    slotName: "inputFieldContainer",
+})(css`
+    text-align: center;
+    flex-basis: 0;
+    flex-grow: 1;
+`);
+
+export interface FinalFormRangeInputProps
+    extends FieldRenderProps<{ min: number; max: number }, HTMLInputElement>,
+        ThemedComponentBaseProps<{
+            root: "div";
+            inputsWrapper: "div";
+            inputFieldsSeparatorContainer: "div";
+            sliderWrapper: "div";
+            inputFieldContainer: "div";
+        }> {
     min: number;
     max: number;
-    startAdornment?: React.ReactNode;
-    endAdornment?: React.ReactNode;
+    startAdornment?: ReactNode;
+    endAdornment?: ReactNode;
+    separator?: ReactNode;
+    disableSlider?: boolean;
     sliderProps?: Omit<SliderProps, "min" | "max">;
 }
 
-const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof styles> & FinalFormRangeInputProps> = ({
-    classes,
-    min,
-    max,
-    sliderProps,
-    startAdornment,
-    endAdornment,
-    input: { name, onChange, value: fieldValue },
-}) => {
-    const [internalMinInput, setInternalMinInput] = React.useState(fieldValue.min || undefined);
-    const [internalMaxInput, setInternalMaxInput] = React.useState(fieldValue.max || undefined);
+export function FinalFormRangeInput(inProps: FinalFormRangeInputProps) {
+    const {
+        min,
+        max,
+        startAdornment,
+        endAdornment,
+        separator = <FormattedMessage id="comet.rangeInput.separator" defaultMessage="to" />,
+        disableSlider,
+        sliderProps,
+        input: { name, onChange, value: fieldValue },
+        slotProps,
+        ...restProps
+    } = useThemeProps({ props: inProps, name: "CometAdminFinalFormRangeInput" });
+
+    const [internalMinInput, setInternalMinInput] = useState(fieldValue.min || undefined);
+    const [internalMaxInput, setInternalMaxInput] = useState(fieldValue.max || undefined);
 
     const handleSliderChange = (event: Event, newValue: number[]) => {
         onChange({ min: newValue[0], max: newValue[1] });
     };
 
-    React.useEffect(() => {
+    const ownerState: OwnerState = { disableSlider: Boolean(disableSlider) };
+
+    useEffect(() => {
         setInternalMinInput(fieldValue.min);
         setInternalMaxInput(fieldValue.max);
     }, [fieldValue]);
 
+    const updateMinMaxValues = () => {
+        const internalMinValue = typeof internalMinInput === "undefined" ? min : internalMinInput;
+        const internalMaxValue = typeof internalMaxInput === "undefined" ? max : internalMaxInput;
+
+        const minValue = Math.min(internalMinValue, internalMaxValue);
+        const maxValue = Math.max(internalMinValue, internalMaxValue);
+
+        onChange({
+            min: Math.max(minValue, min),
+            max: Math.min(maxValue, max),
+        });
+    };
+
     return (
-        <div className={classes.root}>
-            <div className={classes.inputsWrapper}>
-                <div className={classes.inputFieldContainer}>
+        <Root ownerState={ownerState} {...slotProps?.root} {...restProps}>
+            <InputsWrapper ownerState={ownerState} {...slotProps?.inputsWrapper}>
+                <InputFieldContainer {...slotProps?.inputFieldContainer}>
                     <FormControl fullWidth>
                         <InputBase
                             name={`${name}.min`}
@@ -76,16 +146,12 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             endAdornment={endAdornment}
                             onBlur={() => {
                                 if (internalMinInput !== undefined) {
-                                    const minFieldValue = Math.min(internalMinInput ? internalMinInput : min, fieldValue.max ? fieldValue.max : max);
-                                    onChange({
-                                        min: minFieldValue < min ? min : minFieldValue,
-                                        max: internalMaxInput === undefined ? max : internalMaxInput,
-                                    });
+                                    updateMinMaxValues();
                                 } else {
                                     onChange(undefined);
                                 }
                             }}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            onChange={(e) => {
                                 if (e.target.value === "") {
                                     setInternalMinInput(undefined);
                                 } else {
@@ -94,9 +160,9 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             }}
                         />
                     </FormControl>
-                </div>
-                <div className={classes.inputFieldsSeparatorContainer}>-</div>
-                <div className={classes.inputFieldContainer}>
+                </InputFieldContainer>
+                <InputFieldsSeparatorContainer {...slotProps?.inputFieldsSeparatorContainer}>{separator}</InputFieldsSeparatorContainer>
+                <InputFieldContainer {...slotProps?.inputFieldContainer}>
                     <FormControl fullWidth>
                         <InputBase
                             name={`${name}.max`}
@@ -109,16 +175,12 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             endAdornment={endAdornment ? endAdornment : ""}
                             onBlur={() => {
                                 if (internalMaxInput !== undefined) {
-                                    const maxFieldValue = Math.max(fieldValue.min ? fieldValue.min : min, internalMaxInput ? internalMaxInput : max);
-                                    onChange({
-                                        min: internalMinInput === undefined ? min : internalMinInput,
-                                        max: maxFieldValue > max ? max : maxFieldValue,
-                                    });
+                                    updateMinMaxValues();
                                 } else {
                                     onChange(undefined);
                                 }
                             }}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            onChange={(e) => {
                                 if (e.target.value === "") {
                                     setInternalMaxInput(undefined);
                                 } else {
@@ -127,22 +189,22 @@ const FinalFormRangeInputComponent: React.FunctionComponent<WithStyles<typeof st
                             }}
                         />
                     </FormControl>
-                </div>
-            </div>
-            <div className={classes.sliderWrapper}>
-                <Slider
-                    min={min}
-                    max={max}
-                    value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
-                    onChange={handleSliderChange}
-                    {...sliderProps}
-                />
-            </div>
-        </div>
+                </InputFieldContainer>
+            </InputsWrapper>
+            {!disableSlider && (
+                <SliderWrapper {...slotProps?.sliderWrapper}>
+                    <Slider
+                        min={min}
+                        max={max}
+                        value={[fieldValue.min ? fieldValue.min : min, fieldValue.max ? fieldValue.max : max]}
+                        onChange={handleSliderChange}
+                        {...sliderProps}
+                    />
+                </SliderWrapper>
+            )}
+        </Root>
     );
-};
-
-export const FinalFormRangeInput = withStyles(styles, { name: "CometAdminFinalFormRangeInput" })(FinalFormRangeInputComponent);
+}
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {

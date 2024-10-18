@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
@@ -16,7 +16,7 @@ interface TranslationDialogBaseProps<T> {
 
 export const BaseTranslationDialog = <T,>(props: TranslationDialogBaseProps<T>) => {
     const { open, onClose, originalText, translatedText, onApplyTranslation, renderOriginalText, renderTranslatedText } = props;
-    const [translation, setTranslation] = React.useState(translatedText);
+    const [translation, setTranslation] = useState(translatedText);
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
@@ -24,17 +24,21 @@ export const BaseTranslationDialog = <T,>(props: TranslationDialogBaseProps<T>) 
                 <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
             </DialogTitle>
             <DialogContent>
-                <Grid container spacing={4} columns={2} alignItems="center">
+                <Grid container columnSpacing={4} rowSpacing={2} columns={2} alignItems="center">
                     <Grid item xs={1}>
-                        <Typography variant="h6">
+                        <Typography variant="subtitle2">
                             <FormattedMessage id="comet.translator.original" defaultMessage="Original" />
                         </Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Typography variant="subtitle2">
+                            <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={1}>
                         {renderOriginalText(originalText)}
                     </Grid>
                     <Grid item xs={1}>
-                        <Typography variant="h6">
-                            <FormattedMessage id="comet.translator.translation" defaultMessage="Translation" />
-                        </Typography>
                         {renderTranslatedText(translation, setTranslation)}
                     </Grid>
                 </Grid>

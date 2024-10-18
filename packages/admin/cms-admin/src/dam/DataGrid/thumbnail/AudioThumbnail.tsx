@@ -1,6 +1,5 @@
 import { Music } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 
 const AudioThumbnailWrapper = styled("div")`
     display: flex;
@@ -18,7 +17,7 @@ const StyledMusicIcon = styled(Music)`
     color: ${({ theme }) => theme.palette.primary.main};
 `;
 
-export const AudioThumbnail = (): React.ReactElement => {
+export const AudioThumbnail = () => {
     return (
         <AudioThumbnailWrapper>
             <StyledMusicIcon />

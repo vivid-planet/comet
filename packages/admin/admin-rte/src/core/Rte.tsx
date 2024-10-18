@@ -1,7 +1,7 @@
 import "draft-js/dist/Draft.css"; // important for nesting of ul/ol
 
-import { ComponentsOverrides, Theme } from "@mui/material";
-import { createStyles, WithStyles, withStyles } from "@mui/styles";
+import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
 import {
     DraftBlockType,
     DraftEditorCommand,
@@ -14,7 +14,18 @@ import {
     RichUtils,
 } from "draft-js";
 import { onDraftEditorCopy, onDraftEditorCut } from "draftjs-conductor";
-import * as React from "react";
+import {
+    ClipboardEvent,
+    CSSProperties,
+    forwardRef,
+    ForwardRefExoticComponent,
+    KeyboardEvent,
+    PropsWithoutRef,
+    RefAttributes,
+    useCallback,
+    useImperativeHandle,
+    useRef,
+} from "react";
 
 import Controls from "./Controls/Controls";
 import defaultBlocktypeMap, { cleanBlockTypeMap, mergeBlocktypeMaps } from "./defaultBlocktypeMap";
@@ -92,20 +103,24 @@ export type FilterEditorStateBeforeUpdateFn = (
     context: Pick<IRteOptions, "supports" | "listLevelMax" | "maxBlocks" | "standardBlockType">,
 ) => EditorState;
 
-export interface RteProps {
+export interface RteProps
+    extends ThemedComponentBaseProps<{
+        root: "div";
+        editor: "div";
+    }> {
     value: EditorState;
     onChange: OnEditorStateChangeFn;
     options?: IOptions;
     disabled?: boolean;
     minHeight?: number;
     colors?: {
-        border?: React.CSSProperties["color"];
-        toolbarBackground?: React.CSSProperties["color"];
-        buttonIcon?: React.CSSProperties["color"];
-        buttonIconDisabled?: React.CSSProperties["color"];
-        buttonBackgroundHover?: React.CSSProperties["color"];
-        buttonBorderHover?: React.CSSProperties["color"];
-        buttonBorderDisabled?: React.CSSProperties["color"];
+        border?: CSSProperties["color"];
+        toolbarBackground?: CSSProperties["color"];
+        buttonIcon?: CSSProperties["color"];
+        buttonIconDisabled?: CSSProperties["color"];
+        buttonBackgroundHover?: CSSProperties["color"];
+        buttonBorderHover?: CSSProperties["color"];
+        buttonBorderDisabled?: CSSProperties["color"];
     };
 }
 
@@ -150,10 +165,28 @@ export const styleMap = {
     },
 };
 
-const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles>> = (props, ref) => {
-    const { value: editorState, onChange, options: passedOptions, disabled, classes } = props;
-    const editorRef = React.useRef<DraftJsEditor>(null);
-    const editorWrapperRef = React.useRef<HTMLDivElement>(null);
+export const Rte: ForwardRefExoticComponent<PropsWithoutRef<RteProps> & RefAttributes<unknown>> = forwardRef((inProps: RteProps, ref) => {
+    const {
+        value: editorState,
+        onChange,
+        options: passedOptions,
+        disabled,
+        minHeight,
+        colors,
+        slotProps,
+        ...restProps
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminRte",
+    });
+
+    const ownerState: OwnerState = {
+        disabled,
+        minHeight,
+    };
+
+    const editorRef = useRef<DraftJsEditor>(null);
+    const editorWrapperRef = useRef<HTMLDivElement>(null);
 
     // merge default options with passed options
     let options = passedOptions ? { ...defaultOptions, ...passedOptions } : defaultOptions;
@@ -181,7 +214,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
     /**
      * Expose methods
      */
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
         focus: () => {
             if (editorRef && editorRef.current) {
                 editorRef.current.focus();
@@ -191,7 +224,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
 
     const { filterEditorStateBeforeUpdate, supports, listLevelMax, maxBlocks, standardBlockType } = options;
 
-    const decoratedOnChange = React.useCallback(
+    const decoratedOnChange = useCallback(
         (nextEditorState: EditorState) => {
             let modifiedState = nextEditorState;
             const context = {
@@ -246,7 +279,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
         return "not-handled";
     }
 
-    function handleReturn(e: React.KeyboardEvent, innerEditorState: EditorState) {
+    function handleReturn(e: KeyboardEvent, innerEditorState: EditorState) {
         // inserts a newline "\n" on SHIFT+ENTER-key
         if (e.shiftKey) {
             onChange(RichUtils.insertSoftNewline(innerEditorState));
@@ -255,7 +288,7 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
         return "not-handled";
     }
 
-    function keyBindingFn(event: React.KeyboardEvent) {
+    function keyBindingFn(event: KeyboardEvent) {
         if (event.key === "Tab") {
             // nested lists for ol and ul
             event.preventDefault();
@@ -268,9 +301,6 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
         return getDefaultKeyBinding(event);
     }
 
-    const rootClasses: string[] = [classes.root];
-    if (disabled) rootClasses.push(classes.disabled);
-
     const customStyleMap: DraftStyleMap = { ...styleMap };
 
     if (options.customInlineStyles) {
@@ -280,12 +310,9 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
     }
 
     return (
-        <div ref={editorWrapperRef} className={rootClasses.join(" ")}>
+        <Root ref={editorWrapperRef} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             <Controls editorRef={editorRef} editorState={editorState} setEditorState={onChange} options={options} disabled={disabled} />
-            <div
-                className={classes.editor}
-                style={{ "--comet-admin-rte-min-height": `${props.minHeight === undefined ? 240 : props.minHeight}px` } as React.CSSProperties}
-            >
+            <Editor ownerState={ownerState} {...slotProps?.editor}>
                 <DraftJsEditor
                     ref={editorRef}
                     editorState={editorState}
@@ -296,10 +323,10 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
                     customStyleMap={customStyleMap}
                     blockRenderMap={blockRenderMap}
                     onCopy={(editor, event) => {
-                        onDraftEditorCopy(editor, event as React.ClipboardEvent<HTMLElement>);
+                        onDraftEditorCopy(editor, event as ClipboardEvent<HTMLElement>);
                     }}
                     onCut={(editor, event) => {
-                        onDraftEditorCut(editor, event as React.ClipboardEvent<HTMLElement>);
+                        onDraftEditorCut(editor, event as ClipboardEvent<HTMLElement>);
                     }}
                     handlePastedText={(text: string, html: string | undefined, editorState: EditorState): DraftHandleValue => {
                         const nextEditorState = pasteAndFilterText(html, editorState, options);
@@ -313,38 +340,55 @@ const Rte: React.RefForwardingComponent<any, RteProps & WithStyles<typeof styles
                     }}
                     {...options.draftJsProps}
                 />
-            </div>
-        </div>
+            </Editor>
+        </Root>
     );
-};
+});
 
 export type RteClassKey = "root" | "disabled" | "editor";
 
-const styles = (theme: Theme) => {
-    const rteTheme = getRteTheme(theme.components?.CometAdminRte?.defaultProps);
+type OwnerState = Pick<RteProps, "disabled" | "minHeight">;
 
-    return createStyles<RteClassKey, RteProps>({
-        root: {
-            border: `1px solid ${rteTheme.colors.border}`,
-            borderTopWidth: 0,
-            backgroundColor: "#fff",
-        },
-        disabled: {
-            "& $editor": {
-                color: theme.palette.text.disabled,
-            },
-        },
-        editor: {
-            "& .public-DraftEditor-content": {
-                minHeight: "var(--comet-admin-rte-min-height)",
-                padding: 20,
-                boxSizing: "border-box",
-            },
-        },
-    });
-};
+const Root = createComponentSlot("div")<RteClassKey, OwnerState>({
+    componentName: "Rte",
+    slotName: "root",
+    classesResolver(ownerState) {
+        return [ownerState.disabled && "disabled"];
+    },
+})(
+    ({ theme }) => css`
+        border: 1px solid ${getRteTheme(theme.components?.CometAdminRte?.defaultProps).colors.border};
+        border-top-width: 0;
+        background-color: #fff;
+    `,
+);
 
-export default withStyles(styles, { name: "CometAdminRte" })(React.forwardRef(Rte));
+const Editor = createComponentSlot("div")<RteClassKey, OwnerState>({
+    componentName: "Rte",
+    slotName: "editor",
+    classesResolver(ownerState) {
+        return [ownerState.disabled && "disabled"];
+    },
+})(
+    ({ ownerState, theme }) => css`
+        & .public-DraftEditor-content {
+            min-height: 240px;
+
+            ${ownerState.minHeight !== undefined &&
+            css`
+                min-height: ${ownerState.minHeight};
+            `}
+
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        ${ownerState.disabled &&
+        css`
+            color: ${theme.palette.text.disabled};
+        `}
+    `,
+);
 
 declare module "@mui/material/styles" {
     interface ComponentNameToClassKey {
@@ -357,7 +401,7 @@ declare module "@mui/material/styles" {
 
     interface Components {
         CometAdminRte?: {
-            defaultProps?: ComponentsPropsList["CometAdminRte"];
+            defaultProps?: Partial<ComponentsPropsList["CometAdminRte"]>;
             styleOverrides?: ComponentsOverrides<Theme>["CometAdminRte"];
         };
     }

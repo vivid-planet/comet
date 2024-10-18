@@ -1,10 +1,9 @@
 import { gql } from "@apollo/client";
 import { MainContent, StackLink, Table, TableQuery, Toolbar, ToolbarAutomaticTitleItem, useTableQuery } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
+import { ContentScopeIndicator } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
-import { ContentScopeIndicator } from "@src/common/ContentScopeIndicator";
 import { useContentScope } from "@src/common/ContentScopeProvider";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLMainMenuQuery, GQLMainMenuQueryVariables } from "./MainMenuItems.generated";
@@ -24,7 +23,7 @@ const mainMenuQuery = gql`
     }
 `;
 
-const MainMenuItems: React.FunctionComponent = () => {
+const MainMenuItems = () => {
     const { scope } = useContentScope();
 
     const { tableData, api, loading, error } = useTableQuery<GQLMainMenuQuery, GQLMainMenuQueryVariables>()(mainMenuQuery, {
@@ -39,8 +38,7 @@ const MainMenuItems: React.FunctionComponent = () => {
 
     return (
         <>
-            <ContentScopeIndicator scope={scope} variant="toolbar" />
-            <Toolbar>
+            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                 <ToolbarAutomaticTitleItem />
             </Toolbar>
 

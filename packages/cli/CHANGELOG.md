@@ -1,5 +1,66 @@
 # @comet/cli
 
+## 7.5.0
+
+### Patch Changes
+
+-   bc0570ff2: Fix setting prelogin domain for deployment with site-configs
+
+## 7.4.2
+
+## 7.4.1
+
+## 7.4.0
+
+### Patch Changes
+
+-   a101ed6f5: inject-site-configs: Add sane defaults for preloginEnabled
+
+    When `preloginEnabled` is `undefined` or `null` set it to `true`
+    on environments != `prod` or `local`.
+
+## 7.3.2
+
+## 7.3.1
+
+## 7.3.0
+
+## 7.2.1
+
+## 7.2.0
+
+## 7.1.0
+
+## 7.0.0
+
+## 7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+## 6.17.1
+
+## 6.17.0
+
+## 6.16.0
+
+## 6.15.1
+
+## 6.15.0
+
+## 6.14.1
+
+## 6.14.0
+
 ## 6.13.0
 
 ## 6.12.0

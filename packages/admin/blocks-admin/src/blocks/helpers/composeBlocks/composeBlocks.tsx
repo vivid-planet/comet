@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as React from "react";
 
 import { BlockPreviewContent } from "../../common/blockRow/BlockPreviewContent";
 import { BlockContext, BlockDependency, BlockInterface, BlockMethods, DispatchSetStateAction, PreviewContent, SetStateAction } from "../../types";

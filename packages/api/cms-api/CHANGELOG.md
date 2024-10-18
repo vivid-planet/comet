@@ -1,5 +1,1027 @@
 # @comet/cms-api
 
+## 7.5.0
+
+### Minor Changes
+
+-   f2da11db1: API Generator: Add support for position field
+
+    Add a field named `position` to enable this feature. This field will hold and update the position. This should be an integer number field >= 1. It's also possible to define fields (in CrudGenerator-Decorator) to group position by.
+
+-   5a48ae482: Add file size to `DamFileDownloadLinkBlock`
+-   216d93a10: File Uploads: Add image endpoint
+
+    Add support for viewing images in the browser.
+    This can be useful for file upload previews, profile pictures etc.
+    The image URL can be obtained by querying the `imageUrl` field of the `FileUpload` type.
+    A `resizeWidth` argument needs to be provided.
+
+    **Example**
+
+    ```graphql
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            updatedAt
+            priceList {
+                id
+                imageUrl(resizeWidth: 640)
+            }
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@7.5.0
+
+## 7.4.2
+
+### Patch Changes
+
+-   @comet/blocks-api@7.4.2
+
+## 7.4.1
+
+### Patch Changes
+
+-   @comet/blocks-api@7.4.1
+
+## 7.4.0
+
+### Minor Changes
+
+-   f1d9e449b: Support filtering for document types in the `paginatedPageTreeNodes` query
+
+    **Example**
+
+    ```graphql
+    query PredefinedPages($scope: PageTreeNodeScopeInput!) {
+        paginatedPageTreeNodes(scope: $scope, documentType: "PredefinedPage") {
+            nodes {
+                id
+            }
+        }
+    }
+    ```
+
+-   cab7c427a: Add support for downloading previously uploaded files to `FileUploadField`
+-   bfb8f04e6: Add `VimeoVideoBlock` to support Vimeo videos
+-   a97019016: File Uploads: Add download endpoint
+
+    The endpoint can be enabled by providing the `download` option in the module config:
+
+    ```ts
+    FileUploadsModule.register({
+      /* ... */,
+      download: {
+        secret: "your secret",
+      },
+    })
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@7.4.0
+
+## 7.3.2
+
+### Patch Changes
+
+-   @comet/blocks-api@7.3.2
+
+## 7.3.1
+
+### Patch Changes
+
+-   @comet/blocks-api@7.3.1
+
+## 7.3.0
+
+### Patch Changes
+
+-   c130adc38: `BuildsService`: Start all jobs that match the scope exactly
+
+    Previously, the first job that matched the scope exactly would be started, and the rest would be ignored. This has been fixed so that all jobs that match the scope exactly are started.
+
+    -   @comet/blocks-api@7.3.0
+
+## 7.2.1
+
+### Patch Changes
+
+-   c66336963: Fix bug in `DamVideoBlock` that caused the block to crash if no video file was selected
+
+    The block used to crash if no video was selected because the `DamVideoBlockTransformerService` returned an empty object.
+    This left the `previewImage` state in the admin `undefined` causing `state2Output` to fail.
+
+    -   @comet/blocks-api@7.2.1
+
+## 7.2.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.2.0
+
+## 7.1.0
+
+### Minor Changes
+
+-   19d53c407: Add Sentry module to simplify integration with Sentry.
+
+    ### Usage:
+
+    ```ts
+    // main.ts
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+    app.use(Sentry.Handlers.errorHandler());
+    ```
+
+    ```ts
+    // app.module.ts
+
+    SentryModule.forRootAsync({
+        dsn: "sentry_dsn_url",
+        environment: "dev",
+        shouldReportException: (exception) => {
+            // Custom logic to determine if the exception should be reported
+            return true;
+        },
+    }),
+    ```
+
+### Patch Changes
+
+-   87f74d307: Sort the keys in content scopes returned by `UserPermissionsService` alphabetically
+
+    This fixes issues when comparing content scopes after converting them to strings via `JSON.stringify()`.
+
+    This specifically fixes a bug on the UserPermissionsPage:
+    When the `availableContentScopes` passed to the `UserPermissionsModule` weren't sorted alphabetically, the allowed scopes wouldn't be displayed correctly in the UI.
+
+    -   @comet/blocks-api@7.1.0
+
+## 7.0.0
+
+### Major Changes
+
+-   6ac10edf1: Remove `download` helper
+
+    Use `createFileUploadInputFromUrl` instead.
+
+-   9a1b01669: Remove CDN config from DAM
+
+    It was a bad idea to introduce this in the first place, because `@comet/cms-api` should not be opinionated about how the CDN works.
+
+    Modern applications require all traffic to be routed through a CDN. Cloudflare offers a tunnel, which made the origin-check obsolete, so we introduced a flag to disable the origin check.
+
+    Also changes the behavior of the `FilesService::createFileUrl()`-method which now expects an options-object as second argument.
+
+    ## How to migrate (only required if CDN is used):
+
+    Remove the following env vars from the API
+
+    ```
+    DAM_CDN_ENABLED=
+    DAM_CDN_DOMAIN=
+    DAM_CDN_ORIGIN_HEADER=
+    DAM_DISABLE_CDN_ORIGIN_HEADER_CHECK=false
+    ```
+
+    If you want to enable the origin check:
+
+    1. Set the following env vars for the API
+
+    ```
+    CDN_ORIGIN_CHECK_SECRET="Use value from DAM_CDN_ORIGIN_HEADER to avoid downtime"
+    ```
+
+    _environment-variables.ts_
+
+    ```
+    @IsOptional()
+    @IsString()
+    CDN_ORIGIN_CHECK_SECRET: string;
+    ```
+
+    _config.ts_
+
+    ```
+    cdn: {
+        originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
+    },
+    ```
+
+    2. Add CdnGuard
+
+    ```
+    // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
+    if (config.cdn.originCheckSecret) {
+        app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));
+    }
+    ```
+
+    3. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
+
+-   6ac10edf1: Remove `FileUploadService`
+
+    Use `createFileUploadInputFromUrl` instead of `FileUploadService#createFileUploadInputFromUrl`.
+
+-   0588e212c: Remove `language` field from `User` object
+
+    -   Providing the locale is not mandatory for ID-Tokens
+    -   Does not have a real use case (better rely on the Accept-Language header of the browser to determine the language of the current user)
+
+-   46b86ba5f: `FilesService#createFileDownloadUrl` now expects an options object as second parameter
+
+    ```diff
+    - this.filesService.createFileDownloadUrl(file, previewDamUrls)
+    + this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls })
+    ```
+
+-   0e6debb06: CRUD Generator: Remove `lastUpdatedAt` argument from update mutations
+-   ebf597120: Make `@nestjs/platform-express` a peer dependency
+
+    Make sure that `@nestjs/platform-express` is installed in the application.
+
+-   e15927594: Support "real" dependency injection in `BlockData#transformToPlain`
+
+    Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
+    This is now replaced by a technique that allows actual dependency injection.
+
+    **Example**
+
+    ```ts
+    class NewsLinkBlockData extends BlockData {
+        @BlockField({ nullable: true })
+        id?: string;
+
+        transformToPlain() {
+            // Return service that does the transformation
+            return NewsLinkBlockTransformerService;
+        }
+    }
+
+    type TransformResponse = {
+        news?: {
+            id: string;
+            slug: string;
+        };
+    };
+
+    @Injectable()
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
+        // Use dependency injection here
+        constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+
+        async transformToPlain(block: NewsLinkBlockData, context: BlockContext) {
+            if (!block.id) {
+                return {};
+            }
+
+            const news = await this.repository.findOneOrFail(block.id);
+
+            return {
+                news: {
+                    id: news.id,
+                    slug: news.slug,
+                },
+            };
+        }
+    }
+    ```
+
+    Adding this new technique results in a few breaking changes:
+
+    -   Remove dynamic registration of `BlocksModule`
+    -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+    -   Remove `dependencies` from `BlockData#transformToPlain`
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+
+-   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
+
+    -   Add foreign id as argument to create mutation
+    -   Add foreign id as argument to list query
+
+-   c3940df58: Replace `additionalMimeTypes` and `overrideAcceptedMimeTypes` in `DamModule#damConfig` with `acceptedMimeTypes`
+
+    You can now add mime types like this:
+
+    ```ts
+    DamModule.register({
+        damConfig: {
+            acceptedMimeTypes: [...damDefaultAcceptedMimetypes, "something-else"],
+        },
+    });
+    ```
+
+    And remove them like this:
+
+    ```ts
+    DamModule.register({
+        damConfig: {
+            acceptedMimeTypes: damDefaultAcceptedMimetypes.filter((mimeType) => mimeType !== "application/zip"),
+        },
+    });
+    ```
+
+    Don't forget to also remove/add the mime types in the admin's `DamConfigProvider`
+
+-   4485d1540: filtersToMikroOrmQuery: Move second argument (`applyFilter` callback) into an options object
+-   28322b422: Refactor auth-decorators
+
+    -   Remove `@PublicApi()`-decorator
+    -   Rename `@DisableGlobalGuard()`-decorator to `@DisableCometGuards()`
+
+    The `@DisableCometGuards()`-decorator will only disable the AuthGuard when no `x-include-invisible-content`-header is set.
+
+-   c3940df58: Rename `defaultDamAcceptedMimetypes` to `damDefaultAcceptedMimetypes`
+-   caefa1c5d: Rename `DateFilter` to `DateTimeFilter`
+
+    This leaves room for a future DateFilter that only filters by date, not time.
+
+    **Upgrading**
+
+    1. Change import
+
+    ```diff
+    - import { DateFilter } from "@comet/cms-api";
+    + import { DateTimeFilter } from "@comet/cms-api";
+    ```
+
+    2. Re-run API Generator.
+
+-   ebf597120: Remove unused/unnecessary peer dependencies
+
+    Some dependencies were incorrectly marked as peer dependencies.
+    If you don't use them in your application, you may remove the following dependencies:
+
+    -   Admin: `axios`
+    -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+
+-   6ac10edf1: Rename "public uploads" to "file uploads"
+
+    The name "public uploads" was not fitting since the uploads can also be used for "private" uploads in the Admin.
+    The feature was therefore renamed to "file uploads".
+
+    This requires the following changes:
+
+    -   Use `FileUploadsModule` instead of `PublicUploadModule`
+    -   Use `FileUpload` instead of `PublicUpload`
+    -   Use `FileUploadsService` instead of `PublicUploadsService`
+    -   Change the upload URL from `/public-upload/files/upload` to `/file-uploads/upload`
+
+-   17c7f79a2: Secure file uploads upload endpoint by default
+
+    The `/file-uploads/upload` endpoint now requires the `fileUploads` permission by default.
+
+    Use the `upload.public` option to make the endpoint public:
+
+    ```diff
+    FileUploadsModule.register({
+        /* ... */,
+    +   upload: {
+    +       public: true,
+    +   },
+    }),
+    ```
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+-   1d2f54bee: Require `strategyName` in `createStaticCredentialsBasicStrategy`
+
+    The `strategyName` is then used as SystemUser which allows to distinguish between different system users (e.g. activate logging)
+
+-   2497a062f: API Generator: Remove support for `visible` boolean, use `status` enum instead.
+
+    Recommended enum values: Published/Unpublished or Visible/Invisible or Active/Deleted or Active/Archived
+
+    Remove support for update visibility mutation, use existing generic update instead
+
+-   fe22985d6: API Generator: Replace graphql-type-json with graphql-scalars for JSON columns
+
+    **Upgrading**
+
+    1. Install graphql-scalars: `npm install graphql-scalars`
+    2. Uninstall graphql-type-json: `npm install graphql-type-json`
+    3. Update imports:
+
+        ```diff
+        - import { GraphQLJSONObject } from "graphql-type-json";
+        + import { GraphQLJSONObject } from "graphql-scalars";
+        ```
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+-   4485d1540: API Generator: Remove generated service
+
+    The `Service#getFindCondition` method is replaced with the new `gqlArgsToMikroOrmQuery` function, which detects an entity's searchable fields from its metadata.
+    Consequently, the generated service isn't needed anymore and will therefore no longer be generated.
+    Remove the service from the module after re-running the API Generator.
+
+-   3ea123f68: Increase minimum supported version of `@mikro-orm/core`, `@mikro-orm/migrations`, and `@mikro-orm/postgresql` to v5.8.4
+-   769bd72f0: Use the Next.js Preview Mode for the site preview
+
+    The preview is entered by navigating to an API Route in the site, which has to be executed in a secured environment.
+    In the API Route the current scope is checked (and possibly stored), then the client is redirected to the preview.
+
+### Minor Changes
+
+-   5e8713488: API Generator: Add support for filtering one-to-many relations by id
+-   f1d0f023d: API Generator: Add `list` option to `@CrudGenerator()` to allow disabling the list query
+
+    Related DTO classes will still be generated as they might be useful for application code.
+
+-   bb04fb863: API Generator: Change default value for input field if property has no initializer
+
+    Previously, the following property of an entity
+
+    ```ts
+    @Property({ type: types.date, nullable: true })
+    @Field({ nullable: true })
+    availableSince?: Date;
+    ```
+
+    resulted in the following input being generated:
+
+    ```ts
+    @IsNullable()
+    @IsDate()
+    @Field({ nullable: true })
+    availableSince?: Date;
+    ```
+
+    This was problematic for two reasons:
+
+    1.  The error message would be misleading when trying to create an entity without providing a value for the property. For example, a valid GraphQL mutation
+
+        ```graphql
+        mutation CreateProduct {
+            createProduct(input: { title: "A", slug: "A", description: "FOO" }) {
+                id
+                availableSince
+            }
+        }
+        ```
+
+        would result in the following error:
+
+        ```
+        "isDate": "availableSince must be a Date instance"
+        ```
+
+    2.  Relying on the initializer as the default value is not obvious and appears somewhat magical.
+
+    To address this, we now use `null` as the default value for nullable properties if no initializer is provided. If an initializer is provided, it is used as the default value.
+
+-   8d920da56: CRUD Generator: Add support for date-only fields
+-   36cdd70f1: InternalLinkBlock: add scope to targetPage in output
+
+    This allows for example using the language from scope as url prefix in a multi-language site
+
+-   bfa94b74b: API Generator: Generate field resolver for root blocks
+
+    This allows skipping the `@Field` annotation for root blocks in the entity and it doesn't need the field middleware anymore.
+
+-   f38ecc186: API Generator: Add support for enum array filter and sort
+-   4485d1540: API Generator: Add `search` argument to `OneToManyFilter` and `ManyToManyFilter`
+
+    Performs a search like the `search` argument in the list query.
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
+-   2f0675b83: API Generator: Add support for filtering many-to-many relations by id
+
+### Patch Changes
+
+-   9c8a9a190: API Generator: Add missing type for integer fields in input type
+-   Updated dependencies [e15927594]
+-   Updated dependencies [ebf597120]
+-   Updated dependencies [b7560e3a7]
+    -   @comet/blocks-api@7.0.0
+
+## 7.0.0-beta.6
+
+### Patch Changes
+
+-   @comet/blocks-api@7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+### Patch Changes
+
+-   @comet/blocks-api@7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+### Major Changes
+
+-   b7560e3a7: Move `YouTubeVideoBlock` to `@cms` packages
+
+    **Migrate**
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-admin";
+    + import { YouTubeVideoBlock } from "@comet/cms-admin";
+    ```
+
+    ```diff
+    - import { YouTubeVideoBlock } from "@comet/blocks-api";
+    + import { YouTubeVideoBlock } from "@comet/cms-api";
+    ```
+
+-   a58918893: Remove `aspectRatio` from `YouTubeBlock`
+
+    The block's aspect ratio options (4x3, 16x9) proved too inflexible to be of actual use in an application. Therefore, the aspect ratio field was removed. It should be defined in the application instead.
+
+    **Migrate**
+
+    The block requires an aspect ratio in the site. It should be set using the `aspectRatio` prop (default: `16x9`):
+
+    ```diff
+     <YouTubeVideoBlock
+       data={video}
+    +  aspectRatio="9x16"
+     />
+    ```
+
+-   3ea123f68: Increase minimum supported version of `@mikro-orm/core`, `@mikro-orm/migrations`, and `@mikro-orm/postgresql` to v5.8.4
+
+### Minor Changes
+
+-   bfa94b74b: API Generator: Generate field resolver for root blocks
+
+    This allows skipping the `@Field` annotation for root blocks in the entity and it doesn't need the field middleware anymore.
+
+-   b7560e3a7: Add preview image to `YouTubeVideoBlock` and `DamVideoBlock`
+
+    The `YouTubeVideoBlock` and the `DamVideoBlock` now support a preview image out of the box. For customisation the default `VideoPreviewImage` component can be overridden with the optional `renderPreviewImage` method.
+
+    It is recommended to replace the custom implemented video blocks in the projects with the updated `YouTubeVideoBlock` and `DamVideoBlock` from the library.
+
+### Patch Changes
+
+-   Updated dependencies [b7560e3a7]
+    -   @comet/blocks-api@7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+### Major Changes
+
+-   caefa1c5d: Rename `DateFilter` to `DateTimeFilter`
+
+    This leaves room for a future DateFilter that only filters by date, not time.
+
+    **Upgrading**
+
+    1. Change import
+
+    ```diff
+    - import { DateFilter } from "@comet/cms-api";
+    + import { DateTimeFilter } from "@comet/cms-api";
+    ```
+
+    2. Re-run API Generator.
+
+-   fe22985d6: API Generator: Replace graphql-type-json with graphql-scalars for JSON columns
+
+    **Upgrading**
+
+    1. Install graphql-scalars: `npm install graphql-scalars`
+    2. Uninstall graphql-type-json: `npm install graphql-type-json`
+    3. Update imports:
+
+        ```diff
+        - import { GraphQLJSONObject } from "graphql-type-json";
+        + import { GraphQLJSONObject } from "graphql-scalars";
+        ```
+
+### Minor Changes
+
+-   5e8713488: API Generator: Add support for filtering one-to-many relations by id
+
+### Patch Changes
+
+-   9c8a9a190: API Generator: Add missing type for integer fields in input type
+    -   @comet/blocks-api@7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+### Minor Changes
+
+-   2f0675b83: API Generator: Add support for filtering many-to-many-relations by id
+
+### Patch Changes
+
+-   Updated dependencies [87ef5fa36]
+    -   @comet/blocks-api@7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+### Major Changes
+
+-   c3940df58: Replace `additionalMimeTypes` and `overrideAcceptedMimeTypes` in `DamModule#damConfig` with `acceptedMimeTypes`
+
+    You can now add mime types like this:
+
+    ```ts
+    DamModule.register({
+        damConfig: {
+            acceptedMimeTypes: [...damDefaultAcceptedMimetypes, "something-else"],
+        },
+    });
+    ```
+
+    And remove them like this:
+
+    ```ts
+    DamModule.register({
+        damConfig: {
+            acceptedMimeTypes: damDefaultAcceptedMimetypes.filter((mimeType) => mimeType !== "application/zip"),
+        },
+    });
+    ```
+
+    Don't forget to also remove/add the mime types in the admin's `DamConfigProvider`
+
+-   c3940df58: Rename `defaultDamAcceptedMimetypes` to `damDefaultAcceptedMimetypes`
+
+### Minor Changes
+
+-   f38ecc186: API Generator: Add support for enum array filter and sort
+
+### Patch Changes
+
+-   10424c744: Fix `SvgImageBlock` in site by always loading `fileUrl`
+
+## 7.0.0-beta.0
+
+### Major Changes
+
+-   9a1b01669: Remove CDN config from DAM
+
+    It was a bad idea to introduce this in the first place, because `@comet/cms-api` should not be opinionated about how the CDN works.
+
+    Modern applications require all traffic to be routed through a CDN. Cloudflare offers a tunnel, which made the origin-check obsolete, so we introduced a flag to disable the origin check.
+
+    Also changes the behavior of the `FilesService::createFileUrl()`-method which now expects an options-object as second argument.
+
+    ## How to migrate (only required if CDN is used):
+
+    Remove the following env vars from the API
+
+    ```
+    DAM_CDN_ENABLED=
+    DAM_CDN_DOMAIN=
+    DAM_CDN_ORIGIN_HEADER=
+    DAM_DISABLE_CDN_ORIGIN_HEADER_CHECK=false
+    ```
+
+    If you want to enable the origin check:
+
+    1. Set the following env vars for the API
+
+    ```
+    CDN_ORIGIN_CHECK_SECRET="Use value from DAM_CDN_ORIGIN_HEADER to avoid downtime"
+    ```
+
+    _environment-variables.ts_
+
+    ```
+    @IsOptional()
+    @IsString()
+    CDN_ORIGIN_CHECK_SECRET: string;
+    ```
+
+    _config.ts_
+
+    ```
+    cdn: {
+        originCheckSecret: envVars.CDN_ORIGIN_CHECK_SECRET,
+    },
+    ```
+
+    2. Add CdnGuard
+
+    ```
+    // if CDN is enabled, make sure all traffic is either coming from the CDN or internal sources
+    if (config.cdn.originCheckSecret) {
+        app.useGlobalGuards(new CdnGuard({ headerName: "x-cdn-origin-check", headerValue: config.cdn.originCheckSecret }));
+    }
+    ```
+
+    3. DNS changes might be required. `api.example.com` should point to CDN, CDN should point to internal API domain
+
+-   f74544524: Change language field in User and CurrentUser to locale
+-   0588e212c: Remove `locale`-field from `User`-object
+
+    -   Providing the locale is not mandatory for ID-Tokens
+    -   Does not have a real use case (better rely on the Accept-Language header of the browser to determine the language of the current user)
+
+-   46b86ba5f: `FilesService#createFileDownloadUrl` now expects an options object as second parameter
+
+    ```diff
+    - this.filesService.createFileDownloadUrl(file, previewDamUrls)
+    + this.filesService.createFileDownloadUrl(file, { previewDamUrls, relativeDamUrls })
+    ```
+
+-   0e6debb06: CRUD Generator: Remove `lastUpdatedAt` argument from update mutations
+-   ebf597120: Make `@nestjs/platform-express` a peer dependency
+
+    Make sure that `@nestjs/platform-express` is installed in the application.
+
+-   e15927594: Support "real" dependency injection in `BlockData#transformToPlain`
+
+    Previously we supported poor man's dependency injection using the `TransformDependencies` object in `transformToPlain`.
+    This is now replaced by a technique that allows actual dependency injection.
+
+    **Example**
+
+    ```ts
+    class NewsLinkBlockData extends BlockData {
+        @BlockField({ nullable: true })
+        id?: string;
+
+        transformToPlain() {
+            // Return service that does the transformation
+            return NewsLinkBlockTransformerService;
+        }
+    }
+
+    type TransformResponse = {
+        news?: {
+            id: string;
+            slug: string;
+        };
+    };
+
+    @Injectable()
+    class NewsLinkBlockTransformerService implements BlockTransformerServiceInterface<NewsLinkBlockData, TransformResponse> {
+        // Use dependency injection here
+        constructor(@InjectRepository(News) private readonly repository: EntityRepository<News>) {}
+
+        async transformToPlain(block: NewsLinkBlockData, context: BlockContext) {
+            if (!block.id) {
+                return {};
+            }
+
+            const news = await this.repository.findOneOrFail(block.id);
+
+            return {
+                news: {
+                    id: news.id,
+                    slug: news.slug,
+                },
+            };
+        }
+    }
+    ```
+
+    Adding this new technique results in a few breaking changes:
+
+    -   Remove dynamic registration of `BlocksModule`
+    -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
+    -   Remove `dependencies` from `BlockData#transformToPlain`
+
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+
+-   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
+
+    -   Add foreign id as argument to create mutation
+    -   Add foreign id as argument to list query
+
+-   28322b422: Refactor auth-decorators
+
+    -   Remove `@PublicApi()`-decorator
+    -   Rename `@DisableGlobalGuard()`-decorator to `@DisableCometGuards()`
+
+    The `@DisableCometGuards()`-decorator will only disable the AuthGuard when no `x-include-invisible-content`-header is set.
+
+-   ebf597120: Remove unused/unnecessary peer dependencies
+
+    Some dependencies were incorrectly marked as peer dependencies.
+    If you don't use them in your application, you may remove the following dependencies:
+
+    -   Admin: `axios`
+    -   API: `@aws-sdk/client-s3`, `@azure/storage-blob` and `pg-error-constants`
+
+-   2497a062f: API Generator: Remove support for `visible` boolean, use `status` enum instead.
+
+    Recommended enum values: Published/Unpublished or Visible/Invisible or Active/Deleted or Active/Archived
+
+    Remove support for update visibility mutation, use existing generic update instead
+
+-   769bd72f0: Uses the Next.JS Preview mode for the site preview
+
+    The preview is entered by navigating to an API-Route in the site, which has to be executed in a secured environment.
+    In the API-Routes the current scope is checked (and possibly stored), then the client is redirected to the Preview.
+
+    // TODO Move the following introduction to the migration guide before releasing
+
+    Requires following changes to site:
+
+    -   Import `useRouter` from `next/router` (not exported from `@comet/cms-site` anymore)
+    -   Import `Link` from `next/link` (not exported from `@comet/cms-site` anymore)
+    -   Remove preview pages (pages in `src/pages/preview/` directory which call `createGetUniversalProps` with preview parameters)
+    -   Remove `createGetUniversalProps`
+        -   Just implement `getStaticProps`/`getServerSideProps` (Preview Mode will SSR automatically)
+        -   Get `previewData` from `context` and use it to configure the GraphQL Client
+    -   Add `SitePreviewProvider` to `App` (typically in `src/pages/_app.tsx`)
+    -   Provide a protected environment for the site
+        -   Make sure that a Authorization-Header is present in this environment
+        -   Add a Next.JS API-Route for the site preview (eg. `/api/site-preview`)
+        -   Call `getValidatedSitePreviewParams()` in the API-Route (calls the API which checks the Authorization-Header with the submitted scope)
+        -   Use the `path`-part of the return value to redirect to the preview
+
+    Requires following changes to admin
+
+    -   The `SitesConfig` must provide a `sitePreviewApiUrl`
+
+### Minor Changes
+
+-   f1d0f023d: API Generator: Add `list` option to `@CrudGenerator()` to allow disabling the list query
+
+    Related DTO classes will still be generated as they might be useful for application code.
+
+-   36cdd70f1: InternalLinkBlock: add scope to targetPage in output
+
+    This allows for example using the language from scope as url prefix in a multi-language site
+
+-   1d2f54bee: Require `strategyName` in `createStaticCredentialsBasicStrategy`
+
+    The `strategyName` is then used as SystemUser which allows to distinguish between different system users (e.g. activate logging)
+
+### Patch Changes
+
+-   Updated dependencies [e15927594]
+-   Updated dependencies [ebf597120]
+    -   @comet/blocks-api@7.0.0-beta.0
+
+## 6.17.1
+
+### Patch Changes
+
+-   76ca3bf98: Remove index signature from `ContentScope` interface
+
+    This allows using scope DTOs without index signature in `@ScopedEntity()`.
+
+    -   @comet/blocks-api@6.17.1
+
+## 6.17.0
+
+### Minor Changes
+
+-   9ddf65554: Require a file extension when changing the filename in the DAM
+
+    Previously, files in the DAM could be renamed without restrictions.
+    Files could have invalid extensions (for their mimetype) or no extension at all.
+    This theoretically made the following attack possible:
+
+    1. Creating a dangerous .exe file locally
+    2. Renaming it to .jpg locally
+    3. Uploading the file as a .jpg
+    4. Renaming it to .exe in the DAM
+    5. The file is now downloaded as .exe
+
+    Now, filenames must always have an extension that matches their mimetype.
+    This is enforced in the admin and API.
+    Existing files without an extension are automatically assigned an extension via a DB migration.
+
+-   9ddf65554: Loosen the filename slugification rules
+
+    When uploading a file to the DAM, the filename is automatically slugified.
+    Previously, the slugification used pretty strict rules without a good reason.
+
+    Now, the rules were loosened allowing uppercase characters and most special characters.
+    Also, slugify now uses the locale `en` instead of `de` for special character replacements.
+
+### Patch Changes
+
+-   5a9c49ab5: CronJobModule: Fix job creation if resulting name exceeds 63 characters
+    -   @comet/blocks-api@6.17.0
+
+## 6.16.0
+
+### Minor Changes
+
+-   5e830f8d9: Add an [Azure AI Translator](https://azure.microsoft.com/en-us/products/ai-services/ai-translator) implementation of the content translation feature
+
+    To use it, do the following:
+
+    **API:**
+
+    ```diff
+    // app.module.ts
+    export class AppModule {
+        static forRoot(config: Config): DynamicModule {
+            return {
+                imports: [
+                    // ...
+    +               AzureAiTranslatorModule.register({
+    +                   endpoint: envVars.AZURE_AI_TRANSLATOR_ENDPOINT,
+    +                   key: envVars.AZURE_AI_TRANSLATOR_KEY,
+    +                   region: envVars.AZURE_AI_TRANSLATOR_REGION,
+    +               }),
+                ],
+    ```
+
+    Users need the `translation` permission to use the translation feature.
+
+    **Admin:**
+
+    Wrap the section where you want to use the content translation with the `AzureAiTranslatorProvider` provider:
+
+    ```tsx
+    <AzureAiTranslatorProvider enabled={true}>{/*  ...  */}</AzureAiTranslatorProvider>
+    ```
+
+    Note: `AzureAiTranslatorProvider` automatically checks for the `translation` permission. The translation button is only shown for users with this permission.
+
+### Patch Changes
+
+-   f7d405dfa: Fix the duplicate filename check in `FilesService#updateByEntity`
+
+    Previously, we checked the existing file name (`entity.name`) for the check instead of the new name (`input.name`). This never resulted in an error.
+
+    -   @comet/blocks-api@6.16.0
+
+## 6.15.1
+
+### Patch Changes
+
+-   @comet/blocks-api@6.15.1
+
+## 6.15.0
+
+### Patch Changes
+
+-   9b29afd87: Add missing `@RequiredPermission` to `createZip` route
+-   0654f7bce: Handle unauthorized and unauthenticated correctly in error dialog
+
+    The error dialog now presents screens according to the current state. Required to work in all conditions:
+
+    -   `CurrentUserProvider` must be beneath `MuiThemeProvider` and `IntlProvider` and above `RouterBrowserRouter`
+    -   `ErrorDialogHandler` must be parallel to `CurrentUserProvider`
+
+-   Updated dependencies [c7f5637bd]
+    -   @comet/blocks-api@6.15.0
+
+## 6.14.1
+
+### Patch Changes
+
+-   @comet/blocks-api@6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   73dfb61c9: Add `PhoneLinkBlock` and `EmailLinkBlock`
+-   dddb03d1b: Add capability to generate alt texts and titles for images in DAM
+
+    You can find instructions for adding this feature to your project [in the docs](https://docs.comet-dxp.com/docs/content-generation/).
+
+-   73dfb61c9: Add `IsPhoneNumber` and `isPhoneNumber` validators to validate phone numbers
+
+### Patch Changes
+
+-   b7dbd7a18: Export `DisablePermissionCheck` constant to enable usage in application code
+-   Updated dependencies [73dfb61c9]
+-   Updated dependencies [87ef5fa36]
+    -   @comet/blocks-api@6.14.0
+
 ## 6.13.0
 
 ### Minor Changes

@@ -1,4 +1,4 @@
-import * as React from "react";
+"use client";
 
 import { SvgImageBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";

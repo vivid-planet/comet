@@ -1,17 +1,44 @@
+import { Badge } from "@mui/material";
 import { ListItemProps } from "@mui/material/ListItem";
-import * as React from "react";
+import { ReactNode } from "react";
 import { Link, LinkProps, Route } from "react-router-dom";
 
+import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { MenuItem, MenuItemProps } from "./Item";
 
-interface MenuItemRouterLinkStandardProps {
+interface MenuItemRouterLinkStandardProps
+    extends ThemedComponentBaseProps<{
+        badge: typeof Badge;
+    }> {
     to: string;
+    badgeContent?: ReactNode;
 }
 
 export type MenuItemRouterLinkProps = MenuItemRouterLinkStandardProps & MenuItemProps & ListItemProps & LinkProps;
 
-export const MenuItemRouterLink: React.FC<MenuItemRouterLinkProps> = (props) => (
-    <Route path={props.to} strict={false}>
-        {({ match }) => <MenuItem selected={!!match} component={Link} {...props} />}
-    </Route>
-);
+export const MenuItemRouterLink = ({ badgeContent, secondaryAction: passedSecondaryAction, slotProps, ...restProps }: MenuItemRouterLinkProps) => {
+    const { badge, ...menuItemSlotProps } = slotProps ?? {};
+
+    const secondaryAction = badgeContent ? ( // prioritize badgeContent over passed secondaryAction
+        <Badge
+            variant={restProps.isMenuOpen ? "standard" : "dot"}
+            color="error"
+            overlap="circular"
+            {...badge}
+            badgeContent={badgeContent}
+            sx={{ marginLeft: 2, ...badge?.sx }}
+        />
+    ) : (
+        passedSecondaryAction
+    );
+
+    return (
+        <Route path={restProps.to} strict={false}>
+            {({ match }) => {
+                return (
+                    <MenuItem selected={!!match} secondaryAction={secondaryAction} component={Link} slotProps={menuItemSlotProps} {...restProps} />
+                );
+            }}
+        </Route>
+    );
+};

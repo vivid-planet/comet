@@ -1,23 +1,23 @@
 import { Upload } from "@comet/admin-icons";
 import { Button } from "@mui/material";
-import * as React from "react";
+import { useRef } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamFileUpload } from "./useDamFileUpload";
 
-interface UploadSplitButtonProps {
+interface UploadFilesButtonProps {
     folderId?: string;
     filter?: {
         allowedMimetypes?: string[];
     };
 }
 
-export const UploadFilesButton = ({ folderId, filter }: UploadSplitButtonProps): React.ReactElement => {
+export const UploadFilesButton = ({ folderId, filter }: UploadFilesButtonProps) => {
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
 
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const {
         uploadFiles,

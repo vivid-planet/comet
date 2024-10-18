@@ -3,10 +3,11 @@ import { Loading, MainContent, messages, RouterPrompt, Toolbar, ToolbarActions, 
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
+    AzureAiTranslatorProvider,
     BlockPreviewWithTabs,
+    ContentScopeIndicator,
     createUsePage,
     DependencyList,
-    EditPageLayout,
     openSitePreviewWindow,
     PageName,
     useBlockPreview,
@@ -17,7 +18,6 @@ import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
 
@@ -86,7 +86,7 @@ const usePage = createUsePage({
     `,
 });
 
-export const EditPage: React.FC<Props> = ({ id, category }) => {
+export const EditPage = ({ id, category }: Props) => {
     const intl = useIntl();
     const { pageState, rootBlocksApi, hasChanges, loading, dialogs, pageSaveButton, handleSavePage } = usePage({
         pageId: id,
@@ -119,14 +119,14 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
         });
     }
 
-    if (!pageState) return <></>;
+    if (!pageState) return null;
 
     if (loading) {
         return <Loading behavior="fillPageHeight" />;
     }
 
     return (
-        <EditPageLayout>
+        <AzureAiTranslatorProvider showApplyTranslationDialog={true} enabled={true}>
             {hasChanges && (
                 <RouterPrompt
                     message={(location) => {
@@ -136,7 +136,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                     saveAction={handleSaveAction}
                 />
             )}
-            <Toolbar>
+            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                 <ToolbarItem>
                     <IconButton onClick={stackApi?.goBack}>
                         <ArrowLeft />
@@ -159,7 +159,7 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </ToolbarActions>
             </Toolbar>
             <MainContent disablePaddingBottom>
-                <BlockPreviewWithTabs previewUrl={`${siteConfig.previewUrl}/admin/page`} previewState={previewState} previewApi={previewApi}>
+                <BlockPreviewWithTabs previewUrl={`${siteConfig.blockPreviewBaseUrl}/page`} previewState={previewState} previewApi={previewApi}>
                     {[
                         {
                             key: "content",
@@ -201,6 +201,6 @@ export const EditPage: React.FC<Props> = ({ id, category }) => {
                 </BlockPreviewWithTabs>
             </MainContent>
             {dialogs}
-        </EditPageLayout>
+        </AzureAiTranslatorProvider>
     );
 };

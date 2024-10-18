@@ -1,59 +1,47 @@
-import { Link, useRouter } from "@comet/cms-site";
+"use client";
 import { LinkBlock } from "@src/blocks/LinkBlock";
-import { GQLPredefinedPage } from "@src/graphql.generated";
-import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
-import { gql } from "graphql-request";
-import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { PropsWithChildren } from "react";
 
-import { GQLPageLinkFragment } from "./PageLink.generated";
+import { GQLPageLinkFragment } from "./PageLink.fragment.generated";
 
-const pageLinkFragment = gql`
-    fragment PageLink on PageTreeNode {
-        path
-        documentType
-        document {
-            __typename
-            ... on Link {
-                content
-            }
-            ... on PredefinedPage {
-                type
-            }
-        }
-    }
-`;
-
-interface Props {
+interface Props extends PropsWithChildren {
     page: GQLPageLinkFragment;
-    children: ((active: boolean) => React.ReactNode) | React.ReactNode;
+    className?: string;
+    activeClassName?: string;
 }
 
-function PageLink({ page, children }: Props): JSX.Element | null {
-    const router = useRouter();
-    const active = router.asPath === page.path;
+function PageLink({ page, children, className: passedClassName, activeClassName }: Props): JSX.Element | null {
+    const pathname = usePathname();
+    const active = (pathname.substring(3) || "/") === page.path; // Remove language prefix
+
+    let className = passedClassName;
+
+    if (active) {
+        className = className ? `${className} ${activeClassName}` : activeClassName;
+    }
 
     if (page.documentType === "Link") {
         if (page.document === null || page.document.__typename !== "Link") {
             return null;
         }
 
-        return <LinkBlock data={page.document.content}>{typeof children === "function" ? children(active) : children}</LinkBlock>;
+        return (
+            <LinkBlock data={page.document.content} className={className}>
+                {children}
+            </LinkBlock>
+        );
     } else if (page.documentType === "Page") {
         return (
-            <Link href={page.path} passHref>
-                {typeof children === "function" ? children(active) : children}
+            <Link href={`/${page.scope.language}${page.path}`} className={className}>
+                {children}
             </Link>
         );
     } else if (page.documentType === "PredefinedPage") {
-        if (!page.document) {
-            return null;
-        }
-
-        const type = (page.document as GQLPredefinedPage).type;
-
         return (
-            <Link href={type && predefinedPagePaths[type] ? predefinedPagePaths[type] : ""} passHref>
-                {typeof children === "function" ? children(active) : children}
+            <Link href={`/${page.scope.language}${page.path}`} className={className}>
+                {children}
             </Link>
         );
     } else {
@@ -65,4 +53,4 @@ function PageLink({ page, children }: Props): JSX.Element | null {
     }
 }
 
-export { PageLink, pageLinkFragment };
+export { PageLink };

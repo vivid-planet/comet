@@ -1,7 +1,7 @@
 import { File, Folder, FolderCopy, Pdf } from "@comet/admin-icons";
-import { Fade, Popper } from "@mui/material";
+import { Fade, Popper, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { MouseEvent, useState } from "react";
 
 import { GQLDamFile, GQLDamFolder } from "../../../graphql.generated";
 import { AudioThumbnail } from "./AudioThumbnail";
@@ -47,12 +47,13 @@ interface DamThumbnailProps {
     asset: DamThumbnailFolder | DamThumbnailFile;
 }
 
-export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement => {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+export const DamThumbnail = ({ asset }: DamThumbnailProps) => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const theme = useTheme();
 
     const open = Boolean(anchorEl);
 
-    const handleMouseOver = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMouseOver = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const handleMouseLeave = () => {
@@ -93,7 +94,7 @@ export const DamThumbnail = ({ asset }: DamThumbnailProps): React.ReactElement =
         }
     } else if (asset.__typename === "DamFolder") {
         if (asset.isInboxFromOtherScope) {
-            thumbnail = <FolderCopy htmlColor={inboxFolderColor} />;
+            thumbnail = <FolderCopy htmlColor={theme.palette.highlight.purple} />;
         } else {
             thumbnail = <Folder />;
         }
