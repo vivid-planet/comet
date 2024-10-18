@@ -6,6 +6,7 @@ import {
     DamPage,
     DocumentInterface,
     DocumentType,
+    MasterMenu as CometMasterMenu,
     MasterMenuData,
     PagesPage,
     PublisherPage,
@@ -308,3 +309,6 @@ export const masterMenuData: MasterMenuData = [
         requiredPermission: "products",
     },
 ];
+
+const MasterMenu = () => <CometMasterMenu menu={masterMenuData} />;
+export default MasterMenu;

@@ -4,7 +4,7 @@ import "typeface-open-sans";
 import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
-import { ErrorDialogHandler, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
+import { ErrorDialogHandler, MasterLayout, MuiThemeProvider, RouterBrowserRouter, SnackbarProvider } from "@comet/admin";
 import {
     CmsBlockContextProvider,
     ContentScopeInterface,
@@ -14,6 +14,7 @@ import {
     DamConfigProvider,
     DependenciesConfigProvider,
     LocaleProvider,
+    MasterMenuRoutes,
     SitePreview,
     SitesConfigProvider,
 } from "@comet/cms-admin";
@@ -32,7 +33,8 @@ import * as ReactDOM from "react-dom";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import { Route, Switch } from "react-router-dom";
 
-import { pageTreeDocumentTypes } from "./common/MasterMenu";
+import MasterHeader from "./common/MasterHeader";
+import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
