@@ -80,6 +80,7 @@ function Story() {
                     </MainContent>
                 </RouterTab>
                 <RouterTab path="/second" label="Second Tab">
+                    <AddProductDialog dialogApiRef={editDialogApi} />
                     <MainContent fullHeight disablePadding>
                         <MainContent fullHeight disablePadding>
                             <DataGrid
@@ -110,7 +111,6 @@ function Story() {
                     </MainContent>
                 </RouterTab>
             </RouterTabs>
-            <AddProductDialog dialogApiRef={editDialogApi} />
         </>
     );
 }
