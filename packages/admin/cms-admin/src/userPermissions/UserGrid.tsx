@@ -25,8 +25,8 @@ type Props = {
     actionsColumnWidth?: number;
 };
 
-export const UserGrid = ({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) => {
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
+export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) => {
+    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserPermissionsUserGrid") };
     const intl = useIntl();
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [

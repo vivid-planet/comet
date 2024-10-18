@@ -6,7 +6,7 @@ import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator"
 import { StartImpersonationButton } from "./ImpersonationButtons";
 import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
 
-export const UserPageToolbar = ({ userId }: { userId: string }) => {
+export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) => {
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
             query UserPage($id: String!) {

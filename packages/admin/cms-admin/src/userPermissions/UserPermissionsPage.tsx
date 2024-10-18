@@ -4,10 +4,10 @@ import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-import { UserBasicData } from "./user/basicData/UserBasicData";
-import { UserPermissionsPanel } from "./user/permissions/PermissionsPanel";
-import { UserPageToolbar } from "./user/UserPageToolbar";
-import { UserGrid } from "./UserGrid";
+import { UserPermissionsUserPageBasicDataPanel } from "./user/basicData/UserBasicData";
+import { UserPermissionsUserPagePermissionsPanel } from "./user/permissions/PermissionsPanel";
+import { UserPermissionsUserPageToolbar } from "./user/UserPageToolbar";
+import { UserPermissionsUserGrid } from "./UserGrid";
 
 export const UserPermissionsPage = () => (
     <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Permissions" />}>
@@ -15,7 +15,7 @@ export const UserPermissionsPage = () => (
             <StackPage name="table">
                 <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                 <MainContent fullHeight>
-                    <UserGrid
+                    <UserPermissionsUserGrid
                         rowAction={(params) => (
                             <IconButton component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
                                 <Edit color="primary" />
@@ -27,17 +27,17 @@ export const UserPermissionsPage = () => (
             <StackPage name="edit" title={<FormattedMessage id="comet.userPermissions.edit" defaultMessage="User" />}>
                 {(userId) => (
                     <>
-                        <UserPageToolbar userId={userId} />
+                        <UserPermissionsUserPageToolbar userId={userId} />
                         <MainContent>
                             <RouterTabs>
                                 <RouterTab path="" label={<FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />}>
-                                    <UserBasicData userId={userId} />
+                                    <UserPermissionsUserPageBasicDataPanel userId={userId} />
                                 </RouterTab>
                                 <RouterTab
                                     path="/permissions"
                                     label={<FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />}
                                 >
-                                    <UserPermissionsPanel userId={userId} />
+                                    <UserPermissionsUserPagePermissionsPanel userId={userId} />
                                 </RouterTab>
                             </RouterTabs>
                         </MainContent>

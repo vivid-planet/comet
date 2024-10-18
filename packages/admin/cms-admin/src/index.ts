@@ -114,11 +114,11 @@ export { useSiteConfig } from "./sitesConfig/useSiteConfig";
 export { useSitesConfig } from "./sitesConfig/useSitesConfig";
 export { AzureAiTranslatorProvider } from "./translation/AzureAiTranslatorProvider";
 export { CurrentUserInterface, CurrentUserProvider, useCurrentUser, useUserPermissionCheck } from "./userPermissions/hooks/currentUser";
-export { UserBasicData } from "./userPermissions/user/basicData/UserBasicData";
+export { UserPermissionsUserPageBasicDataPanel } from "./userPermissions/user/basicData/UserBasicData";
 export { StartImpersonationButton, StopImpersonationButton } from "./userPermissions/user/ImpersonationButtons";
-export { UserPermissionsPanel } from "./userPermissions/user/permissions/PermissionsPanel";
-export { UserPageToolbar } from "./userPermissions/user/UserPageToolbar";
-export { UserGrid } from "./userPermissions/UserGrid";
+export { UserPermissionsUserPagePermissionsPanel } from "./userPermissions/user/permissions/PermissionsPanel";
+export { UserPermissionsUserPageToolbar } from "./userPermissions/user/UserPageToolbar";
+export { UserPermissionsUserGrid } from "./userPermissions/UserGrid";
 export { UserPermissionsPage } from "./userPermissions/UserPermissionsPage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
 import emotionStyled from "@emotion/styled";
