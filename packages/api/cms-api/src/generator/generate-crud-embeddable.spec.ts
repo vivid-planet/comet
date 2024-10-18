@@ -50,7 +50,7 @@ export class TestEntityWithoutEmbedded extends BaseEntity<TestEntityWithoutEmbed
 }
 
 describe("GenerateCrudInputEmbedded", () => {
-    describe("crud classes with embedded object", () => {
+    describe("crud classes with sort, filter, input enabled for embedded object", () => {
         let lintedOut: GeneratedFile[];
         let orm: MikroORM;
         beforeEach(async () => {
@@ -67,7 +67,7 @@ describe("GenerateCrudInputEmbedded", () => {
             if (!foundFile) throw new Error("File not found");
         });
 
-        it("should be a valid generated filter ts file", async () => {
+        it("filter for embedded field should exist", async () => {
             const file = lintedOut.find((file) => file.name === "dto/test-entity-with-embedded.filter.ts");
             if (!file) throw new Error("File not found");
 
@@ -95,7 +95,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm.close();
         });
 
-        it("should be a valid generated input ts file", async () => {
+        it("input for embedded field should exist", async () => {
             const file = lintedOut.find((file) => file.name === "dto/test-entity-with-embedded.input.ts");
             if (!file) throw new Error("File not found");
 
@@ -125,7 +125,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm.close();
         });
 
-        it("should be a valid generated sort ts file", async () => {
+        it("sort for embedded field should exist", async () => {
             const file = lintedOut.find((file) => file.name === "dto/test-entity-with-embedded.sort.ts");
             if (!file) throw new Error("File not found");
 
@@ -146,7 +146,7 @@ describe("GenerateCrudInputEmbedded", () => {
         });
     });
 
-    describe("crud classes without embedded object", () => {
+    describe("crud classes with sort, filter, input disabled for embedded object", () => {
         let lintedOut: GeneratedFile[];
         let orm: MikroORM;
         beforeEach(async () => {
@@ -163,7 +163,7 @@ describe("GenerateCrudInputEmbedded", () => {
             if (!foundFile) throw new Error("File not found");
         });
 
-        it("should be a valid generated filter ts file", async () => {
+        it("filter for embedded field should not exist", async () => {
             const file = lintedOut.find((file) => file.name === "dto/test-entity-without-embedded.filter.ts");
             if (!file) throw new Error("File not found");
 
@@ -189,7 +189,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm.close();
         });
 
-        it("should be a valid generated input ts file", async () => {
+        it("input for embedded field should not exist", async () => {
             const file = lintedOut.find((file) => file.name === "dto/test-entity-without-embedded.input.ts");
             if (!file) throw new Error("File not found");
 
@@ -218,7 +218,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm.close();
         });
 
-        it("should be a valid generated sort ts file", async () => {
+        it("sort for embedded field should not exist", async () => {
             const file = lintedOut.find((file) => file.name === "dto/test-entity-without-embedded.sort.ts");
             if (!file) throw new Error("File not found");
 
