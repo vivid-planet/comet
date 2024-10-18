@@ -61,7 +61,7 @@ export interface AccessControlServiceInterface {
 }
 ```
 
-Furthermore, the Access Control Service may provide two methods that allow to programmatically assign permissions and scopes to certain users. These assignments are handled throughout the system in the same way as manually assigned permissions and/or scopes. Moreover, they are also reflected in the Admin Panel.
+Furthermore, the Access Control Service may provide two methods that allow to programmatically assign permissions and scopes to certain users. These assignments are handled throughout the system in the same way as manually assigned permissions and/or scopes. Moreover, they are also reflected in the admin panel.
 
 It's also possible to add additional properties and meta information to permissions (`validFrom`, `validTo`, `reason`, `requestedBy`, `approvedBy`). Additionally, for admin users, COMET DXP also provides the constants `UserPermissions.allPermissions` and `UserPermissions.allContentScopes`.
 

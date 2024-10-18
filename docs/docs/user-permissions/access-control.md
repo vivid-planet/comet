@@ -27,7 +27,7 @@ You might also want to check the permissions on field resolvers. To do that, you
 
 This decorator is mandatory for all operations. The first parameter of type `string | string[] | "disablePermissionCheck"` configures which permission is necessary to access the decorated operation.
 
-The core of COMET DXP already defines a list of permissions (e.g. `pageTree`, `dam`, `cronJobs`, `userPermissions`). Permissions are defined as plain strings, in the most basic case they represent the main items of the menu bar in the administration panel.
+The core of COMET DXP already defines a list of permissions (e.g. `pageTree`, `dam`, `cronJobs`, `userPermissions`). Permissions are defined as plain strings, in the most basic case they represent the main items of the menu bar in the admin panel.
 
 However, if you need a more fine-grained access control you might want to concatenate strings, e.g. `newsRead` or `newsCreate`. Only create as many permissions as really necessary.
 

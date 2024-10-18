@@ -12,8 +12,8 @@ The user permissions system
 -   streamlines authorization throughout the application
 -   not only checks operations but also the handled data
 -   relies on external user handling
--   allows assigning permissions by code as well as in the administration panel
--   offers an administration panel that works out of the box
+-   allows assigning permissions by code as well as in the admin panel
+-   offers an admin panel that works out of the box
 
 COMET DXP checks authentication in two dimensions:
 
