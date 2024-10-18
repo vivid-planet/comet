@@ -37,6 +37,17 @@ async products(@Args("dealerId", { type: () => ID }) dealerId: string): Promise<
 }
 ```
 
+It's possible to add multiple `@AffectedEntity` decorators to one operation if multiple entities are affected:
+
+```ts
+@Query(Product)
+@AffectedEntity(Product)
+@AffectedEntity(Dealer, { idArg: "dealerId" })
+async product(@Args("id", { type: () => ID }) id: string, @Args("dealerId", { type: () => ID }) dealerId: string): Promise<Product> {
+    //...
+}
+```
+
 **@ScopedEntity**
 
 Retrieving the affected entity alone is not sufficient, COMET DXP also needs to know the scope of the entity. The simplest case is when the entity has a field named `scope`. If this is true, this decorator is not necessary.
