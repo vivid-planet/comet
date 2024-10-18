@@ -31,7 +31,7 @@ export const StopImpersonationButton = (buttonProps: ButtonProps) => {
     );
 };
 
-export const ImpersonationButton = ({ userId }: { userId: string }) => {
+export const StartImpersonationButton = ({ userId }: { userId: string }) => {
     const currentUser = useCurrentUser();
     const isAllowed = useUserPermissionCheck();
     const client = useApolloClient();

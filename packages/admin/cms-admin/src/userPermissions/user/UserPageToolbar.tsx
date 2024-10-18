@@ -3,7 +3,7 @@ import { Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSp
 import { styled } from "@mui/material/styles";
 
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
-import { ImpersonationButton } from "./ImpersonationButtons";
+import { StartImpersonationButton } from "./ImpersonationButtons";
 import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
 
 export const UserPageToolbar = ({ userId }: { userId: string }) => {
@@ -38,7 +38,7 @@ export const UserPageToolbar = ({ userId }: { userId: string }) => {
             </ToolbarTitleItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <ImpersonationButton userId={userId} />
+                <StartImpersonationButton userId={userId} />
             </ToolbarActions>
         </StackToolbar>
     );
