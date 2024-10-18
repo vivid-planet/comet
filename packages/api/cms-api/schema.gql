@@ -22,6 +22,8 @@ type CurrentUser {
   impersonated: Boolean
   authenticatedUser: User
   permissionsForScope(scope: JSONObject!): [String!]!
+  allowedContentScopes: [JSONObject!]!
+  allowedContentScopesWithLabels: [JSONObject!]!
 }
 
 type UserPermission {
