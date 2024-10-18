@@ -35,11 +35,11 @@ The User Permissions system does not provide users by itself, so you need to pro
 class UserService implements UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
-    createUserFromIdToken?: (idToken: JwtPayload) => Promise<User> | User;
+    createUserFromRequest?: (request: Request, idToken: JwtPayload) => Promise<User> | User;
 }
 ```
 
-While `getUser` and `findUsers` are self-explaining, `createUserFromIdToken` needs some context about the authorization strategies provided by NestJS. COMET DXP provides a custom strategy that expects a signed JWT in the Authorization Header. When using `createAuthProxyJwtStrategy`, the current user has to be loaded from the information of the submitted JWT. By default the `getUser` method is called, however, by providing `createUserFromIdToken` a custom implementation is possible.
+While `getUser` and `findUsers` are self-explaining, `createUserFromRequest` needs some context about the authorization strategies provided by NestJS. COMET DXP provides a custom strategy that expects a signed JWT in the Authorization Header. When using `createAuthProxyJwtStrategy`, the current user has to be loaded from the information of the submitted JWT. By default the `getUser` method is called, however, by providing `createUserFromRequest` a custom implementation is possible.
 
 :::info
 There may exist ready-to-use UserService-libraries that support the identity provider of your choice.
