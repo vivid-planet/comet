@@ -1,5 +1,53 @@
 # @comet/cms-admin
 
+## 7.5.0
+
+### Minor Changes
+
+-   5a48ae482: Add file size to `DamFileDownloadLinkBlock`
+-   2639fe51a: Add "License" column to DAM Data Grid
+
+    It is only shown if the license feature is enabled by setting `enableLicenseFeature` in `DamConfigProvider` to `true`.
+
+-   216d93a10: File Uploads: Add image endpoint
+
+    Add support for viewing images in the browser.
+    This can be useful for file upload previews, profile pictures etc.
+    The image URL can be obtained by querying the `imageUrl` field of the `FileUpload` type.
+    A `resizeWidth` argument needs to be provided.
+
+    **Example**
+
+    ```graphql
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            updatedAt
+            priceList {
+                id
+                imageUrl(resizeWidth: 640)
+            }
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   bc124d267: Support numbers as content scope values in User Permissions administration panel
+-   Updated dependencies [bb7c2de72]
+-   Updated dependencies [9a6a64ef3]
+-   Updated dependencies [c59a60023]
+-   Updated dependencies [b5838209b]
+-   Updated dependencies [c8f37fbd1]
+-   Updated dependencies [4cea3e31b]
+-   Updated dependencies [216d93a10]
+    -   @comet/admin@7.5.0
+    -   @comet/admin-date-time@7.5.0
+    -   @comet/admin-icons@7.5.0
+    -   @comet/admin-rte@7.5.0
+    -   @comet/admin-theme@7.5.0
+    -   @comet/blocks-admin@7.5.0
+
 ## 7.4.2
 
 ### Patch Changes

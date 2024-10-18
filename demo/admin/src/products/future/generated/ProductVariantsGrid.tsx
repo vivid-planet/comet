@@ -17,7 +17,7 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
@@ -110,6 +110,7 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
             type: "date",
             valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             flex: 1,
             minWidth: 150,
         },
@@ -125,8 +126,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <EditIcon />
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {

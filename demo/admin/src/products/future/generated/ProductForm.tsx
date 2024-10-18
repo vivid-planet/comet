@@ -9,11 +9,12 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
-    MainContent,
     messages,
+    OnChangeField,
     RadioGroupField,
     TextAreaField,
     TextField,
@@ -39,7 +40,12 @@ import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import {
+    GQLManufacturersSelectQuery,
+    GQLManufacturersSelectQueryVariables,
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+} from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -133,6 +139,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                           depth: parseFloat(formValues.dimensions.depth),
                       }
                     : null,
+            manufacturer: formValues.manufacturer?.id,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
@@ -173,12 +180,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{}}
+            subscription={{ values: true }}
         >
-            {() => (
+            {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
+                    <>
                         <FieldSet
                             initiallyExpanded
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
@@ -278,6 +285,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 }}
                                 getOptionLabel={(option) => option.title}
                             />
+
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="priceRange"
+                                component={FinalFormRangeInput}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                min={25}
+                                max={500}
+                                disableSlider
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                            />
                             <Field
                                 fullWidth
                                 name="dimensionsEnabled"
@@ -331,6 +350,37 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
+                                name="manufacturer"
+                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
+                                        query: gql`
+                                            query ManufacturersSelect($filter: ManufacturerFilter) {
+                                                manufacturers(filter: $filter) {
+                                                    nodes {
+                                                        id
+                                                        name
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } },
+                                    });
+                                    return data.manufacturers.nodes;
+                                }}
+                                getOptionLabel={(option) => option.name}
+                                disabled={!values?.type}
+                            />
+                            <OnChangeField name="type">
+                                {(value, previousValue) => {
+                                    if (value.id !== previousValue.id) {
+                                        form.change("manufacturer", undefined);
+                                    }
+                                }}
+                            </OnChangeField>
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel
@@ -347,7 +397,13 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                             />
-                            <Field name="image" isEqual={isEqual}>
+                            <Field
+                                name="image"
+                                isEqual={isEqual}
+                                label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                                variant="horizontal"
+                                fullWidth
+                            >
                                 {createFinalFormBlock(rootBlocks.image)}
                             </Field>
                             <FileUploadField
@@ -364,7 +420,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 maxFileSize={4194304}
                             />
                         </FieldSet>
-                    </MainContent>
+                    </>
                 </>
             )}
         </FinalForm>

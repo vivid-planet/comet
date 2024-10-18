@@ -12,12 +12,14 @@ import { ProductCategory } from "../entities/product-category.entity";
 import { PaginatedProductCategories } from "./dto/paginated-product-categories";
 import { ProductCategoriesArgs } from "./dto/product-categories.args";
 import { ProductCategoryInput, ProductCategoryUpdateInput } from "./dto/product-category.input";
+import { ProductCategoriesService } from "./product-categories.service";
 
 @Resolver(() => ProductCategory)
 @RequiredPermission(["products"], { skipScopeCheck: true })
 export class ProductCategoryResolver {
     constructor(
         private readonly entityManager: EntityManager,
+        private readonly productCategoriesService: ProductCategoriesService,
         @InjectRepository(ProductCategory) private readonly repository: EntityRepository<ProductCategory>,
     ) {}
 
@@ -65,8 +67,17 @@ export class ProductCategoryResolver {
 
     @Mutation(() => ProductCategory)
     async createProductCategory(@Args("input", { type: () => ProductCategoryInput }) input: ProductCategoryInput): Promise<ProductCategory> {
+        const lastPosition = await this.productCategoriesService.getLastPosition();
+        let position = input.position;
+        if (position !== undefined && position < lastPosition + 1) {
+            await this.productCategoriesService.incrementPositions(position);
+        } else {
+            position = lastPosition + 1;
+        }
+
         const productCategory = this.repository.create({
             ...input,
+            position,
         });
 
         await this.entityManager.flush();
@@ -82,6 +93,18 @@ export class ProductCategoryResolver {
     ): Promise<ProductCategory> {
         const productCategory = await this.repository.findOneOrFail(id);
 
+        if (input.position !== undefined) {
+            const lastPosition = await this.productCategoriesService.getLastPosition();
+            if (input.position > lastPosition + 1) {
+                input.position = lastPosition + 1;
+            }
+            if (productCategory.position < input.position) {
+                await this.productCategoriesService.decrementPositions(productCategory.position, input.position);
+            } else if (productCategory.position > input.position) {
+                await this.productCategoriesService.incrementPositions(input.position, productCategory.position);
+            }
+        }
+
         productCategory.assign({
             ...input,
         });
@@ -96,6 +119,7 @@ export class ProductCategoryResolver {
     async deleteProductCategory(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productCategory = await this.repository.findOneOrFail(id);
         this.entityManager.remove(productCategory);
+        await this.productCategoriesService.decrementPositions(productCategory.position);
         await this.entityManager.flush();
         return true;
     }

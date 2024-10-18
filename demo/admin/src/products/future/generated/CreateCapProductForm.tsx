@@ -7,7 +7,6 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormSubmitEvent,
-    MainContent,
     TextAreaField,
     TextField,
     useFormApiRef,
@@ -86,7 +85,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
             subscription={{}}
         >
             {() => (
-                <MainContent>
+                <>
                     <TextField
                         required
                         variant="horizontal"
@@ -149,10 +148,16 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                         component={FinalFormDatePicker}
                         label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                     />
-                    <Field name="image" isEqual={isEqual}>
+                    <Field
+                        name="image"
+                        isEqual={isEqual}
+                        label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                        variant="horizontal"
+                        fullWidth
+                    >
                         {createFinalFormBlock(rootBlocks.image)}
                     </Field>
-                </MainContent>
+                </>
             )}
         </FinalForm>
     );

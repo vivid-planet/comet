@@ -41,7 +41,8 @@ export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } fro
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "./ContentOverflow";
-export { CrudContextMenu } from "./dataGrid/CrudContextMenu";
+export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "./dataGrid/CrudContextMenu";
+export { CrudMoreActionsMenu, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
@@ -51,6 +52,7 @@ export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";
+export { renderStaticSelectCell } from "./dataGrid/renderStaticSelectCell";
 export { useBufferedRowCount } from "./dataGrid/useBufferedRowCount";
 export { useDataGridRemote } from "./dataGrid/useDataGridRemote";
 export { usePersistentColumnState } from "./dataGrid/usePersistentColumnState";
