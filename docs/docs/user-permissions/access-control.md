@@ -59,7 +59,7 @@ Also, try to avoid using the `@GetCurrentUser` decorator (which often leads to u
 ```diff
 - @RequiredPermission("products", {skipScopeCheck: true})
 + @RequiredPermission("products")
-+ @AffectedEntity(User)
++ @AffectedEntity(User, { idArg: "userId" })
 - async myProducts(@GetCurrentUser() currentUser: CurrentUser): Promise<Product[]> {
 + async productsForUser(@Args("userId", { type: () => ID }) userId: string): Promise<Product[]> {
       //...
