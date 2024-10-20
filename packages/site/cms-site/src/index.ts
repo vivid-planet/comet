@@ -42,3 +42,4 @@ export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePre
 export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export { previewParams, SitePreviewData, SitePreviewParams, sitePreviewRoute } from "./sitePreview/SitePreviewUtils";
+export { filesize as convertToFileSize } from "filesize";

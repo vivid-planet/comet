@@ -26,6 +26,7 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
+        "filesize": "^10.1.6",
         "jose": "^5.2.4",
         "rimraf": "^3.0.0",
         "scroll-into-view-if-needed": "^2.0.0",
