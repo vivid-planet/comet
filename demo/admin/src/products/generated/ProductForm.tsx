@@ -230,12 +230,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             name="lastCheckedAt"
                             label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last Checked At" />}
                         />
-                        <DateField
-                            variant="horizontal"
-                            fullWidth
-                            name="nextNotificationEmail"
-                            label={<FormattedMessage id="product.nextNotificationEmail" defaultMessage="Next Notification Email" />}
-                        />
                         <Field name="image" isEqual={isEqual}>
                             {createFinalFormBlock(rootBlocks.image)}
                         </Field>

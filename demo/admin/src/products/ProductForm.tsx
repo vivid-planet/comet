@@ -106,7 +106,7 @@ export function ProductForm({ id }: FormProps) {
                       id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
                   }
                 : undefined,
-            nextNotificationEmail: parseISO(filteredData.nextNotificationEmail),
+            lastCheckedAt: filteredData.lastCheckedAt ? parseISO(filteredData.lastCheckedAt) : null,
         };
     }, [data]);
 
@@ -136,7 +136,7 @@ export function ProductForm({ id }: FormProps) {
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
             manufacturer: formValues.manufacturer?.id,
-            nextNotificationEmail: formValues.nextNotificationEmail.toISOString(),
+            lastCheckedAt: formValues.lastCheckedAt ? formValues.lastCheckedAt.toISOString() : null,
         };
 
         if (mode === "edit") {
@@ -350,8 +350,8 @@ export function ProductForm({ id }: FormProps) {
                             layout="grid"
                         />
                         <Field
-                            label={<FormattedMessage id="product.nextNotificationEmail" defaultMessage="Next notification email" />}
-                            name="nextNotificationEmail"
+                            label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
+                            name="lastCheckedAt"
                             component={FinalFormDateTimePicker}
                             fullWidth
                         />

@@ -14,7 +14,6 @@ export const productFormFragment = gql`
         inStock
         availableSince
         lastCheckedAt
-        nextNotificationEmail
         image
     }
 `;
