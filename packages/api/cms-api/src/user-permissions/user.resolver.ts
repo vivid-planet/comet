@@ -1,14 +1,11 @@
-import { Args, Context, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Request } from "express";
 
-import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DisablePermissionCheck, RequiredPermission } from "./decorators/required-permission.decorator";
+import { UserPermissionsPaginatedUserList } from "./dto/list-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermissionsService } from "./user-permissions.service";
-
-@ObjectType()
-class PaginatedUserList extends PaginatedResponseFactory.create(User) {}
 
 @Resolver(() => User)
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
@@ -20,10 +17,26 @@ export class UserResolver {
         return this.userService.getUser(id);
     }
 
-    @Query(() => PaginatedUserList)
-    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<PaginatedUserList> {
+    @Query(() => UserPermissionsPaginatedUserList)
+    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<UserPermissionsPaginatedUserList> {
         const [users, totalCount] = await this.userService.findUsers(args);
-        return new PaginatedUserList(users, totalCount, args);
+        const countAvailablePermissions = [...new Set(await this.userService.getAvailablePermissions())].length;
+        const countAvailableContentScopes = [...new Set(await (await this.userService.getAvailableContentScopes()).map((c) => JSON.stringify(c)))]
+            .length;
+        return new UserPermissionsPaginatedUserList(
+            await Promise.all(
+                users.map(async (user) => {
+                    return {
+                        ...user,
+                        countPermissions: [...new Set((await this.userService.getPermissions(user)).map((p) => p.permission))].length,
+                        countContentScopes: [...new Set((await this.userService.getContentScopes(user)).map((c) => JSON.stringify(c)))].length,
+                        countAvailablePermissions,
+                        countAvailableContentScopes,
+                    };
+                }),
+            ),
+            totalCount,
+        );
     }
 
     @Mutation(() => Boolean)
