@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 5.9.2
+
+### Patch Changes
+
+-   b6048d77d: API CrudSingleGenerator: Run `transformToBlockData()` for block fields on create
+    -   @comet/blocks-api@5.9.2
+
 ## 5.9.1
 
 ### Patch Changes
