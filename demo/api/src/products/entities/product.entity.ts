@@ -145,10 +145,6 @@ export class Product extends BaseEntity<Product, "id"> {
     @Field({ nullable: true })
     lastCheckedAt?: Date = undefined;
 
-    @Property({ nullable: true })
-    @Field({ nullable: true })
-    nextNotificationEmail?: Date = undefined;
-
     @Property({ customType: new RootBlockType(DamImageBlock) })
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
