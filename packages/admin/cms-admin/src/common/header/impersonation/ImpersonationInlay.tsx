@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
 import { useCurrentUser } from "../../../userPermissions/hooks/currentUser";
-import { StopImpersonationButton } from "../../../userPermissions/user/UserPage";
+import { StopImpersonationButton } from "../../../userPermissions/user/ImpersonationButtons";
 
 export function ImpersonationInlay() {
     const user = useCurrentUser();
