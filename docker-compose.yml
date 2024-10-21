@@ -43,8 +43,18 @@ services:
             COLLECTOR_OTLP_ENABLED: "true"
             COLLECTOR_OTLP_HTTP_HOST_PORT: 0.0.0.0:4318
 
+    redis:
+        image: redis:7
+        command: redis-server --maxmemory 256M --maxmemory-policy allkeys-lru --loglevel warning --requirepass ${REDIS_PASSWORD}
+        ports:
+            - ${REDIS_PORT}:6379
+        networks:
+            - redis
+
 networks:
     postgres:
+        driver: bridge
+    redis:
         driver: bridge
 
 volumes:

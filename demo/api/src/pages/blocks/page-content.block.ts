@@ -4,6 +4,7 @@ import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
 import { NewsDetailBlock } from "@src/news/blocks/news-detail.block";
+import { NewsListBlock } from "@src/news/blocks/news-list.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
@@ -29,6 +30,7 @@ const supportedBlocks = {
     media: MediaBlock,
     teaser: TeaserBlock,
     newsDetail: NewsDetailBlock,
+    newsList: NewsListBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
