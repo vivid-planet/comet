@@ -82,8 +82,8 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                     <Typography color="textSecondary" variant="caption" sx={{ paddingBottom: 2, display: "block" }}>
                         <FormattedMessage id="comet.logged.in" defaultMessage="Logged in as" />
                     </Typography>
-                    <Typography variant="h4">{user.authenticatedUser?.name}</Typography>
-                    <Typography variant="body2">{user.authenticatedUser?.email}</Typography>
+                    <Typography variant="h4">{user.authenticatedUser ? user.authenticatedUser.name : user.name}</Typography>
+                    <Typography variant="body2">{user.authenticatedUser ? user.authenticatedUser.email : user.email}</Typography>
                 </Box>
 
                 <Separator />
