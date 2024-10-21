@@ -23,6 +23,7 @@ import {
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Lock } from "@comet/admin-icons";
+import { CalendarToday as CalendarTodayIcon, Location as LocationIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -355,6 +356,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 fullWidth
                                 name="manufacturer"
                                 label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <LocationIcon />
+                                    </InputAdornment>
+                                }
                                 loadOptions={async () => {
                                     const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
                                         query: gql`

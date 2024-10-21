@@ -57,6 +57,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                         name: "type",
                         gqlName: "addressAsEmbeddable_country",
                     },
+                    startAdornment: { icon: "Location" },
                 },
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince" },
