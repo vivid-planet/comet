@@ -5,7 +5,6 @@ import { ClearInputAdornment, InputWithPopperProps } from "@comet/admin";
 import { Calendar as CalendarIcon } from "@comet/admin-icons";
 import { ComponentsOverrides, InputAdornment } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
 import { FormatDateOptions, useIntl } from "react-intl";
 
 import { DatePickerNavigation } from "../DatePickerNavigation";
@@ -22,8 +21,6 @@ export interface DatePickerProps extends Omit<InputWithPopperProps, "children" |
     maxDate?: Date;
     minDate?: Date;
     slotProps?: SlotProps;
-    startAdornment?: ReactNode;
-    endAdornment?: ReactNode;
 }
 
 export const DatePicker = (inProps: DatePickerProps) => {
