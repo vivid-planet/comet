@@ -155,97 +155,95 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
     });
 
     return (
-        <>
-            <RouterTabs>
-                <RouterTab forceRender={true} path="" label={intl.formatMessage({ id: "products.details", defaultMessage: "Details" })}>
-                    <MainContent fullHeight disablePadding>
-                        <FinalForm
-                            mode="edit"
-                            onSubmit={() => {
-                                console.log("Submitted!");
-                            }}
-                            initialValues={{ name: products[Number(productId)].name }}
-                        >
-                            <TextField name="name" label="Name" fullWidth />
-                        </FinalForm>
-                    </MainContent>
-                </RouterTab>
-                <RouterTab forceRender={true} path="/stocks" label={intl.formatMessage({ id: "products.stocks", defaultMessage: "Stocks" })}>
-                    <StackSwitch initialPage="stocks">
-                        <StackPage name="stocks">
-                            <MainContent fullHeight>
-                                <DataGrid
-                                    columns={[
-                                        { field: "id", headerName: "ID", width: 90 },
-                                        { field: "amount", headerName: "Amount", flex: 1 },
-                                        {
-                                            field: "actions",
-                                            headerName: "",
-                                            sortable: false,
-                                            filterable: false,
-                                            type: "actions",
-                                            align: "right",
-                                            width: 86,
-                                            renderCell: (params) => {
-                                                return (
-                                                    <IconButton component={StackLink} pageName="stocksEdit" payload={params.row.id}>
-                                                        <Edit color="primary" />
-                                                    </IconButton>
-                                                );
-                                            },
+        <RouterTabs>
+            <RouterTab forceRender={true} path="" label={intl.formatMessage({ id: "products.details", defaultMessage: "Details" })}>
+                <MainContent fullHeight disablePadding>
+                    <FinalForm
+                        mode="edit"
+                        onSubmit={() => {
+                            console.log("Submitted!");
+                        }}
+                        initialValues={{ name: products[Number(productId)].name }}
+                    >
+                        <TextField name="name" label="Name" fullWidth />
+                    </FinalForm>
+                </MainContent>
+            </RouterTab>
+            <RouterTab forceRender={true} path="/stocks" label={intl.formatMessage({ id: "products.stocks", defaultMessage: "Stocks" })}>
+                <StackSwitch initialPage="stocks">
+                    <StackPage name="stocks">
+                        <AddStocksDialog dialogApiRef={editDialogApi} />
+                        <MainContent fullHeight>
+                            <DataGrid
+                                columns={[
+                                    { field: "id", headerName: "ID", width: 90 },
+                                    { field: "amount", headerName: "Amount", flex: 1 },
+                                    {
+                                        field: "actions",
+                                        headerName: "",
+                                        sortable: false,
+                                        filterable: false,
+                                        type: "actions",
+                                        align: "right",
+                                        width: 86,
+                                        renderCell: (params) => {
+                                            return (
+                                                <IconButton component={StackLink} pageName="stocksEdit" payload={params.row.id}>
+                                                    <Edit color="primary" />
+                                                </IconButton>
+                                            );
                                         },
-                                    ]}
-                                    rows={rows}
-                                    components={{
-                                        Toolbar: Toolbar,
-                                    }}
-                                    componentsProps={{
-                                        toolbar: {
-                                            toolbarAction: (
-                                                <Button
-                                                    startIcon={<Add />}
-                                                    onClick={() => editDialogApi.current?.openAddDialog()}
-                                                    variant="contained"
-                                                    color="primary"
-                                                >
-                                                    <FormattedMessage {...messages.add} />
-                                                </Button>
-                                            ),
-                                        },
-                                    }}
-                                />
-                            </MainContent>
-                        </StackPage>
-                        <StackPage name="stocksEdit" title={intl.formatMessage({ id: "products.editStocks", defaultMessage: "Edit Stocks" })}>
-                            {(selectedStockId) => (
-                                <SaveBoundary>
-                                    <MainContent fullHeight disablePadding>
-                                        <StackToolbar>
-                                            <ToolbarBackButton />
-                                            <ToolbarAutomaticTitleItem />
-                                            <ToolbarFillSpace />
-                                            <ToolbarActions>
-                                                <SaveBoundarySaveButton />
-                                            </ToolbarActions>
-                                        </StackToolbar>
-                                        <FinalForm
-                                            mode="edit"
-                                            onSubmit={() => {
-                                                console.log("Submitted!");
-                                            }}
-                                            initialValues={{ amount: stocks[Number(selectedStockId)].amount }}
-                                        >
-                                            <TextField name="amount" label="Amount" fullWidth />
-                                        </FinalForm>
-                                    </MainContent>
-                                </SaveBoundary>
-                            )}
-                        </StackPage>
-                    </StackSwitch>
-                </RouterTab>
-            </RouterTabs>
-            <AddStocksDialog dialogApiRef={editDialogApi} />
-        </>
+                                    },
+                                ]}
+                                rows={rows}
+                                components={{
+                                    Toolbar: Toolbar,
+                                }}
+                                componentsProps={{
+                                    toolbar: {
+                                        toolbarAction: (
+                                            <Button
+                                                startIcon={<Add />}
+                                                onClick={() => editDialogApi.current?.openAddDialog()}
+                                                variant="contained"
+                                                color="primary"
+                                            >
+                                                <FormattedMessage {...messages.add} />
+                                            </Button>
+                                        ),
+                                    },
+                                }}
+                            />
+                        </MainContent>
+                    </StackPage>
+                    <StackPage name="stocksEdit" title={intl.formatMessage({ id: "products.editStocks", defaultMessage: "Edit Stocks" })}>
+                        {(selectedStockId) => (
+                            <SaveBoundary>
+                                <MainContent fullHeight disablePadding>
+                                    <StackToolbar>
+                                        <ToolbarBackButton />
+                                        <ToolbarAutomaticTitleItem />
+                                        <ToolbarFillSpace />
+                                        <ToolbarActions>
+                                            <SaveBoundarySaveButton />
+                                        </ToolbarActions>
+                                    </StackToolbar>
+                                    <FinalForm
+                                        mode="edit"
+                                        onSubmit={() => {
+                                            console.log("Submitted!");
+                                        }}
+                                        initialValues={{ amount: stocks[Number(selectedStockId)].amount }}
+                                    >
+                                        <TextField name="amount" label="Amount" fullWidth />
+                                    </FinalForm>
+                                </MainContent>
+                            </SaveBoundary>
+                        )}
+                    </StackPage>
+                </StackSwitch>
+            </RouterTab>
+        </RouterTabs>
     );
 };
 
