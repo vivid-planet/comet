@@ -2,13 +2,13 @@
 "@comet/blocks-admin": minor
 ---
 
-Add support for custom tab labels in OneOfBlock tabs
+Add support for custom labels in OneOfBlock tabs
 
 Usage:
 
--   Add tabLabels to `createOneOfBlock` props
+-   Add labels to `createOneOfBlock` props
     -   ````ts
-        tabLabels: {
+        labels: {
                 image: (
                     <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.image" defaultMessage="Image" />}>
                         <Image />
@@ -27,4 +27,4 @@ Usage:
             }
             ```
         ````
-    -   the keys in the tabLabels need to be the same as the `supportedBlocks`
+    -   the keys in the labels need to be the same as the `supportedBlocks`
