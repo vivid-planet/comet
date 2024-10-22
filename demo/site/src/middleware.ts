@@ -6,13 +6,13 @@ import { getPredefinedPageRedirect, getPredefinedPageRewrite } from "./middlewar
 import { createRedirects } from "./middleware/redirects";
 
 export async function middleware(request: NextRequest) {
-    const { pathname } = new URL(request.url);
+    const { pathname, search } = new URL(request.url);
 
     const scope = { domain };
 
     const redirects = await createRedirects(scope);
 
-    const redirect = redirects.get(pathname);
+    const redirect = redirects.get(pathname + search);
     if (redirect) {
         const destination: string = redirect.destination;
         return NextResponse.redirect(new URL(destination, request.url), redirect.permanent ? 308 : 307);
