@@ -14,7 +14,7 @@ services:
             - postgres
 
     imgproxy:
-        image: darthsim/imgproxy:latest
+        image: darthsim/imgproxy:v3
         volumes:
             - ./demo/uploads:/uploads:ro
         ports:
