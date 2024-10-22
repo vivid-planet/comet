@@ -16,7 +16,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDateTimePicker } from "@comet/admin-date-time";
+import { DateTimeField } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -349,10 +349,9 @@ export function ProductForm({ id }: FormProps) {
                             fullWidth
                             layout="grid"
                         />
-                        <Field
+                        <DateTimeField
                             label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
                             name="lastCheckedAt"
-                            component={FinalFormDateTimePicker}
                             fullWidth
                         />
                     </MainContent>
