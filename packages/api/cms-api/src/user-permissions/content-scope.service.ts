@@ -31,10 +31,11 @@ export class ContentScopeService {
     async getScopesForPermissionCheck(context: ExecutionContext): Promise<ContentScope[][]> {
         const contentScopes: ContentScope[][] = [];
         const args = await this.getArgs(context);
+        const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
         const affectedEntities = this.reflector.getAllAndOverride<AffectedEntityMeta[]>("affectedEntities", [context.getHandler()]) || [];
         for (const affectedEntity of affectedEntities) {
-            contentScopes.push(...(await this.getContentScopesFromEntity(affectedEntity, args)));
+            contentScopes.push(...(await this.getContentScopesFromEntity(affectedEntity, args, location)));
         }
         if (args.scope) {
             contentScopes.push([args.scope as ContentScope]);
@@ -58,7 +59,11 @@ export class ContentScopeService {
         return uniqueScopes;
     }
 
-    private async getContentScopesFromEntity(affectedEntity: AffectedEntityMeta, args: Record<string, string>): Promise<ContentScope[][]> {
+    private async getContentScopesFromEntity(
+        affectedEntity: AffectedEntityMeta,
+        args: Record<string, string>,
+        location: string,
+    ): Promise<ContentScope[][]> {
         const contentScopes: ContentScope[][] = [];
         if (affectedEntity.options.idArg) {
             if (!args[affectedEntity.options.idArg] && !affectedEntity.options.nullable) {
@@ -69,6 +74,13 @@ export class ContentScopeService {
                 const repo = this.orm.em.getRepository<{ scope?: ContentScope }>(affectedEntity.entity);
                 const id = args[affectedEntity.options.idArg];
                 const ids = Array.isArray(id) ? id : [id];
+
+                if (ids.length === 0) {
+                    throw new Error(
+                        `Encountered empty IDs array for argument '${affectedEntity.options.idArg}' of ${location}. Make sure to skip the operation if no IDs are provided.`,
+                    );
+                }
+
                 for (const id of ids) {
                     const row = await repo.findOneOrFail(id);
                     if (row.scope) {

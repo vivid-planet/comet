@@ -1,12 +1,16 @@
-import { MainContent, Stack, StackPage, StackSwitch, Toolbar } from "@comet/admin";
+import { MainContent, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
+import { Edit } from "@comet/admin-icons";
+import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { useRouteMatch } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
-import { UserPage } from "./user/UserPage";
-import { UserGrid } from "./UserGrid";
+import { UserPermissionsUserPageBasicDataPanel } from "./user/basicData/UserBasicData";
+import { UserPermissionsUserPagePermissionsPanel } from "./user/permissions/PermissionsPanel";
+import { UserPermissionsUserPageToolbar } from "./user/UserPageToolbar";
+import { UserPermissionsUserGrid } from "./UserGrid";
 import { LabelsContext, LabelsContextType } from "./utils/LabelsContext";
 
 type UserPermissionsPageProps = LabelsContextType;
@@ -31,15 +35,43 @@ export const UserPermissionsPage = ({ permissionLabels }: UserPermissionsPagePro
                 },
             }}
         >
-            <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Management" />}>
+            <Stack topLevelTitle={<FormattedMessage id="comet.userPermissions.title" defaultMessage="User Permissions" />}>
                 <StackSwitch>
                     <StackPage name="table">
-                        <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
+                        <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
                         <MainContent fullHeight>
-                            <UserGrid />
+                            <UserPermissionsUserGrid
+                                rowAction={(params) => (
+                                    <IconButton component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
+                                        <Edit color="primary" />
+                                    </IconButton>
+                                )}
+                            />
                         </MainContent>
                     </StackPage>
-                    <StackPage name="edit">{(userId) => <UserPage userId={userId} />}</StackPage>
+                    <StackPage name="edit" title={<FormattedMessage id="comet.userPermissions.edit" defaultMessage="User" />}>
+                        {(userId) => (
+                            <>
+                                <UserPermissionsUserPageToolbar userId={userId} />
+                                <MainContent>
+                                    <RouterTabs>
+                                        <RouterTab
+                                            path=""
+                                            label={<FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />}
+                                        >
+                                            <UserPermissionsUserPageBasicDataPanel userId={userId} />
+                                        </RouterTab>
+                                        <RouterTab
+                                            path="/permissions"
+                                            label={<FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />}
+                                        >
+                                            <UserPermissionsUserPagePermissionsPanel userId={userId} />
+                                        </RouterTab>
+                                    </RouterTabs>
+                                </MainContent>
+                            </>
+                        )}
+                    </StackPage>
                 </StackSwitch>
             </Stack>
         </LabelsContext.Provider>
