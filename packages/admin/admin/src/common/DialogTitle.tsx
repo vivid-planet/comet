@@ -5,12 +5,12 @@ import { ReactNode } from "react";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type DialogTitleClassKey = "dialogTitle" | "iconButton" | "contentWrapper";
+export type DialogTitleClassKey = "root" | "iconButton" | "contentWrapper";
 
 export interface DialogTitleProps
     extends ThemedComponentBaseProps<{
         iconButton: typeof MUIIconButton;
-        dialogTitle: typeof MUIDialogTitle;
+        root: typeof MUIDialogTitle;
         contentWrapper: "div";
     }> {
     children?: ReactNode;
@@ -23,23 +23,22 @@ export function DialogTitle(inProps: DialogTitleProps) {
     const { slotProps, iconMapping = {}, children, onClose, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminDialogTitle" });
     const { closeIcon = <Close color="inherit" /> } = iconMapping;
     return (
-        <Title {...slotProps?.dialogTitle} {...restProps}>
+        <Root {...slotProps?.root} {...restProps}>
             <ContentWrapper {...slotProps?.contentWrapper}>{children}</ContentWrapper>
             {onClose && (
                 <IconButton {...slotProps?.iconButton} onClick={onClose}>
                     {closeIcon}
                 </IconButton>
             )}
-        </Title>
+        </Root>
     );
 }
 
-const Title = createComponentSlot(MUIDialogTitle)<DialogTitleClassKey>({
+const Root = createComponentSlot(MUIDialogTitle)<DialogTitleClassKey>({
     componentName: "DialogTitle",
-    slotName: "dialogTitle",
+    slotName: "root",
 })(css`
     display: flex;
-    justify-content: space-between;
     align-items: center;
 `);
 
@@ -48,6 +47,8 @@ const IconButton = createComponentSlot(MUIIconButton)<DialogTitleClassKey>({
     slotName: "iconButton",
 })(css`
     color: inherit;
+    position: absolute;
+    right: 20px;
 `);
 
 const ContentWrapper = createComponentSlot("div")<DialogTitleClassKey>({
@@ -55,6 +56,8 @@ const ContentWrapper = createComponentSlot("div")<DialogTitleClassKey>({
     slotName: "contentWrapper",
 })(css`
     color: inherit;
+    width: 100%;
+    padding-right: 40px;
 `);
 
 declare module "@mui/material/styles" {
