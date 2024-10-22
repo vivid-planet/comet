@@ -6,17 +6,17 @@ import { User } from "./user";
 @ObjectType()
 class UserPermissionsListUser extends User {
     @Field()
-    countPermissions: number;
+    permissionsCount: number;
 
     @Field()
-    countContentScopes: number;
-
-    @Field()
-    countAvailablePermissions: number;
-
-    @Field()
-    countAvailableContentScopes: number;
+    contentScopesCount: number;
 }
 
 @ObjectType()
-export class UserPermissionsPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsListUser) {}
+export class UserPermissionsPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsListUser) {
+    @Field()
+    availablePermissionsCount: number;
+
+    @Field()
+    availableContentScopesCount: number;
+}

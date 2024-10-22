@@ -55,14 +55,14 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             filterable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.permissionsInfo", defaultMessage: "Permissions" }),
             renderCell: ({ row }) => {
-                if (row.countPermissions === row.countAvailablePermissions) {
+                if (row.permissionsCount === data?.users.availablePermissionsCount) {
                     return (
                         <Chip
                             color="primary"
                             label={<FormattedMessage id="comet.userPermissions.allPermissions" defaultMessage="All permissions" />}
                         />
                     );
-                } else if (row.countPermissions === 0) {
+                } else if (row.permissionsCount === 0) {
                     return (
                         <Chip
                             color="secondary"
@@ -76,8 +76,11 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                             label={
                                 <FormattedMessage
                                     id="comet.userPermissions.permissionsCount"
-                                    defaultMessage="{countPermissions} of {countAvailablePermissions} permissions"
-                                    values={{ countPermissions: row.countPermissions, countAvailablePermissions: row.countAvailablePermissions }}
+                                    defaultMessage="{permissionsCount} of {availablePermissionsCount} permissions"
+                                    values={{
+                                        permissionsCount: row.permissionsCount,
+                                        availablePermissionsCount: data?.users.availablePermissionsCount,
+                                    }}
                                 />
                             }
                         />
@@ -93,11 +96,11 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             filterable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.contentScopesInfo", defaultMessage: "Scopes" }),
             renderCell: ({ row }) => {
-                if (row.countContentScopes === row.countAvailableContentScopes) {
+                if (row.contentScopesCount === data?.users.availableContentScopesCount) {
                     return (
                         <Chip color="primary" label={<FormattedMessage id="comet.userPermissions.allContentScopes" defaultMessage="All scopes" />} />
                     );
-                } else if (row.countContentScopes === 0) {
+                } else if (row.contentScopesCount === 0) {
                     return (
                         <Chip color="secondary" label={<FormattedMessage id="comet.userPermissions.noContentScopes" defaultMessage="No scopes" />} />
                     );
@@ -108,10 +111,10 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                             label={
                                 <FormattedMessage
                                     id="comet.userPermissions.contentScopesCount"
-                                    defaultMessage="{countContentScopes} of {countAvailableContentScopes} scopes"
+                                    defaultMessage="{contentScopesCount} of {availableContentScopesCount} scopes"
                                     values={{
-                                        countContentScopes: row.countContentScopes,
-                                        countAvailableContentScopes: row.countAvailableContentScopes,
+                                        contentScopesCount: row.contentScopesCount,
+                                        availableContentScopesCount: data?.users.availableContentScopesCount,
                                     }}
                                 />
                             }
@@ -144,16 +147,16 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                         ...UserForGrid
                     }
                     totalCount
+                    availablePermissionsCount
+                    availableContentScopesCount
                 }
             }
             fragment UserForGrid on UserPermissionsListUser {
                 id
                 name
                 email
-                countPermissions
-                countContentScopes
-                countAvailablePermissions
-                countAvailableContentScopes
+                permissionsCount
+                contentScopesCount
             }
         `,
         {

@@ -20,23 +20,22 @@ export class UserResolver {
     @Query(() => UserPermissionsPaginatedUserList)
     async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<UserPermissionsPaginatedUserList> {
         const [users, totalCount] = await this.userService.findUsers(args);
-        const countAvailablePermissions = [...new Set(await this.userService.getAvailablePermissions())].length;
-        const countAvailableContentScopes = [...new Set(await (await this.userService.getAvailableContentScopes()).map((c) => JSON.stringify(c)))]
-            .length;
-        return new UserPermissionsPaginatedUserList(
-            await Promise.all(
-                users.map(async (user) => {
-                    return {
-                        ...user,
-                        countPermissions: [...new Set((await this.userService.getPermissions(user)).map((p) => p.permission))].length,
-                        countContentScopes: [...new Set((await this.userService.getContentScopes(user)).map((c) => JSON.stringify(c)))].length,
-                        countAvailablePermissions,
-                        countAvailableContentScopes,
-                    };
-                }),
+        return {
+            ...new UserPermissionsPaginatedUserList(
+                await Promise.all(
+                    users.map(async (user) => {
+                        return {
+                            ...user,
+                            permissionsCount: [...new Set((await this.userService.getPermissions(user)).map((p) => p.permission))].length,
+                            contentScopesCount: [...new Set((await this.userService.getContentScopes(user)).map((c) => JSON.stringify(c)))].length,
+                        };
+                    }),
+                ),
+                totalCount,
             ),
-            totalCount,
-        );
+            availablePermissionsCount: [...new Set(await this.userService.getAvailablePermissions())].length,
+            availableContentScopesCount: [...new Set((await this.userService.getAvailableContentScopes()).map((c) => JSON.stringify(c)))].length,
+        };
     }
 
     @Mutation(() => Boolean)

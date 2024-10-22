@@ -197,15 +197,15 @@ type UserPermissionsListUser {
   id: String!
   name: String!
   email: String!
-  countPermissions: Float!
-  countContentScopes: Float!
-  countAvailablePermissions: Float!
-  countAvailableContentScopes: Float!
+  permissionsCount: Float!
+  contentScopesCount: Float!
 }
 
 type UserPermissionsPaginatedUserList {
   nodes: [UserPermissionsListUser!]!
   totalCount: Int!
+  availablePermissionsCount: Float!
+  availableContentScopesCount: Float!
 }
 
 type PageTreeNode {
