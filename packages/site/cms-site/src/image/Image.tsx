@@ -14,8 +14,7 @@ export function parseAspectRatio(value: string | number): number {
             height = 1;
         }
     } else {
-        value = String(value);
-        width = parseFloat(value);
+        width = value;
         height = 1;
     }
     if (!width || !height) throw Error(`An error occurred while parsing the aspect ratio: ${value}`);
