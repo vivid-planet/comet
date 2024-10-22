@@ -30,8 +30,6 @@ Your description should include:
 Everything below this is intended to help ease reviewing this PR.
 Remove all unrelated sections.
 
-WHEN MERGING THE PR, REMOVE THIS FROM THE COMMIT MESSAGE.
-
 -->
 
 ## Example

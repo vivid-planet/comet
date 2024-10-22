@@ -34,6 +34,25 @@ app.prepare().then(() => {
                     return;
                 }
             }
+            if (
+                parsedUrl.pathname?.startsWith("/assets/") || // TODO move public/* files into public/assets folder
+                parsedUrl.pathname == "/favicon.ico" ||
+                parsedUrl.pathname == "/apple-icon.png" ||
+                parsedUrl.pathname == "/icon.svg" ||
+                parsedUrl.pathname == "/robots.txt" ||
+                parsedUrl.pathname == "/sitemap.xml"
+            ) {
+                res.setHeader("Cache-Control", "public, max-age=900");
+                const origSetHeader = res.setHeader;
+                res.setHeader = function (name: string, value: string | number | readonly string[]) {
+                    if (name === "cache-control" || name === "Cache-Control") {
+                        // ignore
+                        return;
+                    }
+                    return origSetHeader.call(this, name, value);
+                };
+            }
+
             await handle(req, res, parsedUrl);
         } catch (err) {
             console.error("Error occurred handling", req.url, err);
