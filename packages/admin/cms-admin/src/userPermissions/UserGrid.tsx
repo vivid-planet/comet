@@ -5,24 +5,29 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
-    StackSwitchApiContext,
+    ToolbarActions,
+    ToolbarFillSpace,
     ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
-import { Chip, IconButton, Typography } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { useContext } from "react";
+import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
-export const UserGrid = () => {
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
+type Props = {
+    toolbarAction?: React.ReactNode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rowAction?: (params: GridRenderCellParams<any, GQLUserForGridFragment, any>) => React.ReactNode;
+    actionsColumnWidth?: number;
+};
+
+export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) => {
+    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserPermissionsUserGrid") };
     const intl = useIntl();
-    const stackApi = useContext(StackSwitchApiContext);
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -119,17 +124,15 @@ export const UserGrid = () => {
             field: "actions",
             headerName: "",
             sortable: false,
-            pinnable: false,
             filterable: false,
-            renderCell: (params) => (
-                <IconButton
-                    onClick={() => {
-                        stackApi.activatePage("edit", params.id.toString());
-                    }}
-                >
-                    <Edit color="primary" />
-                </IconButton>
-            ),
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: actionsColumnWidth,
+            disableExport: true,
+            renderCell: (params) => {
+                return <> {rowAction && rowAction(params)}</>;
+            },
         },
     ];
 
@@ -181,8 +184,13 @@ export const UserGrid = () => {
                         <ToolbarItem>
                             <GridFilterButton />
                         </ToolbarItem>
+                        <ToolbarFillSpace />
+                        {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
                     </DataGridToolbar>
                 ),
+            }}
+            componentsProps={{
+                toolbar: { toolbarAction },
             }}
         />
     );
