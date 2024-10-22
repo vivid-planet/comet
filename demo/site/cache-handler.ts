@@ -3,6 +3,8 @@ import { Redis } from "ioredis";
 import { LRUCache } from "lru-cache";
 import { CacheHandler as NextCacheHandler } from "next/dist/server/lib/incremental-cache";
 
+import { getOrCreateCounter, getOrCreateHistogram } from "./opentelemetry-metrics";
+
 const REDIS_HOST = process.env.REDIS_HOST;
 if (!REDIS_HOST) {
     throw new Error("REDIS_HOST is required");
@@ -39,6 +41,27 @@ const fallbackCache = new LRUCache<string, any>({
 
 let isFallbackInUse = false;
 
+const cacheHitCount = getOrCreateCounter("nextcache.get.hit", {
+    description: "NextJS ISR Cache hits",
+    unit: "requests",
+});
+const cacheMissCount = getOrCreateCounter("nextcache.get.miss", {
+    description: "NextJS ISR Cache misses",
+    unit: "requests",
+});
+const cacheSetCount = getOrCreateCounter("nextcache.set", {
+    description: "NextJS ISR Cache sets",
+    unit: "requests",
+});
+const cacheFallbackCount = getOrCreateCounter("nextcache.get.fallback", {
+    description: "NextJS ISR Cache in-memory fallback gets",
+    unit: "requests",
+});
+const cacheGetAge = getOrCreateHistogram("nextcache.get.age", {
+    description: "NextJS ISR Cache cache age when retrieved",
+    unit: "s",
+});
+
 function parseBodyForGqlError(body: string) {
     try {
         const decodedBody = Buffer.from(body, "base64").toString("utf-8");
@@ -64,9 +87,15 @@ export default class CacheHandler {
                     console.info(`${new Date().toISOString()} [${REDIS_HOST} up] Switching back to redis cache`);
                 }
                 if (!redisResponse) {
+                    cacheMissCount.add(1);
                     return null;
                 }
-                return JSON.parse(redisResponse);
+                cacheHitCount.add(1);
+                const response = JSON.parse(redisResponse);
+                if (response.lastModified) {
+                    cacheGetAge.record((new Date().getTime() - response.lastModified) / 1000);
+                }
+                return response;
             } catch (e) {
                 console.error("CacheHandler.get error", e);
             }
@@ -82,7 +111,14 @@ export default class CacheHandler {
             isFallbackInUse = true;
         }
 
-        return fallbackCache.get(key) ?? null;
+        cacheFallbackCount.add(1);
+        const ret = fallbackCache.get(key) ?? null;
+        if (ret) {
+            cacheHitCount.add(1);
+        } else {
+            cacheMissCount.add(1);
+        }
+        return ret;
     }
 
     async set(key: string, value: Parameters<NextCacheHandler["set"]>[1]): Promise<void> {
@@ -94,6 +130,7 @@ export default class CacheHandler {
                 return;
             }
         }
+        cacheSetCount.add(1);
 
         const stringData = JSON.stringify({
             lastModified: Date.now(),
@@ -114,10 +151,5 @@ export default class CacheHandler {
             console.log("CacheHandler.set fallbackCache", key);
         }
         fallbackCache.set(key, value, { size: stringData.length });
-    }
-
-    async revalidateTag(tags: string | string[]): Promise<void> {
-        console.log("CacheHandler.revalidateTag", tags);
-        throw new Error("unsupported");
     }
 }
