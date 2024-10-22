@@ -38,7 +38,7 @@ async function fetchPageTreeNode(params: { path: string[]; lang: string }) {
             skipPage,
             path,
             scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
-            redirectSource: `/${params.lang}${path != "" ? path : ""}`,
+            redirectSource: `/${params.lang}${path !== "/" ? path : ""}`,
             redirectScope: { domain: scope.domain },
         },
         { method: "GET" }, //for request memoization
