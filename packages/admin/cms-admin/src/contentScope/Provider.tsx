@@ -155,8 +155,7 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
                 redirectPathAfterChange,
                 setRedirectPathAfterChange,
                 values,
-                // @ts-expect-error type mismatch because React Context can't be generic and default value is less specific
-                location,
+                location: location as ContentScopeLocation,
             }}
         >
             <Switch>
