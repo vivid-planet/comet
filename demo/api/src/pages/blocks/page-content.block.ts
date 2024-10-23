@@ -5,6 +5,7 @@ import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
 import { NewsDetailBlock } from "@src/news/blocks/news-detail.block";
 import { NewsListBlock } from "@src/news/blocks/news-list.block";
+import { LayoutItemBlock } from "@src/pages/blocks/layout-item.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
@@ -33,6 +34,7 @@ const supportedBlocks = {
     newsDetail: NewsDetailBlock,
     imageLink: ImageLinkBlock,
     newsList: NewsListBlock,
+    layoutItem: LayoutItemBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
