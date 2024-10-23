@@ -22,12 +22,12 @@ export class DemoConsole {
     ) {}
 
     @Command({
-        command: "demo-command",
+        command: "demoCommand",
         description: "Demo-Command for cronjob-deployment",
     })
     @UseRequestContext()
     async demoCommand(): Promise<void> {
-        this.logger.log("Execute demo-command.");
+        this.logger.log("Execute demo command.");
     }
 }
 ```
@@ -62,6 +62,7 @@ npm run console:prod demo-command
 
 ## Best practices
 
+-   Console commands must be written in camelCase.
 -   Dangerous commands (e.g. resetting the database) should check the `NODE_ENV` and only run locally.
 
 ```ts
