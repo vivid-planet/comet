@@ -332,7 +332,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
             folderIdMap: Map<string, string>,
         ): Promise<{ filesToUpload: FileWithFolderPath[]; duplicateAction: DuplicateAction }> => {
             if (manualDuplicatedFilenamesHandler === undefined) {
-                return { filesToUpload: filesWithFolderPaths, duplicateAction: null };
+                return { filesToUpload: filesWithFolderPaths, duplicateAction: "skip" };
             }
 
             const filesInNewDir: FileWithFolderPath[] = [];

@@ -23,7 +23,7 @@ export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenames
     return useContext(ManualDuplicatedFilenamesHandlerContext);
 };
 
-export type DuplicateAction = "replace" | "copy" | null;
+export type DuplicateAction = "replace" | "copy" | "skip";
 
 export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComponent = ({ children }) => {
     const client = useApolloClient();
@@ -70,7 +70,7 @@ export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComp
             }
 
             if (occupiedFilenames.length === 0) {
-                return { filenames: unoccupiedFilenames, duplicateAction: null };
+                return { filenames: unoccupiedFilenames, duplicateAction: "skip" };
             }
 
             setOccupiedFilenames(occupiedFilenames);
@@ -78,9 +78,9 @@ export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComp
 
             const { newFilenames: finalFilenameData, duplicateAction } = await new Promise<{
                 newFilenames: FilenameData[];
-                duplicateAction: "replace" | "copy" | null;
+                duplicateAction: "replace" | "copy" | "skip";
             }>((resolve) => {
-                setCallback(() => (data: { newFilenames: FilenameData[]; duplicateAction: "replace" | "copy" | null }) => resolve(data));
+                setCallback(() => (data: { newFilenames: FilenameData[]; duplicateAction: "replace" | "copy" | "skip" }) => resolve(data));
             });
 
             return { filenames: finalFilenameData, duplicateAction };
@@ -89,7 +89,7 @@ export const ManualDuplicatedFilenamesHandlerContextProvider: React.FunctionComp
     );
 
     const onSkip = () => {
-        callback?.({ newFilenames: unoccupiedFilenames, duplicateAction: null });
+        callback?.({ newFilenames: unoccupiedFilenames, duplicateAction: "skip" });
         setOccupiedFilenames([]);
     };
 
