@@ -53,10 +53,16 @@ export declare type BlockIndexItem = {
 } & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
+export interface BlockWarningReport {
+    message: string;
+    severity: string; // TODO: Use WarningSeverity here, as soon as it is in the package and not in the demo (cannot import from demo)
+}
+
 export interface BlockDataInterface {
     transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
     transformToSave(): TraversableTransformResponse;
     indexData(): BlockIndexData;
+    reportWarnings(): BlockWarningReport[];
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
     previewImageUrlTemplate(dependencies: Record<string, any>, context: BlockContext): Promise<string | undefined>;
@@ -74,6 +80,11 @@ export abstract class BlockData implements BlockDataInterface {
     indexData(): BlockIndexData {
         return {};
     }
+
+    reportWarnings(): BlockWarningReport[] {
+        return [];
+    }
+
     childBlocksInfo(): ChildBlockInfo[] {
         const ret: ChildBlockInfo[] = [];
         for (const key of getFieldKeys({ prototype: Object.getPrototypeOf(this) })) {

@@ -12,6 +12,16 @@ export class WarningInput {
     @IsNotEmpty()
     @IsString()
     @Field()
+    uniqueIdentifier: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @Field()
+    message: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @Field()
     type: string;
 
     @IsNotEmpty()
