@@ -137,6 +137,13 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
                 alternativeLinks: this.alternativeLinks,
             };
         }
+
+        reportWarnings() {
+            if (!this.htmlTitle) {
+                return [{ severity: "low", message: "Missing HTML title" }];
+            }
+            return [];
+        }
     }
 
     class SeoBlockInput extends BlockInput {

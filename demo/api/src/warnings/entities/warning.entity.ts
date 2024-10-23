@@ -26,6 +26,16 @@ export class Warning extends BaseEntity<Warning, "id"> {
     @Field()
     updatedAt: Date = new Date();
 
+    @Property({ columnType: "text" })
+    @Field()
+    @CrudField()
+    uniqueIdentifier: string;
+
+    @Property({ columnType: "text" })
+    @Field()
+    @CrudField()
+    message: string;
+
     @Property()
     @Field()
     @CrudField()
