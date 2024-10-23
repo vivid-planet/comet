@@ -1,5 +1,5 @@
-import { BlockDataInterface } from "@comet/blocks-api";
 import {
+    BlockDataInterface,
     DocumentInterface,
     EntityInfo,
     PageTreeNodeDocumentEntityInfoService,

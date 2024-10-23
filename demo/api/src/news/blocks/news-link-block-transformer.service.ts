@@ -1,4 +1,4 @@
-import { BlockTransformerServiceInterface } from "@comet/blocks-api";
+import { BlockTransformerServiceInterface } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";

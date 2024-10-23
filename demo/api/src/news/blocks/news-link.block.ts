@@ -4,11 +4,11 @@ import {
     BlockField,
     BlockIndexData,
     BlockInput,
+    blockInputToData,
     BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { IsOptional, IsUUID } from "class-validator";
 
 import { NewsLinkBlockTransformerService } from "./news-link-block-transformer.service";
@@ -90,7 +90,7 @@ class NewsLinkBlockInput extends BlockInput {
     id?: string;
 
     transformToBlockData(): NewsLinkBlockData {
-        return inputToData(NewsLinkBlockData, this);
+        return blockInputToData(NewsLinkBlockData, this);
     }
 }
 

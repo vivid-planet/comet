@@ -2,14 +2,14 @@ import {
     BlockData,
     BlockDataInterface,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
+    DamImageBlock,
     ExtractBlockData,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
+} from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 
 import { HeadlineBlock } from "./headline.block";
@@ -42,7 +42,7 @@ class TeaserBlockInput extends BlockInput {
     buttons: ExtractBlockInput<typeof LinkListBlock>;
 
     transformToBlockData(): BlockDataInterface {
-        return inputToData(TeaserBlockData, this);
+        return blockInputToData(TeaserBlockData, this);
     }
 }
 
