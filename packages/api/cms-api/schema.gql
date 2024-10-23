@@ -204,8 +204,6 @@ type UserPermissionsListUser {
 type UserPermissionsPaginatedUserList {
   nodes: [UserPermissionsListUser!]!
   totalCount: Int!
-  availablePermissionsCount: Float!
-  availableContentScopesCount: Float!
 }
 
 type PageTreeNode {

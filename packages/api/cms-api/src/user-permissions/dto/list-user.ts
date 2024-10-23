@@ -13,10 +13,4 @@ class UserPermissionsListUser extends User {
 }
 
 @ObjectType()
-export class UserPermissionsPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsListUser) {
-    @Field()
-    availablePermissionsCount: number;
-
-    @Field()
-    availableContentScopesCount: number;
-}
+export class UserPermissionsPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsListUser) {}

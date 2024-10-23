@@ -55,7 +55,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             filterable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.permissionsInfo", defaultMessage: "Permissions" }),
             renderCell: ({ row }) => {
-                if (row.permissionsCount === data?.users.availablePermissionsCount) {
+                if (row.permissionsCount === data?.availablePermissions.length) {
                     return (
                         <Chip
                             color="primary"
@@ -79,7 +79,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                     defaultMessage="{permissionsCount} of {availablePermissionsCount} permissions"
                                     values={{
                                         permissionsCount: row.permissionsCount,
-                                        availablePermissionsCount: data?.users.availablePermissionsCount,
+                                        availablePermissionsCount: data?.availablePermissions.length,
                                     }}
                                 />
                             }
@@ -96,7 +96,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             filterable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.contentScopesInfo", defaultMessage: "Scopes" }),
             renderCell: ({ row }) => {
-                if (row.contentScopesCount === data?.users.availableContentScopesCount) {
+                if (row.contentScopesCount === data?.availableContentScopes.length) {
                     return (
                         <Chip color="primary" label={<FormattedMessage id="comet.userPermissions.allContentScopes" defaultMessage="All scopes" />} />
                     );
@@ -114,7 +114,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                     defaultMessage="{contentScopesCount} of {availableContentScopesCount} scopes"
                                     values={{
                                         contentScopesCount: row.contentScopesCount,
-                                        availableContentScopesCount: data?.users.availableContentScopesCount,
+                                        availableContentScopesCount: data?.availableContentScopes.length,
                                     }}
                                 />
                             }
@@ -147,9 +147,9 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                         ...UserForGrid
                     }
                     totalCount
-                    availablePermissionsCount
-                    availableContentScopesCount
                 }
+                availablePermissions: userPermissionsAvailablePermissions
+                availableContentScopes: userPermissionsAvailableContentScopes
             }
             fragment UserForGrid on UserPermissionsListUser {
                 id
