@@ -28,12 +28,16 @@ Comet DXP is a cloud-native CMS, so Kubernetes is the preferred way to deploy a 
 
 We provide [Helm](https://helm.sh/) Charts, which are available on [GitHub](https://github.com/vivid-planet/comet-charts), for easy deployment.
 
-### Serverless
+### Hosting without Kubernetes
 
-Comet Applications can also be deployed to serverless container platforms like [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) or [Digital Ocean App Platform](https://docs.digitalocean.com/products/app-platform/).
+Comet applications can also be deployed without Kubernetes. Two options are serverless container platforms (e.g., [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) or [Digital Ocean App Platform](https://docs.digitalocean.com/products/app-platform/)) or Docker Compose.
 
-It's important to note that deploying to a serverless platform comes with its own set of limitations. For instance, you won't be able to use the [CronJobModule](../cron-jobs/index.md) and the KubernetesModule in this setup.
+It’s important to note that deploying without Kubernetes comes with its own set of limitations. You won’t be able to use the `KubernetesModule`. Additionally, [CronJobs](../cron-jobs/index.md) must be handled differently and might require an external service. Consequently, you won’t be able to use the `CronJobModule`.
 
-### Docker Compose
+#### Serverless
+
+Serverless container platforms are a good option for those who want to deploy Comet applications without the complexity of Kubernetes. They are usually cheaper than Kubernetes and provide automatic scaling. An example deployment for the Digital Ocean App Platform can be found [here](https://github.com/vivid-planet/comet-starter/tree/main/.digitalocean).
+
+#### Docker Compose
 
 For those with budget constraints, Docker Compose can be a viable option for deploying Comet applications.
