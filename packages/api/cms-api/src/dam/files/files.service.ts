@@ -321,6 +321,8 @@ export class FilesService {
             });
 
             result = await this.save(exisitingFile);
+
+            rimraf.sync(file.path);
         } catch (e) {
             rimraf.sync(file.path);
             throw e;
