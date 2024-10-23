@@ -6,9 +6,9 @@ import {
     BlockDataInterface,
     BlockInput,
     BlockInputInterface,
+    blockInputToData,
     createBlock,
     ExtractBlockInput,
-    inputToData,
     SimpleBlockInputInterface,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
@@ -52,7 +52,7 @@ export function createTextLinkBlock<LinkBlock extends Block>(
         link: ExtractBlockInput<LinkBlock>;
 
         transformToBlockData(): TextLinkBlockData {
-            return inputToData(TextLinkBlockData, this);
+            return blockInputToData(TextLinkBlockData, this);
         }
     }
 

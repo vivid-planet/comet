@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from "class-validator";
 
-import { BlockData, BlockInput, createBlock, inputToData } from "../../blocks/block";
+import { BlockData, BlockInput, blockInputToData, createBlock } from "../../blocks/block";
 import { BlockField } from "../../blocks/decorators/field";
 
 class AnchorBlockData extends BlockData {
@@ -15,7 +15,7 @@ class AnchorBlockInput extends BlockInput {
     name?: string;
 
     transformToBlockData(): AnchorBlockData {
-        return inputToData(AnchorBlockData, this);
+        return blockInputToData(AnchorBlockData, this);
     }
 }
 

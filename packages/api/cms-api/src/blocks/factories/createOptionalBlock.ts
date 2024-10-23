@@ -8,14 +8,14 @@ import {
     BlockDataInterface,
     BlockInput,
     BlockInputInterface,
+    blockInputToData,
     ChildBlockInfo,
     createBlock,
     ExtractBlockInput,
-    inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
     SimpleBlockInputInterface,
-    TraversableTransformResponse,
+    TraversableTransformBlockResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
@@ -37,7 +37,7 @@ export function createOptionalBlock<DecoratedBlock extends Block>(
         @BlockField()
         visible: boolean;
 
-        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformBlockResponse> {
             return {
                 block: (includeInvisibleContent || this.visible) && this.block ? this.block : null,
                 visible: this.visible,
@@ -72,7 +72,7 @@ export function createOptionalBlock<DecoratedBlock extends Block>(
         visible: boolean;
 
         transformToBlockData(): BlockOptional {
-            return inputToData(BlockOptional, this);
+            return blockInputToData(BlockOptional, this);
         }
     }
 

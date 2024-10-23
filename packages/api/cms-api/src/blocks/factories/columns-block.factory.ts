@@ -14,7 +14,7 @@ import {
     isBlockDataInterface,
     isBlockInputInterface,
     SimpleBlockInputInterface,
-    TraversableTransformResponse,
+    TraversableTransformBlockResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
@@ -101,7 +101,7 @@ export class ColumnsBlockFactory {
                 }));
             }
 
-            async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+            async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformBlockResponse> {
                 return {
                     layout: this.layout,
                     columns: includeInvisibleContent ? this.columns : this.columns.filter((c) => c.visible),

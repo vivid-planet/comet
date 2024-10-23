@@ -9,9 +9,9 @@ import {
     BlockDataInterface,
     BlockInput,
     BlockInputInterface,
+    blockInputToData,
     createBlock,
     ExtractBlockInput,
-    inputToData,
     SimpleBlockInputInterface,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
@@ -84,7 +84,7 @@ export function createTextImageBlock<TextBlock extends Block, ImageBlock extends
         imageAspectRatio: string;
 
         transformToBlockData(): TextImageBlockData {
-            return inputToData(TextImageBlockData, this);
+            return blockInputToData(TextImageBlockData, this);
         }
     }
 

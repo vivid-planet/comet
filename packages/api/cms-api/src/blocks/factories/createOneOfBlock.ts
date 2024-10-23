@@ -19,7 +19,7 @@ import {
     isBlockInputInterface,
     MigrateOptions,
     SimpleBlockInputInterface,
-    TraversableTransformResponse,
+    TraversableTransformBlockResponse,
 } from "../block";
 import { AnnotationBlockMeta, BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
@@ -80,7 +80,7 @@ export function BaseOneOfBlockItemData<BlockMap extends BaseBlockMap>({
         @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockData;
 
-        async transformToPlain(): Promise<TraversableTransformResponse> {
+        async transformToPlain(): Promise<TraversableTransformBlockResponse> {
             return {
                 type: this.type,
                 props: this.props,
@@ -116,7 +116,7 @@ export function BaseOneOfBlockData<BlockMap extends BaseBlockMap>({
         // index of blocks
         activeType?: string;
 
-        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformBlockResponse> {
             const { attachedBlocks, activeType, ...additionalFields } = this;
             const block = attachedBlocks.find((c) => c.type === this.activeType);
             return {

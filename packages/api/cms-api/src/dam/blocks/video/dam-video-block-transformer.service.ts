@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { BlockContext, BlockTransformerServiceInterface, TraversableTransformResponse } from "../../../blocks/block";
+import { BlockContext, BlockTransformerServiceInterface, TraversableTransformBlockResponse } from "../../../blocks/block";
 import { FilesService } from "../../files/files.service";
 import { DamScopeInterface } from "../../types";
 import { DamVideoBlockData } from "./dam-video.block";
@@ -28,7 +28,7 @@ export class DamVideoBlockTransformerService implements BlockTransformerServiceI
     constructor(private readonly filesService: FilesService) {}
 
     async transformToPlain(block: DamVideoBlockData, { previewDamUrls, relativeDamUrls }: BlockContext) {
-        const ret: TraversableTransformResponse = {
+        const ret: TraversableTransformBlockResponse = {
             autoplay: block.autoplay,
             loop: block.loop,
             showControls: block.showControls,

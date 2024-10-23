@@ -5,9 +5,9 @@ import {
     BlockDataInterface,
     BlockInput,
     BlockInputInterface,
+    blockInputToData,
     createBlock,
     ExtractBlockInput,
-    inputToData,
     SimpleBlockInputInterface,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
@@ -48,7 +48,7 @@ export function createImageLinkBlock<LinkBlock extends Block, ImageBlock extends
         image: ExtractBlockInput<ImageBlock>;
 
         transformToBlockData(): ImageLinkBlockData {
-            return inputToData(ImageLinkBlockData, this);
+            return blockInputToData(ImageLinkBlockData, this);
         }
     }
 

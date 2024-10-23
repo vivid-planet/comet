@@ -14,7 +14,7 @@ export interface BlockTransformerServiceInterface<Block extends BlockDataInterfa
     transformToPlain(block: Block, context: BlockContext): T | Promise<T>;
 }
 
-export interface TraversableTransformResponse {
+export interface TraversableTransformBlockResponse {
     [member: string]:
         | string
         | number
@@ -22,17 +22,17 @@ export interface TraversableTransformResponse {
         | null
         | undefined
         | BlockDataInterface
-        | TraversableTransformResponseArray
-        | TraversableTransformResponse;
+        | TraversableTransformBlockResponseArray
+        | TraversableTransformBlockResponse;
 }
-export type TraversableTransformResponseArray = Array<
-    string | number | boolean | null | undefined | BlockDataInterface | TraversableTransformResponseArray | TraversableTransformResponse
+export type TraversableTransformBlockResponseArray = Array<
+    string | number | boolean | null | undefined | BlockDataInterface | TraversableTransformBlockResponseArray | TraversableTransformBlockResponse
 >;
 
-export interface TransformResponse {
-    [member: string]: string | number | boolean | null | undefined | TransformResponseArray | TransformResponse;
+export interface TransformBlockResponse {
+    [member: string]: string | number | boolean | null | undefined | TransformBlockResponseArray | TransformBlockResponse;
 }
-export type TransformResponseArray = Array<string | number | boolean | null | undefined | TransformResponseArray | TransformResponse>;
+export type TransformBlockResponseArray = Array<string | number | boolean | null | undefined | TransformBlockResponseArray | TransformBlockResponse>;
 export interface ChildBlockInfo {
     visible: boolean;
     relJsonPath: Array<string | number>;
@@ -54,8 +54,8 @@ export declare type BlockIndexItem = {
 export declare type BlockIndex = Array<BlockIndexItem>;
 
 export interface BlockDataInterface {
-    transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
-    transformToSave(): TraversableTransformResponse;
+    transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformBlockResponse>;
+    transformToSave(): TraversableTransformBlockResponse;
     indexData(): BlockIndexData;
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
@@ -67,7 +67,7 @@ export abstract class BlockData implements BlockDataInterface {
         return { ...(this as any) };
     }
 
-    transformToSave(): TraversableTransformResponse {
+    transformToSave(): TraversableTransformBlockResponse {
         return this as any; // MUST NOT transform it's child blocks (these handle transforming themselves)
     }
 
@@ -298,9 +298,17 @@ export interface BlockContext {
     relativeDamUrls?: boolean;
 }
 
-export function transformToSave(block: BlockDataInterface): TraversableTransformResponse {
-    type Output = TransformResponse | TransformResponseArray | string | number | boolean | null | undefined;
-    type Input = TraversableTransformResponse | TraversableTransformResponseArray | string | number | boolean | null | undefined | BlockDataInterface;
+export function transformToBlockSave(block: BlockDataInterface): TraversableTransformBlockResponse {
+    type Output = TransformBlockResponse | TransformBlockResponseArray | string | number | boolean | null | undefined;
+    type Input =
+        | TraversableTransformBlockResponse
+        | TraversableTransformBlockResponseArray
+        | string
+        | number
+        | boolean
+        | null
+        | undefined
+        | BlockDataInterface;
     function traverse(jsonObj: Input): Output {
         if (Array.isArray(jsonObj)) {
             return jsonObj.map((c) => traverse(c));
@@ -318,10 +326,10 @@ export function transformToSave(block: BlockDataInterface): TraversableTransform
         }
     }
 
-    return traverse(block) as TraversableTransformResponse;
+    return traverse(block) as TraversableTransformBlockResponse;
 }
 
-export function inputToData<T extends BlockDataInterface, V extends BlockInputInterface>(cls: ClassConstructor<T>, plain: V): T {
+export function blockInputToData<T extends BlockDataInterface, V extends BlockInputInterface>(cls: ClassConstructor<T>, plain: V): T {
     const dataWithChildBlocksTransformed = Object.fromEntries(
         Object.entries(plain).map(([k, v]) => {
             if (isBlockInputInterface(v)) {

@@ -1,9 +1,9 @@
 import { IsOptional, IsString } from "class-validator";
 
 import { BaseVideoBlockData, BaseVideoBlockInput } from "../base-video-block";
-import { BlockDataInterface, createBlock, inputToData } from "../block";
+import { BlockDataInterface, blockInputToData, createBlock } from "../block";
 import { BlockField } from "../decorators/field";
-import { typesafeMigrationPipe } from "../migrations/typesafeMigrationPipe";
+import { typeSafeBlockMigrationPipe } from "../migrations/typeSafeBlockMigrationPipe";
 import { IsValidYouTubeIdentifier } from "../validator/is-valid-you-tube-identifier";
 import { RemoveAspectRatioMigration } from "./migrations/1-remove-aspect-ratio.migration";
 import { AddPreviewImageMigration } from "./migrations/2-add-preview-image.migration";
@@ -21,7 +21,7 @@ class YouTubeVideoBlockInput extends BaseVideoBlockInput {
     youtubeIdentifier?: string;
 
     transformToBlockData(): BlockDataInterface {
-        return inputToData(YouTubeVideoBlockData, this);
+        return blockInputToData(YouTubeVideoBlockData, this);
     }
 }
 
@@ -29,6 +29,6 @@ export const YouTubeVideoBlock = createBlock(YouTubeVideoBlockData, YouTubeVideo
     name: "YouTubeVideo",
     migrate: {
         version: 2,
-        migrations: typesafeMigrationPipe([RemoveAspectRatioMigration, AddPreviewImageMigration]),
+        migrations: typeSafeBlockMigrationPipe([RemoveAspectRatioMigration, AddPreviewImageMigration]),
     },
 });

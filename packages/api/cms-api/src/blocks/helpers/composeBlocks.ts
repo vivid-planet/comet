@@ -12,7 +12,7 @@ import {
     ExtractBlockInputFactoryProps,
     MigrateOptions,
     registerBlock,
-    TransformResponse,
+    TransformBlockResponse,
 } from "../block";
 import { createAppliedMigrationsBlockDataFactoryDecorator } from "../migrations/createAppliedMigrationsBlockDataFactoryDecorator";
 import { BlockDataMigrationVersion } from "../migrations/decorators/BlockDataMigrationVersion";
@@ -47,11 +47,11 @@ export function composeBlocks<BlockMap extends BaseBlockMap>(
     class CompositeBlock extends BlockData implements BlockDataInterface {
         public _blockMap: Record<keyof BlockMap, BlockDataInterface>;
 
-        public async transformToPlain(): Promise<TransformResponse> {
+        public async transformToPlain(): Promise<TransformBlockResponse> {
             return Object.entries(this._blockMap).reduce((a, [key, block]) => ({ ...a, [key]: block }), {});
         }
 
-        public transformToSave(): TransformResponse {
+        public transformToSave(): TransformBlockResponse {
             return Object.entries(this._blockMap).reduce((a, [key, block]) => ({ ...a, [key]: block }), {});
         }
 

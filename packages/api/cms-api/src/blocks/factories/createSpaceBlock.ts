@@ -1,6 +1,6 @@
 import { IsEnum } from "class-validator";
 
-import { Block, BlockData, BlockDataInterface, BlockInput, createBlock, inputToData, SimpleBlockInputInterface } from "../block";
+import { Block, BlockData, BlockDataInterface, BlockInput, blockInputToData, createBlock, SimpleBlockInputInterface } from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
 
@@ -31,7 +31,7 @@ export function createSpaceBlock<SpacingOptions extends string[] | Record<string
         spacing: SingleEnumType<SpacingOptions>;
 
         transformToBlockData(): SpaceBlockData {
-            return inputToData(SpaceBlockData, this);
+            return blockInputToData(SpaceBlockData, this);
         }
     }
 

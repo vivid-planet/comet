@@ -137,7 +137,7 @@ Doing so prevents the need to adapt old migrations if the code changes at a late
 Finally, we add the migration to the block using the `migrate` option in `createBlock`.
 
 ```ts
-import { createBlock, typesafeMigrationPipe } from "@comet/cms-api";
+import { createBlock, typeSafeBlockMigrationPipe } from "@comet/cms-api";
 
 ...
 
@@ -146,7 +146,7 @@ export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, 
     migrate: {
         version: 1,
         // highlight-next-line
-        migrations: typesafeMigrationPipe([ChangeEyebrowMigration]),
+        migrations: typeSafeBlockMigrationPipe([ChangeEyebrowMigration]),
     },
 });
 ```

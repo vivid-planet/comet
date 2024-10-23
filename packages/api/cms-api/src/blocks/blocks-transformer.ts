@@ -3,7 +3,7 @@ import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ContextId, ModuleRef } from "@nestjs/core";
 import opentelemetry from "@opentelemetry/api";
 
-import { BlockContext, BlockDataInterface, BlockTransformerServiceInterface, isBlockDataInterface, TraversableTransformResponse } from "./block";
+import { BlockContext, BlockDataInterface, BlockTransformerServiceInterface, isBlockDataInterface, TraversableTransformBlockResponse } from "./block";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
@@ -55,7 +55,7 @@ export async function transformToPlain(
 }
 
 function isBlockTransformerService(
-    transformResponse: Type<BlockTransformerServiceInterface> | TraversableTransformResponse,
+    transformResponse: Type<BlockTransformerServiceInterface> | TraversableTransformBlockResponse,
 ): transformResponse is Type<BlockTransformerServiceInterface> {
     return Reflect.hasMetadata(INJECTABLE_WATERMARK, transformResponse);
 }

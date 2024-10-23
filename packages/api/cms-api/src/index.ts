@@ -26,6 +26,7 @@ export {
     BlockInput,
     BlockInputFactory,
     BlockInputInterface,
+    blockInputToData,
     BlockMetaField,
     BlockMetaFieldKind,
     BlockMetaInterface,
@@ -36,16 +37,15 @@ export {
     ExtractBlockInput,
     ExtractBlockInputFactoryProps,
     getRegisteredBlocks,
-    inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
     registerBlock,
     SimpleBlockInputInterface,
-    TransformResponse,
-    TransformResponseArray,
-    transformToSave,
-    TraversableTransformResponse,
-    TraversableTransformResponseArray,
+    TransformBlockResponse,
+    TransformBlockResponseArray,
+    transformToBlockSave,
+    TraversableTransformBlockResponse,
+    TraversableTransformBlockResponseArray,
 } from "./blocks/block";
 export { BlocksModule } from "./blocks/blocks.module";
 export { getBlocksMeta } from "./blocks/blocks-meta";
@@ -85,21 +85,21 @@ export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTe
 export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
 export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
 export { FlatBlocks } from "./blocks/flat-blocks/flat-blocks";
-export { getMostSignificantPreviewImageUrlTemplate, getPreviewImageUrlTemplates } from "./blocks/get-preview-image-url-templates";
+export { getMostSignificantPreviewImageUrlTemplateFromBlock, getPreviewImageUrlTemplatesFromBlock } from "./blocks/get-preview-image-url-templates";
 export { composeBlocks } from "./blocks/helpers/composeBlocks";
 export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDataFactoryDecorator";
 export { strictBlockInputFactoryDecorator } from "./blocks/helpers/strictBlockInputFactoryDecorator";
 export { BlockMigration } from "./blocks/migrations/BlockMigration";
 export { BlockDataMigrationVersion } from "./blocks/migrations/decorators/BlockDataMigrationVersion";
 export { BlockMigrationInterface } from "./blocks/migrations/types";
-export { typesafeMigrationPipe } from "./blocks/migrations/typesafeMigrationPipe";
+export { typeSafeBlockMigrationPipe } from "./blocks/migrations/typeSafeBlockMigrationPipe";
 export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
-export { getSearchText, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
+export { getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
 export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
-export { transformToSaveIndex } from "./blocks/transformToSaveIndex/transformToSaveIndex";
+export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";

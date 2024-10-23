@@ -1,7 +1,7 @@
 import { BlockContext, BlockDataInterface } from "./block";
 import { FlatBlocks } from "./flat-blocks/flat-blocks";
 
-export async function getPreviewImageUrlTemplates(
+export async function getPreviewImageUrlTemplatesFromBlock(
     block: BlockDataInterface,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dependencies: Record<string, any>,
@@ -24,13 +24,13 @@ export async function getPreviewImageUrlTemplates(
     return previewImageUrlTemplates;
 }
 
-export async function getMostSignificantPreviewImageUrlTemplate(
+export async function getMostSignificantPreviewImageUrlTemplateFromBlock(
     block: BlockDataInterface,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dependencies: Record<string, any>,
     context: BlockContext,
 ): Promise<string | undefined> {
-    const previewImageUrlTemplates = await getPreviewImageUrlTemplates(block, dependencies, context);
+    const previewImageUrlTemplates = await getPreviewImageUrlTemplatesFromBlock(block, dependencies, context);
 
     return previewImageUrlTemplates.length > 0 ? previewImageUrlTemplates[0] : undefined;
 }

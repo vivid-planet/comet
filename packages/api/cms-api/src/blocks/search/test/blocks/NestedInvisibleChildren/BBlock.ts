@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-import { BlockData, BlockInput, createBlock, ExtractBlockData, ExtractBlockInput, inputToData } from "../../../../block";
+import { BlockData, BlockInput, blockInputToData, createBlock, ExtractBlockData, ExtractBlockInput } from "../../../../block";
 import { ChildBlock } from "../../../../decorators/child-block";
 import { ChildBlockInput } from "../../../../decorators/child-block-input";
 import { BlockField } from "../../../../decorators/field";
@@ -29,7 +29,7 @@ export class BBlockInput extends BlockInput {
     c: ExtractBlockInput<typeof CBlock>;
 
     transformToBlockData(): BBlockData {
-        return inputToData(BBlockData, this);
+        return blockInputToData(BBlockData, this);
     }
 }
 

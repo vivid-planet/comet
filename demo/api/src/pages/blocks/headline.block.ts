@@ -3,11 +3,11 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
 } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -47,7 +47,7 @@ class HeadlineBlockInput extends BlockInput {
     level: HeadlineLevel;
 
     transformToBlockData(): HeadlineBlockData {
-        return inputToData(HeadlineBlockData, this);
+        return blockInputToData(HeadlineBlockData, this);
     }
 }
 

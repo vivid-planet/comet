@@ -1,6 +1,6 @@
 import { IsBoolean, IsOptional } from "class-validator";
 
-import { BlockData, BlockInput, createBlock, inputToData } from "./block";
+import { BlockData, BlockInput, blockInputToData, createBlock } from "./block";
 import { BlockField } from "./decorators/field";
 import { IsLinkTarget } from "./validator/is-link-target.validator";
 
@@ -23,7 +23,7 @@ class ExternalLinkBlockInput extends BlockInput {
     openInNewWindow: boolean;
 
     transformToBlockData(): ExternalLinkBlockData {
-        return inputToData(ExternalLinkBlockData, this);
+        return blockInputToData(ExternalLinkBlockData, this);
     }
 }
 

@@ -1,12 +1,12 @@
 import { Type } from "@mikro-orm/core";
 import opentelemetry from "@opentelemetry/api";
 
-import { Block, BlockDataInterface, isBlockInputInterface, transformToSave, TraversableTransformResponse } from "./block";
-import { transformToSaveIndex } from "./transformToSaveIndex/transformToSaveIndex";
+import { Block, BlockDataInterface, isBlockInputInterface, transformToBlockSave, TraversableTransformBlockResponse } from "./block";
+import { transformToBlockSaveIndex } from "./transformToBlockSaveIndex/transformToBlockSaveIndex";
 
 const tracer = opentelemetry.trace.getTracer("@comet/cms-api");
 
-export class RootBlockType extends Type<BlockDataInterface | null, TraversableTransformResponse | null> {
+export class RootBlockType extends Type<BlockDataInterface | null, TraversableTransformBlockResponse | null> {
     public block: Block;
 
     constructor(block: Block) {
@@ -14,7 +14,7 @@ export class RootBlockType extends Type<BlockDataInterface | null, TraversableTr
         this.block = block;
     }
 
-    convertToDatabaseValue(value: BlockDataInterface | null): TraversableTransformResponse | null {
+    convertToDatabaseValue(value: BlockDataInterface | null): TraversableTransformBlockResponse | null {
         return tracer.startActiveSpan("RootBlockType::convertToDatabaseValue", (span) => {
             span.setAttribute("rootBlock.name", this.block.name);
             if (!value) {
@@ -29,14 +29,14 @@ export class RootBlockType extends Type<BlockDataInterface | null, TraversableTr
                     throw new Error("Value doesn't look like BlockData");
                 }
             }
-            const data = transformToSave(value);
-            const index = transformToSaveIndex(this.block, value);
+            const data = transformToBlockSave(value);
+            const index = transformToBlockSaveIndex(this.block, value);
             span.end();
             return { data, index };
         });
     }
 
-    convertToJSValue(value: TraversableTransformResponse | null): BlockDataInterface | null {
+    convertToJSValue(value: TraversableTransformBlockResponse | null): BlockDataInterface | null {
         return tracer.startActiveSpan("RootBlockType::convertToJSValue", (span) => {
             span.setAttribute("rootBlock.name", this.block.name);
             if (!value) {

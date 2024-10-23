@@ -6,9 +6,9 @@ import { ABlock } from "./test/blocks/ABlock";
 import { BBlock } from "./test/blocks/BBlock";
 import { CBlock } from "./test/blocks/CBlock";
 import { ImageBlock } from "./test/blocks/ImageBlock";
-import { transformToSaveIndex } from "./transformToSaveIndex";
+import { transformToBlockSaveIndex } from "./transformToBlockSaveIndex";
 
-describe("transform to save index", () => {
+describe("transformToBlockSaveIndex", () => {
     it("build correctly", () => {
         const TestBlock = createBlocksBlock(
             {
@@ -90,7 +90,7 @@ describe("transform to save index", () => {
             ],
         }).transformToBlockData();
 
-        const result = transformToSaveIndex(TestBlock, testBlock);
+        const result = transformToBlockSaveIndex(TestBlock, testBlock);
 
         expect(result).toStrictEqual([
             { blockname: "TestBlock", jsonPath: "root", visible: true },
@@ -223,7 +223,7 @@ describe("transform to save index", () => {
             blocks: [{ key: "a", type: "image", visible: true, props: { damFileId: "abc" } }],
         }).transformToBlockData();
 
-        const result = transformToSaveIndex(TestBlock, testBlock);
+        const result = transformToBlockSaveIndex(TestBlock, testBlock);
 
         expect(result).toStrictEqual([
             { blockname: "TestBlock", jsonPath: "root", visible: true },

@@ -2,6 +2,7 @@ import {
     BlockData,
     BlockDataInterface,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
@@ -9,7 +10,6 @@ import {
     DamImageBlock,
     ExtractBlockData,
     ExtractBlockInput,
-    inputToData,
 } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { ValidateNested } from "class-validator";
@@ -34,7 +34,7 @@ class FullWidthImageBlockInput extends BlockInput {
     content: ExtractBlockInput<typeof FullWidthImageContentBlock>;
 
     transformToBlockData(): BlockDataInterface {
-        return inputToData(FullWidthImageBlockData, this);
+        return blockInputToData(FullWidthImageBlockData, this);
     }
 }
 

@@ -6,10 +6,10 @@ import {
     BlockData,
     BlockIndexData,
     BlockInput,
+    blockInputToData,
     BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
-    inputToData,
 } from "../../blocks/block";
 import { AnnotationBlockMeta } from "../../blocks/decorators/field";
 import { FocalPoint } from "../common/enums/focal-point.enum";
@@ -76,7 +76,7 @@ class PixelImageBlockInput extends BlockInput {
     cropArea?: ImageCropAreaInput;
 
     transformToBlockData(): PixelImageBlockData {
-        return inputToData(PixelImageBlockData, this);
+        return blockInputToData(PixelImageBlockData, this);
     }
 }
 

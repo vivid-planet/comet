@@ -3,11 +3,11 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
 } from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { IsOptional, IsString, ValidateNested } from "class-validator";
@@ -31,7 +31,7 @@ class FooterLinkSectionBlockInput extends BlockInput {
     links: ExtractBlockInput<typeof LinkListBlock>;
 
     transformToBlockData(): FooterLinkSectionBlockData {
-        return inputToData(FooterLinkSectionBlockData, this);
+        return blockInputToData(FooterLinkSectionBlockData, this);
     }
 }
 

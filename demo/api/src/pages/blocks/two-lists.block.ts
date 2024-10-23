@@ -2,13 +2,13 @@ import {
     BlockData,
     BlockDataInterface,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     createListBlock,
     ExtractBlockData,
     ExtractBlockInput,
-    inputToData,
 } from "@comet/cms-api";
 
 import { HeadlineBlock } from "./headline.block";
@@ -31,7 +31,7 @@ class TwoListsBlockInput extends BlockInput {
     list2: ExtractBlockInput<typeof TwoListsList>;
 
     transformToBlockData(): BlockDataInterface {
-        return inputToData(TwoListsBlockData, this);
+        return blockInputToData(TwoListsBlockData, this);
     }
 }
 

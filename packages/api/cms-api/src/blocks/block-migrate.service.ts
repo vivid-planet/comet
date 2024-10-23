@@ -4,8 +4,8 @@ import { Injectable } from "@nestjs/common";
 import isEqual from "lodash.isequal";
 
 import { DiscoverService } from "../dependencies/discover.service";
-import { transformToSave } from "./block";
-import { transformToSaveIndex } from "./transformToSaveIndex/transformToSaveIndex";
+import { transformToBlockSave } from "./block";
+import { transformToBlockSaveIndex } from "./transformToBlockSaveIndex/transformToBlockSaveIndex";
 
 @Injectable()
 export class BlockMigrateService {
@@ -53,8 +53,8 @@ export class BlockMigrateService {
                     if (!blockData) {
                         console.error(blockData, row[column]);
                     }
-                    const blockDataJson = transformToSave(blockData);
-                    const blockIndex = transformToSaveIndex(block, blockData);
+                    const blockDataJson = transformToBlockSave(blockData);
+                    const blockIndex = transformToBlockSaveIndex(block, blockData);
                     statistics.blocks += blockIndex.length;
 
                     let needsUpdate = false;

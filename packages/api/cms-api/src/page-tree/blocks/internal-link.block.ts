@@ -1,6 +1,6 @@
 import { IsOptional, IsString, IsUUID } from "class-validator";
 
-import { BlockData, BlockIndexData, BlockInput, BlockMetaField, BlockMetaFieldKind, createBlock, inputToData } from "../../blocks/block";
+import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
 import { AnnotationBlockMeta, BlockField } from "../../blocks/decorators/field";
 import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageExists } from "../validators/page-exists.validator";
@@ -45,7 +45,7 @@ class InternalLinkBlockInput extends BlockInput {
     targetPageAnchor?: string;
 
     transformToBlockData(): InternalLinkBlockData {
-        return inputToData(InternalLinkBlockData, this);
+        return blockInputToData(InternalLinkBlockData, this);
     }
 }
 

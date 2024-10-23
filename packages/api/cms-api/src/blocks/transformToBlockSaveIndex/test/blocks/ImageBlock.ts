@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from "class-validator";
 
-import { BlockData, BlockIndexData, BlockInput, createBlock, inputToData } from "../../../block";
+import { BlockData, BlockIndexData, BlockInput, blockInputToData, createBlock } from "../../../block";
 import { BlockField } from "../../../decorators/field";
 
 class ImageBlockData extends BlockData {
@@ -30,7 +30,7 @@ class ImageBlockInput extends BlockInput {
     damFileId: string;
 
     transformToBlockData(): ImageBlockData {
-        return inputToData(ImageBlockData, this);
+        return blockInputToData(ImageBlockData, this);
     }
 }
 

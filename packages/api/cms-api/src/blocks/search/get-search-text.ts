@@ -12,7 +12,7 @@ function isWeightedText(text: SearchText): text is WeightedSearchText {
     return typeof text !== "string";
 }
 
-export function getSearchText(block: BlockDataInterface): WeightedSearchText[] {
+export function getSearchTextFromBlock(block: BlockDataInterface): WeightedSearchText[] {
     const visitor = new FlatBlocks(block);
 
     let weightedSearchText: WeightedSearchText[] = [];

@@ -1,4 +1,4 @@
-import { getSearchText } from "./get-search-text";
+import { getSearchTextFromBlock } from "./get-search-text";
 import { ABlock } from "./test/blocks/A/ABlock";
 import { ABlock as InvisibleChildrenBlock } from "./test/blocks/InvisibleChildren/ABlock";
 import { ABlock as NestedInvisibleChildren } from "./test/blocks/NestedInvisibleChildren/ABlock";
@@ -11,7 +11,7 @@ describe("Search", () => {
             c: { titleC: "c" },
         }).transformToBlockData();
 
-        const searchText = getSearchText(testBlock);
+        const searchText = getSearchTextFromBlock(testBlock);
 
         expect(searchText[0].text).toBe("a");
         expect(searchText[1].text).toBe("b");
@@ -29,7 +29,7 @@ describe("Search", () => {
             c: { titleC: "c" },
         }).transformToBlockData();
 
-        const searchText = getSearchText(testBlock);
+        const searchText = getSearchTextFromBlock(testBlock);
 
         expect(searchText.length).toBe(4);
         expect(searchText[0].text).toBe("a");
@@ -60,7 +60,7 @@ describe("Search", () => {
             ],
         }).transformToBlockData();
 
-        const searchText = getSearchText(testBlock);
+        const searchText = getSearchTextFromBlock(testBlock);
 
         expect(searchText.length).toBe(2);
 

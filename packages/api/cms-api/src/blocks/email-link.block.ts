@@ -1,6 +1,6 @@
 import { IsEmail, IsOptional } from "class-validator";
 
-import { BlockData, BlockInput, createBlock, inputToData } from "./block";
+import { BlockData, BlockInput, blockInputToData, createBlock } from "./block";
 import { BlockField } from "./decorators/field";
 
 class EmailLinkBlockData extends BlockData {
@@ -15,7 +15,7 @@ class EmailLinkBlockInput extends BlockInput {
     email?: string;
 
     transformToBlockData(): EmailLinkBlockData {
-        return inputToData(EmailLinkBlockData, this);
+        return blockInputToData(EmailLinkBlockData, this);
     }
 }
 

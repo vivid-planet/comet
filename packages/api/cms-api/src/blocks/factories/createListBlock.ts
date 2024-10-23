@@ -8,14 +8,14 @@ import {
     BlockDataInterface,
     BlockInput,
     BlockInputInterface,
+    blockInputToData,
     ChildBlockInfo,
     createBlock,
     ExtractBlockInput,
-    inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
     SimpleBlockInputInterface,
-    TraversableTransformResponse,
+    TraversableTransformBlockResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
@@ -38,7 +38,7 @@ export function BaseListBlockItemData<B extends Block>(block: B): ClassConstruct
         @BlockField(block)
         props: BlockDataInterface;
 
-        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformBlockResponse> {
             const { key, visible, props, ...additionalFields } = this;
 
             return {
@@ -85,7 +85,7 @@ export function BaseListBlockItemInput<B extends Block>(
         props: ExtractBlockInput<B>;
 
         transformToBlockData(): ListBlockItemDataInterface {
-            return inputToData(ListBlockItemData, this);
+            return blockInputToData(ListBlockItemData, this);
         }
     }
 
@@ -121,7 +121,7 @@ export function createListBlock<B extends Block>(
         @BlockField(ListBlockItemData)
         blocks: ListBlockItemDataInterface[];
 
-        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformBlockResponse> {
             return {
                 blocks: includeInvisibleContent ? this.blocks : this.blocks.filter((c) => c.visible),
             };

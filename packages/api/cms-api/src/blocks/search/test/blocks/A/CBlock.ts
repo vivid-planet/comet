@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-import { BlockData, BlockInput, createBlock, inputToData } from "../../../../block";
+import { BlockData, BlockInput, blockInputToData, createBlock } from "../../../../block";
 import { BlockField } from "../../../../decorators/field";
 import { SearchText } from "../../../get-search-text";
 
@@ -20,7 +20,7 @@ class CBlockInput extends BlockInput {
     titleC: string;
 
     transformToBlockData(): CBlockData {
-        return inputToData(CBlockData, this);
+        return blockInputToData(CBlockData, this);
     }
 }
 

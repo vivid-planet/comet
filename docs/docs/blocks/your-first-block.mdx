@@ -59,7 +59,7 @@ Once we have defined the block data, we also need to define the block input. The
 <!-- TODO: ein vergleich mit einem DTO und/oder GraphQL Input Type kann vielleicht helfen -->
 
 ```ts title="headline.block.ts"
-import { inputToData } from "@comet/cms-api";
+import { blockInputToData } from "@comet/cms-api";
 
 class HeadlineBlockInput extends BlockInput {
     @IsOptional()
@@ -76,12 +76,12 @@ class HeadlineBlockInput extends BlockInput {
     level: HeadlineLevel;
 
     transformToBlockData(): HeadlineBlockData {
-        return inputToData(HeadlineBlockData, this);
+        return blockInputToData(HeadlineBlockData, this);
     }
 }
 ```
 
-Note the method called `transformToBlockData()`. This method transforms the block input into the savable block data. As this method is nearly identical for all blocks, we provide a `inputToData` method to create the intended outcome.
+Note the method called `transformToBlockData()`. This method transforms the block input into the savable block data. As this method is nearly identical for all blocks, we provide a `blockInputToData` method to create the intended outcome.
 
 ### Create and Register the Block
 
@@ -126,7 +126,7 @@ The complete code for our Headline API block (including all necessary imports) c
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
+    blockInputToData,
 } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";\n
@@ -158,7 +158,7 @@ export class HeadlineBlockInput extends BlockInput {
     @BlockField({ type: "enum", enum: HeadlineLevel })
     level: HeadlineLevel;\n
     transformToBlockData(): HeadlineBlockData {
-        return inputToData(HeadlineBlockData, this);
+        return blockInputToData(HeadlineBlockData, this);
     }
 }\n
 export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, "Headline");

@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-import { BlockData, BlockIndexData, BlockInput, BlockMetaField, BlockMetaFieldKind, createBlock, inputToData } from "../../blocks/block";
+import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
 import { AnnotationBlockMeta } from "../../blocks/decorators/field";
 import { FILE_ENTITY } from "../files/entities/file.entity";
 import { SvgImageBlockTransformerService } from "./svg-image-block-transformer.service";
@@ -35,7 +35,7 @@ class SvgImageBlockInput extends BlockInput {
     damFileId?: string;
 
     transformToBlockData(): SvgImageBlockData {
-        return inputToData(SvgImageBlockData, this);
+        return blockInputToData(SvgImageBlockData, this);
     }
 }
 

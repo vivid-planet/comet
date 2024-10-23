@@ -9,15 +9,15 @@ import {
     BlockDataInterface,
     BlockInput,
     BlockInputInterface,
+    blockInputToData,
     ChildBlockInfo,
     createBlock,
     ExtractBlockInput,
     ExtractBlockInputFactoryProps,
-    inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
     SimpleBlockInputInterface,
-    TraversableTransformResponse,
+    TraversableTransformBlockResponse,
 } from "../block";
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
@@ -56,7 +56,7 @@ export function BaseBlocksBlockItemData<BlockMap extends BaseBlockMap>(supported
         @BlockField({ kind: "oneOfBlocks", blocks: supportedBlocks })
         props: BlockDataInterface;
 
-        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformBlockResponse> {
             const { key, visible, type, props, ...additionalFields } = this;
 
             return {
@@ -117,7 +117,7 @@ export function BaseBlocksBlockItemInput<BlockMap extends BaseBlockMap>(
         props: BlockInputInterface;
 
         transformToBlockData(): BlocksBlockItemDataInterface {
-            return inputToData(BlocksBlockItemData, this);
+            return blockInputToData(BlocksBlockItemData, this);
         }
     }
 
@@ -183,7 +183,7 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
         @BlockField(BlocksBlockItemData)
         blocks: BlocksBlockItemDataInterface[];
 
-        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformResponse> {
+        async transformToPlain({ includeInvisibleContent }: BlockContext): Promise<TraversableTransformBlockResponse> {
             return {
                 blocks: includeInvisibleContent ? this.blocks : this.blocks.filter((c) => c.visible),
             };

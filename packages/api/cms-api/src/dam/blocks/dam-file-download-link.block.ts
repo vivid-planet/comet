@@ -1,6 +1,6 @@
 import { IsEnum, IsUUID } from "class-validator";
 
-import { BlockData, BlockIndexData, BlockInput, BlockMetaField, BlockMetaFieldKind, createBlock, inputToData } from "../../blocks/block";
+import { BlockData, BlockIndexData, BlockInput, blockInputToData, BlockMetaField, BlockMetaFieldKind, createBlock } from "../../blocks/block";
 import { AnnotationBlockMeta, BlockField } from "../../blocks/decorators/field";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
 import { FILE_ENTITY } from "../files/entities/file.entity";
@@ -48,7 +48,7 @@ class DamFileDownloadLinkBlockInput extends BlockInput {
     openFileType: OpenFileTypeMethod;
 
     transformToBlockData(): DamFileDownloadLinkBlockData {
-        return inputToData(DamFileDownloadLinkBlockData, this);
+        return blockInputToData(DamFileDownloadLinkBlockData, this);
     }
 }
 

@@ -26,7 +26,7 @@ export function BlockDataMigrationVersion(versionNumber: number) {
 
             const originalTransformToPlain = constructor.prototype.transformToPlain;
 
-            // Decorate original transformToSave
+            // Decorate original transformToPlain
             // remove version number
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             constructor.prototype.transformToPlain = async function (...args: any[]) {

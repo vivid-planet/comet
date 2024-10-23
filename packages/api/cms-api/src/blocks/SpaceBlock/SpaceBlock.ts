@@ -1,7 +1,7 @@
 import { IsInt, Max } from "class-validator";
 
-// import { typesafeMigrationPipe } from "../../migrations/typesafeMigrationPipe";
-import { BlockData, BlockInput, createBlock, inputToData } from "../block";
+// import { typeSafeBlockMigrationPipe } from "../../migrations/typeSafeBlockMigrationPipe";
+import { BlockData, BlockInput, blockInputToData, createBlock } from "../block";
 import { BlockField } from "../decorators/field";
 // import { MigrationTo1 } from "./migrations/MigrationTo1";
 // import { MigrationTo2 } from "./migrations/MigrationTo2";
@@ -18,7 +18,7 @@ class SpaceBlockInput extends BlockInput {
     height: number;
 
     transformToBlockData(): SpaceBlockData {
-        return inputToData(SpaceBlockData, this);
+        return blockInputToData(SpaceBlockData, this);
     }
 }
 
@@ -27,7 +27,7 @@ export const SpaceBlock = createBlock(SpaceBlockData, SpaceBlockInput, {
     name: "Space",
     // demoMigrations:
     // migrate: {
-    //     migrations: typesafeMigrationPipe([MigrationTo1, MigrationTo2]),
+    //     migrations: typeSafeBlockMigrationPipe([MigrationTo1, MigrationTo2]),
     //     version: 2,
     // },
 });

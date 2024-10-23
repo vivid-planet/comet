@@ -1,6 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
 
-import { BlockData, BlockInput, ChildBlockInfo, createBlock, ExtractBlockData, ExtractBlockInput, inputToData } from "../../../../block";
+import { BlockData, BlockInput, blockInputToData, ChildBlockInfo, createBlock, ExtractBlockData, ExtractBlockInput } from "../../../../block";
 import { ChildBlock } from "../../../../decorators/child-block";
 import { ChildBlockInput } from "../../../../decorators/child-block-input";
 import { BlockField } from "../../../../decorators/field";
@@ -59,7 +59,7 @@ class BBlockInput extends BlockInput {
     visibilityC1: boolean;
 
     transformToBlockData(): BBlockData {
-        return inputToData(BBlockData, this);
+        return blockInputToData(BBlockData, this);
     }
 }
 

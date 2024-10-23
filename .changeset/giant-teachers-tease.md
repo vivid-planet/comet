@@ -12,6 +12,18 @@ Therefore, the `@comet/blocks-api` is merged into this package.
 
 -   The `@comet/blocks-api` package doesn't exist anymore
 -   The `getFieldKeys` function has been removed from the public API
+-   Multiple exports that were too generic have been renamed
+    -   `getMostSignificantPreviewImageUrlTemplate` -> `getMostSignificantPreviewImageUrlTemplateFromBlock`
+    -   `getPreviewImageUrlTemplates` -> `getPreviewImageUrlTemplatesFromBlock`
+    -   `getSearchText` -> `getSearchTextFromBlock`
+    -   `inputToData` -> `blockInputToData`
+    -   `TransformResponse` -> `TransformBlockResponse`
+    -   `TransformResponseArray` -> `TransformBlockResponseArray`
+    -   `transformToSave` -> `transformToBlockSave`
+    -   `transformToSaveIndex` -> `transformToBlockSaveIndex`
+    -   `TraversableTransformResponse` -> `TraversableTransformBlockResponse`
+    -   `TraversableTransformResponseArray` -> `TraversableTransformBlockResponseArray`
+    -   `typesafeMigrationPipe` -> `typeSafeBlockMigrationPipe`
 
 **How to upgrade**
 
@@ -20,3 +32,4 @@ To upgrade, perform the following changes:
 1. Uninstall the `@comet/blocks-api` package
 2. Update all your imports from `@comet/blocks-api` to `@comet/cms-api`
 3. Remove usages of `getFieldKeys` (probably none)
+4. Update imports that have been renamed

@@ -8,13 +8,13 @@ import {
     BlockDataInterface,
     BlockInput,
     BlockInputInterface,
+    blockInputToData,
     BlockMetaField,
     BlockMetaFieldKind,
     createBlock,
     ExtractBlockInput,
-    inputToData,
     SimpleBlockInputInterface,
-    TraversableTransformResponse,
+    TraversableTransformBlockResponse,
 } from "../block";
 import { ChildBlock } from "../decorators/child-block";
 import { ChildBlockInput } from "../decorators/child-block-input";
@@ -115,7 +115,7 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         //Alternate Hreflang
         alternativeLinks: AlternativeLink[] = [];
 
-        async transformToPlain(): Promise<TraversableTransformResponse> {
+        async transformToPlain(): Promise<TraversableTransformBlockResponse> {
             return {
                 htmlTitle: this.htmlTitle,
                 metaDescription: this.metaDescription,
@@ -196,7 +196,7 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
         alternativeLinks: AlternativeLink[] = [];
 
         transformToBlockData(): SeoBlockData {
-            return inputToData(SeoBlockData, this);
+            return blockInputToData(SeoBlockData, this);
         }
     }
 
