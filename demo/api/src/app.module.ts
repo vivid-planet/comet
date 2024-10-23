@@ -51,7 +51,6 @@ import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 
-///
 @Module({})
 export class AppModule {
     static forRoot(config: Config): DynamicModule {
