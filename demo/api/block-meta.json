@@ -760,6 +760,37 @@
         ]
     },
     {
+        "name": "ImageLink",
+        "fields": [
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "InternalLink",
         "fields": [
             {
@@ -1306,6 +1337,7 @@
                                 "media": "Media",
                                 "teaser": "Teaser",
                                 "newsDetail": "NewsDetail",
+                                "imageLink": "ImageLink",
                                 "newsList": "NewsList"
                             },
                             "nullable": false
@@ -1363,6 +1395,7 @@
                                 "media": "Media",
                                 "teaser": "Teaser",
                                 "newsDetail": "NewsDetail",
+                                "imageLink": "ImageLink",
                                 "newsList": "NewsList"
                             },
                             "nullable": false

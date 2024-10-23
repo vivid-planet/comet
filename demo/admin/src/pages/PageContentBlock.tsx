@@ -13,6 +13,7 @@ import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuIt
 
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
+import { ImageLinkBlock } from "./blocks/ImageLinkBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
 import { TeaserBlock } from "./blocks/TeaserBlock";
 import { TwoListsBlock } from "./blocks/TwoListsBlock";
@@ -33,6 +34,7 @@ export const PageContentBlock = createBlocksBlock({
         media: MediaBlock,
         teaser: TeaserBlock,
         newsDetail: NewsDetailBlock,
+        imageLink: ImageLinkBlock,
         newsList: NewsListBlock,
     },
     additionalItemFields: {
