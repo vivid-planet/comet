@@ -34,7 +34,7 @@ export class ImportRedirectsConsole {
     ) {}
 
     @Command({
-        command: "import-redirects [filepath] [comment]",
+        command: "importRedirects [filepath] [comment]",
         description: "Import redirects from csv file",
     })
     @UseRequestContext()
