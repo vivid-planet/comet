@@ -27,7 +27,6 @@ import { ContentGenerationService } from "@src/content-generation/content-genera
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
-import { PredefinedPage } from "@src/predefined-page/entities/predefined-page.entity";
 import { ValidationError } from "apollo-server-express";
 import { Request } from "express";
 
@@ -37,6 +36,8 @@ import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
+import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
+import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
 import { FooterModule } from "./footer/footer.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
@@ -47,7 +48,6 @@ import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dt
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
 import { Page } from "./pages/entities/page.entity";
-import { PredefinedPageModule } from "./predefined-page/predefined-page.module";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 
@@ -168,7 +168,7 @@ export class AppModule {
                 NewsModule,
                 MenusModule,
                 FooterModule,
-                PredefinedPageModule,
+                PredefinedPagesModule,
                 CronJobsModule,
                 ProductsModule,
                 ...(config.azureAiTranslator ? [AzureAiTranslatorModule.register(config.azureAiTranslator)] : []),

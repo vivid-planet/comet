@@ -1,6 +1,6 @@
 import { gql } from "@comet/cms-site";
 import { languages } from "@src/config";
-import { predefinedPagePaths } from "@src/predefinedPages/predefinedPagePaths";
+import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 
 import { memoryCache } from "./cache";
