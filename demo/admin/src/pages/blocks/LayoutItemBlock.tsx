@@ -1,6 +1,6 @@
 import { Field, FinalFormSelect } from "@comet/admin";
 import { Hamburger, Image } from "@comet/admin-icons";
-import { BlockCategory, BlocksFinalForm, createCompositeSetting, createLayoutBlock } from "@comet/blocks-admin";
+import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSetting } from "@comet/blocks-admin";
 import { MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { LayoutItemBlockData } from "@src/blocks.generated";
@@ -83,12 +83,10 @@ export const layoutOptions: Array<{
     },
 ];
 
-/* ToDo: hide mediaList2 or text2 dependent on layout */
-export const LayoutItemBlock = createLayoutBlock(
+export const LayoutItemBlock = createCompositeBlock(
     {
         name: "LayoutItem",
         displayName: <FormattedMessage id="layoutItemBlock.displayName" defaultMessage="Layout Item" />,
-        layouts: layoutOptions,
         blocks: {
             layout: {
                 block: createCompositeSetting<LayoutItemBlockData["layout"]>({
@@ -138,18 +136,26 @@ export const LayoutItemBlock = createLayoutBlock(
             media1: {
                 title: <FormattedMessage id="layoutItemBlock.media1" defaultMessage="Media 1" />,
                 block: MediaBlock,
+                hiddenForState: (state: LayoutItemBlockData) =>
+                    !layoutOptions.find((option) => option.value === state.layout)?.visibleBlocks.includes("media1") ?? false,
             },
             text1: {
                 block: RichTextBlock,
                 title: <FormattedMessage id="layoutItemBlock.text1" defaultMessage="Text 1" />,
+                hiddenForState: (state: LayoutItemBlockData) =>
+                    !layoutOptions.find((option) => option.value === state.layout)?.visibleBlocks.includes("text1") ?? false,
             },
             media2: {
                 title: <FormattedMessage id="layoutItemBlock.media2" defaultMessage="Media 2" />,
                 block: MediaBlock,
+                hiddenForState: (state: LayoutItemBlockData) =>
+                    !layoutOptions.find((option) => option.value === state.layout)?.visibleBlocks.includes("media2") ?? false,
             },
             text2: {
                 block: RichTextBlock,
                 title: <FormattedMessage id="layoutItemBlock.text2" defaultMessage="Text 2" />,
+                hiddenForState: (state: LayoutItemBlockData) =>
+                    !layoutOptions.find((option) => option.value === state.layout)?.visibleBlocks.includes("text2") ?? false,
             },
         },
     },
@@ -158,53 +164,6 @@ export const LayoutItemBlock = createLayoutBlock(
         return block;
     },
 );
-
-// export const LayoutItemBlock = createLayoutBlock(
-//     {
-//         name: "LayoutItem",
-//         displayName: <FormattedMessage id="layoutItemBlock.displayName" defaultMessage="Card Grid Item" />,
-//         layouts: [
-//             {
-//                 name: "9-9",
-//                 blocks: ["mediaList1", "text1", "mediaList2"],
-//                 label: <FormattedMessage id="columnsBlock.sameWidth" defaultMessage="Same width" />,
-//                 preview: (
-//                     <ColumnsLayoutPreview>
-//                         <ColumnsLayoutPreviewContent width={9} />
-//                         <ColumnsLayoutPreviewSpacing width={0.5} />
-//                         <ColumnsLayoutPreviewContent width={9} />
-//                     </ColumnsLayoutPreview>
-//                 ),
-//             },
-// ],
-//
-//         blocks: {
-//
-//             mediaList1: {
-//                 title: <FormattedMessage id="layoutItemBlock.mediaList1" defaultMessage="Media List 1" />,
-//                 block: MediaListBlock,
-//             },
-//             text1: {
-//                 block: LayoutItemTextBlock,
-//                 title: <FormattedMessage id="layoutItemBlock.text1" defaultMessage="Text 1" />,
-//                 paper: true,
-//             },
-//             mediaList2: {
-//                 title: <FormattedMessage id="layoutItemBlock.mediaList2" defaultMessage="Media List 2" />,
-//                 block: MediaListBlock,
-//             },
-//             text2: {
-//                 block: LayoutItemTextBlock,
-//                 title: <FormattedMessage id="layoutItemBlock.text2" defaultMessage="Text 2" />,
-//                 paper: true,
-//             },
-//         },
-//     },
-//     (block) => {
-//         block.category = BlockCategory.TextAndContent;
-//         return block;
-//     },
-// );
 
 const ItemWrapper = styled("div")`
     display: flex;

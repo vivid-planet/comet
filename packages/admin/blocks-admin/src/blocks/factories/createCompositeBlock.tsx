@@ -23,6 +23,7 @@ interface BlockConfiguration {
     hiddenInSubroute?: boolean;
     divider?: boolean;
     paper?: boolean;
+    hiddenForState?: (state: unknown) => boolean;
 }
 
 interface GroupConfiguration {
@@ -168,7 +169,10 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     hiddenInSubroute,
                     divider,
                     paper,
+                    hiddenForState,
                 } = blockConfigNormalized[blockKey];
+
+                if (hiddenForState?.(state)) return null;
 
                 const sectionVariant = group.paper ? "dense" : "normal";
                 const showDivider = divider && (isInPaper || group.paper);
