@@ -8,13 +8,14 @@ interface WrapperProps {
 export const Wrapper = styled("div", { shouldForwardProp: (prop) => prop !== "$active" })<WrapperProps>`
     width: fit-content;
     position: relative;
+    border-radius: 2px;
     border: 1px solid ${({ theme, $active }) => ($active ? theme.palette.grey[400] : theme.palette.grey[100])};
 `;
 
 export const SortByButton = styled(Button)`
     position: relative;
     align-items: center;
-    padding: 10px 15px;
+    padding: 11px 14px;
     cursor: pointer;
     display: flex;
     margin: 0;
