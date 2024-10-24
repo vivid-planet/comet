@@ -18,6 +18,8 @@ For those with budget constraints, the database can be included in the [Docker C
 
 We recommend using a managed object storage service like [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs) or [Digital Ocean Spaces](https://www.digitalocean.com/products/spaces).
 
+For those with budget constraints, the asset storage can be included in the [Docker Compose setup for the API, Admin, and Site](#docker-compose), either as a mounted volume or as S3-compatible storage.
+
 ## API, Admin, Site, oauth2-proxy and imgproxy
 
 There are several ways to deploy these microservices. The best deployment method depends on your budget and requirements.
