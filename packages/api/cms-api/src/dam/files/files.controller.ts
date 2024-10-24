@@ -147,7 +147,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             res.setHeader("Content-Disposition", "attachment");
-            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 hour)
+            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
         }
 
         @DisableCometGuards()
@@ -163,7 +163,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new NotFoundException();
             }
 
-            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 hour)
+            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
         }
 
         private isValidHash(hash: string, fileParams: FileParams): boolean {

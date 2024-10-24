@@ -126,7 +126,7 @@ export class ImagesController {
         }
 
         return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "max-age=86400, public", // Public cache (1 hour)
+            "cache-control": "max-age=86400, public", // Public cache (1 day)
         });
     }
 
