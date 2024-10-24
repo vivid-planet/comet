@@ -7,7 +7,7 @@ import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
-import { StopImpersonationButton } from "../../userPermissions/user/UserPage";
+import { StopImpersonationButton } from "../../userPermissions/user/ImpersonationButtons";
 import { AboutModal } from "./about/AboutModal";
 import { GQLSignOutMutation } from "./UserHeaderItem.generated";
 

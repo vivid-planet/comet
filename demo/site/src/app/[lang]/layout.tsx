@@ -1,3 +1,4 @@
+import { languages } from "@src/config";
 import { readFile } from "fs/promises";
 import { PropsWithChildren } from "react";
 
@@ -13,9 +14,13 @@ async function loadMessages(lang: string) {
 }
 
 export default async function Page({ children, params }: PropsWithChildren<{ params: { lang: string } }>) {
-    const messages = await loadMessages(params.lang);
+    let language = params.lang;
+    if (!languages.includes(language)) {
+        language = "en";
+    }
+    const messages = await loadMessages(language);
     return (
-        <IntlProvider locale={params.lang} messages={messages}>
+        <IntlProvider locale={language} messages={messages}>
             {children}
         </IntlProvider>
     );
