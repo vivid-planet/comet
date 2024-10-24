@@ -56,6 +56,7 @@ export class UserPermissionsService {
                 ]
                     .flatMap((p) => p.meta.requiredPermission)
                     .concat(["prelogin"]) // Add permission to allow checking if a specific user has access to a site where preloginEnabled is true
+                    .concat(["impersonation"])
                     .filter((p) => p !== DisablePermissionCheck)
                     .sort(),
             ),
@@ -161,21 +162,10 @@ export class UserPermissionsService {
                 try {
                     return await this.getUser(request?.cookies["comet-impersonate-user-id"]);
                 } catch (e) {
-                    this.unsetImpersonatedUser(request);
+                    return undefined;
                 }
             }
         }
-    }
-
-    async setImpersonatedUser(userId: string, request: Request) {
-        if (!(await this.getUser(userId))) {
-            throw new Error("User not found.");
-        }
-        request.res?.cookie("comet-impersonate-user-id", userId);
-    }
-
-    unsetImpersonatedUser(request: Request) {
-        request.res?.clearCookie("comet-impersonate-user-id");
     }
 
     async createCurrentUser(authenticatedUser: User, request?: Request): Promise<CurrentUser> {
