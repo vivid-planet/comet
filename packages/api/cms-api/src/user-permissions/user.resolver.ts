@@ -1,14 +1,11 @@
-import { Args, Context, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Request } from "express";
 
-import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DisablePermissionCheck, RequiredPermission } from "./decorators/required-permission.decorator";
+import { UserPermissionsPaginatedUserList } from "./dto/list-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermissionsService } from "./user-permissions.service";
-
-@ObjectType()
-class PaginatedUserList extends PaginatedResponseFactory.create(User) {}
 
 @Resolver(() => User)
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
@@ -20,10 +17,21 @@ export class UserResolver {
         return this.userService.getUser(id);
     }
 
-    @Query(() => PaginatedUserList)
-    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<PaginatedUserList> {
+    @Query(() => UserPermissionsPaginatedUserList)
+    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<UserPermissionsPaginatedUserList> {
         const [users, totalCount] = await this.userService.findUsers(args);
-        return new PaginatedUserList(users, totalCount, args);
+        return new UserPermissionsPaginatedUserList(
+            await Promise.all(
+                users.map(async (user) => {
+                    return {
+                        ...user,
+                        permissionsCount: (await this.userService.getPermissions(user)).length,
+                        contentScopesCount: (await this.userService.getContentScopes(user)).length,
+                    };
+                }),
+            ),
+            totalCount,
+        );
     }
 
     @Mutation(() => Boolean)
