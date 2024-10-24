@@ -2,4 +2,4 @@
 "@comet/cms-site": minor
 ---
 
-Use non-preview dam urls for site preview
+Use non-preview DAM URLs for the site preview
