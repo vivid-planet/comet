@@ -17,7 +17,6 @@ export { createBlocksBlock } from "./blocks/factories/createBlocksBlock";
 export type { ColumnsBlockLayout } from "./blocks/factories/createColumnsBlock";
 export { createColumnsBlock } from "./blocks/factories/createColumnsBlock";
 export { createCompositeBlock } from "./blocks/factories/createCompositeBlock";
-export { createLayoutBlock } from "./blocks/factories/createLayoutBlock";
 export type { ListBlockFragment, ListBlockState } from "./blocks/factories/createListBlock";
 export { createListBlock } from "./blocks/factories/createListBlock";
 export type { CreateOneOfBlockOptions, OneOfBlockFragment, OneOfBlockState } from "./blocks/factories/createOneOfBlock";
