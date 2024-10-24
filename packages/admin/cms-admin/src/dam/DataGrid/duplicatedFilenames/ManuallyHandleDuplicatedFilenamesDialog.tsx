@@ -1,5 +1,5 @@
 import { Alert } from "@comet/admin";
-import { Duplicate, Save } from "@comet/admin-icons";
+import { Duplicate, Forward, Save } from "@comet/admin-icons";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Fragment } from "react";
@@ -99,7 +99,7 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
             </DialogContent>
             <DialogActions>
                 <Box display="flex" justifyContent="space-between" width="100%">
-                    <Button variant="text" color="secondary" onClick={onSkip}>
+                    <Button variant="text" color="secondary" onClick={onSkip} startIcon={<Forward />}>
                         <FormattedMessage
                             id="comet.dam.duplicateFilenameDialog.action.skip"
                             defaultMessage="Skip {count, plural, one {file} other {files}}"
