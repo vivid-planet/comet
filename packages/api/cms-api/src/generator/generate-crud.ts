@@ -793,7 +793,7 @@ function generateNestedEntityResolver({ generatorOptions, metadata }: { generato
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !skipScopeCheck, "read")}
+    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, skipScopeCheck, "read")}
     export class ${classNameSingular}Resolver {
         ${needsBlocksTransformer ? `constructor(private readonly blocksTransformer: BlocksTransformerService) {}` : ""}
         ${code}
@@ -1023,7 +1023,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     ${generateImportsCode(imports)}
 
     @Resolver(() => ${metadata.className})
-    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !skipScopeCheck, "read")}
+    ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, skipScopeCheck, "read")}
     export class ${classNameSingular}Resolver {
         constructor(
             private readonly entityManager: EntityManager,${
@@ -1248,7 +1248,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 ? `
         @Mutation(() => Boolean)
         @AffectedEntity(${metadata.className})
-        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, !scopeProp, "delete")}
+        ${createRequiredPermissionDecorator(generatorOptions.requiredPermission, skipScopeCheck, "delete")}
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
             this.entityManager.remove(${instanceNameSingular});${

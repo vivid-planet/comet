@@ -8,7 +8,7 @@ import { Product } from "../entities/product.entity";
 import { ProductColor } from "../entities/product-color.entity";
 
 @Resolver(() => ProductColor)
-@RequiredPermission(["products"], { skipScopeCheck: true })
+@RequiredPermission(["products.read"], { skipScopeCheck: true })
 export class ProductColorResolver {
     @ResolveField(() => Product)
     async product(@Parent() productColor: ProductColor): Promise<Product> {

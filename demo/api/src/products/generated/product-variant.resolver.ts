@@ -22,7 +22,7 @@ import { ProductVariantInput, ProductVariantUpdateInput } from "./dto/product-va
 import { ProductVariantsArgs } from "./dto/product-variants.args";
 
 @Resolver(() => ProductVariant)
-@RequiredPermission("products.read", { skipScopeCheck: true })
+@RequiredPermission(["products.read"], { skipScopeCheck: true })
 export class ProductVariantResolver {
     constructor(
         private readonly entityManager: EntityManager,
@@ -70,6 +70,7 @@ export class ProductVariantResolver {
     }
 
     @Mutation(() => ProductVariant)
+    @RequiredPermission(["products.create"], { skipScopeCheck: true })
     @AffectedEntity(Product, { idArg: "product" })
     async createProductVariant(
         @Args("product", { type: () => ID }) product: string,
@@ -91,6 +92,7 @@ export class ProductVariantResolver {
 
     @Mutation(() => ProductVariant)
     @AffectedEntity(ProductVariant)
+    @RequiredPermission(["products.update"], { skipScopeCheck: true })
     async updateProductVariant(
         @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => ProductVariantUpdateInput }) input: ProductVariantUpdateInput,
@@ -113,6 +115,7 @@ export class ProductVariantResolver {
 
     @Mutation(() => Boolean)
     @AffectedEntity(ProductVariant)
+    @RequiredPermission(["products.delete"], { skipScopeCheck: true })
     async deleteProductVariant(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
         const productVariant = await this.repository.findOneOrFail(id);
         this.entityManager.remove(productVariant);
