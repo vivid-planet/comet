@@ -42,7 +42,7 @@ export class ImagesController {
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
     ) {}
 
-    @Get(`/preview/${smartImageUrl}`)
+    @Get(`/preview/:contentHash?/${smartImageUrl}`)
     async previewSmartCroppedImage(
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
@@ -59,6 +59,10 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new Error("Content Hash mismatch!");
+        }
+
         if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
             throw new ForbiddenException();
         }
@@ -68,7 +72,7 @@ export class ImagesController {
         });
     }
 
-    @Get(`/preview/${focusImageUrl}`)
+    @Get(`/preview/:contentHash?/${focusImageUrl}`)
     async previewFocusCroppedImage(
         @Param() params: ImageParams,
         @Headers("Accept") accept: string,
@@ -85,6 +89,10 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new Error("Content Hash mismatch!");
+        }
+
         if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
             throw new ForbiddenException();
         }
@@ -95,7 +103,7 @@ export class ImagesController {
     }
 
     @DisableCometGuards()
-    @Get(`/:hash/${smartImageUrl}`)
+    @Get(`/:hash/:contentHash?/${smartImageUrl}`)
     async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
@@ -107,11 +115,15 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new Error("Content Hash mismatch!");
+        }
+
         return this.getCroppedImage(file, params, accept, res);
     }
 
     @DisableCometGuards()
-    @Get(`/:hash/${focusImageUrl}`)
+    @Get(`/:hash/:contentHash?/${focusImageUrl}`)
     async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {
             throw new NotFoundException();
@@ -121,6 +133,10 @@ export class ImagesController {
 
         if (file === null) {
             throw new NotFoundException();
+        }
+
+        if (params.contentHash && file.contentHash !== params.contentHash) {
+            throw new Error("Content Hash mismatch!");
         }
 
         return this.getCroppedImage(file, params, accept, res);
