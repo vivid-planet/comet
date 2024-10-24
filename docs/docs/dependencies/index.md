@@ -207,10 +207,37 @@ export const NewsDependency: DependencyInterface = {
 };
 ```
 
+**If your DAM is global or only uses a part of the scope, you must further pass a `scopeFragment`.**
+The loaded scope is then passed to the `basePath` method where you must attach it to the URL.
+
+```tsx
+// NewsDependency.tsx
+export const NewsDependency: DependencyInterface = {
+    // ...
+    ...createDependencyMethods({
+        // ...
+        scopeFragment: gql`
+            fragment NewsDependencyScope on NewsContentScope {
+                domain
+                language
+            }
+        `,
+        basePath: ({ id, scope }) => {
+            const newsScope = scope as GQLNewsContentScope;
+            return `/${newsScope.domain}/${newsScope.language}/structured-content/news/${id}/edit`;
+        },
+    }),
+};
+```
+
+If you don't provide a `scopeFragment`, the link to a dependency will always stay in the current scope.
+This can cause 404 errors if the dependency is in a different scope.
+
 ##### `createDocumentDependencyMethods`
 
 For document types you can use the `createDocumentDependencyMethods` helper.
 It loads the document and also the `PageTreeNode` the document is attached to.
+The API is identical to `createDependencyMethods()`.
 
 ```tsx
 // Page.tsx
