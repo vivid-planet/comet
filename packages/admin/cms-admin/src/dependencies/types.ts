@@ -1,8 +1,8 @@
 import { ApolloClient } from "@apollo/client";
-import * as React from "react";
+import { ReactNode } from "react";
 
 export interface DependencyInterface {
-    displayName: React.ReactNode;
+    displayName: ReactNode;
     resolvePath: ({
         rootColumnName,
         jsonPath,

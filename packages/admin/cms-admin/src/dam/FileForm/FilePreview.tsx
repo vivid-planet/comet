@@ -4,7 +4,7 @@ import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons"
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import saveAs from "file-saver";
-import * as React from "react";
+import { ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
@@ -32,7 +32,7 @@ const ActionsContainer = styled("div")`
 `;
 
 const ActionButton = styled(Button)`
-    color: ${({ theme }) => theme.palette.primary.contrastText};
+    color: white;
 `;
 
 const FileWrapper = styled(Paper)`
@@ -56,12 +56,12 @@ interface FilePreviewProps {
     file: DamFileDetails;
 }
 
-export const FilePreview = ({ file }: FilePreviewProps): React.ReactElement => {
+export const FilePreview = ({ file }: FilePreviewProps) => {
     const client = useApolloClient();
     const stackApi = useStackApi();
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
-    let preview: React.ReactNode;
+    let preview: ReactNode;
 
     if (file.mimetype.startsWith("image/") && file.image !== undefined) {
         preview = <ImagePreview file={file} />;

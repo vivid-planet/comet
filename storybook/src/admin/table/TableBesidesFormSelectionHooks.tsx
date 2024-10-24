@@ -41,20 +41,18 @@ interface IExampleTableProps {
 }
 function ExampleTable(props: IExampleTableProps) {
     return (
-        <>
-            <Table
-                {...props.tableData}
-                selectionApi={props.selectionApi}
-                selectedId={props.selectedId}
-                selectable={true}
-                columns={[
-                    {
-                        name: "name",
-                        header: "Name",
-                    },
-                ]}
-            />
-        </>
+        <Table
+            {...props.tableData}
+            selectionApi={props.selectionApi}
+            selectedId={props.selectedId}
+            selectable={true}
+            columns={[
+                {
+                    name: "name",
+                    header: "Name",
+                },
+            ]}
+        />
     );
 }
 

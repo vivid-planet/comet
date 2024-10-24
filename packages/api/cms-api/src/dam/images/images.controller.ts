@@ -1,4 +1,3 @@
-import { mediaType } from "@hapi/accept";
 import { Controller, ForbiddenException, forwardRef, Get, Headers, Inject, NotFoundException, Param, Res } from "@nestjs/common";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
@@ -6,37 +5,26 @@ import mime from "mime";
 import fetch from "node-fetch";
 import { PassThrough } from "stream";
 
+import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { ScaledImagesCacheService } from "../cache/scaled-images-cache.service";
 import { FocalPoint } from "../common/enums/focal-point.enum";
-import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
+import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { FileInterface } from "../files/entities/file.entity";
 import { FilesService } from "../files/files.service";
-import { createHashedPath } from "../files/files.utils";
 import { Extension, Gravity, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../imgproxy/imgproxy.service";
 import { HashImageParams, ImageParams } from "./dto/image.params";
+import { BASIC_TYPES, MODERN_TYPES } from "./images.constants";
 import { ImagesService } from "./images.service";
-import { getCenteredPosition, getMaxDimensionsFromArea } from "./images.util";
-
-const WEBP = "image/webp";
-const PNG = "image/png";
-const JPEG = "image/jpeg";
-const GIF = "image/gif";
-const BASIC_TYPES = [JPEG, PNG, GIF];
-const MODERN_TYPES = [/* AVIF, */ WEBP];
-
-function getSupportedMimeType(options: string[], accept = ""): string {
-    const mimeType = mediaType(accept, options);
-    return accept.includes(mimeType) ? mimeType : "";
-}
+import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "./images.util";
 
 const smartImageUrl = `:fileId/crop::focalPoint([A-Z]{5,9})/resize::resizeWidth::resizeHeight/:filename`;
 const focusImageUrl = `:fileId/crop::cropWidth::cropHeight::focalPoint::cropX::cropY/resize::resizeWidth::resizeHeight/:filename`;
@@ -106,16 +94,9 @@ export class ImagesController {
         });
     }
 
-    @DisableGlobalGuard()
+    @DisableCometGuards()
     @Get(`/:hash/${smartImageUrl}`)
-    async smartCroppedImage(
-        @Param() params: HashImageParams,
-        @Headers("Accept") accept: string,
-        @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-        @Res() res: Response,
-    ): Promise<void> {
-        this.checkCdnOrigin(cdnOriginCheck);
-
+    async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {
             throw new NotFoundException();
         }
@@ -129,16 +110,9 @@ export class ImagesController {
         return this.getCroppedImage(file, params, accept, res);
     }
 
-    @DisableGlobalGuard()
+    @DisableCometGuards()
     @Get(`/:hash/${focusImageUrl}`)
-    async focusCroppedImage(
-        @Param() params: HashImageParams,
-        @Headers("Accept") accept: string,
-        @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
-        @Res() res: Response,
-    ): Promise<void> {
-        this.checkCdnOrigin(cdnOriginCheck);
-
+    async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {
             throw new NotFoundException();
         }
@@ -154,14 +128,6 @@ export class ImagesController {
 
     private isValidHash({ hash, ...imageParams }: HashImageParams): boolean {
         return hash === this.imagesService.createHash(imageParams);
-    }
-
-    private checkCdnOrigin(incomingCdnOriginHeader: string): void {
-        if (this.config.cdnEnabled && !this.config.disableCdnOriginHeaderCheck) {
-            if (incomingCdnOriginHeader !== this.config.cdnOriginHeader) {
-                throw new ForbiddenException();
-            }
-        }
     }
 
     private async getCroppedImage(

@@ -4,22 +4,20 @@ import {
     messages,
     RouterPrompt,
     SaveButton,
-    SplitButton,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarTitleItem,
-    useStackApi,
 } from "@comet/admin";
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
 import { AdminComponentRoot, BlockOutputApi, BlockState, HiddenInSubroute, IFrameBridgeProvider, resolveNewState } from "@comet/blocks-admin";
-import { EditPageLayout, openSitePreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/cms-admin";
+import { ContentScopeIndicator, openSitePreviewWindow, SplitPreview, useBlockPreview, useCmsBlockContext, useSiteConfig } from "@comet/cms-admin";
 import { Button } from "@mui/material";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router-dom";
 
@@ -57,28 +55,27 @@ interface EditMainMenuItemProps {
 type RichTextBlockState = BlockState<typeof RichTextBlock>;
 type RichTextBlockOutput = BlockOutputApi<typeof RichTextBlock>;
 
-const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item }) => {
+const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
     const previewApi = useBlockPreview();
     const match = useRouteMatch();
-    const stackApi = useStackApi();
     const [updateMainMenuItem, { loading: saving, error: saveError }] = useMutation<
         GQLUpdateMainMenuItemMutation,
         GQLUpdateMainMenuItemMutationVariables
     >(updateMainMenuItemMutation);
-    const [referenceContent, setReferenceContent] = React.useState<RichTextBlockOutput | null>(null);
-    const [hasChanges, setHasChanges] = React.useState(false);
-    const [content, setContent] = React.useState<RichTextBlockState | null>(null);
+    const [referenceContent, setReferenceContent] = useState<RichTextBlockOutput | null>(null);
+    const [hasChanges, setHasChanges] = useState(false);
+    const [content, setContent] = useState<RichTextBlockState | null>(null);
     const { match: contentScopeMatch, scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
     const intl = useIntl();
     const blockContext = useCmsBlockContext();
 
-    React.useEffect(() => {
+    useEffect(() => {
         setContent(item.content ? RichTextBlock.input2State(item.content) : null);
         setReferenceContent(item.content ? RichTextBlock.state2Output(RichTextBlock.input2State(item.content)) : null);
     }, [item]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const equal = isEqual(referenceContent, content ? RichTextBlock.state2Output(content) : null);
         setHasChanges(!equal);
     }, [content, referenceContent]);
@@ -121,8 +118,8 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
     };
 
     return (
-        <EditPageLayout>
-            <Toolbar>
+        <>
+            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                 <ToolbarBackButton />
                 <ToolbarTitleItem>{item?.node?.name}</ToolbarTitleItem>
                 <ToolbarFillSpace />
@@ -136,32 +133,17 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                     >
                         <FormattedMessage id="pages.pages.page.edit.preview" defaultMessage="Web preview" />
                     </Button>
-
-                    <SplitButton localStorageKey="EditMainMenuItemSave" disabled={!hasChanges}>
-                        <SaveButton
-                            startIcon={<Save />}
-                            saving={saving}
-                            hasErrors={saveError != null}
-                            color="primary"
-                            variant="contained"
-                            onClick={handleSaveClick}
-                        >
-                            <FormattedMessage {...messages.save} />
-                        </SaveButton>
-                        <SaveButton
-                            startIcon={<Save />}
-                            saving={saving}
-                            hasErrors={saveError != null}
-                            color="primary"
-                            variant="contained"
-                            onClick={async () => {
-                                await handleSaveClick();
-                                stackApi?.goBack();
-                            }}
-                        >
-                            <FormattedMessage {...messages.saveAndGoBack} />
-                        </SaveButton>
-                    </SplitButton>
+                    <SaveButton
+                        disabled={!hasChanges}
+                        startIcon={<Save />}
+                        saving={saving}
+                        hasErrors={saveError != null}
+                        color="primary"
+                        variant="contained"
+                        onClick={handleSaveClick}
+                    >
+                        <FormattedMessage {...messages.save} />
+                    </SaveButton>
                 </ToolbarActions>
             </Toolbar>
             {hasChanges && (
@@ -175,7 +157,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
             )}
             <MainContent>
                 <IFrameBridgeProvider>
-                    <SplitPreview url={`${siteConfig.previewUrl}/admin/main-menu`} previewState={previewState} previewApi={previewApi}>
+                    <SplitPreview url={`${siteConfig.blockPreviewBaseUrl}/main-menu`} previewState={previewState} previewApi={previewApi}>
                         <div>
                             {content ? (
                                 <AdminComponentRoot title={intl.formatMessage({ id: "mainMenu.menuItem", defaultMessage: "Menu item" })}>
@@ -200,7 +182,7 @@ const EditMainMenuItem: React.FunctionComponent<EditMainMenuItemProps> = ({ item
                     </SplitPreview>
                 </IFrameBridgeProvider>
             </MainContent>
-        </EditPageLayout>
+        </>
     );
 };
 

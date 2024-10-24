@@ -13,10 +13,9 @@ import {
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { AdminComponentRoot } from "@comet/blocks-admin";
-import { createUsePage, EditPageLayout, PageName } from "@comet/cms-admin";
+import { ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { GQLEditLinkQuery, GQLEditLinkQueryVariables, GQLUpdateLinkMutation, GQLUpdateLinkMutationVariables } from "./EditLink.generated";
@@ -62,7 +61,7 @@ interface Props {
     id: string;
 }
 
-export const EditLink: React.FC<Props> = ({ id }) => {
+export const EditLink = ({ id }: Props) => {
     const intl = useIntl();
     const stackApi = useStackApi();
 
@@ -91,10 +90,10 @@ export const EditLink: React.FC<Props> = ({ id }) => {
         return <Loading behavior="fillPageHeight" />;
     }
 
-    if (!linkState) return <></>;
+    if (!linkState) return null;
 
     return (
-        <EditPageLayout>
+        <>
             {hasChanges && (
                 <RouterPrompt
                     message={(location) => {
@@ -103,7 +102,7 @@ export const EditLink: React.FC<Props> = ({ id }) => {
                     saveAction={handleSaveAction}
                 />
             )}
-            <Toolbar>
+            <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                 <ToolbarItem>
                     <IconButton onClick={stackApi?.goBack}>
                         <ArrowLeft />
@@ -121,6 +120,6 @@ export const EditLink: React.FC<Props> = ({ id }) => {
                 </RouterTabs>
             </MainContent>
             {dialogs}
-        </EditPageLayout>
+        </>
     );
 };

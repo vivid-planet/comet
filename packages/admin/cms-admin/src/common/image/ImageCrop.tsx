@@ -1,5 +1,4 @@
 import isEqual from "lodash.isequal";
-import * as React from "react";
 import { Field, useForm, useFormState } from "react-final-form";
 import ReactCrop, { ReactCropProps } from "react-image-crop";
 
@@ -15,7 +14,7 @@ const clipValue = (value?: number) => {
     return value === undefined ? undefined : Math.max(0, Math.min(100, value));
 };
 
-export const ImageCrop = (props: ImageCropProps): React.ReactElement => {
+export const ImageCrop = (props: ImageCropProps) => {
     const form = useForm<EditImageFormValues>();
     const {
         values: { focalPoint },
@@ -36,6 +35,7 @@ export const ImageCrop = (props: ImageCropProps): React.ReactElement => {
                         crop={disabled ? {} : { ...value, unit: "%" }}
                         ruleOfThirds={true}
                         disabled={disabled}
+                        imageStyle={{ width: "auto", height: "auto" }}
                         onChange={(newCrop, percentCrop) => {
                             // Prevent reset at first rendering
                             if (percentCrop.width === 0 && percentCrop.height === 0 && percentCrop.x === 0 && percentCrop.y === 0) {

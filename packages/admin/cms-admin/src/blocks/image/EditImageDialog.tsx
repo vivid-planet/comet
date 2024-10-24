@@ -1,8 +1,11 @@
 import "react-image-crop/dist/ReactCrop.css";
 
+import { useApolloClient } from "@apollo/client";
 import { CancelButton, Field, FormSection, messages, SaveButton } from "@comet/admin";
+import { OpenNewTab } from "@comet/admin-icons";
 import {
     Box,
+    Button,
     Dialog,
     DialogActions,
     DialogContent as MuiDialogContent,
@@ -15,13 +18,15 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { ChangeEvent } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { ImageCrop } from "../../common/image/ImageCrop";
+import { useContentScope } from "../../contentScope/Provider";
 import { CropSettingsFields } from "../../dam/FileForm/CropSettingsFields";
 import { EditImageFormValues } from "../../dam/FileForm/EditFile";
+import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { GQLFocalPoint } from "../../graphql.generated";
 
 type CropArea = {
@@ -46,6 +51,7 @@ interface Props {
         height: number;
         size?: number;
     };
+    damFileId: string;
     onClose: () => void;
     initialValues: {
         useInheritedDamSettings?: boolean;
@@ -59,9 +65,14 @@ const DialogContent = styled(MuiDialogContent)`
     display: grid;
     grid-template-columns: auto 320px;
     padding: 0;
+    padding-left: 40px;
 `;
 
-export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings }: Props): React.ReactElement {
+export function EditImageDialog({ image, initialValues, onSubmit, onClose, inheritedDamSettings, damFileId }: Props) {
+    const contentScope = useContentScope();
+    const apolloClient = useApolloClient();
+    const dependencyMap = useDependenciesConfig();
+
     const handleSubmit = (values: FormValues) => {
         if (values.useInheritedDamSettings) {
             onSubmit(undefined);
@@ -107,7 +118,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
         >
             {({ handleSubmit, values }) => (
                 <Dialog open onClose={onClose} maxWidth={false}>
-                    <form onSubmit={handleSubmit}>
+                    <DialogFormWrapper onSubmit={handleSubmit}>
                         <DialogTitle>
                             <Grid container justifyContent="space-between">
                                 <Grid item>
@@ -149,7 +160,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                             <div>
                                 {inheritedDamSettings !== undefined && (
                                     <>
-                                        <Box padding={8}>
+                                        <Box padding={8} paddingBottom={6}>
                                             <FormSection
                                                 title={<FormattedMessage id="comet.blocks.image.dam" defaultMessage="DAM" />}
                                                 disableMarginBottom
@@ -168,6 +179,26 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                 </Field>
                                             </FormSection>
                                         </Box>
+
+                                        {dependencyMap["DamFile"] && damFileId && (
+                                            <Box padding={7} paddingTop={0}>
+                                                <Button
+                                                    variant="text"
+                                                    color="inherit"
+                                                    onClick={async () => {
+                                                        const path = await dependencyMap["DamFile"].resolvePath({
+                                                            apolloClient,
+                                                            id: damFileId,
+                                                        });
+                                                        const url = contentScope.match.url + path;
+                                                        window.open(url, "_blank");
+                                                    }}
+                                                    startIcon={<OpenNewTab />}
+                                                >
+                                                    <FormattedMessage id="comet.blocks.image.openInDam" defaultMessage="Open in DAM" />
+                                                </Button>
+                                            </Box>
+                                        )}
                                         <Divider />
                                     </>
                                 )}
@@ -180,7 +211,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                             <CancelButton type="button" onClick={onClose} />
                             <SaveButton type="submit" />
                         </DialogActions>
-                    </form>
+                    </DialogFormWrapper>
                 </Dialog>
             )}
         </Form>
@@ -189,10 +220,10 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
 
 interface YesNoSwitchProps {
     checked?: boolean;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const YesNoSwitch = ({ checked, onChange }: YesNoSwitchProps): React.ReactElement => {
+const YesNoSwitch = ({ checked, onChange }: YesNoSwitchProps) => {
     return (
         <FormControlLabel
             control={<Switch checked={checked} onChange={onChange} />}
@@ -200,3 +231,13 @@ const YesNoSwitch = ({ checked, onChange }: YesNoSwitchProps): React.ReactElemen
         />
     );
 };
+
+const DialogFormWrapper = styled("form")`
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content auto min-content;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    max-height: 100%;
+    overflow: hidden;
+`;

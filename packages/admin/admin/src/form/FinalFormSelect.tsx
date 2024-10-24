@@ -1,5 +1,5 @@
 import { CircularProgress, InputAdornment, MenuItem, Select, SelectProps } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -9,9 +9,17 @@ import { AsyncOptionsProps } from "../hooks/useAsyncOptionsProps";
 export interface FinalFormSelectProps<T> extends FieldRenderProps<T, HTMLInputElement | HTMLTextAreaElement> {
     getOptionLabel?: (option: T) => string;
     getOptionValue?: (option: T) => string;
-    children?: React.ReactNode;
-    clearable?: boolean;
+    children?: ReactNode;
+    required?: boolean;
 }
+
+const getHasClearableContent = (value: unknown, multiple: boolean | undefined) => {
+    if (multiple && Array.isArray(value)) {
+        return value.length > 0;
+    }
+
+    return value !== undefined && value !== "";
+};
 
 export const FinalFormSelect = <T,>({
     input: { checked, value, name, onChange, onFocus, onBlur, ...restInput },
@@ -36,33 +44,31 @@ export const FinalFormSelect = <T,>({
         }
     },
     children,
-    endAdornment,
-    clearable,
+    required,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
+}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
-    const selectEndAdornment = clearable ? (
+    const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
-            hasClearableContent={Boolean(multiple ? (Array.isArray(value) ? value.length : value) : value)}
+            hasClearableContent={getHasClearableContent(value, multiple)}
             onClick={() => onChange(multiple ? [] : undefined)}
         />
-    ) : (
-        endAdornment
-    );
+    ) : null;
 
     const selectProps = {
         ...rest,
         multiple,
-        endAdornment: selectEndAdornment,
+        endAdornment,
         name,
         onChange,
         onFocus,
         onBlur,
+        required,
     };
 
     if (children) {
@@ -83,7 +89,7 @@ export const FinalFormSelect = <T,>({
                             <CircularProgress size={16} color="inherit" />
                         </InputAdornment>
                     )}
-                    {selectEndAdornment}
+                    {endAdornment}
                 </>
             }
             onChange={(event) => {

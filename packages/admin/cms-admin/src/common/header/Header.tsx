@@ -1,18 +1,19 @@
-import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton } from "@comet/admin";
-import * as React from "react";
-
-import { Logo } from "./Logo";
+import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
+import { useMediaQuery, useTheme } from "@mui/material";
+import { PropsWithChildren, ReactNode } from "react";
 
 interface Props {
-    children?: React.ReactNode;
-    logo?: React.ReactNode;
+    logo?: ReactNode;
 }
 
-function Header({ children, logo }: Props): React.ReactElement {
+function Header({ children, logo }: PropsWithChildren<Props>) {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
     return (
         <AppHeader>
             <AppHeaderMenuButton />
-            {logo || <Logo />}
+            {!isMobile && (logo || <CometLogo color="white" />)}
             <AppHeaderFillSpace />
             {children}
         </AppHeader>

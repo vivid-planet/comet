@@ -1,10 +1,13 @@
 export { ColorField, ColorFieldProps } from "./ColorField";
+export { ColorPicker, ColorPickerColorPreviewProps, ColorPickerProps, ColorPickerPropsComponents } from "./ColorPicker";
+export { ColorPickerClassKey } from "./ColorPicker.slots";
 export {
-    ColorPicker,
-    ColorPickerColorPreviewProps,
-    ColorPickerProps,
-    ColorPickerPropsComponents,
-    ColorPickerPropsComponentsProps,
-} from "./ColorPicker";
-export { ColorPickerClassKey } from "./ColorPicker.styles";
-export { FinalFormColorPicker, FinalFormColorPickerProps } from "./FinalFormColorPicker";
+    /**
+     * @deprecated Use `<ColorField />` instead of `<Field component={FinalFormColorPicker} />`
+     */
+    FinalFormColorPicker,
+    /**
+     * @deprecated Use `<ColorField />` instead of `<Field component={FinalFormColorPicker} />`
+     */
+    FinalFormColorPickerProps,
+} from "./FinalFormColorPicker";

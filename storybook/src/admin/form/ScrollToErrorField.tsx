@@ -35,21 +35,19 @@ function Story() {
             </Button>
             <Typography>The page then scrolls to the 2nd field which has an error.</Typography>
             {open && (
-                <>
-                    <FinalForm<FormValues>
-                        mode="edit"
-                        onSubmit={() => {
-                            // noop
-                        }}
-                        initialValues={initialValues}
-                        validate={validate}
-                        formContext={{ shouldScrollToField: ({ touched }) => !touched, shouldShowFieldError: () => true }}
-                    >
-                        <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
-                        <div style={{ height: "2000px", borderLeft: "1px solid black" }} />
-                        <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
-                    </FinalForm>
-                </>
+                <FinalForm<FormValues>
+                    mode="edit"
+                    onSubmit={() => {
+                        // noop
+                    }}
+                    initialValues={initialValues}
+                    validate={validate}
+                    formContext={{ shouldScrollToField: ({ touched }) => !touched, shouldShowFieldError: () => true }}
+                >
+                    <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
+                    <div style={{ height: "2000px", borderLeft: "1px solid black" }} />
+                    <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
+                </FinalForm>
             )}
         </>
     );

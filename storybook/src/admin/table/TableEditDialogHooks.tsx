@@ -21,7 +21,7 @@ import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Story() {
     interface IEditFormProps {
-        row: IExampleRow;
+        row?: IExampleRow;
         mode: "edit" | "add";
     }
     // Defined in story to be able to call setData, hence using useMemo to avoid multiple rendering
@@ -31,12 +31,20 @@ function Story() {
                 mode={props.mode}
                 initialValues={props.row}
                 onSubmit={async (values: IExampleRow) => {
-                    await new Promise((resolve) => setTimeout(resolve, 500));
-                    setData((data) => {
-                        const index = data.findIndex((d) => d.id === values.id);
-                        data[index] = values;
-                        return [...data];
-                    });
+                    if (props.mode == "edit") {
+                        await new Promise((resolve) => setTimeout(resolve, 500));
+                        setData((data) => {
+                            const index = data.findIndex((d) => d.id === values.id);
+                            data[index] = values;
+                            return [...data];
+                        });
+                    } else {
+                        setData((data) => {
+                            const lastId = data.length;
+                            const newVal: IExampleRow = { id: lastId + 1, foo: values.foo, bar: values.foo };
+                            return [...data, newVal];
+                        });
+                    }
                 }}
             >
                 <Field name="foo" component={FinalFormInput} type="text" label="Name" fullWidth />
@@ -109,10 +117,6 @@ function Story() {
                     {selection.mode && (
                         <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
                             {(row, { selectionMode: sm }) => {
-                                if (row === undefined) {
-                                    return null;
-                                }
-
                                 return <EditForm mode={sm} row={row} />;
                             }}
                         </Selected>

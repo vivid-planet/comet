@@ -1,9 +1,6 @@
-import { BuildEntry, Header, UserHeaderItem } from "@comet/cms-admin";
-import * as React from "react";
+import { BuildEntry, ContentScopeControls, Header, UserHeaderItem } from "@comet/cms-admin";
 
-import { ContentScopeControls } from "./ContentScopeProvider";
-
-const MasterHeader: React.FC = () => {
+const MasterHeader = () => {
     return (
         <Header>
             <ContentScopeControls />

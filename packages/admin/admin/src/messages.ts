@@ -30,7 +30,7 @@ export const messages = defineMessages({
     page: { id: "comet.generic.page", defaultMessage: "Page" },
     yes: { id: "comet.generic.yes", defaultMessage: "Yes" },
     no: { id: "comet.generic.no", defaultMessage: "No" },
-    globalContentScope: { id: "comet.generic.globalContentScope", defaultMessage: "Global Content" },
+    globalContentScope: { id: "comet.generic.globalContentScope", defaultMessage: "Global" },
     invalidData: { id: "comet.generic.invalidData", defaultMessage: "Invalid Data" },
     saveConflict: { id: "comet.generic.saveConflict", defaultMessage: "Save Conflict" },
     retry: { id: "comet.generic.retry", defaultMessage: "Retry" },
@@ -49,7 +49,9 @@ export const messages = defineMessages({
     close: { id: "comet.generic.close", defaultMessage: "Close" },
     url: { id: "comet.generic.url", defaultMessage: "URL" },
     filter: { id: "comet.generic.filter", defaultMessage: "Filter" },
+    columns: { id: "comet.generic.columns", defaultMessage: "Columns" },
     copyUrl: { id: "comet.generic.copyUrl", defaultMessage: "Copy URL" },
     deleteItem: { id: "comet.generic.deleteItem", defaultMessage: "Delete Item" },
     empty: { id: "comet.generic.empty", defaultMessage: "Empty" },
+    downloadAsExcel: { id: "comet.generic.downloadAsExcel", defaultMessage: "Download as Excel" },
 });

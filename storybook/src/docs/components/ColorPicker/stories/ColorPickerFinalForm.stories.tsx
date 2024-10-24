@@ -47,6 +47,9 @@ storiesOf("stories/components/Color Picker/Color Picker Final Form", module).add
                     <Grid item md={3}>
                         <Field name="color4" label="Disabled" fullWidth disabled component={FinalFormColorPicker} />
                     </Grid>
+                    <Grid item md={3}>
+                        <Field name="color5" label="Required" fullWidth required component={FinalFormColorPicker} />
+                    </Grid>
                 </Grid>
             )}
         </Form>

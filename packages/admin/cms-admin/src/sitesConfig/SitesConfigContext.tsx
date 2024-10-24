@@ -1,11 +1,12 @@
-import * as React from "react";
+import { createContext } from "react";
 
 import { ContentScopeInterface } from "../contentScope/Provider";
 
 export interface SiteConfig {
     url: string;
-    previewUrl: string;
     preloginEnabled: boolean;
+    blockPreviewBaseUrl: string;
+    sitePreviewApiUrl: string;
 }
 
 export interface SiteConfigApi<Configs = unknown> {
@@ -13,4 +14,4 @@ export interface SiteConfigApi<Configs = unknown> {
     resolveSiteConfigForScope: (configs: Configs, scope: ContentScopeInterface) => SiteConfig;
 }
 
-export const SiteConfigContext = React.createContext<SiteConfigApi | undefined>(undefined);
+export const SiteConfigContext = createContext<SiteConfigApi | undefined>(undefined);

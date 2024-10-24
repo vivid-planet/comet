@@ -1,8 +1,8 @@
 import { useApolloClient } from "@apollo/client";
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
-import { Button, Checkbox, FormControlLabel, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
-import * as React from "react";
+import { Button, Checkbox, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
+import { ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { deletePageMutation, GQLDeletePageTreeNodeMutation, GQLDeletePageTreeNodeMutationVariables } from "../pageTree/Page";
@@ -14,7 +14,7 @@ import { usePageTreeContext } from "../pageTree/usePageTreeContext";
 import { areAllSubTreesFullSelected } from "./areAllSubTreesFullSelected";
 import { ConfirmPageActionDialog } from "./ConfirmPageActionDialog";
 import { PageCanNotDeleteDialog } from "./PageCanNotDeleteDialog";
-import { Separator, useStyles } from "./PagesPageActionToolbar.sc";
+import { CenterContainer, Root, SelectAllLabel, Separator } from "./PagesPageActionToolbar.sc";
 import { pageTreeBatchResetVisibility, pageTreeBatchUpdateVisibility } from "./PagesPageActionToolbarBatchUpdateHelper";
 
 export type PageAction = "publish" | "unpublish" | "archive";
@@ -35,32 +35,31 @@ export interface PagesPageActionToolbarProps {
     onCollapseAllPressed: () => void;
 }
 
-export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionToolbarProps> = ({
+export const PagesPageActionToolbar = ({
     selectedState,
     selectedTree,
     onSelectAllPressed,
     collapseAllDisabled,
     onCollapseAllPressed,
-}) => {
-    const [showCanNotDeleteDialog, setShowCanNotDeleteDialog] = React.useState(false);
-    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-    const [confirmAction, setConfirmAction] = React.useState<ConfirmActionState | null>(null);
+}: PagesPageActionToolbarProps) => {
+    const [showCanNotDeleteDialog, setShowCanNotDeleteDialog] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<ConfirmActionState | null>(null);
 
     const { tree } = usePageTreeContext();
-    const [publishLoading, setPublishLoading] = React.useState(false);
-    const [unpublishLoading, setUnpublishLoading] = React.useState(false);
-    const [archiveLoading, setArchiveLoading] = React.useState(false);
-    const [copyLoading, setCopyLoading] = React.useState(false);
-    const [pasteLoading, setPasteLoading] = React.useState(false);
-    const [deleting, setDeleting] = React.useState(false);
+    const [publishLoading, setPublishLoading] = useState(false);
+    const [unpublishLoading, setUnpublishLoading] = useState(false);
+    const [archiveLoading, setArchiveLoading] = useState(false);
+    const [copyLoading, setCopyLoading] = useState(false);
+    const [pasteLoading, setPasteLoading] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const { prepareForClipboard, writeToClipboard, getFromClipboard, sendPages, progressDialog } = useCopyPastePages();
 
-    const classes = useStyles();
     const theme = useTheme();
     const client = useApolloClient();
     const snackbarApi = useSnackbarApi();
 
-    const showUndoSnackbar = (pageTreeNodes: GQLPageTreePageFragment[], message: React.ReactNode) => {
+    const showUndoSnackbar = (pageTreeNodes: GQLPageTreePageFragment[], message: ReactNode) => {
         snackbarApi.showSnackbar(
             <UndoSnackbar
                 message={message}
@@ -113,9 +112,9 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
     return (
         <>
             {progressDialog}
-            <Grid container justifyContent="space-between" classes={{ root: classes.root }}>
+            <Root container justifyContent="space-between">
                 <Grid item>
-                    <FormControlLabel
+                    <SelectAllLabel
                         control={
                             <Checkbox
                                 checked={selectedState === "all_selected"}
@@ -124,10 +123,9 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             />
                         }
                         label={<FormattedMessage id="comet.pagesPageActionToolbar.selectAll" defaultMessage="Select all" />}
-                        classes={{ root: classes.selectAllFromControlLabel }}
                     />
                 </Grid>
-                <Grid item classes={{ root: classes.centerContainer }}>
+                <CenterContainer item>
                     <Tooltip title={<FormattedMessage id="comet.pagesPageActionToolbar.tooltip.publish" defaultMessage="Publish" />}>
                         <span>
                             <IconButton
@@ -228,13 +226,13 @@ export const PagesPageActionToolbar: React.FunctionComponent<PagesPageActionTool
                             </IconButton>
                         </span>
                     </Tooltip>
-                </Grid>
+                </CenterContainer>
                 <Grid item>
                     <Button disabled={collapseAllDisabled} startIcon={<TreeCollapseAll />} onClick={onCollapseAllPressed} size="small" color="info">
                         <FormattedMessage id="comet.pages.pages.collapseAll" defaultMessage="Collapse all" />
                     </Button>
                 </Grid>
-            </Grid>
+            </Root>
             <ConfirmPageActionDialog
                 open={confirmAction !== null}
                 action={confirmAction?.action}

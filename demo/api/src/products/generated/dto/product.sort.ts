@@ -6,16 +6,21 @@ import { IsEnum } from "class-validator";
 
 export enum ProductSortField {
     title = "title",
-    visible = "visible",
+    status = "status",
     slug = "slug",
     description = "description",
     type = "type",
+    additionalTypes = "additionalTypes",
     price = "price",
     inStock = "inStock",
     soldCount = "soldCount",
+    availableSince = "availableSince",
+    lastCheckedAt = "lastCheckedAt",
     category = "category",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
+    manufacturer = "manufacturer",
+    priceList = "priceList",
 }
 registerEnumType(ProductSortField, {
     name: "ProductSortField",

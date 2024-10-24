@@ -1,14 +1,24 @@
 // eslint-disable-next-line no-restricted-imports
 import NextImage, { ImageLoaderProps, ImageProps as NextImageProps } from "next/image";
-import * as React from "react";
 
 // Fallback to 1 / 1 aspect ratio for invalid value format
-export function parseAspectRatio(value: string): number {
-    const [width = 1, height = 1] = value.split("x").map((v) => {
-        let ret: number | undefined = Number(v);
-        if (isNaN(ret)) ret = undefined;
-        return ret;
-    });
+export function parseAspectRatio(value: string | number): number {
+    let width, height;
+    if (typeof value === "string") {
+        [width, height] = value.split(/[x/:]/).map((v) => {
+            let ret: number | undefined = parseFloat(v);
+            if (isNaN(ret)) ret = undefined;
+            return ret;
+        });
+        if (width && !height) {
+            height = 1;
+        }
+    } else {
+        width = value;
+        height = 1;
+    }
+    if (!width || !height) throw Error(`An error occurred while parsing the aspect ratio: ${value}`);
+
     return width / height;
 }
 
@@ -61,18 +71,9 @@ export function generateImageUrl({ src, width }: Pick<ImageLoaderProps, "src" | 
     return src.replace("$resizeWidth", String(width)).replace("$resizeHeight", String(Math.ceil(width / aspectRatio)));
 }
 
-type Props = Omit<NextImageProps, "loader"> &
-    (
-        | { layout?: "fixed" | "intrinsic" }
-        // The sizes prop must be specified for images with layout "fill" or "responsive", as recommended in the next/image documentation
-        // https://nextjs.org/docs/api-reference/next/image#sizes
-        | {
-              layout?: "fill" | "responsive";
-              sizes: string;
-          }
-    ) & { aspectRatio?: string };
+type Props = Omit<NextImageProps, "loader"> & { aspectRatio: string };
 
-export function Image({ aspectRatio = "16x9", ...nextImageProps }: Props): React.ReactElement {
+export function Image({ aspectRatio, ...nextImageProps }: Props) {
     const usedAspectRatio = parseAspectRatio(aspectRatio);
 
     return <NextImage loader={(loaderProps) => generateImageUrl(loaderProps, usedAspectRatio)} {...nextImageProps} />;

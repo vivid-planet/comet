@@ -6,11 +6,14 @@ import { gql } from "@apollo/client";
 export const productFormFragment = gql`
     fragment ProductForm on Product {
         title
+        status
         slug
         description
         type
         price
         inStock
+        availableSince
+        lastCheckedAt
         image
     }
 `;
@@ -46,8 +49,8 @@ export const createProductMutation = gql`
 `;
 
 export const updateProductMutation = gql`
-    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!, $lastUpdatedAt: DateTime) {
-        updateProduct(id: $id, input: $input, lastUpdatedAt: $lastUpdatedAt) {
+    mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+        updateProduct(id: $id, input: $input) {
             id
             updatedAt
             ...ProductForm

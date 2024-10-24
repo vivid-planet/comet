@@ -12,7 +12,6 @@ import {
 } from "@comet/blocks-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";

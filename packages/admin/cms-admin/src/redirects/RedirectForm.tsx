@@ -3,27 +3,24 @@ import {
     Field,
     FinalForm,
     FinalFormInput,
+    FinalFormSaveButton,
     FinalFormSelect,
     Loading,
     MainContent,
-    messages,
-    SaveButton,
-    SplitButton,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarTitleItem,
-    useStackApi,
+    useStackSwitchApi,
 } from "@comet/admin";
-import { useStackSwitchApi } from "@comet/admin/lib/stack/Switch";
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
-import { Card, CardContent, Grid, MenuItem } from "@mui/material";
-import { FORM_ERROR } from "final-form";
+import { MenuItem } from "@mui/material";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLRedirectSourceTypeValues } from "../graphql.generated";
 import { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";
 import { redirectDetailQuery } from "./RedirectForm.gql";
@@ -87,8 +84,9 @@ const useInitialValues = (id: string | undefined, linkBlock: BlockInterface): Fo
 export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element => {
     const intl = useIntl();
     const initialValues = useInitialValues(id, linkBlock);
-    const targetInput = React.useMemo(() => createFinalFormBlock(linkBlock), [linkBlock]);
+    const targetInput = useMemo(() => createFinalFormBlock(linkBlock), [linkBlock]);
     const client = useApolloClient();
+    const stackSwitchApi = useStackSwitchApi();
 
     const sourceTypeOptions = [
         {
@@ -100,15 +98,32 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
         },
     ];
 
-    const stackApi = useStackApi();
-    const stackSwitchApi = useStackSwitchApi();
-
-    const [submit, { loading: saving, error: saveError }] = useSubmitMutation(mode, id, linkBlock, scope);
-    const newlyCreatedRedirectId = React.useRef<string>();
+    const [submit] = useSubmitMutation(mode, id, linkBlock, scope);
 
     if (mode === "edit" && initialValues === undefined) {
         return <Loading behavior="fillPageHeight" />;
     }
+
+    const isRedirectSourceAvailable = async (newRedirectSource: string): Promise<boolean> => {
+        if (newRedirectSource === initialValues?.source) {
+            return true;
+        }
+
+        const { data } = await client.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
+            query: gql`
+                query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
+                    redirectSourceAvailable(scope: $scope, source: $source)
+                }
+            `,
+            variables: {
+                scope,
+                source: newRedirectSource,
+            },
+            fetchPolicy: "network-only",
+        });
+
+        return data.redirectSourceAvailable;
+    };
 
     const validateSource = async (value: string, allValues: GQLRedirectDetailFragment) => {
         if (allValues.sourceType === "path") {
@@ -118,20 +133,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                 return <FormattedMessage id="comet.pages.redirects.validate.path.invalidPathError" defaultMessage="Invalid path" />;
             }
 
-            const { data } = await client.query<GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables>({
-                query: gql`
-                    query RedirectSourceAvailable($scope: RedirectScopeInput!, $source: String!) {
-                        redirectSourceAvailable(scope: $scope, source: $source)
-                    }
-                `,
-                variables: {
-                    scope,
-                    source: value,
-                },
-                fetchPolicy: "network-only",
-            });
-
-            if (!data.redirectSourceAvailable && initialValues?.source !== undefined && initialValues.source !== value) {
+            if (!(await isRedirectSourceAvailable(value))) {
                 return (
                     <FormattedMessage
                         id="comet.redirects.form.validation.sourceTaken"
@@ -156,9 +158,10 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
 
     const handleSaveClick = async (values: FormValues) => {
         const response = await submit(values);
-
         if (response.data && "createRedirect" in response.data) {
-            newlyCreatedRedirectId.current = (response.data as GQLCreateRedirectMutation).createRedirect.id;
+            setTimeout(() => {
+                stackSwitchApi.activatePage("edit", (response.data as GQLCreateRedirectMutation).createRedirect.id);
+            });
         }
     };
 
@@ -175,112 +178,65 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
         >
             {({ values, pristine, hasValidationErrors, submitting, handleSubmit, validating }) => (
                 <>
-                    <Toolbar>
+                    <Toolbar scopeIndicator={<ContentScopeIndicator scope={scope} />}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>
                             {values.source ? values.source : <FormattedMessage id="comet.redirects.defaultTitle" defaultMessage="Redirect Detail" />}
                         </ToolbarTitleItem>
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SplitButton disabled={pristine || hasValidationErrors || submitting || validating} localStorageKey="editRedirectSave">
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={saving}
-                                    hasErrors={saveError != null}
-                                    type="submit"
-                                    onClick={async () => {
-                                        const submitResult = await handleSubmit();
-                                        const error = submitResult?.[FORM_ERROR];
-                                        if (!error && mode === "add" && newlyCreatedRedirectId.current) {
-                                            stackSwitchApi.activatePage("edit", newlyCreatedRedirectId.current);
-                                        }
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.save} />
-                                </SaveButton>
-
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={saving}
-                                    hasErrors={saveError != null}
-                                    onClick={async () => {
-                                        const submitResult = await handleSubmit();
-                                        const error = submitResult?.[FORM_ERROR];
-                                        if (!error) {
-                                            stackApi?.goBack();
-                                        }
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.saveAndGoBack} />
-                                </SaveButton>
-                            </SplitButton>
+                            <FinalFormSaveButton />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
-                        <Card>
-                            <CardContent>
-                                <Grid container spacing={4}>
-                                    <Grid item xs={3}>
-                                        <Field
-                                            label={intl.formatMessage({
-                                                id: "comet.pages.redirects.redirect.source.type",
-                                                defaultMessage: "Source type",
-                                            })}
-                                            name="sourceType"
-                                            required
-                                            fullWidth
-                                        >
-                                            {(props) => (
-                                                <FinalFormSelect {...props} fullWidth>
-                                                    {sourceTypeOptions.map((option) => (
-                                                        <MenuItem value={option.value} key={option.value}>
-                                                            {option.label}
-                                                        </MenuItem>
-                                                    ))}
-                                                </FinalFormSelect>
-                                            )}
-                                        </Field>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            label={intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" })}
-                                            name="source"
-                                            required
-                                            component={FinalFormInput}
-                                            // @TODO: FIX ts-type here: https://github.com/vivid-planet/comet-admin/blob/next/packages/admin/src/form/Field.tsx#L18
-                                            // type object doesnt work with "strict"
-                                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                            validate={validateSource as any}
-                                            fullWidth
-                                            placeholder="/example-path"
-                                            disableContentTranslation
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <Field
-                                            name="target"
-                                            label={intl.formatMessage({
-                                                id: "comet.pages.redirects.redirect.target",
-                                                defaultMessage: "Target",
-                                            })}
-                                            required
-                                            fullWidth
-                                            component={targetInput}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            label={intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" })}
-                                            name="comment"
-                                            component={FinalFormInput}
-                                            fullWidth
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </CardContent>
-                        </Card>
+                        <Field
+                            label={intl.formatMessage({
+                                id: "comet.pages.redirects.redirect.source.type",
+                                defaultMessage: "Source type",
+                            })}
+                            name="sourceType"
+                            required
+                            fullWidth
+                        >
+                            {(props) => (
+                                <FinalFormSelect {...props} fullWidth>
+                                    {sourceTypeOptions.map((option) => (
+                                        <MenuItem value={option.value} key={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </FinalFormSelect>
+                            )}
+                        </Field>
+                        <Field
+                            label={intl.formatMessage({ id: "comet.pages.redirects.redirect.source", defaultMessage: "Source" })}
+                            name="source"
+                            required
+                            component={FinalFormInput}
+                            // @TODO: FIX ts-type here: https://github.com/vivid-planet/comet-admin/blob/next/packages/admin/src/form/Field.tsx#L18
+                            // type object doesnt work with "strict"
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            validate={validateSource as any}
+                            fullWidth
+                            placeholder="/example-path"
+                            disableContentTranslation
+                        />
+                        <Field
+                            name="target"
+                            label={intl.formatMessage({
+                                id: "comet.pages.redirects.redirect.target",
+                                defaultMessage: "Target",
+                            })}
+                            required
+                            fullWidth
+                            component={targetInput}
+                        />
+                        <Field
+                            label={intl.formatMessage({ id: "comet.pages.redirects.redirect.comment", defaultMessage: "Comment" })}
+                            name="comment"
+                            component={FinalFormInput}
+                            fullWidth
+                        />
                     </MainContent>
                 </>
             )}

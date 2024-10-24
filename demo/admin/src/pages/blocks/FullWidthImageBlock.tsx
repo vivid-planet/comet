@@ -3,7 +3,6 @@ import { createCompositeBlock, createOptionalBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { customBlockCategory } from "@src/common/blocks/customBlockCategories";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 const FullWidthImageContentBlock = createOptionalBlock(RichTextBlock, {

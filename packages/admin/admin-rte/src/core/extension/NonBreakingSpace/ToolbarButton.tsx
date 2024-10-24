@@ -1,16 +1,16 @@
 import { RteNonBreakingSpace } from "@comet/admin-icons";
 import Tooltip from "@mui/material/Tooltip";
 import { EditorState, Modifier } from "draft-js";
-import * as React from "react";
+import { MouseEvent } from "react";
 import { FormattedMessage } from "react-intl";
 
-import ControlButton from "../../Controls/ControlButton";
+import { ControlButton } from "../../Controls/ControlButton";
 import { IControlProps } from "../../types";
 
 const NO_BREAK_SPACE_UNICODE_CHAR = 0x00a0;
 
-function ToolbarButton({ editorState, setEditorState }: IControlProps): React.ReactElement {
-    function handleClick(event: React.MouseEvent) {
+function ToolbarButton({ editorState, setEditorState }: IControlProps) {
+    function handleClick(event: MouseEvent) {
         event.preventDefault(); // Preserve focus in editor
 
         const currentContent = editorState.getCurrentContent();

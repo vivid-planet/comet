@@ -106,10 +106,16 @@ const config = {
                 indexName: "comet-dxp",
                 contextualSearch: true,
             },
+            mermaid: {
+                theme: { light: "neutral", dark: "dark" },
+            },
         }),
 
-    themes: ["@docusaurus/theme-live-codeblock"],
+    themes: ["@docusaurus/theme-live-codeblock", "@docusaurus/theme-mermaid"],
     plugins: ["./src/plugins/extend-webpack-config"],
+    markdown: {
+        mermaid: true,
+    },
 };
 
 module.exports = config;

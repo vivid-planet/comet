@@ -1,6 +1,6 @@
 import { isEmail, isURL } from "class-validator";
 
-const PHONE_NUMBER_REGEX = /^\+?[0-9\s]+$/;
+import { isPhoneNumber } from "./isPhoneNumber";
 
 export function isLinkTarget(value: string): boolean {
     if (value.toLowerCase().includes("javascript:")) {
@@ -10,7 +10,7 @@ export function isLinkTarget(value: string): boolean {
     } else if (value.startsWith("mailto:")) {
         return isEmail(value.slice(7));
     } else if (value.startsWith("tel:")) {
-        return PHONE_NUMBER_REGEX.test(value.slice(4));
+        return isPhoneNumber(value.slice(4));
     } else {
         return isURL(value, { require_protocol: true, require_valid_protocol: false });
     }

@@ -1,7 +1,16 @@
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 import { ContentTranslationServiceContext } from "./ContentTranslationServiceContext";
 
-export const ContentTranslationServiceProvider: React.FunctionComponent<ContentTranslationServiceContext> = ({ children, enabled, translate }) => {
-    return <ContentTranslationServiceContext.Provider value={{ enabled, translate }}>{children}</ContentTranslationServiceContext.Provider>;
+export const ContentTranslationServiceProvider = ({
+    children,
+    enabled,
+    showApplyTranslationDialog,
+    translate,
+}: PropsWithChildren<ContentTranslationServiceContext>) => {
+    return (
+        <ContentTranslationServiceContext.Provider value={{ enabled, showApplyTranslationDialog, translate }}>
+            {children}
+        </ContentTranslationServiceContext.Provider>
+    );
 };

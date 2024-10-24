@@ -1,10 +1,14 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    CrudMoreActionsMenu,
+    DataGridToolbar,
     FileIcon,
+    GridColDef,
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
+    RowActionsItem,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -14,10 +18,11 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { MoreVert } from "@mui/icons-material";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
+import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
@@ -231,6 +236,39 @@ storiesOf("stories/components/DataGrid", module)
             </Box>
         );
     })
+    .add("responsiveColumns", () => {
+        const dataGridProps = usePersistentColumnState("ResponsiveColumnsStory");
+        const theme = useTheme();
+
+        const columns: GridColDef[] = [
+            {
+                field: "id",
+                headerName: "ID",
+                width: 50,
+            },
+            {
+                field: "fullName",
+                headerName: "Full name",
+                flex: 1,
+                renderCell: ({ row }) => `${row.firstName} ${row.lastName}`,
+                visible: theme.breakpoints.down("md"),
+            },
+            {
+                field: "firstName",
+                headerName: "First name",
+                flex: 1,
+                visible: theme.breakpoints.up("md"),
+            },
+            {
+                field: "lastName",
+                headerName: "Last name",
+                flex: 1,
+                visible: theme.breakpoints.up("md"),
+            },
+        ];
+
+        return <DataGridPro sx={{ height: 200 }} rows={exampleRows} columns={columns} {...dataGridProps} />;
+    })
     .add("GridFilterButton", () => {
         function DemoToolbar() {
             return (
@@ -260,57 +298,64 @@ storiesOf("stories/components/DataGrid", module)
             {
                 field: "firstName",
                 headerName: "First name",
+                flex: 1,
             },
             {
                 field: "lastName",
                 headerName: "Last name",
+                flex: 1,
             },
             {
-                field: "action",
+                field: "actions",
                 headerName: "",
                 sortable: false,
                 filterable: false,
+                pinned: "right",
+                width: 52,
                 renderCell: (params) => {
                     return (
-                        <>
-                            <CrudContextMenu
-                                url={`http://example.com/people/${params.row.id}`}
-                                onPaste={async ({ input, client }) => {
-                                    /*
+                        <CrudContextMenu
+                            url={`http://example.com/people/${params.row.id}`}
+                            onPaste={async ({ input, client }) => {
+                                /*
                                     await client.mutate<GQLCreatePeopleMutation, GQLCreatePeopleMutationVariables>({
                                         mutation: createPeopleMutation,
                                         variables: { input },
                                     });
                                     */
-                                    alert(`insert ${JSON.stringify(input)}`);
-                                }}
-                                onDelete={async ({ client }) => {
-                                    /*
+                                alert(`insert ${JSON.stringify(input)}`);
+                            }}
+                            onDelete={async ({ client }) => {
+                                /*
                                     await client.mutate<GQLDeletePeopleMutation, GQLDeletePeopleMutationVariables>({
                                         mutation: deletePeopleMutation,
                                         variables: { id: params.row.id },
                                     });
                                     */
-                                    alert(`delete id ${params.row.id}`);
-                                }}
-                                refetchQueries={[]}
-                                copyData={() => {
-                                    //could also use GQL Fragment:
-                                    //return filter<GQLPeopleListFragment>(peopleFragment, params.row);
-                                    return {
-                                        firstName: params.row.firstName,
-                                        lastName: params.row.lastName,
-                                    };
-                                }}
-                            />
-                        </>
+                                alert(`delete id ${params.row.id}`);
+                            }}
+                            refetchQueries={[]}
+                            copyData={() => {
+                                //could also use GQL Fragment:
+                                //return filter<GQLPeopleListFragment>(peopleFragment, params.row);
+                                return {
+                                    firstName: params.row.firstName,
+                                    lastName: params.row.lastName,
+                                };
+                            }}
+                        >
+                            <RowActionsItem icon={<Favorite />} onClick={() => alert(`Doing a custom action on ${params.row.firstName}`)}>
+                                Custom action
+                            </RowActionsItem>
+                            <Divider />
+                        </CrudContextMenu>
                     );
                 },
             },
         ];
 
         return (
-            <Box sx={{ height: 400, width: "100%" }}>
+            <Box height={400}>
                 <DataGrid rows={exampleRows} columns={columns} />
             </Box>
         );
@@ -376,7 +421,7 @@ storiesOf("stories/components/DataGrid", module)
                     <ToolbarFillSpace />
                     <ToolbarActions>
                         <>
-                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVert />} color="info">
+                            <Button variant="text" ref={moreMenuRef} onClick={() => setShowMoreMenu(true)} endIcon={<MoreVertical />} color="info">
                                 More Actions
                             </Button>
                             <Menu
@@ -422,6 +467,79 @@ storiesOf("stories/components/DataGrid", module)
                         Toolbar: DemoToolbar,
                     }}
                 />
+            </Box>
+        );
+    })
+    .add("CrudMoreActionsMenu", () => {
+        return (
+            <Box sx={{ height: 300, width: "100%" }}>
+                <h2>Without selection:</h2>
+                <DataGridToolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarItem>
+                        <CrudMoreActionsMenu
+                            selectionSize={0}
+                            overallActions={[
+                                {
+                                    label: "Export to excel",
+                                    onClick: () => {},
+                                },
+                            ]}
+                            selectiveActions={[
+                                {
+                                    label: "Move",
+                                    onClick: () => {},
+                                    icon: <Move />,
+                                },
+                                {
+                                    label: "Delete",
+                                    onClick: () => {},
+                                    icon: <Delete />,
+                                    divider: true,
+                                },
+                                {
+                                    label: "Download",
+                                    onClick: () => {},
+                                    icon: <Download />,
+                                },
+                            ]}
+                        />
+                    </ToolbarItem>
+                </DataGridToolbar>
+
+                <h2>With selection:</h2>
+                <DataGridToolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarItem>
+                        <CrudMoreActionsMenu
+                            selectionSize={2}
+                            overallActions={[
+                                {
+                                    label: "Export to excel",
+                                    onClick: () => {},
+                                },
+                            ]}
+                            selectiveActions={[
+                                {
+                                    label: "Move",
+                                    onClick: () => {},
+                                    icon: <Move />,
+                                },
+                                {
+                                    label: "Delete",
+                                    onClick: () => {},
+                                    icon: <Delete />,
+                                    divider: true,
+                                },
+                                {
+                                    label: "Download",
+                                    onClick: () => {},
+                                    icon: <Download />,
+                                },
+                            ]}
+                        />
+                    </ToolbarItem>
+                </DataGridToolbar>
             </Box>
         );
     });

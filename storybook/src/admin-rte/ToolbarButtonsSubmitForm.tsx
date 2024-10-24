@@ -11,16 +11,14 @@ const { RteField } = createFinalFormRte();
  */
 function Story() {
     return (
-        <>
-            <Form
-                onSubmit={() => alert("submit")}
-                render={({ handleSubmit }) => (
-                    <form onSubmit={handleSubmit}>
-                        <Field name="text" component={RteField} />
-                    </form>
-                )}
-            />
-        </>
+        <Form
+            onSubmit={() => alert("submit")}
+            render={({ handleSubmit }) => (
+                <form onSubmit={handleSubmit}>
+                    <Field name="text" component={RteField} />
+                </form>
+            )}
+        />
     );
 }
 

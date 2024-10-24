@@ -1,5 +1,4 @@
 import { ChevronDown } from "@comet/admin-icons";
-import * as React from "react";
 import { PropsWithChildren } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
@@ -15,6 +14,9 @@ export interface FormSaveButtonProps {
     hasConflict?: boolean;
 }
 
+/**
+ * @deprecated Use `FinalFormSaveButton` instead as we are retiring the SplitButton pattern.
+ */
 export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", hasConflict = false }: PropsWithChildren<FormSaveButtonProps>) => {
     const stackApi = useStackApi();
     const form = useForm();

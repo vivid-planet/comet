@@ -1,4 +1,3 @@
-import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 
 import PageTreeSelect from "./PageTreeSelect";

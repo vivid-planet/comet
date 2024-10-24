@@ -3,7 +3,7 @@ import { IEditDialogApi, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
-import React, { useImperativeHandle, useRef } from "react";
+import { Dispatch, forwardRef, ForwardRefRenderFunction, SetStateAction, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { Align, FixedSizeList as List } from "react-window";
@@ -82,19 +82,19 @@ const PAGES_CACHE_QUERY = gql`
 // @TODO: Calculate dynamically
 const levelOffsetPx = 50;
 
-const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
+const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
     { pages, editDialogApi, toggleExpand, onSelectChanged, category, siteUrl },
     ref,
 ) => {
     const client = useApolloClient();
-    const newPageIds = React.useRef<string[]>([]);
+    const newPageIds = useRef<string[]>([]);
 
     const queries = client.getObservableQueries();
     const pagesQuery = Array.from(queries.values()).find((query) => query.queryName === "Pages") as
         | ObservableQuery<GQLPagesQuery, GQLPagesQueryVariables>
         | undefined;
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (pagesQuery) {
             client.cache.watch<GQLPagesQuery, GQLPagesQueryVariables>({
                 query: pagesQuery.query,
@@ -115,19 +115,19 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         }
     }, [client.cache, pagesQuery]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (newPageIds.current.length > 0) {
             const index = pages.findIndex((page) => newPageIds.current.includes(page.id));
             refList.current?.scrollToItem(index, "smart");
         }
     }, [pages]);
 
-    const pageTreeService = React.useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
+    const pageTreeService = useMemo(() => new PageTreeService(levelOffsetPx, pages), [pages]);
     const { scope } = useContentScope();
     const snackbarApi = useSnackbarApi();
 
     const debouncedSetHoverState = useDebouncedCallback(
-        (setHoverState: React.Dispatch<React.SetStateAction<DropInfo | undefined>>, newHoverState: DropInfo | undefined) => {
+        (setHoverState: Dispatch<SetStateAction<DropInfo | undefined>>, newHoverState: DropInfo | undefined) => {
             setHoverState((prevState) => {
                 if (isEqual(newHoverState, prevState)) {
                     return prevState;
@@ -139,11 +139,11 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         5,
     );
 
-    const selectedPages = React.useMemo(() => {
+    const selectedPages = useMemo(() => {
         return pages.filter((page) => page.selected);
     }, [pages]);
 
-    const moveByPosRequest = React.useCallback(
+    const moveByPosRequest = useCallback(
         // @TODO: handle path collisions when moving pages
         async ({ ids, parentId, position }: { ids: string[]; parentId: string | null; position: number }) => {
             await client.mutate({
@@ -220,7 +220,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         [client, scope, category],
     );
 
-    const moveByNeighbourRequest = React.useCallback(
+    const moveByNeighbourRequest = useCallback(
         async ({ ids, parentId, afterId, beforeId }: { ids: string[]; parentId: string | null; afterId: string | null; beforeId: string | null }) => {
             await client.mutate({
                 mutation: MOVE_PAGE_TREE_NODES_BY_NEIGHBOURS,
@@ -237,7 +237,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
         [client],
     );
 
-    const onDrop = React.useCallback(
+    const onDrop = useCallback(
         async (dragObject: PageTreeDragObject, dropTargetPage: PageTreePage, dropTarget: DropTarget, targetLevel: number) => {
             const selectedPageIds = selectedPages.map((page) => page.id);
             let pagesToMove: PageTreePage[];
@@ -370,7 +370,7 @@ const PageTree: React.ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = 
 const VIRTUAL_LIST_PADDING_SIZE = 24;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VirtualListPadder = React.forwardRef<any, any>(({ style, ...rest }, ref) => (
+const VirtualListPadder = forwardRef<any, any>(({ style, ...rest }, ref) => (
     <div
         ref={ref}
         style={{
@@ -387,7 +387,7 @@ function getLinkedPages(pages: PageTreePage[], index: number): [PageTreePage | u
     return [prevPage, pages[index], nextPage];
 }
 
-const PageTreeWithRef = React.forwardRef(PageTree);
+const PageTreeWithRef = forwardRef(PageTree);
 
 export { PageTreeWithRef as PageTree, PageTreeRefApi };
 

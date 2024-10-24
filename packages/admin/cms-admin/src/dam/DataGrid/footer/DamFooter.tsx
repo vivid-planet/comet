@@ -1,16 +1,19 @@
 import { Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
 const FooterBar = styled(Paper)`
     position: fixed;
-    z-index: 10;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
 
     min-height: 60px;
     border-radius: 4px;
+
+    ${({ theme }) => theme.breakpoints.up(1024)} {
+        z-index: ${({ theme }) => theme.zIndex.snackbar};
+    }
 
     background-color: ${({ theme }) => theme.palette.grey.A400};
     color: ${({ theme }) => theme.palette.grey.A100};
@@ -28,7 +31,7 @@ interface DamFooterProps {
     open: boolean;
 }
 
-export const DamFooter: React.FunctionComponent<DamFooterProps> = ({ children }) => {
+export const DamFooter = ({ children, open }: PropsWithChildren<DamFooterProps>) => {
     if (!open) {
         return null;
     }

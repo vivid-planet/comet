@@ -1,7 +1,4 @@
-import "@fontsource/roboto/100.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
+import "@fontsource-variable/roboto-flex/full.css";
 
 import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
@@ -9,13 +6,13 @@ import { createCometTheme } from "@comet/admin-theme";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
 import { select, withKnobs } from "@storybook/addon-knobs";
 import { addDecorator, addParameters } from "@storybook/react";
+import { Locale as DateFnsLocale } from "date-fns";
+import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import * as React from "react";
 import { IntlProvider } from "react-intl";
-import { de as deLocale, enUS as enLocale } from "date-fns/locale";
-import { Locale as DateFnsLocale } from "date-fns";
 
-import { previewGlobalStyles } from "./preview.styles";
 import { worker } from "./mocks/browser";
+import { previewGlobalStyles } from "./preview.styles";
 
 type LocaleKey = "de" | "en";
 
@@ -160,4 +157,4 @@ addParameters({
     },
 });
 
-worker.start()
+worker.start();

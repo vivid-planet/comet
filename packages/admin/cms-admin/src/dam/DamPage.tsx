@@ -1,9 +1,5 @@
-import { messages } from "@comet/admin";
-import { Domain } from "@comet/admin-icons";
-import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
-import { FormattedMessage } from "react-intl";
+import { ReactNode } from "react";
 import { useRouteMatch } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
@@ -11,39 +7,26 @@ import { ContentScopeInterface, useContentScope } from "../contentScope/Provider
 import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { DamScopeProvider } from "./config/DamScopeProvider";
 import { useDamConfig } from "./config/useDamConfig";
+import { useDamScope } from "./config/useDamScope";
 import { DamTable } from "./DamTable";
 
 type Props = {
-    renderContentScopeIndicator?: (scope: ContentScopeInterface) => React.ReactNode;
+    renderContentScopeIndicator?: (scope: ContentScopeInterface) => ReactNode;
     /**
      * @deprecated Use `additionalToolbarItems` option in `DamConfigProvider` instead
      */
-    additionalToolbarItems?: React.ReactNode;
+    additionalToolbarItems?: ReactNode;
 };
 
-const defaultRenderContentScopeIndicator = () => (
-    <ContentScopeIndicator variant="toolbar" global>
-        <ScopeIndicatorContent>
-            <Domain fontSize="small" />
-            <ScopeIndicatorLabelBold variant="body2">
-                <FormattedMessage {...messages.globalContentScope} />
-            </ScopeIndicatorLabelBold>
-        </ScopeIndicatorContent>
-    </ContentScopeIndicator>
-);
+const DefaultContentScopeIndicator = () => {
+    const damScope = useDamScope();
 
-const ScopeIndicatorLabelBold = styled(Typography)`
-    && {
-        font-weight: 400;
-        padding: 0 8px 0 4px;
-        text-transform: uppercase;
+    if (Object.keys(damScope).length > 0) {
+        return <ContentScopeIndicator scope={damScope} />;
+    } else {
+        return <ContentScopeIndicator global />;
     }
-`;
-
-const ScopeIndicatorContent = styled("div")`
-    display: flex;
-    align-items: center;
-`;
+};
 
 const DamTableWrapper = styled("div")`
     display: grid;
@@ -52,7 +35,7 @@ const DamTableWrapper = styled("div")`
     grid-template-rows: max-content;
 `;
 
-function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndicator, additionalToolbarItems }: Props): React.ReactElement {
+function DamPage({ renderContentScopeIndicator, additionalToolbarItems }: Props) {
     const { scope, match } = useContentScope();
     const routeMatch = useRouteMatch();
     const damRouteLocation = routeMatch.url.replace(match.url, "");
@@ -63,7 +46,7 @@ function DamPage({ renderContentScopeIndicator = defaultRenderContentScopeIndica
         <DamScopeProvider>
             <DamTableWrapper>
                 <DamTable
-                    contentScopeIndicator={renderContentScopeIndicator(scope)}
+                    contentScopeIndicator={renderContentScopeIndicator ? renderContentScopeIndicator(scope) : <DefaultContentScopeIndicator />}
                     additionalToolbarItems={damConfig.additionalToolbarItems ?? additionalToolbarItems}
                 />
             </DamTableWrapper>

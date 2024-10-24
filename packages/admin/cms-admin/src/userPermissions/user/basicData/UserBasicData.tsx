@@ -2,14 +2,11 @@ import { gql, useQuery } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, Loading, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables } from "./UserBasicData.generated";
 
-export const UserBasicData: React.FC<{
-    id: string;
-}> = ({ id }) => {
+export const UserPermissionsUserPageBasicDataPanel = ({ userId }: { userId: string }) => {
     const { data, error, loading } = useQuery<GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables>(
         gql`
             query UserBasicData($id: String!) {
@@ -17,12 +14,11 @@ export const UserBasicData: React.FC<{
                     id
                     name
                     email
-                    language
                 }
             }
         `,
         {
-            variables: { id },
+            variables: { id: userId },
         },
     );
 
@@ -63,13 +59,6 @@ export const UserBasicData: React.FC<{
                         component={FinalFormInput}
                         disabled={true}
                         label={<FormattedMessage id="comet.userPermissions.name" defaultMessage="Name" />}
-                    />
-                    <Field
-                        variant="horizontal"
-                        name="language"
-                        component={FinalFormInput}
-                        disabled={true}
-                        label={<FormattedMessage id="comet.userPermissions.language" defaultMessage="Language" />}
                     />
                 </FinalForm>
             </CardContent>

@@ -7,7 +7,7 @@ import { Transform } from "class-transformer";
 import { IsDate, IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 
 import { NewsContentBlock } from "../../blocks/news-content.block";
-import { NewsCategory } from "../../entities/news.entity";
+import { NewsCategory, NewsStatus } from "../../entities/news.entity";
 
 @InputType()
 export class NewsInput {
@@ -23,13 +23,18 @@ export class NewsInput {
     title: string;
 
     @IsNotEmpty()
+    @IsEnum(NewsStatus)
+    @Field(() => NewsStatus, { defaultValue: NewsStatus.Active })
+    status: NewsStatus;
+
+    @IsNotEmpty()
     @IsDate()
     @Field()
     date: Date;
 
     @IsNotEmpty()
     @IsEnum(NewsCategory)
-    @Field(() => NewsCategory, { defaultValue: NewsCategory.Awards })
+    @Field(() => NewsCategory)
     category: NewsCategory;
 
     @IsNotEmpty()

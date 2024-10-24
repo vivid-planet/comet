@@ -47,6 +47,7 @@ export default defineConfig(({ mode }) => {
             }),
         ],
         server: {
+            host: true,
             port: Number(process.env.ADMIN_PORT),
         },
         define: {

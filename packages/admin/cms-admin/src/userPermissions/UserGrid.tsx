@@ -1,29 +1,33 @@
 import { gql, useQuery } from "@apollo/client";
 import {
+    DataGridToolbar,
+    GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
-    StackSwitchApiContext,
-    Toolbar,
     ToolbarActions,
-    ToolbarAutomaticTitleItem,
+    ToolbarFillSpace,
     ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import React from "react";
+import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useIntl } from "react-intl";
 
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
-export const UserGrid: React.FC = () => {
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
+type Props = {
+    toolbarAction?: React.ReactNode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rowAction?: (params: GridRenderCellParams<any, GQLUserForGridFragment, any>) => React.ReactNode;
+    actionsColumnWidth?: number;
+};
+
+export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) => {
+    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserPermissionsUserGrid") };
     const intl = useIntl();
-    const stackApi = React.useContext(StackSwitchApiContext);
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -44,27 +48,18 @@ export const UserGrid: React.FC = () => {
             headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
         },
         {
-            field: "language",
-            flex: 0.5,
-            pinnable: false,
-            headerName: intl.formatMessage({ id: "comet.userPermissions.language", defaultMessage: "Language" }),
-            renderCell: ({ row }) => row.language.toUpperCase(),
-        },
-        {
             field: "actions",
             headerName: "",
             sortable: false,
-            pinnable: false,
             filterable: false,
-            renderCell: (params) => (
-                <IconButton
-                    onClick={() => {
-                        stackApi.activatePage("edit", params.id.toString());
-                    }}
-                >
-                    <Edit color="primary" />
-                </IconButton>
-            ),
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: actionsColumnWidth,
+            disableExport: true,
+            renderCell: (params) => {
+                return <> {rowAction && rowAction(params)}</>;
+            },
         },
     ];
 
@@ -82,7 +77,6 @@ export const UserGrid: React.FC = () => {
                 id
                 name
                 email
-                language
             }
         `,
         {
@@ -106,16 +100,20 @@ export const UserGrid: React.FC = () => {
             loading={loading}
             components={{
                 Toolbar: () => (
-                    <Toolbar>
-                        <ToolbarAutomaticTitleItem />
-                        <ToolbarActions>
-                            <ToolbarItem>
-                                <GridToolbarQuickFilter />
-                                <GridFilterButton />
-                            </ToolbarItem>
-                        </ToolbarActions>
-                    </Toolbar>
+                    <DataGridToolbar>
+                        <ToolbarItem>
+                            <GridToolbarQuickFilter />
+                        </ToolbarItem>
+                        <ToolbarItem>
+                            <GridFilterButton />
+                        </ToolbarItem>
+                        <ToolbarFillSpace />
+                        {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+                    </DataGridToolbar>
                 ),
+            }}
+            componentsProps={{
+                toolbar: { toolbarAction },
             }}
         />
     );
