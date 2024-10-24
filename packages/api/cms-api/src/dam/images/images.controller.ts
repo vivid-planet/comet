@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, forwardRef, Get, Headers, Inject, NotFoundException, Param, Res } from "@nestjs/common";
+import { BadRequestException, Controller, ForbiddenException, forwardRef, Get, Headers, Inject, NotFoundException, Param, Res } from "@nestjs/common";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 import mime from "mime";
@@ -60,7 +60,7 @@ export class ImagesController {
         }
 
         if (params.contentHash && file.contentHash !== params.contentHash) {
-            throw new Error("Content Hash mismatch!");
+            throw new BadRequestException("Content Hash mismatch!");
         }
 
         if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
@@ -90,7 +90,7 @@ export class ImagesController {
         }
 
         if (params.contentHash && file.contentHash !== params.contentHash) {
-            throw new Error("Content Hash mismatch!");
+            throw new BadRequestException("Content Hash mismatch!");
         }
 
         if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
@@ -116,7 +116,7 @@ export class ImagesController {
         }
 
         if (params.contentHash && file.contentHash !== params.contentHash) {
-            throw new Error("Content Hash mismatch!");
+            throw new BadRequestException("Content Hash mismatch!");
         }
 
         return this.getCroppedImage(file, params, accept, res);
@@ -136,7 +136,7 @@ export class ImagesController {
         }
 
         if (params.contentHash && file.contentHash !== params.contentHash) {
-            throw new Error("Content Hash mismatch!");
+            throw new BadRequestException("Content Hash mismatch!");
         }
 
         return this.getCroppedImage(file, params, accept, res);

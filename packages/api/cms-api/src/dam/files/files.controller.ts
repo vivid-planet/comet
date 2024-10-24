@@ -1,5 +1,6 @@
 import { BaseEntity } from "@mikro-orm/core";
 import {
+    BadRequestException,
     Body,
     Controller,
     ForbiddenException,
@@ -137,7 +138,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             if (contentHash && file.contentHash !== contentHash) {
-                throw new Error("Content Hash mismatch!");
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
@@ -161,7 +162,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             if (contentHash && file.contentHash !== contentHash) {
-                throw new Error("Content Hash mismatch!");
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
@@ -190,7 +191,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             if (contentHash && file.contentHash !== contentHash) {
-                throw new Error("Content Hash mismatch!");
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             res.setHeader("Content-Disposition", "attachment");
@@ -215,7 +216,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             if (contentHash && file.contentHash !== contentHash) {
-                throw new Error("Content Hash mismatch!");
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             return this.streamFile(file, res, { range });
