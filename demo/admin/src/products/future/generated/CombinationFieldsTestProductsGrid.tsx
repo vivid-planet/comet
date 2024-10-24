@@ -105,16 +105,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                return (
-                    <GridCellContent
-                        primaryText={row.title}
-                        secondaryText={
-                            row.category?.title ?? (
-                                <FormattedMessage id="product.titleAndCategory.secondaryText.empty" defaultMessage="No category set" />
-                            )
-                        }
-                    />
-                );
+                return <GridCellContent primaryText={row.title ?? "-"} secondaryText={row.category?.title ?? "-"} />;
             },
             flex: 1,
             minWidth: 150,
@@ -134,7 +125,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                 return (
                     <GridCellContent
                         primaryText={row.type == null ? primaryEmptyMessage : typePrimaryLabels[`${row.type}`] ?? row.type}
-                        secondaryText={row.type}
+                        secondaryText={row.type ?? "-"}
                     />
                 );
             },
