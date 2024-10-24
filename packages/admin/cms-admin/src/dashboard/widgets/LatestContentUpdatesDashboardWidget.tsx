@@ -2,7 +2,7 @@ import { GridColDef } from "@comet/admin";
 import { ArrowRight, Reload } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid, DataGridProps } from "@mui/x-data-grid";
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 
 import { DashboardWidgetRoot } from "./DashboardWidgetRoot";
@@ -38,13 +38,7 @@ export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
             headerName: intl.formatMessage({ id: "dashboard.latestContentUpdates.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
             flex: 1,
-            renderCell: ({ row }) => (
-                <>
-                    <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.updatedAt} />
-                </>
-            ),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
         },
         {
             ...disableFieldOptions,

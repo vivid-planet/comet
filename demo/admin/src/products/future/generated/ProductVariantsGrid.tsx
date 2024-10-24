@@ -6,6 +6,7 @@ import {
     DataGridToolbar,
     filterByFragment,
     GridColDef,
+    gridColumnTypes,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -106,11 +107,9 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
         { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
+            ...gridColumnTypes.date(intl),
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
-            type: "date",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             flex: 1,
             minWidth: 150,
         },
