@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Inject, Injectable } from "@nestjs/commo
 import { Reflector } from "@nestjs/core";
 import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
+import { getRequestFromExecutionContext } from "../../common/decorators/utils";
 import { ContentScopeService } from "../content-scope.service";
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
@@ -19,6 +20,14 @@ export class UserPermissionsGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
+
+        const requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
+
+        // Ignore field resolvers as they have no scopes and would overwrite the scopes of the root query.
+        if (!this.isResolvingGraphQLField(context)) {
+            const request = getRequestFromExecutionContext(context);
+            request.contentScopes = this.contentScopeService.getUniqueScopes(requiredContentScopes);
+        }
 
         if (this.getDecorator(context, "disableCometGuards")) return true;
 
@@ -38,7 +47,6 @@ export class UserPermissionsGuard implements CanActivate {
             // At least one permission is required
             return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission));
         } else {
-            const requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
             if (requiredContentScopes.length === 0)
                 throw new Error(
                     `Could not get content scope. Either pass a scope-argument or add an @AffectedEntity()-decorator or enable skipScopeCheck in the @RequiredPermission()-decorator of ${location}`,
