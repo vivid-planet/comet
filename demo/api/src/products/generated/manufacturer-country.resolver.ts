@@ -11,7 +11,7 @@ import { ManufacturerCountriesArgs } from "./dto/manufacturer-countries.args";
 import { PaginatedManufacturerCountries } from "./dto/paginated-manufacturer-countries";
 
 @Resolver(() => ManufacturerCountry)
-@RequiredPermission(["manufacturerCountries"], { skipScopeCheck: true })
+@RequiredPermission(["manufacturerCountries.read"], { skipScopeCheck: true })
 export class ManufacturerCountryResolver {
     constructor(
         private readonly entityManager: EntityManager,

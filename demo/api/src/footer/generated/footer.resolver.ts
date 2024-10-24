@@ -11,7 +11,7 @@ import { FooterInput } from "./dto/footer.input";
 import { FootersService } from "./footers.service";
 
 @Resolver(() => Footer)
-@RequiredPermission(["pageTree"])
+@RequiredPermission(["pageTree.read"])
 export class FooterResolver {
     constructor(
         private readonly entityManager: EntityManager,
@@ -30,6 +30,7 @@ export class FooterResolver {
     }
 
     @Mutation(() => Footer)
+    @RequiredPermission(["pageTree.update"])
     async saveFooter(
         @Args("scope", { type: () => FooterContentScope }) scope: FooterContentScope,
         @Args("input", { type: () => FooterInput }) input: FooterInput,
