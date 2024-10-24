@@ -18,7 +18,7 @@ import Dashboard from "@src/dashboard/Dashboard";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
-import { NewsPage } from "@src/news/generated/NewsPage";
+import { NewsPage } from "@src/news/NewsPage";
 import MainMenu from "@src/pages/mainMenu/MainMenu";
 import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
