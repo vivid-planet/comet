@@ -70,7 +70,7 @@ export class Product extends BaseEntity<Product, "id"> {}
 You might have to load multiple relations for nested data.
 :::
 
-It's also possible to pass a function which return the Content Scope to the `@ScopedEntity` decorator. This is necessary fo documents that get their scope from a `PageTreeNode`, here you can pass the helper service `PageTreeNodeDocumentEntityScopeService` provided by the library:
+It's also possible to pass a function which returns the content scope to the `@ScopedEntity` decorator. This is necessary for documents that get their scope from a `PageTreeNode`. Here you can pass the helper service `PageTreeNodeDocumentEntityScopeService` provided by the library:
 
 ```ts
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
