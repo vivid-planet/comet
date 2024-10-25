@@ -100,4 +100,6 @@ export const YouTubeVideoBlock: BlockInterface<YouTubeVideoBlockData, State, You
     },
 
     previewContent: (state) => [{ type: "text", content: state.youtubeIdentifier }],
+
+    extractTextContents: (state) => [state.previewImage.damFile?.altText ?? "", state.previewImage.damFile?.title ?? ""],
 };

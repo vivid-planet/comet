@@ -159,4 +159,13 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
             </BlocksFinalForm>
         );
     },
+
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.file?.altText) contents.push(state.file.altText);
+        if (state.file?.title) contents.push(state.file.title);
+
+        return contents;
+    },
 };
