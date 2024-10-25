@@ -59,6 +59,15 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
     },
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,
+    extractTextContents: (input) => {
+        console.log("input", input);
+        console.log("PageContentBlock.input2State(input.content) ", PageContentBlock.input2State(input.content));
+
+        return [
+            ...(PageContentBlock.extractTextContents?.(PageContentBlock.input2State(input.content)) ?? []),
+            ...(SeoBlock.extractTextContents?.(SeoBlock.input2State(input.seo)) ?? []),
+        ];
+    },
     ...createDocumentRootBlocksMethods(rootBlocks),
     ...createDocumentDependencyMethods({
         rootQueryName: "page",

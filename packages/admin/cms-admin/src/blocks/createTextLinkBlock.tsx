@@ -68,6 +68,10 @@ export function createTextLinkBlock({
         previewContent: (state) => [{ type: "text", content: state.text }],
 
         dynamicDisplayName: (state) => LinkBlock.dynamicDisplayName?.(state.link),
+
+        extractTextContents: (state) => {
+            return [state.text, ...(composedBlock?.extractTextContents?.(state) ?? [])];
+        },
     };
 
     return TextLinkBlock;

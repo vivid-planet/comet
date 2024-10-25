@@ -1,4 +1,5 @@
 import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
+import { stateToHtml } from "@comet/admin-rte/lib/core/translation/stateToHtml";
 import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
     BlockMapBuilder,
@@ -94,7 +95,6 @@ export interface RichTextBlockFactoryOptions {
 
 export type RichTextBlock = BlockInterface<RichTextBlockData, RichTextBlockState>;
 
-export const createRichTextBlock = (
     options: RichTextBlockFactoryOptions,
 ): BlockInterface<RichTextBlockData, RichTextBlockState, RichTextBlockInput> => {
     const CmsLinkToolbarButton = createCmsLinkToolbarButton({ link: options.link });
@@ -249,9 +249,20 @@ export const createRichTextBlock = (
         previewContent: (state) => {
             // get first text block
             const content = state.editorState.getCurrentContent();
+            console.log("previewContent ", content.getPlainText());
             const MAX_CHARS = 100;
 
             return content.hasText() ? [{ type: "text", content: content.getPlainText().slice(0, MAX_CHARS) }] : [];
+        },
+        extractTextContents: (state) => {
+            const content = state.editorState.getCurrentContent();
+            console.log("extractTextContents ", content.getPlainText());
+            // console.log(
+            //     "stateToHtml({ editorState: state.editorState, options: rteOptions }) ",
+            //     stateToHtml({ editorState: state.editorState, options: rteOptions }),
+            // );
+
+            return [stateToHtml({ editorState: state.editorState, options: rteOptions }).html];
         },
     };
     return RichTextBlock;

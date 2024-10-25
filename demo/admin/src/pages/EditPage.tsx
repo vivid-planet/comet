@@ -18,6 +18,7 @@ import { Button, IconButton } from "@mui/material";
 import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import { Page } from "@src/pages/Page";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
 
@@ -110,6 +111,8 @@ export const EditPage = ({ id, category }: Props) => {
     };
 
     let previewState = undefined;
+
+    console.log(pageState?.document ? Page.extractTextContents(pageState.document) : "");
 
     if (pageState && pageState.document) {
         previewState = PageContentBlock.createPreviewState(pageState.document.content, {
