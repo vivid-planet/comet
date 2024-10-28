@@ -547,8 +547,6 @@ type Mutation {
   createPageTreeNode(input: PageTreeNodeCreateInput!, scope: PageTreeNodeScopeInput!, category: String!): PageTreeNode!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   currentUserSignOut: String!
-  userPermissionsStartImpersonation(userId: String!): Boolean!
-  userPermissionsStopImpersonation: Boolean!
   userPermissionsCreatePermission(userId: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsUpdatePermission(id: String!, input: UserPermissionInput!): UserPermission!
   userPermissionsDeletePermission(id: ID!): Boolean!

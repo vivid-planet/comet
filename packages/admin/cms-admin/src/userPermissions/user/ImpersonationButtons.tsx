@@ -1,27 +1,13 @@
-import { gql, useApolloClient } from "@apollo/client";
 import { Button, ButtonProps } from "@mui/material";
+import Cookies from "js-cookie";
 import { FormattedMessage } from "react-intl";
 
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
-import {
-    GQLUserPermissionsStartImpersonationMutation,
-    GQLUserPermissionsStartImpersonationMutationVariables,
-    GQLUserPermissionsStopImpersonationMutation,
-} from "./ImpersonationButtons.generated";
 
 export const StopImpersonationButton = (buttonProps: ButtonProps) => {
-    const client = useApolloClient();
     const stopImpersonation = async () => {
-        const result = await client.mutate<GQLUserPermissionsStopImpersonationMutation>({
-            mutation: gql`
-                mutation UserPermissionsStopImpersonation {
-                    userPermissionsStopImpersonation
-                }
-            `,
-        });
-        if (result.data?.userPermissionsStopImpersonation) {
-            location.href = "/";
-        }
+        Cookies.remove("comet-impersonate-user-id");
+        location.href = "/";
     };
 
     return (
@@ -34,21 +20,9 @@ export const StopImpersonationButton = (buttonProps: ButtonProps) => {
 export const StartImpersonationButton = ({ userId }: { userId: string }) => {
     const currentUser = useCurrentUser();
     const isAllowed = useUserPermissionCheck();
-    const client = useApolloClient();
     const startImpersonation = async () => {
-        const result = await client.mutate<GQLUserPermissionsStartImpersonationMutation, GQLUserPermissionsStartImpersonationMutationVariables>({
-            mutation: gql`
-                mutation UserPermissionsStartImpersonation($userId: String!) {
-                    userPermissionsStartImpersonation(userId: $userId)
-                }
-            `,
-            variables: {
-                userId,
-            },
-        });
-        if (result.data?.userPermissionsStartImpersonation) {
-            location.href = "/";
-        }
+        Cookies.set("comet-impersonate-user-id", userId);
+        location.href = "/";
     };
 
     if (!isAllowed("impersonation")) return null;

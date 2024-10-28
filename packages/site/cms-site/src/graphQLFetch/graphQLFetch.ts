@@ -3,10 +3,9 @@ import { SitePreviewData } from "../sitePreview/SitePreviewUtils";
 type Fetch = typeof fetch;
 
 function graphQLHeaders(previewData?: SitePreviewData) {
-    const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = {
+    const { includeInvisibleBlocks, includeInvisiblePages } = {
         includeInvisiblePages: !!previewData,
         includeInvisibleBlocks: previewData && previewData.includeInvisible,
-        previewDamUrls: !!previewData,
     };
 
     const headers: Record<string, string> = {};
@@ -21,11 +20,6 @@ function graphQLHeaders(previewData?: SitePreviewData) {
     // authentication is required when this header is used
     if (includeInvisibleContentHeaderEntries.length > 0) {
         headers["x-include-invisible-content"] = includeInvisibleContentHeaderEntries.join(",");
-    }
-    // tells api to create preview image urls
-    // authentication is required when this header is used
-    if (previewDamUrls) {
-        headers["x-preview-dam-urls"] = "1";
     }
     return headers;
 }
