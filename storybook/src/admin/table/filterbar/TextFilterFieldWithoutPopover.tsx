@@ -9,7 +9,6 @@ import {
     useTableQueryFilter,
 } from "@comet/admin";
 import { Box, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
 
@@ -119,7 +118,11 @@ function Story({ tableData }: StoryProps) {
     );
 }
 
-storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with Text Field Search", () => {
+export default {
+    title: "@comet/admin/table/filterbar",
+};
+
+export const FilterbarWithTextFieldSearch = () => {
     const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
         return {
             id: i,
@@ -135,4 +138,6 @@ storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with Text Field
         };
     });
     return <Story tableData={randomTableData} />;
-});
+};
+
+FilterbarWithTextFieldSearch.storyName = "Filterbar with Text Field Search";

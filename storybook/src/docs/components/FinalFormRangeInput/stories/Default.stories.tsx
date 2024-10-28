@@ -1,10 +1,13 @@
 import { Field, FinalFormRangeInput } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Final Form Range Input/Default", module).add("Default", () => {
+export default {
+    title: "stories/components/Final Form Range Input/Default",
+};
+
+export const Default = () => {
     return (
         <Form
             onSubmit={(values) => {
@@ -30,4 +33,4 @@ storiesOf("stories/components/Final Form Range Input/Default", module).add("Defa
             )}
         />
     );
-});
+};

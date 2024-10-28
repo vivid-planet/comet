@@ -1,10 +1,13 @@
 import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
 import { Account, Language, Logout, Preview } from "@comet/admin-icons";
 import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/AppHeader/AppHeader", module).add("AppHeader", () => {
+export default {
+    title: "stories/components/AppHeader/AppHeader",
+};
+
+export const _AppHeader = () => {
     function AccountHeaderItem() {
         return (
             <Box display="flex" alignItems="center">
@@ -59,4 +62,6 @@ storiesOf("stories/components/AppHeader/AppHeader", module).add("AppHeader", () 
             </AppHeaderDropdown>
         </AppHeader>
     );
-});
+};
+
+_AppHeader.storyName = "AppHeader";

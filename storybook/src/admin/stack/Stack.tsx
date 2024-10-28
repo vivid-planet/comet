@@ -1,6 +1,5 @@
 import { Stack, StackBreadcrumbs } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -14,6 +13,9 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack", () => <Story />);
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _Stack = () => <Story />;

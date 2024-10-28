@@ -1,5 +1,4 @@
 import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useLocation } from "react-router";
 
@@ -36,6 +35,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Breadcrumbs with nested Tabs", () => <Story />);
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackBreadcrumbsWithNestedTabs = () => <Story />;
+
+StackBreadcrumbsWithNestedTabs.storyName = "Stack Breadcrumbs with nested Tabs";

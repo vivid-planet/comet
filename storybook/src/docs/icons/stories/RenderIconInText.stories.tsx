@@ -1,12 +1,17 @@
 import { Error } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/Icons/Render Icon in Text", module).add("Render Icon in Text", () => {
+export default {
+    title: "stories/Icons/Render Icon in Text",
+};
+
+export const RenderIconInText = () => {
     return (
         <Typography>
             This is an error <Error /> icon.
         </Typography>
     );
-});
+};
+
+RenderIconInText.storyName = "Render Icon in Text";

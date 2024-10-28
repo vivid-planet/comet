@@ -1,17 +1,22 @@
 import { Cookie } from "@comet/admin-icons";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/Icons/Sizes", module)
-    .add("Small Size Icon", () => {
-        return <Cookie fontSize="small" />;
-    })
-    .add("Default Size Icon", () => {
-        return <Cookie fontSize="medium" />;
-    })
-    .add("Large Size Icon", () => {
-        return <Cookie fontSize="large" />;
-    })
-    .add("Custom Size Icon", () => {
-        return <Cookie sx={{ fontSize: 100 }} />;
-    });
+export default {
+    title: "stories/Icons/Sizes",
+};
+
+export const SmallSizeIcon = () => {
+    return <Cookie fontSize="small" />;
+};
+
+export const DefaultSizeIcon = () => {
+    return <Cookie fontSize="medium" />;
+};
+
+export const LargeSizeIcon = () => {
+    return <Cookie fontSize="large" />;
+};
+
+export const CustomSizeIcon = () => {
+    return <Cookie sx={{ fontSize: 100 }} />;
+};

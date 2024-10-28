@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { FieldValidator } from "final-form";
 import * as React from "react";
 
@@ -144,6 +143,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Two level validation (warning and error)", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const TwoLevelValidationWarningAndError = () => <Story />;
+
+TwoLevelValidationWarningAndError.storyName = "Two level validation (warning and error)";

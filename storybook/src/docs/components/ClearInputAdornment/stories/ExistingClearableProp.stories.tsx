@@ -1,11 +1,14 @@
 import { Field, FinalFormInput, FinalFormSelect } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Grid, MenuItem } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Clear Input Adornment/Existing clearable prop", module).add("Existing clearable prop", () => {
+export default {
+    title: "stories/components/Clear Input Adornment/Existing clearable prop",
+};
+
+export const ExistingClearableProp = () => {
     const selectOptions = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
@@ -48,4 +51,6 @@ storiesOf("stories/components/Clear Input Adornment/Existing clearable prop", mo
             )}
         </Form>
     );
-});
+};
+
+ExistingClearableProp.storyName = "Existing clearable prop";

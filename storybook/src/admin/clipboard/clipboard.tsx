@@ -1,9 +1,12 @@
 import { Alert, readClipboardText, writeClipboardText } from "@comet/admin";
 import { Button, Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
-storiesOf("@comet/admin/clipboard", module).add("Clipboard fallback size limit", function () {
+export default {
+    title: "@comet/admin/clipboard",
+};
+
+export const ClipboardFallbackSizeLimit = function () {
     const writtenClipboardContent = "a".repeat(1024 * 1024 * 10); // 10MB
     const [readClipboardContent, setReadClipboardContent] = React.useState<string | undefined>();
 
@@ -43,4 +46,6 @@ storiesOf("@comet/admin/clipboard", module).add("Clipboard fallback size limit",
             )}
         </Grid>
     );
-});
+};
+
+ClipboardFallbackSizeLimit.storyName = "Clipboard fallback size limit";

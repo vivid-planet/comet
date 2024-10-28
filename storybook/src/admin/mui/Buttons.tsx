@@ -17,7 +17,6 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -311,6 +310,10 @@ export const Story: React.FC = () => {
     );
 };
 
-storiesOf("@comet/admin/mui", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Buttons", () => <Story />);
+export default {
+    title: "@comet/admin/mui",
+    decorators: [storyRouterDecorator()],
+    excludeStories: ["Story"],
+};
+
+export const Buttons = () => <Story />;

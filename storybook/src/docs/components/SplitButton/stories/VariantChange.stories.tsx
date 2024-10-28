@@ -1,9 +1,12 @@
 import { SplitButton } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Split Button/Variant Change", module).add("Variant change", () => {
+export default {
+    title: "stories/components/Split Button/Variant Change",
+};
+
+export const VariantChange = () => {
     return (
         <SplitButton color="primary">
             <Button
@@ -32,4 +35,6 @@ storiesOf("stories/components/Split Button/Variant Change", module).add("Variant
             </Button>
         </SplitButton>
     );
-});
+};
+
+VariantChange.storyName = "Variant change";

@@ -14,7 +14,6 @@ import {
 } from "@comet/admin";
 import { CometColor, Dashboard, Settings, Sort } from "@comet/admin-icons";
 import { Card, CardContent, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Route, Switch } from "react-router";
 
@@ -93,6 +92,12 @@ export const Story: React.FC = () => (
     </MasterLayout>
 );
 
-storiesOf("@comet/admin/mui", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Menu", () => <Story />, { layout: "fullscreen" });
+export default {
+    title: "@comet/admin/mui",
+    decorators: [storyRouterDecorator()],
+    excludeStories: ["Story"],
+};
+
+export const _Menu = () => <Story />;
+
+_Menu.parameters = { layout: "fullscreen" };

@@ -1,7 +1,6 @@
 import { Toolbar, ToolbarActions, ToolbarFillSpace } from "@comet/admin";
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Button, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
@@ -40,4 +39,10 @@ function Story() {
     );
 }
 
-storiesOf("comet-admin-rte", module).add("Rte, disable", () => <Story />);
+export default {
+    title: "comet-admin-rte",
+};
+
+export const RteDisable = () => <Story />;
+
+RteDisable.storyName = "Rte, disable";

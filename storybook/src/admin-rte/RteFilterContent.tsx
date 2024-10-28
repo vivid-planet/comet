@@ -7,7 +7,6 @@ import {
     Rte,
 } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { EditorState, EntityInstance } from "draft-js";
 import * as React from "react";
 
@@ -58,4 +57,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Rte, filter content", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteFilterContent = () => <Story />;
+
+RteFilterContent.storyName = "Rte, filter content";

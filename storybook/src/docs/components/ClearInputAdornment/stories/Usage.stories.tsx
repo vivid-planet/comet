@@ -1,10 +1,13 @@
 import { ClearInputAdornment, FieldContainer } from "@comet/admin";
 import { Cut } from "@comet/admin-icons";
 import { Grid, InputBase } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Clear Input Adornment/Usage", module).add("Usage", () => {
+export default {
+    title: "stories/components/Clear Input Adornment/Usage",
+};
+
+export const Usage = () => {
     const [inputText, setInputText] = React.useState<string>("Lorem ipsum");
 
     return (
@@ -38,4 +41,4 @@ storiesOf("stories/components/Clear Input Adornment/Usage", module).add("Usage",
             </Grid>
         </Grid>
     );
-});
+};

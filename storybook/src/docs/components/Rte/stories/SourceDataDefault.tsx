@@ -1,10 +1,13 @@
 import { makeRteApi, Rte } from "@comet/admin-rte";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const [useRteApi, { convertStateToRawContent }] = makeRteApi();
 
-storiesOf("stories/rte/Setup", module).add("sourde-data-default", () => {
+export default {
+    title: "stories/rte/Setup",
+};
+
+export const SourdeDataDefault = () => {
     const { editorState, setEditorState } = useRteApi({
         defaultValue: JSON.stringify({
             blocks: [
@@ -23,6 +26,8 @@ storiesOf("stories/rte/Setup", module).add("sourde-data-default", () => {
             <PrettyJson>{convertStateToRawContent(editorState)}</PrettyJson>
         </>
     );
-});
+};
+
+SourdeDataDefault.storyName = "sourde-data-default";
 
 const PrettyJson: React.FC<{ children: string }> = ({ children }) => <pre>{JSON.stringify(JSON.parse(children), null, 2)}</pre>;

@@ -1,6 +1,5 @@
 import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
@@ -58,4 +57,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Rte, maxBlocks set", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteMaxBlocksSet = () => <Story />;
+
+RteMaxBlocksSet.storyName = "Rte, maxBlocks set";

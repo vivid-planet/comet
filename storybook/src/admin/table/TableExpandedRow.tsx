@@ -2,7 +2,6 @@ import { ITableHeadRowProps, ITableRowProps, Table, TableBodyRow, TableColumns, 
 import { AddNoCircle } from "@comet/admin-icons";
 import { IconButton, TableCell } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 interface IRow {
@@ -77,4 +76,8 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module).add("Expanded Row", () => <Story />);
+export default {
+    title: "@comet/admin/table",
+};
+
+export const ExpandedRow = () => <Story />;

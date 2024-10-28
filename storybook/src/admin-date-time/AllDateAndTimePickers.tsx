@@ -1,7 +1,6 @@
 import { DateField, DateRange, DateRangeField, DateTimeField, TimeField, TimeRange, TimeRangeField } from "@comet/admin-date-time";
 import { Box, Card, CardContent } from "@mui/material";
 import { boolean } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -69,4 +68,8 @@ const Story = () => {
     );
 };
 
-storiesOf("@comet/admin-date-time", module).add("All Pickers", () => <Story />);
+export default {
+    title: "@comet/admin-date-time",
+};
+
+export const AllPickers = () => <Story />;

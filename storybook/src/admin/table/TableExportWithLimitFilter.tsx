@@ -20,7 +20,6 @@ import {
     VisibleType,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -142,6 +141,9 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Export With Limit Filter", () => <Story />);
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ExportWithLimitFilter = () => <Story />;

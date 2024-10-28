@@ -1,6 +1,5 @@
 import { IRteOptions, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const rteOptions: IRteOptions = {
@@ -27,4 +26,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Rte, sort block types", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteSortBlockTypes = () => <Story />;
+
+RteSortBlockTypes.storyName = "Rte, sort block types";

@@ -1,9 +1,12 @@
 import { FieldContainer } from "@comet/admin";
 import { InputBase } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/Form/Components", module).add("FieldContainer", () => {
+export default {
+    title: "stories/Form/Components",
+};
+
+export const _FieldContainer = () => {
     const [value, setValue] = React.useState<string>("");
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -33,4 +36,6 @@ storiesOf("stories/Form/Components", module).add("FieldContainer", () => {
             </FieldContainer>
         </form>
     );
-});
+};
+
+_FieldContainer.storyName = "FieldContainer";

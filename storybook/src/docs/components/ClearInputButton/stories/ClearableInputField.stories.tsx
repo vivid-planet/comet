@@ -1,9 +1,12 @@
 import { ClearInputButton } from "@comet/admin";
 import { Box, InputAdornment, InputBase, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Clear Input Button/Clearable Input Field", module).add("Clearable Input Field", () => {
+export default {
+    title: "stories/components/Clear Input Button/Clearable Input Field",
+};
+
+export const ClearableInputField = () => {
     const [inputText, setInputText] = React.useState<string>("");
 
     return (
@@ -22,4 +25,4 @@ storiesOf("stories/components/Clear Input Button/Clearable Input Field", module)
             />
         </Box>
     );
-});
+};

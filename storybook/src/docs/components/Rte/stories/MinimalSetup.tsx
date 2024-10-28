@@ -1,11 +1,16 @@
 import { makeRteApi, Rte } from "@comet/admin-rte";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const [useRteApi] = makeRteApi();
 
-storiesOf("stories/rte/Setup", module).add("minimal", () => {
+export default {
+    title: "stories/rte/Setup",
+};
+
+export const Minimal = () => {
     const { editorState, setEditorState } = useRteApi();
 
     return <Rte value={editorState} onChange={setEditorState} />;
-});
+};
+
+Minimal.storyName = "minimal";

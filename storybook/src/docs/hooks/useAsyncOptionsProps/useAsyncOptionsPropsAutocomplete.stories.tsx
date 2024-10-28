@@ -1,9 +1,12 @@
 import { Field, FinalFormAutocomplete, useAsyncOptionsProps } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/hooks/useAsyncOptionsPropsAutocomplete", module).add("Select", () => {
+export default {
+    title: "stories/hooks/useAsyncOptionsPropsAutocomplete",
+};
+
+export const Select = () => {
     interface Option {
         value: string;
         label: string;
@@ -39,4 +42,4 @@ storiesOf("stories/hooks/useAsyncOptionsPropsAutocomplete", module).add("Select"
             </Form>
         </div>
     );
-});
+};

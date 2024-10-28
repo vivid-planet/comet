@@ -1,5 +1,4 @@
 import { RouterTab, RouterTabs, Stack, StackPage, StackSwitch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -54,6 +53,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/tabs", module)
-    .addDecorator(storyRouterDecorator())
-    .add("RouterTabs in Stack", () => <Story />);
+export default {
+    title: "@comet/admin/tabs",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInStack = () => <Story />;
+
+RouterTabsInStack.storyName = "RouterTabs in Stack";

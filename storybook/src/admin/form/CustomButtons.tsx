@@ -2,7 +2,6 @@ import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Master } from "@comet/admin-icons";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useFormState } from "react-final-form";
 
@@ -65,6 +64,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("CustomButtons", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const _CustomButtons = () => <Story />;
+
+_CustomButtons.storyName = "CustomButtons";

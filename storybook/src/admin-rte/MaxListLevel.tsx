@@ -1,7 +1,6 @@
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
 import { number } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
@@ -133,4 +132,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Max list level", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const MaxListLevel = () => <Story />;
+
+MaxListLevel.storyName = "Max list level";

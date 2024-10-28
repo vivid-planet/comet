@@ -1,10 +1,13 @@
 import { AppHeader, AppHeaderDropdown, AppHeaderFillSpace } from "@comet/admin";
 import { Snips } from "@comet/admin-icons";
 import { Box, MenuItem, MenuList, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdown", () => {
+export default {
+    title: "stories/components/AppHeader/Dropdown",
+};
+
+export const _AppHeaderDropdown = () => {
     const [open, setOpen] = React.useState<boolean>(false);
 
     return (
@@ -40,4 +43,6 @@ storiesOf("stories/components/AppHeader/Dropdown", module).add("AppHeader Dropdo
             </AppHeader>
         </>
     );
-});
+};
+
+_AppHeaderDropdown.storyName = "AppHeader Dropdown";

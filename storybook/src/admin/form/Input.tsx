@@ -1,6 +1,5 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -25,4 +24,8 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module).add("Input", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+};
+
+export const Input = () => <Story />;

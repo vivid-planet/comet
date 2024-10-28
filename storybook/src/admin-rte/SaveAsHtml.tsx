@@ -1,6 +1,5 @@
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import * as React from "react";
@@ -45,4 +44,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte/save-as", module).add("Save as HTML", () => <Story />);
+export default {
+    title: "@comet/admin-rte/save-as",
+};
+
+export const SaveAsHtml = () => <Story />;
+
+SaveAsHtml.storyName = "Save as HTML";

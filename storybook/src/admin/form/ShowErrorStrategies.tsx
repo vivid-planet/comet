@@ -1,7 +1,6 @@
 import { Field, FinalForm, FinalFormContext, FinalFormInput } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -81,6 +80,9 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Show Error Strategies", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ShowErrorStrategies = () => <Story />;

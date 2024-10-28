@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -53,6 +52,9 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Scroll To Error Field", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ScrollToErrorField = () => <Story />;

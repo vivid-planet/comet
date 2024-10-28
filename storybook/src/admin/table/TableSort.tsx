@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -85,6 +84,9 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Sort", () => <Story />);
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const Sort = () => <Story />;

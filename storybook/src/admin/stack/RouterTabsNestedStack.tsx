@@ -1,6 +1,5 @@
 import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -41,6 +40,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("RouterTabs with nested Stack", () => <Story />);
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsWithNestedStack = () => <Story />;
+
+RouterTabsWithNestedStack.storyName = "RouterTabs with nested Stack";

@@ -1,6 +1,5 @@
 import { IMakeRteApiProps, makeRteApi, OnDebouncedContentChangeFn, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { convertFromRaw, convertToRaw, RawDraftContentState } from "draft-js";
 import * as React from "react";
 
@@ -65,4 +64,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte/save-as", module).add("Save as Raw DraftJs Object", () => <Story />);
+export default {
+    title: "@comet/admin-rte/save-as",
+};
+
+export const SaveAsRawDraftJsObject = () => <Story />;
+
+SaveAsRawDraftJsObject.storyName = "Save as Raw DraftJs Object";

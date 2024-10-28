@@ -1,5 +1,4 @@
 import { Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -36,6 +35,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(storyRouterDecorator())
-    .add("StackInForm", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackInForm = () => <Story />;
+
+StackInForm.storyName = "StackInForm";

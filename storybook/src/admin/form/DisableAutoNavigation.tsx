@@ -14,7 +14,6 @@ import {
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { Box, Card, CardContent, IconButton, Paper, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Switch } from "react-router";
 
@@ -115,7 +114,9 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Disable Auto Navigation", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+};
+
+export const DisableAutoNavigation = () => <Story />;

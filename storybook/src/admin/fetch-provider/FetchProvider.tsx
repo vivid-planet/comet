@@ -1,5 +1,4 @@
 import { createFetch, FetchProvider, useFetch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 function ExampleFetch() {
@@ -29,4 +28,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/fetch-provider", module).add("FetchProvider", () => <Story />);
+export default {
+    title: "@comet/admin/fetch-provider",
+};
+
+export const _FetchProvider = () => <Story />;
+
+_FetchProvider.storyName = "FetchProvider";

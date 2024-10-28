@@ -1,5 +1,4 @@
 import { makeRteApi, Rte } from "@comet/admin-rte";
-import { storiesOf } from "@storybook/react";
 import { stateToMarkdown } from "draft-js-export-markdown";
 import { stateFromMarkdown } from "draft-js-import-markdown";
 import * as React from "react";
@@ -13,7 +12,11 @@ const [useRteApi, { convertStateToRawContent }] = makeRteApi({
     },
 });
 
-storiesOf("stories/rte/Setup", module).add("source-data-markdown", () => {
+export default {
+    title: "stories/rte/Setup",
+};
+
+export const SourceDataMarkdown = () => {
     const { editorState, setEditorState } = useRteApi({
         defaultValue: `
 # Headline 1
@@ -30,4 +33,6 @@ This is markdown
             <pre>{convertStateToRawContent(editorState)}</pre>
         </>
     );
-});
+};
+
+SourceDataMarkdown.storyName = "source-data-markdown";

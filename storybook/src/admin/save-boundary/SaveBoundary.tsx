@@ -1,5 +1,4 @@
 import { Savable, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -55,6 +54,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/save-range", module)
-    .addDecorator(storyRouterDecorator())
-    .add("SaveBoundary", () => <Story />);
+export default {
+    title: "@comet/admin/save-range",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _SaveBoundary = () => <Story />;
+
+_SaveBoundary.storyName = "SaveBoundary";

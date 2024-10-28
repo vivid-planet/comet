@@ -1,5 +1,4 @@
 import { Link } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const Story: React.FC = () => {
@@ -10,4 +9,8 @@ const Story: React.FC = () => {
     );
 };
 
-storiesOf("@comet/admin/mui", module).add("Link", () => <Story />);
+export default {
+    title: "@comet/admin/mui",
+};
+
+export const _Link = () => <Story />;

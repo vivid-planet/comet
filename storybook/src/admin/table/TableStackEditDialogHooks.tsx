@@ -16,7 +16,6 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -129,7 +128,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Stack + EditDialog Hooks", () => <Story />);
+export default {
+    title: "@comet/admin/table",
+    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+};
+
+export const StackEditDialogHooks = () => <Story />;
+
+StackEditDialogHooks.storyName = "Stack + EditDialog Hooks";

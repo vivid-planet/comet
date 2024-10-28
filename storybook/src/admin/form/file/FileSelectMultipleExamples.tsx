@@ -1,7 +1,6 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
 import { Box, Grid, Typography } from "@mui/material";
 import { boolean } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
 type StoryProps = {
@@ -119,7 +118,11 @@ const MultipleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
     );
 };
 
-storiesOf("@comet/admin/form/File", module).add("File Select (multiple examples)", () => {
+export default {
+    title: "@comet/admin/form/File",
+};
+
+export const FileSelectMultipleExamples = () => {
     return (
         <div>
             <Grid container spacing={4}>
@@ -138,4 +141,6 @@ storiesOf("@comet/admin/form/File", module).add("File Select (multiple examples)
             </Grid>
         </div>
     );
-});
+};
+
+FileSelectMultipleExamples.storyName = "File Select (multiple examples)";

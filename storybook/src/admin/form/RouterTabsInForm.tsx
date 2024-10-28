@@ -1,5 +1,4 @@
 import { Field, FinalForm, FinalFormInput, RouterTab, RouterTabs } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useLocation } from "react-router";
 
@@ -45,6 +44,12 @@ function Story() {
         </>
     );
 }
-storiesOf("@comet/admin/form", module)
-    .addDecorator(storyRouterDecorator())
-    .add("RouterTabsInForm", () => <Story />);
+
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInForm = () => <Story />;
+
+RouterTabsInForm.storyName = "RouterTabsInForm";

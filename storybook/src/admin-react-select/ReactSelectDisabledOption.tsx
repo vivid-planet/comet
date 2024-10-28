@@ -1,7 +1,6 @@
 import { FormSection } from "@comet/admin";
 import { ReactSelect } from "@comet/admin-react-select";
 import { Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const options = [
@@ -22,4 +21,8 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-react-select", module).add("React Select Disabled Option", () => <Story />);
+export default {
+    title: "@comet/admin-react-select",
+};
+
+export const ReactSelectDisabledOption = () => <Story />;

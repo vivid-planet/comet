@@ -1,10 +1,13 @@
 import { CopyToClipboardButton, HoverActions, Table } from "@comet/admin";
 import { Download, Maximize } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/HoverActions", module).add("HoverActions", () => {
+export default {
+    title: "stories/components/HoverActions",
+};
+
+export const _HoverActions = () => {
     interface Row {
         id: number;
         foo: string;
@@ -61,4 +64,6 @@ storiesOf("stories/components/HoverActions", module).add("HoverActions", () => {
             ]}
         />
     );
-});
+};
+
+_HoverActions.storyName = "HoverActions";

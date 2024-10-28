@@ -1,5 +1,4 @@
 import { ForcePromptRoute, RouterPrompt } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -61,6 +60,11 @@ function App() {
     );
 }
 
-storiesOf("@comet/admin/router", module)
-    .addDecorator(storyRouterDecorator())
-    .add("ForcePromptRoute", () => <App />);
+export default {
+    title: "@comet/admin/router",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _ForcePromptRoute = () => <App />;
+
+_ForcePromptRoute.storyName = "ForcePromptRoute";

@@ -1,45 +1,55 @@
 import { SplitButton } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Split Button/One Child", module)
-    .add("One child", () => {
-        return (
-            <SplitButton variant="contained" color="primary">
-                <Button
-                    onClick={() => {
-                        alert("primary clicked");
-                    }}
-                >
-                    Primary Action
-                </Button>
-            </SplitButton>
-        );
-    })
-    .add("One child with select", () => {
-        return (
-            <SplitButton showSelectButton={true} variant="contained" color="primary">
-                <Button
-                    onClick={() => {
-                        alert("primary clicked");
-                    }}
-                >
-                    Primary Action
-                </Button>
-            </SplitButton>
-        );
-    })
-    .add("One child disabled", () => {
-        return (
-            <SplitButton disabled={true} variant="contained" color="primary">
-                <Button
-                    onClick={() => {
-                        alert("primary clicked");
-                    }}
-                >
-                    Primary Action
-                </Button>
-            </SplitButton>
-        );
-    });
+export default {
+    title: "stories/components/Split Button/One Child",
+};
+
+export const OneChild = () => {
+    return (
+        <SplitButton variant="contained" color="primary">
+            <Button
+                onClick={() => {
+                    alert("primary clicked");
+                }}
+            >
+                Primary Action
+            </Button>
+        </SplitButton>
+    );
+};
+
+OneChild.storyName = "One child";
+
+export const OneChildWithSelect = () => {
+    return (
+        <SplitButton showSelectButton={true} variant="contained" color="primary">
+            <Button
+                onClick={() => {
+                    alert("primary clicked");
+                }}
+            >
+                Primary Action
+            </Button>
+        </SplitButton>
+    );
+};
+
+OneChildWithSelect.storyName = "One child with select";
+
+export const OneChildDisabled = () => {
+    return (
+        <SplitButton disabled={true} variant="contained" color="primary">
+            <Button
+                onClick={() => {
+                    alert("primary clicked");
+                }}
+            >
+                Primary Action
+            </Button>
+        </SplitButton>
+    );
+};
+
+OneChildDisabled.storyName = "One child disabled";

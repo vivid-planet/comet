@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { createPagePagingActions, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { LaunchesPastPagePagingResult } from "../../../.storybook/mocks/handlers";
@@ -67,6 +66,9 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloStoryDecorator("/graphql"))
-    .add("Paging", () => <Story />);
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloStoryDecorator("/graphql")],
+};
+
+export const Paging = () => <Story />;

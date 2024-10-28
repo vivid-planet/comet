@@ -1,5 +1,4 @@
 import { SortDirection, Table, useTableQuerySort } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 interface IExampleRow {
@@ -48,4 +47,8 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module).add("Sort Clientside", () => <Story />);
+export default {
+    title: "@comet/admin/table",
+};
+
+export const SortClientside = () => <Story />;

@@ -12,7 +12,6 @@ import {
 } from "@comet/admin";
 import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
 import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -86,6 +85,12 @@ export function Story() {
     );
 }
 
-storiesOf("@comet/admin/mui", module)
-    .addDecorator(storyRouterDecorator())
-    .add("App Header", () => <Story />, { layout: "fullscreen" });
+export default {
+    title: "@comet/admin/mui",
+    decorators: [storyRouterDecorator()],
+    excludeStories: ["Story"],
+};
+
+export const _AppHeader = () => <Story />;
+
+_AppHeader.parameters = { layout: "fullscreen" };

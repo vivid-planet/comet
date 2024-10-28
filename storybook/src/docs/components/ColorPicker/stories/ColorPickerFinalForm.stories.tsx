@@ -1,11 +1,14 @@
 import { Field } from "@comet/admin";
 import { FinalFormColorPicker } from "@comet/admin-color-picker";
 import { Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Color Picker/Color Picker Final Form", module).add("Color Picker Final Form", () => {
+export default {
+    title: "stories/components/Color Picker/Color Picker Final Form",
+};
+
+export const ColorPickerFinalForm = () => {
     return (
         <Form initialValues={{ color1: "#00ff00", color2: "rgba(255, 127, 80, 0.75)" }} onSubmit={() => {}}>
             {() => (
@@ -54,4 +57,4 @@ storiesOf("stories/components/Color Picker/Color Picker Final Form", module).add
             )}
         </Form>
     );
-});
+};

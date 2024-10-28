@@ -2,10 +2,13 @@ import { FieldContainer } from "@comet/admin";
 import { ColorPicker, ColorPickerColorPreviewProps } from "@comet/admin-color-picker";
 import { StateFilled, StateRing, Warning } from "@comet/admin-icons";
 import { Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Color Picker/Color Picker Customized", module).add("Color Picker Customized", () => {
+export default {
+    title: "stories/components/Color Picker/Color Picker Customized",
+};
+
+export const ColorPickerCustomized = () => {
     const [colorOne, setColorOne] = React.useState<string | undefined>("#00ff00");
     const [colorTwo, setColorTwo] = React.useState<string | undefined>();
 
@@ -69,4 +72,4 @@ storiesOf("stories/components/Color Picker/Color Picker Customized", module).add
             </Grid>
         </Grid>
     );
-});
+};

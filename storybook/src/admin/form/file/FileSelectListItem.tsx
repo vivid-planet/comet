@@ -1,54 +1,62 @@
 import { FileSelectItem, FileSelectListItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
 import { boolean, select } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
+import { ComponentMeta } from "@storybook/react";
 import React from "react";
 
-storiesOf("@comet/admin/form/File", module)
-    .addDecorator((story) => (
-        <Card sx={{ maxWidth: 300 }}>
-            <CardContent>
-                <Stack spacing={4}>{story()}</Stack>
-            </CardContent>
-        </Card>
-    ))
-    .add("FileSelectListItem", () => {
-        const fileSize = 1.8 * 1024 * 1024; // 1.8 MB
+export default {
+    title: "@comet/admin/form/File",
 
-        const fileItems: Record<string, FileSelectItem> = {
-            "Valid File": { name: "Filename.xyz", size: fileSize },
-            "Long File Name": {
-                name: "This is a really long file name that should cause the text to be truncated and show a tooltip.png",
-                size: fileSize,
-            },
-            Loading: { name: "Filename.xyz", loading: true },
-            "Error (no details)": { name: "Filename.xyz", error: true },
-            "Error (with details)": { name: "Filename.xyz", error: "File too large" },
-            Skeleton: { loading: true },
-        };
+    decorators: [
+        (story) => (
+            <Card sx={{ maxWidth: 300 }}>
+                <CardContent>
+                    <Stack spacing={4}>{story()}</Stack>
+                </CardContent>
+            </Card>
+        ),
+    ],
+} as ComponentMeta<typeof FileSelectListItem>;
 
-        const filePreviewOptions = {
-            None: undefined,
-            "Generic Preview": true,
-            "Image Preview": "https://picsum.photos/756/756",
-        };
+export const _FileSelectListItem = () => {
+    const fileSize = 1.8 * 1024 * 1024; // 1.8 MB
 
-        const downloadMethods = ["No download", "Download function", "Download URL"];
+    const fileItems: Record<string, FileSelectItem> = {
+        "Valid File": { name: "Filename.xyz", size: fileSize },
+        "Long File Name": {
+            name: "This is a really long file name that should cause the text to be truncated and show a tooltip.png",
+            size: fileSize,
+        },
+        Loading: { name: "Filename.xyz", loading: true },
+        "Error (no details)": { name: "Filename.xyz", error: true },
+        "Error (with details)": { name: "Filename.xyz", error: "File too large" },
+        Skeleton: { loading: true },
+    };
 
-        const selectedFile = select("File Item", fileItems, fileItems["Valid File"]);
-        const showFilePreview = select("File Preview", filePreviewOptions, filePreviewOptions.None);
-        const downloadMethod = select("Can be downloaded", downloadMethods, downloadMethods[0]);
-        const canBeDeleted = boolean("Can Be Deleted", true);
-        const disabled = boolean("Disabled", false);
+    const filePreviewOptions = {
+        None: undefined,
+        "Generic Preview": true,
+        "Image Preview": "https://picsum.photos/756/756",
+    };
 
-        return (
-            <FileSelectListItem
-                file={selectedFile}
-                onClickDownload={downloadMethod === "Download function" ? () => alert("Downloading file") : undefined}
-                downloadUrl={downloadMethod === "Download URL" ? "https://example.com" : undefined}
-                onClickDelete={canBeDeleted ? () => alert("Delete") : undefined}
-                filePreview={showFilePreview}
-                disabled={disabled}
-            />
-        );
-    });
+    const downloadMethods = ["No download", "Download function", "Download URL"];
+
+    const selectedFile = select("File Item", fileItems, fileItems["Valid File"]);
+    const showFilePreview = select("File Preview", filePreviewOptions, filePreviewOptions.None);
+    const downloadMethod = select("Can be downloaded", downloadMethods, downloadMethods[0]);
+    const canBeDeleted = boolean("Can Be Deleted", true);
+    const disabled = boolean("Disabled", false);
+
+    return (
+        <FileSelectListItem
+            file={selectedFile}
+            onClickDownload={downloadMethod === "Download function" ? () => alert("Downloading file") : undefined}
+            downloadUrl={downloadMethod === "Download URL" ? "https://example.com" : undefined}
+            onClickDelete={canBeDeleted ? () => alert("Delete") : undefined}
+            filePreview={showFilePreview}
+            disabled={disabled}
+        />
+    );
+};
+
+_FileSelectListItem.storyName = "FileSelectListItem";

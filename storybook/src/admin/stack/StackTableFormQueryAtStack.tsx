@@ -21,7 +21,6 @@ import {
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { Grid, IconButton, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -190,7 +189,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Table Form Query at stack", () => <Story />);
+export default {
+    title: "@comet/admin/stack",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const StackTableFormQueryAtStack = () => <Story />;
+
+StackTableFormQueryAtStack.storyName = "Stack Table Form Query at stack";

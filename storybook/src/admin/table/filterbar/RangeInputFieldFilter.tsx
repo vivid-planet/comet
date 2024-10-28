@@ -1,6 +1,5 @@
 import { Field, FilterBar, FilterBarPopoverFilter, FinalFormRangeInput, Table, TableFilterFinalForm, useTableQueryFilter } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
 
@@ -59,7 +58,11 @@ function Story({ tableData }: StoryProps) {
     );
 }
 
-storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with Range Input Field Filter", () => {
+export default {
+    title: "@comet/admin/table/filterbar",
+};
+
+export const FilterbarWithRangeInputFieldFilter = () => {
     const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
         return {
             id: i,
@@ -67,4 +70,6 @@ storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with Range Inpu
         };
     });
     return <Story tableData={randomTableData} />;
-});
+};
+
+FilterbarWithRangeInputFieldFilter.storyName = "Filterbar with Range Input Field Filter";

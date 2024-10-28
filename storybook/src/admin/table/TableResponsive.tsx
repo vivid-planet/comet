@@ -1,6 +1,5 @@
 import { ITableRowProps, Table, TableBodyRow, TableColumns, useWindowSize } from "@comet/admin";
 import { TableCell } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 function ExampleTableRow({ columns, row, showSecondRow, rowProps }: ITableRowProps<IExampleRow> & { showSecondRow: boolean }) {
@@ -58,4 +57,8 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module).add("Responsive", () => <Story />);
+export default {
+    title: "@comet/admin/table",
+};
+
+export const Responsive = () => <Story />;

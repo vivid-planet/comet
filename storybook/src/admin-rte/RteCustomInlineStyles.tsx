@@ -1,7 +1,6 @@
 import { Favorite } from "@comet/admin-icons";
 import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
@@ -42,4 +41,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Custom inline styles", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const CustomInlineStyles = () => <Story />;
+
+CustomInlineStyles.storyName = "Custom inline styles";

@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput, Tab, Tabs } from "@comet/admin";
 import { Button, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -50,7 +49,9 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("Tabs", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const _Tabs = () => <Story />;

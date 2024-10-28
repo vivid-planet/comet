@@ -1,6 +1,5 @@
 import { IRteReadOnlyOptions, makeRteApi, RteReadOnly } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { exampleContent, PrintEditorState } from "./helper";
@@ -38,4 +37,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Rte readonly", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteReadonly = () => <Story />;
+
+RteReadonly.storyName = "Rte readonly";

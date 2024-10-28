@@ -1,7 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 export const updateUserMutation = gql`
@@ -42,7 +41,12 @@ interface InnerFormProps {
     id: number;
 }
 
-storiesOf("stories/form/Submit Mutation Best Practices", module).add("Submit Mutation Best Practices", () => {
+export default {
+    title: "stories/form/Submit Mutation Best Practices",
+    excludeStories: ["updateUserMutation"],
+};
+
+export const SubmitMutationBestPractices = () => {
     const InnerForm: React.VoidFunctionComponent<InnerFormProps> = ({ id }) => {
         const client = useApolloClient();
 
@@ -83,4 +87,4 @@ storiesOf("stories/form/Submit Mutation Best Practices", module).add("Submit Mut
             <InnerForm id={1} />
         </MockedProvider>
     );
-});
+};

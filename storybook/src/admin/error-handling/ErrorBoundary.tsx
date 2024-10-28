@@ -1,7 +1,6 @@
 import { Alert, ErrorBoundary } from "@comet/admin";
 import { Box, Card, CardContent, Link, Typography } from "@mui/material";
 import { boolean } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const ViewWithNoError: React.FunctionComponent = () => {
@@ -58,4 +57,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/error-handling/error-boundaries", module).add("ErrorBoundary", () => <Story />);
+export default {
+    title: "@comet/admin/error-handling/error-boundaries",
+};
+
+export const _ErrorBoundary = () => <Story />;
+
+_ErrorBoundary.storyName = "ErrorBoundary";

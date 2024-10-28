@@ -1,6 +1,5 @@
 import { Cookie, Error, ThreeDotSaving } from "@comet/admin-icons";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 function Story() {
@@ -72,4 +71,8 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-icons", module).add("Icon Usage", () => <Story />);
+export default {
+    title: "@comet/admin-icons",
+};
+
+export const IconUsage = () => <Story />;

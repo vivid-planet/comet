@@ -1,10 +1,13 @@
 import { Field, FinalFormRangeInput } from "@comet/admin";
 import { styled } from "@mui/material/styles";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Final Form Range Input/Different Slider Thumb", module).add("Different Slider Thumb", () => {
+export default {
+    title: "stories/components/Final Form Range Input/Different Slider Thumb",
+};
+
+export const DifferentSliderThumb = () => {
     const Thumb = styled("div")`
         && {
             margin-top: -9px;
@@ -46,4 +49,4 @@ storiesOf("stories/components/Final Form Range Input/Different Slider Thumb", mo
             )}
         />
     );
-});
+};

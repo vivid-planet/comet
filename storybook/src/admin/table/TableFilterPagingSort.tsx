@@ -16,7 +16,6 @@ import {
     useTableQuerySort,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as qs from "qs";
 import * as React from "react";
 
@@ -179,8 +178,11 @@ interface IResponseLinks {
     next?: string;
     last?: string;
 }
-storiesOf("@comet/admin/table", module)
-    .addDecorator(
+
+export default {
+    title: "@comet/admin/table",
+
+    decorators: [
         apolloRestStoryDecorator({
             responseTransformer: async (response) => {
                 const links: IResponseLinks = {};
@@ -200,5 +202,7 @@ storiesOf("@comet/admin/table", module)
                 };
             },
         }),
-    )
-    .add("Filter Paging Sort", () => <Story />);
+    ],
+};
+
+export const FilterPagingSort = () => <Story />;

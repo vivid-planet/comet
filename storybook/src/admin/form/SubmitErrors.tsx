@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput, FinalFormSaveCancelButtonsLegacy } from "@comet/admin";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
 
@@ -57,6 +56,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("SubmitErrors", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const SubmitErrors = () => <Story />;
+
+SubmitErrors.storyName = "SubmitErrors";

@@ -1,9 +1,12 @@
 import { SplitButton } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Split Button/Uncontrolled", module).add("Uncontrolled", () => {
+export default {
+    title: "stories/components/Split Button/Uncontrolled",
+};
+
+export const Uncontrolled = () => {
     return (
         <SplitButton variant="contained" color="primary">
             <Button
@@ -22,4 +25,4 @@ storiesOf("stories/components/Split Button/Uncontrolled", module).add("Uncontrol
             </Button>
         </SplitButton>
     );
-});
+};

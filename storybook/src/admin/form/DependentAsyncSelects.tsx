@@ -1,7 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { AsyncSelectField, FinalForm, OnChangeField } from "@comet/admin";
 import { Box } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
@@ -12,71 +11,76 @@ interface FormValues {
     product?: Product;
 }
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloStoryDecorator("/graphql"))
-    .add("Dependent async selects", function () {
-        const client = useApolloClient();
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloStoryDecorator("/graphql")],
+};
 
-        return (
-            <Box maxWidth={400}>
-                <FinalForm<FormValues>
-                    mode="add"
-                    onSubmit={() => {
-                        // Noop
-                    }}
-                >
-                    {({ values, form }) => (
-                        <>
-                            <AsyncSelectField
-                                name="manufacturer"
-                                loadOptions={async () => {
-                                    const { data } = await client.query<{ manufacturers: Manufacturer[] }>({
-                                        query: gql`
-                                            query Manufacturers {
-                                                manufacturers {
-                                                    id
-                                                    name
-                                                }
+export const DependentAsyncSelects = function () {
+    const client = useApolloClient();
+
+    return (
+        <Box maxWidth={400}>
+            <FinalForm<FormValues>
+                mode="add"
+                onSubmit={() => {
+                    // Noop
+                }}
+            >
+                {({ values, form }) => (
+                    <>
+                        <AsyncSelectField
+                            name="manufacturer"
+                            loadOptions={async () => {
+                                const { data } = await client.query<{ manufacturers: Manufacturer[] }>({
+                                    query: gql`
+                                        query Manufacturers {
+                                            manufacturers {
+                                                id
+                                                name
                                             }
-                                        `,
-                                    });
+                                        }
+                                    `,
+                                });
 
-                                    return data.manufacturers;
-                                }}
-                                getOptionLabel={(option) => option.name}
-                                label="Manufacturer"
-                                fullWidth
-                            />
-                            <AsyncSelectField
-                                name="product"
-                                loadOptions={async () => {
-                                    const { data } = await client.query<{ products: Product[] }>({
-                                        query: gql`
-                                            query Products($manufacturer: ID) {
-                                                products(manufacturer: $manufacturer) {
-                                                    id
-                                                    name
-                                                }
+                                return data.manufacturers;
+                            }}
+                            getOptionLabel={(option) => option.name}
+                            label="Manufacturer"
+                            fullWidth
+                        />
+                        <AsyncSelectField
+                            name="product"
+                            loadOptions={async () => {
+                                const { data } = await client.query<{ products: Product[] }>({
+                                    query: gql`
+                                        query Products($manufacturer: ID) {
+                                            products(manufacturer: $manufacturer) {
+                                                id
+                                                name
                                             }
-                                        `,
-                                        variables: { manufacturer: values.manufacturer?.id },
-                                    });
+                                        }
+                                    `,
+                                    variables: { manufacturer: values.manufacturer?.id },
+                                });
 
-                                    return data.products;
-                                }}
-                                getOptionLabel={(option) => option.name}
-                                label="Product"
-                                fullWidth
-                                disabled={!values.manufacturer}
-                            />
-                            <OnChangeField name="manufacturer">
-                                {() => {
-                                    form.change("product", undefined);
-                                }}
-                            </OnChangeField>
-                        </>
-                    )}
-                </FinalForm>
-            </Box>
-        );
-    });
+                                return data.products;
+                            }}
+                            getOptionLabel={(option) => option.name}
+                            label="Product"
+                            fullWidth
+                            disabled={!values.manufacturer}
+                        />
+                        <OnChangeField name="manufacturer">
+                            {() => {
+                                form.change("product", undefined);
+                            }}
+                        </OnChangeField>
+                    </>
+                )}
+            </FinalForm>
+        </Box>
+    );
+};
+
+DependentAsyncSelects.storyName = "Dependent async selects";

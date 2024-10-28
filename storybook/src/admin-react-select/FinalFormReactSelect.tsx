@@ -1,7 +1,6 @@
 import { Field, FinalFormInput, FormSection } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -41,4 +40,8 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-react-select", module).add("Final Form React Select", () => <Story />);
+export default {
+    title: "@comet/admin-react-select",
+};
+
+export const FinalFormReactSelect = () => <Story />;

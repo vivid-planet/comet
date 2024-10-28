@@ -1,6 +1,5 @@
 import { Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { dndProviderDecorator } from "../../dnd.decorator";
@@ -70,7 +69,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/table", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(dndProviderDecorator())
-    .add("DnD Order", () => <Story />);
+export default {
+    title: "@comet/admin/table",
+    decorators: [storyRouterDecorator(), dndProviderDecorator()],
+};
+
+export const DnDOrder = () => <Story />;
+
+DnDOrder.storyName = "DnD Order";

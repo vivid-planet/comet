@@ -1,6 +1,5 @@
 import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
@@ -44,4 +43,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Rte, customized", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteCustomized = () => <Story />;
+
+RteCustomized.storyName = "Rte, customized";

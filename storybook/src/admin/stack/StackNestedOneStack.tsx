@@ -1,5 +1,4 @@
 import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, SubRoute, useSubRoutePrefix } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 
@@ -64,6 +63,11 @@ function App() {
     );
 }
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Nested one Stack", () => <App />);
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackNestedOneStack = () => <App />;
+
+StackNestedOneStack.storyName = "Stack Nested one Stack";

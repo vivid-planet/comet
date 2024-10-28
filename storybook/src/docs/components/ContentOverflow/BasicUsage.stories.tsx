@@ -1,10 +1,13 @@
 import { ContentOverflow } from "@comet/admin";
 import { Box, Link, Paper, Typography, TypographyProps } from "@mui/material";
 import {} from "@mui/system";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/ContentOverflow", module).add("Basic usage", () => {
+export default {
+    title: "stories/components/ContentOverflow",
+};
+
+export const BasicUsage = () => {
     const DummyParagraph = (p: TypographyProps) => (
         <Typography variant="body2" {...p}>
             Curabitur blandit tempus porttitor. Nullam id dolor{" "}
@@ -47,4 +50,6 @@ storiesOf("stories/components/ContentOverflow", module).add("Basic usage", () =>
             </ContentOverflow>
         </Paper>
     );
-});
+};
+
+BasicUsage.storyName = "Basic usage";

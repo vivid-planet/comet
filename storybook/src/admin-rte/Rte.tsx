@@ -1,6 +1,5 @@
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
@@ -28,4 +27,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Rte, minimal configuration", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteMinimalConfiguration = () => <Story />;
+
+RteMinimalConfiguration.storyName = "Rte, minimal configuration";

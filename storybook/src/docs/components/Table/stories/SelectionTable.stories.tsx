@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@comet/admin";
 import { Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
@@ -52,56 +51,58 @@ const ExampleForm = (props: ExampleFormProps) => {
     );
 };
 
-storiesOf("stories/components/Table/Selection Table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("Selection Table", () => {
-        // step 1
-        const [SelectionRoute, selection, selectionApi] = useSelectionRoute();
-        const { tableData, api, loading, error } = useTableQuery<UserQueryData, never>()(usersQuery, {
-            resolveTableData: (data) => ({
-                data: data.users,
-                totalCount: data.users.length,
-            }),
-        });
+export default {
+    title: "stories/components/Table/Selection Table",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
 
-        // eslint-disable-next-line react/jsx-no-useless-fragment
-        if (!tableData) return <></>;
-
-        return (
-            <SelectionRoute>
-                {/* step 2 */}
-                <TableQuery api={api} loading={loading} error={error}>
-                    <Grid container spacing={4}>
-                        <Grid item>
-                            <Table
-                                {...tableData}
-                                // step 3
-                                selectionApi={selectionApi}
-                                selectedId={selection.id}
-                                selectable={true}
-                                columns={[
-                                    {
-                                        name: "name",
-                                        header: "Name",
-                                    },
-                                ]}
-                            />
-                        </Grid>
-                        <Grid item xs={4}>
-                            {/* step 4 */}
-                            <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
-                                {(user, { selectionMode: selectedSelectionMode }) => {
-                                    if (user === undefined) {
-                                        return null;
-                                    }
-
-                                    return <ExampleForm mode={selectedSelectionMode} user={user} />;
-                                }}
-                            </Selected>
-                        </Grid>
-                    </Grid>
-                </TableQuery>
-            </SelectionRoute>
-        );
+export const SelectionTable = () => {
+    // step 1
+    const [SelectionRoute, selection, selectionApi] = useSelectionRoute();
+    const { tableData, api, loading, error } = useTableQuery<UserQueryData, never>()(usersQuery, {
+        resolveTableData: (data) => ({
+            data: data.users,
+            totalCount: data.users.length,
+        }),
     });
+
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    if (!tableData) return <></>;
+
+    return (
+        <SelectionRoute>
+            {/* step 2 */}
+            <TableQuery api={api} loading={loading} error={error}>
+                <Grid container spacing={4}>
+                    <Grid item>
+                        <Table
+                            {...tableData}
+                            // step 3
+                            selectionApi={selectionApi}
+                            selectedId={selection.id}
+                            selectable={true}
+                            columns={[
+                                {
+                                    name: "name",
+                                    header: "Name",
+                                },
+                            ]}
+                        />
+                    </Grid>
+                    <Grid item xs={4}>
+                        {/* step 4 */}
+                        <Selected selectionMode={selection.mode} selectedId={selection.id} rows={tableData.data}>
+                            {(user, { selectionMode: selectedSelectionMode }) => {
+                                if (user === undefined) {
+                                    return null;
+                                }
+
+                                return <ExampleForm mode={selectedSelectionMode} user={user} />;
+                            }}
+                        </Selected>
+                    </Grid>
+                </Grid>
+            </TableQuery>
+        </SelectionRoute>
+    );
+};

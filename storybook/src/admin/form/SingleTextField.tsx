@@ -1,7 +1,6 @@
 import { FieldContainer } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 function Story() {
@@ -72,4 +71,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module).add("Single TextField", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+};
+
+export const SingleTextField = () => <Story />;
+
+SingleTextField.storyName = "Single TextField";

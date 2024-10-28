@@ -1,7 +1,6 @@
 import { FinalForm, MainContent, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, TextField, useEditDialog } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -64,37 +63,42 @@ function ProductDetail({ id: stackSelectionId }: { id: string }) {
     );
 }
 
-storiesOf("@comet/admin/edit-dialog", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Nested Edit Dialog in Stack", function Story() {
-        return (
-            <Stack topLevelTitle="Products">
-                <StackBreadcrumbs />
-                <StackSwitch initialPage="grid">
-                    <StackPage name="grid">
-                        <MainContent fullHeight disablePadding>
-                            <DataGrid
-                                columns={[
-                                    { field: "id", headerName: "ID", width: 90 },
-                                    { field: "name", headerName: "Name", flex: 1 },
-                                    {
-                                        field: "actions",
-                                        headerName: "",
-                                        renderCell: ({ row }) => (
-                                            <StackLink pageName="detail" payload={row.id}>
-                                                Edit
-                                            </StackLink>
-                                        ),
-                                    },
-                                ]}
-                                rows={products}
-                            />
-                        </MainContent>
-                    </StackPage>
-                    <StackPage name="detail" title="Edit product detail">
-                        {(productId) => <ProductDetail id={productId} />}
-                    </StackPage>
-                </StackSwitch>
-            </Stack>
-        );
-    });
+export default {
+    title: "@comet/admin/edit-dialog",
+    decorators: [storyRouterDecorator()],
+};
+
+export const NestedEditDialogInStack = function Story() {
+    return (
+        <Stack topLevelTitle="Products">
+            <StackBreadcrumbs />
+            <StackSwitch initialPage="grid">
+                <StackPage name="grid">
+                    <MainContent fullHeight disablePadding>
+                        <DataGrid
+                            columns={[
+                                { field: "id", headerName: "ID", width: 90 },
+                                { field: "name", headerName: "Name", flex: 1 },
+                                {
+                                    field: "actions",
+                                    headerName: "",
+                                    renderCell: ({ row }) => (
+                                        <StackLink pageName="detail" payload={row.id}>
+                                            Edit
+                                        </StackLink>
+                                    ),
+                                },
+                            ]}
+                            rows={products}
+                        />
+                    </MainContent>
+                </StackPage>
+                <StackPage name="detail" title="Edit product detail">
+                    {(productId) => <ProductDetail id={productId} />}
+                </StackPage>
+            </StackSwitch>
+        </Stack>
+    );
+};
+
+NestedEditDialogInStack.storyName = "Nested Edit Dialog in Stack";

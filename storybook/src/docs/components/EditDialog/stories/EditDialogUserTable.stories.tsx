@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput, ISelectionApi, Table, Toolbar, ToolbarFillSpace, ToolbarItem, useEditDialog } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { v4 as uuid } from "uuid";
 
@@ -45,73 +44,76 @@ interface UserFormProps {
     selectionApi: ISelectionApi;
 }
 
-storiesOf("stories/components/EditDialog/Edit Dialog User Table", module)
-    .addDecorator(editDialogDecorator())
-    .add("Edit Dialog User Table", () => {
-        const UserForm: React.VoidFunctionComponent<UserFormProps> = ({ selectionApi, id, mode = "add" }) => {
-            const selection = { id, mode };
-            const user = selection.mode === "edit" ? getUser(selection.id as string) : undefined;
+export default {
+    title: "stories/components/EditDialog/Edit Dialog User Table",
+    decorators: [editDialogDecorator()],
+};
 
-            return (
-                <FinalForm<{ name: string }>
-                    mode={selection.mode}
-                    onSubmit={async ({ name }) => {
-                        if (selection.mode === "edit") {
-                            updateUser(selection.id as string, name);
-                        } else {
-                            addUser(name);
-                        }
-                    }}
-                    onAfterSubmit={() => {
-                        selectionApi.handleDeselect();
-                    }}
-                    initialValues={user}
-                >
-                    <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
-                </FinalForm>
-            );
-        };
-
-        const [EditDialog, { id: selectedId, mode: selectionMode }, editDialogApi, selectionApi] = useEditDialog();
-        const users = getUsers();
+export const EditDialogUserTable = () => {
+    const UserForm: React.VoidFunctionComponent<UserFormProps> = ({ selectionApi, id, mode = "add" }) => {
+        const selection = { id, mode };
+        const user = selection.mode === "edit" ? getUser(selection.id as string) : undefined;
 
         return (
-            <>
-                <Toolbar>
-                    <ToolbarFillSpace />
-                    <ToolbarItem>
-                        <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
-                            Add User
-                        </Button>
-                    </ToolbarItem>
-                </Toolbar>
-                <Table
-                    data={users}
-                    totalCount={users.length}
-                    columns={[
-                        { name: "name", header: "Name" },
-                        {
-                            name: "edit",
-                            cellProps: {
-                                align: "right",
-                            },
-                            render: (row) => {
-                                return (
-                                    <Button
-                                        onClick={() => {
-                                            editDialogApi.openEditDialog(row.id);
-                                        }}
-                                    >
-                                        Change Name
-                                    </Button>
-                                );
-                            },
-                        },
-                    ]}
-                />
-                <EditDialog>
-                    <UserForm mode={selectionMode} id={selectedId} selectionApi={selectionApi} />
-                </EditDialog>
-            </>
+            <FinalForm<{ name: string }>
+                mode={selection.mode}
+                onSubmit={async ({ name }) => {
+                    if (selection.mode === "edit") {
+                        updateUser(selection.id as string, name);
+                    } else {
+                        addUser(name);
+                    }
+                }}
+                onAfterSubmit={() => {
+                    selectionApi.handleDeselect();
+                }}
+                initialValues={user}
+            >
+                <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
+            </FinalForm>
         );
-    });
+    };
+
+    const [EditDialog, { id: selectedId, mode: selectionMode }, editDialogApi, selectionApi] = useEditDialog();
+    const users = getUsers();
+
+    return (
+        <>
+            <Toolbar>
+                <ToolbarFillSpace />
+                <ToolbarItem>
+                    <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
+                        Add User
+                    </Button>
+                </ToolbarItem>
+            </Toolbar>
+            <Table
+                data={users}
+                totalCount={users.length}
+                columns={[
+                    { name: "name", header: "Name" },
+                    {
+                        name: "edit",
+                        cellProps: {
+                            align: "right",
+                        },
+                        render: (row) => {
+                            return (
+                                <Button
+                                    onClick={() => {
+                                        editDialogApi.openEditDialog(row.id);
+                                    }}
+                                >
+                                    Change Name
+                                </Button>
+                            );
+                        },
+                    },
+                ]}
+            />
+            <EditDialog>
+                <UserForm mode={selectionMode} id={selectedId} selectionApi={selectionApi} />
+            </EditDialog>
+        </>
+    );
+};

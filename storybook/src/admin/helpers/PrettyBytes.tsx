@@ -1,7 +1,6 @@
 import { PrettyBytes } from "@comet/admin";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const Content = styled("div")`
@@ -136,7 +135,11 @@ function CustomMaximumFractionDigits() {
     );
 }
 
-storiesOf("@comet/admin/helpers", module).add("PrettyBytes", () => {
+export default {
+    title: "@comet/admin/helpers",
+};
+
+export const _PrettyBytes = () => {
     return (
         <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -150,4 +153,6 @@ storiesOf("@comet/admin/helpers", module).add("PrettyBytes", () => {
             </Grid>
         </Grid>
     );
-});
+};
+
+_PrettyBytes.storyName = "PrettyBytes";

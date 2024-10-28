@@ -1,6 +1,5 @@
 import { BreadcrumbItem, Stack, StackBreadcrumbs, useStackApi } from "@comet/admin";
 import { select } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -50,10 +49,13 @@ function Story() {
     return <StackBreadcrumbs />;
 }
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Breadcrumbs", () => (
-        <Stack topLevelTitle="Stack">
-            <Story />
-        </Stack>
-    ));
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _StackBreadcrumbs = () => (
+    <Stack topLevelTitle="Stack">
+        <Story />
+    </Stack>
+);

@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, useEditDialog } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -107,7 +106,11 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/edit-dialog", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Edit Dialog with Form in Stack", () => <Story />);
+export default {
+    title: "@comet/admin/edit-dialog",
+    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+};
+
+export const EditDialogWithFormInStack = () => <Story />;
+
+EditDialogWithFormInStack.storyName = "Edit Dialog with Form in Stack";

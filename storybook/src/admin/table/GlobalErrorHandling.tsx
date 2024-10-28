@@ -1,6 +1,5 @@
 import { Table, TableQuery, useTableQuery } from "@comet/admin";
 import { text } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import gql from "graphql-tag";
 import * as React from "react";
 
@@ -68,7 +67,9 @@ const Story: React.FunctionComponent = () => {
     );
 };
 
-storiesOf("@comet/admin/table/globalErrorHandling", module)
-    .addDecorator(apolloSwapiStoryDecorator())
-    .addDecorator(errorDialogStoryProviderDecorator())
-    .add("Global Error Handling", () => <Story />);
+export default {
+    title: "@comet/admin/table/globalErrorHandling",
+    decorators: [apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()],
+};
+
+export const GlobalErrorHandling = () => <Story />;

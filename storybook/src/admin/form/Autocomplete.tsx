@@ -1,6 +1,5 @@
 import { Field, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -119,4 +118,10 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/form", module).add("Autocomplete / Async Select", () => <Story />);
+export default {
+    title: "@comet/admin/form",
+};
+
+export const AutocompleteAsyncSelect = () => <Story />;
+
+AutocompleteAsyncSelect.storyName = "Autocomplete / Async Select";

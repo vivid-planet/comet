@@ -1,6 +1,5 @@
 import { IMakeRteApiProps, IRteApiProps, IRteOptions, IRteRef, LinkDecorator, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { convertFromRaw, convertToRaw } from "draft-js";
 import * as React from "react";
 
@@ -123,4 +122,12 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin-rte", module).add("Rte, all options", () => <Story />);
+export default {
+    title: "@comet/admin-rte",
+
+    excludeStories: ["ContentFormat", "defaultContent", "makeApiOptions", "apiOptions", "rteOptions"],
+};
+
+export const RteAllOptions = () => <Story />;
+
+RteAllOptions.storyName = "Rte, all options";
