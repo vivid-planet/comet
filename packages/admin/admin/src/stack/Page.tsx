@@ -1,8 +1,9 @@
-import { Component, ReactNode } from "react";
+import { Component, ComponentType, ReactNode } from "react";
+import { FormattedMessage } from "react-intl";
 
 export interface IStackPageProps {
     name: string;
-    title?: ReactNode;
+    title?: string | ComponentType<typeof FormattedMessage>;
     children: ((id: string) => ReactNode) | ReactNode;
 }
 
