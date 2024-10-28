@@ -1,7 +1,7 @@
 import { Args, Context, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Request } from "express";
-import { PaginatedResponseFactory } from "src/common/pagination/paginated-response.factory";
 
+import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { DisablePermissionCheck, RequiredPermission } from "./decorators/required-permission.decorator";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
