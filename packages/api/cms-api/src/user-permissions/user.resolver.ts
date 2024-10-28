@@ -1,11 +1,14 @@
-import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Context, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Request } from "express";
+import { PaginatedResponseFactory } from "src/common/pagination/paginated-response.factory";
 
 import { DisablePermissionCheck, RequiredPermission } from "./decorators/required-permission.decorator";
-import { UserPermissionsPaginatedUserList } from "./dto/list-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermissionsService } from "./user-permissions.service";
+
+@ObjectType()
+class PaginatedUserList extends PaginatedResponseFactory.create(User) {}
 
 @Resolver(() => User)
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
@@ -17,21 +20,10 @@ export class UserResolver {
         return this.userService.getUser(id);
     }
 
-    @Query(() => UserPermissionsPaginatedUserList)
-    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<UserPermissionsPaginatedUserList> {
+    @Query(() => PaginatedUserList)
+    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<PaginatedUserList> {
         const [users, totalCount] = await this.userService.findUsers(args);
-        return new UserPermissionsPaginatedUserList(
-            await Promise.all(
-                users.map(async (user) => {
-                    return {
-                        ...user,
-                        permissionsCount: (await this.userService.getPermissions(user)).length,
-                        contentScopesCount: (await this.userService.getContentScopes(user)).length,
-                    };
-                }),
-            ),
-            totalCount,
-        );
+        return new PaginatedUserList(users, totalCount, args);
     }
 
     @Mutation(() => Boolean)
@@ -46,5 +38,15 @@ export class UserResolver {
     async userPermissionsStopImpersonation(@Context() request: Request): Promise<boolean> {
         this.userService.unsetImpersonatedUser(request);
         return true;
+    }
+
+    @ResolveField(() => Number)
+    async permissionsCount(@Parent() user: User): Promise<number> {
+        return (await this.userService.getPermissions(user)).length;
+    }
+
+    @ResolveField(() => Number)
+    async contentScopesCount(@Parent() user: User): Promise<number> {
+        return (await this.userService.getContentScopes(user)).length;
     }
 }

@@ -151,7 +151,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                 availablePermissions: userPermissionsAvailablePermissions
                 availableContentScopes: userPermissionsAvailableContentScopes
             }
-            fragment UserForGrid on UserPermissionsListUser {
+            fragment UserForGrid on User {
                 id
                 name
                 email

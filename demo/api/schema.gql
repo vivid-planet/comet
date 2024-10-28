@@ -6,6 +6,8 @@ type User {
   id: String!
   name: String!
   email: String!
+  permissionsCount: Float!
+  contentScopesCount: Float!
 }
 
 type CurrentUserPermission {
@@ -197,16 +199,8 @@ type FileUpload {
   imageUrl(resizeWidth: Int!): String
 }
 
-type UserPermissionsListUser {
-  id: String!
-  name: String!
-  email: String!
-  permissionsCount: Float!
-  contentScopesCount: Float!
-}
-
 type UserPermissionsPaginatedUserList {
-  nodes: [UserPermissionsListUser!]!
+  nodes: [User!]!
   totalCount: Int!
 }
 
