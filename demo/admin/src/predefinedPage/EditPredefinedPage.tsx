@@ -66,8 +66,8 @@ export const EditPredefinedPage = ({ id }: Props) => {
         <FinalForm
             mode="edit"
             initialValues={{ type: data?.page?.document?.__typename === "PredefinedPage" ? data.page.document.type : undefined }}
-            onSubmit={() => {
-                mutation({ variables: { pageId: id, input: { type: "News" }, attachedPageTreeNodeId: id } });
+            onSubmit={({ type }) => {
+                mutation({ variables: { pageId: id, input: { type }, attachedPageTreeNodeId: id } });
             }}
         >
             {({ pristine, hasValidationErrors, submitting, handleSubmit, hasSubmitErrors }) => {
