@@ -2,8 +2,8 @@ type User {
   id: String!
   name: String!
   email: String!
-  permissionsCount: Float!
-  contentScopesCount: Float!
+  permissionsCount: Int!
+  contentScopesCount: Int!
 }
 
 type CurrentUserPermission {
