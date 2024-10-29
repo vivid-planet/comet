@@ -1,4 +1,4 @@
-import { Args, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
@@ -25,12 +25,12 @@ export class UserResolver {
         return new PaginatedUserList(users, totalCount, args);
     }
 
-    @ResolveField(() => Number)
+    @ResolveField(() => Int)
     async permissionsCount(@Parent() user: User): Promise<number> {
         return (await this.userService.getPermissions(user)).length;
     }
 
-    @ResolveField(() => Number)
+    @ResolveField(() => Int)
     async contentScopesCount(@Parent() user: User): Promise<number> {
         return (await this.userService.getContentScopes(user)).length;
     }
