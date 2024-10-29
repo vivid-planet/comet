@@ -1,6 +1,6 @@
 import { createOneOfBlock, ExternalLinkBlock } from "@comet/blocks-api";
 import { NestFactory } from "@nestjs/core";
-import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Query, Resolver } from "@nestjs/graphql";
+import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType } from "@nestjs/graphql";
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
 
@@ -13,7 +13,6 @@ import {
     DependentsResolverFactory,
     DocumentInterface,
     FileImagesResolver,
-    FileUpload,
     InternalLinkBlock,
     PageTreeNodeBase,
     PageTreeNodeCategory,
@@ -81,15 +80,6 @@ async function generateSchema(): Promise<void> {
     const File = createFileEntity({ Folder });
     const FileDependentsResolver = DependentsResolverFactory.create(File);
 
-    // Required to force the generation of the FileUpload type in the schema
-    @Resolver(() => FileUpload)
-    class MockFileUploadResolver {
-        @Query(() => FileUpload)
-        fileUploadForTypesGenerationDoNotUse(): void {
-            // Noop
-        }
-    }
-
     const schema = await gqlSchemaFactory.create([
         BuildsResolver,
         BuildTemplatesResolver,
@@ -109,7 +99,6 @@ async function generateSchema(): Promise<void> {
         UserResolver,
         UserPermissionResolver,
         UserContentScopesResolver,
-        MockFileUploadResolver,
         AzureAiTranslatorResolver,
         GenerateAltTextResolver,
         GenerateImageTitleResolver,

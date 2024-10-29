@@ -380,8 +380,8 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
-  fileUploadForTypesGenerationDoNotUse: FileUpload!
   azureAiTranslate(input: AzureAiTranslationInput!): String!
+  fileUpload(id: ID!): FileUpload!
   sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
 }
 
