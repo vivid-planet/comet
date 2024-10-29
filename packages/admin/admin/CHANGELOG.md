@@ -1,5 +1,12 @@
 # @comet/admin
 
+## 6.17.11
+
+### Patch Changes
+
+-   246cea5ee: Fix a bug where the `disabled` prop would not be passed to the children of `Field`
+    -   @comet/admin-icons@6.17.11
+
 ## 6.17.10
 
 ### Patch Changes
