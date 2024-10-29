@@ -1,9 +1,12 @@
 import { CopyToClipboardButton } from "@comet/admin";
 import { Card, CardContent, Grid, Typography, useTheme } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/CopyToClipboardButton", module).add("CopyToClipboardButton", () => {
+export default {
+    title: "stories/components/CopyToClipboardButton",
+};
+
+export const _CopyToClipboardButton = () => {
     const {
         typography: { fontWeightMedium },
     } = useTheme();
@@ -32,4 +35,6 @@ storiesOf("stories/components/CopyToClipboardButton", module).add("CopyToClipboa
             ))}
         </Grid>
     );
-});
+};
+
+_CopyToClipboardButton.storyName = "CopyToClipboardButton";

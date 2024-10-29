@@ -13,13 +13,17 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+};
+
+export const EditDialogHooks = () => {
     interface IEditFormProps {
         row?: IExampleRow;
         mode: "edit" | "add";
@@ -125,9 +129,6 @@ function Story() {
             </MainContent>
         </>
     );
-}
+};
 
-storiesOf("@comet/admin/table", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloRestStoryDecorator())
-    .add("EditDialog Hooks", () => <Story />);
+EditDialogHooks.storyName = "EditDialog Hooks";

@@ -1,9 +1,12 @@
 import { Tooltip } from "@comet/admin";
 import { Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Tooltip", module).add("TooltipVariant", () => {
+export default {
+    title: "stories/components/Tooltip",
+};
+
+export const TooltipVariant = () => {
     return (
         <Grid container justifyContent="center" spacing={4}>
             <Grid item>
@@ -28,4 +31,6 @@ storiesOf("stories/components/Tooltip", module).add("TooltipVariant", () => {
             </Grid>
         </Grid>
     );
-});
+};
+
+TooltipVariant.storyName = "TooltipVariant";

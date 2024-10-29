@@ -1,12 +1,16 @@
 import { gql } from "@apollo/client";
 import { createPagePagingActions, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { LaunchesPastPagePagingResult } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloStoryDecorator("/graphql")],
+};
+
+export const Paging = () => {
     const pagingApi = useTableQueryPaging(1);
     const { tableData, api, loading, error } = useTableQuery<
         { launchesPastPagePaging: LaunchesPastPagePagingResult },
@@ -65,8 +69,4 @@ function Story() {
             </MainContent>
         </TableQuery>
     );
-}
-
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloStoryDecorator("/graphql"))
-    .add("Paging", () => <Story />);
+};

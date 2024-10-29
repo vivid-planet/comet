@@ -1,10 +1,13 @@
 import { ChevronDown } from "@comet/admin-icons";
 import { Box, Card, CardContent, Chip, Grid, Stack, Typography } from "@mui/material";
 import { boolean, select } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin/mui",
+};
+
+export const _Chip = () => {
     return (
         <Stack spacing={4}>
             <Card>
@@ -324,6 +327,4 @@ function Story() {
             </Card>
         </Stack>
     );
-}
-
-storiesOf("@comet/admin/mui", module).add("Chip", () => <Story />);
+};

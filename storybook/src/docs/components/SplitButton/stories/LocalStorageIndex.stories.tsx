@@ -1,9 +1,12 @@
 import { SplitButton } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Split Button/Persistent Index", module).add("Local Storage Index", () => {
+export default {
+    title: "stories/components/Split Button/Persistent Index",
+};
+
+export const LocalStorageIndex = () => {
     return (
         <SplitButton variant="contained" color="secondary" localStorageKey="StorylocalStorageIndexSplitButton">
             <Button
@@ -29,4 +32,4 @@ storiesOf("stories/components/Split Button/Persistent Index", module).add("Local
             </Button>
         </SplitButton>
     );
-});
+};

@@ -1,9 +1,12 @@
 import { SplitButton } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Split Button/Persistent Index", module).add("Session Storage Index", () => {
+export default {
+    title: "stories/components/Split Button/Persistent Index",
+};
+
+export const SessionStorageIndex = () => {
     return (
         <SplitButton localStorageKey="StorySessionStorageIndexSplitButton" storage={window.sessionStorage} variant="contained" color="secondary">
             <Button
@@ -29,4 +32,4 @@ storiesOf("stories/components/Split Button/Persistent Index", module).add("Sessi
             </Button>
         </SplitButton>
     );
-});
+};

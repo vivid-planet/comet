@@ -1,12 +1,16 @@
 import { gql } from "@apollo/client";
 import { createOffsetLimitPagingAction, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { LaunchesPastResult } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloStoryDecorator("/graphql")],
+};
+
+export const PagingOffsetLimit = () => {
     const pagingApi = useTableQueryPaging(0);
     const limit = 10;
     const { tableData, api, loading, error } = useTableQuery<
@@ -60,8 +64,4 @@ function Story() {
             </MainContent>
         </TableQuery>
     );
-}
-
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloStoryDecorator("/graphql"))
-    .add("Paging Offset Limit", () => <Story />);
+};

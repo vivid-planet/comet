@@ -12,12 +12,16 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator()],
+};
+
+export const FormWithRouterTabs = () => {
     return (
         <Stack topLevelTitle="Root Stack">
             <RouterTabs>
@@ -73,8 +77,6 @@ function Story() {
             </RouterTabs>
         </Stack>
     );
-}
+};
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Form with router tabs", () => <Story />);
+FormWithRouterTabs.storyName = "Form with router tabs";

@@ -1,10 +1,13 @@
 import { Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Grid, IconButton } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Tooltip", module).add("BasicTooltip", () => {
+export default {
+    title: "stories/components/Tooltip",
+};
+
+export const BasicTooltip = () => {
     return (
         <Grid container justifyContent="center" spacing={4}>
             <Grid item>
@@ -31,4 +34,6 @@ storiesOf("stories/components/Tooltip", module).add("BasicTooltip", () => {
             </Grid>
         </Grid>
     );
-});
+};
+
+BasicTooltip.storyName = "BasicTooltip";

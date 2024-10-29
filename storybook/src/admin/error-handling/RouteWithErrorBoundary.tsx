@@ -1,6 +1,5 @@
 import { Alert, MasterLayout, Menu, MenuItemRouterLink, RouteWithErrorBoundary } from "@comet/admin";
 import { Card, CardContent, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 
@@ -40,7 +39,12 @@ function MasterMenu() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/error-handling/error-boundaries",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _RouteWithErrorBoundary = () => {
     return (
         <MasterLayout menuComponent={MasterMenu}>
             <Switch>
@@ -52,8 +56,6 @@ function App() {
             </Switch>
         </MasterLayout>
     );
-}
+};
 
-storiesOf("@comet/admin/error-handling/error-boundaries", module)
-    .addDecorator(storyRouterDecorator())
-    .add("RouteWithErrorBoundary", () => <App />);
+_RouteWithErrorBoundary.storyName = "RouteWithErrorBoundary";

@@ -9,7 +9,6 @@ import {
     useTableQueryFilter,
 } from "@comet/admin";
 import { Box, Divider, FormControlLabel, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
 
@@ -88,7 +87,11 @@ function Story({ tableData }: StoryProps) {
     );
 }
 
-storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with Combined Fields Filter (Price/Delivery)", () => {
+export default {
+    title: "@comet/admin/table/filterbar",
+};
+
+export const FilterbarWithCombinedFieldsFilterPriceDelivery = () => {
     const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
         return {
             id: i,
@@ -97,4 +100,6 @@ storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with Combined F
         };
     });
     return <Story tableData={randomTableData} />;
-});
+};
+
+FilterbarWithCombinedFieldsFilterPriceDelivery.storyName = "Filterbar with Combined Fields Filter (Price/Delivery)";

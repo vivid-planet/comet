@@ -1,9 +1,12 @@
 import { SplitButton } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Split Button/Override Popover Props", module).add("Override Popover Props", () => {
+export default {
+    title: "stories/components/Split Button/Override Popover Props",
+};
+
+export const OverridePopoverProps = () => {
     return (
         <SplitButton
             variant="contained"
@@ -34,4 +37,4 @@ storiesOf("stories/components/Split Button/Override Popover Props", module).add(
             </Button>
         </SplitButton>
     );
-});
+};

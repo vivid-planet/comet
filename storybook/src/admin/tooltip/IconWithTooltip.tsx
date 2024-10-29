@@ -1,12 +1,17 @@
 import { Tooltip } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("@comet/admin", module).add("Icon with Tooltip", () => {
+export default {
+    title: "@comet/admin",
+};
+
+export const IconWithTooltip = () => {
     return (
         <Tooltip title="Add something">
             <Add />
         </Tooltip>
     );
-});
+};
+
+IconWithTooltip.storyName = "Icon with Tooltip";

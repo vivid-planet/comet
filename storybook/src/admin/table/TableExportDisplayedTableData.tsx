@@ -10,7 +10,6 @@ import {
     useExportDisplayedTableData,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 interface IExampleRow extends IRow {
@@ -27,7 +26,11 @@ const CustomHeader: React.FunctionComponent = () => {
     return <div>Custom Header</div>;
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+};
+
+export const ExportDisplayedTableData = () => {
     const data: IExampleRow[] = [
         { id: 1, foo1: "blub", foo2: "blub", currency: 22.3, nestedFoo: { foo: "bar" } },
         { id: 2, foo1: "blub", foo2: "blub", currency: -100, nestedFoo: { foo: "bar" } },
@@ -89,6 +92,4 @@ function Story() {
             </MainContent>
         </>
     );
-}
-
-storiesOf("@comet/admin/table", module).add("Export Displayed Table Data", () => <Story />);
+};

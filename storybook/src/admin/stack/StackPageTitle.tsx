@@ -1,5 +1,4 @@
 import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 
@@ -86,7 +85,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _StackPageTitle = () => {
     return (
         <div>
             <p>This story is mainly for testing the StackPageTitle component under various situations.</p>
@@ -100,8 +104,4 @@ function App() {
             </Switch>
         </div>
     );
-}
-
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Page Title", () => <App />);
+};

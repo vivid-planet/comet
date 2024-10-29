@@ -1,10 +1,13 @@
 import { Selection } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { List, ListItem, ListItemIcon, ListItemText, Paper } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Selection/Selection Component", module).add("Selection Component", () => {
+export default {
+    title: "stories/components/Selection/Selection Component",
+};
+
+export const SelectionComponent = () => {
     return (
         <Paper style={{ padding: "10px" }}>
             <h2>Selection Component:</h2>
@@ -33,4 +36,4 @@ storiesOf("stories/components/Selection/Selection Component", module).add("Selec
             </Selection>
         </Paper>
     );
-});
+};

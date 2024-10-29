@@ -1,5 +1,4 @@
 import { makeRteApi, Rte } from "@comet/admin-rte";
-import { storiesOf } from "@storybook/react";
 import { ContentState, convertFromHTML } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import * as React from "react";
@@ -16,7 +15,11 @@ const [useRteApi, { convertStateToRawContent }] = makeRteApi<Html>({
     },
 });
 
-storiesOf("stories/rte/Setup", module).add("source-data-html", () => {
+export default {
+    title: "stories/rte/Setup",
+};
+
+export const SourceDataHtml = () => {
     const { editorState, setEditorState } = useRteApi({
         defaultValue: `
 <h1>Headline 1</h1>
@@ -32,4 +35,6 @@ storiesOf("stories/rte/Setup", module).add("source-data-html", () => {
             <pre>{convertStateToRawContent(editorState)}</pre>
         </>
     );
-});
+};
+
+SourceDataHtml.storyName = "source-data-html";

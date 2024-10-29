@@ -1,7 +1,6 @@
 import { Field, FinalForm, FinalFormContext, FinalFormInput } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -30,7 +29,12 @@ const strategies: Record<ShowStrategy, FinalFormContext["shouldShowFieldError"]>
     "when-submitted": ({ submitFailed }) => !!submitFailed,
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ShowErrorStrategies = () => {
     const initialValues = {
         foo: "foo",
         bar: "",
@@ -79,8 +83,4 @@ function Story() {
             )}
         </FinalForm>
     );
-}
-
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Show Error Strategies", () => <Story />);
+};

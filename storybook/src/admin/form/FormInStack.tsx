@@ -12,7 +12,6 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { Box, Button, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
 
@@ -94,7 +93,12 @@ function Page2() {
     );
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const FormInStack = () => {
     return (
         <Stack topLevelTitle="Stack">
             <StackSwitch>
@@ -107,9 +111,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
+};
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("FormInStack", () => <Story />);
+FormInStack.storyName = "FormInStack";

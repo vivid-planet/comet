@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { FieldValidator } from "final-form";
 import * as React from "react";
 
@@ -34,7 +33,12 @@ const validateError: FieldValidator<number | undefined> = (value) => {
     }
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const TwoLevelValidationWarningAndError = () => {
     return (
         <Grid container spacing={4} style={{ maxWidth: 800 }}>
             <Grid item xs={6}>
@@ -142,8 +146,6 @@ function Story() {
             </Grid>
         </Grid>
     );
-}
+};
 
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Two level validation (warning and error)", () => <Story />);
+TwoLevelValidationWarningAndError.storyName = "Two level validation (warning and error)";

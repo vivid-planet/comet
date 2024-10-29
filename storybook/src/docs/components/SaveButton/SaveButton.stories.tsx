@@ -1,9 +1,12 @@
 import { SaveButton } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
-storiesOf("stories/components/Save Button", module).add("SaveButton", () => {
+export default {
+    title: "stories/components/Save Button",
+};
+
+export const _SaveButton = () => {
     const [saving, setSaving] = React.useState(false);
     return (
         <SaveButton
@@ -18,4 +21,6 @@ storiesOf("stories/components/Save Button", module).add("SaveButton", () => {
             <FormattedMessage id="comet.save" defaultMessage="Save" />
         </SaveButton>
     );
-});
+};
+
+_SaveButton.storyName = "SaveButton";

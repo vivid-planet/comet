@@ -2,7 +2,6 @@ import { ClearInputAdornment } from "@comet/admin";
 import * as icons from "@comet/admin-icons";
 import { Grid, InputAdornment, InputBase, SvgIconProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useDebounce } from "use-debounce";
 
@@ -64,7 +63,11 @@ const IconsGrid = ({ searchQuery }: { searchQuery: string }): React.ReactElement
     );
 };
 
-storiesOf("stories/Icons", module).add("All Icons", () => {
+export default {
+    title: "stories/Icons",
+};
+
+export const AllIcons = () => {
     const [searchQuery, setSearchQuery] = React.useState<string>("");
     const [debouncedSearchQuery] = useDebounce(searchQuery.trim().toLowerCase(), 500);
 
@@ -98,4 +101,4 @@ storiesOf("stories/Icons", module).add("All Icons", () => {
             <IconsGrid searchQuery={debouncedSearchQuery} />
         </>
     );
-});
+};

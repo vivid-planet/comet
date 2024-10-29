@@ -1,10 +1,13 @@
 import { FieldContainer } from "@comet/admin";
 import { Search } from "@comet/admin-icons";
 import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const SingleTextField = () => {
     const [searchString1, setSearchString1] = React.useState<string>("");
     const [searchString2, setSearchString2] = React.useState<string>("");
     const [checkboxValue, setCheckboxValue] = React.useState<boolean>(false);
@@ -70,6 +73,6 @@ function Story() {
             </div>
         </div>
     );
-}
+};
 
-storiesOf("@comet/admin/form", module).add("Single TextField", () => <Story />);
+SingleTextField.storyName = "Single TextField";

@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { SortDirection, Table, TableQuery, useTableQuery } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
@@ -31,37 +30,42 @@ interface QueryVariables {
     order: SortDirection;
 }
 
-storiesOf("stories/components/Table/TableQuery", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("TableQuery", () => {
-        const { tableData, api, loading, error } = useTableQuery<QueryData, QueryVariables>()(query, {
-            resolveTableData: (data) => ({
-                data: data.users,
-                totalCount: data.users.length,
-            }),
-        });
+export default {
+    title: "stories/components/Table/TableQuery",
+    decorators: [apolloRestStoryDecorator()],
+};
 
-        return (
-            <TableQuery api={api} loading={loading} error={error}>
-                {tableData && (
-                    <Table
-                        {...tableData}
-                        columns={[
-                            {
-                                name: "name",
-                                header: "Name",
-                            },
-                            {
-                                name: "username",
-                                header: "Username",
-                            },
-                            {
-                                name: "email",
-                                header: "E-Mail",
-                            },
-                        ]}
-                    />
-                )}
-            </TableQuery>
-        );
+export const _TableQuery = () => {
+    const { tableData, api, loading, error } = useTableQuery<QueryData, QueryVariables>()(query, {
+        resolveTableData: (data) => ({
+            data: data.users,
+            totalCount: data.users.length,
+        }),
     });
+
+    return (
+        <TableQuery api={api} loading={loading} error={error}>
+            {tableData && (
+                <Table
+                    {...tableData}
+                    columns={[
+                        {
+                            name: "name",
+                            header: "Name",
+                        },
+                        {
+                            name: "username",
+                            header: "Username",
+                        },
+                        {
+                            name: "email",
+                            header: "E-Mail",
+                        },
+                    ]}
+                />
+            )}
+        </TableQuery>
+    );
+};
+
+_TableQuery.storyName = "TableQuery";

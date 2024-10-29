@@ -1,10 +1,13 @@
 import { AppHeader, AppHeaderButton, AppHeaderFillSpace } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { Avatar, Box, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/AppHeader/Button custom", module).add("AppHeader Button custom", () => {
+export default {
+    title: "stories/components/AppHeader/Button custom",
+};
+
+export const AppHeaderButtonCustom = () => {
     return (
         <AppHeader position="relative" headerHeight={60}>
             <Typography style={{ padding: 20 }}>Header button custom content</Typography>
@@ -20,4 +23,6 @@ storiesOf("stories/components/AppHeader/Button custom", module).add("AppHeader B
             </AppHeaderButton>
         </AppHeader>
     );
-});
+};
+
+AppHeaderButtonCustom.storyName = "AppHeader Button custom";

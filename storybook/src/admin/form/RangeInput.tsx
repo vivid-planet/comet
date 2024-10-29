@@ -1,7 +1,6 @@
 import { Field, FinalFormRangeInput, Toolbar, ToolbarTitleItem } from "@comet/admin";
 import { Box, Button, Card, CardContent, SliderThumb, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -34,7 +33,11 @@ const Thumb = styled(SliderThumb)`
     }
 `;
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const RangeInput = () => {
     return (
         <>
             <Box marginBottom={4}>
@@ -157,6 +160,4 @@ function Story() {
             </div>
         </>
     );
-}
-
-storiesOf("@comet/admin/form", module).add("Range Input", () => <Story />);
+};

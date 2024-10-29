@@ -1,9 +1,12 @@
 import { Field, FinalFormRangeInput } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-storiesOf("stories/components/Final Form Range Input/With Initial Values", module).add("With Initial Values", () => {
+export default {
+    title: "stories/components/Final Form Range Input/With Initial Values",
+};
+
+export const WithInitialValues = () => {
     return (
         <Form
             onSubmit={(values) => {
@@ -13,4 +16,4 @@ storiesOf("stories/components/Final Form Range Input/With Initial Values", modul
             render={({ handleSubmit, values, form, initialValues }) => <Field component={FinalFormRangeInput} name="price" min={0} max={100} />}
         />
     );
-});
+};

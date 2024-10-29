@@ -1,10 +1,13 @@
 import { ChevronDown, Cookie, Domain, Favorite } from "@comet/admin-icons";
 import { Box, Card, CardContent, Chip, ListItemIcon, ListItemText, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useState } from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin/mui",
+};
+
+export const ChipMenu = () => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
     const handleChipClick = (event: React.MouseEvent) => {
@@ -58,6 +61,6 @@ function Story() {
             </Card>
         </Stack>
     );
-}
+};
 
-storiesOf("@comet/admin/mui", module).add("ChipMenu", () => <Story />);
+ChipMenu.storyName = "ChipMenu";

@@ -1,17 +1,21 @@
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
 import { number } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
+export default {
+    title: "@comet/admin-rte",
+};
+
 /**
  * Development story for testing the max list level option.
  */
-function Story() {
+
+export const MaxListLevel = () => {
     const { editorState, setEditorState } = useRteApi({
         defaultValue: JSON.stringify({
             blocks: [
@@ -131,6 +135,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
+};
 
-storiesOf("@comet/admin-rte", module).add("Max list level", () => <Story />);
+MaxListLevel.storyName = "Max list level";

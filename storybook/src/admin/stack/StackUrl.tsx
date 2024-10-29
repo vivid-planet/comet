@@ -1,12 +1,16 @@
 import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
 import { Link } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackUrl = () => {
     const location = useLocation();
 
     return (
@@ -51,8 +55,6 @@ function Story() {
             </Stack>
         </>
     );
-}
+};
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("StackUrl", () => <Story />);
+StackUrl.storyName = "StackUrl";

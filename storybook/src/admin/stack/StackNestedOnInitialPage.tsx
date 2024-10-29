@@ -1,5 +1,4 @@
 import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 
@@ -49,7 +48,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackNestedOnInitialPage = () => {
     return (
         <Switch>
             <Route exact path="/">
@@ -60,8 +64,4 @@ function App() {
             </Route>
         </Switch>
     );
-}
-
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Nested On Initial Page", () => <App />);
+};

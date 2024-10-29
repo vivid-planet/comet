@@ -1,6 +1,5 @@
 import { Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { dndProviderDecorator } from "../../dnd.decorator";
@@ -12,7 +11,12 @@ interface IRow {
     task: string;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [storyRouterDecorator(), dndProviderDecorator()],
+};
+
+export const DnDOrder = () => {
     const data: IRow[] = [
         { id: "1", order: 1, task: "Write a cool JS library" },
         { id: "2", order: 2, task: "Make it generic enough" },
@@ -68,9 +72,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
+};
 
-storiesOf("@comet/admin/table", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(dndProviderDecorator())
-    .add("DnD Order", () => <Story />);
+DnDOrder.storyName = "DnD Order";

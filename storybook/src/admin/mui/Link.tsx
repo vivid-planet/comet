@@ -1,13 +1,14 @@
 import { Link } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-const Story: React.FC = () => {
+export default {
+    title: "@comet/admin/mui",
+};
+
+export const _Link = () => {
     return (
         <Link href="https://github.com/vivid-planet/comet" target="_blank">
             Link with Default Styling
         </Link>
     );
 };
-
-storiesOf("@comet/admin/mui", module).add("Link", () => <Story />);

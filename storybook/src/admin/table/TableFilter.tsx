@@ -12,7 +12,6 @@ import {
     useTableQueryFilter,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as qs from "qs";
 import * as React from "react";
 
@@ -68,7 +67,12 @@ interface IVariables extends IFilterValues {
     pathFunction: any;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const Filter = () => {
     const filterApi = useTableQueryFilter<IFilterValues>({});
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
@@ -121,8 +125,4 @@ function Story() {
             </>
         </TableQuery>
     );
-}
-
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Filter", () => <Story />);
+};

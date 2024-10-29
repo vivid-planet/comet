@@ -14,7 +14,6 @@ import {
     useTableQueryPaging,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -55,7 +54,12 @@ interface IVariables {
     limit: number;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ExportAllPages = () => {
     const totalCount = 5000;
     const loadLimit = 50;
     const pagingApi = useTableQueryPaging(0);
@@ -128,8 +132,4 @@ function Story() {
             )}
         </TableQuery>
     );
-}
-
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Export All Pages", () => <Story />);
+};

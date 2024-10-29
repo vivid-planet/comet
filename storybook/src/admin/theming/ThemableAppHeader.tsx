@@ -1,9 +1,12 @@
 import { AppHeader, CometLogo, MuiThemeProvider } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin/theming",
+};
+
+export const ThemableAppHeader = () => {
     const theme = createCometTheme({
         components: {
             CometAdminAppHeader: {
@@ -34,6 +37,6 @@ function Story() {
             </AppHeader>
         </MuiThemeProvider>
     );
-}
+};
 
-storiesOf("@comet/admin/theming", module).add("Themable AppHeader", () => <Story />);
+ThemableAppHeader.storyName = "Themable AppHeader";

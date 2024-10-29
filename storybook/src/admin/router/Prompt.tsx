@@ -1,5 +1,4 @@
 import { RouterPrompt } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -43,15 +42,18 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function App() {
+export default {
+    title: "@comet/admin/router",
+    decorators: [storyRouterDecorator()],
+};
+
+export const NestedRouteWithNonSubPathRouteInPrompt = () => {
     return (
         <>
             <Path />
             <Story />
         </>
     );
-}
+};
 
-storiesOf("@comet/admin/router", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Nested route with non-sub-path route in Prompt", () => <App />);
+NestedRouteWithNonSubPathRouteInPrompt.storyName = "Nested route with non-sub-path route in Prompt";

@@ -1,5 +1,4 @@
 import { Table } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 interface Person {
@@ -12,7 +11,11 @@ interface Person {
     };
 }
 
-storiesOf("stories/components/Table/Basic Table", module).add("Basic Table", () => {
+export default {
+    title: "stories/components/Table/Basic Table",
+};
+
+export const BasicTable = () => {
     const data: Person[] = [
         { id: 1, firstname: "Kady", lastname: "Wood", job: { id: 1, name: "Project Manager" } },
         { id: 2, firstname: "Lewis", lastname: "Chan", job: { id: 2, name: "UI/UX Designer" } },
@@ -45,4 +48,4 @@ storiesOf("stories/components/Table/Basic Table", module).add("Basic Table", () 
             ]}
         />
     );
-});
+};

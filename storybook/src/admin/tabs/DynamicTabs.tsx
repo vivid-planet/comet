@@ -1,6 +1,5 @@
 import { RouterTab, RouterTabs, Tab, Tabs } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -43,7 +42,13 @@ export const DynamicTabs = ({ showFourthTab }: { showFourthTab: boolean }) => {
     );
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/tabs",
+    decorators: [storyRouterDecorator()],
+    excludeStories: ["DynamicRouterTabs", "DynamicTabs"],
+};
+
+export const DynamicTabsAndRouterTabs = () => {
     const [showFourthTab, setShowFourthTab] = React.useState(false);
 
     return (
@@ -61,8 +66,6 @@ function Story() {
             <DynamicRouterTabs showFourthTab={showFourthTab} />
         </>
     );
-}
+};
 
-storiesOf("@comet/admin/tabs", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Dynamic Tabs and RouterTabs", () => <Story />);
+DynamicTabsAndRouterTabs.storyName = "Dynamic Tabs and RouterTabs";

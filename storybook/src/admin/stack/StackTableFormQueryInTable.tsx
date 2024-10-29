@@ -21,7 +21,6 @@ import {
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -172,7 +171,12 @@ function ExampleForm(props: IExampleFormProps) {
     );
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const StackTableFormQueryInTable = () => {
     const persistedStateId = usePersistedStateId();
     return (
         <Stack topLevelTitle="Stack">
@@ -186,9 +190,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
+};
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Table Form Query in Table", () => <Story />);
+StackTableFormQueryInTable.storyName = "Stack Table Form Query in Table";

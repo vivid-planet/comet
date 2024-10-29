@@ -1,6 +1,5 @@
 import { Table, TableQuery, useTableQuery } from "@comet/admin";
 import { text } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import gql from "graphql-tag";
 import * as React from "react";
 
@@ -22,7 +21,12 @@ interface QueryData {
     };
 }
 
-const Story: React.FunctionComponent = () => {
+export default {
+    title: "@comet/admin/table/globalErrorHandling",
+    decorators: [apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()],
+};
+
+export const GlobalErrorHandling = () => {
     const query = gql`
         ${text("GQL Query", "query StarWarsPeople {allPeople { people { id name birthYear gender homeworld{ name } } }}")}
     `;
@@ -67,8 +71,3 @@ const Story: React.FunctionComponent = () => {
         </TableQuery>
     );
 };
-
-storiesOf("@comet/admin/table/globalErrorHandling", module)
-    .addDecorator(apolloSwapiStoryDecorator())
-    .addDecorator(errorDialogStoryProviderDecorator())
-    .add("Global Error Handling", () => <Story />);

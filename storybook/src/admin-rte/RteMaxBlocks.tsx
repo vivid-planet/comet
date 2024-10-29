@@ -1,6 +1,5 @@
 import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
@@ -16,7 +15,11 @@ const rteOptions: IRteOptions = {
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteMaxBlocksSet = () => {
     const { editorState, setEditorState } = useRteApi({
         defaultValue: JSON.stringify({
             blocks: [
@@ -56,6 +59,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
+};
 
-storiesOf("@comet/admin-rte", module).add("Rte, maxBlocks set", () => <Story />);
+RteMaxBlocksSet.storyName = "Rte, maxBlocks set";

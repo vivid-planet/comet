@@ -1,6 +1,5 @@
 import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { CometColor } from "@comet/admin-icons";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 
@@ -33,7 +32,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackCustomSeparator = () => {
     return (
         <Switch>
             <Route exact path="/">
@@ -44,8 +48,4 @@ function App() {
             </Route>
         </Switch>
     );
-}
-
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Custom Separator", () => <App />);
+};

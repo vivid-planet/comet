@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput, RouterTab, RouterTabs, Stack, StackLink, StackPage, StackSwitch } from "@comet/admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { useLocation } from "react-router";
 
@@ -18,7 +17,12 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInFormWithSubroutes = () => {
     return (
         <>
             <Path />
@@ -56,7 +60,6 @@ function Story() {
             </FinalForm>
         </>
     );
-}
-storiesOf("@comet/admin/form", module)
-    .addDecorator(storyRouterDecorator())
-    .add("RouterTabsInFormWithSubroutes", () => <Story />);
+};
+
+RouterTabsInFormWithSubroutes.storyName = "RouterTabsInFormWithSubroutes";

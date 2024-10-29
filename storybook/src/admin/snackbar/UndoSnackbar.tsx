@@ -1,6 +1,5 @@
 import { SnackbarProvider, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 const UndoSnackbarExample = () => {
@@ -34,12 +33,14 @@ const UndoSnackbarExample = () => {
     );
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/snackbar",
+};
+
+export const _UndoSnackbar = () => {
     return (
         <SnackbarProvider>
             <UndoSnackbarExample />
         </SnackbarProvider>
     );
-}
-
-storiesOf("@comet/admin/snackbar", module).add("Undo Snackbar", () => <Story />);
+};

@@ -17,7 +17,6 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -31,7 +30,13 @@ const ButtonsRow = styled("div")`
     margin-bottom: ${(props) => props.theme.spacing(4)};
 `;
 
-export const Story: React.FC = () => {
+export default {
+    title: "@comet/admin/mui",
+    decorators: [storyRouterDecorator()],
+    excludeStories: ["Story"],
+};
+
+export const Buttons = () => {
     return (
         <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -310,7 +315,3 @@ export const Story: React.FC = () => {
         </Grid>
     );
 };
-
-storiesOf("@comet/admin/mui", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Buttons", () => <Story />);

@@ -1,12 +1,16 @@
 import { Field, FinalForm, FinalFormInput, Tab, Tabs } from "@comet/admin";
 import { Button, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const _Tabs = () => {
     const [showExample3, setShowExample3] = React.useState(false);
 
     return (
@@ -48,9 +52,4 @@ function Story() {
             </FinalForm>
         </>
     );
-}
-
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("Tabs", () => <Story />);
+};

@@ -1,6 +1,5 @@
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Grid, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { EditorState } from "draft-js";
 import * as React from "react";
 
@@ -8,7 +7,11 @@ import { PrintEditorState, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const SynchronizedRtEs = () => {
     const { editorState, setEditorState } = useRteApi();
     const [activeEditor, setActiveEditor] = React.useState<"left" | "right">("left");
 
@@ -50,6 +53,6 @@ function Story() {
             </Grid>
         </Grid>
     );
-}
+};
 
-storiesOf("@comet/admin-rte", module).add("Synchronized RTEs", () => <Story />);
+SynchronizedRtEs.storyName = "Synchronized RTEs";

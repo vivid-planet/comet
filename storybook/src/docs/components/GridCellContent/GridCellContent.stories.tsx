@@ -2,10 +2,13 @@ import { GridCellContent, GridColDef } from "@comet/admin";
 import { StateFilled } from "@comet/admin-icons";
 import { faker } from "@faker-js/faker";
 import { DataGrid } from "@mui/x-data-grid";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/GridCellContent", module).add("GridCellContent", () => {
+export default {
+    title: "stories/components/GridCellContent",
+};
+
+export const _GridCellContent = () => {
     const gridRows = Array.from({ length: 5 }).map((_, index) => ({
         id: index + 1,
         name: faker.name.fullName(),
@@ -45,4 +48,6 @@ storiesOf("stories/components/GridCellContent", module).add("GridCellContent", (
     ];
 
     return <DataGrid autoHeight rows={gridRows} columns={gridColumns} disableSelectionOnClick />;
-});
+};
+
+_GridCellContent.storyName = "GridCellContent";

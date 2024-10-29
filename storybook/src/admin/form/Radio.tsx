@@ -1,10 +1,13 @@
 import { Field, FieldContainer, FinalFormRadio } from "@comet/admin";
 import { Card, CardContent, FormControlLabel, Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const Radio = () => {
     return (
         <div style={{ width: 600 }}>
             <Form
@@ -77,6 +80,4 @@ function Story() {
             />
         </div>
     );
-}
-
-storiesOf("@comet/admin/form", module).add("Radio", () => <Story />);
+};

@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client";
 import { Field, FinalForm, FinalFormInput, ISelectionApi, Selected, Table, TableQuery, useSelectionRoute, useTableQuery } from "@comet/admin";
 import { Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router";
 
@@ -112,7 +111,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const BesidesFormSelectionHooks = () => {
     return (
         <Switch>
             <Route exact path="/">
@@ -123,9 +127,4 @@ function App() {
             </Route>
         </Switch>
     );
-}
-
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("Besides Form Selection Hooks", () => <App />);
+};

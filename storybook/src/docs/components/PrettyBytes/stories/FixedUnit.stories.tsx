@@ -1,8 +1,11 @@
 import { PrettyBytes } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/PrettyBytes/Fixed Unit", module).add("Fixed Unit", () => {
+export default {
+    title: "stories/components/PrettyBytes/Fixed Unit",
+};
+
+export const FixedUnit = () => {
     return (
         <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "10px" }}>
             <span>6.000.000 Bytes</span>{" "}
@@ -11,4 +14,4 @@ storiesOf("stories/components/PrettyBytes/Fixed Unit", module).add("Fixed Unit",
             </span>
         </div>
     );
-});
+};

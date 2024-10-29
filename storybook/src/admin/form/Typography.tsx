@@ -1,11 +1,14 @@
 import { Field, FieldContainer } from "@comet/admin";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 import { FormattedDate } from "react-intl";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const TypographyStaticTextInForm = () => {
     const initialValues = {
         foo: "FooValue",
         bar: "BarValue",
@@ -54,6 +57,6 @@ function Story() {
             />
         </div>
     );
-}
+};
 
-storiesOf("@comet/admin/form", module).add("Typography Static Text in Form", () => <Story />);
+TypographyStaticTextInForm.storyName = "Typography Static Text in Form";

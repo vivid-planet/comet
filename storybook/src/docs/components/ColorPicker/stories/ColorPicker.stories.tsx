@@ -1,10 +1,13 @@
 import { FieldContainer } from "@comet/admin";
 import { ColorPicker } from "@comet/admin-color-picker";
 import { Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Color Picker/Color Picker", module).add("Color Picker", () => {
+export default {
+    title: "stories/components/Color Picker/Color Picker",
+};
+
+export const _ColorPicker = () => {
     const [colorOne, setColorOne] = React.useState<string | undefined>("#00ff00");
     const [colorTwo, setColorTwo] = React.useState<string | undefined>("rgba(255, 127, 80, 0.75)");
     const [colorThree, setColorThree] = React.useState<string | undefined>();
@@ -64,4 +67,4 @@ storiesOf("stories/components/Color Picker/Color Picker", module).add("Color Pic
             </Grid>
         </Grid>
     );
-});
+};

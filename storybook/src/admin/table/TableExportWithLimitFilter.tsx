@@ -20,7 +20,6 @@ import {
     VisibleType,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -64,7 +63,12 @@ interface IVariables extends IFilterValues {
     limit: number;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ExportWithLimitFilter = () => {
     const totalCount = 5000;
     const loadLimit = 50;
     const pagingApi = useTableQueryPaging(0);
@@ -140,8 +144,4 @@ function Story() {
             </>
         </TableQuery>
     );
-}
-
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Export With Limit Filter", () => <Story />);
+};

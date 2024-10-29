@@ -1,11 +1,14 @@
 import { FieldSet, SelectField, SelectFieldOption } from "@comet/admin";
 import { Account } from "@comet/admin-icons";
 import { Box, Checkbox, InputAdornment, ListItemIcon, ListItemText, MenuItem } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const Select = () => {
     const options: SelectFieldOption[] = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
@@ -126,6 +129,4 @@ function Story() {
             />
         </Box>
     );
-}
-
-storiesOf("@comet/admin/form", module).add("Select", () => <Story />);
+};

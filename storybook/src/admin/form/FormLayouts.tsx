@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput, FormSection } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -60,7 +59,12 @@ function FieldsInGrid() {
     );
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const FormLayouts = () => {
     return (
         <FinalForm mode="edit" onSubmit={() => {}}>
             <Grid container spacing={8} style={{ maxWidth: 1024 }}>
@@ -76,8 +80,4 @@ function Story() {
             </Grid>
         </FinalForm>
     );
-}
-
-storiesOf("@comet/admin/form", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Form Layouts", () => <Story />);
+};

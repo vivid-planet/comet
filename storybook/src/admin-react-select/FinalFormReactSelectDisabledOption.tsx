@@ -1,7 +1,6 @@
 import { Field, FormSection } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -12,7 +11,11 @@ const options = [
     { value: "cherry", label: "Cherry" },
 ];
 
-function Story() {
+export default {
+    title: "@comet/admin-react-select",
+};
+
+export const FinalFormReactSelectDisabledOption = () => {
     return (
         <Card variant="outlined" style={{ width: 400 }}>
             <CardContent>
@@ -40,6 +43,4 @@ function Story() {
             </CardContent>
         </Card>
     );
-}
-
-storiesOf("@comet/admin-react-select", module).add("Final Form React Select Disabled Option", () => <Story />);
+};

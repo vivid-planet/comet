@@ -14,7 +14,6 @@ import {
 } from "@comet/admin";
 import { CometColor, Dashboard, LinkExternal, Settings, Sort } from "@comet/admin-icons";
 import { Card, CardContent, Divider, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { matchPath, Route, Switch, useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -117,7 +116,12 @@ const Content = ({ children }: { children: string }) => (
     </MainContent>
 );
 
-const Story: React.FC = () => (
+export default {
+    title: "@comet/admin/mui",
+    decorators: [storyRouterDecorator()],
+};
+
+export const MenuDynamicVariants = () => (
     <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
         <Switch>
             <Route path="/" exact render={() => <Content>Root</Content>} />
@@ -131,6 +135,5 @@ const Story: React.FC = () => (
     </MasterLayout>
 );
 
-storiesOf("@comet/admin/mui", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Menu (dynamic variants)", () => <Story />, { layout: "fullscreen" });
+MenuDynamicVariants.storyName = "Menu (dynamic variants)";
+MenuDynamicVariants.parameters = { layout: "fullscreen" };

@@ -1,10 +1,13 @@
 import { useSelection } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { List, ListItem, ListItemIcon, ListItemText, Paper } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Selection/useSelection Hook", module).add("useSelection Hook", () => {
+export default {
+    title: "stories/components/Selection/useSelection Hook",
+};
+
+export const UseSelectionHook = () => {
     const [selection, selectionApi] = useSelection();
 
     return (
@@ -31,4 +34,6 @@ storiesOf("stories/components/Selection/useSelection Hook", module).add("useSele
             </div>
         </Paper>
     );
-});
+};
+
+UseSelectionHook.storyName = "useSelection Hook";

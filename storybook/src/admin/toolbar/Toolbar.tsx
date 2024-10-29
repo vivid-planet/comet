@@ -13,7 +13,6 @@ import {
 import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
 import { ArrowRight, Save } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -55,10 +54,13 @@ function Story() {
     );
 }
 
-storiesOf("@comet/admin/toolbar", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Toolbar", () => (
-        <StackWrapper>
-            <Story />
-        </StackWrapper>
-    ));
+export default {
+    title: "@comet/admin/toolbar",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _Toolbar = () => (
+    <StackWrapper>
+        <Story />
+    </StackWrapper>
+);

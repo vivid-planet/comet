@@ -1,9 +1,12 @@
 import { Cookie, Error, ThreeDotSaving } from "@comet/admin-icons";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin-icons",
+};
+
+export const IconUsage = () => {
     return (
         <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -70,6 +73,4 @@ function Story() {
             </Grid>
         </Grid>
     );
-}
-
-storiesOf("@comet/admin-icons", module).add("Icon Usage", () => <Story />);
+};

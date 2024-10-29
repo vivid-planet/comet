@@ -1,11 +1,15 @@
 import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackWithReactReactNodeTitle = () => {
     const [StackSwitch, api] = useStackSwitch();
 
     return (
@@ -24,8 +28,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
+};
 
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack with React.ReactNode title", () => <Story />);
+StackWithReactReactNodeTitle.storyName = "Stack with React.ReactNode title";

@@ -1,7 +1,6 @@
 import { Favorite } from "@comet/admin-icons";
 import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
@@ -21,7 +20,11 @@ const rteOptions: IRteOptions = {
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const CustomInlineStyles = () => {
     const { editorState, setEditorState } = useRteApi();
 
     // focus the editor to see the cursor immediately
@@ -40,6 +43,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
+};
 
-storiesOf("@comet/admin-rte", module).add("Custom inline styles", () => <Story />);
+CustomInlineStyles.storyName = "Custom inline styles";

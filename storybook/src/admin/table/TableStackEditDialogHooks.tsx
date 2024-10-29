@@ -16,7 +16,6 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -46,7 +45,12 @@ function EditForm(props: IEditFormProps) {
     );
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+};
+
+export const StackEditDialogHooks = () => {
     const data: IExampleRow[] = [
         { id: 1, foo: "blub", bar: "blub" },
         { id: 2, foo: "blub", bar: "blub" },
@@ -127,9 +131,6 @@ function Story() {
             <p>This story uses a Stack plus an EditDialog</p>
         </>
     );
-}
+};
 
-storiesOf("@comet/admin/table", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Stack + EditDialog Hooks", () => <Story />);
+StackEditDialogHooks.storyName = "Stack + EditDialog Hooks";

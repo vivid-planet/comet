@@ -1,13 +1,16 @@
 import { Field, FinalFormInput, FormSection } from "@comet/admin";
 import { createFinalFormRte } from "@comet/admin-rte";
 import { Button, Card, CardContent, Grid } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
 const { RteField, RteReadOnly } = createFinalFormRte();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte/field",
+};
+
+export const _Field = () => {
     const [submittedValue, setSubmittedValue] = React.useState<{ rteContent: any }>({ rteContent: undefined });
     const [disabled, toggleDisabled] = React.useReducer((s) => !s, false);
 
@@ -60,6 +63,4 @@ function Story() {
             </Grid>
         </Grid>
     );
-}
-
-storiesOf("@comet/admin-rte/field", module).add("Field", () => <Story />);
+};

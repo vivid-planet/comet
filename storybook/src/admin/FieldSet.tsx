@@ -2,13 +2,16 @@ import { FieldSet, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Chip, Stack } from "@mui/material";
 import { Box } from "@mui/system";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
 const textContent =
     "FieldSet content. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
-storiesOf("@comet/admin/FieldSet", module).add("FieldSet", () => (
+export default {
+    title: "@comet/admin/FieldSet",
+};
+
+export const _FieldSet = () => (
     <Stack spacing={4}>
         <FieldSet title="FieldSet Title" supportText="Support text">
             {textContent}
@@ -43,4 +46,6 @@ storiesOf("@comet/admin/FieldSet", module).add("FieldSet", () => (
             {textContent}
         </FieldSet>
     </Stack>
-));
+);
+
+_FieldSet.storyName = "FieldSet";

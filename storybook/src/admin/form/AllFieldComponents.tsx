@@ -20,11 +20,14 @@ import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
 import { Box, Button, Link, MenuItem } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const AllFieldComponents = () => {
     const fieldVariant = select(
         "Field variant",
         {
@@ -310,6 +313,6 @@ function Story() {
             )}
         />
     );
-}
+};
 
-storiesOf("@comet/admin/form", module).add("AllFieldComponents", () => <Story />);
+AllFieldComponents.storyName = "AllFieldComponents";

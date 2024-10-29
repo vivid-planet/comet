@@ -1,5 +1,4 @@
 import { Table } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 interface IExampleRow {
@@ -11,7 +10,11 @@ interface IExampleRow {
     };
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+};
+
+export const _Table = () => {
     const data: IExampleRow[] = [
         { id: 1, foo1: "blub", foo2: "blub", nestedFoo: { foo: "bar" } },
         { id: 2, foo1: "blub", foo2: "blub", nestedFoo: { foo: "bar" } },
@@ -44,6 +47,4 @@ function Story() {
             ]}
         />
     );
-}
-
-storiesOf("@comet/admin/table", module).add("Table", () => <Story />);
+};

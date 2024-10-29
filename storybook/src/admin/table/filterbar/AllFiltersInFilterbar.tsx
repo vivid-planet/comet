@@ -12,7 +12,6 @@ import {
 } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Box, Divider, FormControlLabel, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import faker from "faker";
 import * as React from "react";
 
@@ -184,7 +183,11 @@ function Story({ tableData }: StoryProps) {
     );
 }
 
-storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with all kinds of Filters", () => {
+export default {
+    title: "@comet/admin/table/filterbar",
+};
+
+export const FilterbarWithAllKindsOfFilters = () => {
     const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
         return {
             id: i,
@@ -200,4 +203,6 @@ storiesOf("@comet/admin/table/filterbar", module).add("Filterbar with all kinds 
         };
     });
     return <Story tableData={randomTableData} />;
-});
+};
+
+FilterbarWithAllKindsOfFilters.storyName = "Filterbar with all kinds of Filters";

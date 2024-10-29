@@ -1,5 +1,4 @@
 import { RouterTab, RouterTabs, SubRoute } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router";
 
@@ -35,7 +34,12 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function App() {
+export default {
+    title: "@comet/admin/tabs",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInSubRoute = () => {
     return (
         <>
             <Path />
@@ -49,8 +53,6 @@ function App() {
             </Switch>
         </>
     );
-}
+};
 
-storiesOf("@comet/admin/tabs", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Router Tabs in SubRoute", () => <App />);
+RouterTabsInSubRoute.storyName = "Router Tabs in SubRoute";

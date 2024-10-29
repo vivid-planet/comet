@@ -7,7 +7,6 @@ import {
     Rte,
 } from "@comet/admin-rte";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import { EditorState, EntityInstance } from "draft-js";
 import * as React from "react";
 
@@ -33,7 +32,11 @@ const filterEditorStateBeforeUpdate: FilterEditorStateBeforeUpdateFn = (nextStat
     return filterEditorStateDefault(nextState, ctx);
 };
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteFilterContent = () => {
     const { editorState, setEditorState } = useRteApi();
 
     // focus the editor to see the cursor immediately
@@ -56,6 +59,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
+};
 
-storiesOf("@comet/admin-rte", module).add("Rte, filter content", () => <Story />);
+RteFilterContent.storyName = "Rte, filter content";

@@ -1,34 +1,35 @@
 import { FinalForm, NumberField } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
+export default {
+    title: "stories/Form/Components/NumberField",
+};
 
-storiesOf("stories/Form/Components/NumberField", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("NumberField", () => {
-        return (
-            <FinalForm mode="add" onSubmit={() => {}}>
-                <NumberField name="number" label="Number" fullWidth />
-            </FinalForm>
-        );
-    });
-storiesOf("stories/Form/Components/NumberField", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("WithDecimals", () => {
-        return (
-            <FinalForm mode="add" onSubmit={() => {}}>
-                <NumberField name="number" label="Number with three decimals" decimals={3} fullWidth />
-            </FinalForm>
-        );
-    });
-storiesOf("stories/Form/Components/NumberField", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Currency", () => {
-        return (
-            <FinalForm mode="add" onSubmit={() => {}}>
-                <NumberField name="number" label="Currency with currency sign before the value" startAdornment="€" decimals={2} fullWidth />
-                <NumberField name="number" label="Currency with currency sign after the value" endAdornment="€" decimals={2} fullWidth />
-            </FinalForm>
-        );
-    });
+export const _NumberField = () => {
+    return (
+        <FinalForm mode="add" onSubmit={() => {}}>
+            <NumberField name="number" label="Number" fullWidth />
+        </FinalForm>
+    );
+};
+
+_NumberField.storyName = "NumberField";
+
+export const WithDecimals = () => {
+    return (
+        <FinalForm mode="add" onSubmit={() => {}}>
+            <NumberField name="number" label="Number with three decimals" decimals={3} fullWidth />
+        </FinalForm>
+    );
+};
+
+WithDecimals.storyName = "WithDecimals";
+
+export const Currency = () => {
+    return (
+        <FinalForm mode="add" onSubmit={() => {}}>
+            <NumberField name="number" label="Currency with currency sign before the value" startAdornment="€" decimals={2} fullWidth />
+            <NumberField name="number" label="Currency with currency sign after the value" endAdornment="€" decimals={2} fullWidth />
+        </FinalForm>
+    );
+};

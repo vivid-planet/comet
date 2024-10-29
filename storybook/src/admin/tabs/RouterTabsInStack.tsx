@@ -1,5 +1,4 @@
 import { RouterTab, RouterTabs, Stack, StackPage, StackSwitch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -30,7 +29,12 @@ function PrintMountCount() {
     return <div>Mount count: {JSON.stringify(mountCount)}</div>;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/tabs",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInStack = () => {
     return (
         <Stack topLevelTitle="Nested Stack">
             <PrintMountCount />
@@ -52,8 +56,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
+};
 
-storiesOf("@comet/admin/tabs", module)
-    .addDecorator(storyRouterDecorator())
-    .add("RouterTabs in Stack", () => <Story />);
+RouterTabsInStack.storyName = "RouterTabs in Stack";

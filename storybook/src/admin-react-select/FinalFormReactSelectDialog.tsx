@@ -1,7 +1,6 @@
 import { CancelButton, Field, OkayButton } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -11,7 +10,11 @@ const options = [
     { value: "vanilla", label: "Vanilla" },
 ];
 
-function Story() {
+export default {
+    title: "@comet/admin-react-select",
+};
+
+export const FinalFormReactSelectDialog = () => {
     return (
         <div>
             <Dialog open={true}>
@@ -43,6 +46,4 @@ function Story() {
             </Dialog>
         </div>
     );
-}
-
-storiesOf("@comet/admin-react-select", module).add("Final Form React Select Dialog", () => <Story />);
+};

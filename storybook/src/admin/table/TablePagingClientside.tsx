@@ -1,5 +1,4 @@
 import { IPagingInfo, Table, useTableQueryPaging } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 interface IExampleRow {
@@ -8,7 +7,11 @@ interface IExampleRow {
     foo2: string;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+};
+
+export const PagingClientside = () => {
     const data = Array.from(Array(100).keys()).map(
         (i): IExampleRow => ({
             id: i,
@@ -57,6 +60,4 @@ function Story() {
             ]}
         />
     );
-}
-
-storiesOf("@comet/admin/table", module).add("Paging Clientside", () => <Story />);
+};

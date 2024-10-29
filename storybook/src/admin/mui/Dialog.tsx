@@ -2,7 +2,6 @@ import { CancelButton, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect
 import { Save } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, FormControlLabel, MenuItem } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -25,7 +24,11 @@ const selectOptions = [
     { value: "vanilla", label: "Vanilla" },
 ];
 
-function Story() {
+export default {
+    title: "@comet/admin/mui",
+};
+
+export const _Dialog = () => {
     const selectedDialogSize = select("Dialog size", dialogSizeOptions, "sm");
 
     return (
@@ -50,9 +53,7 @@ function Story() {
             />
         </div>
     );
-}
-
-storiesOf("@comet/admin/mui", module).add("Dialog", () => <Story />);
+};
 
 function ConfirmationDialogContent(): React.ReactElement {
     return (

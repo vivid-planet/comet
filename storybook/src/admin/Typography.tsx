@@ -1,8 +1,11 @@
 import { Divider, Grid, Paper, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
-storiesOf("@comet/admin/Typography", module).add("Typography", () => (
+export default {
+    title: "@comet/admin/Typography",
+};
+
+export const _Typography = () => (
     <Paper sx={{ padding: 10 }}>
         <Typography variant="body1">Headlines</Typography>
         <Divider />
@@ -70,4 +73,4 @@ storiesOf("@comet/admin/Typography", module).add("Typography", () => (
             </Grid>
         </Grid>
     </Paper>
-));
+);

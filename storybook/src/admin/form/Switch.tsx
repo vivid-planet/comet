@@ -1,10 +1,13 @@
 import { Field, FinalFormSwitch } from "@comet/admin";
 import { Box, Card, CardContent, Divider, FormControlLabel } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const Switch = () => {
     return (
         <div style={{ width: 500 }}>
             <Form
@@ -31,6 +34,4 @@ function Story() {
             />
         </div>
     );
-}
-
-storiesOf("@comet/admin/form", module).add("Switch", () => <Story />);
+};

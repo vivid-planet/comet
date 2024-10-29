@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { createOffsetLimitPagingAction, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import { apolloRestStoryDecorator } from "../../../../apollo-rest-story.decorator";
@@ -29,54 +28,57 @@ interface QueryVariables {
     limit: number;
 }
 
-storiesOf("stories/components/Table/Pagination Table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Pagination Table", () => {
-        // step 1
-        const pagingApi = useTableQueryPaging(0);
-        const limit = 5;
-        // step 2
-        const { tableData, api, loading, error } = useTableQuery<QueryResult, QueryVariables>()(query, {
-            variables: {
-                // step 3
-                offset: pagingApi.current,
-                limit,
-            },
-            resolveTableData: (result) => {
-                const data = {
-                    ...result,
-                    // Don't hardcode this in a real application,
-                    // normally the API should return the totalCount
-                    totalCount: 100,
-                };
-                return {
-                    data: data.posts,
-                    totalCount: data.totalCount,
-                    // step 4
-                    pagingInfo: createOffsetLimitPagingAction(pagingApi, data, limit),
-                };
-            },
-        });
+export default {
+    title: "stories/components/Table/Pagination Table",
+    decorators: [apolloRestStoryDecorator()],
+};
 
-        return (
-            <TableQuery api={api} loading={loading} error={error}>
-                {tableData && (
-                    <Table
-                        // step 5
-                        // pagingInfo is a property of tableData
-                        {...tableData}
-                        columns={[
-                            {
-                                name: "id",
-                                header: "ID",
-                            },
-                            {
-                                name: "title",
-                                header: "Title",
-                            },
-                        ]}
-                    />
-                )}
-            </TableQuery>
-        );
+export const PaginationTable = () => {
+    // step 1
+    const pagingApi = useTableQueryPaging(0);
+    const limit = 5;
+    // step 2
+    const { tableData, api, loading, error } = useTableQuery<QueryResult, QueryVariables>()(query, {
+        variables: {
+            // step 3
+            offset: pagingApi.current,
+            limit,
+        },
+        resolveTableData: (result) => {
+            const data = {
+                ...result,
+                // Don't hardcode this in a real application,
+                // normally the API should return the totalCount
+                totalCount: 100,
+            };
+            return {
+                data: data.posts,
+                totalCount: data.totalCount,
+                // step 4
+                pagingInfo: createOffsetLimitPagingAction(pagingApi, data, limit),
+            };
+        },
     });
+
+    return (
+        <TableQuery api={api} loading={loading} error={error}>
+            {tableData && (
+                <Table
+                    // step 5
+                    // pagingInfo is a property of tableData
+                    {...tableData}
+                    columns={[
+                        {
+                            name: "id",
+                            header: "ID",
+                        },
+                        {
+                            name: "title",
+                            header: "Title",
+                        },
+                    ]}
+                />
+            )}
+        </TableQuery>
+    );
+};

@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { SortDirection, Table, TableQuery, useTableQuery, useTableQuerySort } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
@@ -39,7 +38,12 @@ interface IVariables {
     order: SortDirection;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const Sort = () => {
     const sortApi = useTableQuerySort({
         columnName: "name",
         direction: SortDirection.ASC,
@@ -83,8 +87,4 @@ function Story() {
             )}
         </TableQuery>
     );
-}
-
-storiesOf("@comet/admin/table", module)
-    .addDecorator(apolloRestStoryDecorator())
-    .add("Sort", () => <Story />);
+};

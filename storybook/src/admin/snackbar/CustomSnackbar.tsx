@@ -1,6 +1,5 @@
 import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
 import { Button, List, ListItem, Snackbar } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 let counter = 0;
@@ -48,12 +47,14 @@ const CustomSnackbar = () => {
     );
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/snackbar",
+};
+
+export const _CustomSnackbar = () => {
     return (
         <SnackbarProvider>
             <CustomSnackbar />
         </SnackbarProvider>
     );
-}
-
-storiesOf("@comet/admin/snackbar", module).add("Custom Snackbar", () => <Story />);
+};

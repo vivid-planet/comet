@@ -1,5 +1,4 @@
 import { Stack, StackBreadcrumbs, StackPage, useStackSwitch } from "@comet/admin";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 
@@ -32,7 +31,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackRefApi = () => {
     return (
         <Switch>
             <Route exact path="/">
@@ -43,8 +47,4 @@ function App() {
             </Route>
         </Switch>
     );
-}
-
-storiesOf("@comet/admin/stack", module)
-    .addDecorator(storyRouterDecorator())
-    .add("Stack Ref Api", () => <App />);
+};

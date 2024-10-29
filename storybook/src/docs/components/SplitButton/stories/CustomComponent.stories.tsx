@@ -1,10 +1,13 @@
 import { SplitButton } from "@comet/admin";
 import { Home } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
-storiesOf("stories/components/Split Button/Custom Component", module).add("Custom Component", () => {
+export default {
+    title: "stories/components/Split Button/Custom Component",
+};
+
+export const CustomComponent = () => {
     return (
         <div>
             <div style={{ marginBottom: 20 }}>
@@ -43,4 +46,4 @@ storiesOf("stories/components/Split Button/Custom Component", module).add("Custo
             </div>
         </div>
     );
-});
+};

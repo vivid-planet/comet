@@ -2,10 +2,13 @@ import { Alert, OkayButton, SaveButton } from "@comet/admin";
 import { ArrowRight } from "@comet/admin-icons";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin/alert/Alert",
+};
+
+export const Alerts = () => {
     return (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 50 }}>
             <Card variant="outlined">
@@ -147,6 +150,4 @@ function Story() {
             </Card>
         </div>
     );
-}
-
-storiesOf("@comet/admin/alert/Alert", module).add("Alerts", () => <Story />);
+};
