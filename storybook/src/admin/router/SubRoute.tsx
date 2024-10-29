@@ -79,7 +79,12 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function App() {
+export default {
+    title: "@comet/admin/router",
+    decorators: [storyRouterDecorator()],
+};
+
+export const Subroute = () => {
     return (
         <>
             <Path />
@@ -93,11 +98,4 @@ function App() {
             </Switch>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/router",
-    decorators: [storyRouterDecorator()],
 };
-
-export const Subroute = () => <App />;

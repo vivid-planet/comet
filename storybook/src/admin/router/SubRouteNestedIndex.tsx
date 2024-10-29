@@ -47,7 +47,12 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function App() {
+export default {
+    title: "@comet/admin/router",
+    decorators: [storyRouterDecorator()],
+};
+
+export const SubrouteNestedIndex = () => {
     return (
         <>
             <Path />
@@ -61,13 +66,6 @@ function App() {
             </Switch>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/router",
-    decorators: [storyRouterDecorator()],
 };
-
-export const SubrouteNestedIndex = () => <App />;
 
 SubrouteNestedIndex.storyName = "Subroute nested index";

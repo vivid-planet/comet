@@ -4,18 +4,16 @@ import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _Stack = () => {
     return (
         <Stack topLevelTitle="Stack">
             <StackBreadcrumbs />
             <Typography>Foo</Typography>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const _Stack = () => <Story />;

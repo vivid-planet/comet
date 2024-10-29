@@ -93,7 +93,12 @@ function Page2() {
     );
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const FormInStack = () => {
     return (
         <Stack topLevelTitle="Stack">
             <StackSwitch>
@@ -106,13 +111,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
-
-export const FormInStack = () => <Story />;
 
 FormInStack.storyName = "FormInStack";

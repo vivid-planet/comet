@@ -3,7 +3,12 @@ import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackInForm = () => {
     return (
         <FinalForm
             mode="edit"
@@ -33,13 +38,6 @@ function Story() {
             )}
         </FinalForm>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [storyRouterDecorator()],
 };
-
-export const StackInForm = () => <Story />;
 
 StackInForm.storyName = "StackInForm";

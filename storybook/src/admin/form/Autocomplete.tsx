@@ -25,7 +25,11 @@ const initialValues = {
     ],
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const AutocompleteAsyncSelect = () => {
     const acAsyncProps = useAsyncOptionsProps<Option>(async () => {
         return new Promise((resolve) => setTimeout(() => resolve(options), 500));
     });
@@ -116,12 +120,6 @@ function Story() {
             </div>
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const AutocompleteAsyncSelect = () => <Story />;
 
 AutocompleteAsyncSelect.storyName = "Autocomplete / Async Select";

@@ -16,7 +16,12 @@ import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator()],
+};
+
+export const FormWithRouterTabs = () => {
     return (
         <Stack topLevelTitle="Root Stack">
             <RouterTabs>
@@ -72,13 +77,6 @@ function Story() {
             </RouterTabs>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [storyRouterDecorator()],
 };
-
-export const FormWithRouterTabs = () => <Story />;
 
 FormWithRouterTabs.storyName = "Form with router tabs";

@@ -4,7 +4,11 @@ import * as React from "react";
 import { Form } from "react-final-form";
 import { FormattedDate } from "react-intl";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const TypographyStaticTextInForm = () => {
     const initialValues = {
         foo: "FooValue",
         bar: "BarValue",
@@ -53,12 +57,6 @@ function Story() {
             />
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const TypographyStaticTextInForm = () => <Story />;
 
 TypographyStaticTextInForm.storyName = "Typography Static Text in Form";

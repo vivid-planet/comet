@@ -42,7 +42,13 @@ export const DynamicTabs = ({ showFourthTab }: { showFourthTab: boolean }) => {
     );
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/tabs",
+    decorators: [storyRouterDecorator()],
+    excludeStories: ["DynamicRouterTabs", "DynamicTabs"],
+};
+
+export const DynamicTabsAndRouterTabs = () => {
     const [showFourthTab, setShowFourthTab] = React.useState(false);
 
     return (
@@ -60,14 +66,6 @@ function Story() {
             <DynamicRouterTabs showFourthTab={showFourthTab} />
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/tabs",
-    decorators: [storyRouterDecorator()],
-    excludeStories: ["DynamicRouterTabs", "DynamicTabs"],
 };
-
-export const DynamicTabsAndRouterTabs = () => <Story />;
 
 DynamicTabsAndRouterTabs.storyName = "Dynamic Tabs and RouterTabs";

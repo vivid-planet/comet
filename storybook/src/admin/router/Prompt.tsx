@@ -42,20 +42,18 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function App() {
+export default {
+    title: "@comet/admin/router",
+    decorators: [storyRouterDecorator()],
+};
+
+export const NestedRouteWithNonSubPathRouteInPrompt = () => {
     return (
         <>
             <Path />
             <Story />
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/router",
-    decorators: [storyRouterDecorator()],
 };
-
-export const NestedRouteWithNonSubPathRouteInPrompt = () => <App />;
 
 NestedRouteWithNonSubPathRouteInPrompt.storyName = "Nested route with non-sub-path route in Prompt";

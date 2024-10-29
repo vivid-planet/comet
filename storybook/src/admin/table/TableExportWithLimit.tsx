@@ -55,7 +55,12 @@ interface IVariables {
     limit: number;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ExportWithLimit = () => {
     const totalCount = 5000;
     const loadLimit = 50;
     const pagingApi = useTableQueryPaging(0);
@@ -122,11 +127,4 @@ function Story() {
             )}
         </TableQuery>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const ExportWithLimit = () => <Story />;

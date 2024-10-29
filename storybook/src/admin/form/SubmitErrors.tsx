@@ -30,7 +30,12 @@ const resolveSubmitErrors = (error: SubmissionErrors) => {
     return result;
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const SubmitErrors = () => {
     const initialValues = {
         foo: "foo",
     };
@@ -54,13 +59,6 @@ function Story() {
             <FinalFormSaveCancelButtonsLegacy />
         </FinalForm>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const SubmitErrors = () => <Story />;
 
 SubmitErrors.storyName = "SubmitErrors";

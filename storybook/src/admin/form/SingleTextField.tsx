@@ -3,7 +3,11 @@ import { Search } from "@comet/admin-icons";
 import { Card, CardContent, Checkbox, FormControlLabel, Grid, InputAdornment, InputBase, Typography } from "@mui/material";
 import * as React from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const SingleTextField = () => {
     const [searchString1, setSearchString1] = React.useState<string>("");
     const [searchString2, setSearchString2] = React.useState<string>("");
     const [checkboxValue, setCheckboxValue] = React.useState<boolean>(false);
@@ -69,12 +73,6 @@ function Story() {
             </div>
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const SingleTextField = () => <Story />;
 
 SingleTextField.storyName = "Single TextField";

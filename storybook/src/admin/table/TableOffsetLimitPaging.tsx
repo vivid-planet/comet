@@ -5,7 +5,12 @@ import * as React from "react";
 import { LaunchesPastResult } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloStoryDecorator("/graphql")],
+};
+
+export const PagingOffsetLimit = () => {
     const pagingApi = useTableQueryPaging(0);
     const limit = 10;
     const { tableData, api, loading, error } = useTableQuery<
@@ -59,11 +64,4 @@ function Story() {
             </MainContent>
         </TableQuery>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
-    decorators: [apolloStoryDecorator("/graphql")],
 };
-
-export const PagingOffsetLimit = () => <Story />;

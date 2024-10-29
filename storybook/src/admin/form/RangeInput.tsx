@@ -33,7 +33,11 @@ const Thumb = styled(SliderThumb)`
     }
 `;
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const RangeInput = () => {
     return (
         <>
             <Box marginBottom={4}>
@@ -156,10 +160,4 @@ function Story() {
             </div>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const RangeInput = () => <Story />;

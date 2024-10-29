@@ -116,7 +116,12 @@ const Content = ({ children }: { children: string }) => (
     </MainContent>
 );
 
-const Story: React.FC = () => (
+export default {
+    title: "@comet/admin/mui",
+    decorators: [storyRouterDecorator()],
+};
+
+export const MenuDynamicVariants = () => (
     <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
         <Switch>
             <Route path="/" exact render={() => <Content>Root</Content>} />
@@ -129,13 +134,6 @@ const Story: React.FC = () => (
         </Switch>
     </MasterLayout>
 );
-
-export default {
-    title: "@comet/admin/mui",
-    decorators: [storyRouterDecorator()],
-};
-
-export const MenuDynamicVariants = () => <Story />;
 
 MenuDynamicVariants.storyName = "Menu (dynamic variants)";
 MenuDynamicVariants.parameters = { layout: "fullscreen" };

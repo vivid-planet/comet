@@ -29,7 +29,12 @@ function PrintMountCount() {
     return <div>Mount count: {JSON.stringify(mountCount)}</div>;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/tabs",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInStack = () => {
     return (
         <Stack topLevelTitle="Nested Stack">
             <PrintMountCount />
@@ -51,13 +56,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/tabs",
-    decorators: [storyRouterDecorator()],
 };
-
-export const RouterTabsInStack = () => <Story />;
 
 RouterTabsInStack.storyName = "RouterTabs in Stack";

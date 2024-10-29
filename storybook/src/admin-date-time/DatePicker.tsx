@@ -4,7 +4,11 @@ import { Card, CardContent } from "@mui/material";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-const Story = () => {
+export default {
+    title: "@comet/admin-date-time",
+};
+
+export const DatePicker = () => {
     type Values = {
         dateOne: string;
         dateTwo: string;
@@ -33,9 +37,3 @@ const Story = () => {
         </div>
     );
 };
-
-export default {
-    title: "@comet/admin-date-time",
-};
-
-export const DatePicker = () => <Story />;

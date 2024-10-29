@@ -41,7 +41,12 @@ const CustomButtons: React.FC = () => {
     }
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const _CustomButtons = () => {
     return (
         <div style={{ width: 300 }}>
             <FinalForm
@@ -62,13 +67,6 @@ function Story() {
             </FinalForm>
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const _CustomButtons = () => <Story />;
 
 _CustomButtons.storyName = "CustomButtons";

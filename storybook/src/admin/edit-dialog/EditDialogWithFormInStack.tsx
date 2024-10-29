@@ -98,19 +98,17 @@ const InnerNestedStack = ({ counter }: InnerNestedStackProps) => {
     );
 };
 
-function Story() {
-    return (
-        <Stack topLevelTitle="Page 1">
-            <InnerNestedStack counter={1} />
-        </Stack>
-    );
-}
-
 export default {
     title: "@comet/admin/edit-dialog",
     decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
 };
 
-export const EditDialogWithFormInStack = () => <Story />;
+export const EditDialogWithFormInStack = () => {
+    return (
+        <Stack topLevelTitle="Page 1">
+            <InnerNestedStack counter={1} />
+        </Stack>
+    );
+};
 
 EditDialogWithFormInStack.storyName = "Edit Dialog with Form in Stack";

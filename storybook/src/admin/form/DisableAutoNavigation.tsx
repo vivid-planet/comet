@@ -97,7 +97,12 @@ const SampleForm: React.FunctionComponent = () => {
     );
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+};
+
+export const DisableAutoNavigation = () => {
     return (
         <Switch>
             <Stack topLevelTitle="Sample">
@@ -112,11 +117,4 @@ function Story() {
             </Stack>
         </Switch>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
 };
-
-export const DisableAutoNavigation = () => <Story />;

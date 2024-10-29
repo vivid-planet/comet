@@ -43,7 +43,12 @@ function SaveButtonContainer() {
     return <SaveBoundarySaveButton />;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/save-range",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _SaveBoundary = () => {
     return (
         <SaveBoundary>
             <DemoForm />
@@ -52,13 +57,6 @@ function Story() {
             <SaveButtonContainer />
         </SaveBoundary>
     );
-}
-
-export default {
-    title: "@comet/admin/save-range",
-    decorators: [storyRouterDecorator()],
 };
-
-export const _SaveBoundary = () => <Story />;
 
 _SaveBoundary.storyName = "SaveBoundary";

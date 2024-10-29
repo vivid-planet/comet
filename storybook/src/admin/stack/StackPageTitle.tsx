@@ -85,7 +85,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _StackPageTitle = () => {
     return (
         <div>
             <p>This story is mainly for testing the StackPageTitle component under various situations.</p>
@@ -99,11 +104,4 @@ function App() {
             </Switch>
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const _StackPageTitle = () => <App />;

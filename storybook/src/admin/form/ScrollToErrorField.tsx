@@ -20,7 +20,12 @@ function validate({ foo, bar }: FormValues) {
     return errors;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ScrollToErrorField = () => {
     const initialValues = {
         foo: "foo",
         bar: "",
@@ -50,11 +55,4 @@ function Story() {
             )}
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const ScrollToErrorField = () => <Story />;

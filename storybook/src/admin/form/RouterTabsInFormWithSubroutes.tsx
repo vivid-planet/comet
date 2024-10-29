@@ -17,7 +17,12 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInFormWithSubroutes = () => {
     return (
         <>
             <Path />
@@ -55,13 +60,6 @@ function Story() {
             </FinalForm>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [storyRouterDecorator()],
 };
-
-export const RouterTabsInFormWithSubroutes = () => <Story />;
 
 RouterTabsInFormWithSubroutes.storyName = "RouterTabsInFormWithSubroutes";

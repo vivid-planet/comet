@@ -111,7 +111,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const BesidesFormSelectionHooks = () => {
     return (
         <Switch>
             <Route exact path="/">
@@ -122,11 +127,4 @@ function App() {
             </Route>
         </Switch>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
-
-export const BesidesFormSelectionHooks = () => <App />;

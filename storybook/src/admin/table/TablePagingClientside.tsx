@@ -7,7 +7,11 @@ interface IExampleRow {
     foo2: string;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+};
+
+export const PagingClientside = () => {
     const data = Array.from(Array(100).keys()).map(
         (i): IExampleRow => ({
             id: i,
@@ -56,10 +60,4 @@ function Story() {
             ]}
         />
     );
-}
-
-export default {
-    title: "@comet/admin/table",
 };
-
-export const PagingClientside = () => <Story />;

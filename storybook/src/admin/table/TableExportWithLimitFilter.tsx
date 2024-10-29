@@ -63,7 +63,12 @@ interface IVariables extends IFilterValues {
     limit: number;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ExportWithLimitFilter = () => {
     const totalCount = 5000;
     const loadLimit = 50;
     const pagingApi = useTableQueryPaging(0);
@@ -139,11 +144,4 @@ function Story() {
             </>
         </TableQuery>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const ExportWithLimitFilter = () => <Story />;

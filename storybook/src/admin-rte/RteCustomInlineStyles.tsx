@@ -20,7 +20,11 @@ const rteOptions: IRteOptions = {
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const CustomInlineStyles = () => {
     const { editorState, setEditorState } = useRteApi();
 
     // focus the editor to see the cursor immediately
@@ -39,12 +43,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
-
-export default {
-    title: "@comet/admin-rte",
 };
-
-export const CustomInlineStyles = () => <Story />;
 
 CustomInlineStyles.storyName = "Custom inline styles";

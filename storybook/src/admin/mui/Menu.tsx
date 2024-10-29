@@ -76,7 +76,13 @@ const Content = ({ children }: { children: string }) => (
     </MainContent>
 );
 
-export const Story: React.FC = () => (
+export default {
+    title: "@comet/admin/mui",
+    decorators: [storyRouterDecorator()],
+    excludeStories: ["Story"],
+};
+
+export const _Menu = () => (
     <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
         <Switch>
             <Route path="/" exact render={() => <Content>Root</Content>} />
@@ -91,13 +97,5 @@ export const Story: React.FC = () => (
         </Switch>
     </MasterLayout>
 );
-
-export default {
-    title: "@comet/admin/mui",
-    decorators: [storyRouterDecorator()],
-    excludeStories: ["Story"],
-};
-
-export const _Menu = () => <Story />;
 
 _Menu.parameters = { layout: "fullscreen" };

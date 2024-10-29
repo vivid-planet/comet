@@ -11,7 +11,11 @@ const options = [
     { value: "cherry", label: "Cherry" },
 ];
 
-function Story() {
+export default {
+    title: "@comet/admin-react-select",
+};
+
+export const FinalFormReactSelectDisabledOption = () => {
     return (
         <Card variant="outlined" style={{ width: 400 }}>
             <CardContent>
@@ -39,10 +43,4 @@ function Story() {
             </CardContent>
         </Card>
     );
-}
-
-export default {
-    title: "@comet/admin-react-select",
 };
-
-export const FinalFormReactSelectDisabledOption = () => <Story />;

@@ -11,7 +11,11 @@ const { RteField, RteReadOnly } = createFinalFormRte<ContentFormat>({
     rteOptions, // see ./RteAllOptions for details
 });
 
-function Story() {
+export default {
+    title: "@comet/admin-rte/field",
+};
+
+export const FieldAllOptions = () => {
     const [submittedValue, setSubmittedValue] = React.useState<{ rteContent: any }>({ rteContent: defaultContent });
 
     return (
@@ -49,12 +53,6 @@ function Story() {
             </Grid>
         </Grid>
     );
-}
-
-export default {
-    title: "@comet/admin-rte/field",
 };
-
-export const FieldAllOptions = () => <Story />;
 
 FieldAllOptions.storyName = "Field, all options";

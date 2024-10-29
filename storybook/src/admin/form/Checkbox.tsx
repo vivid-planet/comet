@@ -3,7 +3,11 @@ import { Card, CardContent, FormControlLabel, Grid } from "@mui/material";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const Checkbox = () => {
     return (
         <div style={{ width: 600 }}>
             <Form
@@ -85,10 +89,4 @@ function Story() {
             />
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const Checkbox = () => <Story />;

@@ -42,7 +42,11 @@ const makeRteApiProps: IMakeRteApiProps<RawDraftContentState> = {
 
 const [useRteApi] = makeRteApi<RawDraftContentState>(makeRteApiProps);
 
-function Story() {
+export default {
+    title: "@comet/admin-rte/save-as",
+};
+
+export const SaveAsRawDraftJsObject = () => {
     const [savableContent, setSavableContent] = React.useState<RawDraftContentState>(defaultValue);
 
     const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
@@ -62,12 +66,6 @@ function Story() {
             <PrintAnything label="Save Value: RawDraftJs (not stringified)">{savableContent}</PrintAnything>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin-rte/save-as",
 };
-
-export const SaveAsRawDraftJsObject = () => <Story />;
 
 SaveAsRawDraftJsObject.storyName = "Save as Raw DraftJs Object";

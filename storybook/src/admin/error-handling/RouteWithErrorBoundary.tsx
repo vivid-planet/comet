@@ -39,7 +39,12 @@ function MasterMenu() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/error-handling/error-boundaries",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _RouteWithErrorBoundary = () => {
     return (
         <MasterLayout menuComponent={MasterMenu}>
             <Switch>
@@ -51,13 +56,6 @@ function App() {
             </Switch>
         </MasterLayout>
     );
-}
-
-export default {
-    title: "@comet/admin/error-handling/error-boundaries",
-    decorators: [storyRouterDecorator()],
 };
-
-export const _RouteWithErrorBoundary = () => <App />;
 
 _RouteWithErrorBoundary.storyName = "RouteWithErrorBoundary";

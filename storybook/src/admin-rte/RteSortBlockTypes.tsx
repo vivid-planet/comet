@@ -12,7 +12,11 @@ const rteOptions: IRteOptions = {
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteSortBlockTypes = () => {
     const { editorState, setEditorState } = useRteApi();
 
     return (
@@ -24,12 +28,6 @@ function Story() {
             </Card>
         </Box>
     );
-}
-
-export default {
-    title: "@comet/admin-rte",
 };
-
-export const RteSortBlockTypes = () => <Story />;
 
 RteSortBlockTypes.storyName = "Rte, sort block types";

@@ -77,20 +77,18 @@ function MasterHeader() {
     );
 }
 
-export function Story() {
-    return (
-        <MasterLayout menuComponent={Menu} headerComponent={MasterHeader}>
-            <MainContent>Some content</MainContent>
-        </MasterLayout>
-    );
-}
-
 export default {
     title: "@comet/admin/mui",
     decorators: [storyRouterDecorator()],
     excludeStories: ["Story"],
 };
 
-export const _AppHeader = () => <Story />;
+export const _AppHeader = () => {
+    return (
+        <MasterLayout menuComponent={Menu} headerComponent={MasterHeader}>
+            <MainContent>Some content</MainContent>
+        </MasterLayout>
+    );
+};
 
 _AppHeader.parameters = { layout: "fullscreen" };

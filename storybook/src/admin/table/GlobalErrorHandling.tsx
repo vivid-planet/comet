@@ -21,7 +21,12 @@ interface QueryData {
     };
 }
 
-const Story: React.FunctionComponent = () => {
+export default {
+    title: "@comet/admin/table/globalErrorHandling",
+    decorators: [apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()],
+};
+
+export const GlobalErrorHandling = () => {
     const query = gql`
         ${text("GQL Query", "query StarWarsPeople {allPeople { people { id name birthYear gender homeworld{ name } } }}")}
     `;
@@ -66,10 +71,3 @@ const Story: React.FunctionComponent = () => {
         </TableQuery>
     );
 };
-
-export default {
-    title: "@comet/admin/table/globalErrorHandling",
-    decorators: [apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()],
-};
-
-export const GlobalErrorHandling = () => <Story />;

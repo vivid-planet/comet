@@ -57,7 +57,12 @@ interface IVariables extends IFilterValues {
     pathFunction: any;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ResetFilter = () => {
     const filterApi = useTableQueryFilter<IFilterValues>({});
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
         variables: {
@@ -115,11 +120,4 @@ function Story() {
             )}
         </TableQuery>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const ResetFilter = () => <Story />;

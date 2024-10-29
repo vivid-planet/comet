@@ -171,7 +171,12 @@ function ExampleForm(props: IExampleFormProps) {
     );
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const StackTableFormQueryInTable = () => {
     const persistedStateId = usePersistedStateId();
     return (
         <Stack topLevelTitle="Stack">
@@ -185,13 +190,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
-
-export const StackTableFormQueryInTable = () => <Story />;
 
 StackTableFormQueryInTable.storyName = "Stack Table Form Query in Table";

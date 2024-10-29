@@ -51,20 +51,18 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function App() {
+export default {
+    title: "@comet/admin/router",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _ForcePromptRoute = () => {
     return (
         <>
             <Path />
             <Story />
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/router",
-    decorators: [storyRouterDecorator()],
 };
-
-export const _ForcePromptRoute = () => <App />;
 
 _ForcePromptRoute.storyName = "ForcePromptRoute";

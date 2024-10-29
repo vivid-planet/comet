@@ -47,16 +47,14 @@ const CustomSnackbar = () => {
     );
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/snackbar",
+};
+
+export const _CustomSnackbar = () => {
     return (
         <SnackbarProvider>
             <CustomSnackbar />
         </SnackbarProvider>
     );
-}
-
-export default {
-    title: "@comet/admin/snackbar",
 };
-
-export const _CustomSnackbar = () => <Story />;

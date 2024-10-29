@@ -33,16 +33,14 @@ const UndoSnackbarExample = () => {
     );
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/snackbar",
+};
+
+export const _UndoSnackbar = () => {
     return (
         <SnackbarProvider>
             <UndoSnackbarExample />
         </SnackbarProvider>
     );
-}
-
-export default {
-    title: "@comet/admin/snackbar",
 };
-
-export const _UndoSnackbar = () => <Story />;

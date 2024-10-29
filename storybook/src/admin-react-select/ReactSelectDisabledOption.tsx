@@ -9,7 +9,11 @@ const options = [
     { value: "vanilla", label: "Vanilla" },
 ];
 
-function Story() {
+export default {
+    title: "@comet/admin-react-select",
+};
+
+export const ReactSelectDisabledOption = () => {
     return (
         <Card variant="outlined" style={{ width: 400 }}>
             <CardContent>
@@ -19,10 +23,4 @@ function Story() {
             </CardContent>
         </Card>
     );
-}
-
-export default {
-    title: "@comet/admin-react-select",
 };
-
-export const ReactSelectDisabledOption = () => <Story />;

@@ -4,7 +4,12 @@ import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackWithReactReactNodeTitle = () => {
     const [StackSwitch, api] = useStackSwitch();
 
     return (
@@ -23,13 +28,6 @@ function Story() {
             </StackSwitch>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const StackWithReactReactNodeTitle = () => <Story />;
 
 StackWithReactReactNodeTitle.storyName = "Stack with React.ReactNode title";

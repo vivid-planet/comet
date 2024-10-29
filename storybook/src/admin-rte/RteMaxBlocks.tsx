@@ -15,7 +15,11 @@ const rteOptions: IRteOptions = {
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteMaxBlocksSet = () => {
     const { editorState, setEditorState } = useRteApi({
         defaultValue: JSON.stringify({
             blocks: [
@@ -55,12 +59,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
-
-export default {
-    title: "@comet/admin-rte",
 };
-
-export const RteMaxBlocksSet = () => <Story />;
 
 RteMaxBlocksSet.storyName = "Rte, maxBlocks set";

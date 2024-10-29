@@ -5,7 +5,12 @@ import * as React from "react";
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const _Tabs = () => {
     const [showExample3, setShowExample3] = React.useState(false);
 
     return (
@@ -47,11 +52,4 @@ function Story() {
             </FinalForm>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
-
-export const _Tabs = () => <Story />;

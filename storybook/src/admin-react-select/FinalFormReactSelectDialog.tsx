@@ -10,7 +10,11 @@ const options = [
     { value: "vanilla", label: "Vanilla" },
 ];
 
-function Story() {
+export default {
+    title: "@comet/admin-react-select",
+};
+
+export const FinalFormReactSelectDialog = () => {
     return (
         <div>
             <Dialog open={true}>
@@ -42,10 +46,4 @@ function Story() {
             </Dialog>
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin-react-select",
 };
-
-export const FinalFormReactSelectDialog = () => <Story />;

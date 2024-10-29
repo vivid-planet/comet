@@ -2,7 +2,11 @@ import { Cookie, Error, ThreeDotSaving } from "@comet/admin-icons";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import * as React from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin-icons",
+};
+
+export const IconUsage = () => {
     return (
         <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -69,10 +73,4 @@ function Story() {
             </Grid>
         </Grid>
     );
-}
-
-export default {
-    title: "@comet/admin-icons",
 };
-
-export const IconUsage = () => <Story />;

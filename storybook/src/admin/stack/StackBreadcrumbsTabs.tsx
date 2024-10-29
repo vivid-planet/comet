@@ -4,7 +4,12 @@ import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackBreadcrumbsWithNestedTabs = () => {
     const location = useLocation();
 
     return (
@@ -33,13 +38,6 @@ function Story() {
             </Stack>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const StackBreadcrumbsWithNestedTabs = () => <Story />;
 
 StackBreadcrumbsWithNestedTabs.storyName = "Stack Breadcrumbs with nested Tabs";

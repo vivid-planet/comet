@@ -32,7 +32,11 @@ const filterEditorStateBeforeUpdate: FilterEditorStateBeforeUpdateFn = (nextStat
     return filterEditorStateDefault(nextState, ctx);
 };
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteFilterContent = () => {
     const { editorState, setEditorState } = useRteApi();
 
     // focus the editor to see the cursor immediately
@@ -55,12 +59,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
-
-export default {
-    title: "@comet/admin-rte",
 };
-
-export const RteFilterContent = () => <Story />;
 
 RteFilterContent.storyName = "Rte, filter content";

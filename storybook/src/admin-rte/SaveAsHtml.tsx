@@ -22,7 +22,11 @@ const makeRteApiProps: IMakeRteApiProps<Html> = {
 
 const [useRteApi] = makeRteApi<Html>(makeRteApiProps);
 
-function Story() {
+export default {
+    title: "@comet/admin-rte/save-as",
+};
+
+export const SaveAsHtml = () => {
     const [savableContent, setSavableContent] = React.useState<Html>(defaultValue);
 
     const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
@@ -42,12 +46,6 @@ function Story() {
             <PrintAnything label="Save Value: Html">{savableContent}</PrintAnything>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin-rte/save-as",
 };
-
-export const SaveAsHtml = () => <Story />;
 
 SaveAsHtml.storyName = "Save as HTML";

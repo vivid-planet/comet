@@ -20,7 +20,11 @@ const rteOptions: IRteReadOnlyOptions = {
     },
 };
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteReadonly = () => {
     const { editorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
 
     return (
@@ -35,12 +39,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
-
-export default {
-    title: "@comet/admin-rte",
 };
-
-export const RteReadonly = () => <Story />;
 
 RteReadonly.storyName = "Rte readonly";

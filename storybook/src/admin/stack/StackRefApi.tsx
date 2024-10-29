@@ -31,7 +31,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackRefApi = () => {
     return (
         <Switch>
             <Route exact path="/">
@@ -42,11 +47,4 @@ function App() {
             </Route>
         </Switch>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const StackRefApi = () => <App />;

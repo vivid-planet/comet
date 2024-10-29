@@ -38,7 +38,12 @@ interface IVariables {
     order: SortDirection;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const Sort = () => {
     const sortApi = useTableQuerySort({
         columnName: "name",
         direction: SortDirection.ASC,
@@ -82,11 +87,4 @@ function Story() {
             )}
         </TableQuery>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const Sort = () => <Story />;

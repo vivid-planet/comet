@@ -3,7 +3,11 @@ import { Box, Card, CardContent, Chip, Grid, Stack, Typography } from "@mui/mate
 import { boolean, select } from "@storybook/addon-knobs";
 import * as React from "react";
 
-function Story() {
+export default {
+    title: "@comet/admin/mui",
+};
+
+export const _Chip = () => {
     return (
         <Stack spacing={4}>
             <Card>
@@ -323,10 +327,4 @@ function Story() {
             </Card>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/mui",
 };
-
-export const _Chip = () => <Story />;

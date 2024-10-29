@@ -45,7 +45,11 @@ function ExampleHeadTableRow<TRow extends IRow>(props: ITableHeadRowProps<TRow>)
     );
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+};
+
+export const ExpandedRow = () => {
     const data: IRow[] = [
         { id: 1, foo1: "blub", foo2: "blub" },
         { id: 2, foo1: "blub", foo2: "blub" },
@@ -74,10 +78,4 @@ function Story() {
             ]}
         />
     );
-}
-
-export default {
-    title: "@comet/admin/table",
 };
-
-export const ExpandedRow = () => <Story />;

@@ -4,7 +4,12 @@ import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsWithNestedStack = () => {
     return (
         <Stack topLevelTitle="Root Stack">
             <StackBreadcrumbs />
@@ -38,13 +43,6 @@ function Story() {
             </RouterTabs>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const RouterTabsWithNestedStack = () => <Story />;
 
 RouterTabsWithNestedStack.storyName = "RouterTabs with nested Stack";

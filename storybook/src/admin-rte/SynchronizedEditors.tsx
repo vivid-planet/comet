@@ -7,7 +7,11 @@ import { PrintEditorState, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const SynchronizedRtEs = () => {
     const { editorState, setEditorState } = useRteApi();
     const [activeEditor, setActiveEditor] = React.useState<"left" | "right">("left");
 
@@ -49,12 +53,6 @@ function Story() {
             </Grid>
         </Grid>
     );
-}
-
-export default {
-    title: "@comet/admin-rte",
 };
-
-export const SynchronizedRtEs = () => <Story />;
 
 SynchronizedRtEs.storyName = "Synchronized RTEs";

@@ -47,7 +47,12 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackNestedOneStack = () => {
     return (
         <>
             <Path />
@@ -61,13 +66,6 @@ function App() {
             </Switch>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const StackNestedOneStack = () => <App />;
 
 StackNestedOneStack.storyName = "Stack Nested one Stack";

@@ -162,7 +162,12 @@ function ExampleForm(props: IExampleFormProps) {
     );
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+};
+
+export const StackTableFormQueryAtStack = () => {
     const filterApi = useTableQueryFilter<IFilterValues>({ query: "" });
 
     const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
@@ -187,13 +192,6 @@ function Story() {
             </TableQuery>
         </Stack>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
-
-export const StackTableFormQueryAtStack = () => <Story />;
 
 StackTableFormQueryAtStack.storyName = "Stack Table Form Query at stack";

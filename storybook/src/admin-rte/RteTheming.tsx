@@ -5,7 +5,11 @@ import * as React from "react";
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+};
+
+export const RteMinHeight = () => {
     const { editorState, setEditorState } = useRteApi();
 
     return (
@@ -17,12 +21,6 @@ function Story() {
             </Card>
         </Box>
     );
-}
-
-export default {
-    title: "@comet/admin-rte",
 };
-
-export const RteMinHeight = () => <Story />;
 
 RteMinHeight.storyName = "Rte, minHeight";

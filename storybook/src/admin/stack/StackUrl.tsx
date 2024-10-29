@@ -5,7 +5,12 @@ import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackUrl = () => {
     const location = useLocation();
 
     return (
@@ -50,13 +55,6 @@ function Story() {
             </Stack>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const StackUrl = () => <Story />;
 
 StackUrl.storyName = "StackUrl";

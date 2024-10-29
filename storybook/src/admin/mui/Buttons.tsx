@@ -30,7 +30,13 @@ const ButtonsRow = styled("div")`
     margin-bottom: ${(props) => props.theme.spacing(4)};
 `;
 
-export const Story: React.FC = () => {
+export default {
+    title: "@comet/admin/mui",
+    decorators: [storyRouterDecorator()],
+    excludeStories: ["Story"],
+};
+
+export const Buttons = () => {
     return (
         <Grid container spacing={4}>
             <Grid item xs={12}>
@@ -309,11 +315,3 @@ export const Story: React.FC = () => {
         </Grid>
     );
 };
-
-export default {
-    title: "@comet/admin/mui",
-    decorators: [storyRouterDecorator()],
-    excludeStories: ["Story"],
-};
-
-export const Buttons = () => <Story />;

@@ -32,7 +32,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const StackCustomSeparator = () => {
     return (
         <Switch>
             <Route exact path="/">
@@ -43,11 +48,4 @@ function App() {
             </Route>
         </Switch>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const StackCustomSeparator = () => <App />;

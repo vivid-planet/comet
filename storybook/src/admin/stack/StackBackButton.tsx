@@ -34,7 +34,12 @@ function Story() {
     );
 }
 
-function App() {
+export default {
+    title: "@comet/admin/stack",
+    decorators: [storyRouterDecorator()],
+};
+
+export const _StackBackButton = () => {
     return (
         <Switch>
             <Route exact path="/">
@@ -45,11 +50,4 @@ function App() {
             </Route>
         </Switch>
     );
-}
-
-export default {
-    title: "@comet/admin/stack",
-    decorators: [storyRouterDecorator()],
 };
-
-export const _StackBackButton = () => <App />;

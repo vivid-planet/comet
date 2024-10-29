@@ -4,7 +4,11 @@ import { boolean } from "@storybook/addon-knobs";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-const Story = () => {
+export default {
+    title: "@comet/admin-date-time",
+};
+
+export const AllPickers = () => {
     type FormValues = {
         date: string;
         dateRange: DateRange;
@@ -67,9 +71,3 @@ const Story = () => {
         </Box>
     );
 };
-
-export default {
-    title: "@comet/admin-date-time",
-};
-
-export const AllPickers = () => <Story />;

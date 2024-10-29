@@ -4,7 +4,11 @@ import { Box, Checkbox, InputAdornment, ListItemIcon, ListItemText, MenuItem } f
 import * as React from "react";
 import { Form } from "react-final-form";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const Select = () => {
     const options: SelectFieldOption[] = [
         { value: "chocolate", label: "Chocolate" },
         { value: "strawberry", label: "Strawberry" },
@@ -125,10 +129,4 @@ function Story() {
             />
         </Box>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const Select = () => <Story />;

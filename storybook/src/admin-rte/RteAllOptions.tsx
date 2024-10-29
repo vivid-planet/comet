@@ -101,7 +101,13 @@ export const rteOptions: IRteOptions = {
 
 const [useRteApi] = makeRteApi<ContentFormat>(makeApiOptions);
 
-function Story() {
+export default {
+    title: "@comet/admin-rte",
+
+    excludeStories: ["ContentFormat", "defaultContent", "makeApiOptions", "apiOptions", "rteOptions"],
+};
+
+export const RteAllOptions = () => {
     const { editorState, setEditorState } = useRteApi(apiOptions);
 
     // focus the editor to see the cursor immediately
@@ -120,14 +126,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
-
-export default {
-    title: "@comet/admin-rte",
-
-    excludeStories: ["ContentFormat", "defaultContent", "makeApiOptions", "apiOptions", "rteOptions"],
 };
-
-export const RteAllOptions = () => <Story />;
 
 RteAllOptions.storyName = "Rte, all options";

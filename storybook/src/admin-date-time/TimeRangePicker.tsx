@@ -4,7 +4,11 @@ import { Card, CardContent } from "@mui/material";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-const Story = () => {
+export default {
+    title: "@comet/admin-date-time",
+};
+
+export const TimeRangePicker = () => {
     interface Values {
         timeRangeOne?: TimeRange;
         timeRangeTwo?: TimeRange;
@@ -36,9 +40,3 @@ const Story = () => {
         </div>
     );
 };
-
-export default {
-    title: "@comet/admin-date-time",
-};
-
-export const TimeRangePicker = () => <Story />;

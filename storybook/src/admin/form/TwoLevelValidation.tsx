@@ -33,7 +33,12 @@ const validateError: FieldValidator<number | undefined> = (value) => {
     }
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const TwoLevelValidationWarningAndError = () => {
     return (
         <Grid container spacing={4} style={{ maxWidth: 800 }}>
             <Grid item xs={6}>
@@ -141,13 +146,6 @@ function Story() {
             </Grid>
         </Grid>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const TwoLevelValidationWarningAndError = () => <Story />;
 
 TwoLevelValidationWarningAndError.storyName = "Two level validation (warning and error)";

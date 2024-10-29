@@ -24,7 +24,11 @@ interface IExampleRow {
     bar: string;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+};
+
+export const Responsive = () => {
     const { width } = useWindowSize();
     const showSecondRow = width < 1024;
 
@@ -55,10 +59,4 @@ function Story() {
             ]}
         />
     );
-}
-
-export default {
-    title: "@comet/admin/table",
 };
-
-export const Responsive = () => <Story />;

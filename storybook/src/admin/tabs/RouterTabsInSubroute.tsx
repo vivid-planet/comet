@@ -34,7 +34,12 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function App() {
+export default {
+    title: "@comet/admin/tabs",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInSubRoute = () => {
     return (
         <>
             <Path />
@@ -48,13 +53,6 @@ function App() {
             </Switch>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/tabs",
-    decorators: [storyRouterDecorator()],
 };
-
-export const RouterTabsInSubRoute = () => <App />;
 
 RouterTabsInSubRoute.storyName = "Router Tabs in SubRoute";

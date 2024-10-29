@@ -24,7 +24,11 @@ const selectOptions = [
     { value: "vanilla", label: "Vanilla" },
 ];
 
-function Story() {
+export default {
+    title: "@comet/admin/mui",
+};
+
+export const _Dialog = () => {
     const selectedDialogSize = select("Dialog size", dialogSizeOptions, "sm");
 
     return (
@@ -49,13 +53,7 @@ function Story() {
             />
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin/mui",
 };
-
-export const _Dialog = () => <Story />;
 
 function ConfirmationDialogContent(): React.ReactElement {
     return (

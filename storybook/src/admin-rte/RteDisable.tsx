@@ -7,7 +7,11 @@ import { exampleContent, PrintEditorState, useAutoFocus } from "./helper";
 
 const [useRteApi] = makeRteApi();
 
-function Story() {
+export default {
+    title: "comet-admin-rte",
+};
+
+export const RteDisable = () => {
     const { editorState, setEditorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
     const [disabled, toggleDisabled] = React.useReducer((s) => !s, false);
 
@@ -37,12 +41,6 @@ function Story() {
             <PrintEditorState editorState={editorState} />
         </>
     );
-}
-
-export default {
-    title: "comet-admin-rte",
 };
-
-export const RteDisable = () => <Story />;
 
 RteDisable.storyName = "Rte, disable";

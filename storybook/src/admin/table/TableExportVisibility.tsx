@@ -22,7 +22,11 @@ interface IExampleRow extends IRow {
     column5: string | number | null;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+};
+
+export const ExportVisibility = () => {
     const data: IExampleRow[] = [
         { id: 1, column1: 1, column2: 2, column3: 3, column4: 4, column5: 5 },
         { id: 2, column1: 1, column2: 2, column3: 3, column4: 4, column5: 5 },
@@ -83,10 +87,4 @@ function Story() {
             </MainContent>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
 };
-
-export const ExportVisibility = () => <Story />;

@@ -26,7 +26,11 @@ const CustomHeader: React.FunctionComponent = () => {
     return <div>Custom Header</div>;
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+};
+
+export const ExportDisplayedTableData = () => {
     const data: IExampleRow[] = [
         { id: 1, foo1: "blub", foo2: "blub", currency: 22.3, nestedFoo: { foo: "bar" } },
         { id: 2, foo1: "blub", foo2: "blub", currency: -100, nestedFoo: { foo: "bar" } },
@@ -88,10 +92,4 @@ function Story() {
             </MainContent>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
 };
-
-export const ExportDisplayedTableData = () => <Story />;

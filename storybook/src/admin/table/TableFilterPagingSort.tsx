@@ -96,7 +96,40 @@ interface IFilterValues {
     query?: string;
 }
 
-function Story() {
+interface IResponseLinks {
+    first?: string;
+    prev?: string;
+    next?: string;
+    last?: string;
+}
+
+export default {
+    title: "@comet/admin/table",
+
+    decorators: [
+        apolloRestStoryDecorator({
+            responseTransformer: async (response) => {
+                const links: IResponseLinks = {};
+                const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
+                linkMatches.forEach((i: string) => {
+                    const m = i.match(/<(.*?)>; rel="(.*?)"/);
+                    if (m) {
+                        links[m[2] as keyof IResponseLinks] = m[1];
+                    }
+                });
+                return {
+                    data: await response.json(),
+                    meta: {
+                        links,
+                        totalCount: response.headers.get("x-total-count"),
+                    },
+                };
+            },
+        }),
+    ],
+};
+
+export const FilterPagingSort = () => {
     const filterApi = useTableQueryFilter<IFilterValues>({});
 
     const pagingApi = useTableQueryPaging(1);
@@ -170,39 +203,4 @@ function Story() {
             </>
         </TableQuery>
     );
-}
-
-interface IResponseLinks {
-    first?: string;
-    prev?: string;
-    next?: string;
-    last?: string;
-}
-
-export default {
-    title: "@comet/admin/table",
-
-    decorators: [
-        apolloRestStoryDecorator({
-            responseTransformer: async (response) => {
-                const links: IResponseLinks = {};
-                const linkMatches = response.headers.get("link").match(/<(.*?)>; rel="(.*?)"/g) || [];
-                linkMatches.forEach((i: string) => {
-                    const m = i.match(/<(.*?)>; rel="(.*?)"/);
-                    if (m) {
-                        links[m[2] as keyof IResponseLinks] = m[1];
-                    }
-                });
-                return {
-                    data: await response.json(),
-                    meta: {
-                        links,
-                        totalCount: response.headers.get("x-total-count"),
-                    },
-                };
-            },
-        }),
-    ],
 };
-
-export const FilterPagingSort = () => <Story />;

@@ -25,7 +25,11 @@ const makeRteApiProps: IMakeRteApiProps<Markdown> = {
 
 const [useRteApi] = makeRteApi<Markdown>(makeRteApiProps);
 
-function Story() {
+export default {
+    title: "@comet/admin-rte/save-as",
+};
+
+export const SaveAsMd = () => {
     const [savableContent, setSavableContent] = React.useState<Markdown>(defaultValue);
 
     const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
@@ -45,12 +49,6 @@ function Story() {
             <PrintAnything label="Save Value: Markdown">{savableContent}</PrintAnything>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin-rte/save-as",
 };
-
-export const SaveAsMd = () => <Story />;
 
 SaveAsMd.storyName = "Save as MD";

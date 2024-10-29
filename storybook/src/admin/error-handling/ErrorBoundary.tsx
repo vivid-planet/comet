@@ -19,7 +19,12 @@ const ViewWithError: React.FunctionComponent = () => {
         </div>
     );
 };
-function Story() {
+
+export default {
+    title: "@comet/admin/error-handling/error-boundaries",
+};
+
+export const _ErrorBoundary = () => {
     const renderViewWithErrors = boolean("Render view with error", false);
     return (
         <>
@@ -55,12 +60,6 @@ function Story() {
             </Card>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/error-handling/error-boundaries",
 };
-
-export const _ErrorBoundary = () => <Story />;
 
 _ErrorBoundary.storyName = "ErrorBoundary";

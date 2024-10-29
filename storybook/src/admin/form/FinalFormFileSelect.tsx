@@ -10,7 +10,11 @@ type FormValues = {
     disabled: File[];
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const _FinalFormFileSelect = () => {
     return (
         <Box maxWidth={1600}>
             <Form<FormValues>
@@ -123,12 +127,6 @@ function Story() {
             />
         </Box>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const _FinalFormFileSelect = () => <Story />;
 
 _FinalFormFileSelect.storyName = "FinalFormFileSelect";

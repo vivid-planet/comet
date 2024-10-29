@@ -16,7 +16,12 @@ function Path() {
     return <div>{location.pathname}</div>;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [storyRouterDecorator()],
+};
+
+export const RouterTabsInForm = () => {
     return (
         <>
             <Path />
@@ -43,13 +48,6 @@ function Story() {
             </FinalForm>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [storyRouterDecorator()],
 };
-
-export const RouterTabsInForm = () => <Story />;
 
 RouterTabsInForm.storyName = "RouterTabsInForm";

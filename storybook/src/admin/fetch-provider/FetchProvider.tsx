@@ -14,7 +14,11 @@ function ExampleFetch() {
     return <div>{JSON.stringify(data)}</div>;
 }
 
-function Story() {
+export default {
+    title: "@comet/admin/fetch-provider",
+};
+
+export const _FetchProvider = () => {
     const fetch = createFetch({
         interceptHeaders: async (headers: Headers) => {
             // headers.append("x-foo", "bar");
@@ -26,12 +30,6 @@ function Story() {
             <ExampleFetch />
         </FetchProvider>
     );
-}
-
-export default {
-    title: "@comet/admin/fetch-provider",
 };
-
-export const _FetchProvider = () => <Story />;
 
 _FetchProvider.storyName = "FetchProvider";

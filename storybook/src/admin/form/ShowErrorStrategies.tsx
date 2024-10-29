@@ -29,7 +29,12 @@ const strategies: Record<ShowStrategy, FinalFormContext["shouldShowFieldError"]>
     "when-submitted": ({ submitFailed }) => !!submitFailed,
 };
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+    decorators: [apolloRestStoryDecorator()],
+};
+
+export const ShowErrorStrategies = () => {
     const initialValues = {
         foo: "foo",
         bar: "",
@@ -78,11 +83,4 @@ function Story() {
             )}
         </FinalForm>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
-
-export const ShowErrorStrategies = () => <Story />;

@@ -18,7 +18,12 @@ import * as React from "react";
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function Story() {
+export default {
+    title: "@comet/admin/table",
+    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+};
+
+export const EditDialogHooks = () => {
     interface IEditFormProps {
         row?: IExampleRow;
         mode: "edit" | "add";
@@ -124,13 +129,6 @@ function Story() {
             </MainContent>
         </>
     );
-}
-
-export default {
-    title: "@comet/admin/table",
-    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
 };
-
-export const EditDialogHooks = () => <Story />;
 
 EditDialogHooks.storyName = "EditDialog Hooks";

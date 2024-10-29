@@ -23,7 +23,11 @@ import { select } from "@storybook/addon-knobs";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const AllFieldComponents = () => {
     const fieldVariant = select(
         "Field variant",
         {
@@ -309,12 +313,6 @@ function Story() {
             )}
         />
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const AllFieldComponents = () => <Story />;
 
 AllFieldComponents.storyName = "AllFieldComponents";

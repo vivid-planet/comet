@@ -3,7 +3,11 @@ import { Box, Card, CardContent, Divider, FormControlLabel } from "@mui/material
 import * as React from "react";
 import { Form } from "react-final-form";
 
-function Story() {
+export default {
+    title: "@comet/admin/form",
+};
+
+export const Switch = () => {
     return (
         <div style={{ width: 500 }}>
             <Form
@@ -30,10 +34,4 @@ function Story() {
             />
         </div>
     );
-}
-
-export default {
-    title: "@comet/admin/form",
 };
-
-export const Switch = () => <Story />;
