@@ -242,16 +242,7 @@ Add a new page tree node with the document type "Predefined Page" to test whethe
 
 If you want to add another predefined page type (e.g., products), make the following changes:
 
-1. API: Add the new type to the GraphQL enum:
-
-    ```diff title="src/documents/predefined-pages/entities/predefined-page.entity.ts"
-    export enum PredefinedPageType {
-        News = "News",
-    +   Products = "Products",
-    }
-    ```
-
-2. Admin: Add the new type to the labels:
+1. Admin: Add the new type to the labels:
 
     ```diff title="src/documents/predefinedPages/predefinedPageLabels.tsx"
     export const predefinedPageLabels: Record<GQLPredefinedPageType, ReactNode> = {
@@ -260,7 +251,7 @@ If you want to add another predefined page type (e.g., products), make the follo
     };
     ```
 
-3. Site: Add the new type to the code paths:
+2. Site: Add the new type to the code paths:
 
     ```diff title="src/documents/predefinedPages/predefinedPagePaths.ts"
     export const predefinedPagePaths = {
