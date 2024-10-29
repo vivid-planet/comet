@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 5.9.3
+
+### Patch Changes
+
+-   070ec85d7: Fix parsing of `contentScopeAnnotation` in `KubernetesService#getContentScope`
+    -   @comet/blocks-api@5.9.3
+
 ## 5.9.2
 
 ### Patch Changes
