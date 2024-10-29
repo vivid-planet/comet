@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface BarSkeletonStyleProps {
     $backgroundColor: string;
@@ -37,10 +37,32 @@ export const RowSkeleton = styled.div<RowsSkeletonStyleProps>`
 interface ImageSkeletonStyleProps {
     $backgroundColor: string;
     $color: string;
+    $aspectRatio: string | number | undefined;
+    $height: string | number | undefined;
 }
+
 export const ImageContainer = styled.div<ImageSkeletonStyleProps>`
     background-color: ${({ $backgroundColor }) => $backgroundColor};
     color: ${({ $color }) => $color};
     width: 100%;
-    height: 300px;
+
+    ${({ $aspectRatio }) =>
+        typeof $aspectRatio !== "undefined" &&
+        css`
+            aspect-ratio: ${$aspectRatio};
+        `}
+
+    ${({ $aspectRatio, $height }) =>
+        typeof $aspectRatio === "undefined" &&
+        typeof $height !== "undefined" &&
+        css`
+            height: ${$height};
+        `}
+
+    ${({ $aspectRatio, $height }) =>
+        typeof $aspectRatio === "undefined" &&
+        typeof $height === "undefined" &&
+        css`
+            height: 300px;
+        `}
 `;
