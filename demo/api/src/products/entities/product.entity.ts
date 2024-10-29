@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudField, CrudGenerator, DamImageBlock, FileUpload, RootBlockType } from "@comet/cms-api";
+import { CrudField, CrudGenerator, DamImageBlock, RootBlockType } from "@comet/cms-api";
 import {
     BaseEntity,
     Collection,
@@ -219,11 +219,11 @@ export class Product extends BaseEntity<Product, "id"> {
     @ManyToOne(() => Manufacturer, { nullable: true, index: true, ref: true })
     manufacturer?: Ref<Manufacturer> = undefined;
 
-    @ManyToOne(() => FileUpload, { nullable: true, ref: true })
-    @Field(() => FileUpload, { nullable: true })
-    priceList?: Ref<FileUpload> = undefined;
+    // @ManyToOne(() => FileUpload, { nullable: true, ref: true })
+    // @Field(() => FileUpload, { nullable: true })
+    // priceList?: Ref<FileUpload> = undefined;
 
-    @ManyToMany(() => FileUpload)
-    @Field(() => [FileUpload])
-    datasheets = new Collection<FileUpload>(this);
+    // @ManyToMany(() => FileUpload)
+    // @Field(() => [FileUpload])
+    // datasheets = new Collection<FileUpload>(this);
 }
