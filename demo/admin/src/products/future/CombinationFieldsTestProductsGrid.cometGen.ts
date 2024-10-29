@@ -86,5 +86,52 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
                 decimals: 1,
             },
         },
+        {
+            type: "combination",
+            name: "combinedAndNestedValues",
+            headerName: "Custom formatting with nested values",
+            primaryText: {
+                type: "formattedMessage",
+                message: 'This product is named "{title}" and is a "{type}"',
+                valueFields: {
+                    title: "title",
+                    type: "type",
+                },
+            },
+            secondaryText: {
+                type: "formattedMessage",
+                message: "Price: {price} • Category: {category} • Same values again: ({nestedValues})",
+                valueFields: {
+                    price: {
+                        type: "number",
+                        field: "price",
+                        currency: "EUR",
+                        emptyValue: "No price set",
+                    },
+                    category: {
+                        type: "text",
+                        field: "category.title",
+                        emptyValue: "No category set",
+                    },
+                    nestedValues: {
+                        type: "formattedMessage",
+                        message: "Price: {price} • Category: {category}",
+                        valueFields: {
+                            price: {
+                                type: "number",
+                                field: "price",
+                                currency: "EUR",
+                                emptyValue: "No price set",
+                            },
+                            category: {
+                                type: "text",
+                                field: "category.title",
+                                emptyValue: "No category set",
+                            },
+                        },
+                    },
+                },
+            },
+        },
     ],
 };
