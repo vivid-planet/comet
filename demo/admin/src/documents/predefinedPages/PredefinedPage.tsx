@@ -1,12 +1,14 @@
 import { useQuery } from "@apollo/client";
 import { FileData, FileDataNotMenu } from "@comet/admin-icons";
 import { DocumentInterface } from "@comet/cms-admin";
+import { Chip } from "@mui/material";
 import { GQLPredefinedPage, GQLPredefinedPageInput } from "@src/graphql.generated";
-import { EditPredefinedPage } from "@src/predefinedPage/EditPredefinedPage";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
+import { EditPredefinedPage } from "./EditPredefinedPage";
 import { GQLPredefinedPageInfoTagQuery, GQLPredefinedPageInfoTagQueryVariables } from "./PredefinedPage.generated";
+import { predefinedPageLabels } from "./predefinedPageLabels";
 
 const predefinedPageInfoTagQuery = gql`
     query PredefinedPageInfoTag($id: ID!) {
@@ -23,7 +25,7 @@ const predefinedPageInfoTagQuery = gql`
 `;
 
 export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, GQLPredefinedPageInput> = {
-    displayName: <FormattedMessage id="predefinedPage" defaultMessage="Predefined Page" />,
+    displayName: <FormattedMessage id="predefinedPages.displayName" defaultMessage="Predefined Page" />,
     editComponent: EditPredefinedPage,
     getQuery: gql`
         query PredefinedPageDocument($id: ID!) {
@@ -64,7 +66,7 @@ export const PredefinedPage: DocumentInterface<Pick<GQLPredefinedPage, "type">, 
 
         if (data?.page?.document != null) {
             const { type } = data.page.document as GQLPredefinedPage;
-            return type ? <>{type}</> : null;
+            return type ? <Chip label={predefinedPageLabels[type]} /> : null;
         } else {
             return null;
         }
