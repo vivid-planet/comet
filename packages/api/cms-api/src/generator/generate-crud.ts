@@ -63,7 +63,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
             hasFieldFeature(metadata.class, prop.name, "filter") &&
             !prop.name.startsWith("scope_") &&
             prop.name != "position" &&
-            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "filter")) && // the whole emeddable has filter disabled
+            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "filter")) && // the whole embeddable has filter disabled
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "text" ||
@@ -85,7 +85,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "sort") &&
             !prop.name.startsWith("scope_") &&
-            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole emeddable has sort disabled
+            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
             (prop.type === "string" ||
                 prop.type === "text" ||
                 prop.type === "DecimalType" ||
