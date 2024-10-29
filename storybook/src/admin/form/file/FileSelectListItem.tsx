@@ -1,12 +1,32 @@
 import { FileSelectItem, FileSelectListItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { boolean, select } from "@storybook/addon-knobs";
 import { ComponentMeta } from "@storybook/react";
 import React from "react";
 
+const fileSize = 1.8 * 1024 * 1024; // 1.8 MB
+
+const fileItems: Record<string, FileSelectItem> = {
+    "Valid File": { name: "Filename.xyz", size: fileSize },
+    "Long File Name": {
+        name: "This is a really long file name that should cause the text to be truncated and show a tooltip.png",
+        size: fileSize,
+    },
+    Loading: { name: "Filename.xyz", loading: true },
+    "Error (no details)": { name: "Filename.xyz", error: true },
+    "Error (with details)": { name: "Filename.xyz", error: "File too large" },
+    Skeleton: { loading: true },
+};
+
+const filePreviewOptions = {
+    None: undefined,
+    "Generic Preview": true,
+    "Image Preview": "https://picsum.photos/756/756",
+};
+
+const downloadMethods = ["No download", "Download function", "Download URL"];
+
 export default {
     title: "@comet/admin/form/File",
-
     decorators: [
         (story) => (
             <Card sx={{ maxWidth: 300 }}>
@@ -16,37 +36,51 @@ export default {
             </Card>
         ),
     ],
+    args: {
+        selectedFile: fileItems["Valid File"],
+        showFilePreview: filePreviewOptions["None"],
+        downloadMethod: downloadMethods[0],
+        canBeDeleted: true,
+        disabled: false,
+    },
+    argTypes: {
+        selectedFile: {
+            name: "File Item",
+            control: "select",
+            options: Object.keys(fileItems),
+            mapping: fileItems,
+        },
+        showFilePreview: {
+            name: "Field Preview",
+            control: "select",
+            options: Object.keys(filePreviewOptions),
+            mapping: filePreviewOptions,
+        },
+        downloadMethod: {
+            name: "Can be downloaded",
+            control: "select",
+            options: downloadMethods,
+        },
+        canBeDeleted: {
+            name: "Can Be Deleted",
+            control: "boolean",
+        },
+        disabled: {
+            name: "Disabled",
+            control: "boolean",
+        },
+    },
 } as ComponentMeta<typeof FileSelectListItem>;
 
-export const _FileSelectListItem = () => {
-    const fileSize = 1.8 * 1024 * 1024; // 1.8 MB
+type Args = {
+    selectedFile: FileSelectItem;
+    showFilePreview?: boolean | string;
+    downloadMethod: string;
+    canBeDeleted: boolean;
+    disabled: boolean;
+};
 
-    const fileItems: Record<string, FileSelectItem> = {
-        "Valid File": { name: "Filename.xyz", size: fileSize },
-        "Long File Name": {
-            name: "This is a really long file name that should cause the text to be truncated and show a tooltip.png",
-            size: fileSize,
-        },
-        Loading: { name: "Filename.xyz", loading: true },
-        "Error (no details)": { name: "Filename.xyz", error: true },
-        "Error (with details)": { name: "Filename.xyz", error: "File too large" },
-        Skeleton: { loading: true },
-    };
-
-    const filePreviewOptions = {
-        None: undefined,
-        "Generic Preview": true,
-        "Image Preview": "https://picsum.photos/756/756",
-    };
-
-    const downloadMethods = ["No download", "Download function", "Download URL"];
-
-    const selectedFile = select("File Item", fileItems, fileItems["Valid File"]);
-    const showFilePreview = select("File Preview", filePreviewOptions, filePreviewOptions.None);
-    const downloadMethod = select("Can be downloaded", downloadMethods, downloadMethods[0]);
-    const canBeDeleted = boolean("Can Be Deleted", true);
-    const disabled = boolean("Disabled", false);
-
+export const _FileSelectListItem = ({ selectedFile, showFilePreview, downloadMethod, canBeDeleted, disabled }: Args) => {
     return (
         <FileSelectListItem
             file={selectedFile}

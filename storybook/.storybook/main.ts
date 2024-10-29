@@ -8,7 +8,7 @@ export default {
         emotionAlias: false,
     },
     addons: [
-        "@storybook/addon-knobs",
+        "@storybook/addon-controls",
         {
             name: "@storybook/addon-docs",
             options: {},

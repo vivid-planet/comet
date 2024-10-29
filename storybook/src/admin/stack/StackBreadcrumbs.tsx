@@ -1,5 +1,4 @@
 import { BreadcrumbItem, Stack, StackBreadcrumbs, useStackApi } from "@comet/admin";
-import { select } from "@storybook/addon-knobs";
 import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -40,22 +39,41 @@ const allBreadcrumbGroups: Record<string, Record<string, BreadcrumbItem[]>> = {
     "Increased length": allBradcrumbItemsGroupTwo,
 };
 
-function Story() {
+type Args = {
+    selectedBreadcrumbsNumber: string;
+    selectedBreadcrumbsGroup: string;
+};
+
+function Story({ selectedBreadcrumbsNumber, selectedBreadcrumbsGroup }: Args) {
     const stackApi = useStackApi();
     if (!stackApi) return null;
-    const selectedBreadcrumbsNumberKey = select("Number of items", Object.keys(allBradcrumbItemsGroupOne), "Three");
-    const selectedBreadcrumbsGroupKey = select("Item group", Object.keys(allBreadcrumbGroups), Object.keys(allBreadcrumbGroups)[0]);
-    stackApi.breadCrumbs = allBreadcrumbGroups[selectedBreadcrumbsGroupKey][selectedBreadcrumbsNumberKey];
+    stackApi.breadCrumbs = allBreadcrumbGroups[selectedBreadcrumbsGroup][selectedBreadcrumbsNumber];
     return <StackBreadcrumbs />;
 }
 
 export default {
     title: "@comet/admin/stack",
     decorators: [storyRouterDecorator()],
+    args: {
+        selectedBreadcrumbsNumber: "Three",
+        selectedBreadcrumbsGroup: "Normal",
+    },
+    argTypes: {
+        selectedBreadcrumbsNumber: {
+            name: "Number of items",
+            control: "select",
+            options: Object.keys(allBradcrumbItemsGroupOne),
+        },
+        selectedBreadcrumbsGroup: {
+            name: "Item group",
+            control: "select",
+            options: Object.keys(allBreadcrumbGroups),
+        },
+    },
 };
 
-export const _StackBreadcrumbs = () => (
+export const _StackBreadcrumbs = ({ selectedBreadcrumbsGroup, selectedBreadcrumbsNumber }: Args) => (
     <Stack topLevelTitle="Stack">
-        <Story />
+        <Story selectedBreadcrumbsGroup={selectedBreadcrumbsGroup} selectedBreadcrumbsNumber={selectedBreadcrumbsNumber} />
     </Stack>
 );

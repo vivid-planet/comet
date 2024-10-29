@@ -1,26 +1,96 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { boolean, select } from "@storybook/addon-knobs";
 import { ComponentMeta } from "@storybook/react";
 import React from "react";
 
-const getLayout = () => select("Layout", { List: "list", Grid: "grid" }, "list");
-
 export default {
     title: "@comet/admin/form/File",
-
     decorators: [
-        (story) => (
-            <Card sx={{ maxWidth: getLayout() === "grid" ? 960 : 440 }}>
+        (story, context) => (
+            <Card sx={{ maxWidth: context.args.layout === "grid" ? 960 : 440 }}>
                 <CardContent>
                     <Stack spacing={4}>{story()}</Stack>
                 </CardContent>
             </Card>
         ),
     ],
+    args: {
+        layout: "list",
+        disabled: false,
+        readOnly: false,
+        multiple: false,
+        hasError: false,
+        hasMaxFileSize: false,
+        hasMaxFiles: false,
+        onlyAllowImages: false,
+        filesSelection: "No files",
+    },
+    argTypes: {
+        layout: {
+            name: "Layout",
+            control: "select",
+            options: ["list", "grid"],
+        },
+        disabled: {
+            name: "Disabled",
+            control: "boolean",
+        },
+        readOnly: {
+            name: "Readonly",
+            control: "boolean",
+        },
+        multiple: {
+            name: "Multiple",
+            control: "boolean",
+        },
+        hasError: {
+            name: "Has Error",
+            control: "boolean",
+        },
+        hasMaxFileSize: {
+            name: "Limit file size (5 MB)",
+            control: "boolean",
+        },
+        hasMaxFiles: {
+            name: "Max number of files (4)",
+            control: "boolean",
+        },
+        onlyAllowImages: {
+            name: "Only allow images",
+            control: "boolean",
+        },
+        filesSelection: {
+            name: "Existing files",
+            control: "select",
+            options: ["No files", "One valid file", "Three valid files", "Four files (one too large)", "Four files (one uploading)"],
+        },
+    },
 } as ComponentMeta<typeof FileSelect>;
 
-export const _FileSelect = () => {
+type Args = {
+    layout: "list" | "grid";
+    disabled: boolean;
+    readOnly: boolean;
+    multiple: boolean;
+    hasError: boolean;
+    hasMaxFileSize: boolean;
+    hasMaxFiles: boolean;
+    onlyAllowImages: boolean;
+    filesSelection: "No files" | "One valid file" | "Three valid files" | "Four files (one too large)" | "Four files (one uploading)";
+};
+
+export const _FileSelect = ({
+    layout,
+    disabled,
+    readOnly,
+    multiple,
+    hasError,
+    hasMaxFileSize,
+    hasMaxFiles,
+    onlyAllowImages,
+    filesSelection,
+}: Args) => {
+    console.log(layout);
     const exampleFiles: Record<string, FileSelectItem> = {
         "fileName.xyz": {
             name: "Filename.xyz",
@@ -63,19 +133,6 @@ export const _FileSelect = () => {
         ],
     };
 
-    const disabled = boolean("Disabled", false);
-    const readOnly = boolean("ReadOnly", false);
-    const multiple = boolean("Multiple", false);
-    const hasError = boolean("Has Error", false);
-    const hasMaxFileSize = boolean("Limit file size (5 MB)", false);
-    const hasMaxFiles = boolean("Max number of files (4)", false);
-    const onlyAllowImages = boolean("Only allow images", false);
-    const filesSelection = select(
-        "Existing files",
-        ["No files", "One valid file", "Three valid files", "Four files (one too large)", "Four files (one uploading)"],
-        "No files",
-    );
-
     return (
         <FileSelect
             onDrop={(acceptedFiles, rejectedFiles) => {
@@ -87,7 +144,7 @@ export const _FileSelect = () => {
             onDownload={() => {
                 console.log("Downloading file");
             }}
-            layout={getLayout()}
+            layout={layout}
             files={filesMapping[filesSelection]}
             disabled={disabled}
             readOnly={readOnly}

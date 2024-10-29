@@ -1,7 +1,6 @@
 import { CancelButton, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, FormControlLabel, MenuItem } from "@mui/material";
-import { select } from "@storybook/addon-knobs";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -26,11 +25,24 @@ const selectOptions = [
 
 export default {
     title: "@comet/admin/mui",
+    args: {
+        selectedDialogSize: "sm",
+    },
+    argTypes: {
+        selectedDialogSize: {
+            name: "Dialog Size",
+            control: "select",
+            options: Object.keys(dialogSizeOptions),
+            mapping: dialogSizeOptions,
+        },
+    },
 };
 
-export const _Dialog = () => {
-    const selectedDialogSize = select("Dialog size", dialogSizeOptions, "sm");
+type Args = {
+    selectedDialogSize: DialogSize;
+};
 
+export const _Dialog = ({ selectedDialogSize }: Args) => {
     return (
         <div>
             <Form

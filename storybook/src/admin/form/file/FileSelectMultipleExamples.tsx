@@ -1,9 +1,9 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
 import { Box, Grid, Typography } from "@mui/material";
-import { boolean } from "@storybook/addon-knobs";
 import React from "react";
 
 type StoryProps = {
+    noBackground?: boolean;
     hasExistingFiles?: boolean;
 };
 
@@ -23,10 +23,9 @@ const dummyFileDownload = (file: any) => {
     alert(`Pretend "${file.name}" was just downloaded.`);
 };
 
-const SingleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
+const SingleFileSelectStory = ({ noBackground, hasExistingFiles }: StoryProps) => {
     const [file, setFile] = React.useState<FileSelectItem | undefined>(hasExistingFiles ? dummyFiles[0] : undefined);
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const noBackground = boolean("No Background", false);
 
     return (
         <Box padding={4} sx={{ backgroundColor: noBackground ? "transparent" : "white" }}>
@@ -68,10 +67,9 @@ const SingleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
     );
 };
 
-const MultipleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
+const MultipleFileSelectStory = ({ noBackground, hasExistingFiles }: StoryProps) => {
     const [files, setFiles] = React.useState<FileSelectItem[]>(hasExistingFiles ? dummyFiles : []);
     const [tooManyFilesSelected, setTooManyFilesSelected] = React.useState(false);
-    const noBackground = boolean("No Background", false);
     const maxNumberOfFiles = 4;
 
     return (
@@ -120,23 +118,36 @@ const MultipleFileSelectStory = ({ hasExistingFiles }: StoryProps) => {
 
 export default {
     title: "@comet/admin/form/File",
+    args: {
+        noBackground: false,
+    },
+    argTypes: {
+        noBackground: {
+            name: "No background",
+            control: "boolean",
+        },
+    },
 };
 
-export const FileSelectMultipleExamples = () => {
+type Args = {
+    noBackground: boolean;
+};
+
+export const FileSelectMultipleExamples = ({ noBackground }: Args) => {
     return (
         <div>
             <Grid container spacing={4}>
                 <Grid item xs={6}>
-                    <SingleFileSelectStory />
+                    <SingleFileSelectStory noBackground={noBackground} />
                 </Grid>
                 <Grid item xs={6}>
-                    <MultipleFileSelectStory />
+                    <MultipleFileSelectStory noBackground={noBackground} />
                 </Grid>
                 <Grid item xs={6}>
-                    <SingleFileSelectStory hasExistingFiles />
+                    <SingleFileSelectStory noBackground={noBackground} hasExistingFiles />
                 </Grid>
                 <Grid item xs={6}>
-                    <MultipleFileSelectStory hasExistingFiles />
+                    <MultipleFileSelectStory noBackground={noBackground} hasExistingFiles />
                 </Grid>
             </Grid>
         </div>

@@ -19,24 +19,28 @@ import {
 import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
 import { Box, Button, Link, MenuItem } from "@mui/material";
-import { select } from "@storybook/addon-knobs";
 import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {
     title: "@comet/admin/form",
+    args: {
+        fieldVariant: "horizontal",
+    },
+    argTypes: {
+        fieldVariant: {
+            name: "Field Variant",
+            control: "select",
+            options: ["horizontal", "vertical"],
+        },
+    },
 };
 
-export const AllFieldComponents = () => {
-    const fieldVariant = select(
-        "Field variant",
-        {
-            Horizontal: "horizontal",
-            Vertical: "vertical",
-        },
-        "horizontal",
-    );
+type Args = {
+    fieldVariant: "horizontal" | "vertical";
+};
 
+export const AllFieldComponents = ({ fieldVariant }: Args) => {
     type Option = { value: string; label: string };
 
     const options = [
