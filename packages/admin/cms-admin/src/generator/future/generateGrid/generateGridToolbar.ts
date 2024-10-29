@@ -30,7 +30,7 @@ export const generateGridToolbar = ({
                 ${hasSearch ? searchItem : ""}
                 ${hasFilter ? filterItem : ""}
                 <ToolbarFillSpace />
-                ${showMoreActionsMenu ? renderMoreActionsMenu(instanceGqlType, excelExport) : ""}
+                ${showMoreActionsMenu ? renderMoreActionsMenu(excelExport) : ""}
               ${
                   allowAdding
                       ? renderToolbarActions(
@@ -83,7 +83,7 @@ const filterItem = `<ToolbarItem>
     <GridFilterButton />
 </ToolbarItem>`;
 
-const renderMoreActionsMenu = (formattedMessageIdPrefix: string, excelExport: boolean | undefined) => {
+const renderMoreActionsMenu = (excelExport: boolean | undefined) => {
     return `<CrudMoreActionsMenu
         overallActions={[
             ${

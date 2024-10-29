@@ -760,6 +760,37 @@
         ]
     },
     {
+        "name": "ImageLink",
+        "fields": [
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "InternalLink",
         "fields": [
             {
@@ -1190,6 +1221,25 @@
         ]
     },
     {
+        "name": "NewsList",
+        "fields": [
+            {
+                "name": "ids",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "ids",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ]
+    },
+    {
         "name": "OptionalPixelImage",
         "fields": [
             {
@@ -1286,7 +1336,9 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "imageLink": "ImageLink",
+                                "newsList": "NewsList"
                             },
                             "nullable": false
                         },
@@ -1342,7 +1394,9 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "imageLink": "ImageLink",
+                                "newsList": "NewsList"
                             },
                             "nullable": false
                         },
