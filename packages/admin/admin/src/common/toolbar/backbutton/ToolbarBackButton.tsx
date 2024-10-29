@@ -20,8 +20,6 @@ const Root = createComponentSlot("div")<ToolbarBackButtonClassKey>({
 
         .CometAdminToolbarItem-root {
             padding: 0;
-            button {
-            }
         }
     `,
 );
