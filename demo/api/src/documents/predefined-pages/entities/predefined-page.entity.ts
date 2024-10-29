@@ -1,7 +1,15 @@
 import { DocumentInterface, PageTreeNodeDocumentEntityScopeService, ScopedEntity } from "@comet/cms-api";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
+
+export enum PredefinedPageType {
+    News = "News",
+}
+
+registerEnumType(PredefinedPageType, {
+    name: "PredefinedPageType",
+});
 
 @Entity()
 @ObjectType({
@@ -29,6 +37,6 @@ export class PredefinedPage extends BaseEntity<PredefinedPage, "id"> implements 
     updatedAt: Date = new Date();
 
     @Property({ columnType: "text", nullable: true })
-    @Field({ nullable: true })
-    type?: string;
+    @Field(() => PredefinedPageType, { nullable: true })
+    type?: PredefinedPageType | null;
 }
