@@ -2,6 +2,6 @@
 "@comet/admin-date-time": minor
 ---
 
-Change `endAdornment` in `DatePicker` from `boolean` to `React.ReactNode`
+Allow setting `startAdornment` in `DatePicker`
 
-Instead of enabling a fixed icon, a custom `endAdornment` can be given to `DatePicker`.
+A `startAdornment` can be passed to `DatePicker`.
