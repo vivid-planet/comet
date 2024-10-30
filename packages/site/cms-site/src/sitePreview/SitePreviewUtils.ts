@@ -1,9 +1,9 @@
 import "server-only";
 
-import { jwtVerify } from "jose";
+import { errors, jwtVerify, SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Scope = Record<string, any>;
@@ -21,12 +21,23 @@ export async function sitePreviewRoute(request: NextRequest, _graphQLFetch: unkn
     const params = request.nextUrl.searchParams;
     const jwt = params.get("jwt");
     if (!jwt) {
-        throw new Error("Missing jwt parameter");
+        return NextResponse.json({ error: "JWT-Parameter is missing." });
     }
 
     const data = await verifySitePreviewJwt(jwt);
+    if (!data) {
+        return NextResponse.json({ error: "JWT-validation failed." });
+    }
 
-    cookies().set("__comet_preview", jwt);
+    const cookieJwt = await new SignJWT({
+        scope: data.scope,
+        path: data.path,
+        previewData: data.previewData,
+    })
+        .setProtectedHeader({ alg: "HS256" })
+        .setExpirationTime("1 day")
+        .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
+    cookies().set("__comet_preview", cookieJwt, { httpOnly: true, sameSite: "lax" });
 
     draftMode().enable();
 
@@ -50,10 +61,15 @@ export async function previewParams(options: { skipDraftModeCheck: boolean } = {
     return null;
 }
 
-export async function verifySitePreviewJwt(jwt: string): Promise<SitePreviewParams> {
+export async function verifySitePreviewJwt(jwt: string): Promise<SitePreviewParams | null> {
     if (!process.env.SITE_PREVIEW_SECRET) {
         throw new Error("SITE_PREVIEW_SECRET environment variable is required.");
     }
-    const data = await jwtVerify<SitePreviewParams>(jwt, new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
-    return data.payload;
+    try {
+        const data = await jwtVerify<SitePreviewParams>(jwt, new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
+        return data.payload;
+    } catch (e) {
+        if (e instanceof errors.JOSEError) return null;
+        throw e;
+    }
 }
