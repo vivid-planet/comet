@@ -1,5 +1,5 @@
 ---
-title: Customizaton and Styling
+title: Customization and Styling
 sidebar_position: 1
 ---
 
@@ -20,7 +20,7 @@ Each of these elements or components is referred to as a slot.
 Each of the component's slots can be accessed through its name to override styles and props.
 The outermost slot of a component is generally called `root`.
 
-## Customizing individial instances of a component
+## Customizing individual instances of a component
 
 ### Styling a component's root slot
 
@@ -28,9 +28,7 @@ Overriding the styles of the root slot can be done using the `sx` prop.
 See [MUIs `sx` documentation](https://mui.com/system/getting-started/the-sx-prop/) for more details.
 
 ```tsx
-<ContentOverflow sx={{ backgroundColor: "lime" }}>
-    {/* ... */}
-</ContentOverflow>
+<ContentOverflow sx={{ backgroundColor: "lime" }}>{/* ... */}</ContentOverflow>
 ```
 
 <Story path="customization-and-styling/StylingAComponentsRootElement.tsx" />
@@ -124,4 +122,4 @@ const theme = createCometTheme({
 });
 ```
 
-<Story path="customization-and-styling/SettignDefaultPropsOfAComponent.tsx" />
+<Story path="customization-and-styling/SettingDefaultPropsOfAComponent.tsx" />
