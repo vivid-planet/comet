@@ -4,8 +4,7 @@ import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { createCometTheme } from "@comet/admin-theme";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
-import { select, withKnobs } from "@storybook/addon-knobs";
-import { addDecorator, addParameters } from "@storybook/react";
+import { addParameters, ArgTypes, DecoratorFn } from "@storybook/react";
 import { Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import * as React from "react";
@@ -14,6 +13,11 @@ import { IntlProvider } from "react-intl";
 import { worker } from "./mocks/browser";
 import { previewGlobalStyles } from "./preview.styles";
 
+const themeOptions = {
+    comet: "Comet",
+    defaultMui: "Default MUI",
+};
+
 type LocaleKey = "de" | "en";
 
 const dateFnsLocales: Record<LocaleKey, DateFnsLocale> = {
@@ -21,66 +25,75 @@ const dateFnsLocales: Record<LocaleKey, DateFnsLocale> = {
     en: enLocale,
 };
 
-addDecorator((story, context) => {
-    const storyWithKnobs = withKnobs(story, context); // explicitly add withKnobs
-    // @TODO: use messages from lang-package
-    const messages = {
-        en: {
-            "comet.core.deleteMutation.promptDelete": "Delete data?",
-            "comet.core.deleteMutation.yes": "Yes",
-            "comet.core.deleteMutation.no": "No",
-            "comet.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
-            "comet.core.editDialog.edit": "Edit",
-            "comet.core.editDialog.add": "Add",
-            "comet.core.editDialog.cancel": "Cancel",
-            "comet.core.editDialog.save": "Save",
-            "comet.core.finalForm.abort": "Cancel",
-            "comet.core.finalForm.save": "Save",
-            "comet.core.router.confirmationDialog.confirm": "OK",
-            "comet.core.router.confirmationDialog.abort": "Cancel",
-            "comet.core.stack.stack.back": "Back",
-            "comet.core.table.addButton": "Add",
-            "comet.core.table.excelExportButton": "Export",
-            "comet.core.table.deleteButton": "Delete",
-            "comet.core.table.pagination.pageInfo": "Page {current} of {total}",
-            "comet.core.table.localChangesToolbar.save": "Save",
-            "comet.core.table.localChangesToolbar.unsavedItems":
-                "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
-            "comet.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
-            "comet.core.table.tableQuery.error": "Error :( {error}",
-        },
-        de: {
-            "comet.core.table.localChangesToolbar.unsavedItems":
-                "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
-            "comet.core.table.tableQuery.error": "Fehler :( {error}",
-        },
-    };
-
-    const selectedLocale = select<LocaleKey>("Locale", ["en", "de"], "en");
-
-    return (
-        <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
-            <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>{storyWithKnobs}</DateFnsLocaleProvider>
-        </IntlProvider>
-    );
-});
-
-const themeOptions = {
-    comet: "Comet",
-    defaultMui: "Default MUI",
+// @TODO: use messages from lang-package
+const messages = {
+    en: {
+        "comet.core.deleteMutation.promptDelete": "Delete data?",
+        "comet.core.deleteMutation.yes": "Yes",
+        "comet.core.deleteMutation.no": "No",
+        "comet.core.dirtyHandler.discardChanges": "Discard unsaved changes?",
+        "comet.core.editDialog.edit": "Edit",
+        "comet.core.editDialog.add": "Add",
+        "comet.core.editDialog.cancel": "Cancel",
+        "comet.core.editDialog.save": "Save",
+        "comet.core.finalForm.abort": "Cancel",
+        "comet.core.finalForm.save": "Save",
+        "comet.core.router.confirmationDialog.confirm": "OK",
+        "comet.core.router.confirmationDialog.abort": "Cancel",
+        "comet.core.stack.stack.back": "Back",
+        "comet.core.table.addButton": "Add",
+        "comet.core.table.excelExportButton": "Export",
+        "comet.core.table.deleteButton": "Delete",
+        "comet.core.table.pagination.pageInfo": "Page {current} of {total}",
+        "comet.core.table.localChangesToolbar.save": "Save",
+        "comet.core.table.localChangesToolbar.unsavedItems":
+            "{count, plural, =0 {no unsaved changes} one {# unsaved change} other {# unsaved changes}}",
+        "comet.core.table.tableFilterFinalForm.resetButton": "Reset Filter",
+        "comet.core.table.tableQuery.error": "Error :( {error}",
+    },
+    de: {
+        "comet.core.table.localChangesToolbar.unsavedItems":
+            "{count, plural, =0 {keine ungespeicherten Änderungen} one {# ungespeicherte Änderung} other {# ungespeicherte Änderungen}}",
+        "comet.core.table.tableQuery.error": "Fehler :( {error}",
+    },
 };
 
-addDecorator((story, ctx) => {
-    const selectedTheme = select("Theme", Object.values(themeOptions), Object.values(themeOptions)[0]);
-    const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
+export const argTypes: ArgTypes = {
+    theme: {
+        name: "Theme",
+        control: "select",
+        options: Object.values(themeOptions),
+    },
+    locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
+};
 
-    return (
-        <MuiThemeProvider theme={theme}>
-            <GlobalStyles styles={previewGlobalStyles} />
-            <>{ctx.parameters.layout === "padded" ? <MainContent>{story()}</MainContent> : story()}</>
-        </MuiThemeProvider>
-    );
-});
+export const args = { theme: Object.values(themeOptions)[0], locale: "en" };
+
+export const decorators: DecoratorFn[] = [
+    (Story, context) => {
+        const { theme: selectedTheme, locale: selectedLocale } = context.args;
+        const theme = selectedTheme === themeOptions.defaultMui ? createMuiTheme() : createCometTheme();
+
+        return (
+            <MuiThemeProvider theme={theme}>
+                <IntlProvider locale={selectedLocale} messages={messages[selectedLocale] ?? {}}>
+                    <DateFnsLocaleProvider value={dateFnsLocales[selectedLocale]}>
+                        <GlobalStyles styles={previewGlobalStyles} />
+                        <>
+                            {context.parameters.layout === "padded" ? (
+                                <MainContent>
+                                    <Story />
+                                </MainContent>
+                            ) : (
+                                <Story />
+                            )}
+                        </>
+                    </DateFnsLocaleProvider>
+                </IntlProvider>
+            </MuiThemeProvider>
+        );
+    },
+];
 
 const orderGettingStarted = [
     "docs-getting-started-installation",

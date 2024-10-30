@@ -1,6 +1,5 @@
 import { IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { number } from "@storybook/addon-knobs";
 import * as React from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
@@ -9,13 +8,29 @@ const [useRteApi] = makeRteApi();
 
 export default {
     title: "@comet/admin-rte",
+    args: {
+        listLevelMax: 4,
+    },
+    argTypes: {
+        listLevelMax: {
+            name: "Max list level",
+            control: {
+                type: "number",
+                min: 0,
+                max: 4,
+            },
+        },
+    },
+};
+
+type Args = {
+    listLevelMax: number;
 };
 
 /**
  * Development story for testing the max list level option.
  */
-
-export const MaxListLevel = () => {
+export const MaxListLevel = ({ listLevelMax }: Args) => {
     const { editorState, setEditorState } = useRteApi({
         defaultValue: JSON.stringify({
             blocks: [
@@ -123,12 +138,7 @@ export const MaxListLevel = () => {
             <Box marginBottom={4}>
                 <Card variant="outlined">
                     <CardContent>
-                        <Rte
-                            value={editorState}
-                            onChange={setEditorState}
-                            ref={editorRef}
-                            options={{ listLevelMax: number("Max list level", 4, { min: 0, max: 4 }) }}
-                        />
+                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={{ listLevelMax }} />
                     </CardContent>
                 </Card>
             </Box>

@@ -1,6 +1,5 @@
+import { gql } from "@apollo/client";
 import { Table, TableQuery, useTableQuery } from "@comet/admin";
-import { text } from "@storybook/addon-knobs";
-import gql from "graphql-tag";
 import * as React from "react";
 
 import { apolloSwapiStoryDecorator } from "../../apollo-story.decorator";
@@ -24,20 +23,33 @@ interface QueryData {
 export default {
     title: "@comet/admin/table/globalErrorHandling",
     decorators: [apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()],
+    args: {
+        query: "query StarWarsPeople {allPeople { people { id name birthYear gender homeworld{ name } } }}",
+    },
+    argTypes: {
+        query: {
+            name: "GQL Query",
+        },
+    },
 };
 
-export const GlobalErrorHandling = () => {
-    const query = gql`
-        ${text("GQL Query", "query StarWarsPeople {allPeople { people { id name birthYear gender homeworld{ name } } }}")}
-    `;
+type Args = {
+    query: string;
+};
 
-    const { tableData, api, loading, error } = useTableQuery<QueryData, Record<string, any>>()(query, {
-        resolveTableData: (data) => ({
-            data: data.allPeople.people,
-            totalCount: data.allPeople.people.length,
-        }),
-        globalErrorHandling: true,
-    });
+export const GlobalErrorHandling = ({ query }: Args) => {
+    const { tableData, api, loading, error } = useTableQuery<QueryData, Record<string, any>>()(
+        gql`
+            ${query}
+        `,
+        {
+            resolveTableData: (data) => ({
+                data: data.allPeople.people,
+                totalCount: data.allPeople.people.length,
+            }),
+            globalErrorHandling: true,
+        },
+    );
 
     return (
         <TableQuery api={api} loading={loading} error={error}>

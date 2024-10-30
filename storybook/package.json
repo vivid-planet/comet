@@ -10,7 +10,7 @@
         "build-storybook": "build-storybook",
         "storybook": "start-storybook -p 26638 --no-version-updates",
         "lint": "run-p lint:prettier lint:eslint lint:tsc",
-        "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:eslint": "eslint --max-warnings 0 src/ package.json .storybook/",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit"
     },
@@ -33,8 +33,8 @@
         "@mui/x-data-grid": "^5.17.6",
         "@mui/x-data-grid-pro": "^5.17.6",
         "@storybook/addon-actions": "^6.5.16",
+        "@storybook/addon-controls": "^6.5.16",
         "@storybook/addon-docs": "^6.5.16",
-        "@storybook/addon-knobs": "^6.4.0",
         "@storybook/addon-storysource": "^6.5.16",
         "@storybook/addons": "^6.5.16",
         "@storybook/api": "^6.5.16",

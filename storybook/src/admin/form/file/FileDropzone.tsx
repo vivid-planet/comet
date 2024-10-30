@@ -1,6 +1,5 @@
 import { FileDropzone, FileDropzoneProps } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { boolean } from "@storybook/addon-knobs";
 import { ComponentMeta } from "@storybook/react";
 import React from "react";
 
@@ -8,7 +7,6 @@ type FileRejections = Parameters<Required<FileDropzoneProps>["onDropRejected"]>[
 
 export default {
     title: "@comet/admin/form/File",
-
     decorators: [
         (story) => (
             <Card sx={{ maxWidth: 440 }}>
@@ -18,18 +16,43 @@ export default {
             </Card>
         ),
     ],
+    args: {
+        disabled: false,
+        multiple: false,
+        hasError: false,
+    },
+    argTypes: {
+        disabled: {
+            name: "Disabled",
+            control: "boolean",
+        },
+        multiple: {
+            name: "Multiple",
+            control: "boolean",
+        },
+        hasError: {
+            name: "Has errors",
+            control: "boolean",
+        },
+    },
 } as ComponentMeta<typeof FileDropzone>;
 
-export const _FileDropzone = () => {
+type Args = {
+    disabled: boolean;
+    multiple: boolean;
+    hasError: boolean;
+};
+
+export const _FileDropzone = ({ disabled, multiple, hasError }: Args) => {
     const [files, setFiles] = React.useState<File[]>([]);
     const [rejectedFiles, setRejectedFiles] = React.useState<FileRejections>([]);
 
     return (
         <>
             <FileDropzone
-                disabled={boolean("Disabled", false)}
-                multiple={boolean("Multiple", false)}
-                hasError={boolean("Has Error", false)}
+                disabled={disabled}
+                multiple={multiple}
+                hasError={hasError}
                 onDrop={(files) => {
                     setFiles(files);
                     setRejectedFiles([]);

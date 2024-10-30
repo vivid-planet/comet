@@ -1,14 +1,26 @@
 import { DateField, DateRange, DateRangeField, DateTimeField, TimeField, TimeRange, TimeRangeField } from "@comet/admin-date-time";
 import { Box, Card, CardContent } from "@mui/material";
-import { boolean } from "@storybook/addon-knobs";
 import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {
     title: "@comet/admin-date-time",
+    args: {
+        initialValues: false,
+    },
+    argTypes: {
+        initialValues: {
+            name: "Show Initial Values",
+            control: "boolean",
+        },
+    },
 };
 
-export const AllPickers = () => {
+type Args = {
+    initialValues: boolean;
+};
+
+export const AllPickers = ({ initialValues }: Args) => {
     type FormValues = {
         date: string;
         dateRange: DateRange;
@@ -22,7 +34,7 @@ export const AllPickers = () => {
             <Form<FormValues>
                 onSubmit={() => {}}
                 initialValues={
-                    boolean("Show Initial Values", false)
+                    initialValues
                         ? {
                               date: "2024-03-01",
                               dateRange: {

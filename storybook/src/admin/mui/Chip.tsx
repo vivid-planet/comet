@@ -1,13 +1,64 @@
 import { ChevronDown } from "@comet/admin-icons";
 import { Box, Card, CardContent, Chip, Grid, Stack, Typography } from "@mui/material";
-import { boolean, select } from "@storybook/addon-knobs";
 import * as React from "react";
 
 export default {
     title: "@comet/admin/mui",
+    args: {
+        color: "default",
+        variant: "filled",
+        size: "medium",
+        disabled: false,
+        clickable: false,
+        icon: false,
+        deletable: false,
+    },
+    argTypes: {
+        color: {
+            name: "Color",
+            control: "select",
+            options: ["default", "primary", "secondary", "success", "error", "warning"],
+        },
+        variant: {
+            name: "Variant",
+            control: "select",
+            options: ["filled", "outlined"],
+        },
+        size: {
+            name: "Size",
+            control: "select",
+            options: ["small", "medium"],
+        },
+        disabled: {
+            name: "Disabled",
+            control: "boolean",
+        },
+        clickable: {
+            name: "Clickable",
+            control: "boolean",
+        },
+        icon: {
+            name: "Icon",
+            control: "boolean",
+        },
+        deletable: {
+            name: "Deletable",
+            control: "boolean",
+        },
+    },
 };
 
-export const _Chip = () => {
+type Args = {
+    color: "default" | "primary" | "secondary" | "success" | "error" | "warning";
+    variant: "filled" | "outlined";
+    size: "small" | "medium";
+    disabled: boolean;
+    clickable: boolean;
+    icon: boolean;
+    deletable: boolean;
+};
+
+export const _Chip = ({ color, variant, size, disabled, clickable, icon, deletable }: Args) => {
     return (
         <Stack spacing={4}>
             <Card>
@@ -24,13 +75,13 @@ export const _Chip = () => {
                         </Typography>
                         <Chip
                             label="Customizable Chip"
-                            color={select("Color", ["default", "primary", "secondary", "success", "error", "warning"], "default")}
-                            variant={select("Variant", ["filled", "outlined"], "filled")}
-                            size={select("Size", ["small", "medium"], "medium")}
-                            disabled={boolean("Disabled", false)}
-                            clickable={boolean("Clickable", false)}
-                            icon={boolean("Icon", false) ? <ChevronDown /> : undefined}
-                            onDelete={boolean("Deletable", false) ? () => console.log("Delete") : undefined}
+                            color={color}
+                            variant={variant}
+                            size={size}
+                            disabled={disabled}
+                            clickable={clickable}
+                            icon={icon ? <ChevronDown /> : undefined}
+                            onDelete={deletable ? () => console.log("Delete") : undefined}
                         />
                     </Box>
                     <Box mb={10}>

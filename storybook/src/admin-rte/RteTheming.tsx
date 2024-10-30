@@ -1,22 +1,35 @@
 import { makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import { select } from "@storybook/addon-knobs";
 import * as React from "react";
 
 const [useRteApi] = makeRteApi();
 
 export default {
     title: "@comet/admin-rte",
+    args: {
+        minHeight: 0,
+    },
+    argTypes: {
+        minHeight: {
+            name: "Min Height",
+            control: "select",
+            options: [0, 100, 200, 300, 1000],
+        },
+    },
 };
 
-export const RteMinHeight = () => {
+type Args = {
+    minHeight: number;
+};
+
+export const RteMinHeight = ({ minHeight }: Args) => {
     const { editorState, setEditorState } = useRteApi();
 
     return (
         <Box marginBottom={4}>
             <Card variant="outlined">
                 <CardContent>
-                    <Rte value={editorState} onChange={setEditorState} minHeight={select("minHeight", [0, 100, 200, 300, 1000], 0)} />
+                    <Rte value={editorState} onChange={setEditorState} minHeight={minHeight} />
                 </CardContent>
             </Card>
         </Box>

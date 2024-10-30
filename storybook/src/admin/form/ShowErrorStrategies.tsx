@@ -1,9 +1,6 @@
 import { Field, FinalForm, FinalFormContext, FinalFormInput } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
-import { select } from "@storybook/addon-knobs";
 import * as React from "react";
-
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
 interface FormValues {
     foo: string;
@@ -31,21 +28,29 @@ const strategies: Record<ShowStrategy, FinalFormContext["shouldShowFieldError"]>
 
 export default {
     title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
+    args: {
+        strategy: "when-submitted",
+    },
+    argTypes: {
+        strategy: {
+            name: "Show Error Strategy",
+            control: "select",
+            options: ["always", "on-blur", "while-typing", "when-submitted"],
+        },
+    },
 };
 
-export const ShowErrorStrategies = () => {
+type Args = {
+    strategy: ShowStrategy;
+};
+
+export const ShowErrorStrategies = ({ strategy }: Args) => {
     const initialValues = {
         foo: "foo",
         bar: "",
     };
 
-    const selectedStrategytName = select<ShowStrategy>(
-        "Show Error Strategy",
-        ["always", "on-blur", "while-typing", "when-submitted"],
-        "when-submitted",
-    );
-    const shouldShowFieldError = strategies[selectedStrategytName];
+    const shouldShowFieldError = strategies[strategy];
     return (
         <FinalForm<FormValues>
             mode="edit"
@@ -62,7 +67,7 @@ export const ShowErrorStrategies = () => {
                         Demonstrates different implementations of &quot;shouldShowFieldError&quot;. Use Knob to switch strategies.
                     </Typography>
 
-                    <Typography variant="h3">Show-Error-Strategy: &quot;{selectedStrategytName}&quot;</Typography>
+                    <Typography variant="h3">Show-Error-Strategy: &quot;{strategy}&quot;</Typography>
                     <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
                     <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
                     <Button variant="contained" color="primary" type="submit">

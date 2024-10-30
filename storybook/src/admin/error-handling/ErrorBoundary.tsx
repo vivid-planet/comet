@@ -1,6 +1,6 @@
 import { Alert, ErrorBoundary } from "@comet/admin";
 import { Box, Card, CardContent, Link, Typography } from "@mui/material";
-import { boolean } from "@storybook/addon-knobs";
+import { ComponentMeta } from "@storybook/react";
 import * as React from "react";
 
 const ViewWithNoError: React.FunctionComponent = () => {
@@ -22,10 +22,22 @@ const ViewWithError: React.FunctionComponent = () => {
 
 export default {
     title: "@comet/admin/error-handling/error-boundaries",
+    args: {
+        renderViewWithErrors: false,
+    },
+    argTypes: {
+        renderViewWithErrors: {
+            name: "Render view with errors",
+            control: "boolean",
+        },
+    },
+} as ComponentMeta<typeof ErrorBoundary>;
+
+type Args = {
+    renderViewWithErrors: boolean;
 };
 
-export const _ErrorBoundary = () => {
-    const renderViewWithErrors = boolean("Render view with error", false);
+export const _ErrorBoundary = ({ renderViewWithErrors }: Args) => {
     return (
         <>
             <Box marginBottom={4}>
