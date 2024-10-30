@@ -11,16 +11,22 @@ import {
     withAdditionalBlockAttributes,
 } from "@comet/blocks-admin";
 import { Box } from "@mui/material";
+import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";
 
 interface CreateTextLinkBlockOptions {
     name?: string;
+    displayName?: ReactNode;
     link: BlockInterface;
 }
 
-export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: CreateTextLinkBlockOptions): BlockInterface {
+export function createTextLinkBlock({
+    link: LinkBlock,
+    name = "TextLink",
+    displayName = <FormattedMessage {...messages.link} />,
+}: CreateTextLinkBlockOptions): BlockInterface {
     const { api: composedApi, block: composedBlock } = composeBlocks({ link: LinkBlock });
 
     const block = withAdditionalBlockAttributes<Pick<TextLinkBlockData, "text">>({
@@ -33,7 +39,7 @@ export function createTextLinkBlock({ link: LinkBlock, name = "TextLink" }: Crea
 
         name,
 
-        displayName: <FormattedMessage {...messages.link} />,
+        displayName,
 
         category: BlockCategory.Navigation,
 

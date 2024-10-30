@@ -5,6 +5,7 @@ import {
     Field,
     filterByFragment,
     FinalForm,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
@@ -24,7 +25,7 @@ import {
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { MenuItem } from "@mui/material";
+import { InputAdornment, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import {
     GQLManufacturerCountriesQuery,
@@ -35,6 +36,7 @@ import {
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
+import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -177,6 +179,16 @@ export function ProductForm({ id }: FormProps) {
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
+                        <Field
+                            name="priceRange"
+                            label={<FormattedMessage id="product.priceRange" defaultMessage="Price range" />}
+                            fullWidth
+                            component={FinalFormRangeInput}
+                            min={5}
+                            max={100}
+                            startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                            disableSlider
+                        />
                         <TextAreaField
                             required
                             fullWidth
@@ -331,6 +343,7 @@ export function ProductForm({ id }: FormProps) {
                             multiple
                             maxFileSize={1024 * 1024 * 4} // 4 MB
                             fullWidth
+                            layout="grid"
                         />
                     </MainContent>
                 </>

@@ -7,6 +7,7 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -38,9 +39,9 @@ function ProductsGridToolbar() {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
-            <ToolbarItem>
+            <ToolbarActions>
                 <GridColumnsButton />
-            </ToolbarItem>
+            </ToolbarActions>
         </DataGridToolbar>
     );
 }

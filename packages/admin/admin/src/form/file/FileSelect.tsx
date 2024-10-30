@@ -135,6 +135,17 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                         <>
                             {files.map((file, index) => {
                                 const isValidFile = !("error" in file) && !("loading" in file);
+                                let filePreview: string | boolean;
+
+                                if (layout === "grid") {
+                                    if (isValidFile && file.previewUrl) {
+                                        filePreview = file.previewUrl;
+                                    } else {
+                                        filePreview = true;
+                                    }
+                                } else {
+                                    filePreview = false;
+                                }
 
                                 return (
                                     <FileListItem
@@ -149,7 +160,7 @@ export const FileSelect = <AdditionalValidFileValues = Record<string, unknown>,>
                                         }
                                         downloadUrl={isValidFile && getDownloadUrl ? getDownloadUrl(file) : undefined}
                                         onClickDelete={readOnly || !onRemove || "loading" in file ? undefined : () => onRemove(file)}
-                                        filePreview={layout === "grid"}
+                                        filePreview={filePreview}
                                         {...slotProps?.fileListItem}
                                     />
                                 );

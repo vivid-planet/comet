@@ -2,40 +2,76 @@ import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { getFormattedMessageNode } from "../utils/intl";
 
 type Options = {
-    gqlTypePlural: string;
+    componentName: string;
     forwardToolbarAction: boolean | undefined;
     hasSearch: boolean;
     hasFilter: boolean;
+    excelExport: boolean | undefined;
     allowAdding: boolean;
     instanceGqlType: string;
     gqlType: string;
 };
 
 export const generateGridToolbar = ({
-    gqlTypePlural,
+    componentName,
     forwardToolbarAction,
     hasSearch,
     hasFilter,
+    excelExport,
     allowAdding,
     instanceGqlType,
     gqlType,
 }: Options) => {
-    return `function ${gqlTypePlural}GridToolbar(${forwardToolbarAction ? `{ toolbarAction }: { toolbarAction?: React.ReactNode }` : ``}) {
+    const showMoreActionsMenu = excelExport;
+
+    return `function ${componentName}(${getGridToolbarProps(!!forwardToolbarAction, !!excelExport)}) {
         return (
             <DataGridToolbar>
                 ${hasSearch ? searchItem : ""}
                 ${hasFilter ? filterItem : ""}
                 <ToolbarFillSpace />
-                ${
-                    allowAdding
-                        ? renderToolbarActions(
-                              forwardToolbarAction,
-                              getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
-                          )
-                        : ""
-                }
+                ${showMoreActionsMenu ? renderMoreActionsMenu(excelExport) : ""}
+              ${
+                  allowAdding
+                      ? renderToolbarActions(
+                            forwardToolbarAction,
+                            getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
+                        )
+                      : ""
+              }
             </DataGridToolbar>
         );
+    }`.replace(/^\s+\n/gm, "");
+};
+
+const getGridToolbarProps = (toolbarAction: boolean, exportApi: boolean) => {
+    const props: Array<{
+        destructured: string;
+        typeDefinition: string;
+    }> = [];
+
+    if (toolbarAction) {
+        props.push({
+            destructured: "toolbarAction",
+            typeDefinition: "toolbarAction?: React.ReactNode",
+        });
+    }
+
+    if (exportApi) {
+        props.push({
+            destructured: "exportApi",
+            typeDefinition: "exportApi: ExportApi",
+        });
+    }
+
+    if (!props.length) {
+        return "";
+    }
+
+    return `{
+        ${props.map((prop) => `${prop.destructured}`).join(",")}
+    }: {
+        ${props.map((prop) => prop.typeDefinition).join(";")}
     }`;
 };
 
@@ -46,6 +82,23 @@ const searchItem = `<ToolbarItem>
 const filterItem = `<ToolbarItem>
     <GridFilterButton />
 </ToolbarItem>`;
+
+const renderMoreActionsMenu = (excelExport: boolean | undefined) => {
+    return `<CrudMoreActionsMenu
+        overallActions={[
+            ${
+                excelExport
+                    ? `{
+                label: <FormattedMessage {...messages.downloadAsExcel} />,
+                icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                onClick: () => exportApi.exportGrid(),
+                disabled: exportApi.loading,
+            }`
+                    : ""
+            }
+        ]}
+    />`;
+};
 
 const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItemText: string) => {
     if (forwardToolbarAction) {

@@ -19,8 +19,9 @@ type BlockFieldOptions =
           nullable?: boolean;
       }
     | {
-          type: "json";
+          type: "json" | "string" | "number" | "boolean";
           nullable?: boolean;
+          array?: boolean;
       }
     | {
           nullable?: boolean;
@@ -53,6 +54,7 @@ type BlockFieldData =
     | {
           kind: BlockMetaLiteralFieldKind;
           nullable: boolean;
+          array?: boolean;
       }
     | { kind: BlockMetaFieldKind.Enum; enum: string[]; nullable: boolean }
     | { kind: BlockMetaFieldKind.Block; block: Block; nullable: boolean }
@@ -68,13 +70,20 @@ export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string)
     const fieldType = Reflect.getMetadata(`data:fieldType`, ctor.prototype, propertyKey);
 
     const nullable = !!(fieldType && fieldType.nullable);
+    const array: boolean | undefined = fieldType?.array ?? undefined;
 
     if (fieldType && fieldType.type) {
-        if (fieldType.type === "enum") {
+        if (fieldType.type === "string") {
+            ret = { kind: BlockMetaFieldKind.String, nullable, array };
+        } else if (fieldType.type === "number") {
+            ret = { kind: BlockMetaFieldKind.Number, nullable, array };
+        } else if (fieldType.type === "boolean") {
+            ret = { kind: BlockMetaFieldKind.Boolean, nullable, array };
+        } else if (fieldType.type === "json") {
+            ret = { kind: BlockMetaFieldKind.Json, nullable, array };
+        } else if (fieldType.type === "enum") {
             const enumValues = Array.isArray(fieldType.enum) ? fieldType.enum : Object.values(fieldType.enum);
             ret = { kind: BlockMetaFieldKind.Enum, enum: enumValues, nullable };
-        } else if (fieldType.type === "json") {
-            ret = { kind: BlockMetaFieldKind.Json, nullable };
         } else if (fieldType.type === "block") {
             ret = { kind: BlockMetaFieldKind.Block, block: fieldType.block, nullable };
         } else {
@@ -110,7 +119,7 @@ export function getBlockFieldData(ctor: { prototype: any }, propertyKey: string)
                 break;
             case "Array":
                 if (!fieldType || !(isBlockDataInterface(fieldType.prototype) || isBlockInputInterface(fieldType.prototype))) {
-                    throw new Error(`In ${designType.name} for ${propertyKey} only SubBlocks implementing BlockDataInterface are allowed`);
+                    throw new Error(`Unknown array type for ${propertyKey}. An explicit type annotation is necessary.`);
                 }
                 ret = { kind: BlockMetaFieldKind.NestedObjectList, object: fieldType, nullable };
 
@@ -144,6 +153,7 @@ export class AnnotationBlockMeta implements BlockMetaInterface {
                     name,
                     kind: field.kind,
                     nullable: field.nullable,
+                    array: field.array,
                 });
             } else if (field.kind === BlockMetaFieldKind.Enum) {
                 ret.push({
