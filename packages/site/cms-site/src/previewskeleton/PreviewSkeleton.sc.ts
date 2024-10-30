@@ -46,23 +46,12 @@ export const ImageContainer = styled.div<ImageSkeletonStyleProps>`
     color: ${({ $color }) => $color};
     width: 100%;
 
-    ${({ $aspectRatio }) =>
-        typeof $aspectRatio !== "undefined" &&
-        css`
-            aspect-ratio: ${$aspectRatio};
-        `}
-
-    ${({ $aspectRatio, $height }) =>
-        typeof $aspectRatio === "undefined" &&
-        typeof $height !== "undefined" &&
-        css`
-            height: ${$height};
-        `}
-
-    ${({ $aspectRatio, $height }) =>
-        typeof $aspectRatio === "undefined" &&
-        typeof $height === "undefined" &&
-        css`
-            height: 300px;
-        `}
+    ${({ $aspectRatio, $height = 300 }) =>
+        typeof $aspectRatio === "undefined"
+            ? css`
+                  height: ${$height};
+              `
+            : css`
+                  aspect-ratio: ${$aspectRatio};
+              `}
 `;
