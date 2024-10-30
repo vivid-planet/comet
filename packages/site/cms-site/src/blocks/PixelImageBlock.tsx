@@ -10,7 +10,7 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
-    aspectRatio: string | "inherit";
+    aspectRatio: string | number | "inherit";
 }
 
 export const PixelImageBlock = withPreview(
