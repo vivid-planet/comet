@@ -41,7 +41,7 @@ Display logs:
 
 Display logs for a process:
 
-`npx dev-pm logs <prcess_name>`
+`npx dev-pm logs <process_name>`
 
 <br />
 
