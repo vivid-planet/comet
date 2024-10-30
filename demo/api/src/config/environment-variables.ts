@@ -33,6 +33,9 @@ export class EnvironmentVariables {
     API_URL: string;
 
     @IsString()
+    BASIC_AUTH_SYSTEM_USER_PASSWORD: string;
+
+    @IsString()
     ADMIN_URL: string;
 
     @Type(() => Number)
