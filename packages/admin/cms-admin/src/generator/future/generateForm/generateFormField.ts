@@ -165,6 +165,32 @@ export function generateFormField({
                 },
             },
         ];
+    } else if (config.type === "numberRange") {
+        code = `
+            <Field
+                ${required ? "required" : ""}
+                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                variant="horizontal"
+                fullWidth
+                name="${nameWithPrefix}"
+                component={FinalFormRangeInput}
+                label={${fieldLabel}}
+                min={${config.minValue}}
+                max={${config.maxValue}}
+                ${config.disableSlider ? "disableSlider" : ""}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${config.startAdornment}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${config.endAdornment}</InputAdornment>}` : ""}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${formattedMessageRootId}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
+                ${validateCode}
+            />`;
+
+        formFragmentField = `${name} { min max }`;
     } else if (config.type == "boolean") {
         code = `<Field name="${nameWithPrefix}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
@@ -217,7 +243,7 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "block") {
-        code = `<Field name="${nameWithPrefix}" isEqual={isEqual}>
+        code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;

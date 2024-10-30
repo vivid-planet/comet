@@ -1,4 +1,3 @@
-import { mediaType } from "@hapi/accept";
 import { Controller, ForbiddenException, forwardRef, Get, Headers, Inject, NotFoundException, Param, Res } from "@nestjs/common";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
@@ -23,20 +22,9 @@ import { FilesService } from "../files/files.service";
 import { Extension, Gravity, ResizingType } from "../imgproxy/imgproxy.enum";
 import { ImgproxyService } from "../imgproxy/imgproxy.service";
 import { HashImageParams, ImageParams } from "./dto/image.params";
+import { BASIC_TYPES, MODERN_TYPES } from "./images.constants";
 import { ImagesService } from "./images.service";
-import { getCenteredPosition, getMaxDimensionsFromArea } from "./images.util";
-
-const WEBP = "image/webp";
-const PNG = "image/png";
-const JPEG = "image/jpeg";
-const GIF = "image/gif";
-const BASIC_TYPES = [JPEG, PNG, GIF];
-const MODERN_TYPES = [/* AVIF, */ WEBP];
-
-function getSupportedMimeType(options: string[], accept = ""): string {
-    const mimeType = mediaType(accept, options);
-    return accept.includes(mimeType) ? mimeType : "";
-}
+import { getCenteredPosition, getMaxDimensionsFromArea, getSupportedMimeType } from "./images.util";
 
 const smartImageUrl = `:fileId/crop::focalPoint([A-Z]{5,9})/resize::resizeWidth::resizeHeight/:filename`;
 const focusImageUrl = `:fileId/crop::cropWidth::cropHeight::focalPoint::cropX::cropY/resize::resizeWidth::resizeHeight/:filename`;
@@ -76,7 +64,7 @@ export class ImagesController {
         }
 
         return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "private",
+            "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
 
@@ -102,7 +90,7 @@ export class ImagesController {
         }
 
         return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "private",
+            "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
 
@@ -119,7 +107,9 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(file, params, accept, res);
+        return this.getCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=86400, public", // Public cache (1 day)
+        });
     }
 
     @DisableCometGuards()
@@ -135,7 +125,9 @@ export class ImagesController {
             throw new NotFoundException();
         }
 
-        return this.getCroppedImage(file, params, accept, res);
+        return this.getCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=86400, public", // Public cache (1 day)
+        });
     }
 
     private isValidHash({ hash, ...imageParams }: HashImageParams): boolean {

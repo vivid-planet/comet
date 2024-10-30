@@ -1,3 +1,4 @@
+import { gql, useQuery } from "@apollo/client";
 import { CometColor, Domain, DomainLocked } from "@comet/admin-icons";
 import { Grid, Tooltip, Typography } from "@mui/material";
 import { ReactNode, useCallback, useState } from "react";
@@ -14,6 +15,7 @@ import { VisibilityToggle } from "../common/VisibilityToggle";
 import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
+import { GQLSitePreviewJwtQuery } from "./SitePreview.generated";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
 
 //TODO v4 remove RouteComponentProps
@@ -98,6 +100,7 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         const newShowOnlyVisible = !showOnlyVisible;
         setShowOnlyVisible(String(newShowOnlyVisible));
         setIframePath(sitePath); //reload iframe with new settings
+        refetch();
     };
 
     const siteLink = `${siteConfig.url}${sitePath}`;
@@ -113,13 +116,26 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
         }
     });
 
-    const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({
-        scope: JSON.stringify(scope),
-        path: iframePath,
-        settings: JSON.stringify({
-            includeInvisible: showOnlyVisible ? false : true,
-        }),
-    }).toString()}`;
+    const { data, error, refetch } = useQuery<GQLSitePreviewJwtQuery>(
+        gql`
+            query SitePreviewJwt($scope: JSONObject!, $path: String!, $includeInvisible: Boolean!) {
+                sitePreviewJwt(scope: $scope, path: $path, includeInvisible: $includeInvisible)
+            }
+        `,
+        {
+            fetchPolicy: "network-only",
+            variables: {
+                scope,
+                path: iframePath,
+                includeInvisible: showOnlyVisible ? false : true,
+            },
+            pollInterval: 1000 * 60 * 60 * 24, // due to expiration time of jwt
+        },
+    );
+    if (error) throw new Error(error.message);
+    if (!data) return <div />;
+
+    const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({ jwt: data.sitePreviewJwt }).toString()}`;
 
     return (
         <Root>

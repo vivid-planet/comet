@@ -1,5 +1,40 @@
 # @comet/cms-api
 
+## 7.5.0
+
+### Minor Changes
+
+-   f2da11db1: API Generator: Add support for position field
+
+    Add a field named `position` to enable this feature. This field will hold and update the position. This should be an integer number field >= 1. It's also possible to define fields (in CrudGenerator-Decorator) to group position by.
+
+-   5a48ae482: Add file size to `DamFileDownloadLinkBlock`
+-   216d93a10: File Uploads: Add image endpoint
+
+    Add support for viewing images in the browser.
+    This can be useful for file upload previews, profile pictures etc.
+    The image URL can be obtained by querying the `imageUrl` field of the `FileUpload` type.
+    A `resizeWidth` argument needs to be provided.
+
+    **Example**
+
+    ```graphql
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            updatedAt
+            priceList {
+                id
+                imageUrl(resizeWidth: 640)
+            }
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   @comet/blocks-api@7.5.0
+
 ## 7.4.2
 
 ### Patch Changes

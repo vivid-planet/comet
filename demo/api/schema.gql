@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: String!
+  name: String!
+  email: String!
+}
+
 type CurrentUserPermission {
   permission: String!
   contentScopes: [JSONObject!]!
@@ -17,6 +23,8 @@ type CurrentUser {
   name: String!
   email: String!
   permissions: [CurrentUserPermission!]!
+  impersonated: Boolean
+  authenticatedUser: User
   permissionsForScope(scope: JSONObject!): [String!]!
 }
 
@@ -186,12 +194,7 @@ type FileUpload {
   createdAt: DateTime!
   updatedAt: DateTime!
   downloadUrl: String
-}
-
-type User {
-  id: String!
-  name: String!
-  email: String!
+  imageUrl(resizeWidth: Int!): String
 }
 
 type PaginatedUserList {
@@ -335,13 +338,6 @@ enum UserGroup {
 
 union PageContentUnion = Page | Link | PredefinedPage
 
-type PredefinedPage implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  createdAt: DateTime!
-  type: String
-}
-
 type DamScope {
   domain: String!
 }
@@ -382,6 +378,17 @@ type DamFile {
   duplicates: [DamFile!]!
   damPath: String!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+type PredefinedPage implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  type: PredefinedPageType
+}
+
+enum PredefinedPageType {
+  News
 }
 
 type FooterContentScope {
@@ -469,6 +476,7 @@ type ProductCategory {
   id: ID!
   title: String!
   slug: String!
+  position: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
   products: [Product!]!
@@ -525,6 +533,11 @@ type ProductDimensions {
   depth: Float!
 }
 
+type ProductPriceRange {
+  min: Float!
+  max: Float!
+}
+
 type Product {
   id: ID!
   title: String!
@@ -534,6 +547,7 @@ type Product {
   type: ProductType!
   additionalTypes: [ProductType!]!
   price: Float
+  priceRange: ProductPriceRange
   inStock: Boolean!
   soldCount: Int
   availableSince: Date
@@ -725,6 +739,11 @@ input ProductDimensionsInput {
   depth: Float!
 }
 
+input ProductPriceRangeInput {
+  min: Float!
+  max: Float!
+}
+
 input RedirectScopeInput {
   domain: String!
 }
@@ -748,9 +767,11 @@ type Query {
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
   paginatedPageTreeNodes(scope: PageTreeNodeScopeInput!, category: String, sort: [PageTreeNodeSort!], documentType: String, offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
+  sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
   redirects(scope: RedirectScopeInput!, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput!, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
+  redirectBySource(scope: RedirectScopeInput!, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
   redirectSourceAvailable(scope: RedirectScopeInput!, source: String!): Boolean!
   damItemsList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
   damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput!, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
@@ -766,12 +787,12 @@ type Query {
   news(id: ID!): News!
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
+  newsListByIds(ids: [ID!]!): [News!]!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
-  predefinedPage(id: ID!): PredefinedPage
-  pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  predefinedPage(id: ID!): PredefinedPage!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
@@ -1065,6 +1086,7 @@ input ProductCategorySort {
 enum ProductCategorySortField {
   title
   slug
+  position
   createdAt
   updatedAt
 }
@@ -1384,7 +1406,7 @@ input FooterInput {
 scalar FooterContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input PredefinedPageInput {
-  type: String
+  type: PredefinedPageType
 }
 
 input ProductInput {
@@ -1395,6 +1417,7 @@ input ProductInput {
   type: ProductType!
   additionalTypes: [ProductType!]! = []
   price: Float = null
+  priceRange: ProductPriceRangeInput
   inStock: Boolean! = true
   availableSince: Date = null
   lastCheckedAt: DateTime = null
@@ -1434,6 +1457,7 @@ input ProductUpdateInput {
   type: ProductType
   additionalTypes: [ProductType!]
   price: Float
+  priceRange: ProductPriceRangeInput
   inStock: Boolean
   availableSince: Date
   lastCheckedAt: DateTime
@@ -1455,12 +1479,14 @@ input ProductCategoryInput {
   title: String!
   slug: String!
   products: [ID!]! = []
+  position: Int
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
   products: [ID!]
+  position: Int
 }
 
 input ProductTagInput {
