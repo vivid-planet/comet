@@ -61,6 +61,7 @@ export function ProductsPage() {
                                     <Edit color="primary" />
                                 </IconButton>
                             )}
+                            actionsColumnWidth={116}
                         />
                     </MainContent>
                 </StackPage>
@@ -74,14 +75,18 @@ export function ProductsPage() {
                                     path=""
                                     label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                 >
-                                    <ProductForm id={selectedProductId} manufacturerCountry="DE" />
+                                    <MainContent>
+                                        <ProductForm id={selectedProductId} manufacturerCountry="DE" />
+                                    </MainContent>
                                 </RouterTab>
                                 <RouterTab
                                     forceRender={true}
                                     path="/price"
                                     label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
                                 >
-                                    <ProductPriceForm id={selectedProductId} />
+                                    <MainContent>
+                                        <ProductPriceForm id={selectedProductId} />
+                                    </MainContent>
                                 </RouterTab>
                             </RouterTabs>
                         </SaveBoundary>
@@ -106,7 +111,9 @@ export function ProductsPage() {
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ProductForm manufacturerCountry="DE" />
+                        <MainContent>
+                            <ProductForm manufacturerCountry="DE" />
+                        </MainContent>
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>

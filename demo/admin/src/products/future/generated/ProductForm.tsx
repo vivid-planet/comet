@@ -9,10 +9,10 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
-    MainContent,
     messages,
     RadioGroupField,
     TextAreaField,
@@ -185,7 +185,7 @@ export function ProductForm({ manufacturerCountry, id }: FormProps): React.React
             {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
+                    <>
                         <FieldSet
                             initiallyExpanded
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
@@ -285,6 +285,18 @@ export function ProductForm({ manufacturerCountry, id }: FormProps): React.React
                                 }}
                                 getOptionLabel={(option) => option.title}
                             />
+
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="priceRange"
+                                component={FinalFormRangeInput}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                min={25}
+                                max={500}
+                                disableSlider
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                            />
                             <Field
                                 fullWidth
                                 name="dimensionsEnabled"
@@ -377,7 +389,13 @@ export function ProductForm({ manufacturerCountry, id }: FormProps): React.React
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
                             />
-                            <Field name="image" isEqual={isEqual}>
+                            <Field
+                                name="image"
+                                isEqual={isEqual}
+                                label={<FormattedMessage id="product.image" defaultMessage="Image" />}
+                                variant="horizontal"
+                                fullWidth
+                            >
                                 {createFinalFormBlock(rootBlocks.image)}
                             </Field>
                             <FileUploadField
@@ -394,7 +412,7 @@ export function ProductForm({ manufacturerCountry, id }: FormProps): React.React
                                 maxFileSize={4194304}
                             />
                         </FieldSet>
-                    </MainContent>
+                    </>
                 </>
             )}
         </FinalForm>

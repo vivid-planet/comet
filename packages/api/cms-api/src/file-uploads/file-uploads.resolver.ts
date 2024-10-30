@@ -1,5 +1,5 @@
 import { Inject } from "@nestjs/common";
-import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Int, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { RequiredPermission } from "../user-permissions/decorators/required-permission.decorator";
 import { FileUpload } from "./entities/file-upload.entity";
@@ -19,5 +19,14 @@ export class FileUploadsResolver {
         }
 
         return this.fileUploadsService.createDownloadUrl(fileUpload);
+    }
+
+    @ResolveField(() => String, { nullable: true })
+    imageUrl(@Parent() fileUpload: FileUpload, @Args("resizeWidth", { type: () => Int }) resizeWidth: number): string | null {
+        if (!this.config.download) {
+            return null;
+        }
+
+        return this.fileUploadsService.createImageUrl(fileUpload, resizeWidth) ?? null;
     }
 }

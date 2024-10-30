@@ -28,6 +28,10 @@ export const productFormFragment = gql`
             id
             title
         }
+        priceRange {
+            min
+            max
+        }
     }
     ${finalFormFileUploadFragment}
 `;
