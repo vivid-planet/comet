@@ -16,7 +16,7 @@ export default {
             name: "Max list level",
             control: {
                 type: "number",
-                min: 1,
+                min: 0,
                 max: 4,
             },
         },
