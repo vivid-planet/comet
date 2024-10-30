@@ -215,7 +215,7 @@ export function ProductsGrid() {
             field: "manufacturer",
             headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }), // shown in filter-column-list and find-column-list
             sortable: false,
-            valueGetter: ({ value }) => (value ? value.name : "-"),
+            valueGetter: ({ value }) => value?.name,
             filterOperators: [ManufacturerFilterOperator],
         },
         // action column
