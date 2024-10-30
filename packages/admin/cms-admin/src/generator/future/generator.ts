@@ -3,6 +3,7 @@ import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { IconProps } from "@mui/material";
+import { GridSortDirection } from "@mui/x-data-grid";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -34,6 +35,14 @@ type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?:
 export type FormFieldConfig<T> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
+    | {
+          type: "numberRange";
+          minValue: number;
+          maxValue: number;
+          disableSlider?: boolean;
+          startAdornment?: string;
+          endAdornment?: string;
+      }
     | { type: "boolean" }
     | { type: "date" }
     // TODO | { type: "dateTime" }
@@ -87,7 +96,7 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
     fieldName?: string; // this can be used to overwrite field-prop of column-config
@@ -121,11 +130,13 @@ export type GridConfig<T extends { __typename?: string }> = {
     fragmentName?: string;
     query?: string;
     columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
+    excelExport?: boolean;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;
     copyPaste?: boolean;
     readOnly?: boolean;
+    initialSort?: Array<{ field: string; sort: GridSortDirection }>;
     filterProp?: boolean;
     toolbar?: boolean;
     toolbarActionProp?: boolean;
