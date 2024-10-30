@@ -40,14 +40,14 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                         control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
                         label={<FormattedMessage id="comet.dam.file.smartFocusPoint" defaultMessage="Smart focus point" />}
                     />
-                    <Box mt={2} pl={2}>
-                        <Typography variant="body2" paragraph>
+                    <Box>
+                        <Typography variant="caption" color="text.secondary" paragraph>
                             <FormattedMessage
                                 id="comet.dam.file.croppingInfoText"
                                 defaultMessage="Cropping selects the maximum visible area. Depending on the aspect ratio, the image may be cropped further on the page."
                             />
                         </Typography>
-                        <Typography variant="body2">
+                        <Typography variant="caption" color="text.secondary" paragraph>
                             <FormattedMessage
                                 id="comet.dam.file.focusPointInfoText"
                                 defaultMessage="The focus point marks the most important part of the image, which is always visible. Choose it wisely."
