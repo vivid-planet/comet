@@ -1170,7 +1170,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
                           positionGroupProps.length
                               ? `{ ${positionGroupProps
-                                    .map((prop) => (prop.name === "scope" ? `scope` : `${prop.name}: input.${prop.name}`))
+                                    .map((prop) =>
+                                        prop.name === "scope"
+                                            ? `scope`
+                                            : dedicatedResolverArgProps.find(
+                                                  (dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name,
+                                              ) !== undefined
+                                            ? prop.name
+                                            : `${prop.name}: input.${prop.name}`,
+                                    )
                                     .join(",")} }`
                               : ``
                       });
@@ -1179,7 +1187,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 await this.${instanceNamePlural}Service.incrementPositions(${
                           positionGroupProps.length
                               ? `{ ${positionGroupProps
-                                    .map((prop) => (prop.name === "scope" ? `scope` : `${prop.name}: input.${prop.name}`))
+                                    .map((prop) =>
+                                        prop.name === "scope"
+                                            ? `scope`
+                                            : dedicatedResolverArgProps.find(
+                                                  (dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name,
+                                              ) !== undefined
+                                            ? prop.name
+                                            : `${prop.name}: input.${prop.name}`,
+                                    )
                                     .join(",")} }, `
                               : ``
                       }position);
