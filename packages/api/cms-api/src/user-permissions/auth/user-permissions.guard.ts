@@ -6,6 +6,7 @@ import { getRequestFromExecutionContext } from "../../common/decorators/utils";
 import { ContentScopeService } from "../content-scope.service";
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
+import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
 import { AccessControlServiceInterface, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
 
@@ -19,32 +20,28 @@ export class UserPermissionsGuard implements CanActivate {
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        if (this.getDecorator(context, "disableCometGuards")) {
-            return true;
-        }
-
-        const user = this.getUser(context);
-
-        if (!user) {
-            return false;
-        }
-
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
         const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
         const skipScopeCheck = requiredPermission?.options?.skipScopeCheck ?? false;
 
-        // System user authenticated via basic auth
-        if (typeof user === "string" && this.options.systemUsers?.includes(user)) {
-            // Ignore field resolvers as they have no scopes and would overwrite the scopes of the root query.
-            if (!this.isResolvingGraphQLField(context) && !skipScopeCheck) {
-                const contentScopes = await this.contentScopeService.inferScopesFromExecutionContext(context);
-                const request = getRequestFromExecutionContext(context);
-                request.contentScopes = contentScopes;
-            }
+        let requiredContentScopes: ContentScope[][] = [];
 
-            return true;
+        // Ignore field resolvers as they have no scopes and would overwrite the scopes of the root query.
+        if (!this.isResolvingGraphQLField(context) && !skipScopeCheck) {
+            requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
+
+            const request = getRequestFromExecutionContext(context);
+            request.contentScopes = this.contentScopeService.getUniqueScopes(requiredContentScopes);
         }
+
+        if (this.getDecorator(context, "disableCometGuards")) return true;
+
+        const user = this.getUser(context);
+        if (!user) return false;
+
+        // System user authenticated via basic auth
+        if (typeof user === "string" && this.options.systemUsers?.includes(user)) return true;
 
         if (!requiredPermission && this.isResolvingGraphQLField(context)) return true;
         if (!requiredPermission) throw new Error(`RequiredPermission decorator is missing in ${location}`);
@@ -55,16 +52,10 @@ export class UserPermissionsGuard implements CanActivate {
             // At least one permission is required
             return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission));
         } else {
-            const requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
-
-            if (requiredContentScopes.length === 0) {
+            if (requiredContentScopes.length === 0)
                 throw new Error(
                     `Could not get content scope. Either pass a scope-argument or add an @AffectedEntity()-decorator or enable skipScopeCheck in the @RequiredPermission()-decorator of ${location}`,
                 );
-            }
-
-            const request = getRequestFromExecutionContext(context);
-            request.contentScopes = this.contentScopeService.getUniqueScopes(requiredContentScopes);
 
             // requiredContentScopes is an two level array of scopes
             // The first level has to be checked with AND, the second level with OR
