@@ -1,4 +1,4 @@
-import { SiteConfig } from "./site-configs.types";
+import { SiteConfig } from "./site-configs.d";
 
 // Called by `npx @comet/cli inject-site-configs`
 export default (): SiteConfig[] => [
@@ -12,7 +12,7 @@ export default (): SiteConfig[] => [
                 domain: "main",
                 language: "de",
             },
-        }
+        },
     },
     {
         name: 'Comet Site "Main/EN"',
@@ -24,7 +24,7 @@ export default (): SiteConfig[] => [
                 domain: "main",
                 language: "en",
             },
-        }
+        },
     },
     {
         name: 'Comet Site "Secondary/DE"',
@@ -36,7 +36,7 @@ export default (): SiteConfig[] => [
                 domain: "secondary",
                 language: "de",
             },
-        }
+        },
     },
     {
         name: 'Comet Site "Secondary/EN"',
@@ -48,6 +48,6 @@ export default (): SiteConfig[] => [
                 domain: "secondary",
                 language: "en",
             },
-        }
+        },
     },
 ];
