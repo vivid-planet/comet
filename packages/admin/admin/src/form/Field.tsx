@@ -51,7 +51,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
 }: FieldProps<FieldValue, FieldElement>) {
     const { disabled, variant, fullWidth } = otherProps;
 
-    const { mutators } = useForm();
+    const { mutators, getFieldState } = useForm();
     const setFieldData = mutators.setFieldData as ((...args: any[]) => any) | undefined;
     const currentWarningValidationRound = useRef(0);
 
@@ -62,12 +62,21 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     const shouldShowWarning = passedShouldShowWarning ?? finalFormContext.shouldShowFieldWarning;
     const shouldScrollToField = passedShouldScrollTo ?? finalFormContext.shouldScrollToField;
 
+    const keyRequired = required || validate ? 1 : 0;
+    const keyValidate = validate ? 2 : 3;
+
     function renderField({
         input,
         meta,
         fieldContainerProps,
         ...rest
     }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean; required?: boolean }) {
+        // fix for problem with conditional validation https://github.com/final-form/react-final-form/issues/980
+        const formMeta = getFieldState(name);
+
+        if (formMeta) {
+            meta = formMeta;
+        }
         function render() {
             if (component) {
                 return createElement(component, { ...rest, input, meta });
@@ -78,12 +87,13 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 return children({ input, meta, disabled, required });
             }
         }
+
         return (
             <FieldContainer
                 label={label}
                 required={required}
                 disabled={disabled}
-                error={shouldShowError(meta) && (meta.error || meta.submitError)}
+                error={(shouldShowError(meta) && meta.error) || meta.submitError}
                 warning={shouldShowWarning(meta) && meta.data?.warning}
                 helperText={helperText}
                 variant={variant}
@@ -103,6 +113,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 validate={validateError}
                 required={required}
                 {...otherProps}
+                key={keyRequired + keyValidate}
             >
                 {renderField}
             </FinalFormField>
