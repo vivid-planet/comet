@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
+import { InputBase } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
 import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { useIntl } from "react-intl";
@@ -53,7 +53,7 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
                 applyValue({ id: item.id, operatorValue: "equals", value: value ? value.id : undefined, columnField: "manufacturer" });
             }}
             renderInput={(params) => (
-                <TextField
+                <InputBase
                     {...params}
                     placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
                     value={search ? search : null}
