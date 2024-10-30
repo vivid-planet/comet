@@ -1,5 +1,6 @@
 import { Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
+import { AdminComponentSection } from "@comet/blocks-admin";
 import { Box, Button, FormControlLabel, Switch, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent } from "react";
@@ -36,24 +37,35 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
         <Container>
             <FormSection title={<FormattedMessage id="comet.dam.file.cropSettings.sectionTitle" defaultMessage="Crop/Focus settings" />}>
                 <FieldContainer>
-                    <FormControlLabel
-                        control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
-                        label={<FormattedMessage id="comet.dam.file.smartFocusPoint" defaultMessage="Smart focus point" />}
-                    />
-                    <Box>
-                        <Typography variant="caption" color="text.secondary" paragraph>
-                            <FormattedMessage
-                                id="comet.dam.file.croppingInfoText"
-                                defaultMessage="Cropping selects the maximum visible area. Depending on the aspect ratio, the image may be cropped further on the page."
-                            />
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" paragraph>
-                            <FormattedMessage
-                                id="comet.dam.file.focusPointInfoText"
-                                defaultMessage="The focus point marks the most important part of the image, which is always visible. Choose it wisely."
-                            />
-                        </Typography>
-                    </Box>
+                    <AdminComponentSection
+                        title={<FormattedMessage id="comet.dam.file.cropSettings.smartFocusPoint.title" defaultMessage="Smart focus point" />}
+                    >
+                        <FormControlLabel
+                            control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
+                            label={
+                                focalPoint === "SMART" ? (
+                                    <FormattedMessage id="comet.dam.file.smartFocusPoint.yes" defaultMessage="Yes" />
+                                ) : (
+                                    <FormattedMessage id="comet.dam.file.smartFocusPoint.no" defaultMessage="No" />
+                                )
+                            }
+                            style={{ marginBottom: "4px" }}
+                        />
+                        <Box>
+                            <Typography variant="caption" color="text.secondary" paragraph>
+                                <FormattedMessage
+                                    id="comet.dam.file.croppingInfoText"
+                                    defaultMessage="Cropping selects the maximum visible area. Depending on the aspect ratio, the image may be cropped further on the page."
+                                />
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" paragraph>
+                                <FormattedMessage
+                                    id="comet.dam.file.focusPointInfoText"
+                                    defaultMessage="The focus point marks the most important part of the image, which is always visible. Choose it wisely."
+                                />
+                            </Typography>
+                        </Box>
+                    </AdminComponentSection>
                 </FieldContainer>
                 {showChooseManualFocusPointButtons && (
                     <Field name="focalPoint">
