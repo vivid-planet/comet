@@ -1,5 +1,6 @@
 ---
-"@comet/cms-admin": minor
+"@comet/cms-admin": patch
+"@comet/cms-api": patch
 ---
 
-Improve Slug validation to filter url encoded special characters
+Fix page tree node slug validation to prevent URL encoded characters
