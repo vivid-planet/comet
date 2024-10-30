@@ -61,7 +61,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                     </Field>
                 )}
                 {showResetCropAreaButton && (
-                    <Field name="crop">
+                    <Field name="crop" fullWidth>
                         {({ input: { value, onChange } }) => (
                             <Button
                                 startIcon={<Reset />}

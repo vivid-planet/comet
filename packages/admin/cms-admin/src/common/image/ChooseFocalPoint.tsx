@@ -40,7 +40,7 @@ export const ChooseFocalPoint = ({ focalPoint, onChangeFocalPoint }: ChooseFocal
                     <FocusPointSoutheast />
                 </ToggleButton>
             </ToggleButtonGroup>
-            <Typography variant="caption" color="text.secondary" paragraph>
+            <Typography variant="caption" color="text.secondary" paragraph style={{ marginBottom: 0 }}>
                 <FormattedMessage
                     id="comet.blocks.image.hintSelectFocalPoint"
                     defaultMessage="You can also select the focus point by clicking on the bullets in the image."
