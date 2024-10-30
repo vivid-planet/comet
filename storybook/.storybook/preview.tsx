@@ -4,7 +4,7 @@ import { MainContent, MuiThemeProvider } from "@comet/admin";
 import { DateFnsLocaleProvider } from "@comet/admin-date-time";
 import { createCometTheme } from "@comet/admin-theme";
 import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
-import {  addParameters, ArgTypes, DecoratorFn } from "@storybook/react";
+import { addParameters, ArgTypes, DecoratorFn } from "@storybook/react";
 import { Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
 import * as React from "react";
@@ -64,7 +64,7 @@ export const argTypes: ArgTypes = {
         control: "select",
         options: Object.values(themeOptions),
     },
-    locale: { name: "Locale", control: "select", options: ["en","de"], mapping: {"en": "English"} },
+    locale: { name: "Locale", control: "select", options: ["en", "de"], mapping: { en: "English" } },
 };
 
 export const args = { theme: Object.values(themeOptions)[0], locale: "en" };
