@@ -69,8 +69,8 @@ export function generateFormField({
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
     const fieldIsOptionalInApi = isFieldOptionalInApi({ name: String(config.name), gqlIntrospection, gqlType });
-    const optionalRender = config.optionalRenderProp && fieldIsOptionalInApi;
-    if (config.optionalRenderProp && !fieldIsOptionalInApi) {
+    const optionalRender = config.hideable && fieldIsOptionalInApi;
+    if (config.hideable && !fieldIsOptionalInApi) {
         console.warn(
             `Field ${String(
                 config.name,
