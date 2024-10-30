@@ -9,14 +9,12 @@ import { isFieldOptional } from "../utils/isFieldOptional";
 import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
 
 function convertGqlScalarToTypescript(scalarName: string) {
-    if (scalarName === "String" || scalarName === "ID") {
+    if (scalarName === "String" || scalarName === "ID" || scalarName === "DateTime") {
         return "string";
     } else if (scalarName === "Boolean") {
         return "boolean";
     } else if (scalarName === "Int" || scalarName === "Float") {
         return "number";
-    } else if (scalarName === "DateTime") {
-        return "Date";
     } else if (scalarName === "JSONObject") {
         return "unknown";
     } else {
