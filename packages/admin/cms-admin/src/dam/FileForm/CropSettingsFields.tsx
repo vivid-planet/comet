@@ -75,6 +75,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                                     });
                                 }}
                                 color="info"
+                                variant="outlined"
                             >
                                 <FormattedMessage id="comet.dam.file.resetCropArea" defaultMessage="Reset crop area" />
                             </Button>
