@@ -123,7 +123,7 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
     let determinedMimetype: string | undefined = fileType?.mime;
     let determinedExtension: string | undefined = fileType?.ext;
 
-    if (determinedMimetype === "application/xml") {
+    if (determinedMimetype === "application/xml" || determinedMimetype === undefined) {
         // could be svg because it's not supported by the file-type library
         if (isSvg(fs.readFileSync(tempFile, "utf8"))) {
             determinedMimetype = "image/svg+xml";
