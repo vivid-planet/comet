@@ -7,7 +7,6 @@ import { FormattedMessage } from "react-intl";
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 import { startImpersonation, stopImpersonation } from "../utils/handleImpersonation";
-import { StartImpersonationButton } from "./ImpersonationButtons";
 import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
 
 export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) => {
@@ -45,7 +44,6 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
             </ToolbarTitleItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <StartImpersonationButton userId={userId} />
                 <CrudMoreActionsMenu
                     slotProps={{
                         group: { groupTitle: null },
