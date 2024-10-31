@@ -69,12 +69,12 @@ export function generateFormField({
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
     const fieldIsOptionalInApi = isFieldOptionalInApi({ name: String(config.name), gqlIntrospection, gqlType });
-    const optionalRender = config.hideable && fieldIsOptionalInApi;
+    const hideable = config.hideable && fieldIsOptionalInApi;
     if (config.hideable && !fieldIsOptionalInApi) {
         console.warn(
             `Field ${String(
                 config.name,
-            )}: Required input can not be optionalRender. Try generating a second form without this field to enable providing a value via prop.`,
+            )}: Required input can not be hideable. Try generating a second form without this field to enable providing a value via prop.`,
         );
     }
     const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
@@ -88,10 +88,8 @@ export function generateFormField({
     const imports: Imports = [];
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
-        initializationCode: optionalRender
-            ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? data.${dataRootName}.${name} : undefined`
-            : undefined,
-        initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+        initializationCode: hideable ? `${name}: hideFields.${name} ? undefined : data.${dataRootName}.${name}` : undefined,
+        initializationVarDependency: hideable ? `hideFields` : undefined,
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
@@ -164,15 +162,11 @@ export function generateFormField({
         }
         formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
 
-        let initializationAssignment = optionalRender
-            ? `show${name[0].toUpperCase() + name.substring(1)} ? String(data.${dataRootName}.${nameWithPrefix}) : undefined`
+        let initializationAssignment = hideable
+            ? `hideFields.${name} ? undefined : String(data.${dataRootName}.${nameWithPrefix})`
             : `String(data.${dataRootName}.${nameWithPrefix})`;
         if (!required) {
-            initializationAssignment = optionalRender
-                ? `show${
-                      name[0].toUpperCase() + name.substring(1)
-                  } && data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`
-                : `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
+            initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
         }
         formValuesConfig = [
             {
@@ -181,7 +175,7 @@ export function generateFormField({
                     omitFromFragmentType: name,
                     typeCode: `${name}${!required ? `?` : ``}: string;`,
                     initializationCode: `${name}: ${initializationAssignment}`,
-                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+                    initializationVarDependency: hideable ? `hideFields` : undefined,
                 },
             },
         ];
@@ -205,10 +199,8 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    defaultInitializationCode: optionalRender
-                        ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? false : undefined`
-                        : `${name}: false`,
-                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+                    defaultInitializationCode: hideable ? `${name}: hideFields.${name} ? undefined : false` : `${name}: false`,
+                    initializationVarDependency: hideable ? `hideFields` : undefined,
                 },
             },
         ];
@@ -235,12 +227,10 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    initializationCode: optionalRender
-                        ? `${name}: show${
-                              name[0].toUpperCase() + name.substring(1)
-                          } && data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`
+                    initializationCode: hideable
+                        ? `${name}: hideFields.${name} && data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`
                         : `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
-                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+                    initializationVarDependency: hideable ? `hideFields` : undefined,
                 },
             },
         ];
@@ -254,15 +244,13 @@ export function generateFormField({
                 ...defaultFormValuesConfig,
                 ...{
                     typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
-                    initializationCode: optionalRender
-                        ? `${name}: show${
-                              name[0].toUpperCase() + name.substring(1)
-                          } ? rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix}) : undefined`
+                    initializationCode: hideable
+                        ? `${name}: hideFields.${name} ? rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix}) : undefined`
                         : `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
-                    defaultInitializationCode: optionalRender
-                        ? `${name}: show${name[0].toUpperCase() + name.substring(1)} ? rootBlocks.${name}.defaultValues() : undefined`
+                    defaultInitializationCode: hideable
+                        ? `${name}: hideFields.${name} ? rootBlocks.${name}.defaultValues() : undefined`
                         : `${name}: rootBlocks.${name}.defaultValues()`,
-                    initializationVarDependency: optionalRender ? `show${name[0].toUpperCase() + name.substring(1)}` : undefined,
+                    initializationVarDependency: hideable ? `hideFields` : undefined,
                 },
             },
         ];
@@ -492,8 +480,8 @@ export function generateFormField({
         throw new Error(`Unsupported type`);
     }
     return {
-        code: optionalRender ? `{ show${name[0].toUpperCase() + name.substring(1)} && ${code} }` : code,
-        props: optionalRender ? [{ name: `show${name[0].toUpperCase() + name.substring(1)}`, type: `boolean`, optional: true }] : [],
+        code: hideable ? `{ !hideFields.${name} && ${code} }` : code,
+        props: hideable ? [{ name: `hideFields.${name}`, type: `boolean`, optional: true }] : [],
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],

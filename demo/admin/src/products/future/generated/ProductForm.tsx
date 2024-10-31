@@ -77,11 +77,11 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
 };
 
 interface FormProps {
-    showAvailableSince?: boolean;
+    hideFields?: { availableSince?: boolean };
     id?: string;
 }
 
-export function ProductForm({ showAvailableSince, id }: FormProps): React.ReactElement {
+export function ProductForm({ hideFields, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -106,14 +106,14 @@ export function ProductForm({ showAvailableSince, id }: FormProps): React.ReactE
                                 depth: String(data.product.dimensions.depth),
                             }
                           : undefined,
-                      availableSince: showAvailableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
+                      availableSince: hideFields.availableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
                       inStock: false,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data, showAvailableSince],
+        [data, hideFields],
     );
 
     const saveConflict = useFormSaveConflict({
@@ -378,7 +378,7 @@ export function ProductForm({ showAvailableSince, id }: FormProps): React.ReactE
                                     />
                                 )}
                             </Field>
-                            {showAvailableSince && (
+                            {!hideFields.availableSince && (
                                 <Field
                                     variant="horizontal"
                                     fullWidth

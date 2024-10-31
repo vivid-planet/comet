@@ -74,7 +74,7 @@ export function ProductsPage() {
                                     path=""
                                     label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                 >
-                                    <ProductForm id={selectedProductId} />
+                                    <ProductForm id={selectedProductId} hideFields={{ availableSince: true }} />
                                 </RouterTab>
                                 <RouterTab
                                     forceRender={true}
