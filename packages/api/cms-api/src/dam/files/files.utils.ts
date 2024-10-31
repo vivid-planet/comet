@@ -3,8 +3,10 @@ import FileType from "file-type";
 import fs from "fs";
 import { unlink } from "fs/promises";
 import got from "got";
+import isSvg from "is-svg";
 import * as mimedb from "mime-db";
 import os from "os";
+import { basename, extname } from "path";
 import slugify from "slugify";
 import stream from "stream";
 import { promisify } from "util";
@@ -114,15 +116,30 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
         fs.copyFileSync(url, tempFile);
     }
 
-    const fileType = await FileType.fromFile(tempFile);
     const stats = fs.statSync(tempFile); // TODO don't use sync
-    const filename = url.substring(url.lastIndexOf("/") + 1);
+    const filenameWithoutExtension = basename(url, extname(url));
+
+    const fileType = await FileType.fromFile(tempFile);
+    let determinedMimetype: string | undefined = fileType?.mime;
+    let determinedExtension: string | undefined = fileType?.ext;
+
+    if (determinedMimetype === "application/xml" || determinedMimetype === undefined) {
+        // could be svg because it's not supported by the file-type library
+        if (isSvg(fs.readFileSync(tempFile, "utf8"))) {
+            determinedMimetype = "image/svg+xml";
+            determinedExtension = "svg";
+        }
+    }
+
+    if (determinedMimetype === undefined || determinedExtension === undefined) {
+        throw new Error("Mimetype or extension could not be determined");
+    }
 
     return {
         fieldname: FilesService.UPLOAD_FIELD,
-        originalname: `${filename}.${fileType?.ext}`,
+        originalname: `${filenameWithoutExtension}.${determinedExtension}`,
         encoding: "utf8",
-        mimetype: fileType?.mime as string,
+        mimetype: determinedMimetype,
         size: stats.size,
         destination: tempDir,
         filename: fakeName,

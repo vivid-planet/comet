@@ -2393,6 +2393,9 @@ importers:
       hasha:
         specifier: ^5.2.2
         version: 5.2.2
+      is-svg:
+        specifier: ^4.4.0
+        version: 4.4.0
       jose:
         specifier: ^5.2.4
         version: 5.6.3
@@ -22476,13 +22479,6 @@ packages:
       punycode: 1.4.1
     dev: false
 
-  /fast-xml-parser@3.21.1:
-    resolution: {integrity: sha512-FTFVjYoBOZTJekiUsawGsSYV9QL0A+zDYCRj7y34IO6Jg+2IMYEtQa+bbictpdpV8dHxXywqU7C0gRDEOFtBFg==}
-    hasBin: true
-    dependencies:
-      strnum: 1.0.5
-    dev: false
-
   /fast-xml-parser@4.2.7:
     resolution: {integrity: sha512-J8r6BriSLO1uj2miOk1NW0YVm8AGOOu3Si2HQp/cSmo6EA4m3fcwu2WKjJ4RK9wMLBtg69y1kS8baDiQBR41Ig==}
     hasBin: true
@@ -23380,7 +23376,7 @@ packages:
     dependencies:
       cheerio: 0.22.0
       chroma-js: 2.4.2
-      is-svg: 4.3.2
+      is-svg: 4.4.0
       lodash.compact: 3.0.1
       lodash.uniq: 4.5.0
     dev: false
@@ -25259,11 +25255,11 @@ packages:
       better-path-resolve: 1.0.0
     dev: false
 
-  /is-svg@4.3.2:
-    resolution: {integrity: sha512-mM90duy00JGMyjqIVHu9gNTjywdZV+8qNasX8cm/EEYZ53PHDgajvbBwNVvty5dwSAxLUD3p3bdo+7sR/UMrpw==}
+  /is-svg@4.4.0:
+    resolution: {integrity: sha512-v+AgVwiK5DsGtT9ng+m4mClp6zDAmwrW8nZi6Gg15qzvBnRWWdfWA1TGaXyCDnWq5g5asofIgMVl3PjKxvk1ug==}
     engines: {node: '>=6'}
     dependencies:
-      fast-xml-parser: 3.21.1
+      fast-xml-parser: 4.4.1
     dev: false
 
   /is-symbol@1.0.4:
