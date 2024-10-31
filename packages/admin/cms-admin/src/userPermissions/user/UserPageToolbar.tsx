@@ -65,7 +65,7 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                               }
                             : null,
                     ]}
-                />{" "}
+                />
             </ToolbarActions>
         </StackToolbar>
     );
