@@ -11,12 +11,12 @@ export async function sitePreviewRoute(request: NextRequest, _graphQLFetch: unkn
     const params = request.nextUrl.searchParams;
     const jwt = params.get("jwt");
     if (!jwt) {
-        return NextResponse.json({ error: "JWT-Parameter is missing." });
+        return NextResponse.json({ error: "JWT-Parameter is missing." }, { status: 400 });
     }
 
     const data = await verifySitePreviewJwt(jwt);
     if (!data) {
-        return NextResponse.json({ error: "JWT-validation failed." });
+        return NextResponse.json({ error: "JWT-validation failed." }, { status: 400 });
     }
 
     const cookieJwt = await new SignJWT({
