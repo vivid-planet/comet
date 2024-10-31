@@ -6,6 +6,7 @@ import { FormattedMessage } from "react-intl";
 
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
+import { startImpersonation, stopImpersonation } from "../utils/handleImpersonation";
 import { StartImpersonationButton } from "./ImpersonationButtons";
 import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
 
@@ -55,12 +56,14 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                                   label: <FormattedMessage id="comet.impersonate" defaultMessage="Impersonate" />,
                                   icon: <ImpersonateUser />,
                                   disabled: userId === currentUser.id,
+                                  onClick: () => startImpersonation(userId),
                               }
                             : null,
                         currentUser.impersonated
                             ? {
                                   icon: <Reset />,
                                   label: <FormattedMessage id="comet.impersonate.stop" defaultMessage="Impersonate" />,
+                                  onClick: () => stopImpersonation,
                               }
                             : null,
                     ]}

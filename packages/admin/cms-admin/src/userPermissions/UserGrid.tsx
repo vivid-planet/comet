@@ -21,6 +21,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { useCurrentUser } from "./hooks/currentUser";
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
+import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
 
 type Props = {
     toolbarAction?: React.ReactNode;
@@ -34,6 +35,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
     const intl = useIntl();
     const stackApi = useContext(StackSwitchApiContext);
     const currentUser = useCurrentUser();
+    const isImpersonated = currentUser.impersonated;
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -78,9 +80,10 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                             {/* span is needed for the tooltip to trigger even if the button is disabled*/}
                             <span>
                                 <IconButton
-                                    disabled={isCurrentUser}
+                                    disabled={isCurrentUser && !isImpersonated}
                                     onClick={() => {
-                                        //TODO: add startImpersonation
+                                        !isCurrentUser && startImpersonation(params.row.id.toString());
+                                        isCurrentUser && isImpersonated && stopImpersonation();
                                     }}
                                 >
                                     <ImpersonateUser />
