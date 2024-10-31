@@ -15,7 +15,7 @@ import {
     Typography,
 } from "@mui/material";
 import { Maybe } from "graphql/jsutils/Maybe";
-import React, { ComponentProps, MouseEvent, PropsWithChildren, ReactNode, useState } from "react";
+import { ComponentProps, MouseEvent, PropsWithChildren, ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
