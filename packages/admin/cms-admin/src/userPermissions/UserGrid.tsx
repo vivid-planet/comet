@@ -5,17 +5,21 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    StackSwitchApiContext,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Typography } from "@mui/material";
+import { Edit, ImpersonateUser } from "@comet/admin-icons";
+import { IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { useIntl } from "react-intl";
+import { useContext } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 
+import { useCurrentUser } from "./hooks/currentUser";
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
 type Props = {
@@ -28,6 +32,8 @@ type Props = {
 export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) => {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserPermissionsUserGrid") };
     const intl = useIntl();
+    const stackApi = useContext(StackSwitchApiContext);
+    const currentUser = useCurrentUser();
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -52,13 +58,44 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             headerName: "",
             sortable: false,
             filterable: false,
-            type: "actions",
+
             align: "right",
             pinned: "right",
-            width: actionsColumnWidth,
             disableExport: true,
             renderCell: (params) => {
-                return <> {rowAction && rowAction(params)}</>;
+                const isCurrentUser = params.row.id === currentUser.id;
+                return (
+                    <>
+                        <Tooltip
+                            title={
+                                isCurrentUser ? (
+                                    <FormattedMessage id="comet.userPermissions.cannotImpersonate" defaultMessage="You can't impersonate yourself" />
+                                ) : (
+                                    <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
+                                )
+                            }
+                        >
+                            {/* span is needed for the tooltip to trigger even if the button is disabled*/}
+                            <span>
+                                <IconButton
+                                    disabled={isCurrentUser}
+                                    onClick={() => {
+                                        //TODO: add startImpersonation
+                                    }}
+                                >
+                                    <ImpersonateUser />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                        <IconButton
+                            onClick={() => {
+                                stackApi.activatePage("edit", params.id.toString());
+                            }}
+                        >
+                            <Edit color="primary" />
+                        </IconButton>
+                    </>
+                );
             },
         },
     ];
