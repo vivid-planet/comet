@@ -193,7 +193,7 @@ type FileUpload {
   contentHash: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  downloadUrl: String
+  downloadUrl: String!
   imageUrl(resizeWidth: Int!): String
 }
 

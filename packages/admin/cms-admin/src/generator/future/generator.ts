@@ -22,12 +22,12 @@ type ImportReference = {
     import: string;
 };
 
-type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1 } & Pick<
+type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1; download?: boolean } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number } & Pick<
+type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number; download?: boolean } & Pick<
     Partial<FinalFormFileUploadProps<true>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
@@ -189,7 +189,7 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
             await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
-                import { finalFormFileUploadFragment } from "@comet/cms-admin";
+                import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 
                 ${gqlDocumentsOutputCode}
             `;
