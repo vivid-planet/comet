@@ -44,6 +44,7 @@ interface CreateCompositeBlockOptionsBase {
     category?: BlockCategory | CustomBlockCategory;
     adminLayout?: "stacked";
     blocks: Record<string, BlockConfiguration>;
+    visibleOrderedBlocksForState?: (state: unknown) => string[];
 }
 
 type CreateCompositeBlockOptionsWithGroups = Omit<CreateCompositeBlockOptionsBase, "blocks"> & { groups: Record<string, GroupConfiguration> };
@@ -78,7 +79,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
         block: CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>>,
     ) => CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>>,
 ): CompositeBlockInterface<ExtractCompositeBlocksConfig<Options>> => {
-    const { name, displayName, category = BlockCategory.Other } = options;
+    const { name, displayName, category = BlockCategory.Other, visibleOrderedBlocksForState } = options;
 
     let groups: Record<string, GroupConfiguration>;
 
@@ -159,6 +160,10 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
             const blockIsValids = isValids(state);
 
             const nestedBlocks = Object.entries(blockConfigNormalized).filter(([, { nested }]) => nested === true);
+
+            const visibleOrderedBlocks = visibleOrderedBlocksForState?.(state) ?? [];
+            const compareWithVisibleOrderedBlocks = (blockKey: string) => visibleOrderedBlocks.findIndex((blockName) => blockName === blockKey);
+            const visibleBlockKeys = new Set(visibleOrderedBlocks.map((blockName) => blockName));
 
             const renderBlock = (blockKey: string, group: GroupConfiguration) => {
                 const {
@@ -241,9 +246,13 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                         <StackPage name="initial" key="initial">
                             {Object.entries(groups).map(([groupKey, group]) => {
                                 const { title, paper, blocks } = group;
-                                const children = Object.keys(blocks).map((blockKey) => (
-                                    <Fragment key={blockKey}>{renderBlock(blockKey, group)}</Fragment>
-                                ));
+                                const blockKeys =
+                                    visibleBlockKeys.size > 0
+                                        ? Object.keys(blocks)
+                                              .filter((blockKey) => visibleBlockKeys.has(blockKey))
+                                              .sort((a, b) => compareWithVisibleOrderedBlocks(a) - compareWithVisibleOrderedBlocks(b))
+                                        : Object.keys(blocks);
+                                const children = blockKeys.map((blockKey) => <Fragment key={blockKey}>{renderBlock(blockKey, group)}</Fragment>);
 
                                 const hiddenInSubroute = Object.values(blocks).every(
                                     (blockConfig) => blockConfig.hiddenInSubroute || blockConfig.nested,
