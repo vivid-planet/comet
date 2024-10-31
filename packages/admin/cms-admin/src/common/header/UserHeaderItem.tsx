@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
-import { Account, Clear, Info, Logout } from "@comet/admin-icons";
-import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
+import { Account, Clear, ImpersonateUser, Info, Logout } from "@comet/admin-icons";
+import { Avatar, Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -48,8 +48,36 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     const [showAboutModal, setShowAboutModal] = useState(false);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
-    const AccountIcon = user.impersonated ? <Account color="info" /> : <Account />;
-
+    const AccountIcon = user.impersonated ? (
+        <Box display="flex">
+            <Avatar
+                sx={{
+                    border: `1px solid ${theme.palette.grey[400]}`,
+                    width: 32,
+                    height: 32,
+                    backgroundColor: theme.palette.grey[900],
+                    opacity: "50%",
+                }}
+            >
+                <Account />
+            </Avatar>
+            <Avatar
+                sx={{
+                    border: `2px solid ${theme.palette.primary.main}`,
+                    width: 32,
+                    height: 32,
+                    backgroundColor: theme.palette.grey[900],
+                    marginLeft: "-10px",
+                }}
+            >
+                <ImpersonateUser />
+            </Avatar>
+        </Box>
+    ) : (
+        <Avatar sx={{ border: `1px solid ${theme.palette.grey[400]}`, width: 32, height: 32, backgroundColor: theme.palette.grey[900] }}>
+            <Account />
+        </Avatar>
+    );
     return (
         <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)} startIcon={isMobile ? undefined : AccountIcon}>
             <DropdownContent padding={4}>
