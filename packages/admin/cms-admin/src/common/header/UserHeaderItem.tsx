@@ -50,33 +50,26 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
 
     const AccountIcon = user.impersonated ? (
         <Box display="flex">
-            <Avatar
+            <StyledAvatar
                 sx={{
-                    border: `1px solid ${theme.palette.grey[400]}`,
-                    width: 32,
-                    height: 32,
-                    backgroundColor: theme.palette.grey[900],
                     opacity: "50%",
                 }}
             >
                 <Account />
-            </Avatar>
-            <Avatar
+            </StyledAvatar>
+            <StyledAvatar
                 sx={{
                     border: `2px solid ${theme.palette.primary.main}`,
-                    width: 32,
-                    height: 32,
-                    backgroundColor: theme.palette.grey[900],
                     marginLeft: "-10px",
                 }}
             >
                 <ImpersonateUser />
-            </Avatar>
+            </StyledAvatar>
         </Box>
     ) : (
-        <Avatar sx={{ border: `1px solid ${theme.palette.grey[400]}`, width: 32, height: 32, backgroundColor: theme.palette.grey[900] }}>
+        <StyledAvatar>
             <Account />
-        </Avatar>
+        </StyledAvatar>
     );
     return (
         <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)} startIcon={isMobile ? undefined : AccountIcon}>
@@ -135,3 +128,10 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
         </AppHeaderDropdown>
     );
 }
+
+const StyledAvatar = styled(Avatar)`
+    border: 1px solid ${({ theme }) => theme.palette.grey[400]};
+    width: 32px;
+    height: 32px;
+    background-color: ${({ theme }) => theme.palette.grey[900]};
+`;
