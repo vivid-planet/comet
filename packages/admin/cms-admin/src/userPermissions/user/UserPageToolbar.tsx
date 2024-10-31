@@ -1,12 +1,18 @@
 import { gql, useQuery } from "@apollo/client";
-import { Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { CrudMoreActionsMenu, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { ImpersonateUser, Reset } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
+import { FormattedMessage } from "react-intl";
 
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
+import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 import { StartImpersonationButton } from "./ImpersonationButtons";
 import { GQLUserPageQuery, GQLUserPageQueryVariables } from "./UserPageToolbar.generated";
 
 export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) => {
+    const currentUser = useCurrentUser();
+    const isAllowed = useUserPermissionCheck();
+
     const { data, error, loading } = useQuery<GQLUserPageQuery, GQLUserPageQueryVariables>(
         gql`
             query UserPage($id: String!) {
@@ -39,6 +45,26 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
             <ToolbarFillSpace />
             <ToolbarActions>
                 <StartImpersonationButton userId={userId} />
+                <CrudMoreActionsMenu
+                    slotProps={{
+                        group: { groupTitle: null },
+                    }}
+                    overallActions={[
+                        isAllowed("impersonation")
+                            ? {
+                                  label: <FormattedMessage id="comet.impersonate" defaultMessage="Impersonate" />,
+                                  icon: <ImpersonateUser />,
+                                  disabled: userId === currentUser.id,
+                              }
+                            : null,
+                        currentUser.impersonated
+                            ? {
+                                  icon: <Reset />,
+                                  label: <FormattedMessage id="comet.impersonate.stop" defaultMessage="Impersonate" />,
+                              }
+                            : null,
+                    ]}
+                />{" "}
             </ToolbarActions>
         </StackToolbar>
     );
