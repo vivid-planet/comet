@@ -2726,9 +2726,6 @@ importers:
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
-      use-debounce:
-        specifier: ^6.0.0
-        version: 6.0.1(react@18.3.1)
       usehooks-ts:
         specifier: ^3.1.0
         version: 3.1.0(react@18.3.1)
@@ -34455,15 +34452,6 @@ packages:
       react: '>=16.8.0'
     dependencies:
       react: 17.0.2
-    dev: false
-
-  /use-debounce@6.0.1(react@18.3.1):
-    resolution: {integrity: sha512-kpvIxpa0vOLz/2I2sfNJ72mUeaT2CMNCu5BT1f2HkV9qZK27UVSOFf1sSSu+wjJE4TcR2VTXS2SM569+m3TN7Q==}
-    engines: {node: '>= 10.0.0'}
-    peerDependencies:
-      react: '>=16.8.0'
-    dependencies:
-      react: 18.3.1
     dev: false
 
   /use-isomorphic-layout-effect@1.1.2(@types/react@17.0.53)(react@17.0.2):
