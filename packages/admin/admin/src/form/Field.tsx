@@ -62,8 +62,10 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
     const shouldShowWarning = passedShouldShowWarning ?? finalFormContext.shouldShowFieldWarning;
     const shouldScrollToField = passedShouldScrollTo ?? finalFormContext.shouldScrollToField;
 
-    const keyRequired = required || validate ? 1 : 0;
-    const keyValidate = validate ? 2 : 3;
+    // We need to change the key of the field when required or validate changes, to force revalidation
+    // https://codesandbox.io/p/sandbox/changing-field-level-validators-zc8ei
+    const keyRequired = required ? "required" : "not-required";
+    const keyValidate = validate ? "validate" : "no-validate";
 
     function renderField({
         input,
@@ -93,7 +95,7 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
                 label={label}
                 required={required}
                 disabled={disabled}
-                error={(shouldShowError(meta) && meta.error) || meta.submitError}
+                error={shouldShowError(meta) && (meta.error || meta.submitError)}
                 warning={shouldShowWarning(meta) && meta.data?.warning}
                 helperText={helperText}
                 variant={variant}
