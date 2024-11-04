@@ -59,7 +59,7 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
             </StyledAvatar>
             <StyledAvatar active>
                 <ImpersonateUser />
-            </StyledActiveAvatar>
+            </StyledAvatar>
         </AvatarGroup>
     ) : (
         <StyledAvatar>
