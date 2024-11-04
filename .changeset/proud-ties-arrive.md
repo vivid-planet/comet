@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-Adapt styling of `CropSettingsFields` and `ChooseFocalPoint`
+Adapt the styling of the DAM image settings
