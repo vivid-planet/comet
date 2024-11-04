@@ -160,7 +160,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                             <div>
                                 {inheritedDamSettings !== undefined && (
                                     <>
-                                        <Box padding={8} paddingBottom={6}>
+                                        <Box padding={8} paddingTop={0}>
                                             <FormSection
                                                 title={<FormattedMessage id="comet.blocks.image.dam" defaultMessage="DAM" />}
                                                 disableMarginBottom
