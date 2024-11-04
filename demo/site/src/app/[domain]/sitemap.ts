@@ -1,18 +1,21 @@
 export const dynamic = "force-dynamic"; // don't generate at build time
 
 import { gql } from "@comet/cms-site";
-import { domain, languages } from "@src/config";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { getSiteConfig } from "@src/util/siteConfig";
 import { MetadataRoute } from "next";
 
-import { GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables } from "./sitemap.generated";
+import { GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables } from "../sitemap.generated";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemap: MetadataRoute.Sitemap = [];
     const graphqlFetch = createGraphQLFetch();
 
-    for (const lang of languages) {
-        const scope = { domain, language: lang };
+    const siteConfig = await getSiteConfig();
+
+    for (const language of siteConfig.scope.languages) {
+        const domain = siteConfig.scope.domain;
+        const scope = { domain, language };
 
         let totalCount = 0;
         let currentCount = 0;
@@ -37,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                         const seoBlock = pageTreeNode.document.seo;
                         if (!seoBlock.noIndex) {
                             sitemap.push({
-                                url: `${process.env.SITE_URL}/${lang}${pageTreeNode.path}`, // TODO support multiple site domains
+                                url: `${siteConfig.url}/${language}${pageTreeNode.path}`, // TODO support multiple site domains
                                 priority: Number(seoBlock.priority.replace("_", ".")),
                                 changeFrequency: seoBlock.changeFrequency,
                                 lastModified: pageTreeNode.document.updatedAt,
