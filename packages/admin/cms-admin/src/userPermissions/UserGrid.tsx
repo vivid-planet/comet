@@ -14,7 +14,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Edit, ImpersonateUser } from "@comet/admin-icons";
-import { IconButton, Tooltip, Typography } from "@mui/material";
+import { Chip, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useContext } from "react";
@@ -55,6 +55,82 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             flex: 1,
             pinnable: false,
             headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
+        },
+        {
+            field: "permissionsInfo",
+            flex: 1,
+            pinnable: false,
+            sortable: false,
+            filterable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.permissionsInfo", defaultMessage: "Permissions" }),
+            renderCell: ({ row }) => {
+                if (row.permissionsCount === data?.availablePermissions.length) {
+                    return (
+                        <Chip
+                            color="primary"
+                            label={<FormattedMessage id="comet.userPermissions.allPermissions" defaultMessage="All permissions" />}
+                        />
+                    );
+                } else if (row.permissionsCount === 0) {
+                    return (
+                        <Chip
+                            color="secondary"
+                            label={<FormattedMessage id="comet.userPermissions.noPermissions" defaultMessage="No permissions" />}
+                        />
+                    );
+                } else {
+                    return (
+                        <Chip
+                            color="default"
+                            label={
+                                <FormattedMessage
+                                    id="comet.userPermissions.permissionsCount"
+                                    defaultMessage="{permissionsCount} of {availablePermissionsCount} permissions"
+                                    values={{
+                                        permissionsCount: row.permissionsCount,
+                                        availablePermissionsCount: data?.availablePermissions.length,
+                                    }}
+                                />
+                            }
+                        />
+                    );
+                }
+            },
+        },
+        {
+            field: "scopesInfo",
+            flex: 1,
+            pinnable: false,
+            sortable: false,
+            filterable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.contentScopesInfo", defaultMessage: "Scopes" }),
+            renderCell: ({ row }) => {
+                if (row.contentScopesCount === data?.availableContentScopes.length) {
+                    return (
+                        <Chip color="primary" label={<FormattedMessage id="comet.userPermissions.allContentScopes" defaultMessage="All scopes" />} />
+                    );
+                } else if (row.contentScopesCount === 0) {
+                    return (
+                        <Chip color="secondary" label={<FormattedMessage id="comet.userPermissions.noContentScopes" defaultMessage="No scopes" />} />
+                    );
+                } else {
+                    return (
+                        <Chip
+                            color="default"
+                            label={
+                                <FormattedMessage
+                                    id="comet.userPermissions.contentScopesCount"
+                                    defaultMessage="{contentScopesCount} of {availableContentScopesCount} scopes"
+                                    values={{
+                                        contentScopesCount: row.contentScopesCount,
+                                        availableContentScopesCount: data?.availableContentScopes.length,
+                                    }}
+                                />
+                            }
+                        />
+                    );
+                }
+            },
         },
         {
             field: "actions",
@@ -117,11 +193,15 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                     }
                     totalCount
                 }
+                availablePermissions: userPermissionsAvailablePermissions
+                availableContentScopes: userPermissionsAvailableContentScopes
             }
             fragment UserForGrid on User {
                 id
                 name
                 email
+                permissionsCount
+                contentScopesCount
             }
         `,
         {

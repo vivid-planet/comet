@@ -1,5 +1,41 @@
 # @comet/admin
 
+## 7.6.0
+
+### Minor Changes
+
+-   bc19fb18c: `useDataGridExcelExport`: Add support for `number` and `null` values in the Data Grid Excel export without the need for a `valueFormatter`
+-   00d7ddae1: Allow hiding the header (summary) of `FieldSet` by making the `title` prop optional
+
+### Patch Changes
+
+-   37d71a89a: Fix hover styling of `ToolbarBackButton`
+-   cf2ee898f: Fix missing key error in `CrudMoreActionsMenu`
+-   03afcd073: Allow customizing `CrudContextMenu`
+
+    Customize existing parts of `CrudContextMenu` using the `slotProps`, `iconMapping` and `messagesMapping` props.
+    Add custom actions by adding instances of `RowActionsItem` to the `children`:
+
+    ```tsx
+    <CrudContextMenu
+    // ...
+    >
+        <RowActionsItem
+            icon={<Favorite />}
+            onClick={() => {
+                // Do something
+            }}
+        >
+            Custom action
+        </RowActionsItem>
+        <Divider />
+    </CrudContextMenu>
+    ```
+
+-   fe8909404: Slightly adjust the color of the clear button of inputs to match the Comet CI
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-theme@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes

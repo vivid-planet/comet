@@ -1,5 +1,83 @@
 # @comet/cms-admin
 
+## 7.6.0
+
+### Minor Changes
+
+-   1f5c29ce8: Show the number of permissions and content scopes in the User Permissions Admin panel
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   3ea66fb38: Add support for user impersonation
+
+    Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
+
+    Adds an "Impersonation" button to the detail view of a user in the User Permissions admin panel. The impersonation can be exited by clicking the button in the user's info on the top right.
+
+-   d54a8c9f8: Add support for multiple paths in `ContentScopeProvider`
+
+    This enables using different paths for scopes with non-overlapping dimensions.
+    The `location.createPath` and `location.createUrl` functions can be used to override the default behavior.
+
+    **Example**
+
+    ```tsx
+    <ContentScopeProvider
+        location={{
+            createPath: () => ["/organization/:organizationId", "/channel/:channelId"],
+            createUrl: (scope) => {
+                if (scope.organizationId) {
+                    return `/organization/${scope.organizationId}`;
+                } else if (scope.channelId) {
+                    return `/channel/${scope.channelId}`;
+                } else {
+                    throw new Error("Invalid scope");
+                }
+            },
+        }}
+    />
+    ```
+
+-   05058fc1b: Export components to allow customization of User Permissions Admin panel
+
+    The application can provide a custom UserPermissionsPage based on the [default UserPermissionsPage](https://github.com/vivid-planet/comet/blob/main/packages/admin/cms-admin/src/userPermissions/UserPermissionsPage.tsx).
+
+-   0589ef554: Add `displayName` prop to `createTextLinkBlock` factory to support setting a custom display name
+
+### Patch Changes
+
+-   11ce320e9: Fix validation of empty `PhoneLinkBlock`
+
+    Previously, the default phone value was an empty string, meaning `@IsOptional()` didn't prevent validation.
+    Since an empty string is not a valid phone number, the validation failed.
+
+    This change sets the default value to `undefined`.
+
+-   700ddc340: Fix copy/paste for documents containing a `DamFileDownloadLinkBlock`
+-   18a9f22a7: Keep current location when changing scope on publisher and user permissions page
+-   6a43beebc: Display global `ContentScopeIndicator` if redirects are scoped globally
+
+    Previously, an empty `ContentScopeIndicator` was displayed if no `scopeParts` were passed to `createRedirectsPage`.
+
+-   1cf01f70f: Fix `ContentScopeIndicator` for scope with optional dimensions
+-   Updated dependencies [bc19fb18c]
+-   Updated dependencies [37d71a89a]
+-   Updated dependencies [cf2ee898f]
+-   Updated dependencies [03afcd073]
+-   Updated dependencies [00d7ddae1]
+-   Updated dependencies [fe8909404]
+    -   @comet/admin@7.6.0
+    -   @comet/admin-date-time@7.6.0
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-rte@7.6.0
+    -   @comet/admin-theme@7.6.0
+    -   @comet/blocks-admin@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes
