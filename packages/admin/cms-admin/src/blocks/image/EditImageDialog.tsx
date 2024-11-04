@@ -199,7 +199,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                 </Button>
                                             </Box>
                                         )}
-                                        <Divider />
+                                        <Divider sx={{ marginLeft: 8, marginRight: 8 }} />
                                     </>
                                 )}
                                 <Box padding={8}>
