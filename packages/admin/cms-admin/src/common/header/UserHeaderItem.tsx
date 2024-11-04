@@ -1,8 +1,8 @@
 import { gql, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
 import { Account, Clear, ImpersonateUser, Info, Logout } from "@comet/admin-icons";
-import { Avatar, AvatarGroup, Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Avatar, AvatarGroup, AvatarProps, Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
 import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -38,6 +38,10 @@ interface UserHeaderItemProps {
     buttonChildren?: AppHeaderDropdownProps["buttonChildren"];
 }
 
+interface StyledAvatarProps extends AvatarProps {
+    active?: boolean;
+    inactive?: boolean;
+}
 export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     const { aboutModalLogo, buttonChildren, children } = props;
 
@@ -50,16 +54,12 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
 
     const AccountIcon = user.impersonated ? (
         <AvatarGroup>
-            <StyledAvatar
-                sx={{
-                    opacity: "50%",
-                }}
-            >
+            <StyledAvatar inactive>
                 <Account />
             </StyledAvatar>
-            <StyledActiveAvatar>
+            <StyledAvatar active>
                 <ImpersonateUser />
-            </StyledActiveAvatar>
+            </StyledAvatar>
         </AvatarGroup>
     ) : (
         <StyledAvatar>
@@ -124,7 +124,7 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     );
 }
 
-const StyledAvatar = styled(Avatar)`
+const StyledAvatar = styled(Avatar)<StyledAvatarProps>`
     border: 1px solid ${({ theme }) => theme.palette.grey[400]};
     width: 32px;
     height: 32px;
@@ -133,13 +133,21 @@ const StyledAvatar = styled(Avatar)`
     && {
         border: 1px solid ${({ theme }) => theme.palette.grey[400]};
     }
-`;
 
-const StyledActiveAvatar = styled(StyledAvatar)`
-    margin-left: -10px;
-    z-index: 1;
+    ${({ active, theme }) =>
+        active &&
+        css`
+            margin-left: -10px;
+            z-index: 1;
 
-    && {
-        border: 2px solid ${({ theme }) => theme.palette.primary.main};
-    }
+            && {
+                border: 2px solid ${theme.palette.primary.main};
+            }
+        `}
+
+    ${({ inactive }) =>
+        inactive &&
+        css`
+            opacity: 50%;
+        `}
 `;
