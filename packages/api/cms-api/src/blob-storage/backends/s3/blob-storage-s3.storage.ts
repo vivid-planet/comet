@@ -12,6 +12,7 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
 
     constructor(config: BlobStorageS3Config["s3"]) {
         this.client = new AWS.S3({
+            requestHandler: config.requestHandler,
             credentials: {
                 accessKeyId: config.accessKeyId,
                 secretAccessKey: config.secretAccessKey,
