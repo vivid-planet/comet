@@ -3,6 +3,7 @@ import {
     DataGridToolbar,
     GridColDef,
     GridFilterButton,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
@@ -76,7 +77,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                         defaultMessage="You can't impersonate yourself"
                                     />
                                 ) : (
-                                    <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
+                                    <FormattedMessage {...messages.impersonate} />
                                 )
                             }
                         >

@@ -1,5 +1,14 @@
 import { gql, useQuery } from "@apollo/client";
-import { CrudMoreActionsMenu, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import {
+    CrudMoreActionsMenu,
+    Loading,
+    messages,
+    StackToolbar,
+    ToolbarActions,
+    ToolbarBackButton,
+    ToolbarFillSpace,
+    ToolbarTitleItem,
+} from "@comet/admin";
 import { ImpersonateUser, Reset } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
@@ -48,7 +57,7 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                     overallActions={[
                         isAllowed("impersonation")
                             ? {
-                                  label: <FormattedMessage id="comet.impersonate" defaultMessage="Impersonate" />,
+                                  label: <FormattedMessage {...messages.impersonate} />,
                                   icon: <ImpersonateUser />,
                                   disabled: userId === currentUser.id,
                                   onClick: () => startImpersonation(userId),
@@ -57,7 +66,7 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                         currentUser.impersonated
                             ? {
                                   icon: <Reset />,
-                                  label: <FormattedMessage id="comet.impersonate.stop" defaultMessage="Impersonate" />,
+                                  label: <FormattedMessage {...messages.stopImpersonation} />,
                                   onClick: () => stopImpersonation,
                               }
                             : null,
