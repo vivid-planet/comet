@@ -45,9 +45,6 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
             <ToolbarFillSpace />
             <ToolbarActions>
                 <CrudMoreActionsMenu
-                    slotProps={{
-                        group: { groupTitle: null },
-                    }}
                     overallActions={[
                         isAllowed("impersonation")
                             ? {
