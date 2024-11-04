@@ -1,40 +1,27 @@
 import { Reset } from "@comet/admin-icons";
-import { Box, Typography } from "@mui/material";
+import { Box, Chip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
 import { useCurrentUser } from "../../../userPermissions/hooks/currentUser";
-import { StopImpersonationButton } from "../../../userPermissions/user/UserPage";
+import { StopImpersonationButton } from "../../../userPermissions/user/ImpersonationButtons";
 
 export function ImpersonationInlay() {
     const user = useCurrentUser();
 
     return (
         <Inlay padding={4}>
-            <Tag>
-                <FormattedMessage id="comet.impersonation.inlay.title" defaultMessage="Impersonation mode" />
-            </Tag>
+            <Chip color="primary" label={<FormattedMessage id="comet.impersonation.inlay.title" defaultMessage="Impersonation mode" />} />
             <Typography variant="h6" sx={{ marginTop: 3 }}>
                 {user.name}
             </Typography>
             <Typography variant="body2" sx={{ marginBottom: 3 }}>
                 {user.email}
             </Typography>
-            <StopImpersonationButton startIcon={<Reset />} fullWidth variant="contained" color="secondary" sx={{ justifyContent: "center" }} />
+            <StopImpersonationButton startIcon={<Reset />} variant="contained" color="secondary" />
         </Inlay>
     );
 }
-
-const Tag = styled("div")`
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    padding: 4px 10px;
-    line-height: 16px;
-    justify-content: center;
-    background-color: ${({ theme }) => theme.palette.primary.main};
-    border-radius: 12px;
-`;
 
 const Inlay = styled(Box)`
     display: flex;
