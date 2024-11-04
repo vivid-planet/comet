@@ -3,12 +3,12 @@ import { PixelImageBlock, PreviewSkeleton, PropsWithData, SvgImageBlock, withPre
 import { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
 import { ImageProps } from "next/image";
 
-type Props = PropsWithData<DamImageBlockData> & Omit<ImageProps, "src" | "width" | "height" | "alt"> & { aspectRatio: string | "inherit" };
+type Props = PropsWithData<DamImageBlockData> & Omit<ImageProps, "src" | "width" | "height" | "alt"> & { aspectRatio: string | number | "inherit" };
 
 const DamImageBlock = withPreview(
     ({ data: { block }, aspectRatio, ...imageProps }: Props) => {
         if (!block) {
-            return <PreviewSkeleton type="media" hasContent={false} />;
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
         if (block.type === "pixelImage") {

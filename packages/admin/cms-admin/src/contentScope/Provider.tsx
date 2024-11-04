@@ -1,16 +1,24 @@
-import * as React from "react";
-import { generatePath, match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
+import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
+import { match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
 
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
 }
 
+type ContentScopeLocation<S extends ContentScopeInterface = ContentScopeInterface> = {
+    createPath: (scope: ContentScopeValues<S>) => string | string[];
+    createUrl: (scope: S) => string;
+};
+
+const defaultContentScopeLocation = { createPath: defaultCreatePath, createUrl: defaultCreateUrl };
+
 interface ContentScopeContext {
-    path: string;
+    path: string | string[];
     redirectPathAfterChange?: string; // define where the user should be redirected to after a scope change
-    setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
+    setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     values: ContentScopeValues;
+    location: ContentScopeLocation;
 }
 
 const defaultContentScopeContext: ContentScopeContext = {
@@ -19,6 +27,7 @@ const defaultContentScopeContext: ContentScopeContext = {
         //
     },
     values: [],
+    location: defaultContentScopeLocation,
 };
 
 type NonNull<T> = T extends null ? never : T;
@@ -33,7 +42,7 @@ export type UseContentScopeApi<S extends ContentScopeInterface = ContentScopeInt
     scope: S;
     setScope: (action: SetContentScopeAction<S>) => void;
     match: match;
-    setRedirectPathAfterChange: React.Dispatch<React.SetStateAction<string | undefined>>;
+    setRedirectPathAfterChange: Dispatch<SetStateAction<string | undefined>>;
     supported: boolean;
     values: ContentScopeValues<S>;
 };
@@ -44,7 +53,7 @@ export type ContentScopeValues<S extends ContentScopeInterface = ContentScopeInt
 
 // @TODO (maybe): factory for Provider (and other components) to be able to create a generic context https://ordina-jworks.github.io/architecture/2021/02/12/react-generic-context.html
 // ... and get rid of "as" type-assertions
-const Context = React.createContext<ContentScopeContext>(defaultContentScopeContext);
+const Context = createContext<ContentScopeContext>(defaultContentScopeContext);
 
 const NullValueAsString = "-"; // used to represent null-values in the url
 
@@ -92,24 +101,23 @@ function defaultCreateUrl(scope: ContentScopeInterface) {
 // @TODO: remove supported attribute
 // @TODO: provide default empty scope "{}"
 export function useContentScope<S extends ContentScopeInterface = ContentScopeInterface>(): UseContentScopeApi<S> {
-    const context = React.useContext(Context);
+    const context = useContext(Context);
     const history = useHistory();
     const matchContextScope = useRouteMatch<NonNullRecord<S>>(context?.path || "");
     const matchDefault = useRouteMatch();
     const match = matchContextScope || matchDefault;
 
     const matchParamsString = JSON.stringify(match.params); // convert matchParams to string, like this we can memoize or callbacks more easily
-    const scope = React.useMemo(() => parseScopeFromRouterMatchParams<S>(JSON.parse(matchParamsString)), [matchParamsString]);
-    const matchPath = match.path;
+    const scope = useMemo(() => parseScopeFromRouterMatchParams<S>(JSON.parse(matchParamsString)), [matchParamsString]);
     const redirectPath = context.redirectPathAfterChange;
-    const setScope = React.useCallback(
+    const setScope = useCallback(
         (action: SetContentScopeAction) => {
             const newContentScope = action(scope);
             const pathAfterScopePath = redirectPath || "";
-            const url = generatePath(matchPath, formatScopeToRouterMatchParams(newContentScope));
+            const url = context.location.createUrl(newContentScope);
             history.push({ pathname: url + pathAfterScopePath });
         },
-        [scope, matchPath, history, redirectPath],
+        [scope, history, redirectPath, context.location],
     );
 
     return {
@@ -125,26 +133,31 @@ export function useContentScope<S extends ContentScopeInterface = ContentScopeIn
 export interface ContentScopeProviderProps<S extends ContentScopeInterface = ContentScopeInterface> {
     defaultValue: S;
     values: ContentScopeValues<S>;
-    children: (p: { match: match<NonNullRecord<S>> }) => React.ReactNode;
-    location?: {
-        createPath: (scope: ContentScopeValues<S>) => string;
-        createUrl: (scope: S) => string;
-    };
+    children: (p: { match: match<NonNullRecord<S>> }) => ReactNode;
+    location?: ContentScopeLocation<S>;
 }
 
 export function ContentScopeProvider<S extends ContentScopeInterface = ContentScopeInterface>({
     children,
     defaultValue,
     values,
-    location = { createPath: defaultCreatePath, createUrl: defaultCreateUrl },
-}: ContentScopeProviderProps<S>): React.ReactElement {
+    location = defaultContentScopeLocation,
+}: ContentScopeProviderProps<S>) {
     const path = location.createPath(values);
     const defaultUrl = location.createUrl(defaultValue);
     const match = useRouteMatch<NonNullRecord<S>>(path);
-    const [redirectPathAfterChange, setRedirectPathAfterChange] = React.useState<undefined | string>("");
+    const [redirectPathAfterChange, setRedirectPathAfterChange] = useState<undefined | string>("");
 
     return (
-        <Context.Provider value={{ path, redirectPathAfterChange, setRedirectPathAfterChange, values }}>
+        <Context.Provider
+            value={{
+                path,
+                redirectPathAfterChange,
+                setRedirectPathAfterChange,
+                values,
+                location: location as ContentScopeLocation,
+            }}
+        >
             <Switch>
                 {match && (
                     <Route exact={false} strict={false} path={path}>

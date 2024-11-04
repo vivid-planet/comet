@@ -1,14 +1,14 @@
 import { ISortInformation, SortDirection } from "@comet/admin";
 import { Check, ChevronDown } from "@comet/admin-icons";
 import { List, ListItem, Typography } from "@mui/material";
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import * as sc from "./DamSortPopover.sc";
 
 type Sorting = {
     sortInfo: ISortInformation;
-    label: React.ReactNode;
+    label: ReactNode;
 };
 
 const sortings: Sorting[] = [
@@ -40,7 +40,7 @@ interface SortListItemProps {
     onClick: () => void;
 }
 
-const SortListItem = ({ children, selected, onClick }: PropsWithChildren<SortListItemProps>): React.ReactElement => {
+const SortListItem = ({ children, selected, onClick }: PropsWithChildren<SortListItemProps>) => {
     return (
         <ListItem button selected={selected} onClick={onClick}>
             <sc.InnerListItem>
@@ -59,8 +59,8 @@ interface DamSortPopoverProps {
 // This component is heavily based on comet-admin FilterBarPopoverFilter (https://github.com/vivid-planet/comet-admin/blob/next/packages/admin/src/table/filterbar/filterBarPopoverFilter/FilterBarPopoverFilter.tsx)
 // Todo: Create a generic FilterBarPopover component in comet-admin and use it instead of this component
 
-export const DamSortPopover = ({ onChoose, currentSort }: DamSortPopoverProps): React.ReactElement => {
-    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+export const DamSortPopover = ({ onChoose, currentSort }: DamSortPopoverProps) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
 
     const close = () => {

@@ -5,24 +5,29 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
-    StackSwitchApiContext,
+    ToolbarActions,
+    ToolbarFillSpace,
     ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
-import { IconButton, Typography } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import React from "react";
-import { useIntl } from "react-intl";
+import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
-export const UserGrid: React.FC = () => {
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserGrid") };
+type Props = {
+    toolbarAction?: React.ReactNode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    rowAction?: (params: GridRenderCellParams<any, GQLUserForGridFragment, any>) => React.ReactNode;
+    actionsColumnWidth?: number;
+};
+
+export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) => {
+    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("UserPermissionsUserGrid") };
     const intl = useIntl();
-    const stackApi = React.useContext(StackSwitchApiContext);
 
     const columns: GridColDef<GQLUserForGridFragment>[] = [
         {
@@ -43,20 +48,94 @@ export const UserGrid: React.FC = () => {
             headerName: intl.formatMessage({ id: "comet.userPermissions.email", defaultMessage: "E-Mail" }),
         },
         {
+            field: "permissionsInfo",
+            flex: 1,
+            pinnable: false,
+            sortable: false,
+            filterable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.permissionsInfo", defaultMessage: "Permissions" }),
+            renderCell: ({ row }) => {
+                if (row.permissionsCount === data?.availablePermissions.length) {
+                    return (
+                        <Chip
+                            color="primary"
+                            label={<FormattedMessage id="comet.userPermissions.allPermissions" defaultMessage="All permissions" />}
+                        />
+                    );
+                } else if (row.permissionsCount === 0) {
+                    return (
+                        <Chip
+                            color="secondary"
+                            label={<FormattedMessage id="comet.userPermissions.noPermissions" defaultMessage="No permissions" />}
+                        />
+                    );
+                } else {
+                    return (
+                        <Chip
+                            color="default"
+                            label={
+                                <FormattedMessage
+                                    id="comet.userPermissions.permissionsCount"
+                                    defaultMessage="{permissionsCount} of {availablePermissionsCount} permissions"
+                                    values={{
+                                        permissionsCount: row.permissionsCount,
+                                        availablePermissionsCount: data?.availablePermissions.length,
+                                    }}
+                                />
+                            }
+                        />
+                    );
+                }
+            },
+        },
+        {
+            field: "scopesInfo",
+            flex: 1,
+            pinnable: false,
+            sortable: false,
+            filterable: false,
+            headerName: intl.formatMessage({ id: "comet.userPermissions.contentScopesInfo", defaultMessage: "Scopes" }),
+            renderCell: ({ row }) => {
+                if (row.contentScopesCount === data?.availableContentScopes.length) {
+                    return (
+                        <Chip color="primary" label={<FormattedMessage id="comet.userPermissions.allContentScopes" defaultMessage="All scopes" />} />
+                    );
+                } else if (row.contentScopesCount === 0) {
+                    return (
+                        <Chip color="secondary" label={<FormattedMessage id="comet.userPermissions.noContentScopes" defaultMessage="No scopes" />} />
+                    );
+                } else {
+                    return (
+                        <Chip
+                            color="default"
+                            label={
+                                <FormattedMessage
+                                    id="comet.userPermissions.contentScopesCount"
+                                    defaultMessage="{contentScopesCount} of {availableContentScopesCount} scopes"
+                                    values={{
+                                        contentScopesCount: row.contentScopesCount,
+                                        availableContentScopesCount: data?.availableContentScopes.length,
+                                    }}
+                                />
+                            }
+                        />
+                    );
+                }
+            },
+        },
+        {
             field: "actions",
             headerName: "",
             sortable: false,
-            pinnable: false,
             filterable: false,
-            renderCell: (params) => (
-                <IconButton
-                    onClick={() => {
-                        stackApi.activatePage("edit", params.id.toString());
-                    }}
-                >
-                    <Edit color="primary" />
-                </IconButton>
-            ),
+            type: "actions",
+            align: "right",
+            pinned: "right",
+            width: actionsColumnWidth,
+            disableExport: true,
+            renderCell: (params) => {
+                return <> {rowAction && rowAction(params)}</>;
+            },
         },
     ];
 
@@ -69,11 +148,15 @@ export const UserGrid: React.FC = () => {
                     }
                     totalCount
                 }
+                availablePermissions: userPermissionsAvailablePermissions
+                availableContentScopes: userPermissionsAvailableContentScopes
             }
             fragment UserForGrid on User {
                 id
                 name
                 email
+                permissionsCount
+                contentScopesCount
             }
         `,
         {
@@ -104,8 +187,13 @@ export const UserGrid: React.FC = () => {
                         <ToolbarItem>
                             <GridFilterButton />
                         </ToolbarItem>
+                        <ToolbarFillSpace />
+                        {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
                     </DataGridToolbar>
                 ),
+            }}
+            componentsProps={{
+                toolbar: { toolbarAction },
             }}
         />
     );

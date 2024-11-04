@@ -1,21 +1,22 @@
 import { createBlocksBlock } from "@comet/blocks-admin";
-import { AnchorBlock, DamImageBlock, DamVideoBlock, YouTubeVideoBlock } from "@comet/cms-admin";
+import { AnchorBlock, DamImageBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
+import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
 import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
 
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
+import { ImageLinkBlock } from "./blocks/ImageLinkBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
 import { TeaserBlock } from "./blocks/TeaserBlock";
 import { TwoListsBlock } from "./blocks/TwoListsBlock";
-import { VideoBlock } from "./blocks/VideoBlock";
 
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
@@ -25,9 +26,6 @@ export const PageContentBlock = createBlocksBlock({
         headline: HeadlineBlock,
         image: DamImageBlock,
         textImage: TextImageBlock,
-        damVideo: DamVideoBlock,
-        youTubeVideo: YouTubeVideoBlock,
-        video: VideoBlock,
         linkList: LinkListBlock,
         fullWidthImage: FullWidthImageBlock,
         columns: ColumnsBlock,
@@ -36,6 +34,8 @@ export const PageContentBlock = createBlocksBlock({
         media: MediaBlock,
         teaser: TeaserBlock,
         newsDetail: NewsDetailBlock,
+        imageLink: ImageLinkBlock,
+        newsList: NewsListBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

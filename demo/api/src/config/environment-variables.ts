@@ -33,6 +33,9 @@ export class EnvironmentVariables {
     API_URL: string;
 
     @IsString()
+    BASIC_AUTH_SYSTEM_USER_PASSWORD: string;
+
+    @IsString()
     ADMIN_URL: string;
 
     @Type(() => Number)
@@ -131,4 +134,13 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.SENTRY_DSN)
     @IsString()
     SENTRY_ENVIRONMENT?: string;
+
+    @IsString()
+    @MinLength(16)
+    FILE_UPLOADS_DOWNLOAD_SECRET: string;
+
+    @IsString()
+    @MinLength(16)
+    @ValidateIf(() => process.env.NODE_ENV === "production")
+    SITE_PREVIEW_SECRET: string;
 }

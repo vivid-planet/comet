@@ -4,6 +4,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { getClientIp } from "request-ip";
 
 import { CurrentUser } from "../user-permissions/dto/current-user";
+import { User } from "../user-permissions/interfaces/user";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogConfig } from "./access-log.module";
 
@@ -88,9 +89,19 @@ export class AccessLogInterceptor implements NestInterceptor {
         return next.handle();
     }
 
-    private pushUserToRequestData(user: CurrentUser, requestData: string[]) {
-        if (user) {
-            requestData.push(this.config && this.config.userToLog ? this.config.userToLog(user) : `user: ${user.id}`);
+    private pushUserToRequestData(currentUser: CurrentUser, requestData: string[]) {
+        if (currentUser) {
+            const user = currentUser.authenticatedUser ? currentUser.authenticatedUser : currentUser;
+            const impersonatedUser = currentUser.authenticatedUser ? currentUser : undefined;
+            const userToLog =
+                this.config && this.config.userToLog
+                    ? this.config.userToLog
+                    : (user: User, impersonatedUser?: User) => {
+                          let log = `user: ${user.id}`;
+                          if (impersonatedUser) log += ` (impersonating: ${impersonatedUser.id})`;
+                          return log;
+                      };
+            requestData.push(userToLog(user, impersonatedUser));
         }
     }
 

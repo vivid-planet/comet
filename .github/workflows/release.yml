@@ -16,12 +16,12 @@ jobs:
             cancel-in-progress: true
         steps:
             - name: Checkout Repo
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - uses: pnpm/action-setup@v4
 
             - name: Use Node.js 18.x
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: 18
                   registry-url: "https://registry.npmjs.org"
@@ -40,7 +40,7 @@ jobs:
 
             - name: Create Release Pull Request or Publish to npm
               id: changesets
-              uses: dotansimha/changesets-action@cbc5ff3569ae9861100a48b290f4e9c1b94e45b5
+              uses: dotansimha/changesets-action@v1.5.2
               with:
                   version: pnpm run version
                   publish: pnpm run publish

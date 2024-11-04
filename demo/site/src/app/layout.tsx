@@ -1,4 +1,4 @@
-import { SitePreviewProvider } from "@comet/cms-site";
+import { CookieApiProvider, SitePreviewProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@comet/cms-site";
 import { ErrorHandler } from "@src/util/ErrorHandler";
 import StyledComponentsRegistry from "@src/util/StyledComponentsRegistry";
 import type { Metadata } from "next";
@@ -16,9 +16,11 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
     return (
         <html>
             <body className={inter.className}>
-                <StyledComponentsRegistry>
-                    <ErrorHandler>{draftMode().isEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}</ErrorHandler>
-                </StyledComponentsRegistry>
+                <CookieApiProvider api={process.env.NODE_ENV === "development" ? useLocalStorageCookieApi : useProductionCookieApi}>
+                    <StyledComponentsRegistry>
+                        <ErrorHandler>{draftMode().isEnabled ? <SitePreviewProvider>{children}</SitePreviewProvider> : children}</ErrorHandler>
+                    </StyledComponentsRegistry>
+                </CookieApiProvider>
             </body>
         </html>
     );

@@ -3,24 +3,33 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    CrudMoreActionsMenu,
     DataGridToolbar,
+    ExportApi,
     filterByFragment,
+    GridCellContent,
     GridColDef,
     GridFilterButton,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderStaticSelectCell,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
+    Tooltip,
     useBufferedRowCount,
+    useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { Excel, Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { CircularProgress, useTheme } from "@mui/material";
+import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
 import {
@@ -36,11 +45,14 @@ import {
 const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
-        inStock
         title
-        description
         price
         type
+        category {
+            title
+        }
+        inStock
+        description
         availableSince
         createdAt
     }
@@ -72,7 +84,7 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: React.ReactNode; exportApi: ExportApi }) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -82,6 +94,16 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNod
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
+            <CrudMoreActionsMenu
+                overallActions={[
+                    {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    },
+                ]}
+            />
             {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );
@@ -92,16 +114,90 @@ type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => React.ReactNode;
+    actionsColumnWidth?: number;
 };
 
-export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React.ReactElement {
+export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            initialSort: [
+                { field: "inStock", sort: "desc" },
+                { field: "price", sort: "asc" },
+            ],
+        }),
+        ...usePersistentColumnState("ProductsGrid"),
+    };
+
+    const theme = useTheme();
 
     const columns: GridColDef<GQLProductsGridFutureFragment>[] = [
-        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
-        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
+        {
+            field: "overview",
+            headerName: intl.formatMessage({ id: "product.overview", defaultMessage: "Overview" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                const typeLabels: Record<string, React.ReactNode> = {
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                };
+                const inStockLabels: Record<string, React.ReactNode> = {
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
+                    false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.title ?? "-"}
+                        secondaryText={
+                            <FormattedMessage
+                                id="product.overview.secondaryText"
+                                defaultMessage="{price} • {type} • {category} • {inStock}"
+                                values={{
+                                    price:
+                                        typeof row.price === "undefined" || row.price === null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.price.empty" defaultMessage="No price" />
+                                        ) : (
+                                            <FormattedNumber
+                                                value={row.price}
+                                                minimumFractionDigits={2}
+                                                maximumFractionDigits={2}
+                                                style="currency"
+                                                currency="EUR"
+                                            />
+                                        ),
+                                    type:
+                                        row.type == null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
+                                        ) : (
+                                            typeLabels[`${row.type}`] ?? row.type
+                                        ),
+                                    category: row.category?.title ?? (
+                                        <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
+                                    ),
+                                    inStock: row.inStock == null ? "-" : inStockLabels[`${row.inStock}`] ?? row.inStock,
+                                }}
+                            />
+                        }
+                    />
+                );
+            },
+            flex: 1,
+            visible: theme.breakpoints.down("md"),
+            disableExport: true,
+            sortBy: ["title", "price", "type", "category", "inStock"],
+            minWidth: 200,
+        },
+        {
+            field: "title",
+            headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
+            flex: 1,
+            visible: theme.breakpoints.up("md"),
+            minWidth: 200,
+            maxWidth: 250,
+        },
         {
             field: "description",
             headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
@@ -110,30 +206,83 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
         },
         {
             field: "price",
-            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
+            renderHeader: () => (
+                <>
+                    <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150} />
+                    <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
+                        <Info sx={{ marginLeft: 1 }} />
+                    </Tooltip>
+                </>
+            ),
             type: "number",
             flex: 1,
-            maxWidth: 150,
+            visible: theme.breakpoints.up("md"),
             minWidth: 150,
+            maxWidth: 150,
+        },
+        {
+            field: "inStock",
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            type: "singleSelect",
+            valueFormatter: ({ value }) => value?.toString(),
+            valueOptions: [
+                {
+                    value: "true",
+                    label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
+                            icon={<StateFilledIcon color="success" />}
+                        />
+                    ),
+                },
+                {
+                    value: "false",
+                    label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
+                            icon={<StateFilledIcon color="error" />}
+                        />
+                    ),
+                },
+            ],
+            renderCell: renderStaticSelectCell,
+            flex: 1,
+            visible: theme.breakpoints.up("md"),
+            minWidth: 80,
         },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
+            valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
-                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
-                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                {
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                },
+                {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
             ],
+            renderCell: renderStaticSelectCell,
             flex: 1,
-            maxWidth: 150,
+            visible: theme.breakpoints.up("md"),
             minWidth: 150,
+            maxWidth: 150,
         },
         {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
             valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             width: 140,
         },
         {
@@ -141,6 +290,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
             valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
+            valueFormatter: ({ value }) =>
+                value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
             width: 170,
         },
         {
@@ -151,7 +302,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
             type: "actions",
             align: "right",
             pinned: "right",
-            width: 116,
+            width: actionsColumnWidth,
+            disableExport: true,
             renderCell: (params) => {
                 return (
                     <>
@@ -201,6 +353,23 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
     if (error) throw error;
     const rows = data?.products.nodes ?? [];
 
+    const exportApi = useDataGridExcelExport<
+        GQLProductsGridQuery["products"]["nodes"][0],
+        GQLProductsGridQuery,
+        Omit<GQLProductsGridQueryVariables, "offset" | "limit">
+    >({
+        columns,
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+        },
+        query: productsQuery,
+        resolveQueryNodes: (data) => data.products.nodes,
+        totalCount: data?.products.totalCount ?? 0,
+        exportOptions: {
+            fileName: "Products",
+        },
+    });
+
     return (
         <DataGridPro
             {...dataGridProps}
@@ -213,7 +382,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props): React
                 Toolbar: ProductsGridToolbar,
             }}
             componentsProps={{
-                toolbar: { toolbarAction: toolbarAction },
+                toolbar: { toolbarAction, exportApi },
             }}
         />
     );

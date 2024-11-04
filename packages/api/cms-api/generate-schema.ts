@@ -29,6 +29,8 @@ import { createFolderEntity } from "./src/dam/files/entities/folder.entity";
 import { FileLicensesResolver } from "./src/dam/files/file-licenses.resolver";
 import { createFilesResolver } from "./src/dam/files/files.resolver";
 import { createFoldersResolver } from "./src/dam/files/folders.resolver";
+import { FileUploadsResolver } from "./src/file-uploads/file-uploads.resolver";
+import { SitePreviewResolver } from "./src/page-tree/site-preview.resolver";
 import { RedirectInputFactory } from "./src/redirects/dto/redirect-input.factory";
 import { RedirectEntityFactory } from "./src/redirects/entities/redirect-entity.factory";
 import { AzureAiTranslatorResolver } from "./src/translation/azure-ai-translator.resolver";
@@ -111,6 +113,8 @@ async function generateSchema(): Promise<void> {
         AzureAiTranslatorResolver,
         GenerateAltTextResolver,
         GenerateImageTitleResolver,
+        FileUploadsResolver,
+        SitePreviewResolver,
     ]);
 
     await writeFile("schema.gql", printSchema(schema));

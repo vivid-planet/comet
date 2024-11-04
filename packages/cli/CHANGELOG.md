@@ -1,5 +1,42 @@
 # @comet/cli
 
+## 7.6.0
+
+### Minor Changes
+
+-   d353fc847: The `inject-site-configs` command locates the site-config-file argument relative to the current directory
+-   9e2b0fac8: Add support for literal arrays to block meta
+
+    String, number, boolean, and JSON arrays can be defined by setting `array: true`.
+
+    **Example**
+
+    ```ts
+    class NewsListBlockData {
+        @BlockField({ type: "string", array: true })
+        newsIds: string[];
+    }
+    ```
+
+## 7.5.0
+
+### Patch Changes
+
+-   bc0570ff2: Fix setting prelogin domain for deployment with site-configs
+
+## 7.4.2
+
+## 7.4.1
+
+## 7.4.0
+
+### Patch Changes
+
+-   a101ed6f5: inject-site-configs: Add sane defaults for preloginEnabled
+
+    When `preloginEnabled` is `undefined` or `null` set it to `true`
+    on environments != `prod` or `local`.
+
 ## 7.3.2
 
 ## 7.3.1

@@ -1,5 +1,5 @@
 import escapeRegExp from "lodash.escaperegexp";
-import React from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 
 import { traversePreOrder } from "../../pages/pageTree/treemap/TreeMapUtils";
 import { FolderSearchMatch } from "./MoveDamItemDialog";
@@ -48,12 +48,12 @@ export interface FolderWithMatches extends FolderWithRenderInformation {
 interface UseFolderTreeSearchProps {
     folderTree: FolderTreeMap;
     foldersToRender: Array<FolderWithRenderInformation>;
-    setExpandedIds: React.Dispatch<React.SetStateAction<Set<string>>>;
+    setExpandedIds: Dispatch<SetStateAction<Set<string>>>;
 }
 interface UseFolderTreeSearchApi {
     foldersToRenderWithMatches: FolderWithMatches[];
     query: string;
-    setQuery: React.Dispatch<React.SetStateAction<string>>;
+    setQuery: Dispatch<SetStateAction<string>>;
     currentMatchIndex?: number;
     focusedFolderId?: string;
     totalMatches?: number;
@@ -63,11 +63,11 @@ interface UseFolderTreeSearchApi {
 }
 
 export const useFolderTreeSearch = ({ folderTree, foldersToRender, setExpandedIds }: UseFolderTreeSearchProps): UseFolderTreeSearchApi => {
-    const [query, setQuery] = React.useState("");
-    const [matches, setMatches] = React.useState<FolderSearchMatch[] | null>(null);
-    const [currentMatchIndex, setCurrentMatchIndex] = React.useState<number | undefined>(undefined);
+    const [query, setQuery] = useState("");
+    const [matches, setMatches] = useState<FolderSearchMatch[] | null>(null);
+    const [currentMatchIndex, setCurrentMatchIndex] = useState<number | undefined>(undefined);
 
-    const updateCurrentMatchIndex = React.useCallback(
+    const updateCurrentMatchIndex = useCallback(
         (nextCurrentMatchIndex: number | undefined) => {
             if (matches === null) {
                 return;
@@ -79,7 +79,7 @@ export const useFolderTreeSearch = ({ folderTree, foldersToRender, setExpandedId
         [matches],
     );
 
-    const jumpToNextMatch = React.useCallback(() => {
+    const jumpToNextMatch = useCallback(() => {
         if (matches === null || currentMatchIndex === undefined) {
             return;
         }
@@ -87,7 +87,7 @@ export const useFolderTreeSearch = ({ folderTree, foldersToRender, setExpandedId
         updateCurrentMatchIndex(currentMatchIndex === matches.length - 1 ? 0 : currentMatchIndex + 1);
     }, [currentMatchIndex, matches, updateCurrentMatchIndex]);
 
-    const jumpToPreviousMatch = React.useCallback(() => {
+    const jumpToPreviousMatch = useCallback(() => {
         if (matches === null || currentMatchIndex === undefined) {
             return;
         }
@@ -95,7 +95,7 @@ export const useFolderTreeSearch = ({ folderTree, foldersToRender, setExpandedId
         updateCurrentMatchIndex(currentMatchIndex === 0 ? matches.length - 1 : currentMatchIndex - 1);
     }, [currentMatchIndex, matches, updateCurrentMatchIndex]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (query === undefined || query.length === 0) {
             setMatches([]);
             return;
@@ -116,7 +116,7 @@ export const useFolderTreeSearch = ({ folderTree, foldersToRender, setExpandedId
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query]);
 
-    const foldersToRenderWithMatches = React.useMemo(
+    const foldersToRenderWithMatches = useMemo(
         () => foldersToRender.map((folder) => ({ ...folder, matches: matches?.filter((match) => match.folder.id === folder.id) ?? [] })),
         [matches, foldersToRender],
     );

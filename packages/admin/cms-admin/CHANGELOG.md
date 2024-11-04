@@ -1,5 +1,208 @@
 # @comet/cms-admin
 
+## 7.6.0
+
+### Minor Changes
+
+-   1f5c29ce8: Show the number of permissions and content scopes in the User Permissions Admin panel
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   3ea66fb38: Add support for user impersonation
+
+    Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
+
+    Adds an "Impersonation" button to the detail view of a user in the User Permissions admin panel. The impersonation can be exited by clicking the button in the user's info on the top right.
+
+-   d54a8c9f8: Add support for multiple paths in `ContentScopeProvider`
+
+    This enables using different paths for scopes with non-overlapping dimensions.
+    The `location.createPath` and `location.createUrl` functions can be used to override the default behavior.
+
+    **Example**
+
+    ```tsx
+    <ContentScopeProvider
+        location={{
+            createPath: () => ["/organization/:organizationId", "/channel/:channelId"],
+            createUrl: (scope) => {
+                if (scope.organizationId) {
+                    return `/organization/${scope.organizationId}`;
+                } else if (scope.channelId) {
+                    return `/channel/${scope.channelId}`;
+                } else {
+                    throw new Error("Invalid scope");
+                }
+            },
+        }}
+    />
+    ```
+
+-   05058fc1b: Export components to allow customization of User Permissions Admin panel
+
+    The application can provide a custom UserPermissionsPage based on the [default UserPermissionsPage](https://github.com/vivid-planet/comet/blob/main/packages/admin/cms-admin/src/userPermissions/UserPermissionsPage.tsx).
+
+-   0589ef554: Add `displayName` prop to `createTextLinkBlock` factory to support setting a custom display name
+
+### Patch Changes
+
+-   11ce320e9: Fix validation of empty `PhoneLinkBlock`
+
+    Previously, the default phone value was an empty string, meaning `@IsOptional()` didn't prevent validation.
+    Since an empty string is not a valid phone number, the validation failed.
+
+    This change sets the default value to `undefined`.
+
+-   700ddc340: Fix copy/paste for documents containing a `DamFileDownloadLinkBlock`
+-   18a9f22a7: Keep current location when changing scope on publisher and user permissions page
+-   6a43beebc: Display global `ContentScopeIndicator` if redirects are scoped globally
+
+    Previously, an empty `ContentScopeIndicator` was displayed if no `scopeParts` were passed to `createRedirectsPage`.
+
+-   1cf01f70f: Fix `ContentScopeIndicator` for scope with optional dimensions
+-   Updated dependencies [bc19fb18c]
+-   Updated dependencies [37d71a89a]
+-   Updated dependencies [cf2ee898f]
+-   Updated dependencies [03afcd073]
+-   Updated dependencies [00d7ddae1]
+-   Updated dependencies [fe8909404]
+    -   @comet/admin@7.6.0
+    -   @comet/admin-date-time@7.6.0
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-rte@7.6.0
+    -   @comet/admin-theme@7.6.0
+    -   @comet/blocks-admin@7.6.0
+
+## 7.5.0
+
+### Minor Changes
+
+-   5a48ae482: Add file size to `DamFileDownloadLinkBlock`
+-   2639fe51a: Add "License" column to DAM Data Grid
+
+    It is only shown if the license feature is enabled by setting `enableLicenseFeature` in `DamConfigProvider` to `true`.
+
+-   216d93a10: File Uploads: Add image endpoint
+
+    Add support for viewing images in the browser.
+    This can be useful for file upload previews, profile pictures etc.
+    The image URL can be obtained by querying the `imageUrl` field of the `FileUpload` type.
+    A `resizeWidth` argument needs to be provided.
+
+    **Example**
+
+    ```graphql
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            updatedAt
+            priceList {
+                id
+                imageUrl(resizeWidth: 640)
+            }
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   bc124d267: Support numbers as content scope values in User Permissions administration panel
+-   Updated dependencies [bb7c2de72]
+-   Updated dependencies [9a6a64ef3]
+-   Updated dependencies [c59a60023]
+-   Updated dependencies [b5838209b]
+-   Updated dependencies [c8f37fbd1]
+-   Updated dependencies [4cea3e31b]
+-   Updated dependencies [216d93a10]
+    -   @comet/admin@7.5.0
+    -   @comet/admin-date-time@7.5.0
+    -   @comet/admin-icons@7.5.0
+    -   @comet/admin-rte@7.5.0
+    -   @comet/admin-theme@7.5.0
+    -   @comet/blocks-admin@7.5.0
+
+## 7.4.2
+
+### Patch Changes
+
+-   @comet/admin@7.4.2
+-   @comet/admin-date-time@7.4.2
+-   @comet/admin-icons@7.4.2
+-   @comet/admin-rte@7.4.2
+-   @comet/admin-theme@7.4.2
+-   @comet/blocks-admin@7.4.2
+
+## 7.4.1
+
+### Patch Changes
+
+-   fa31e0856: Display validation errors of file name field in DAM
+    -   @comet/admin@7.4.1
+    -   @comet/admin-date-time@7.4.1
+    -   @comet/admin-icons@7.4.1
+    -   @comet/admin-rte@7.4.1
+    -   @comet/admin-theme@7.4.1
+    -   @comet/blocks-admin@7.4.1
+
+## 7.4.0
+
+### Minor Changes
+
+-   aad4eef42: Use a `Chip` in combination with a `Menu` for the page visibility selection
+
+    This replaces a `Button` which was used previously as trigger for the menu.
+
+-   44f1c593e: Add dialog to confirm manually starting a cron job
+-   cab7c427a: Add support for downloading previously uploaded files to `FileUploadField`
+-   1ca46e8da: Add support for `badgeContent` prop in `MenuItemRouterLink`
+
+    **Example usage in `masterMenuData`:**
+
+    ```ts
+    const masterMenuData = [
+        // ...
+        {
+            type: "route",
+            primary: "Some Route",
+            to: "/someRoute",
+            badgeContent: 2,
+        },
+        // ...
+    ];
+    ```
+
+    **Example usage as element:**
+
+    ```tsx
+    <MenuItemRouterLink primary="Some Route" to="/someRoute" badgeContent={2} />
+    ```
+
+-   bfb8f04e6: Add `VimeoVideoBlock` to support Vimeo videos
+-   5fc1fc393: Add info alert for dependents and duplicates in DAM
+
+### Patch Changes
+
+-   Updated dependencies [22863c202]
+-   Updated dependencies [cab7c427a]
+-   Updated dependencies [48d1403d7]
+-   Updated dependencies [1ca46e8da]
+-   Updated dependencies [1ca46e8da]
+-   Updated dependencies [bef162a60]
+-   Updated dependencies [bc1ed880a]
+-   Updated dependencies [46f932299]
+-   Updated dependencies [3e013b05d]
+    -   @comet/admin@7.4.0
+    -   @comet/blocks-admin@7.4.0
+    -   @comet/admin-date-time@7.4.0
+    -   @comet/admin-icons@7.4.0
+    -   @comet/admin-rte@7.4.0
+    -   @comet/admin-theme@7.4.0
+
 ## 7.3.2
 
 ### Patch Changes

@@ -1,6 +1,5 @@
 import { CancelButton, DeleteButton, messages } from "@comet/admin";
 import { Dialog, DialogActions, DialogTitle } from "@mui/material";
-import React from "react";
 import { FormattedMessage } from "react-intl";
 
 import * as sc from "./ConfirmDeleteDialog.sc";
@@ -12,7 +11,7 @@ interface ConfirmDeleteDialogProps {
     name?: string;
 }
 
-export const ConfirmDeleteDialog = ({ open, onCloseDialog, name, itemType }: ConfirmDeleteDialogProps): React.ReactElement => {
+export const ConfirmDeleteDialog = ({ open, onCloseDialog, name, itemType }: ConfirmDeleteDialogProps) => {
     return (
         <Dialog open={open} onClose={() => onCloseDialog(false)}>
             <DialogTitle>
