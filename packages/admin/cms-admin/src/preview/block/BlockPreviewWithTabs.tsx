@@ -1,5 +1,4 @@
 import { AdminComponentPart, AdminTabs, IFrameBridgeProvider } from "@comet/blocks-admin";
-import * as React from "react";
 
 import { SplitPreview } from "./SplitPreview";
 import { BlockPreviewApi } from "./useBlockPreview";
@@ -11,7 +10,7 @@ interface Props {
     previewUrl: string;
 }
 
-function BlockPreviewWithTabs({ children, previewApi, previewState, previewUrl }: Props): React.ReactElement {
+function BlockPreviewWithTabs({ children, previewApi, previewState, previewUrl }: Props) {
     let pageContent = null;
 
     if (previewApi.minimized) {

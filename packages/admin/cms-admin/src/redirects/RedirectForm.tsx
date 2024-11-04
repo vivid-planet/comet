@@ -17,7 +17,7 @@ import {
 import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
 import { MenuItem } from "@mui/material";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
@@ -84,7 +84,7 @@ const useInitialValues = (id: string | undefined, linkBlock: BlockInterface): Fo
 export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element => {
     const intl = useIntl();
     const initialValues = useInitialValues(id, linkBlock);
-    const targetInput = React.useMemo(() => createFinalFormBlock(linkBlock), [linkBlock]);
+    const targetInput = useMemo(() => createFinalFormBlock(linkBlock), [linkBlock]);
     const client = useApolloClient();
     const stackSwitchApi = useStackSwitchApi();
 

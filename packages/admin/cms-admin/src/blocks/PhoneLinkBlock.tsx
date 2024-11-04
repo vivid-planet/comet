@@ -1,6 +1,5 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PhoneLinkBlockData, PhoneLinkBlockInput } from "../blocks.generated";
@@ -14,7 +13,7 @@ export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockDa
 
     displayName: <FormattedMessage id="comet.blocks.link.phone" defaultMessage="Phone Number" />,
 
-    defaultValues: () => ({ phone: "" }),
+    defaultValues: () => ({ phone: undefined }),
 
     category: BlockCategory.Navigation,
 

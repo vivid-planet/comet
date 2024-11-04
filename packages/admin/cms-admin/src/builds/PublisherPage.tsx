@@ -3,10 +3,12 @@ import { Stack, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } fr
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { useRouteMatch } from "react-router";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
+import { useContentScope } from "../contentScope/Provider";
+import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { JobRuntime } from "../cronJobs/JobRuntime";
 import { PublishButton } from "./PublishButton";
 import { GQLBuildsQuery } from "./PublisherPage.generated";
@@ -30,7 +32,12 @@ const DataGridContainer = styled("div")`
     height: calc(100vh - var(--comet-admin-master-layout-content-top-spacing));
 `;
 
-export function PublisherPage(): React.ReactElement {
+export function PublisherPage() {
+    const { match } = useContentScope();
+    const routeMatch = useRouteMatch();
+    const location = routeMatch.url.replace(match.url, "");
+    useContentScopeConfig({ redirectPathAfterChange: location });
+
     const intl = useIntl();
 
     const { data, loading, error } = useQuery<GQLBuildsQuery, undefined>(buildsQuery);

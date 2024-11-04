@@ -23,8 +23,16 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "text", name: "slug" },
                 { type: "date", name: "createdAt", label: "Created", readOnly: true },
                 { type: "text", name: "description", label: "Description", multiline: true },
-                { type: "staticSelect", name: "type", label: "Type", required: true, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
+                {
+                    type: "staticSelect",
+                    name: "type",
+                    label: "Type",
+                    required: true,
+                    inputType: "radio",
+                    values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
+                },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
+                { type: "numberRange", name: "priceRange", minValue: 25, maxValue: 500, disableSlider: true, startAdornment: "€" },
                 {
                     type: "optionalNestedFields",
                     name: "dimensions",
@@ -41,6 +49,15 @@ export const ProductForm: FormConfig<GQLProduct> = {
             type: "fieldSet",
             name: "additionalData",
             fields: [
+                {
+                    type: "asyncSelect",
+                    name: "manufacturer",
+                    rootQuery: "manufacturers",
+                    filterField: {
+                        name: "type",
+                        gqlName: "addressAsEmbeddable_country",
+                    },
+                },
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince" },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },

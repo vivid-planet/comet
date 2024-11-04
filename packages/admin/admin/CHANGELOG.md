@@ -1,5 +1,249 @@
 # @comet/admin
 
+## 7.6.0
+
+### Minor Changes
+
+-   bc19fb18c: `useDataGridExcelExport`: Add support for `number` and `null` values in the Data Grid Excel export without the need for a `valueFormatter`
+-   00d7ddae1: Allow hiding the header (summary) of `FieldSet` by making the `title` prop optional
+
+### Patch Changes
+
+-   37d71a89a: Fix hover styling of `ToolbarBackButton`
+-   cf2ee898f: Fix missing key error in `CrudMoreActionsMenu`
+-   03afcd073: Allow customizing `CrudContextMenu`
+
+    Customize existing parts of `CrudContextMenu` using the `slotProps`, `iconMapping` and `messagesMapping` props.
+    Add custom actions by adding instances of `RowActionsItem` to the `children`:
+
+    ```tsx
+    <CrudContextMenu
+    // ...
+    >
+        <RowActionsItem
+            icon={<Favorite />}
+            onClick={() => {
+                // Do something
+            }}
+        >
+            Custom action
+        </RowActionsItem>
+        <Divider />
+    </CrudContextMenu>
+    ```
+
+-   fe8909404: Slightly adjust the color of the clear button of inputs to match the Comet CI
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-theme@7.6.0
+
+## 7.5.0
+
+### Minor Changes
+
+-   bb7c2de72: Adapt the `DeleteDialog` in `CrudContextMenu` to match the updated Comet CI
+-   c59a60023: Add a `CrudMoreActionsMenu` component
+
+    The component can be used to create a "More actions" menu for a list of items.
+    It is typically used in a toolbar above a Data Grid.
+
+    **Example**
+
+    ```tsx
+    <CrudMoreActionsMenu
+        selectionSize={selectionSize}
+        overallActions={[
+            {
+                label: "Export to excel",
+                onClick: handleExportToExcelClick,
+            },
+        ]}
+        selectiveActions={[
+            {
+                label: "move",
+                onClick: handleMoveClick,
+                icon: <Move />,
+                divider: true,
+            },
+            {
+                label: "download",
+                onClick: handleDownloadClick,
+                icon: <Download />,
+            },
+        ]}
+    />
+    ```
+
+-   4cea3e31b: Make it easier to render DataGrid cell content based on the cell's `valueOptions`
+
+    Objects inside a cell's `valueOptions` now support an optional `cellContent` property to allow defining a React node in addition to the `label`, which can only be a string.
+
+    When using the new `renderStaticSelectCell` helper as the `renderCell` function in the column definition, the helper will render the `cellContent` node of the selected option if defined.
+    The `label` or the string value of the option will be used as the cell's content if no `cellContent` node is provided.
+
+    The following example would behave as follows:
+
+    -   If the cell's value is "Shirt", it will render the `cellContent` node (the H2 Typography)
+    -   If the cell's value is "Cap", it will render the `label` (the string "This Cap")
+    -   If the cell's value is anything else, it will render the value as a string, e.g. "Tie"
+
+    ```tsx
+    {
+        headerName: "Category",
+        field: "category",
+        valueOptions: [
+            {
+                value: "Shirt",
+                label: "Shirt"
+                cellContent: (
+                    <Typography variant="h2">
+                        A Shirt
+                    </Typography>
+                ),
+            },
+            {
+                value: "Cap",
+                label: "This Cap",
+            },
+            "Tie",
+        ],
+        renderCell: renderStaticSelectCell,
+    }
+    ```
+
+-   216d93a10: File Uploads: Add image endpoint
+
+    Add support for viewing images in the browser.
+    This can be useful for file upload previews, profile pictures etc.
+    The image URL can be obtained by querying the `imageUrl` field of the `FileUpload` type.
+    A `resizeWidth` argument needs to be provided.
+
+    **Example**
+
+    ```graphql
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            updatedAt
+            priceList {
+                id
+                imageUrl(resizeWidth: 640)
+            }
+        }
+    }
+    ```
+
+### Patch Changes
+
+-   9a6a64ef3: Fix a bug where the initial values of `RadioGroupField` and `CheckboxListField` would not be shown in the input
+-   b5838209b: Fix an issue where the clear button of `SelectField` would be shown, even if the value is `undefined`
+-   c8f37fbd1: Allow setting all props of `FinalFormSelect` via `componentsProps` in `SelectField`
+    -   @comet/admin-icons@7.5.0
+    -   @comet/admin-theme@7.5.0
+
+## 7.4.2
+
+### Patch Changes
+
+-   @comet/admin-icons@7.4.2
+-   @comet/admin-theme@7.4.2
+
+## 7.4.1
+
+### Patch Changes
+
+-   @comet/admin-icons@7.4.1
+-   @comet/admin-theme@7.4.1
+
+## 7.4.0
+
+### Minor Changes
+
+-   22863c202: Add an `options` prop to `SelectField` as an alternative to `children`
+
+    Note: the behavior of the `options` prop differs from `FinalFormSelect` and is only intended to work with static options.
+    Use the existing `AsyncSelectField` for dynamic options.
+
+    -   Each option must have the `value` and `label` properties. A custom structure is not supported.
+    -   There are no `getOptionLabel` and `getOptionValue` props. The `label` and `value` properties are used directly.
+    -   The value stored in the form state is the `value` property, not the whole option object.
+
+    ```tsx
+    const options: SelectFieldOption[] = [
+        { value: "chocolate", label: "Chocolate" },
+        { value: "strawberry", label: "Strawberry" },
+        { value: "raspberry", label: "Raspberry", disabled: true },
+    ];
+
+    // ...
+
+    <SelectField name="flavor" label="Select a flavor" options={options} fullWidth />;
+    ```
+
+-   cab7c427a: Add support for downloading previously uploaded files to `FileUploadField`
+-   1ca46e8da: Add support for `badgeContent` prop in `MenuItemRouterLink`
+
+    **Example usage in `masterMenuData`:**
+
+    ```ts
+    const masterMenuData = [
+        // ...
+        {
+            type: "route",
+            primary: "Some Route",
+            to: "/someRoute",
+            badgeContent: 2,
+        },
+        // ...
+    ];
+    ```
+
+    **Example usage as element:**
+
+    ```tsx
+    <MenuItemRouterLink primary="Some Route" to="/someRoute" badgeContent={2} />
+    ```
+
+-   1ca46e8da: Extend `MenuItemAnchorLink` to define a correctly styled `LinkExternal` icon if no `secondaryAction` is passed
+-   bef162a60: Add possibility for uncontrolled (promise-based) behavior to `FeedbackButton`
+
+    Previously the `FeedbackButton` was controlled by the props `loading` and `hasErrors`. To enable more use cases and easier usage, a promise-based way was added. If neither of the mentioned props are passed, the component uses the promise returned by `onClick` to evaluate the idle, loading and error state.
+
+-   3e013b05d: Add the ability to disable individual `CheckboxListField` and `RadioGroupField` options
+
+    ```tsx
+    const options = [
+        {
+            label: "Selectable",
+            value: "selectable",
+        },
+        {
+            label: "Disabled",
+            value: "disabled",
+            disabled: true,
+        },
+    ];
+
+    const FormFields = () => (
+        <>
+            <CheckboxListField label="Checkbox List" name="checkboxList" options={options} />
+            <RadioGroupField label="Radio Group" name="radioGroup" fullWdth options={options} />
+        </>
+    );
+    ```
+
+### Patch Changes
+
+-   48d1403d7: Fix `FieldContainer` layout on first render
+
+    Previously, `FieldContainer` displayed vertically on desktop instead of horizontally due to the container width not being available during the first render (because `ref.current` was null).
+    The layout corrected itself after interacting with the field, triggering a rerender.
+
+    Now, the rerender is triggered automatically when `ref.current` is set resulting in the correct layout from the start.
+
+-   bc1ed880a: FinalFormSelect: Fix value `0` and `false` not being clearable
+    -   @comet/admin-icons@7.4.0
+    -   @comet/admin-theme@7.4.0
+
 ## 7.3.2
 
 ### Patch Changes

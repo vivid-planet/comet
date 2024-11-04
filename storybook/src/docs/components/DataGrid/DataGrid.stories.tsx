@@ -1,11 +1,14 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    CrudMoreActionsMenu,
+    DataGridToolbar,
     FileIcon,
     GridColDef,
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
+    RowActionsItem,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -15,8 +18,8 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { MoreVertical } from "@comet/admin-icons";
-import { Button, Menu, MenuItem, useTheme } from "@mui/material";
+import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
+import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
@@ -295,16 +298,20 @@ storiesOf("stories/components/DataGrid", module)
             {
                 field: "firstName",
                 headerName: "First name",
+                flex: 1,
             },
             {
                 field: "lastName",
                 headerName: "Last name",
+                flex: 1,
             },
             {
-                field: "action",
+                field: "actions",
                 headerName: "",
                 sortable: false,
                 filterable: false,
+                pinned: "right",
+                width: 52,
                 renderCell: (params) => {
                     return (
                         <CrudContextMenu
@@ -336,14 +343,19 @@ storiesOf("stories/components/DataGrid", module)
                                     lastName: params.row.lastName,
                                 };
                             }}
-                        />
+                        >
+                            <RowActionsItem icon={<Favorite />} onClick={() => alert(`Doing a custom action on ${params.row.firstName}`)}>
+                                Custom action
+                            </RowActionsItem>
+                            <Divider />
+                        </CrudContextMenu>
                     );
                 },
             },
         ];
 
         return (
-            <Box sx={{ height: 400, width: "100%" }}>
+            <Box height={400}>
                 <DataGrid rows={exampleRows} columns={columns} />
             </Box>
         );
@@ -455,6 +467,79 @@ storiesOf("stories/components/DataGrid", module)
                         Toolbar: DemoToolbar,
                     }}
                 />
+            </Box>
+        );
+    })
+    .add("CrudMoreActionsMenu", () => {
+        return (
+            <Box sx={{ height: 300, width: "100%" }}>
+                <h2>Without selection:</h2>
+                <DataGridToolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarItem>
+                        <CrudMoreActionsMenu
+                            selectionSize={0}
+                            overallActions={[
+                                {
+                                    label: "Export to excel",
+                                    onClick: () => {},
+                                },
+                            ]}
+                            selectiveActions={[
+                                {
+                                    label: "Move",
+                                    onClick: () => {},
+                                    icon: <Move />,
+                                },
+                                {
+                                    label: "Delete",
+                                    onClick: () => {},
+                                    icon: <Delete />,
+                                    divider: true,
+                                },
+                                {
+                                    label: "Download",
+                                    onClick: () => {},
+                                    icon: <Download />,
+                                },
+                            ]}
+                        />
+                    </ToolbarItem>
+                </DataGridToolbar>
+
+                <h2>With selection:</h2>
+                <DataGridToolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarItem>
+                        <CrudMoreActionsMenu
+                            selectionSize={2}
+                            overallActions={[
+                                {
+                                    label: "Export to excel",
+                                    onClick: () => {},
+                                },
+                            ]}
+                            selectiveActions={[
+                                {
+                                    label: "Move",
+                                    onClick: () => {},
+                                    icon: <Move />,
+                                },
+                                {
+                                    label: "Delete",
+                                    onClick: () => {},
+                                    icon: <Delete />,
+                                    divider: true,
+                                },
+                                {
+                                    label: "Download",
+                                    onClick: () => {},
+                                    icon: <Download />,
+                                },
+                            ]}
+                        />
+                    </ToolbarItem>
+                </DataGridToolbar>
             </Box>
         );
     });

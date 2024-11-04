@@ -3,10 +3,9 @@ import { SitePreviewData } from "../sitePreview/SitePreviewUtils";
 type Fetch = typeof fetch;
 
 function graphQLHeaders(previewData?: SitePreviewData) {
-    const { includeInvisibleBlocks, includeInvisiblePages, previewDamUrls } = {
+    const { includeInvisibleBlocks, includeInvisiblePages } = {
         includeInvisiblePages: !!previewData,
         includeInvisibleBlocks: previewData && previewData.includeInvisible,
-        previewDamUrls: !!previewData,
     };
 
     const headers: Record<string, string> = {};
@@ -22,17 +21,35 @@ function graphQLHeaders(previewData?: SitePreviewData) {
     if (includeInvisibleContentHeaderEntries.length > 0) {
         headers["x-include-invisible-content"] = includeInvisibleContentHeaderEntries.join(",");
     }
-    // tells api to create preview image urls
-    // authentication is required when this header is used
-    if (previewDamUrls) {
-        headers["x-preview-dam-urls"] = "1";
-    }
     return headers;
 }
 
-//from graphql-request https://github.com/jasonkuhrt/graphql-request/blob/main/src/raw/functions/gql.ts
+// Adapted from https://github.com/jasonkuhrt/graffle/blob/main/src/layers/6_helpers/gql.ts
 export const gql = (chunks: TemplateStringsArray, ...variables: unknown[]): string => {
-    return chunks.reduce((acc, chunk, index) => `${acc}${chunk}${index in variables ? String(variables[index]) : ``}`, ``);
+    return chunks.reduce((acc, chunk, index) => {
+        let variable;
+
+        if (index in variables) {
+            if (typeof variables[index] !== "string") {
+                let errorMessage =
+                    `Non-string variable in the GraphQL document\n\n` +
+                    `This is most likely due to importing a GraphQL document from a React Client Component.\n` +
+                    `All GraphQL documents need to be imported from React Server Components (i.e. no "use client" notation).`;
+
+                if (chunk.trim().length > 0) {
+                    errorMessage += `\n\nThe error occurred in the following GraphQL document:\n${chunk}`;
+                }
+
+                throw new Error(errorMessage);
+            } else {
+                variable = variables[index];
+            }
+        } else {
+            variable = "";
+        }
+
+        return `${acc}${chunk}${variable}`;
+    }, ``);
 };
 
 export function createFetchWithPreviewHeaders(fetch: Fetch, previewData?: SitePreviewData): Fetch {
@@ -79,13 +96,28 @@ export function createGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
             });
         }
         if (!response.ok) {
-            throw new Error(`Network response was not ok. Status: ${response.status}`);
+            let errorMessage = `Network response was not ok. Status: ${response.status}`;
+            const body = await response.text();
+
+            try {
+                const json = JSON.parse(body);
+
+                const { errors } = json;
+                if (errors) {
+                    errorMessage += `\n\nGraphQL error(s):\n- ${errors.map((error: { message: string }) => error.message).join("\n- ")}`;
+                }
+            } catch (error) {
+                errorMessage += `\n${body}`;
+            }
+
+            throw new Error(errorMessage);
         }
+
         const { data, errors } = await response.json();
+
         if (errors) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const errorMessage = errors.map((error: any) => error.message).join("\n");
-            throw new Error(`GraphQL Error: ${errorMessage}`);
+            throw new Error(`GraphQL error(s):\n- ${errors.map((error: any) => error.message).join("\n- ")}`);
         }
 
         return data;

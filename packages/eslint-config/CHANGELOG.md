@@ -1,5 +1,35 @@
 # @comet/eslint-config
 
+## 7.6.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.6.0
+
+## 7.5.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.5.0
+
+## 7.4.2
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.4.2
+
+## 7.4.1
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.4.1
+
+## 7.4.0
+
+### Patch Changes
+
+-   @comet/eslint-plugin@7.4.0
+
 ## 7.3.2
 
 ### Patch Changes

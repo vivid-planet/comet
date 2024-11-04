@@ -19,7 +19,19 @@ export type GenerateFieldsReturn = GeneratorReturn & {
         initializationCode?: string;
         defaultInitializationCode?: string;
     }[];
+    finalFormConfig?: {
+        subscription?: { values?: true };
+        renderProps?: { values?: true; form?: true };
+    };
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function findFieldByName(name: string, fields: FormConfig<any>["fields"]): FormConfig<any>["fields"][0] | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return fields.reduce<FormConfig<any>["fields"][0] | undefined>((acc, field) => {
+        return acc ? acc : field.name === name ? field : isFormLayoutConfig(field) ? findFieldByName(name, field.fields) : undefined;
+    }, undefined);
+}
 
 export function generateFields({
     gqlIntrospection,
@@ -49,6 +61,7 @@ export function generateFields({
     const imports: Imports = [];
     const gqlArgs: GqlArg[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
+    const finalFormConfig = { subscription: {}, renderProps: {} };
 
     const code = fields
         .map((field) => {
@@ -88,6 +101,10 @@ export function generateFields({
             formValueToGqlInputCode += generated.formValueToGqlInputCode;
             formFragmentFields.push(...generated.formFragmentFields);
             formValuesConfig.push(...generated.formValuesConfig);
+
+            finalFormConfig.subscription = { ...finalFormConfig.subscription, ...generated.finalFormConfig?.subscription };
+            finalFormConfig.renderProps = { ...finalFormConfig.renderProps, ...generated.finalFormConfig?.renderProps };
+
             return generated.code;
         })
         .join("\n");
@@ -101,5 +118,6 @@ export function generateFields({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

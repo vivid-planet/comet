@@ -17,7 +17,7 @@ import {
 import { Card, CardContent, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { ReactNode, useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
@@ -32,8 +32,9 @@ import Duplicates from "./Duplicates";
 import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
 import { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
-import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
+import { FileSettingsFields } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
+import { LicenseType } from "./licenseType";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
@@ -57,7 +58,7 @@ export interface EditFileFormValues extends EditImageFormValues {
 
 interface EditFormProps {
     id: string;
-    contentScopeIndicator?: React.ReactNode;
+    contentScopeIndicator?: ReactNode;
 }
 
 const useInitialValues = (id: string) => {
@@ -69,7 +70,7 @@ const useInitialValues = (id: string) => {
     return { loading, data, error };
 };
 
-const EditFile = ({ id, contentScopeIndicator }: EditFormProps): React.ReactElement => {
+const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
     const { match: scopeMatch } = useContentScope();
     const initialValues = useInitialValues(id);
     const file = initialValues.data?.damFile;
@@ -106,7 +107,7 @@ export type DamFileDetails = GQLDamFileDetailFragment;
 interface EditFileInnerProps {
     file: DamFileDetails;
     id: string;
-    contentScopeIndicator?: React.ReactNode;
+    contentScopeIndicator?: ReactNode;
 }
 
 const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
@@ -115,7 +116,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
     const damConfig = useDamConfig();
     const apolloClient = useApolloClient();
 
-    const onSubmit = React.useCallback(
+    const onSubmit = useCallback(
         async (values: EditFileFormValues) => {
             let cropArea: GQLImageCropAreaInput;
 
@@ -275,7 +276,7 @@ const StickyWrapper = styled("div")`
     top: 140px;
 `;
 
-const StickyScrollWrapper = ({ children }: { children: React.ReactNode }): React.ReactElement => {
+const StickyScrollWrapper = ({ children }: { children: ReactNode }) => {
     return (
         <div>
             <FullHeightWrapper>

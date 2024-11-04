@@ -15,6 +15,7 @@ import {
 import { ContentScope } from "@src/common/ContentScopeProvider";
 import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import Dashboard from "@src/dashboard/Dashboard";
+import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
@@ -22,8 +23,8 @@ import { NewsPage } from "@src/news/generated/NewsPage";
 import MainMenu from "@src/pages/mainMenu/MainMenu";
 import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
-import { PredefinedPage } from "@src/predefinedPage/PredefinedPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
+import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
@@ -237,6 +238,15 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/products-with-low-price-future",
                             component: FutureProductsWithLowPricePage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.combinationFieldsTest" defaultMessage="Combination Fields Test" />,
+                        secondary: <FormattedMessage id="menu.productsFuture" defaultMessage="Products Future" />,
+                        route: {
+                            path: "/combination-fields-test-products-future",
+                            component: CombinationFieldsTestProductsPage,
                         },
                     },
                 ],

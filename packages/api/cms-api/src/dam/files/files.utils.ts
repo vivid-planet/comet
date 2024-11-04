@@ -5,7 +5,7 @@ import { unlink } from "fs/promises";
 import got from "got";
 import * as mimedb from "mime-db";
 import os from "os";
-import { sep } from "path";
+import { basename, extname } from "path";
 import slugify from "slugify";
 import stream from "stream";
 import { promisify } from "util";
@@ -20,8 +20,6 @@ export function slugifyFilename(filename: string, extension: string): string {
     const extensionWithDot = extension.startsWith(".") ? extension : `.${extension}`;
     return `${slugify(filename)}${extensionWithDot}`;
 }
-
-export const createHashedPath = (contentHash: string): string => [contentHash.substr(0, 2), contentHash.substr(2, 2), contentHash].join(sep);
 
 export const calculatePartialRanges = (size: number, range: string): { start: number; end: number; contentLength: number } => {
     let [start, end] = range.replace(/bytes=/, "").split("-") as Array<string | number>;
@@ -119,11 +117,11 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
 
     const fileType = await FileType.fromFile(tempFile);
     const stats = fs.statSync(tempFile); // TODO don't use sync
-    const filename = url.substring(url.lastIndexOf("/") + 1);
+    const filenameWithoutExtension = basename(url, extname(url));
 
     return {
         fieldname: FilesService.UPLOAD_FIELD,
-        originalname: `${filename}.${fileType?.ext}`,
+        originalname: `${filenameWithoutExtension}.${fileType?.ext}`,
         encoding: "utf8",
         mimetype: fileType?.mime as string,
         size: stats.size,

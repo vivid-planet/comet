@@ -1,9 +1,9 @@
-import * as React from "react";
+import { useEffect } from "react";
 
 import { SitePreviewIFrameMessage, SitePreviewIFrameMessageType } from "./SitePreviewIFrameMessage";
 
 export function useSitePreviewIFrameBridge(onReceiveMessage: (message: SitePreviewIFrameMessage) => void) {
-    React.useEffect(() => {
+    useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
             let message;
             try {
