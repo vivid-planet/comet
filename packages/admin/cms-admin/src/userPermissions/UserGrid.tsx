@@ -71,7 +71,10 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                         <Tooltip
                             title={
                                 isCurrentUser ? (
-                                    <FormattedMessage id="comet.userPermissions.cannotImpersonate" defaultMessage="You can't impersonate yourself" />
+                                    <FormattedMessage
+                                        id="comet.userPermissions.cannotImpersonateYourself"
+                                        defaultMessage="You can't impersonate yourself"
+                                    />
                                 ) : (
                                     <FormattedMessage id="comet.userPermissions.impersonate" defaultMessage="Impersonate" />
                                 )
