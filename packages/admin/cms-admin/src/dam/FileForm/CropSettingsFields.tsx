@@ -1,7 +1,7 @@
 import { Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
 import { AdminComponentSection } from "@comet/blocks-admin";
-import { Box, Button, FormControlLabel, Switch, Typography } from "@mui/material";
+import { Box, Button, FormControlLabel, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";
@@ -40,18 +40,16 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                     fullWidth
                     helperText={
                         <Box>
-                            <Typography variant="caption" color="text.secondary" paragraph>
-                                <FormattedMessage
-                                    id="comet.dam.file.croppingInfoText"
-                                    defaultMessage="Cropping selects the maximum visible area. Depending on the aspect ratio, the image may be cropped further on the page."
-                                />
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary" paragraph>
-                                <FormattedMessage
-                                    id="comet.dam.file.focusPointInfoText"
-                                    defaultMessage="The focus point marks the most important part of the image, which is always visible. Choose it wisely."
-                                />
-                            </Typography>
+                            <FormattedMessage
+                                id="comet.dam.file.croppingInfoText"
+                                defaultMessage="Cropping selects the maximum visible area. Depending on the aspect ratio, the image may be cropped further on the page."
+                            />
+                            <br />
+                            <br />
+                            <FormattedMessage
+                                id="comet.dam.file.focusPointInfoText"
+                                defaultMessage="The focus point marks the most important part of the image, which is always visible. Choose it wisely."
+                            />
                         </Box>
                     }
                 >
@@ -75,12 +73,10 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                         name="focalPoint"
                         fullWidth
                         helperText={
-                            <Typography variant="caption" color="text.secondary" paragraph>
-                                <FormattedMessage
-                                    id="comet.blocks.image.hintSelectFocalPoint"
-                                    defaultMessage="You can also select the focus point by clicking on the bullets in the image."
-                                />
-                            </Typography>
+                            <FormattedMessage
+                                id="comet.blocks.image.hintSelectFocalPoint"
+                                defaultMessage="You can also select the focus point by clicking on the bullets in the image."
+                            />
                         }
                     >
                         {({ input: { value, onChange } }) => <ChooseFocalPoint focalPoint={value} onChangeFocalPoint={onChange} />}
