@@ -60,7 +60,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             headerName: "",
             sortable: false,
             filterable: false,
-
+            type: "actions",
             align: "right",
             pinned: "right",
             disableExport: true,
