@@ -57,15 +57,9 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
             >
                 <Account />
             </StyledAvatar>
-            <StyledAvatar
-                sx={{
-                    border: `2px solid ${theme.palette.primary.main} !important`,
-                    marginLeft: "-10px",
-                    zIndex: 1,
-                }}
-            >
+            <StyledActiveAvatar>
                 <ImpersonateUser />
-            </StyledAvatar>
+            </StyledActiveAvatar>
         </AvatarGroup>
     ) : (
         <StyledAvatar>
@@ -131,8 +125,21 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
 }
 
 const StyledAvatar = styled(Avatar)`
-    border: 1px solid ${({ theme }) => theme.palette.grey[400]} !important;
+    border: 1px solid ${({ theme }) => theme.palette.grey[400]};
     width: 32px;
     height: 32px;
     background-color: ${({ theme }) => theme.palette.grey[900]};
+
+    && {
+        border: 1px solid ${({ theme }) => theme.palette.grey[400]};
+    }
+`;
+
+const StyledActiveAvatar = styled(StyledAvatar)`
+    margin-left: -10px;
+    z-index: 1;
+
+    && {
+        border: 2px solid ${({ theme }) => theme.palette.primary.main};
+    }
 `;
