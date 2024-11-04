@@ -7,6 +7,7 @@ import {
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderStaticSelectCell,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -74,7 +75,7 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
     };
 
     const columns: GridColDef<GQLSelectProductsGridFutureFragment>[] = [
-        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, maxWidth: 250, minWidth: 200 },
+        { field: "title", headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }), flex: 1, minWidth: 200, maxWidth: 250 },
         {
             field: "description",
             headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
@@ -86,27 +87,39 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
             headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
             type: "number",
             flex: 1,
-            maxWidth: 150,
             minWidth: 150,
+            maxWidth: 150,
         },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
+            valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
-                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
-                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                {
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                },
+                {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
             ],
+            renderCell: renderStaticSelectCell,
             flex: 1,
-            maxWidth: 150,
             minWidth: 150,
+            maxWidth: 150,
         },
         {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
             valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             width: 140,
         },
         {
@@ -114,6 +127,8 @@ export function ProductsGrid({ selectionModel, onSelectionModelChange }: Props):
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
             valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
+            valueFormatter: ({ value }) =>
+                value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
             width: 170,
         },
     ];
