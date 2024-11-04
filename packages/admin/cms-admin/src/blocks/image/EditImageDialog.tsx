@@ -183,7 +183,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                         {dependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
                                                 <Button
-                                                    variant="text"
+                                                    variant="outlined"
                                                     color="inherit"
                                                     onClick={async () => {
                                                         const path = await dependencyMap["DamFile"].resolvePath({
