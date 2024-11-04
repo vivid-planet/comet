@@ -36,21 +36,9 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
     return (
         <Container>
             <FormSection title={<FormattedMessage id="comet.dam.file.cropSettings.sectionTitle" defaultMessage="Crop/Focus settings" />}>
-                <FieldContainer fullWidth>
-                    <AdminComponentSection
-                        title={<FormattedMessage id="comet.dam.file.cropSettings.smartFocusPoint.title" defaultMessage="Smart focus point" />}
-                    >
-                        <FormControlLabel
-                            control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
-                            label={
-                                focalPoint === "SMART" ? (
-                                    <FormattedMessage id="comet.dam.file.smartFocusPoint.yes" defaultMessage="Yes" />
-                                ) : (
-                                    <FormattedMessage id="comet.dam.file.smartFocusPoint.no" defaultMessage="No" />
-                                )
-                            }
-                            style={{ marginBottom: "4px" }}
-                        />
+                <FieldContainer
+                    fullWidth
+                    helperText={
                         <Box>
                             <Typography variant="caption" color="text.secondary" paragraph>
                                 <FormattedMessage
@@ -65,10 +53,36 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                                 />
                             </Typography>
                         </Box>
+                    }
+                >
+                    <AdminComponentSection
+                        title={<FormattedMessage id="comet.dam.file.cropSettings.smartFocusPoint.title" defaultMessage="Smart focus point" />}
+                    >
+                        <FormControlLabel
+                            control={<Switch checked={focalPoint === "SMART"} onChange={handleSmartFocalPointChange} />}
+                            label={
+                                focalPoint === "SMART" ? (
+                                    <FormattedMessage id="comet.dam.file.smartFocusPoint.yes" defaultMessage="Yes" />
+                                ) : (
+                                    <FormattedMessage id="comet.dam.file.smartFocusPoint.no" defaultMessage="No" />
+                                )
+                            }
+                        />
                     </AdminComponentSection>
                 </FieldContainer>
                 {showChooseManualFocusPointButtons && (
-                    <Field name="focalPoint" fullWidth>
+                    <Field
+                        name="focalPoint"
+                        fullWidth
+                        helperText={
+                            <Typography variant="caption" color="text.secondary" paragraph>
+                                <FormattedMessage
+                                    id="comet.blocks.image.hintSelectFocalPoint"
+                                    defaultMessage="You can also select the focus point by clicking on the bullets in the image."
+                                />
+                            </Typography>
+                        }
+                    >
                         {({ input: { value, onChange } }) => <ChooseFocalPoint focalPoint={value} onChangeFocalPoint={onChange} />}
                     </Field>
                 )}
