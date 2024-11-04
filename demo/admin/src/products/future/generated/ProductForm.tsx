@@ -72,12 +72,12 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
 };
 
 interface FormProps {
-    id?: string;
-    title?: string;
     type?: GQLProductType;
+    title?: string;
+    id?: string;
 }
 
-export function ProductForm({ id, title, type }: FormProps): React.ReactElement {
+export function ProductForm({ type, title, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
