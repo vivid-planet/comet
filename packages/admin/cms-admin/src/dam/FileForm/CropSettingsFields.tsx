@@ -36,7 +36,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
     return (
         <Container>
             <FormSection title={<FormattedMessage id="comet.dam.file.cropSettings.sectionTitle" defaultMessage="Crop/Focus settings" />}>
-                <FieldContainer>
+                <FieldContainer fullWidth>
                     <AdminComponentSection
                         title={<FormattedMessage id="comet.dam.file.cropSettings.smartFocusPoint.title" defaultMessage="Smart focus point" />}
                     >
