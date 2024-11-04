@@ -60,6 +60,7 @@ export const config = {
          * - _next/image (image optimization files)
          * - favicon.ico, favicon.svg, favicon.png
          * - manifest.json
+         * - robots.txt
          */
         "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json|robots.txt).*)",
     ],
