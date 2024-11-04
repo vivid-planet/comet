@@ -68,7 +68,7 @@ export function CropSettingsFields({ disabled }: Props): JSX.Element {
                     </AdminComponentSection>
                 </FieldContainer>
                 {showChooseManualFocusPointButtons && (
-                    <Field name="focalPoint">
+                    <Field name="focalPoint" fullWidth>
                         {({ input: { value, onChange } }) => <ChooseFocalPoint focalPoint={value} onChangeFocalPoint={onChange} />}
                     </Field>
                 )}
