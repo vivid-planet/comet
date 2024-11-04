@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
 import { Account, ImpersonateUser, Logout } from "@comet/admin-icons";
-import { Avatar, AvatarGroup, AvatarProps, Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, AvatarGroup, AvatarProps, Box, Button as MUIButton, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -10,12 +10,7 @@ import { version } from "../..";
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
 import { AboutModal } from "./about/AboutModal";
 import { ImpersonationInlay } from "./impersonation/ImpersonationInlay";
-import { UserHeaderAccountIcon } from "./impersonation/UserHeaderAccountIcon";
 import { GQLSignOutMutation } from "./UserHeaderItem.generated";
-
-const DropdownContent = styled(Box)`
-    width: 300px;
-`;
 
 const Button = styled(MUIButton)`
     justify-content: flex-start;
@@ -73,11 +68,8 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
         </StyledAvatar>
     );
     return (
-        <AppHeaderDropdown
-            buttonChildren={buttonChildren ?? (isMobile ? <UserHeaderAccountIcon impersonated={user.impersonated} /> : user.name)}
-            startIcon={isMobile ? undefined : <UserHeaderAccountIcon impersonated={user.impersonated} />}
-        >
-            <DropdownContent padding={0}>
+        <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)} startIcon={isMobile ? undefined : AccountIcon}>
+            <Box width={300} padding={0}>
                 <Box padding={4}>
                     <Typography color="textSecondary" variant="caption" sx={{ paddingBottom: 2, display: "block" }}>
                         <FormattedMessage id="comet.logged.in" defaultMessage="Logged in as" />
@@ -88,7 +80,13 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
 
                 <Separator />
 
-                {user.impersonated && <ImpersonationInlay />}
+                {user.impersonated && (
+                    <>
+                        <Separator />
+                        <ImpersonationInlay />
+                        <Separator />
+                    </>
+                )}
                 {children && (
                     <>
                         <Box padding={4}>{children}</Box>
@@ -116,23 +114,21 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                         </Button>
                     )}
                     <MenuFooter>
-                        <Typography variant="caption" fontWeight={300}>{`Version: v${version}`}</Typography>
+                        <Typography variant="caption">{`Version: v${version}`}</Typography>
 
                         <Button
                             variant="text"
                             onClick={() => {
                                 setShowAboutModal(true);
                             }}
-                            color="primary"
-                            sx={{ padding: 0 }}
                         >
-                            <Typography variant="caption" fontWeight={300}>
+                            <Typography variant="caption">
                                 <FormattedMessage id="comet.about" defaultMessage="About/Copyright" />
                             </Typography>
                         </Button>
                     </MenuFooter>
                 </Box>
-            </DropdownContent>
+            </Box>
             <AboutModal
                 open={showAboutModal}
                 onClose={() => {
