@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
 import { Account, Clear, ImpersonateUser, Info, Logout } from "@comet/admin-icons";
-import { Avatar, Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -49,7 +49,7 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
     const AccountIcon = user.impersonated ? (
-        <Box display="flex">
+        <AvatarGroup>
             <StyledAvatar
                 sx={{
                     opacity: "50%",
@@ -59,13 +59,14 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
             </StyledAvatar>
             <StyledAvatar
                 sx={{
-                    border: `2px solid ${theme.palette.primary.main}`,
+                    border: `2px solid ${theme.palette.primary.main} !important`,
                     marginLeft: "-10px",
+                    zIndex: 1,
                 }}
             >
                 <ImpersonateUser />
             </StyledAvatar>
-        </Box>
+        </AvatarGroup>
     ) : (
         <StyledAvatar>
             <Account />
@@ -130,7 +131,7 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
 }
 
 const StyledAvatar = styled(Avatar)`
-    border: 1px solid ${({ theme }) => theme.palette.grey[400]};
+    border: 1px solid ${({ theme }) => theme.palette.grey[400]} !important;
     width: 32px;
     height: 32px;
     background-color: ${({ theme }) => theme.palette.grey[900]};
