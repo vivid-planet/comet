@@ -1,9 +1,9 @@
 import { gql, previewParams } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
-import { domain, languages } from "@src/config";
 import { documentTypes } from "@src/documentTypes";
 import { GQLPageTreeNodeScope, GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
@@ -27,18 +27,18 @@ const documentTypeQuery = gql`
     }
 `;
 
-async function fetchPageTreeNode(params: { path: string[]; lang: string }) {
-    const skipPage = !languages.includes(params.lang);
-    const { scope, previewData } = (await previewParams()) || { scope: { domain, language: params.lang }, previewData: undefined };
+async function fetchPageTreeNode({ domain, language, path }: Props["params"]) {
+    const skipPage = !getSiteConfigForDomain(domain).scope.languages.includes(language);
+    const { scope, previewData } = (await previewParams()) || { scope: { domain, language }, previewData: undefined };
     const graphQLFetch = createGraphQLFetch(previewData);
-    const path = `/${(params.path ?? []).join("/")}`;
+    const pathname = `/${(path ?? []).join("/")}`;
     return graphQLFetch<GQLDocumentTypeQuery, GQLDocumentTypeQueryVariables>(
         documentTypeQuery,
         {
             skipPage,
-            path,
+            path: pathname,
             scope: scope as GQLPageTreeNodeScopeInput, //TODO fix type, the scope from previewParams() is not compatible with GQLPageTreeNodeScopeInput
-            redirectSource: `/${params.lang}${path !== "/" ? path : ""}`,
+            redirectSource: `/${language}${pathname !== "/" ? pathname : ""}`,
             redirectScope: { domain: scope.domain },
         },
         { method: "GET" }, //for request memoization
@@ -46,12 +46,12 @@ async function fetchPageTreeNode(params: { path: string[]; lang: string }) {
 }
 
 type Props = {
-    params: { path: string[]; lang: string };
+    params: { path: string[]; domain: string; language: string };
 };
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     // TODO support multiple domains, get domain by Host header
-    const { scope } = (await previewParams()) || { scope: { domain, language: params.lang } };
+    const { scope } = (await previewParams()) || { scope: { domain: params.domain, language: params.language } };
 
     const data = await fetchPageTreeNode(params);
 
@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 export default async function Page({ params }: Props) {
     // TODO support multiple domains, get domain by Host header
-    const { scope } = (await previewParams()) || { scope: { domain, language: params.lang } };
+    const { scope } = (await previewParams()) || { scope: { domain: params.domain, language: params.language } };
 
     const data = await fetchPageTreeNode(params);
 
