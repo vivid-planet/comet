@@ -97,8 +97,9 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                             onClick={() => {
                                 stackApi.activatePage("edit", params.id.toString());
                             }}
+                            color="primary"
                         >
-                            <Edit color="primary" />
+                            <Edit />
                         </IconButton>
                     </>
                 );
