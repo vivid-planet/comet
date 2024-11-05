@@ -123,6 +123,7 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        props.push(...generatedFields.props);
 
         const wrappingFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
             omitFromFragmentType: name,
