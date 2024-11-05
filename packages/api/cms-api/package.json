@@ -84,10 +84,6 @@
         "uuid": "^9.0.0",
         "uuid-by-string": "^4.0.0"
     },
-    "dependenciesComments": {
-        "@aws-sdk/client-s3": "Fixed version necessary because of issue https://github.com/smithy-lang/smithy-typescript/issues/1443",
-        "@smithy/node-http-handler": "Fixed version necessary because of issue https://github.com/smithy-lang/smithy-typescript/issues/1443"
-    },
     "devDependencies": {
         "@aws-sdk/types": "3.609.0",
         "@comet/eslint-config": "workspace:^7.6.0",
@@ -157,5 +153,9 @@
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
+    },
+    "dependenciesComments": {
+        "@aws-sdk/client-s3": "Fixed version necessary because of issue https://github.com/smithy-lang/smithy-typescript/issues/1443",
+        "@smithy/node-http-handler": "Fixed version necessary because of issue https://github.com/smithy-lang/smithy-typescript/issues/1443"
     }
 }
