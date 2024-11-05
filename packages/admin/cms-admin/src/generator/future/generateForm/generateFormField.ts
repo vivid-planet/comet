@@ -8,6 +8,20 @@ import { Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
 
+function convertGqlScalarToTypescript(scalarName: string) {
+    if (scalarName === "String" || scalarName === "ID" || scalarName === "DateTime") {
+        return "string";
+    } else if (scalarName === "Boolean") {
+        return "boolean";
+    } else if (scalarName === "Int" || scalarName === "Float") {
+        return "number";
+    } else if (scalarName === "JSONObject") {
+        return "unknown";
+    } else {
+        return "unknown";
+    }
+}
+
 function getTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
     let typeKind = undefined;
     let typeClass = "unknown";
@@ -94,7 +108,7 @@ export function generateFormField({
                       introspectionFieldType.kind === "OBJECT" || introspectionFieldType.kind === "ENUM"
                           ? `GQL${introspectionFieldType.name}`
                           : introspectionFieldType.kind === "SCALAR"
-                          ? introspectionFieldType.name
+                          ? convertGqlScalarToTypescript(introspectionFieldType.name)
                           : "unknown",
                   name: name,
               });
