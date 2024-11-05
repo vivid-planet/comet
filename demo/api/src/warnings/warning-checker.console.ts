@@ -49,7 +49,7 @@ export class WarningCheckerConsole {
 
                         for (const warning of warnings) {
                             const type = "Block";
-                            const uniqueIdentifier = `${type};${node.pathToString()};${warning.message}`; // TODO: Is this enough to be unique?
+                            const uniqueIdentifier = `${metadata.tableName};${rootBlock["id"]};${type};${node.pathToString()};${warning.message}`;
                             const warningEntity = await this.warningsRepository.findOne({ uniqueIdentifier });
 
                             if (warningEntity) {
