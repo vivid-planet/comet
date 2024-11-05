@@ -125,7 +125,6 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
 }
 
 const StyledAvatar = styled(Avatar)<StyledAvatarProps>`
-    border: 1px solid ${({ theme }) => theme.palette.grey[400]};
     width: 32px;
     height: 32px;
     background-color: ${({ theme }) => theme.palette.grey[900]};
