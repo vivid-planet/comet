@@ -32,7 +32,6 @@ import {
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarItem,
-    useSaveBoundaryApi,
 } from "@comet/admin";
 import { Add, Dashboard, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
@@ -255,7 +254,7 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
         const editingId: string | undefined = undefined; // In a real application, this would be set when editing an existing item
 
         return (
-            <SaveBoundary>
+            <SaveBoundary onAfterSave={() => setShowDialog(false)}>
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
@@ -275,13 +274,7 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={() => setShowDialog(false)}>Cancel</CancelButton>
-                            <BetterSaveBoundarySaveButton
-                                onSave={(success) => {
-                                    if (success) {
-                                        setShowDialog(false);
-                                    }
-                                }}
-                            />
+                            <SaveBoundarySaveButton />
                         </DialogActions>
                     </Dialog>
                 </MainContent>
@@ -326,7 +319,7 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
         const editingId: string | undefined = undefined; // In a real application, this would be set when editing an existing item
 
         return (
-            <SaveBoundary>
+            <SaveBoundary onAfterSave={() => setShowDialog(false)}>
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
@@ -346,13 +339,7 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={() => setShowDialog(false)}>Cancel</CancelButton>
-                            <BetterSaveBoundarySaveButton
-                                onSave={(success) => {
-                                    if (success) {
-                                        setShowDialog(false);
-                                    }
-                                }}
-                            />
+                            <SaveBoundarySaveButton />
                         </DialogActions>
                     </Dialog>
                 </MainContent>
@@ -502,20 +489,14 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                     <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
                 </MainContent>
                 <Dialog open={!!editingId} onClose={() => setEditingId(undefined)}>
-                    <SaveBoundary>
+                    <SaveBoundary onAfterSave={() => setEditingId(undefined)}>
                         <DialogTitle>{editingId === "add" ? "Add new item" : `${rows.find((row) => row.id === editingId)?.title}`}</DialogTitle>
                         <DialogContent>
                             <Form id={editingId === "add" ? undefined : editingId} />
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={() => setEditingId(undefined)}>Cancel</CancelButton>
-                            <BetterSaveBoundarySaveButton
-                                onSave={(success) => {
-                                    if (success) {
-                                        setEditingId(undefined);
-                                    }
-                                }}
-                            />
+                            <SaveBoundarySaveButton />
                         </DialogActions>
                     </SaveBoundary>
                 </Dialog>
@@ -743,20 +724,14 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                     </StackPage>
                 </StackSwitch>
                 <Dialog open={showAddDialog} onClose={() => setShowAddDialog(false)}>
-                    <SaveBoundary>
+                    <SaveBoundary onAfterSave={() => setShowAddDialog(false)}>
                         <DialogTitle>Add new item</DialogTitle>
                         <DialogContent>
                             <Form />
                         </DialogContent>
                         <DialogActions>
                             <CancelButton onClick={() => setShowAddDialog(false)}>Cancel</CancelButton>
-                            <BetterSaveBoundarySaveButton
-                                onSave={(success) => {
-                                    if (success) {
-                                        setShowAddDialog(false);
-                                    }
-                                }}
-                            />
+                            <SaveBoundarySaveButton />
                         </DialogActions>
                     </SaveBoundary>
                 </Dialog>
@@ -927,19 +902,5 @@ const FullHeightGridContainer = ({ children }: { children: ReactNode }) => {
         <Box ref={elementRef} height={`calc(100vh - ${topOffset + 20}px)`}>
             {children}
         </Box>
-    );
-};
-
-// TODO: Replace with updated SaveBoundarySaveButton: https://vivid-planet.atlassian.net/browse/SVK-413
-const BetterSaveBoundarySaveButton = ({ onSave }: { onSave?: (success: boolean) => void }) => {
-    const saveBoundaryApi = useSaveBoundaryApi();
-
-    return (
-        <SaveBoundarySaveButton
-            onClick={async () => {
-                const success = await saveBoundaryApi?.save();
-                onSave?.(Boolean(success));
-            }}
-        />
     );
 };
