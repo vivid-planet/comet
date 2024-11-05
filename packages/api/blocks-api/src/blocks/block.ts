@@ -53,6 +53,7 @@ export declare type BlockIndexItem = {
 } & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
+// TODO: use from WarningModule after the warning module is in the package (this enum is currently duplicated)
 export enum WarningSeverity {
     critical = "critical",
     high = "high",
