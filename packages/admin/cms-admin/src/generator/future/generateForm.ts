@@ -77,8 +77,6 @@ export function generateForm(
         }
     }
 
-    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
-
     const rootBlockFields = formFields
         .filter((field) => field.type == "block")
         .map((field) => {
@@ -245,6 +243,8 @@ export function generateForm(
 
         filterByFragmentType = `${formFragmentName}Fragment`;
     }
+
+    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {

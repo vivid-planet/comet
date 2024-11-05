@@ -16,6 +16,7 @@ import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { FormControlLabel } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -38,7 +39,11 @@ type FormValues = GQLCreateCapProductFormDetailsFragment & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-export function CreateCapProductForm(): React.ReactElement {
+interface FormProps {
+    type: GQLProductType;
+}
+
+export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
     const client = useApolloClient();
 
     const formApiRef = useFormApiRef<FormValues>();
