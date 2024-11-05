@@ -5,7 +5,7 @@ import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { getSiteConfig } from "@src/util/siteConfig";
 import { MetadataRoute } from "next";
 
-import { GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables } from "../sitemap.generated";
+import { GQLPrebuildPageDataListSitemapQuery, GQLPrebuildPageDataListSitemapQueryVariables } from "./sitemap.generated";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemap: MetadataRoute.Sitemap = [];
