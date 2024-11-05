@@ -62,7 +62,7 @@ export interface BlockDataInterface {
     transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
     transformToSave(): TraversableTransformResponse;
     indexData(): BlockIndexData;
-    reportWarnings(): BlockWarningReport[];
+    warnings(): BlockWarningReport[];
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
     previewImageUrlTemplate(dependencies: Record<string, any>, context: BlockContext): Promise<string | undefined>;
@@ -81,7 +81,7 @@ export abstract class BlockData implements BlockDataInterface {
         return {};
     }
 
-    reportWarnings(): BlockWarningReport[] {
+    warnings(): BlockWarningReport[] {
         return [];
     }
 

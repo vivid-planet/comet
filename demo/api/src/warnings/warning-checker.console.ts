@@ -47,7 +47,7 @@ export class WarningCheckerConsole {
                     rootPath: "root",
                 });
                 for (const node of flatBlocks.depthFirst()) {
-                    const warnings = node.block.reportWarnings();
+                    const warnings = node.block.warnings();
 
                     if (warnings.length > 0) {
                         // TODO: auto resolve warnings

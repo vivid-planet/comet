@@ -138,7 +138,7 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
             };
         }
 
-        reportWarnings() {
+        warnings() {
             if (!this.htmlTitle) {
                 return [{ severity: "low", message: "Missing HTML title" }];
             }
