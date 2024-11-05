@@ -5,7 +5,6 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { SeoBlock } from "@src/pages/blocks/seo.block";
-import hasha from "hasha";
 import { Command, Console } from "nestjs-console";
 
 import { Warning } from "./entities/warning.entity";
@@ -54,22 +53,21 @@ export class WarningCheckerConsole {
                         for (const warning of warnings) {
                             const type = "Block";
                             const uniqueIdentifier = `${type};${node.pathToString()};${warning.message}`; // TODO: Is this enough to be unique?
-                            const hash = hasha(uniqueIdentifier, { algorithm: "md5" });
-                            const warningEntity = await this.warningsRepository.findOne({ uniqueIdentifier: hash });
+                            const warningEntity = await this.warningsRepository.findOne({ uniqueIdentifier });
 
                             if (warningEntity) {
                                 warningEntity.assign({
                                     type,
                                     message: warning.message,
                                     severity: warning.severity,
-                                    uniqueIdentifier: hash,
+                                    uniqueIdentifier,
                                 });
                             } else {
                                 await this.warningsRepository.create({
                                     type,
                                     message: warning.message,
                                     severity: warning.severity,
-                                    uniqueIdentifier: hash,
+                                    uniqueIdentifier,
                                 });
                             }
                         }
