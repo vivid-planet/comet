@@ -1,10 +1,9 @@
-import { FlatBlocks } from "@comet/blocks-api";
+import { BlockInput, FlatBlocks } from "@comet/blocks-api";
 import { DiscoverService } from "@comet/cms-api/lib/dependencies/discover.service";
-import { Connection, CreateRequestContext, MikroORM } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { SeoBlock } from "@src/pages/blocks/seo.block";
 import { Command, Console } from "nestjs-console";
 
 import { Warning } from "./entities/warning.entity";
@@ -12,15 +11,12 @@ import { Warning } from "./entities/warning.entity";
 @Injectable()
 @Console()
 export class WarningCheckerConsole {
-    private connection: Connection;
     constructor(
         private readonly orm: MikroORM,
         private readonly discoverService: DiscoverService,
         private readonly entityManager: EntityManager,
         @InjectRepository(Warning) private readonly warningsRepository: EntityRepository<Warning>,
-    ) {
-        this.connection = entityManager.getConnection();
-    }
+    ) {}
 
     @Command({
         command: "check-warnings",
@@ -32,12 +28,13 @@ export class WarningCheckerConsole {
 
         for (const rootBlockEntity of this.discoverService.discoverRootBlocks()) {
             const { metadata, column, block } = rootBlockEntity;
-            const sql = `SELECT id, "${column}" as "block" FROM "${metadata.tableName}";`;
-            const rootBlocks = await this.connection.execute(sql);
+
+            const queryBuilder = this.entityManager.createQueryBuilder(metadata.className);
+            queryBuilder.select(`id, "${column}"`).from(metadata.tableName);
+            const rootBlocks = (await queryBuilder.getResult()) as Array<{ [key: string]: BlockInput }>;
 
             for (const rootBlock of rootBlocks) {
-                const blockData = SeoBlock.blockInputFactory(rootBlock.block).transformToBlockData(); // don't use SeoBlock but maybe a generic Block. I need to call transformToBlockData o therwise the FlatBlocks function does not work
-                // const blockData = block.blockDataFactory(rootBlock.block); // maybe something like this is the correct way - but this here does not work
+                const blockData = block.blockDataFactory(block.blockInputFactory(rootBlock[column]));
 
                 const flatBlocks = new FlatBlocks(blockData, {
                     name: block.name,
