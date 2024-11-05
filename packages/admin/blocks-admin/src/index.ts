@@ -23,10 +23,13 @@ export type { CreateOneOfBlockOptions, OneOfBlockFragment, OneOfBlockState } fro
 export { createOneOfBlock } from "./blocks/factories/createOneOfBlock";
 export type { OptionalBlockDecoratorFragment, OptionalBlockState } from "./blocks/factories/createOptionalBlock";
 export { createOptionalBlock } from "./blocks/factories/createOptionalBlock";
+export { createSpaceBlock } from "./blocks/factories/spaceBlock/createSpaceBlock";
 export { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
 export { createCompositeSetting } from "./blocks/helpers/composeBlocks/createCompositeSetting";
 export { createCompositeSettings } from "./blocks/helpers/composeBlocks/createCompositeSettings";
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+export { createCompositeBlockSelectField } from "./blocks/helpers/createCompositeBlockSelectField";
+export { createCompositeBlockTextField } from "./blocks/helpers/createCompositeBlockTextField";
 export { default as decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
 export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
 export { SpaceBlock } from "./blocks/SpaceBlock";
@@ -52,7 +55,6 @@ export type {
 export type { CustomBlockCategory } from "./blocks/types";
 export { BlockCategory, blockCategoryLabels } from "./blocks/types";
 export { resolveNewState } from "./blocks/utils";
-export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
 export { CannotPasteBlockDialog } from "./clipboard/CannotPasteBlockDialog";
 export { readClipboard } from "./clipboard/readClipboard";
 export type { ClipboardContent } from "./clipboard/useBlockClipboard";

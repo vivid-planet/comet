@@ -1,10 +1,12 @@
 import { ModuleMetadata, Type } from "@nestjs/common";
+import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
 
 import { CurrentUser } from "./dto/current-user";
 import { FindUsersArgs } from "./dto/paginated-user-list";
-import { User } from "./dto/user";
 import { UserPermission } from "./entities/user-permission.entity";
 import { ContentScope } from "./interfaces/content-scope.interface";
+import { User } from "./interfaces/user";
 
 export enum UserPermissions {
     allContentScopes = "all-content-scopes",
@@ -13,7 +15,7 @@ export enum UserPermissions {
 
 export type Users = [User[], number];
 
-export type SystemUser = true;
+export type SystemUser = string;
 
 type PermissionForUser = {
     permission: string;
@@ -32,10 +34,16 @@ export interface AccessControlServiceInterface {
 export interface UserPermissionsUserServiceInterface {
     getUser: (id: string) => Promise<User> | User;
     findUsers: (args: FindUsersArgs) => Promise<Users> | Users;
+    createUserFromRequest?: (request: Request, idToken: JwtPayload) => Promise<User> | User;
+    /**
+     * @deprecated TODO Remove in Comet 8
+     */
+    createUserFromIdToken?: (idToken: JwtPayload) => Promise<User> | User;
 }
 
 export interface UserPermissionsOptions {
     availableContentScopes?: ContentScope[] | (() => Promise<ContentScope[]> | ContentScope[]);
+    systemUsers?: string[];
 }
 export interface UserPermissionsModuleSyncOptions extends UserPermissionsOptions {
     UserService?: Type<UserPermissionsUserServiceInterface>;

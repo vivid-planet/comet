@@ -12,8 +12,6 @@ import { PaginatedResponseFactory } from "../../common/pagination/paginated-resp
 import { AffectedEntity } from "../../user-permissions/decorators/affected-entity.decorator";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { DAM_FILE_VALIDATION_SERVICE } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { CopyFilesResponseInterface, createCopyFilesResponseType } from "./dto/copyFiles.types";
@@ -22,14 +20,22 @@ import { createFileArgs, FileArgsInterface, MoveDamFilesArgs } from "./dto/file.
 import { UpdateFileInput } from "./dto/file.input";
 import { FilenameInput, FilenameResponse } from "./dto/filename.args";
 import { createFindCopiesOfFileInScopeArgs, FindCopiesOfFileInScopeArgsInterface } from "./dto/find-copies-of-file-in-scope.args";
+import { UpdateDamFileArgs } from "./dto/update-dam-file.args";
 import { FileInterface } from "./entities/file.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { FileUploadService } from "./file-upload.service";
 import { FileValidationService } from "./file-validation.service";
 import { FilesService } from "./files.service";
-import { slugifyFilename } from "./files.utils";
+import { createFileUploadInputFromUrl, slugifyFilename } from "./files.utils";
 
-export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<FileInterface>; Scope?: Type<DamScopeInterface> }): Type<unknown> {
+export function createFilesResolver({
+    File,
+    Folder,
+    Scope: PassedScope,
+}: {
+    File: Type<FileInterface>;
+    Folder: Type<FolderInterface>;
+    Scope?: Type<DamScopeInterface>;
+}): Type<unknown> {
     const Scope = PassedScope ?? EmptyDamScope;
     const hasNonEmptyScope = PassedScope != null;
 
@@ -55,9 +61,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             private readonly filesService: FilesService,
             @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
-            @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
             @Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService,
-            private readonly fileUploadService: FileUploadService,
         ) {}
 
         @Query(() => PaginatedDamFiles)
@@ -81,15 +85,12 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         async findCopiesOfFileInScope(
             @Args({ type: () => FindCopiesOfFileInScopeArgs }) { id, scope, imageCropArea }: FindCopiesOfFileInScopeArgsInterface,
         ): Promise<FileInterface[]> {
-            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, scope);
+            return this.filesService.findCopiesOfFileInScope(id, imageCropArea, nonEmptyScopeOrNothing(scope));
         }
 
         @Mutation(() => File)
         @AffectedEntity(File)
-        async updateDamFile(
-            @Args("id", { type: () => ID }) id: string,
-            @Args("input", { type: () => UpdateFileInput }) input: UpdateFileInput,
-        ): Promise<FileInterface> {
+        async updateDamFile(@Args({ type: () => UpdateDamFileArgs }) { id, input }: UpdateDamFileArgs): Promise<FileInterface> {
             return this.filesService.updateById(id, input);
         }
 
@@ -100,7 +101,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
             @Args("input", { type: () => UpdateFileInput }) { image: imageInput, ...input }: UpdateFileInput,
         ): Promise<FileInterface> {
-            const file = await this.fileUploadService.createFileUploadInputFromUrl(url);
+            const file = await createFileUploadInputFromUrl(url);
             const validationResult = await this.fileValidationService.validateFile(file);
             if (validationResult !== undefined) {
                 throw new CometValidationException(validationResult);
@@ -110,12 +111,14 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
                 ...input,
                 imageCropArea: imageInput?.cropArea,
                 folderId: input.folderId ? input.folderId : undefined,
-                scope,
+                scope: nonEmptyScopeOrNothing(scope),
             });
             return uploadedFile;
         }
 
         @Mutation(() => [File])
+        @AffectedEntity(Folder, { idArg: "targetFolderId", nullable: true })
+        @AffectedEntity(File, { idArg: "fileIds" })
         @SkipBuild()
         async moveDamFiles(
             @Args({ type: () => MoveDamFilesArgs }) { fileIds, targetFolderId }: MoveDamFilesArgs,
@@ -124,28 +127,16 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             let targetFolder = null;
             if (targetFolderId !== null) {
                 targetFolder = await this.foldersRepository.findOneOrFail(targetFolderId);
-
-                if (targetFolder.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", targetFolder.scope)) {
-                    throw new Error("Can't access parent folder");
-                }
             }
 
-            const files = [];
-
-            for (const id of fileIds) {
-                const file = await this.filesRepository.findOneOrFail(id);
-
-                if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
-                    throw new Error("Can't access file");
-                }
-
-                files.push(file);
-            }
+            const files = await this.filesRepository.find({ id: { $in: fileIds } });
 
             return this.filesService.moveBatch(files, targetFolder);
         }
 
         @Mutation(() => CopyFilesResponse)
+        @AffectedEntity(File, { idArg: "fileIds" })
+        @AffectedEntity(Folder, { idArg: "inboxFolderId" })
         @SkipBuild()
         async copyFilesToScope(
             @GetCurrentUser() user: CurrentUser,
@@ -155,7 +146,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
             })
             inboxFolderId: string,
         ): Promise<CopyFilesResponseInterface> {
-            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId, user });
+            return this.filesService.copyFilesToScope({ fileIds, inboxFolderId });
         }
 
         @Mutation(() => File)
@@ -170,6 +161,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => [File])
+        @AffectedEntity(File, { idArg: "ids" })
         @SkipBuild()
         async archiveDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<FileInterface[]> {
             const entities = await this.filesRepository.find({ id: { $in: ids } });
@@ -194,6 +186,7 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
         }
 
         @Mutation(() => [File])
+        @AffectedEntity(File, { idArg: "ids" })
         @SkipBuild()
         async restoreDamFiles(@Args("ids", { type: () => [ID] }) ids: string[]): Promise<FileInterface[]> {
             const entities = await this.filesRepository.find({ id: { $in: ids } });
@@ -258,12 +251,15 @@ export function createFilesResolver({ File, Scope: PassedScope }: { File: Type<F
 
         @ResolveField(() => String)
         async fileUrl(@Parent() file: FileInterface, @Context("req") req: IncomingMessage): Promise<string> {
-            return this.filesService.createFileUrl(file, Boolean(req.headers["x-preview-dam-urls"]));
+            return this.filesService.createFileUrl(file, {
+                previewDamUrls: Boolean(req.headers["x-preview-dam-urls"]),
+                relativeDamUrls: Boolean(req.headers["x-relative-dam-urls"]),
+            });
         }
 
         @ResolveField(() => [File])
         async duplicates(@Parent() file: FileInterface): Promise<FileInterface[]> {
-            const files = await this.filesService.findAllByHash(file.contentHash);
+            const files = await this.filesService.findAllByHash(file.contentHash, { scope: file.scope });
             return files.filter((f) => f.id !== file.id);
         }
 

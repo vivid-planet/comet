@@ -1,6 +1,6 @@
 import { BlobStorageConfig } from "@comet/cms-api";
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional, IsString, MinLength, ValidateIf } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, MinLength, ValidateIf } from "class-validator";
 
 export class EnvironmentVariables {
     @IsString()
@@ -31,6 +31,9 @@ export class EnvironmentVariables {
 
     @IsString()
     API_URL: string;
+
+    @IsString()
+    BASIC_AUTH_SYSTEM_USER_PASSWORD: string;
 
     @IsString()
     ADMIN_URL: string;
@@ -95,4 +98,49 @@ export class EnvironmentVariables {
     @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
+
+    @IsString()
+    @ValidateIf(() => process.env.NODE_ENV === "production")
+    CDN_ORIGIN_CHECK_SECRET: string;
+
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_KEY || v.AZURE_AI_TRANSLATOR_REGION)
+    @IsUrl()
+    AZURE_AI_TRANSLATOR_ENDPOINT?: string;
+
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_REGION)
+    @IsString()
+    AZURE_AI_TRANSLATOR_KEY?: string;
+
+    @ValidateIf((v) => v.AZURE_AI_TRANSLATOR_ENDPOINT || v.AZURE_AI_TRANSLATOR_KEY)
+    @IsString()
+    AZURE_AI_TRANSLATOR_REGION?: string;
+
+    @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY || v.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID)
+    @IsString()
+    AZURE_OPEN_AI_CONTENT_GENERATION_API_URL?: string;
+
+    @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL || v.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID)
+    @IsString()
+    AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY?: string;
+
+    @ValidateIf((v) => v.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL || v.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY)
+    @IsString()
+    AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID?: string;
+
+    @IsOptional()
+    @IsUrl()
+    SENTRY_DSN?: string;
+
+    @ValidateIf((v) => v.SENTRY_DSN)
+    @IsString()
+    SENTRY_ENVIRONMENT?: string;
+
+    @IsString()
+    @MinLength(16)
+    FILE_UPLOADS_DOWNLOAD_SECRET: string;
+
+    @IsString()
+    @MinLength(16)
+    @ValidateIf(() => process.env.NODE_ENV === "production")
+    SITE_PREVIEW_SECRET: string;
 }

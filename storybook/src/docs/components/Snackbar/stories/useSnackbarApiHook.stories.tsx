@@ -18,8 +18,6 @@ storiesOf("stories/components/Snackbar/useSnackbarApi()", module)
                 snackbarApi.showSnackbar(
                     <Snackbar
                         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                        // Use uuid or object id in production
-                        key={Math.random()}
                         autoHideDuration={5000}
                         message="This is a completely customizable snackbar"
                         action={

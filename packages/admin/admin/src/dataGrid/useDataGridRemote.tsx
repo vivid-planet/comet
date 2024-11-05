@@ -1,6 +1,6 @@
 import { DataGridProps, GridFilterModel, GridSortDirection, GridSortModel } from "@mui/x-data-grid";
 import queryString from "query-string";
-import * as React from "react";
+import { useCallback } from "react";
 import { useHistory, useLocation } from "react-router";
 
 //returns props for DataGrid that turns it into a controlled component ready to be used for remote filter/sorting/paging
@@ -8,10 +8,12 @@ export function useDataGridRemote({
     queryParamsPrefix = "",
     pageSize: initialPageSize = 25,
     initialSort,
+    initialFilter,
 }: {
     queryParamsPrefix?: string;
     pageSize?: number;
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
+    initialFilter?: GridFilterModel;
 } = {}): Omit<DataGridProps, "rows" | "columns"> & { page: number; pageSize: number; sortModel: GridSortModel } {
     const history = useHistory();
     const location = useLocation();
@@ -51,7 +53,7 @@ export function useDataGridRemote({
         initialSort ??
         [];
 
-    const handleSortModelChange = React.useCallback(
+    const handleSortModelChange = useCallback(
         (sortModel: GridSortModel) => {
             const sort = sortModel.length > 0 ? sortModel.map((i) => `${i.field}:${i.sort}`) : ["none"];
             history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [sortParamName]: sort }) });
@@ -59,8 +61,8 @@ export function useDataGridRemote({
         [history, location, parsedSearch, sortParamName],
     );
 
-    const filterModel = parsedSearch[filterParamName] ? JSON.parse(parsedSearch[filterParamName] as string) : { items: [] };
-    const handleFilterChange = React.useCallback(
+    const filterModel = parsedSearch[filterParamName] ? JSON.parse(parsedSearch[filterParamName] as string) : initialFilter ?? { items: [] };
+    const handleFilterChange = useCallback(
         (filterModel: GridFilterModel) => {
             history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [filterParamName]: JSON.stringify(filterModel) }) });
         },

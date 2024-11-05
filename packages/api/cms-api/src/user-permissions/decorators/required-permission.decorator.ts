@@ -9,7 +9,12 @@ export type RequiredPermissionMetadata = {
     options: RequiredPermissionOptions | undefined;
 };
 
-export const RequiredPermission = (requiredPermission: string | string[], options?: RequiredPermissionOptions): CustomDecorator<string> => {
+export const DisablePermissionCheck = "disablePermissionCheck";
+
+export const RequiredPermission = (
+    requiredPermission: string | string[] | "disablePermissionCheck",
+    options?: RequiredPermissionOptions,
+): CustomDecorator<string> => {
     return SetMetadata<string, RequiredPermissionMetadata>("requiredPermission", {
         requiredPermission: Array.isArray(requiredPermission) ? requiredPermission : [requiredPermission],
         options,

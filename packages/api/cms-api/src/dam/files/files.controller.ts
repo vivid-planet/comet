@@ -19,15 +19,16 @@ import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
 
+import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
-import { DisableGlobalGuard } from "../../auth/decorators/global-guard-disable.decorator";
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometValidationException } from "../../common/errors/validation.exception";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
-import { CDN_ORIGIN_CHECK_HEADER, DamConfig } from "../dam.config";
+import { DamConfig } from "../dam.config";
 import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
@@ -37,7 +38,7 @@ import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInput } from "./dto/file-upload.input";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
-import { calculatePartialRanges, createHashedPath } from "./files.utils";
+import { calculatePartialRanges } from "./files.utils";
 
 const fileUrl = `:fileId/:filename`;
 
@@ -68,6 +69,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @Body() body: UploadFileBodyInterface,
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
         ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
@@ -82,7 +84,10 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             }
 
             const uploadedFile = await this.filesService.upload(file, { ...transformedBody, scope });
-            const fileUrl = await this.filesService.createFileUrl(uploadedFile, Boolean(previewDamUrls));
+            const fileUrl = await this.filesService.createFileUrl(uploadedFile, {
+                previewDamUrls: Boolean(previewDamUrls),
+                relativeDamUrls: Boolean(relativeDamUrls),
+            });
 
             return { ...uploadedFile, fileUrl };
         }
@@ -104,19 +109,33 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new ForbiddenException();
             }
 
-            return this.streamFile(file, res, { range, overrideHeaders: { "Cache-control": "private" } });
+            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
         }
 
-        @DisableGlobalGuard()
-        @Get(`/:hash/${fileUrl}`)
-        async hashedFileUrl(
-            @Param() { hash, ...params }: HashFileParams,
+        @Get(`/download/preview/${fileUrl}`)
+        async previewDownloadFile(
+            @Param() { fileId }: FileParams,
             @Res() res: Response,
-            @Headers(CDN_ORIGIN_CHECK_HEADER) cdnOriginCheck: string,
+            @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
         ): Promise<void> {
-            this.checkCdnOrigin(cdnOriginCheck);
+            const file = await this.filesService.findOneById(fileId);
 
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
+                throw new ForbiddenException();
+            }
+
+            res.setHeader("Content-Disposition", "attachment");
+            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
+        }
+
+        @DisableCometGuards()
+        @Get(`/download/:hash/${fileUrl}`)
+        async downloadFile(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
                 throw new NotFoundException();
             }
@@ -127,15 +146,24 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new NotFoundException();
             }
 
-            return this.streamFile(file, res, { range });
+            res.setHeader("Content-Disposition", "attachment");
+            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
         }
 
-        private checkCdnOrigin(incomingCdnOriginHeader: string): void {
-            if (this.damConfig.cdnEnabled && !this.damConfig.disableCdnOriginHeaderCheck) {
-                if (incomingCdnOriginHeader !== this.damConfig.cdnOriginHeader) {
-                    throw new ForbiddenException();
-                }
+        @DisableCometGuards()
+        @Get(`/:hash/${fileUrl}`)
+        async hashedFileUrl(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+            if (!this.isValidHash(hash, params)) {
+                throw new NotFoundException();
             }
+
+            const file = await this.filesService.findOneById(params.fileId);
+
+            if (file === null) {
+                throw new NotFoundException();
+            }
+
+            return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
         }
 
         private isValidHash(hash: string, fileParams: FileParams): boolean {

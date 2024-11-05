@@ -1,7 +1,6 @@
 import { AllCategories } from "@comet/cms-admin";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { kebabCase, pascalCase } from "change-case";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 export const pageTreeCategories: AllCategories = [
@@ -19,7 +18,7 @@ const isCategory = (category: string): category is GQLPageTreeNodeCategory => {
     return pageTreeCategories.some((c) => c.category === category);
 };
 
-export function categoryToUrlParam(category: GQLPageTreeNodeCategory): string {
+export function categoryToUrlParam(category: GQLPageTreeNodeCategory | string): string {
     return kebabCase(category);
 }
 

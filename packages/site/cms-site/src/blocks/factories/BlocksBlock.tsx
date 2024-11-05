@@ -1,5 +1,6 @@
-import * as React from "react";
+import { Fragment } from "react";
 
+import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
 import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
 import { SupportedBlocks } from "./types";
 
@@ -10,7 +11,7 @@ interface Props {
     };
 }
 
-export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks } }: Props) => {
+export const BlocksBlock = ({ supportedBlocks, data: { blocks } }: Props) => {
     if (blocks.length === 0) {
         return <PreviewSkeleton hasContent={false} />;
     }
@@ -32,7 +33,11 @@ export const BlocksBlock: React.FC<Props> = ({ supportedBlocks, data: { blocks }
                     return null;
                 }
 
-                return <React.Fragment key={block.key}>{blockFunction(block.props)}</React.Fragment>;
+                return (
+                    <Fragment key={block.key}>
+                        <ErrorHandlerBoundary>{blockFunction(block.props)}</ErrorHandlerBoundary>
+                    </Fragment>
+                );
             })}
         </>
     );

@@ -7,8 +7,9 @@ import { PageTreeService } from "../page-tree/page-tree.service";
 import { PageTreeNodeInterface } from "../page-tree/types";
 import { RedirectFilter } from "./dto/redirects.filter";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
+import { REDIRECTS_LINK_BLOCK } from "./redirects.constants";
 import { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects.enum";
-import { REDIRECTS_LINK_BLOCK, RedirectsLinkBlock } from "./redirects.module";
+import { RedirectsLinkBlock } from "./redirects.module";
 import { RedirectScopeInterface } from "./types";
 
 @Injectable()

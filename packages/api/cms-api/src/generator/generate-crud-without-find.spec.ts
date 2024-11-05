@@ -38,6 +38,8 @@ describe("GenerateCrud without find condition", () => {
             if (!file) throw new Error("File not found");
             const source = parseSource(file.content);
 
+            expect(source.getImportDeclarationOrThrow("@mikro-orm/core").getText()).toContain("ObjectQuery");
+
             const cls = source.getClassOrThrow("TestEntityResolver");
             const testEntitiesQuery = cls.getInstanceMethodOrThrow("testEntities");
             const bodyText = testEntitiesQuery.getBodyText();

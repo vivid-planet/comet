@@ -30,13 +30,11 @@ function Story() {
                                             <Field name="foo1" type="radio" value="bar2" fullWidth>
                                                 {(props) => <FormControlLabel label="Checked" control={<FinalFormRadio {...props} />} />}
                                             </Field>
-                                            <Field name="foo2" type="radio" value="bar1" fullWidth>
-                                                {(props) => <FormControlLabel label="Disabled" disabled control={<FinalFormRadio {...props} />} />}
+                                            <Field name="foo2" type="radio" value="bar1" fullWidth disabled>
+                                                {(props) => <FormControlLabel label="Disabled" control={<FinalFormRadio {...props} />} />}
                                             </Field>
-                                            <Field name="foo2" type="radio" value="bar2" fullWidth>
-                                                {(props) => (
-                                                    <FormControlLabel label="Disabled & Checked" disabled control={<FinalFormRadio {...props} />} />
-                                                )}
+                                            <Field name="foo2" type="radio" value="bar2" fullWidth disabled>
+                                                {(props) => <FormControlLabel label="Disabled & Checked" control={<FinalFormRadio {...props} />} />}
                                             </Field>
                                         </FieldContainer>
                                     </CardContent>
@@ -56,20 +54,15 @@ function Story() {
                                                     <FormControlLabel label="Checked" control={<FinalFormRadio {...props} color="secondary" />} />
                                                 )}
                                             </Field>
-                                            <Field name="foo4" type="radio" value="bar1" fullWidth>
+                                            <Field name="foo4" type="radio" value="bar1" fullWidth disabled>
                                                 {(props) => (
-                                                    <FormControlLabel
-                                                        label="Disabled"
-                                                        disabled
-                                                        control={<FinalFormRadio {...props} color="secondary" />}
-                                                    />
+                                                    <FormControlLabel label="Disabled" control={<FinalFormRadio {...props} color="secondary" />} />
                                                 )}
                                             </Field>
-                                            <Field name="foo4" type="radio" value="bar2" fullWidth>
+                                            <Field name="foo4" type="radio" value="bar2" fullWidth disabled>
                                                 {(props) => (
                                                     <FormControlLabel
                                                         label="Disabled & Checked"
-                                                        disabled
                                                         control={<FinalFormRadio {...props} color="secondary" />}
                                                     />
                                                 )}

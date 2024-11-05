@@ -3,14 +3,17 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 import { Request } from "express";
 
 import { CurrentUser } from "../user-permissions/dto/current-user";
+import { User } from "../user-permissions/interfaces/user";
 import { SystemUser } from "../user-permissions/user-permissions.types";
-import { SHOULD_LOG_REQUEST } from "./access-log.constants";
+import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogInterceptor } from "./access-log.interceptor";
 
 export type ShouldLogRequest = ({ user, req }: { user?: CurrentUser | SystemUser; req: Request }) => boolean;
 
-interface AccessLogModuleOptions {
+type AccessLogModuleOptions = AccessLogConfig;
+export interface AccessLogConfig {
     shouldLogRequest?: ShouldLogRequest;
+    userToLog?: (user: User, impersonatedUser?: User) => string;
 }
 
 @Global()
@@ -23,13 +26,13 @@ interface AccessLogModuleOptions {
     ],
 })
 export class AccessLogModule {
-    static forRoot({ shouldLogRequest }: AccessLogModuleOptions): DynamicModule {
+    static forRoot(options: AccessLogModuleOptions): DynamicModule {
         return {
             module: AccessLogModule,
             providers: [
                 {
-                    provide: SHOULD_LOG_REQUEST,
-                    useValue: shouldLogRequest,
+                    provide: ACCESS_LOG_CONFIG,
+                    useValue: options,
                 },
             ],
         };

@@ -25,7 +25,7 @@ export function morphTsProperty(name: string, metadata: EntityMetadata<any>) {
     return tsClass.getPropertyOrThrow(name);
 }
 
-function findImportPath(importName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>) {
+function findImportPath(importName: string, targetDirectory: string, metadata: EntityMetadata<any>) {
     const tsSource = morphTsSource(metadata);
     for (const tsImport of tsSource.getImportDeclarations()) {
         for (const namedImport of tsImport.getNamedImports()) {
@@ -45,7 +45,7 @@ function findImportPath(importName: string, generatorOptions: { targetDirectory:
                 if (importPath.startsWith("./") || importPath.startsWith("../")) {
                     const absolutePath = path.resolve(path.dirname(metadata.path), importPath);
                     return {
-                        importPath: path.relative(`${generatorOptions.targetDirectory}/dto`, absolutePath),
+                        importPath: path.relative(targetDirectory, absolutePath),
                         exportedDeclaration,
                     };
                 } else {
@@ -66,17 +66,31 @@ export function findEnumName(propertyName: string, metadata: EntityMetadata<any>
         .replace(/\[\]$/, "");
 }
 
-export function findEnumImportPath(enumName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {
+export function findEnumImportPath(enumName: string, targetDirectory: string, metadata: EntityMetadata<any>): string {
     const tsSource = morphTsSource(metadata);
     if (tsSource.getEnum(enumName)) {
         //enum defined in same file as entity
         if (!tsSource.getEnum(enumName)?.isExported()) {
             throw new Error(`Enum ${enumName} is not exported in ${metadata.path}`);
         }
-        return path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
+        return path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "");
     } else {
         //try to find import where enum is imported from
-        const { importPath } = findImportPath(enumName, generatorOptions, metadata);
+        const { importPath } = findImportPath(enumName, targetDirectory, metadata);
+        return importPath;
+    }
+}
+
+export function findValidatorImportPath(validatorName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {
+    const tsSource = morphTsSource(metadata);
+    //validator defined in same file as entity
+    if (tsSource.getVariableDeclaration(validatorName) || tsSource.getFunction(validatorName)) {
+        if (!(tsSource.getVariableDeclaration(validatorName)?.isExported() || tsSource.getFunction(validatorName)?.isExported())) {
+            throw new Error(`Validator ${validatorName} is not exported in ${metadata.path}`);
+        }
+        return path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
+    } else {
+        const { importPath } = findImportPath(validatorName, generatorOptions.targetDirectory, metadata);
         return importPath;
     }
 }
@@ -89,7 +103,7 @@ export function findBlockName(propertyName: string, metadata: EntityMetadata<any
     return rootBlockDecorator.getArguments()[0].getText();
 }
 
-export function findBlockImportPath(blockName: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {
+export function findBlockImportPath(blockName: string, targetDirectory: string, metadata: EntityMetadata<any>): string {
     const tsSource = morphTsSource(metadata);
 
     if (tsSource.getVariableDeclaration(blockName)) {
@@ -97,15 +111,15 @@ export function findBlockImportPath(blockName: string, generatorOptions: { targe
         if (!tsSource.getVariableDeclaration(blockName)?.isExported()) {
             throw new Error(`Block ${blockName} is not exported in ${metadata.path}`);
         }
-        return path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
+        return path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "");
     } else {
         //try to find import where block is imported from
-        const { importPath } = findImportPath(blockName, generatorOptions, metadata);
+        const { importPath } = findImportPath(blockName, targetDirectory, metadata);
         return importPath;
     }
 }
 
-export function findInputClassImportPath(className: string, generatorOptions: { targetDirectory: string }, metadata: EntityMetadata<any>): string {
+export function findInputClassImportPath(className: string, targetDirectory: string, metadata: EntityMetadata<any>): string {
     const tsSource = morphTsSource(metadata);
 
     let returnImportPath: string;
@@ -118,10 +132,10 @@ export function findInputClassImportPath(className: string, generatorOptions: { 
         }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         classDeclaration = tsSource.getClass(className)!;
-        returnImportPath = path.relative(`${generatorOptions.targetDirectory}/dto`, metadata.path).replace(/\.ts$/, "");
+        returnImportPath = path.relative(targetDirectory, metadata.path).replace(/\.ts$/, "");
     } else {
         //try to find import where block is imported from
-        const { importPath, exportedDeclaration } = findImportPath(className, generatorOptions, metadata);
+        const { importPath, exportedDeclaration } = findImportPath(className, targetDirectory, metadata);
         if (!(exportedDeclaration instanceof ClassDeclaration)) {
             throw new Error(`Exported declaration for ${className} is not a class`);
         }

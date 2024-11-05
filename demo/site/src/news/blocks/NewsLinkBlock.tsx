@@ -1,13 +1,20 @@
-import { Link, PropsWithData } from "@comet/cms-site";
+import { PropsWithData } from "@comet/cms-site";
 import { NewsLinkBlockData } from "@src/blocks.generated";
-import * as React from "react";
+import Link from "next/link";
+import { PropsWithChildren } from "react";
 
-function NewsLinkBlock({ data: { id }, children }: React.PropsWithChildren<PropsWithData<NewsLinkBlockData>>): JSX.Element | null {
-    if (id === undefined) {
-        return null;
+type Props = PropsWithData<NewsLinkBlockData> & { title?: string; className?: string };
+
+function NewsLinkBlock({ data: { news }, children, title, className }: PropsWithChildren<Props>): JSX.Element | null {
+    if (news === undefined) {
+        return <span className={className}>{children}</span>;
     }
 
-    return <Link href={{ pathname: "/news/[id]", query: { id } }}>{children}</Link>;
+    return (
+        <Link href={`/${news.scope.language}/news/${news.slug}`} title={title} className={className}>
+            {children}
+        </Link>
+    );
 }
 
 export { NewsLinkBlock };

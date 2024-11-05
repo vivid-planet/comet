@@ -2,7 +2,6 @@ import { gql } from "@apollo/client";
 import { SelectField } from "@comet/admin";
 import { createEditPageNode } from "@comet/cms-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 export type { GQLPageTreeNodeAdditionalFieldsFragment } from "./EditPageNode.generated"; //re-export
@@ -32,6 +31,7 @@ export const additionalPageTreeNodeFieldsFragment = {
 };
 
 export const EditPageNode = createEditPageNode({
+    disableHideInMenu: false,
     valuesToInput: ({ values }: { values: { userGroup: string } }) => {
         return {
             userGroup: values.userGroup,

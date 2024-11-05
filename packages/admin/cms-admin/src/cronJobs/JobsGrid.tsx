@@ -1,8 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
-import { MainContent, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { List } from "@comet/admin-icons";
+import { IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
-import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { JobRuntime } from "./JobRuntime";
@@ -122,6 +123,16 @@ export function JobsGrid(props: JobsGridProps) {
                                 />
                             );
                         },
+                    },
+                    {
+                        field: "actions",
+                        headerName: "",
+                        renderCell: ({ row }) => (
+                            <IconButton component={StackLink} pageName="logs" payload={row.name}>
+                                <List color="primary" />
+                            </IconButton>
+                        ),
+                        ...disableFieldOptions,
                     },
                 ]}
                 disableColumnSelector

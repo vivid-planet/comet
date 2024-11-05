@@ -7,16 +7,16 @@ import exifr from "exifr";
 import { createReadStream } from "fs";
 import getColors from "get-image-colors";
 import * as hasha from "hasha";
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 import { basename, extname, parse } from "path";
 import probe from "probe-image-size";
 import * as rimraf from "rimraf";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
 import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FocalPoint } from "../common/enums/focal-point.enum";
@@ -35,7 +35,8 @@ import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { createHashedPath, slugifyFilename } from "./files.utils";
+import { FileValidationService } from "./file-validation.service";
+import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
@@ -117,6 +118,7 @@ export class FilesService {
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+        private readonly fileValidationService: FileValidationService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -177,8 +179,8 @@ export class FilesService {
         return [files, totalCount];
     }
 
-    async findAllByHash(contentHash: string): Promise<FileInterface[]> {
-        return withFilesSelect(this.selectQueryBuilder(), { contentHash }).getResult();
+    async findAllByHash(contentHash: string, options?: { scope?: DamScopeInterface }): Promise<FileInterface[]> {
+        return withFilesSelect(this.selectQueryBuilder(), { contentHash, scope: options?.scope }).getResult();
     }
 
     async findMultipleByIds(ids: string[]) {
@@ -244,17 +246,19 @@ export class FilesService {
         return this.updateByEntity(file, data);
     }
 
-    async updateByEntity(entity: FileInterface, { folderId, image, ...input }: UpdateFileInput): Promise<FileInterface> {
+    async updateByEntity(entity: FileInterface, { image, ...input }: UpdateFileInput): Promise<FileInterface> {
+        const folderId = input.folderId !== undefined ? input.folderId : entity.folder?.id;
         const folder = folderId ? await this.foldersService.findOneById(folderId) : null;
 
         if (entity.image && image?.cropArea) {
             entity.image.cropArea = image.cropArea;
         }
 
-        const entityWithSameName = await this.findOneByFilenameAndFolder({ filename: entity.name, folderId }, entity.scope);
-
-        if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
-            throw new Error(`Entity with name '${entity.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
+        if (input.name) {
+            const entityWithSameName = await this.findOneByFilenameAndFolder({ filename: input.name, folderId }, entity.scope);
+            if (entityWithSameName !== null && entityWithSameName.id !== entity.id) {
+                throw new Error(`Entity with name '${input.name}' already exists in ${folder ? `folder '${folder.name}'` : "root folder"}`);
+            }
         }
 
         const file = Object.assign(entity, {
@@ -457,41 +461,15 @@ export class FilesService {
         return this.create(fileInput);
     }
 
-    async copyFilesToScope({ user, fileIds, inboxFolderId }: { user: CurrentUser; fileIds: string[]; inboxFolderId: string }) {
+    async copyFilesToScope({ fileIds, inboxFolderId }: { fileIds: string[]; inboxFolderId: string }) {
         const inboxFolder = await this.foldersService.findOneById(inboxFolderId);
         if (!inboxFolder) {
             throw new Error("Specified inbox folder doesn't exist.");
         }
-        if (inboxFolder.scope && !this.accessControlService.isAllowed(user, "dam", inboxFolder.scope)) {
-            throw new Error("User can't access the target scope");
-        }
-
-        const getUniqueFileScopes = (files: FileInterface[]): DamScopeInterface[] => {
-            const fileScopes: DamScopeInterface[] = [];
-            for (const file of files) {
-                if (file.scope === undefined) {
-                    continue;
-                }
-
-                const isDuplicateScope = Boolean(fileScopes.find((scope) => this.contentScopeService.scopesAreEqual(scope, file.scope)));
-                if (!isDuplicateScope) {
-                    fileScopes.push(file.scope);
-                }
-            }
-            return fileScopes;
-        };
 
         const files = await this.findMultipleByIds(fileIds);
         if (files.length === 0) {
             throw new Error("No valid file ids provided");
-        }
-
-        const fileScopes = getUniqueFileScopes(files);
-        const canAccessFileScopes = fileScopes.every((scope) => {
-            return this.accessControlService.isAllowed(user, "dam", scope);
-        });
-        if (!canAccessFileScopes) {
-            throw new Error(`User can't access the scope of one or more files`);
         }
 
         const mappedFiles: Array<{ rootFile: FileInterface; copy: FileInterface }> = [];
@@ -556,11 +534,44 @@ export class FilesService {
         }
     }
 
-    async createFileUrl(file: FileInterface, previewDamUrls?: boolean): Promise<string> {
+    async createFileUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
         const filename = parse(file.name).name;
 
-        // Use CDN url only if available and not in preview as preview requires auth
-        const baseUrl = [this.config.cdnEnabled && !previewDamUrls ? `${this.config.cdnDomain}/files` : this.config.filesBaseUrl];
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files`];
+
+        if (previewDamUrls) {
+            baseUrl.push("preview");
+        } else {
+            const hash = this.createHash({
+                fileId: file.id,
+                filename,
+            });
+
+            baseUrl.push(hash);
+        }
+
+        return [...baseUrl, file.id, filename].join("/");
+    }
+
+    async getFileAsBase64String(file: FileInterface) {
+        const fileStream = await this.blobStorageBackendService.getFile(this.config.filesDirectory, createHashedPath(file.contentHash));
+
+        const buffer = await new Response(fileStream).buffer();
+        const base64String = buffer.toString("base64");
+
+        return `data:${file.mimetype};base64,${base64String}`;
+    }
+
+    async createFileDownloadUrl(
+        file: FileInterface,
+        { previewDamUrls = false, relativeDamUrls = false }: { previewDamUrls?: boolean; relativeDamUrls?: boolean },
+    ): Promise<string> {
+        const filename = parse(file.name).name;
+
+        const baseUrl = [`${relativeDamUrls ? "" : this.config.apiUrl}/dam/files/download`];
 
         if (previewDamUrls) {
             baseUrl.push("preview");

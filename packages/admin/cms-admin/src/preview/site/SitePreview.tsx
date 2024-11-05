@@ -1,7 +1,7 @@
-import { CometColor } from "@comet/admin-icons";
-import { Public, VpnLock } from "@mui/icons-material";
+import { gql, useQuery } from "@apollo/client";
+import { CometColor, Domain, DomainLocked } from "@comet/admin-icons";
 import { Grid, Tooltip, Typography } from "@mui/material";
-import * as React from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { RouteComponentProps, useHistory, useLocation } from "react-router";
 
@@ -12,20 +12,16 @@ import { Device } from "../common/Device";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
 import { VisibilityToggle } from "../common/VisibilityToggle";
-import { buildPreviewUrl } from "./buildPreviewUrl";
 import { SitePrevewIFrameLocationMessage, SitePreviewIFrameMessageType } from "./iframebridge/SitePreviewIFrameMessage";
 import { useSitePreviewIFrameBridge } from "./iframebridge/useSitePreviewIFrameBridge";
 import { OpenLinkDialog } from "./OpenLinkDialog";
+import { GQLSitePreviewJwtQuery } from "./SitePreview.generated";
 import { ActionsContainer, LogoWrapper, Root, SiteInformation, SiteLink, SiteLinkWrapper } from "./SitePreview.sc";
-
-interface SitePreviewParams {
-    includeInvisibleBlocks: boolean;
-}
 
 //TODO v4 remove RouteComponentProps
 interface Props extends RouteComponentProps {
     resolvePath?: (path: string, scope: ContentScopeInterface) => string;
-    logo?: React.ReactNode;
+    logo?: ReactNode;
 }
 
 function useSearchState<ParseFunction extends (value: string | undefined) => ReturnType<ParseFunction>>(
@@ -37,7 +33,7 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     const queryParams = new URLSearchParams(location.search);
     const strValue = queryParams.get(name);
     const value = parseValue(strValue !== null ? strValue : undefined);
-    const setValue = React.useCallback(
+    const setValue = useCallback(
         (newValue: string) => {
             const newQueryParams = new URLSearchParams(location.search);
             newQueryParams.set(name, newValue);
@@ -47,8 +43,29 @@ function useSearchState<ParseFunction extends (value: string | undefined) => Ret
     );
     return [value, setValue];
 }
-function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props): React.ReactElement {
-    const [previewPath, setPreviewPath] = useSearchState("path", (v) => v ?? "");
+function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> }: Props) {
+    const { scope } = useContentScope();
+
+    //initialPath: path the preview is intialized with; WITHOUT resolvePath called, might be not the path actually used in site
+    //doesn't change during navigation within site
+    const [initialPath] = useSearchState("path", (v) => v ?? "");
+
+    //sitePath: actual path of site, intialized with initialPath + resolvePath
+    //use case for resolvePath: i18n urls, for example `/${scope.language}${path}`;
+    //changes during navigation within site (iframe bridge reports new path)
+    const [sitePath, setSitePath] = useSearchState("sitePath", (v) => {
+        if (v) {
+            return v;
+        } else {
+            return resolvePath ? resolvePath(initialPath, scope) : initialPath;
+        }
+    });
+
+    //iframePath: path set for iframe
+    //needed to prevent the iframe from reloading on every change
+    //doesn't change during navigation within site
+    //changed when settings (showOnlyVisible) change
+    const [iframePath, setIframePath] = useState(sitePath);
 
     const [device, setDevice] = useSearchState("device", (v) => {
         if (![Device.Responsive, Device.Mobile, Device.Tablet, Device.Desktop].includes(Number(v))) {
@@ -58,40 +75,21 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     });
     const [showOnlyVisible, setShowOnlyVisible] = useSearchState("showOnlyVisible", (v) => !v || v === "true");
 
-    const [linkToOpen, setLinkToOpen] = React.useState<ExternalLinkBlockData | undefined>(undefined);
-    const sitePreviewParams: SitePreviewParams = { includeInvisibleBlocks: !showOnlyVisible };
-    const formattedSitePreviewParams = JSON.stringify(sitePreviewParams);
+    const [linkToOpen, setLinkToOpen] = useState<ExternalLinkBlockData | undefined>(undefined);
 
-    const { scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
-
-    const [initialPageUrl, setInitialPageUrl] = React.useState(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
-
-    // update the initialPreviewUrl when previewParams changes
-    // the iframe is then force-rerendered with the new previewUrl
-    React.useEffect(() => {
-        // react-hooks/exhaustive-deps is disabled because the src-prop of iframe is uncontrolled
-        // the src-value is just the default value, the iframe keeps its own src-state (by clicking links inside the iframe)
-        setInitialPageUrl(buildPreviewUrl(siteConfig.previewUrl, previewPath, formattedSitePreviewParams));
-    }, [formattedSitePreviewParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const intl = useIntl();
 
     // the site in the iframe notifies us about it's current location
     // we sync the location back to our admin-url, so we have it and can reload the page without loosing
-    const handlePreviewLocationChange = React.useCallback(
+    const handlePreviewLocationChange = useCallback(
         (message: SitePrevewIFrameLocationMessage) => {
-            const pathPrefix = new URL(siteConfig.previewUrl).pathname;
-            if (message.data.pathname.search(pathPrefix) === 0) {
-                // this is the original-pathname of the site, we extract it and keep it in "our" url as get-param
-                let normalizedPathname = message.data.pathname.substr(pathPrefix.length);
-                if (normalizedPathname == "") normalizedPathname = "/";
-                if (previewPath !== normalizedPathname) {
-                    setPreviewPath(normalizedPathname);
-                }
+            if (sitePath !== message.data.pathname) {
+                setSitePath(message.data.pathname);
             }
         },
-        [previewPath, setPreviewPath, siteConfig.previewUrl],
+        [sitePath, setSitePath],
     );
 
     const handleDeviceChange = (newDevice: Device) => {
@@ -101,9 +99,11 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
     const handleShowOnlyVisibleChange = () => {
         const newShowOnlyVisible = !showOnlyVisible;
         setShowOnlyVisible(String(newShowOnlyVisible));
+        setIframePath(sitePath); //reload iframe with new settings
+        refetch();
     };
 
-    const siteLink = `${siteConfig.url}${resolvePath ? resolvePath(previewPath, scope) : previewPath}`;
+    const siteLink = `${siteConfig.url}${sitePath}`;
 
     useSitePreviewIFrameBridge((message) => {
         switch (message.cometType) {
@@ -115,6 +115,27 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                 break;
         }
     });
+
+    const { data, error, refetch } = useQuery<GQLSitePreviewJwtQuery>(
+        gql`
+            query SitePreviewJwt($scope: JSONObject!, $path: String!, $includeInvisible: Boolean!) {
+                sitePreviewJwt(scope: $scope, path: $path, includeInvisible: $includeInvisible)
+            }
+        `,
+        {
+            fetchPolicy: "network-only",
+            variables: {
+                scope,
+                path: iframePath,
+                includeInvisible: showOnlyVisible ? false : true,
+            },
+            pollInterval: 1000 * 60 * 60 * 24, // due to expiration time of jwt
+        },
+    );
+    if (error) throw new Error(error.message);
+    if (!data) return <div />;
+
+    const initialPageUrl = `${siteConfig.sitePreviewApiUrl}?${new URLSearchParams({ jwt: data.sitePreviewJwt }).toString()}`;
 
     return (
         <Root>
@@ -137,10 +158,10 @@ function SitePreview({ resolvePath, logo = <CometColor sx={{ fontSize: 32 }} /> 
                                             defaultMessage: "Site is not yet publicly available",
                                         })}
                                     >
-                                        <VpnLock />
+                                        <DomainLocked />
                                     </Tooltip>
                                 ) : (
-                                    <Public />
+                                    <Domain />
                                 )}
                                 <SiteLink variant="body1" href={siteLink} target="_blank">
                                     {siteLink}

@@ -1,6 +1,6 @@
 import { ArgsType, Field } from "@nestjs/graphql";
 import { Type } from "class-transformer";
-import { ValidateNested } from "class-validator";
+import { IsBoolean, ValidateNested } from "class-validator";
 
 import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.args";
 import { IsUndefinable } from "../../common/validators/is-undefinable";
@@ -15,6 +15,7 @@ export class DependenciesArgs extends OffsetBasedPaginationArgs {
     filter?: DependencyFilter;
 
     @Field(() => Boolean, { defaultValue: false })
+    @IsBoolean()
     forceRefresh: boolean;
 }
 
@@ -27,5 +28,6 @@ export class DependentsArgs extends OffsetBasedPaginationArgs {
     filter?: DependentFilter;
 
     @Field(() => Boolean, { defaultValue: false })
+    @IsBoolean()
     forceRefresh: boolean;
 }

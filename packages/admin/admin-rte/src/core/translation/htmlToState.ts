@@ -12,6 +12,11 @@ export function htmlToState({
     }[];
 }) {
     const translatedContentState = stateFromHTML(html, {
+        customBlockFn: (element) => {
+            if (element.className) {
+                return { type: element.className };
+            }
+        },
         customInlineFn: (element, { Style, Entity }) => {
             if (element.tagName === "SUB") {
                 return Style("SUB");

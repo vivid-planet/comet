@@ -1,1 +1,1 @@
-export const SHOULD_LOG_REQUEST = "should-log-request";
+export const ACCESS_LOG_CONFIG = "access-log-config";

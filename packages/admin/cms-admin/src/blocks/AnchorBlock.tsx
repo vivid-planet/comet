@@ -1,6 +1,5 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { AnchorBlockData, AnchorBlockInput } from "../blocks.generated";

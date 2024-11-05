@@ -1,3 +1,4 @@
+import { DependenciesModule } from "@comet/cms-api";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@src/config/config.module";
 import { FixturesConsole } from "@src/db/fixtures/fixtures.console";
@@ -5,19 +6,21 @@ import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
 import { ConsoleModule } from "nestjs-console";
 
+import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
+import { ImageFileFixtureService } from "./generators/image-file-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
-import { PublicUploadsFixtureService } from "./generators/public-uploads-fixture.service";
+import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.service";
-import { UnsplashImageFileFixtureService } from "./generators/unsplash-image-file-fixture.service";
 
 @Module({
-    imports: [ConfigModule, ConsoleModule, PagesModule, LinksModule],
+    imports: [ConfigModule, ConsoleModule, PagesModule, LinksModule, DependenciesModule],
     providers: [
         FixturesConsole,
         ManyImagesTestPageFixtureService,
-        UnsplashImageFileFixtureService,
+        ImageFileFixtureService,
         SvgImageFileFixtureService,
-        PublicUploadsFixtureService,
+        FileUploadsFixtureService,
+        RedirectsFixtureService,
     ],
 })
 export class FixturesModule {}

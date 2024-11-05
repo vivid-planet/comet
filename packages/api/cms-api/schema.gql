@@ -1,3 +1,11 @@
+type User {
+  id: String!
+  name: String!
+  email: String!
+  permissionsCount: Int!
+  contentScopesCount: Int!
+}
+
 type CurrentUserPermission {
   permission: String!
   contentScopes: [JSONObject!]!
@@ -12,8 +20,10 @@ type CurrentUser {
   id: String!
   name: String!
   email: String!
-  language: String!
   permissions: [CurrentUserPermission!]!
+  impersonated: Boolean
+  authenticatedUser: User
+  permissionsForScope(scope: JSONObject!): [String!]!
 }
 
 type UserPermission {
@@ -47,6 +57,8 @@ type Dependency {
   visible: Boolean!
   targetGraphqlObjectType: String!
   targetId: String!
+  name: String
+  secondaryInformation: String
 }
 
 type PaginatedDependencies {
@@ -171,11 +183,16 @@ type FilenameResponse {
   isOccupied: Boolean!
 }
 
-type User {
-  id: String!
+type FileUpload {
+  id: ID!
   name: String!
-  email: String!
-  language: String!
+  size: Int!
+  mimetype: String!
+  contentHash: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  downloadUrl: String
+  imageUrl(resizeWidth: Int!): String
 }
 
 type PaginatedUserList {
@@ -227,9 +244,8 @@ input DependentFilter {
   rootColumnName: String
 }
 
-type Redirect implements DocumentInterface {
+type Redirect {
   id: ID!
-  updatedAt: DateTime!
   sourceType: RedirectSourceTypeValues!
   source: String!
   target: JSONObject!
@@ -237,6 +253,7 @@ type Redirect implements DocumentInterface {
   active: Boolean!
   generationType: RedirectGenerationType!
   createdAt: DateTime!
+  updatedAt: DateTime!
   dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
@@ -334,6 +351,7 @@ type Query {
   redirects(scope: RedirectScopeInput! = {}, query: String, type: RedirectGenerationType, active: Boolean, sortColumnName: String, sortDirection: SortDirection! = ASC): [Redirect!]! @deprecated(reason: "Use paginatedRedirects instead. Will be removed in the next version.")
   paginatedRedirects(scope: RedirectScopeInput! = {}, search: String, filter: RedirectFilter, sort: [RedirectSort!], offset: Int! = 0, limit: Int! = 25): PaginatedRedirects!
   redirect(id: ID!): Redirect!
+  redirectBySource(scope: RedirectScopeInput! = {}, source: String!, sourceType: RedirectSourceTypeValues!): Redirect
   redirectSourceAvailable(scope: RedirectScopeInput! = {}, source: String!): Boolean!
   damItemsList(offset: Int! = 0, limit: Int! = 25, sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): PaginatedDamItems!
   damItemListPosition(sortColumnName: String, sortDirection: SortDirection! = ASC, scope: DamScopeInput! = {}, id: ID!, type: DamItemType!, folderId: ID, includeArchived: Boolean, filter: DamItemFilterInput): Int!
@@ -349,11 +367,13 @@ type Query {
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
   pageTreeNodeList(scope: PageTreeNodeScopeInput!, category: String): [PageTreeNode!]!
-  paginatedPageTreeNodes(scope: PageTreeNodeScopeInput! = {}, category: String, sort: [PageTreeNodeSort!], offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
+  paginatedPageTreeNodes(scope: PageTreeNodeScopeInput! = {}, category: String, sort: [PageTreeNodeSort!], documentType: String, offset: Int! = 0, limit: Int! = 25): PaginatedPageTreeNodes!
   pageTreeNodeSlugAvailable(scope: PageTreeNodeScopeInput!, parentId: ID, slug: String!): SlugAvailability!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
+  kubernetesJob(name: String!): KubernetesJob!
+  kubernetesJobLogs(name: String!): String!
   currentUser: CurrentUser!
   userPermissionsUserById(id: String!): User!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
@@ -362,6 +382,9 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
+  fileUploadForTypesGenerationDoNotUse: FileUpload!
+  azureAiTranslate(input: AzureAiTranslationInput!): String!
+  sitePreviewJwt(scope: JSONObject!, path: String!, includeInvisible: Boolean!): String!
 }
 
 input RedirectScopeInput {
@@ -377,8 +400,8 @@ input RedirectFilter {
   generationType: StringFilter
   source: StringFilter
   active: BooleanFilter
-  createdAt: DateFilter
-  updatedAt: DateFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
   and: [RedirectFilter!]
   or: [RedirectFilter!]
 }
@@ -395,7 +418,7 @@ input BooleanFilter {
   equal: Boolean
 }
 
-input DateFilter {
+input DateTimeFilter {
   equal: DateTime
   lowerThan: DateTime
   greaterThan: DateTime
@@ -475,7 +498,6 @@ input UserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  language: StringFilter
   and: [UserFilter!]
   or: [UserFilter!]
 }
@@ -489,7 +511,11 @@ enum UserSortField {
   name
   email
   status
-  language
+}
+
+input AzureAiTranslationInput {
+  text: String!
+  targetLanguage: String!
 }
 
 type Mutation {
@@ -526,6 +552,8 @@ type Mutation {
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
+  generateAltText(fileId: String!): String!
+  generateImageTitle(fileId: String!): String!
 }
 
 input CreateBuildsInput {

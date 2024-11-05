@@ -1,12 +1,11 @@
 import { Field, FinalFormCheckbox, FinalFormInput } from "@comet/admin";
 import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import { FormControlLabel } from "@mui/material";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
-import { isLinkTarget } from "../validation/isHref";
-import { validateUrl } from "../validation/validateUrl";
+import { isLinkTarget } from "../validation/isLinkTarget";
+import { validateLinkTarget } from "../validation/validateLinkTarget";
 
 type State = ExternalLinkBlockData;
 
@@ -59,7 +58,7 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
             <SelectPreviewComponent>
                 <BlocksFinalForm
                     onSubmit={(newState) => {
-                        updateState((prevState) => ({ ...prevState, ...newState }));
+                        updateState(newState);
                     }}
                     initialValues={state}
                 >
@@ -68,7 +67,8 @@ export const ExternalLinkBlock: BlockInterface<ExternalLinkBlockData, State, Ext
                         name="targetUrl"
                         component={FinalFormInput}
                         fullWidth
-                        validate={(url) => validateUrl(url)}
+                        validate={(url) => validateLinkTarget(url)}
+                        disableContentTranslation
                     />
                     <Field name="openInNewWindow" type="checkbox">
                         {(props) => (

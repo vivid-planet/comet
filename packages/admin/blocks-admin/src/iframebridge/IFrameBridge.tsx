@@ -1,29 +1,37 @@
-import * as React from "react";
+import { createContext, createRef, PropsWithChildren, Ref, useCallback, useEffect, useRef, useState } from "react";
 import { Route, useHistory } from "react-router";
 
 import {
     AdminMessage,
     AdminMessageType,
     IAdminBlockMessage,
+    IAdminContentScopeMessage,
     IAdminHoverComponentMessage,
     IAdminSelectComponentMessage,
+    IAdminShowOnlyVisibleMessage,
     IFrameMessage,
     IFrameMessageType,
 } from "./IFrameMessage";
 
 export interface IFrameBridgeContext {
-    iFrameRef: React.Ref<HTMLIFrameElement>;
+    iFrameRef: Ref<HTMLIFrameElement>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sendBlockState: (blockState: any) => void; // TODO: only PageBlock is supported currently
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    sendContentScope(contentScope: any): void;
+    sendShowOnlyVisible: (showOnlyVisible: boolean) => void;
     iFrameReady: boolean;
     hoveredSiteRoute: string | null;
     sendSelectComponent: (adminRoute: string) => void;
     sendHoverComponent: (adminRoute: string | null) => void;
 }
 
-export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
-    iFrameRef: React.createRef(),
+export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
+    iFrameRef: createRef(),
     sendBlockState: () => {
+        // empty
+    },
+    sendShowOnlyVisible: () => {
         // empty
     },
     iFrameReady: false,
@@ -34,19 +42,22 @@ export const IFrameBridgeContext = React.createContext<IFrameBridgeContext>({
     sendHoverComponent: () => {
         // empty
     },
+    sendContentScope: () => {
+        // empty
+    },
 });
 
 interface IFrameBridgeProviderProps {
     onReceiveMessage?: (message: IFrameMessage) => void;
 }
-export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderProps> = ({ children, onReceiveMessage }) => {
-    const iFrameRef = React.useRef<HTMLIFrameElement>(null);
-    const [iFrameReady, setIFrameReady] = React.useState(false);
+export const IFrameBridgeProvider = ({ children, onReceiveMessage }: PropsWithChildren<IFrameBridgeProviderProps>) => {
+    const iFrameRef = useRef<HTMLIFrameElement>(null);
+    const [iFrameReady, setIFrameReady] = useState(false);
 
-    const [hoveredSiteRoute, setHoveredSiteRoute] = React.useState<string | null>(null);
+    const [hoveredSiteRoute, setHoveredSiteRoute] = useState<string | null>(null);
 
     const history = useHistory();
-    const sendMessage = React.useCallback(
+    const sendMessage = useCallback(
         (message: AdminMessage) => {
             if (!iFrameReady) {
                 throw Error("iFrame not ready");
@@ -58,7 +69,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
         },
         [iFrameReady],
     );
-    const _onReceiveMessage = React.useCallback(
+    const _onReceiveMessage = useCallback(
         (message: IFrameMessage) => {
             onReceiveMessage?.(message);
             switch (message.cometType) {
@@ -76,7 +87,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
         [history, onReceiveMessage],
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
             try {
                 const message = JSON.parse(event.data);
@@ -97,7 +108,7 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
         };
     }, [_onReceiveMessage]);
 
-    const sendSelectComponent = React.useCallback(
+    const sendSelectComponent = useCallback(
         (adminRoute: string) => {
             const message: IAdminSelectComponentMessage = { cometType: AdminMessageType.SelectComponent, data: { adminRoute } };
             sendMessage(message);
@@ -121,12 +132,28 @@ export const IFrameBridgeProvider: React.FunctionComponent<IFrameBridgeProviderP
                                 };
                                 sendMessage(message);
                             },
+                            sendShowOnlyVisible: (showOnlyVisible: boolean) => {
+                                const message: IAdminShowOnlyVisibleMessage = {
+                                    cometType: AdminMessageType.ShowOnlyVisible,
+                                    data: {
+                                        showOnlyVisible,
+                                    },
+                                };
+                                sendMessage(message);
+                            },
                             iFrameRef,
                             iFrameReady,
                             sendSelectComponent,
                             hoveredSiteRoute: hoveredSiteRoute,
                             sendHoverComponent: (adminRoute) => {
                                 const message: IAdminHoverComponentMessage = { cometType: AdminMessageType.HoverComponent, data: { adminRoute } };
+                                sendMessage(message);
+                            },
+                            sendContentScope: (contentScope) => {
+                                const message: IAdminContentScopeMessage = {
+                                    cometType: AdminMessageType.ContentScope,
+                                    data: { contentScope },
+                                };
                                 sendMessage(message);
                             },
                         }}

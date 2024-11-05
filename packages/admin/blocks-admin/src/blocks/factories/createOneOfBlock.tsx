@@ -2,7 +2,7 @@ import { Field, FieldContainer, FinalFormRadio, FinalFormSelect } from "@comet/a
 import { Box, Divider, FormControlLabel, MenuItem, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
@@ -32,6 +32,11 @@ export interface OneOfBlockFragment {
         props: any;
     }[];
     activeType?: string;
+    block?: {
+        type: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        props: any;
+    };
 }
 
 export interface OneOfBlockPreviewState extends PreviewStateInterface {
@@ -55,7 +60,7 @@ export type OneOfBlockOutput<Config extends boolean> = {
 type BlockType = string;
 export interface CreateOneOfBlockOptions<T extends boolean> {
     name: string;
-    displayName?: React.ReactNode;
+    displayName?: ReactNode;
     supportedBlocks: Record<BlockType, BlockInterface>;
     category?: BlockCategory | CustomBlockCategory;
     variant?: "select" | "radio" | "toggle";
@@ -104,7 +109,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
         };
     }
 
-    const options: Array<{ value: string; label: React.ReactNode }> = allowEmpty
+    const options: Array<{ value: string; label: ReactNode }> = allowEmpty
         ? [{ value: "none", label: <FormattedMessage id="comet.blocks.oneOfBlock.empty" defaultMessage="None" /> }]
         : [];
 
@@ -140,12 +145,14 @@ export const createOneOfBlock = <T extends boolean = boolean>({
             }
         },
 
-        input2State: (input) => {
-            const activeType = input.activeType && supportedBlocks[input.activeType] ? input.activeType : undefined;
+        input2State: ({ attachedBlocks, activeType, block, ...additionalFields }) => {
+            const state: OneOfBlockState = {
+                ...additionalFields,
+                attachedBlocks: [],
+                activeType: activeType && supportedBlocks[activeType] ? activeType : undefined,
+            };
 
-            const attachedBlocks: OneOfBlockItem[] = [];
-
-            for (const item of input.attachedBlocks) {
+            for (const item of attachedBlocks) {
                 const block = blockForType(item.type);
 
                 if (!block) {
@@ -154,17 +161,15 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                     continue;
                 }
 
-                attachedBlocks.push({ ...item, props: block.input2State(item.props) });
+                state.attachedBlocks.push({ ...item, props: block.input2State(item.props) });
             }
 
-            return {
-                activeType,
-                attachedBlocks,
-            };
+            return state;
         },
-        state2Output: (s) => {
+        state2Output: ({ attachedBlocks, activeType, ...additionalFields }) => {
             return {
-                attachedBlocks: s.attachedBlocks.map((c) => {
+                ...additionalFields,
+                attachedBlocks: attachedBlocks.map((c) => {
                     const block = blockForType(c.type);
                     if (!block) {
                         throw new Error(`No Block found for type ${c.type}`); // for TS
@@ -174,17 +179,17 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                         props: block.state2Output(c.props),
                     };
                 }),
-                activeType: s.activeType,
+                activeType,
             } as OneOfBlockOutput<T>;
         },
 
-        output2State: async (output, context) => {
+        output2State: async ({ attachedBlocks, activeType, ...additionalFields }, context) => {
             const state: OneOfBlockState = {
                 attachedBlocks: [],
-                activeType: output.activeType,
+                activeType,
             };
 
-            for (const item of output.attachedBlocks) {
+            for (const item of attachedBlocks) {
                 const block = blockForType(item.type);
 
                 if (!block) {
@@ -202,8 +207,10 @@ export const createOneOfBlock = <T extends boolean = boolean>({
 
         createPreviewState: (state, previewCtx) => {
             const { state: blockState, block } = getActiveBlock(state);
+            const { attachedBlocks, activeType, ...additionalFields } = state;
 
             return {
+                ...additionalFields,
                 block: blockState
                     ? {
                           type: blockState.type,
@@ -268,7 +275,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
         AdminComponent: ({ state, updateState }) => {
             const isInPaper = useAdminComponentPaper();
 
-            const handleBlockSelect = React.useCallback(
+            const handleBlockSelect = useCallback(
                 (blockType: string) => {
                     updateState((prevState) => {
                         let newState: OneOfBlockState = prevState;
@@ -325,7 +332,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                 [updateState],
             );
 
-            const createUpdateSubBlocksFn = React.useCallback(
+            const createUpdateSubBlocksFn = useCallback(
                 (blockType: string) => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const updateSubBlocksFn: DispatchSetStateAction<any> = (setStateAction) => {
@@ -359,11 +366,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field
-                                                name="blockType"
-                                                fullWidth
-                                                label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}
-                                            >
+                                            <Field name="blockType" fullWidth>
                                                 {(props) => (
                                                     <FinalFormSelect {...props} fullWidth>
                                                         {options.map((option) => (
@@ -381,7 +384,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "radio" && (
                                     <>
                                         <Box display="flex" flexDirection="column" padding={3}>
-                                            <FieldContainer label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}>
+                                            <FieldContainer>
                                                 {options.map((option) => (
                                                     <Field key={option.value} name="blockType" type="radio" value={option.value} fullWidth>
                                                         {(props) => <FormControlLabel label={option.label} control={<FinalFormRadio {...props} />} />}
@@ -395,11 +398,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "toggle" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field
-                                                name="blockType"
-                                                fullWidth
-                                                label={<FormattedMessage id="comet.blocks.oneOf.blockType" defaultMessage="Type" />}
-                                            >
+                                            <Field name="blockType" fullWidth>
                                                 {({ input: { value, onChange } }) => (
                                                     <ToggleButtonGroup
                                                         value={value}

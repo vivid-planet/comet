@@ -1,5 +1,4 @@
 import { BlockInterface, createCompositeBlock } from "@comet/blocks-admin";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { PixelImageBlock } from "./PixelImageBlock";
@@ -7,11 +6,12 @@ import { PixelImageBlock } from "./PixelImageBlock";
 interface CreateImageLinkBlockOptions {
     link: BlockInterface;
     image?: BlockInterface;
+    name?: string;
 }
 
-export function createImageLinkBlock({ link: LinkBlock, image = PixelImageBlock }: CreateImageLinkBlockOptions): BlockInterface {
+export function createImageLinkBlock({ link: LinkBlock, image = PixelImageBlock, name = "ImageLink" }: CreateImageLinkBlockOptions): BlockInterface {
     return createCompositeBlock({
-        name: "ImageLink",
+        name,
         displayName: <FormattedMessage id="comet.blocks.imageLink" defaultMessage="Image/Link" />,
         blocks: {
             link: {

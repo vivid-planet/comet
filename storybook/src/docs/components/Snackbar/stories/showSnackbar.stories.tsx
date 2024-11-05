@@ -12,13 +12,7 @@ storiesOf("stories/components/Snackbar/Show Snackbar", module)
             const snackbarApi = useSnackbarApi();
             const showCustomSnackbar = () => {
                 snackbarApi.showSnackbar(
-                    <Snackbar
-                        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                        // Use uuid or object id in production
-                        key={Math.random()}
-                        autoHideDuration={5000}
-                        message="Minimal snackbar"
-                    />,
+                    <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "left" }} autoHideDuration={5000} message="Minimal snackbar" />,
                 );
             };
             return <Button onClick={showCustomSnackbar}>Show Snackbar</Button>;

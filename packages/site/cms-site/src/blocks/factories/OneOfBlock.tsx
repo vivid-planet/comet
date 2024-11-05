@@ -1,8 +1,9 @@
-import * as React from "react";
+import { PropsWithChildren } from "react";
 
+import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
 import { SupportedBlocks } from "./types";
 
-interface Props {
+interface Props extends PropsWithChildren {
     data: {
         block?: {
             type: string;
@@ -11,9 +12,10 @@ interface Props {
         };
     };
     supportedBlocks: SupportedBlocks;
+    className?: string;
 }
 
-export const OneOfBlock: React.FC<Props> = ({ data: { block }, supportedBlocks, children }) => {
+export const OneOfBlock = ({ data: { block, ...additionalProps }, supportedBlocks, children, className }: Props) => {
     if (!block) {
         return null;
     }
@@ -32,5 +34,5 @@ export const OneOfBlock: React.FC<Props> = ({ data: { block }, supportedBlocks, 
         return null;
     }
 
-    return <>{blockFunction({ ...block.props, children })}</>;
+    return <ErrorHandlerBoundary>{blockFunction({ ...block.props, ...additionalProps, children, className })}</ErrorHandlerBoundary>;
 };

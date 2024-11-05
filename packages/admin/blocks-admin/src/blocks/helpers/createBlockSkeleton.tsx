@@ -1,4 +1,3 @@
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import { BlockCategory, BlockInterface, RootBlockInterface } from "../types";
@@ -43,6 +42,7 @@ function common<InputApi, State, OutputApi>(): Omit<
         isValid: () => true,
         previewContent: () => [],
         replaceDependenciesInOutput: (output) => output,
+        resolveDependencyPath: () => "",
     };
 }
 

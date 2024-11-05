@@ -17,6 +17,70 @@
         ]
     },
     {
+        "name": "DamFileDownloadLink",
+        "fields": [
+            {
+                "name": "file",
+                "kind": "NestedObject",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "name",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "fileUrl",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        }
+                    ]
+                },
+                "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "fileId",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "openFileType",
+                "kind": "Enum",
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "DamImage",
         "fields": [
             {
@@ -88,14 +152,20 @@
                 "nullable": true
             },
             {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
                 "name": "loop",
                 "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
-                "nullable": true
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
             },
             {
                 "name": "damFile",
@@ -159,12 +229,12 @@
         ],
         "inputFields": [
             {
-                "name": "damFileId",
-                "kind": "String",
+                "name": "autoplay",
+                "kind": "Boolean",
                 "nullable": true
             },
             {
-                "name": "autoplay",
+                "name": "showControls",
                 "kind": "Boolean",
                 "nullable": true
             },
@@ -174,8 +244,31 @@
                 "nullable": true
             },
             {
-                "name": "showControls",
-                "kind": "Boolean",
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "damFileId",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "EmailLink",
+        "fields": [
+            {
+                "name": "email",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "email",
+                "kind": "String",
                 "nullable": true
             }
         ]
@@ -236,6 +329,11 @@
                             "nullable": false
                         },
                         {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
+                        },
+                        {
                             "name": "documentType",
                             "kind": "String",
                             "nullable": false
@@ -262,6 +360,11 @@
         "name": "Link",
         "fields": [
             {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
                 "name": "attachedBlocks",
                 "kind": "NestedObjectList",
                 "object": {
@@ -276,7 +379,9 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "internal": "InternalLink",
-                                "external": "ExternalLink"
+                                "external": "ExternalLink",
+                                "email": "EmailLink",
+                                "phone": "PhoneLink"
                             },
                             "nullable": false
                         }
@@ -304,7 +409,9 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "internal": "InternalLink",
-                                "external": "ExternalLink"
+                                "external": "ExternalLink",
+                                "email": "EmailLink",
+                                "phone": "PhoneLink"
                             },
                             "nullable": false
                         }
@@ -316,6 +423,11 @@
         "inputFields": [
             {
                 "name": "activeType",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "title",
                 "kind": "String",
                 "nullable": true
             }
@@ -347,6 +459,23 @@
                 "name": "visible",
                 "kind": "Boolean",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "PhoneLink",
+        "fields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "phone",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
@@ -961,22 +1090,8 @@
         ]
     },
     {
-        "name": "YouTubeVideo",
+        "name": "VimeoVideo",
         "fields": [
-            {
-                "name": "youtubeIdentifier",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
             {
                 "name": "autoplay",
                 "kind": "Boolean",
@@ -990,24 +1105,52 @@
             {
                 "name": "loop",
                 "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "vimeoIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ],
         "inputFields": [
             {
-                "name": "youtubeIdentifier",
-                "kind": "String",
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
                 "nullable": false
             },
             {
-                "name": "aspectRatio",
-                "kind": "Enum",
-                "enum": [
-                    "16X9",
-                    "4X3"
-                ],
-                "nullable": false
-            },
+                "name": "vimeoIdentifier",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "YouTubeVideo",
+        "fields": [
             {
                 "name": "autoplay",
                 "kind": "Boolean",
@@ -1021,6 +1164,45 @@
             {
                 "name": "loop",
                 "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "autoplay",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "showControls",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "loop",
+                "kind": "Boolean",
+                "nullable": true
+            },
+            {
+                "name": "previewImage",
+                "kind": "Block",
+                "block": "PixelImage",
+                "nullable": false
+            },
+            {
+                "name": "youtubeIdentifier",
+                "kind": "String",
                 "nullable": true
             }
         ]

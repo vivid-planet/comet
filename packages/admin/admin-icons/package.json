@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "6.2.1",
+    "version": "7.6.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -14,23 +14,29 @@
         "build:types": "tsc --project ./tsconfig.json --emitDeclarationOnly",
         "clean": "rimraf lib",
         "generate-icons": "ts-node generate-icons.ts",
-        "lint": "run-p lint:eslint lint:tsc",
+        "lint": "run-p lint:prettier lint:eslint lint:tsc",
         "lint:eslint": "eslint --max-warnings 0 src/ package.json",
+        "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --noEmit",
         "start": "$npm_execpath run generate-icons && run-p start:babel start:types",
         "start:babel": "npx babel ./src -x \".ts,.tsx\" -d lib -w",
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
+    "dependencies": {
+        "use-constant": "^1.0.0",
+        "uuid": "^9.0.0"
+    },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^6.2.1",
-        "@comet/eslint-config": "workspace:^6.2.1",
+        "@comet/admin-babel-preset": "workspace:^7.6.0",
+        "@comet/eslint-config": "workspace:^7.6.0",
         "@mui/material": "^5.0.0",
         "@types/cli-progress": "^3.8.0",
         "@types/node": "^18.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
+        "@types/uuid": "^10.0.0",
         "cli-progress": "^3.8.2",
         "eslint": "^8.0.0",
         "fast-xml-parser": "^4.2.5",

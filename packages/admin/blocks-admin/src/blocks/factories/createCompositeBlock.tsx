@@ -1,6 +1,6 @@
 import { StackPage, StackSwitch, StackSwitchApiContext, SubRoute, useSubRoutePrefix } from "@comet/admin";
 import { Divider } from "@mui/material";
-import * as React from "react";
+import { Fragment, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
@@ -17,7 +17,7 @@ import { isBlockInterface } from "../helpers/isBlockInterface";
 import { BlockCategory, BlockInputApi, BlockInterface, BlockOutputApi, BlockState, CustomBlockCategory } from "../types";
 
 interface BlockConfiguration {
-    title?: React.ReactNode;
+    title?: ReactNode;
     nested?: boolean;
     block: BlockInterface | BlockInterfaceWithOptions;
     hiddenInSubroute?: boolean;
@@ -27,7 +27,7 @@ interface BlockConfiguration {
 
 interface GroupConfiguration {
     blocks: Record<string, BlockConfiguration>;
-    title?: React.ReactNode;
+    title?: ReactNode;
     paper?: boolean;
 }
 
@@ -37,7 +37,7 @@ interface NormalizedBlockConfiguration extends BlockConfiguration {
 
 interface CreateCompositeBlockOptionsBase {
     name: string;
-    displayName: React.ReactNode;
+    displayName: ReactNode;
     /**
      * @deprecated Use override instead to adapt the factored block
      */
@@ -173,7 +173,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                 const sectionVariant = group.paper ? "dense" : "normal";
                 const showDivider = divider && (isInPaper || group.paper);
 
-                let children: React.ReactNode;
+                let children: ReactNode;
 
                 if (nested) {
                     children = (
@@ -205,7 +205,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     );
                 }
 
-                const Container = nested || hiddenInSubroute ? HiddenInSubroute : React.Fragment;
+                const Container = nested || hiddenInSubroute ? HiddenInSubroute : Fragment;
 
                 if (paper) {
                     return (
@@ -242,14 +242,14 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                             {Object.entries(groups).map(([groupKey, group]) => {
                                 const { title, paper, blocks } = group;
                                 const children = Object.keys(blocks).map((blockKey) => (
-                                    <React.Fragment key={blockKey}>{renderBlock(blockKey, group)}</React.Fragment>
+                                    <Fragment key={blockKey}>{renderBlock(blockKey, group)}</Fragment>
                                 ));
 
                                 const hiddenInSubroute = Object.values(blocks).every(
                                     (blockConfig) => blockConfig.hiddenInSubroute || blockConfig.nested,
                                 );
 
-                                const Container = hiddenInSubroute ? HiddenInSubroute : React.Fragment;
+                                const Container = hiddenInSubroute ? HiddenInSubroute : Fragment;
 
                                 if (paper) {
                                     const definesOwnPadding = Object.values(blocks).every((blockConfig) => {
@@ -287,6 +287,22 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
                     ]}
                 </StackSwitch>
             );
+        },
+        resolveDependencyPath: (state, jsonPath) => {
+            const key = jsonPath.split(".")[0];
+
+            const route = [];
+
+            const childPath = block.resolveDependencyPath(state, jsonPath);
+            if (blockConfigNormalized[key].nested) {
+                route.push(key, key);
+            } else if (childPath.length > 0) {
+                route.push(key);
+            }
+
+            route.push(childPath);
+
+            return route.join("/");
         },
     };
     // allows to "fine-tune" the block with the product of the factory as argument

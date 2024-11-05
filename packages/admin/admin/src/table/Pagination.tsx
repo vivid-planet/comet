@@ -1,8 +1,6 @@
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import { ChevronLeft, ChevronRight } from "@comet/admin-icons";
 import { Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
-import * as React from "react";
 import { FormattedMessage, FormattedNumber } from "react-intl";
 
 import { IPagingInfo } from "./paging/IPagingInfo";
@@ -16,7 +14,7 @@ interface IProps {
 /**
  * @deprecated Use MUI X Data Grid in combination with `useDataGridRemote` instead.
  */
-export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, pagingInfo, rowName }) => {
+export const TablePagination = ({ totalCount, pagingInfo, rowName }: IProps) => {
     if (typeof rowName === "function") {
         rowName = rowName(totalCount);
     }
@@ -45,10 +43,10 @@ export const TablePagination: React.FunctionComponent<IProps> = ({ totalCount, p
                             )}
                             <Grid item>
                                 <IconButton disabled={!pagingInfo.fetchPreviousPage} onClick={() => pagingInfo.fetchPreviousPage!()} size="large">
-                                    <KeyboardArrowLeft />
+                                    <ChevronLeft />
                                 </IconButton>
                                 <IconButton disabled={!pagingInfo.fetchNextPage} onClick={() => pagingInfo.fetchNextPage!()} size="large">
-                                    <KeyboardArrowRight />
+                                    <ChevronRight />
                                 </IconButton>
                             </Grid>
                         </Grid>

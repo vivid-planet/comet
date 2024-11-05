@@ -1,4 +1,6 @@
-import { GridColDef, GridFilterModel } from "@mui/x-data-grid";
+import { GridFilterModel } from "@mui/x-data-grid";
+
+import { GridColDef } from "./GridColDef";
 
 const muiGridOperatorValueToGqlOperator: { [key: string]: string } = {
     contains: "contains",
@@ -44,7 +46,7 @@ type GqlFilter = {
     or?: GqlFilter[] | null;
 };
 
-function convertValueByType(value: string, type?: string) {
+function convertValueByType(value: any, type?: string) {
     if (type === "number") {
         return parseFloat(value);
     } else if (type === "boolean") {
@@ -59,21 +61,20 @@ function convertValueByType(value: string, type?: string) {
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items
-        .filter((value) => value.value !== undefined)
-        .map((value) => {
-            if (!value.operatorValue) throw new Error("operaturValue not set");
-            const gqlOperator = muiGridOperatorValueToGqlOperator[value.operatorValue];
-            if (!gqlOperator) throw new Error(`unknown operator ${value.operatorValue}`);
-            const column = columns.find((i) => i.field == value.columnField);
-            const convertedValue = convertValueByType(value.value, column?.type);
+        .filter((filterItem) => filterItem.value !== undefined)
+        .map((filterItem) => {
+            if (!filterItem.operatorValue) throw new Error("operaturValue not set");
+            const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operatorValue] || filterItem.operatorValue;
+            const column = columns.find((i) => i.field == filterItem.columnField);
+            const convertedValue = convertValueByType(filterItem.value, column?.type);
             return {
-                [value.columnField]: {
+                [filterItem.columnField]: {
                     [gqlOperator]: convertedValue,
                 } as GqlStringFilter | GqlNumberFilter,
             };
         });
     const filter: GqlFilter = {};
-    const op: "and" | "or" = filterModel.linkOperator ?? "or";
+    const op: "and" | "or" = filterModel.linkOperator ?? "and";
     filter[op] = filterItems;
 
     let search: undefined | string = undefined;

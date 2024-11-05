@@ -3,14 +3,14 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    DataGridToolbar,
+    GridColDef,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
     ToolbarActions,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -21,7 +21,7 @@ import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColDef, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -40,15 +40,15 @@ import {
 const newsFragment = gql`
     fragment NewsList on News {
         id
-        updatedAt
         slug
         title
+        status
         date
         category
-        visible
         image
         content
         createdAt
+        updatedAt
     }
 `;
 
@@ -80,8 +80,7 @@ const createNewsMutation = gql`
 
 function NewsGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -94,7 +93,7 @@ function NewsGridToolbar() {
                     <FormattedMessage id="news.newNews" defaultMessage="New News" />
                 </Button>
             </ToolbarActions>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -105,15 +104,18 @@ export function NewsGrid(): React.ReactElement {
     const { scope } = useContentScope();
 
     const columns: GridColDef<GQLNewsListFragment>[] = [
-        {
-            field: "updatedAt",
-            headerName: intl.formatMessage({ id: "news.updatedAt", defaultMessage: "Updated At" }),
-            type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
-            width: 150,
-        },
         { field: "slug", headerName: intl.formatMessage({ id: "news.slug", defaultMessage: "Slug" }), width: 150 },
         { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), width: 150 },
+        {
+            field: "status",
+            headerName: intl.formatMessage({ id: "news.status", defaultMessage: "Status" }),
+            type: "singleSelect",
+            valueOptions: [
+                { value: "Active", label: intl.formatMessage({ id: "news.status.active", defaultMessage: "Active" }) },
+                { value: "Deleted", label: intl.formatMessage({ id: "news.status.deleted", defaultMessage: "Deleted" }) },
+            ],
+            width: 150,
+        },
         {
             field: "date",
             headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
@@ -132,7 +134,6 @@ export function NewsGrid(): React.ReactElement {
             ],
             width: 150,
         },
-        { field: "visible", headerName: intl.formatMessage({ id: "news.visible", defaultMessage: "Visible" }), type: "boolean", width: 150 },
         {
             field: "image",
             headerName: intl.formatMessage({ id: "news.image", defaultMessage: "Image" }),
@@ -161,6 +162,13 @@ export function NewsGrid(): React.ReactElement {
             width: 150,
         },
         {
+            field: "updatedAt",
+            headerName: intl.formatMessage({ id: "news.updatedAt", defaultMessage: "Updated At" }),
+            type: "dateTime",
+            valueGetter: ({ value }) => value && new Date(value),
+            width: 150,
+        },
+        {
             field: "actions",
             headerName: "",
             sortable: false,
@@ -178,6 +186,7 @@ export function NewsGrid(): React.ReactElement {
                                 return {
                                     slug: row.slug,
                                     title: row.title,
+                                    status: row.status,
                                     date: row.date,
                                     category: row.category,
                                     image: DamImageBlock.state2Output(DamImageBlock.input2State(row.image)),
@@ -221,7 +230,7 @@ export function NewsGrid(): React.ReactElement {
     const rows = data?.newsList.nodes ?? [];
 
     return (
-        <MainContent fullHeight disablePadding>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableSelectionOnClick

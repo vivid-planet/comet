@@ -21,7 +21,7 @@ import {
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
-import { PixelImageBlock } from "./PixelImageBlock";
+import { PixelImageBlock } from "../dam/blocks/pixel-image.block";
 
 export enum SitemapPagePriority {
     _0_0 = "0_0",

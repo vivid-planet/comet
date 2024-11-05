@@ -1,0 +1,6 @@
+.next/
+block-meta.json
+lang-compiled/
+lang/
+preBuild/
+dist/

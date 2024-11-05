@@ -1,4 +1,4 @@
-import * as React from "react";
+import { ComponentType, ReactElement, ReactNode } from "react";
 import { FormattedMessage, MessageDescriptor } from "react-intl";
 
 export type SetStateFn<S> = (prevState: S) => S;
@@ -25,15 +25,15 @@ export interface BlockAdminComponentProps<S = any> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type BlockAdminComponent<S = any> = React.ComponentType<BlockAdminComponentProps<S>>;
-export type BindBlockAdminComponent<T extends BlockAdminComponent> = T extends React.ComponentType<infer BlockAdminComponentProps>
-    ? React.ComponentType<Partial<BlockAdminComponentProps>>
+export type BlockAdminComponent<S = any> = ComponentType<BlockAdminComponentProps<S>>;
+export type BindBlockAdminComponent<T extends BlockAdminComponent> = T extends ComponentType<infer BlockAdminComponentProps>
+    ? ComponentType<Partial<BlockAdminComponentProps>>
     : never;
 
 export interface AdminComponentPart {
     key: string;
-    label: React.ReactNode;
-    content: React.ReactNode;
+    label: ReactNode;
+    content: ReactNode;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,7 +50,7 @@ export function isPreviewContentTextRule(content: PreviewContent): content is Pr
     return content.type === "text";
 }
 
-export type PreviewContentText = { type: "text"; content: React.ReactNode };
+export type PreviewContentText = { type: "text"; content: ReactNode };
 
 export function isPreviewContentImageRule(content: PreviewContent): content is PreviewContentImage {
     return content.type === "image";
@@ -80,10 +80,11 @@ export interface BlockMethods<
     isValid: (state: State) => Promise<boolean> | boolean;
     childBlockCount?: (state: State) => number;
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
-    dynamicDisplayName?: (state: State) => React.ReactNode;
+    dynamicDisplayName?: (state: State) => ReactNode;
     anchors?: (state: State) => string[];
     dependencies?: (state: State) => BlockDependency[];
     replaceDependenciesInOutput: (output: OutputApi, replacements: ReplaceDependencyObject[]) => OutputApi;
+    resolveDependencyPath: (state: State, jsonPath: string) => string;
 }
 
 export interface AnonymousBlockInterface<
@@ -110,7 +111,7 @@ export interface BlockInterface<
     PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface,
 > extends AnonymousBlockInterface<InputApi, State, OutputApi, PreviewState> {
     name: string;
-    displayName: React.ReactNode;
+    displayName: ReactNode;
     category: BlockCategory | CustomBlockCategory;
 }
 
@@ -151,7 +152,7 @@ export enum BlockCategory {
     Other = "Other",
 }
 
-export type CustomBlockCategory = { id: string; label: string | React.ReactElement<MessageDescriptor>; insertBefore?: BlockCategory };
+export type CustomBlockCategory = { id: string; label: string | ReactElement<MessageDescriptor>; insertBefore?: BlockCategory };
 
 export const blockCategoryLabels = {
     [BlockCategory.TextAndContent]: <FormattedMessage id="comet.blocks.category.textAndContent" defaultMessage="Text & Content" />,

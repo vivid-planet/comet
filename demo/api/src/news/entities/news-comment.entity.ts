@@ -1,4 +1,4 @@
-import { DocumentInterface, ScopedEntity } from "@comet/cms-api";
+import { ScopedEntity } from "@comet/cms-api";
 import { BaseEntity, Entity, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
@@ -6,9 +6,7 @@ import { v4 as uuid } from "uuid";
 import { News } from "./news.entity";
 
 @Entity()
-@ObjectType({
-    implements: () => [DocumentInterface],
-})
+@ObjectType()
 @ScopedEntity(async (newsComment: NewsComment) => {
     const scope = (await newsComment.news.init()).scope;
     return {
@@ -16,7 +14,7 @@ import { News } from "./news.entity";
         language: scope.language,
     };
 })
-export class NewsComment extends BaseEntity<NewsComment, "id"> implements DocumentInterface {
+export class NewsComment extends BaseEntity<NewsComment, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

@@ -7,6 +7,7 @@ type BlockMetaField =
           name: string;
           kind: "String" | "Number" | "Boolean" | "Json";
           nullable: boolean;
+          array?: boolean;
       }
     | {
           name: string;
@@ -48,12 +49,28 @@ let content = "";
 function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
     if (field.kind === "String") {
         content += "string";
+
+        if (field.array) {
+            content += "[]";
+        }
     } else if (field.kind === "Number") {
         content += "number";
+
+        if (field.array) {
+            content += "[]";
+        }
     } else if (field.kind === "Boolean") {
         content += "boolean";
+
+        if (field.array) {
+            content += "[]";
+        }
     } else if (field.kind === "Json") {
         content += "unknown";
+
+        if (field.array) {
+            content += "[]";
+        }
     } else if (field.kind === "Enum") {
         content += `"${field.enum.join('" | "')}"`;
     } else if (field.kind === "Block") {
@@ -91,11 +108,19 @@ function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
     }
 }
 
+type Options = {
+    inputs: boolean;
+    inputFile: string;
+    outputFile: string;
+};
+
 const generateBlockTypes = new Command("generate-block-types")
     .description("generate block types from block meta")
     .option("--inputs", "include block inputs")
-    .action(async (options) => {
-        const blockMeta = await readFile("block-meta.json").then((fileContents) => JSON.parse(fileContents.toString()) as BlockMeta[]);
+    .option("--input-file <inputFile>", "file to read block meta from", "block-meta.json")
+    .option("--output-file <outputFile>", "file to write block types to", "./src/blocks.generated.ts")
+    .action(async (options: Options) => {
+        const blockMeta = await readFile(options.inputFile).then((fileContents) => JSON.parse(fileContents.toString()) as BlockMeta[]);
 
         const sortedBlockMeta = blockMeta.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -128,7 +153,7 @@ const generateBlockTypes = new Command("generate-block-types")
         const prettierOptions = await resolveConfig(process.cwd());
         content = format(content, { ...prettierOptions, parser: "typescript" });
 
-        await writeFile(`./src/blocks.generated.ts`, content);
+        await writeFile(options.outputFile, content);
     });
 
 export { generateBlockTypes };

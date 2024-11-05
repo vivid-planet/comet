@@ -6,24 +6,26 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import * as React from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { writeClipboardText } from "../../clipboard/writeClipboardText";
 import { messages } from "../../messages";
 
-export type ErrorType = "network" | "graphql" | "unknown";
+export type ErrorType = "network" | "graphql" | "unauthorized" | "unauthenticated" | "unknown";
 
-const errorTypeLabels: Record<ErrorType, React.ReactNode> = {
+const errorTypeLabels: Record<ErrorType, ReactNode> = {
     graphql: <FormattedMessage id="comet.errorDialog.details.errorType.graphql" defaultMessage="Server error" />,
     network: <FormattedMessage id="comet.errorDialog.details.errorType.network" defaultMessage="Network error" />,
+    unauthorized: <FormattedMessage id="comet.errorDialog.details.errorType.unauthorized" defaultMessage="Not authorized" />,
+    unauthenticated: <FormattedMessage id="comet.errorDialog.details.errorType.unauthenticated" defaultMessage="Unauthenticated" />,
     unknown: <FormattedMessage id="comet.errorDialog.details.errorType.unknown" defaultMessage="Unknown error" />,
 };
 
 export interface ErrorDialogOptions {
     error: string | string[];
-    title?: React.ReactNode;
-    userMessage?: React.ReactNode;
+    title?: ReactNode;
+    userMessage?: ReactNode;
     additionalInformation?: {
         errorType: ErrorType;
         httpStatus?: string;
@@ -42,7 +44,7 @@ export interface ErrorDialogProps {
     errorOptions?: ErrorDialogOptions;
 }
 
-export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = false, onCloseClicked, errorOptions }) => {
+export const ErrorDialog = ({ show = false, onCloseClicked, errorOptions }: ErrorDialogProps) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -50,18 +52,27 @@ export const ErrorDialog: React.FunctionComponent<ErrorDialogProps> = ({ show = 
         return null;
     }
 
-    // Destructuring and default values
-    const {
-        error,
-        title = <FormattedMessage id="comet.errorDialog.title" defaultMessage="Error" />,
-        userMessage,
-        additionalInformation,
-    } = errorOptions;
+    const { error, additionalInformation } = errorOptions;
+    let { title, userMessage } = errorOptions;
+    const errorType = additionalInformation?.errorType ?? "unknown";
 
+    if (!title) {
+        title = errorTypeLabels[errorType];
+    }
+
+    if (!userMessage) {
+        if (errorType === "unauthenticated") {
+            userMessage = <UnauthenticatedUserMessage />;
+        } else if (errorType === "unauthorized") {
+            userMessage = <UnauthorizedUserMessage error={error} />;
+        } else {
+            userMessage = <DefaultUserMessage error={error} additionalInformation={additionalInformation} />;
+        }
+    }
     return (
         <Dialog open={show} onClose={onCloseClicked} fullScreen={fullScreen} maxWidth="md">
             <DialogTitle>{title}</DialogTitle>
-            <DialogContent>{userMessage ?? <DefaultUserMessage error={error} additionalInformation={additionalInformation} />}</DialogContent>
+            <DialogContent>{userMessage}</DialogContent>
             <DialogActions>
                 <Button onClick={onCloseClicked} color="primary" variant="contained">
                     <FormattedMessage {...messages.ok} />
@@ -98,11 +109,13 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
                     values={{ errorCount: error.length }}
                 />
             </Typography>
-            <ErrorList>
+            <Typography variant="list">
                 {error.map((error) => (
-                    <ErrorListItem key={error}>{error}</ErrorListItem>
+                    <Typography variant="listItem" key={error}>
+                        {error}
+                    </Typography>
                 ))}
-            </ErrorList>
+            </Typography>
             <Typography gutterBottom>
                 <FormattedMessage
                     id="comet.errorDialog.copyToClipboardInstruction"
@@ -139,6 +152,38 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
     );
 }
 
+function UnauthenticatedUserMessage(): JSX.Element {
+    return (
+        <>
+            <Typography gutterBottom>
+                <FormattedMessage id="comet.errorDialog.sessionExpired.message" defaultMessage="Your login-session has expired." />
+            </Typography>
+            <Button href="/" color="info" variant="outlined">
+                <FormattedMessage id="comet.errorDialog.sessionExpired.button" defaultMessage="Re-login" />
+            </Button>
+        </>
+    );
+}
+
+function UnauthorizedUserMessage({ error }: Pick<ErrorDialogOptions, "error">): JSX.Element {
+    if (!Array.isArray(error)) {
+        error = [error];
+    }
+
+    return (
+        <>
+            <Typography gutterBottom>
+                <FormattedMessage id="comet.errorDialog.unauthorized.message" defaultMessage="You are not authorized to perform this action." />
+            </Typography>
+            <ErrorList>
+                {error.map((error) => (
+                    <ErrorListItem key={error}>{error}</ErrorListItem>
+                ))}
+            </ErrorList>
+        </>
+    );
+}
+
 const ErrorList = styled(List)`
     list-style-type: disc;
     padding-inline-start: ${({ theme }) => theme.spacing(6)};
@@ -154,10 +199,10 @@ type CopyToClipboardButtonProps = {
 };
 
 function CopyToClipboardButton({ copyData }: CopyToClipboardButtonProps): JSX.Element {
-    const [showSuccess, setShowSuccess] = React.useState<boolean>(false);
-    const timeoutID = React.useRef<number>();
+    const [showSuccess, setShowSuccess] = useState<boolean>(false);
+    const timeoutID = useRef<number>();
 
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             if (timeoutID.current) {
                 window.clearTimeout(timeoutID.current);

@@ -1,10 +1,12 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, Logger, NestInterceptor, Optional } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
+import { getClientIp } from "request-ip";
 
 import { CurrentUser } from "../user-permissions/dto/current-user";
-import { SHOULD_LOG_REQUEST } from "./access-log.constants";
-import { ShouldLogRequest } from "./access-log.module";
+import { User } from "../user-permissions/interfaces/user";
+import { ACCESS_LOG_CONFIG } from "./access-log.constants";
+import { AccessLogConfig } from "./access-log.module";
 
 const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", "/dam/images/preview/:fileId", "/dam/files/preview/:fileId"];
 
@@ -12,7 +14,7 @@ const IGNORED_PATHS = ["/dam/images/:hash/:fileId", "/dam/files/:hash/:fileId", 
 export class AccessLogInterceptor implements NestInterceptor {
     protected readonly logger = new Logger(AccessLogInterceptor.name);
 
-    constructor(@Optional() @Inject(SHOULD_LOG_REQUEST) private readonly shouldLogRequest?: ShouldLogRequest) {}
+    constructor(@Optional() @Inject(ACCESS_LOG_CONFIG) private readonly config?: AccessLogConfig) {}
 
     intercept(context: ExecutionContext, next: CallHandler) {
         const requestType = context.getType().toString();
@@ -23,10 +25,16 @@ export class AccessLogInterceptor implements NestInterceptor {
         if (requestType === "graphql") {
             const graphqlExecutionContext = GqlExecutionContext.create(context);
             const graphqlContext = graphqlExecutionContext.getContext();
+            const gqlInfo = graphqlExecutionContext.getInfo<GraphQLResolveInfo>();
+
+            if (this.isResolvingGraphQLField(gqlInfo)) {
+                return next.handle();
+            }
 
             if (
-                this.shouldLogRequest &&
-                !this.shouldLogRequest({
+                this.config &&
+                this.config.shouldLogRequest &&
+                !this.config.shouldLogRequest({
                     user: graphqlContext.req.user,
                     req: graphqlContext.req,
                 })
@@ -34,11 +42,11 @@ export class AccessLogInterceptor implements NestInterceptor {
                 ignored = true;
             }
 
-            requestData.push(`ip: ${graphqlContext.req.ip}`);
+            const ipAddress = getClientIp(graphqlContext.req);
+            requestData.push(`ip: ${ipAddress}`);
             this.pushUserToRequestData(graphqlContext.req.user, requestData);
 
             const gqlArgs = { ...graphqlExecutionContext.getArgs() };
-            const gqlInfo = graphqlExecutionContext.getInfo<GraphQLResolveInfo>();
 
             if (gqlInfo.operation.operation === "mutation") {
                 delete gqlArgs["input"];
@@ -55,8 +63,9 @@ export class AccessLogInterceptor implements NestInterceptor {
 
             if (
                 IGNORED_PATHS.some((ignoredPath) => httpRequest.route.path.includes(ignoredPath)) ||
-                (this.shouldLogRequest &&
-                    !this.shouldLogRequest({
+                (this.config &&
+                    this.config.shouldLogRequest &&
+                    !this.config.shouldLogRequest({
                         user: httpRequest.user,
                         req: httpRequest,
                     }))
@@ -64,7 +73,8 @@ export class AccessLogInterceptor implements NestInterceptor {
                 ignored = true;
             }
 
-            requestData.push(`ip: ${httpRequest.ip}`);
+            const ipAddress = getClientIp(httpRequest);
+            requestData.push(`ip: ${ipAddress}`);
             this.pushUserToRequestData(httpRequest.user, requestData);
 
             requestData.push(
@@ -79,9 +89,24 @@ export class AccessLogInterceptor implements NestInterceptor {
         return next.handle();
     }
 
-    private pushUserToRequestData(user: CurrentUser, requestData: string[]) {
-        if (user) {
-            requestData.push(`user: ${user.id} (${user.name})`);
+    private pushUserToRequestData(currentUser: CurrentUser, requestData: string[]) {
+        if (currentUser) {
+            const user = currentUser.authenticatedUser ? currentUser.authenticatedUser : currentUser;
+            const impersonatedUser = currentUser.authenticatedUser ? currentUser : undefined;
+            const userToLog =
+                this.config && this.config.userToLog
+                    ? this.config.userToLog
+                    : (user: User, impersonatedUser?: User) => {
+                          let log = `user: ${user.id}`;
+                          if (impersonatedUser) log += ` (impersonating: ${impersonatedUser.id})`;
+                          return log;
+                      };
+            requestData.push(userToLog(user, impersonatedUser));
         }
+    }
+
+    private isResolvingGraphQLField(gqlInfo: GraphQLResolveInfo): boolean {
+        const parentType = gqlInfo.parentType.name;
+        return parentType !== "Query" && parentType !== "Mutation";
     }
 }

@@ -1,4 +1,4 @@
-import { BlobStorageBackendService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
+import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -9,7 +9,7 @@ import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generat
 import { Link } from "@src/links/entities/link.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
-import { PageContentBlock } from "@src/pages/blocks/PageContentBlock";
+import { PageContentBlock } from "@src/pages/blocks/page-content.block";
 import { PageInput } from "@src/pages/dto/page.input";
 import { Page } from "@src/pages/entities/page.entity";
 import { UserGroup } from "@src/user-groups/user-group";
@@ -17,9 +17,10 @@ import faker from "faker";
 import { Command, Console } from "nestjs-console";
 import slugify from "slugify";
 
+import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { generateLinks } from "./generators/links.generator";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
-import { PublicUploadsFixtureService } from "./generators/public-uploads-fixture.service";
+import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 
 export interface PageTreeNodesFixtures {
     home?: PageTreeNodeInterface;
@@ -48,7 +49,9 @@ export class FixturesConsole {
         @InjectRepository(Page) private readonly pagesRepository: EntityRepository<Page>,
         @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
-        private readonly publicUploadsFixtureService: PublicUploadsFixtureService,
+        private readonly fileUploadsFixtureService: FileUploadsFixtureService,
+        private readonly redirectsFixtureService: RedirectsFixtureService,
+        private readonly dependenciesService: DependenciesService,
     ) {}
 
     @Command({
@@ -109,6 +112,7 @@ export class FixturesConsole {
 
         node = await this.pageTreeService.createNode(
             {
+                id: "aaa585d3-eca1-47c9-8852-9370817b49ac",
                 name: "Sub",
                 slug: "sub",
                 parentId: node.id,
@@ -275,7 +279,11 @@ export class FixturesConsole {
             console.log(`Generated ${pagesCount} lorem ipsum pages for ${domain}`);
         }
 
-        await this.publicUploadsFixtureService.generatePublicUploads();
+        await this.fileUploadsFixtureService.generateFileUploads();
+
+        await this.redirectsFixtureService.generateRedirects();
+
+        await this.dependenciesService.createViews();
 
         await this.orm.em.flush();
     }

@@ -1,47 +1,40 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import {
     FinalForm,
+    FinalFormSaveButton,
     Loading,
     LocalErrorScopeApolloContext,
     MainContent,
-    messages,
     RouterTab,
     RouterTabs,
-    SaveButton,
-    SplitButton,
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
-    useStackApi,
 } from "@comet/admin";
 import { Card, CardContent, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { FORM_ERROR } from "final-form";
 import isEqual from "lodash.isequal";
-import * as React from "react";
+import { ReactNode, useCallback } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
 import ReactSplit from "react-split";
 
 import { useContentScope } from "../../contentScope/Provider";
+import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
+import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
 import { useDamConfig } from "../config/useDamConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
-import { damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
-import {
-    GQLDamFileDetailFragment,
-    GQLDamFileDetailQuery,
-    GQLDamFileDetailQueryVariables,
-    GQLUpdateFileMutation,
-    GQLUpdateFileMutationVariables,
-} from "./EditFile.gql.generated";
+import { damFileDependentsQuery, damFileDetailQuery, updateDamFileMutation } from "./EditFile.gql";
+import { GQLDamFileDetailFragment, GQLDamFileDetailQuery, GQLDamFileDetailQueryVariables } from "./EditFile.gql.generated";
 import { FilePreview } from "./FilePreview";
-import { FileSettingsFields, LicenseType } from "./FileSettingsFields";
+import { FileSettingsFields } from "./FileSettingsFields";
 import { ImageInfos } from "./ImageInfos";
+import { LicenseType } from "./licenseType";
 
 export interface EditImageFormValues {
     focalPoint: GQLFocalPoint;
@@ -65,6 +58,7 @@ export interface EditFileFormValues extends EditImageFormValues {
 
 interface EditFormProps {
     id: string;
+    contentScopeIndicator?: ReactNode;
 }
 
 const useInitialValues = (id: string) => {
@@ -76,7 +70,7 @@ const useInitialValues = (id: string) => {
     return { loading, data, error };
 };
 
-const EditFile = ({ id }: EditFormProps): React.ReactElement => {
+const EditFile = ({ id, contentScopeIndicator }: EditFormProps) => {
     const { match: scopeMatch } = useContentScope();
     const initialValues = useInitialValues(id);
     const file = initialValues.data?.damFile;
@@ -105,7 +99,7 @@ const EditFile = ({ id }: EditFormProps): React.ReactElement => {
         );
     }
 
-    return <EditFileInner file={file} id={id} />;
+    return <EditFileInner file={file} id={id} contentScopeIndicator={contentScopeIndicator} />;
 };
 
 export type DamFileDetails = GQLDamFileDetailFragment;
@@ -113,19 +107,17 @@ export type DamFileDetails = GQLDamFileDetailFragment;
 interface EditFileInnerProps {
     file: DamFileDetails;
     id: string;
+    contentScopeIndicator?: ReactNode;
 }
 
-const EditFileInner = ({ file, id }: EditFileInnerProps) => {
+const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) => {
+    const dependencyMap = useDependenciesConfig();
     const intl = useIntl();
-    const stackApi = useStackApi();
     const damConfig = useDamConfig();
+    const apolloClient = useApolloClient();
 
-    const [updateDamFile, { loading: saving, error: hasSaveErrors }] = useMutation<GQLUpdateFileMutation, GQLUpdateFileMutationVariables>(
-        updateDamFileMutation,
-    );
-
-    const onSubmit = React.useCallback(
-        (values: EditFileFormValues) => {
+    const onSubmit = useCallback(
+        async (values: EditFileFormValues) => {
             let cropArea: GQLImageCropAreaInput;
 
             if (values.focalPoint === "SMART") {
@@ -146,7 +138,8 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                 };
             }
 
-            return updateDamFile({
+            await apolloClient.mutate({
+                mutation: updateDamFileMutation,
                 variables: {
                     id,
                     input: {
@@ -157,11 +150,12 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                             cropArea,
                         },
                         license: values.license?.type === "NO_LICENSE" ? null : { ...values.license, type: values.license?.type },
+                        folderId: file.folder?.id ?? null,
                     },
                 },
             });
         },
-        [id, updateDamFile],
+        [apolloClient, file.folder?.id, id],
     );
 
     const initialBlockListWidth = 100 / 3;
@@ -192,9 +186,9 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
             }}
             initialValuesEqual={(prevValues, newValues) => isEqual(prevValues, newValues)}
         >
-            {({ pristine, hasValidationErrors, submitting, handleSubmit }) => (
+            {() => (
                 <>
-                    <Toolbar>
+                    <Toolbar scopeIndicator={contentScopeIndicator}>
                         <ToolbarBackButton />
                         <ToolbarTitleItem>{file.name}</ToolbarTitleItem>
                         {damConfig.enableLicenseFeature &&
@@ -210,35 +204,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                             )}
                         <ToolbarFillSpace />
                         <ToolbarActions>
-                            <SplitButton disabled={pristine || hasValidationErrors || submitting} localStorageKey="editFileSave">
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={saving}
-                                    hasErrors={hasSaveErrors != null}
-                                    type="button"
-                                    onClick={async () => {
-                                        await handleSubmit();
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.save} />
-                                </SaveButton>
-                                <SaveButton
-                                    color="primary"
-                                    variant="contained"
-                                    saving={saving}
-                                    hasErrors={hasSaveErrors != null}
-                                    onClick={async () => {
-                                        const submitResult = await handleSubmit();
-                                        const error = submitResult?.[FORM_ERROR];
-                                        if (!error) {
-                                            stackApi?.goBack();
-                                        }
-                                    }}
-                                >
-                                    <FormattedMessage {...messages.saveAndGoBack} />
-                                </SaveButton>
-                            </SplitButton>
+                            <FinalFormSaveButton />
                         </ToolbarActions>
                     </Toolbar>
                     <MainContent>
@@ -252,7 +218,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                     label={intl.formatMessage({ id: "comet.dam.file.settings", defaultMessage: "Settings" })}
                                     path=""
                                 >
-                                    <FileSettingsFields isImage={!!file.image} folderId={file.folder?.id || null} />
+                                    <FileSettingsFields file={file} />
                                 </RouterTab>
                                 {file.image !== null && (
                                     <RouterTab
@@ -278,14 +244,20 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {/*<RouterTab*/}
-                                {/*    key="dependencies"*/}
-                                {/*    label={intl.formatMessage({ id: "comet.dam.file.dependencies", defaultMessage: "Dependencies" })}*/}
-                                {/*    path="/dependencies"*/}
-                                {/*>*/}
-                                {/*    /!*@TODO: Add Dependencies*!/*/}
-                                {/*    <div />*/}
-                                {/*</RouterTab>*/}
+                                {Object.keys(dependencyMap).length > 0 && (
+                                    <RouterTab
+                                        key="dependents"
+                                        label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
+                                        path="/dependents"
+                                    >
+                                        <DependencyList
+                                            query={damFileDependentsQuery}
+                                            variables={{
+                                                id: id,
+                                            }}
+                                        />
+                                    </RouterTab>
+                                )}
                             </RouterTabs>
                         </ReactSplit>
                     </MainContent>
@@ -304,7 +276,7 @@ const StickyWrapper = styled("div")`
     top: 140px;
 `;
 
-const StickyScrollWrapper = ({ children }: { children: React.ReactNode }): React.ReactElement => {
+const StickyScrollWrapper = ({ children }: { children: ReactNode }) => {
     return (
         <div>
             <FullHeightWrapper>

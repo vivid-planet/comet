@@ -1,5 +1,104 @@
 # @comet/admin-icons
 
+## 7.6.0
+
+## 7.5.0
+
+## 7.4.2
+
+## 7.4.1
+
+## 7.4.0
+
+## 7.3.2
+
+## 7.3.1
+
+## 7.3.0
+
+### Minor Changes
+
+-   5364ecb37: Add new "DragIndicator" icon
+-   2ab7b688e: Add `Api` icon
+
+### Patch Changes
+
+-   a1f4c0dec: Replace `YouTube` and `Vimeo` icon with correctly colored versions
+
+## 7.2.1
+
+## 7.2.0
+
+## 7.1.0
+
+### Minor Changes
+
+-   b1bbd6a0c: Export a type for all icon names: `IconName`
+
+## 7.0.0
+
+## 7.0.0-beta.6
+
+## 7.0.0-beta.5
+
+## 7.0.0-beta.4
+
+## 7.0.0-beta.3
+
+## 7.0.0-beta.2
+
+## 7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+## 6.17.1
+
+## 6.17.0
+
+## 6.16.0
+
+## 6.15.1
+
+## 6.15.0
+
+### Minor Changes
+
+-   406027806: Add `RteUppercase` icon
+
+## 6.14.1
+
+## 6.14.0
+
+### Minor Changes
+
+-   efccc42a3: Add `YouTube` and `Vimeo` icons
+
+## 6.13.0
+
+## 6.12.0
+
+## 6.11.0
+
+## 6.10.0
+
+## 6.9.0
+
+## 6.8.0
+
+## 6.7.0
+
+## 6.6.2
+
+## 6.6.1
+
+## 6.6.0
+
+## 6.5.0
+
+## 6.4.0
+
+## 6.3.0
+
 ## 6.2.1
 
 ## 6.2.0

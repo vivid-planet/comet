@@ -12,6 +12,7 @@ export const damFileTableFragment = gql`
         mimetype
         contentHash
         license {
+            type
             durationFrom
             durationTo
             expirationDate
@@ -31,6 +32,7 @@ export const damFileTableFragment = gql`
             ...DamFileThumbnail
         }
         updatedAt
+        createdAt
         importSourceType
     }
     ${damFileThumbnailFragment}
@@ -49,6 +51,7 @@ export const damFolderTableFragment = gql`
         numberOfChildFolders
         isInboxFromOtherScope
         updatedAt
+        createdAt
     }
 `;
 
