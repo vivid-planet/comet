@@ -51,7 +51,7 @@ export class NewsResolver {
         @Info() info: GraphQLResolveInfo,
     ): Promise<PaginatedNews> {
         const where = gqlArgsToMikroOrmQuery({ search, filter }, this.repository);
-        //where.status = { $in: status };
+        where.status = { $in: status };
         where.scope = scope;
 
         const fields = extractGraphqlFields(info, { root: "nodes" });
@@ -70,7 +70,7 @@ export class NewsResolver {
                 };
             });
         }
-        console.log(where);
+
         const [entities, totalCount] = await this.repository.findAndCount(where, options);
         return new PaginatedNews(entities, totalCount);
     }
