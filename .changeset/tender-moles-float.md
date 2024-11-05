@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-Render MenuItem only when at least on SubmenuItem is allowed
+Master Menu: render collapsible or grouped menu items only when at least one item of the submenu is allowed.
