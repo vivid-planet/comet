@@ -24,7 +24,7 @@ export class WarningCheckerConsole {
     })
     @CreateRequestContext()
     async execute(): Promise<void> {
-        // TODO: Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
+        // TODO: (in the next PRs) Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
 
         for (const rootBlockEntity of this.discoverService.discoverRootBlocks()) {
             const { metadata, column, block } = rootBlockEntity;
@@ -45,7 +45,7 @@ export class WarningCheckerConsole {
                     const warnings = node.block.warnings();
 
                     if (warnings.length > 0) {
-                        // TODO: auto resolve warnings
+                        // TODO: (in the next PRs) auto resolve warnings
 
                         for (const warning of warnings) {
                             const type = "Block";
