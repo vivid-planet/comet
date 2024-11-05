@@ -9,7 +9,6 @@ import hasha from "hasha";
 import { Command, Console } from "nestjs-console";
 
 import { Warning } from "./entities/warning.entity";
-import { WarningSeverity } from "./entities/warning-severity.enum";
 
 @Injectable()
 @Console()
@@ -62,14 +61,14 @@ export class WarningCheckerConsole {
                                 warningEntity.assign({
                                     type,
                                     message: warning.message,
-                                    severity: warning.severity as WarningSeverity, // TODO: remove as WarningSeverity, as soon as WarningSeverity type is in the package
+                                    severity: warning.severity,
                                     uniqueIdentifier: hash,
                                 });
                             } else {
                                 await this.warningsRepository.create({
                                     type,
                                     message: warning.message,
-                                    severity: warning.severity as WarningSeverity, // TODO: remove as WarningSeverity, as soon as WarningSeverity type is in the package
+                                    severity: warning.severity,
                                     uniqueIdentifier: hash,
                                 });
                             }

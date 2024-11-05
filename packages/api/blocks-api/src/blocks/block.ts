@@ -53,9 +53,15 @@ export declare type BlockIndexItem = {
 } & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
+export enum WarningSeverity {
+    critical = "critical",
+    high = "high",
+    low = "low",
+}
+
 export interface BlockWarningReport {
     message: string;
-    severity: string; // TODO: Use WarningSeverity here, as soon as it is in the package and not in the demo (cannot import from demo)
+    severity: WarningSeverity;
 }
 
 export interface BlockDataInterface {
