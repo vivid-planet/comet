@@ -738,6 +738,148 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
             </>
         );
     })
+    .add("Nested Form in Grid in Tabs in Grid", () => {
+        const Form = ({ id }: { id?: string }) => {
+            const { rows, loading } = useData();
+            const editingExistingItem = Boolean(id);
+
+            if (editingExistingItem && loading) {
+                return <Loading />;
+            }
+
+            return (
+                <FinalForm
+                    onSubmit={() => {
+                        // Submit data
+                    }}
+                    mode={editingExistingItem ? "edit" : "add"}
+                    initialValues={rows.find((row) => row.id === id)}
+                >
+                    <TextField name="title" required fullWidth variant="horizontal" label="Title" />
+                    <TextAreaField name="description" fullWidth variant="horizontal" label="Description" />
+                </FinalForm>
+            );
+        };
+
+        const [showAddDialog, setShowAddDialog] = useState(false);
+        const { rows, loading } = useData();
+
+        const GridToolbar = () => {
+            return (
+                <DataGridToolbar>
+                    <ToolbarItem>
+                        <GridToolbarQuickFilter />
+                    </ToolbarItem>
+                    <ToolbarItem>
+                        <GridFilterButton />
+                    </ToolbarItem>
+                    <ToolbarFillSpace />
+                    <ToolbarActions>
+                        <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => setShowAddDialog(true)}>
+                            Add new item
+                        </Button>
+                    </ToolbarActions>
+                </DataGridToolbar>
+            );
+        };
+
+        const columns: GridColDef[] = [
+            { field: "title", headerName: "Title", flex: 1 },
+            { field: "description", headerName: "Description", flex: 2 },
+            {
+                field: "actions",
+                headerName: "",
+                width: 52,
+                renderCell: (params) => (
+                    <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <Edit />
+                    </IconButton>
+                ),
+            },
+        ];
+
+        const formToolbar = (
+            <StackToolbar>
+                <ToolbarBackButton />
+                <ToolbarAutomaticTitleItem />
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <SaveBoundarySaveButton />
+                </ToolbarActions>
+            </StackToolbar>
+        );
+
+        return (
+            <>
+                <StackSwitch>
+                    <StackPage name="grid">
+                        <StackToolbar>
+                            <ToolbarBackButton />
+                            <ToolbarAutomaticTitleItem />
+                        </StackToolbar>
+                        <MainContent fullHeight>
+                            <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
+                        </MainContent>
+                    </StackPage>
+                    <StackPage name="edit">
+                        {(id) => {
+                            return (
+                                <SaveBoundary>
+                                    <StackPageTitle title={rows.find((row) => row.id === id)?.title}>{formToolbar}</StackPageTitle>
+                                    <MainContent>
+                                        <RouterTabs>
+                                            <RouterTab path="" label="Details Form">
+                                                <FieldSet>
+                                                    <Form id={id} />
+                                                </FieldSet>
+                                            </RouterTab>
+                                            <RouterTab path="/child-items" label="Child items in Grid">
+                                                <StackSwitch>
+                                                    <StackPage name="grid">
+                                                        <FullHeightGridContainer>
+                                                            <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} />
+                                                        </FullHeightGridContainer>
+                                                    </StackPage>
+                                                    <StackPage name="edit">
+                                                        {(id) => {
+                                                            return (
+                                                                <Box m={-4}>
+                                                                    <StackPageTitle title={rows.find((row) => row.id === id)?.title}>
+                                                                        {formToolbar}
+                                                                    </StackPageTitle>
+                                                                    <MainContent>
+                                                                        <FieldSet>
+                                                                            <Form id={id} />
+                                                                        </FieldSet>
+                                                                    </MainContent>
+                                                                </Box>
+                                                            );
+                                                        }}
+                                                    </StackPage>
+                                                </StackSwitch>
+                                            </RouterTab>
+                                        </RouterTabs>
+                                    </MainContent>
+                                </SaveBoundary>
+                            );
+                        }}
+                    </StackPage>
+                </StackSwitch>
+                <Dialog open={showAddDialog} onClose={() => setShowAddDialog(false)}>
+                    <SaveBoundary onAfterSave={() => setShowAddDialog(false)}>
+                        <DialogTitle>Add new item</DialogTitle>
+                        <DialogContent>
+                            <Form />
+                        </DialogContent>
+                        <DialogActions>
+                            <CancelButton onClick={() => setShowAddDialog(false)} />
+                            <SaveBoundarySaveButton />
+                        </DialogActions>
+                    </SaveBoundary>
+                </Dialog>
+            </>
+        );
+    })
     .add("Grid with selection and more actions menu", () => {
         const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
         const { rows, loading } = useData();
