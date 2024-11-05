@@ -273,7 +273,7 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                             <Form id={editingId} />
                         </DialogContent>
                         <DialogActions>
-                            <CancelButton onClick={() => setShowDialog(false)}>Cancel</CancelButton>
+                            <CancelButton onClick={() => setShowDialog(false)} />
                             <SaveBoundarySaveButton />
                         </DialogActions>
                     </Dialog>
@@ -338,7 +338,7 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                             <Form id={editingId} />
                         </DialogContent>
                         <DialogActions>
-                            <CancelButton onClick={() => setShowDialog(false)}>Cancel</CancelButton>
+                            <CancelButton onClick={() => setShowDialog(false)} />
                             <SaveBoundarySaveButton />
                         </DialogActions>
                     </Dialog>
@@ -495,7 +495,7 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                             <Form id={editingId === "add" ? undefined : editingId} />
                         </DialogContent>
                         <DialogActions>
-                            <CancelButton onClick={() => setEditingId(undefined)}>Cancel</CancelButton>
+                            <CancelButton onClick={() => setEditingId(undefined)} />
                             <SaveBoundarySaveButton />
                         </DialogActions>
                     </SaveBoundary>
@@ -730,7 +730,7 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                             <Form />
                         </DialogContent>
                         <DialogActions>
-                            <CancelButton onClick={() => setShowAddDialog(false)}>Cancel</CancelButton>
+                            <CancelButton onClick={() => setShowAddDialog(false)} />
                             <SaveBoundarySaveButton />
                         </DialogActions>
                     </SaveBoundary>
