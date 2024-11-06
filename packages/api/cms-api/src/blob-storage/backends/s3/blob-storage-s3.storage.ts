@@ -96,14 +96,14 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
         await this.client.send(new AWS.PutObjectCommand(input));
     }
 
-    async getFile(folderName: string, fileName: string): Promise<NodeJS.ReadableStream> {
+    async getFile(folderName: string, fileName: string): Promise<Readable> {
         const response = await this.client.send(new AWS.GetObjectCommand(this.getCommandInput(folderName, fileName)));
 
         // Blob is not supported and used in node
         return Readable.from(response.Body as Readable | NodeJS.ReadableStream);
     }
 
-    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<NodeJS.ReadableStream> {
+    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<Readable> {
         const input: AWS.GetObjectCommandInput = {
             ...this.getCommandInput(folderName, fileName),
             Range: `bytes=${offset}-${offset + length - 1}`,
