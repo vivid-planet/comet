@@ -6,6 +6,7 @@ import {
     Get,
     Headers,
     Inject,
+    Logger,
     NotFoundException,
     Param,
     Post,
@@ -56,6 +57,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     @Controller("dam/files")
     @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
     class FilesController {
+        private readonly logger = new Logger(FilesController.name);
         constructor(
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
             private readonly filesService: FilesService,
@@ -222,6 +224,11 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 } catch (err) {
                     throw new Error(`File-Stream error: (storage.getFile) - ${(err as Error).message}`);
                 }
+
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
 
                 res.writeHead(200, {
                     ...headers,
