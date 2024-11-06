@@ -230,6 +230,11 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                     res.end();
                 });
 
+                res.on("close", () => {
+                    this.logger.debug("Client disconnected");
+                    stream.destroy();
+                });
+
                 res.writeHead(200, {
                     ...headers,
                     ...options?.overrideHeaders,

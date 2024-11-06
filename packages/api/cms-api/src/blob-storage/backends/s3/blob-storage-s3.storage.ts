@@ -12,7 +12,11 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
 
     constructor(config: BlobStorageS3Config["s3"]) {
         this.client = new AWS.S3({
-            requestHandler: config.requestHandler,
+            requestHandler: config.requestHandler ?? {
+                // https://github.com/aws/aws-sdk-js-v3/blob/main/supplemental-docs/CLIENTS.md#request-handler-requesthandler
+                requestTimeout: 60000, // clean up unused connections after 60 seconds
+                connectionTimeout: 6000, // fail faster if there are no available connections
+            },
             credentials: {
                 accessKeyId: config.accessKeyId,
                 secretAccessKey: config.secretAccessKey,
