@@ -75,16 +75,25 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
     };
     image: BlockState<typeof rootBlocks.image>;
 };
+type InitialFormValues = {
+    title?: string;
+    dimensions?: {
+        width?: string;
+    };
+    inStock?: boolean;
+    image?: BlockState<typeof rootBlocks.image>;
+};
 
 interface FormProps {
+    width?: number;
     title?: string;
     id?: string;
 }
 
-export function ProductForm({ title, id }: FormProps): React.ReactElement {
+export function ProductForm({ width, title, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
-    const formApiRef = useFormApiRef<FormValues>();
+    const formApiRef = useFormApiRef<FormValues, InitialFormValues>();
     const stackSwitchApi = useStackSwitchApi();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(
@@ -92,10 +101,10 @@ export function ProductForm({ title, id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = React.useMemo<Partial<FormValues> | InitialFormValues>( // Partial<FormValues> must be compatible with InitialFormValues (e.g. changing inStock: boolean to inStock?:boolean) because <FinalForm initialValues only accepts InitialFormValues. Maybe use "Partial<FormValues> | InitialFormValues" as second generic argument
         () =>
             data?.product
-                ? {
+                ? ({
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
                       dimensionsEnabled: !!data.product.dimensions,
@@ -108,13 +117,14 @@ export function ProductForm({ title, id }: FormProps): React.ReactElement {
                           : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
-                  }
-                : {
+                  } satisfies Partial<FormValues>)
+                : ({
                       title: title,
+                      dimensions: { width: width ? String(width) : undefined },
                       inStock: false,
                       image: rootBlocks.image.defaultValues(),
-                  },
-        [data, title],
+                  } satisfies InitialFormValues),
+        [data, title, width],
     );
 
     const saveConflict = useFormSaveConflict({
@@ -128,7 +138,11 @@ export function ProductForm({ title, id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (
+        { dimensionsEnabled, ...formValues }: FormValues,
+        form: FormApi<FormValues, InitialFormValues>,
+        event: FinalFormSubmitEvent,
+    ) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
@@ -176,7 +190,7 @@ export function ProductForm({ title, id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormValues>
+        <FinalForm<FormValues, InitialFormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}
@@ -285,7 +299,9 @@ export function ProductForm({ title, id }: FormProps): React.ReactElement {
                                     });
                                     return data.productCategories.nodes;
                                 }}
-                                getOptionLabel={(option) => option.title}
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                // @ts-ignore
+                                getOptionLabel={(option) => option.title} // option is of type unknown
                             />
 
                             <Field
@@ -373,7 +389,9 @@ export function ProductForm({ title, id }: FormProps): React.ReactElement {
                                     });
                                     return data.manufacturers.nodes;
                                 }}
-                                getOptionLabel={(option) => option.name}
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                // @ts-ignore
+                                getOptionLabel={(option) => option.name} // option is of type unknown
                                 disabled={!values?.type}
                             />
                             <OnChangeField name="type">

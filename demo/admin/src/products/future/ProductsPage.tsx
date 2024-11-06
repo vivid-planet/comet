@@ -112,7 +112,7 @@ export function ProductsPage() {
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
-                            <ProductForm />
+                            <ProductForm width={200} />
                         </MainContent>
                     </SaveBoundary>
                 </StackPage>

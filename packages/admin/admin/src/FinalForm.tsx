@@ -32,17 +32,17 @@ interface IProps<FormValues = Record<string, any>, InitialFormValues = Partial<F
     // override final-form onSubmit and remove callback as we don't support that (return promise instead)
     onSubmit: (
         values: FormValues,
-        form: FormApi<FormValues>,
+        form: FormApi<FormValues, InitialFormValues>,
         event: FinalFormSubmitEvent,
     ) => SubmissionErrors | Promise<SubmissionErrors | undefined> | undefined | void;
 
     /**
      * This method will be called at the end of a submit process.
      */
-    onAfterSubmit?: (values: FormValues, form: FormApi<FormValues>) => void;
+    onAfterSubmit?: (values: FormValues, form: FormApi<FormValues, InitialFormValues>) => void;
     validateWarning?: (values: FormValues) => ValidationErrors | Promise<ValidationErrors> | undefined;
     formContext?: Partial<FinalFormContext>;
-    apiRef?: MutableRefObject<FormApi<FormValues> | undefined>;
+    apiRef?: MutableRefObject<FormApi<FormValues, InitialFormValues> | undefined>;
     subRoutePath?: string;
 }
 
@@ -98,30 +98,33 @@ export class FinalFormSubmitEvent extends Event {
     navigatingBack?: boolean;
 }
 
-export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
+export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<FormValues>>(props: IProps<FormValues, InitialFormValues>) {
     const { client } = useContext(getApolloContext());
     const tableQuery = useContext(TableQueryContext);
 
     const { onAfterSubmit, validateWarning } = props;
 
     return (
-        <Form
+        <Form<FormValues, InitialFormValues>
             {...props}
             mutators={{
                 ...props.mutators,
-                setFieldData: setFieldData as unknown as Mutator<FormValues, object>,
-                setSubmitEvent: setSubmitEvent as unknown as Mutator<FormValues, object>,
-                getSubmitEvent: getSubmitEvent as unknown as Mutator<FormValues, object>,
+                setFieldData: setFieldData as unknown as Mutator<FormValues, InitialFormValues>,
+                setSubmitEvent: setSubmitEvent as unknown as Mutator<FormValues, InitialFormValues>,
+                getSubmitEvent: getSubmitEvent as unknown as Mutator<FormValues, InitialFormValues>,
             }}
             onSubmit={handleSubmit}
             render={RenderForm}
         />
     );
 
-    function RenderForm({ formContext = {}, ...formRenderProps }: FormRenderProps<FormValues> & { formContext: Partial<FinalFormContext> }) {
+    function RenderForm({
+        formContext = {},
+        ...formRenderProps
+    }: FormRenderProps<FormValues, InitialFormValues> & { formContext: Partial<FinalFormContext> }) {
         const subRoutePrefix = useSubRoutePrefix();
         const saveBoundaryApi = useSaveBoundaryApi();
-        if (props.apiRef) props.apiRef.current = formRenderProps.form;
+        if (props.apiRef) props.apiRef.current = formRenderProps.form as FormApi<FormValues, InitialFormValues>; // typ bug in https://github.com/final-form/react-final-form/blob/main/typescript/index.d.ts#L61, missing InitialValues
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
         const subRoutePath = props.subRoutePath ?? `${subRoutePrefix}/form`;
@@ -211,7 +214,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
                 <RouterPromptIf formApi={formRenderProps.form} doSave={doSave} subRoutePath={subRoutePath}>
                     <form onSubmit={submit}>
                         <div>
-                            {renderComponent<FormValues>(
+                            {renderComponent<FormValues, InitialFormValues>(
                                 {
                                     children: props.children,
                                     component: props.component,
@@ -229,7 +232,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
         );
     }
 
-    async function handleSubmit(values: FormValues, form: FormApi<FormValues>) {
+    async function handleSubmit(values: FormValues, form: FormApi<FormValues, InitialFormValues>) {
         const submitEvent = (form.mutators.getSubmitEvent ? form.mutators.getSubmitEvent() : undefined) || new FinalFormSubmitEvent("submit");
         const ret = props.onSubmit(values, form, submitEvent);
         if (ret === undefined) return ret;
@@ -256,7 +259,7 @@ export function FinalForm<FormValues = AnyObject>(props: IProps<FormValues>) {
             .then(
                 (data) => {
                     // for final-form undefined means success, an obj means error
-                    form.reset(values);
+                    form.reset(props.initialValues);
                     return undefined;
                 },
                 (error) => {

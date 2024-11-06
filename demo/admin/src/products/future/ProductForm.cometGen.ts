@@ -39,7 +39,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     name: "dimensions",
                     checkboxLabel: "Configure dimensions",
                     fields: [
-                        { type: "number", name: "width", label: "Width" },
+                        { type: "number", name: "width", label: "Width", initialValueProp: true },
                         { type: "number", name: "height", label: "Height" },
                         { type: "number", name: "depth", label: "Depth" },
                     ],
