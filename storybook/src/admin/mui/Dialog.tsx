@@ -1,6 +1,6 @@
-import { CancelButton, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
+import { CancelButton, Dialog, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, FormControlLabel, MenuItem } from "@mui/material";
+import { Button, DialogActions, DialogContent, DialogContentText, DialogProps, FormControlLabel, MenuItem } from "@mui/material";
 import { select } from "@storybook/addon-knobs";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
@@ -19,6 +19,16 @@ const dialogSizeOptions: DialogSizeOptions = {
     FullWidth: "fullWidth",
 };
 
+const dialogTitleOptions = {
+    "Text title": "Dialog Title Example",
+    None: "",
+};
+
+const dialogOnCloseOptions = {
+    "no callback": null,
+    "provided Callback": "callback",
+};
+
 const selectOptions = [
     { value: "chocolate", label: "Chocolate" },
     { value: "strawberry", label: "Strawberry" },
@@ -27,6 +37,8 @@ const selectOptions = [
 
 function Story() {
     const selectedDialogSize = select("Dialog size", dialogSizeOptions, "sm");
+    const selectedDialogTitle = select("Dialog Title", dialogTitleOptions, "Dialog Title Example");
+    const selectedDialogOnClose = select("Dialog onClose", dialogOnCloseOptions, "no callback");
 
     return (
         <div>
@@ -39,6 +51,8 @@ function Story() {
                     <form onSubmit={handleSubmit}>
                         <Dialog
                             scroll="body"
+                            onClose={selectedDialogOnClose === "callback" ? () => console.log("Dialog closed") : undefined}
+                            title={selectedDialogTitle}
                             open={true}
                             fullWidth={selectedDialogSize === "fullWidth"}
                             maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize}
@@ -56,20 +70,16 @@ storiesOf("@comet/admin/mui", module).add("Dialog", () => <Story />);
 
 function ConfirmationDialogContent(): React.ReactElement {
     return (
-        <>
-            <DialogTitle>This is a small confirmation dialog.</DialogTitle>
-            <DialogActions>
-                <CancelButton />
-                <OkayButton />
-            </DialogActions>
-        </>
+        <DialogActions>
+            <CancelButton />
+            <OkayButton />
+        </DialogActions>
     );
 }
 
 function DefaultDialogContent(): React.ReactElement {
     return (
         <>
-            <DialogTitle>Form in Dialog</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     Lorem ipsum nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Vivamus

@@ -2,9 +2,10 @@ import { Close } from "@comet/admin-icons";
 import {
     ComponentsOverrides,
     css,
-    Dialog as MUIDialog,
-    DialogTitle as MUIDialogTitle,
-    IconButton as MUIIconButton,
+    Dialog as MuiDialog,
+    DialogProps as MuiDialogProps,
+    DialogTitle as MuiDialogTitle,
+    IconButton as MuiIconButton,
     Theme,
     useThemeProps,
 } from "@mui/material";
@@ -15,21 +16,20 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
 export type DialogClassKey = "root" | "iconButton" | "titleWrapper" | "dialogTitle";
 
-export interface DialogProps
-    extends ThemedComponentBaseProps<{
-        iconButton: typeof MUIIconButton;
-        root: typeof MUIDialog;
-        dialogTitle: typeof MUIDialogTitle;
-        titleWrapper: "div";
-    }> {
+export type DialogProps = ThemedComponentBaseProps<{
+    iconButton: typeof MuiIconButton;
+    root: typeof MuiDialog;
+    dialogTitle: typeof MuiDialogTitle;
+    titleWrapper: "div";
+}> & {
     children?: ReactNode;
-    title: ReactNode;
-    open?: boolean;
+    title?: ReactNode;
     onClose?: () => void;
     iconMapping?: {
         closeIcon?: ReactNode;
     };
-}
+} & MuiDialogProps;
+
 export function Dialog(inProps: DialogProps) {
     const {
         slotProps,
@@ -56,12 +56,12 @@ export function Dialog(inProps: DialogProps) {
     );
 }
 
-const Root = createComponentSlot(MUIDialog)<DialogClassKey>({
+const Root = createComponentSlot(MuiDialog)<DialogClassKey>({
     componentName: "Dialog",
     slotName: "root",
-})(css``);
+})();
 
-const DialogTitle = createComponentSlot(MUIDialogTitle)<DialogClassKey>({
+const DialogTitle = createComponentSlot(MuiDialogTitle)<DialogClassKey>({
     componentName: "Dialog",
     slotName: "dialogTitle",
 })(css`
@@ -69,7 +69,7 @@ const DialogTitle = createComponentSlot(MUIDialogTitle)<DialogClassKey>({
     align-items: center;
 `);
 
-const IconButton = createComponentSlot(MUIIconButton)<DialogClassKey>({
+const IconButton = createComponentSlot(MuiIconButton)<DialogClassKey>({
     componentName: "Dialog",
     slotName: "iconButton",
 })(css`
