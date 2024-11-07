@@ -61,7 +61,11 @@ function convertValueByType(value: any, type?: string) {
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
     const filterItems = filterModel.items
-        .filter((filterItem) => filterItem.value !== undefined)
+        .filter(
+            (filterItem) =>
+                (filterItem.operatorValue && ["isEmpty", "isNotEmpty"].includes(filterItem.operatorValue)) || // those operators do not set value
+                filterItem.value !== undefined,
+        )
         .map((filterItem) => {
             if (!filterItem.operatorValue) throw new Error("operaturValue not set");
             const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operatorValue] || filterItem.operatorValue;
