@@ -10,6 +10,7 @@ import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
 import { AnchorBlock } from "./AnchorBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
 import { DamImageBlock } from "./DamImageBlock";
+import { DebugTableBlock } from "./DebugTableBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
 import { LinkListBlock } from "./LinkListBlock";
@@ -37,6 +38,7 @@ const supportedBlocks: SupportedBlocks = {
     newsDetail: (props) => <NewsDetailBlock data={props} />,
     imageLink: (props) => <ImageLinkBlock data={props} />,
     newsList: (props) => <NewsListBlock data={props} />,
+    table: (props) => <DebugTableBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

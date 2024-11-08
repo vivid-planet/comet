@@ -348,6 +348,7 @@ export const createUsePage: CreateUsePage =
                         }
                         const relevantOldState: BlockState<BlockInterface> = s.document[key] as BlockState<BlockInterface>;
                         const newBlockState = resolveNewState({ prevState: relevantOldState, setStateAction });
+                        console.log("### handleUpdateState newBlockState", { type: typeof newBlockState, newBlockState });
 
                         const newState: PS = {
                             ...s,

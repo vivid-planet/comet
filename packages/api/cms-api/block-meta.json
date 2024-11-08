@@ -1002,6 +1002,171 @@
         ]
     },
     {
+        "name": "Table",
+        "fields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "position",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "position",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "columnValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "String",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "columns",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "position",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "size",
+                            "kind": "Enum",
+                            "enum": [
+                                "extraSmall",
+                                "small",
+                                "standard",
+                                "large",
+                                "extraLarge"
+                            ],
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            },
+            {
+                "name": "rows",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "id",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "position",
+                            "kind": "Number",
+                            "nullable": false
+                        },
+                        {
+                            "name": "highlighted",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "columnValues",
+                            "kind": "NestedObjectList",
+                            "object": {
+                                "fields": [
+                                    {
+                                        "name": "columnId",
+                                        "kind": "String",
+                                        "nullable": false
+                                    },
+                                    {
+                                        "name": "value",
+                                        "kind": "String",
+                                        "nullable": false
+                                    }
+                                ]
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "TextImage",
         "fields": [
             {

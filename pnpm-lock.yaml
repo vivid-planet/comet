@@ -2104,6 +2104,9 @@ importers:
       '@mui/x-data-grid':
         specifier: ^5.0.0
         version: 5.17.20(@mui/material@5.11.6)(@mui/system@5.11.5)(react-dom@17.0.2)(react@17.0.2)
+      '@mui/x-data-grid-pro':
+        specifier: ^5.0.0
+        version: 5.17.20(@mui/material@5.11.6)(@mui/system@5.11.5)(react-dom@17.0.2)(react@17.0.2)
       '@types/draft-js':
         specifier: ^0.11.10
         version: 0.11.10
@@ -10818,7 +10821,6 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       reselect: 4.1.7
-    dev: false
 
   /@mui/x-data-grid@5.17.20(@mui/material@5.11.6)(@mui/system@5.11.5)(react-dom@17.0.2)(react@17.0.2):
     resolution: {integrity: sha512-khOe5l2deUBxUCkY9qKzevjIcg0l2rab2GjVwRfpJ/FUlV9cEsTvA9fSv4ylo6BsPfENBH6GPjZwxkr5GsXYgw==}
@@ -10848,7 +10850,6 @@ packages:
       '@babel/runtime': 7.20.13
       '@mui/utils': 5.11.2(react@17.0.2)
       react: 17.0.2
-    dev: false
 
   /@nestjs/apollo@10.1.7(@nestjs/common@9.2.1)(@nestjs/core@9.2.1)(@nestjs/graphql@10.1.7)(apollo-server-core@3.11.1)(apollo-server-express@3.11.1)(graphql@15.8.0):
     resolution: {integrity: sha512-UQDgUgyJvrj53AcCzws6/854SVibAeyg+RGxMtb9+ENhd8snP6f7RS6mCaFY85UTAc6mo674NIUu9a/JyeYezw==}
@@ -15004,7 +15005,6 @@ packages:
 
   /@types/format-util@1.0.2:
     resolution: {integrity: sha512-9SrLCpgzWo2yHHhiMOX0WwgDh37nSbDbWUsRc1ss++o8O97E3tB6SJiyUQM21UeUsKvZNuhDCmkRaINZ4uJAfg==}
-    dev: false
 
   /@types/fs-extra@9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}

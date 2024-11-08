@@ -16,6 +16,7 @@ export { InternalLinkBlock } from "./blocks/InternalLinkBlock";
 export { PhoneLinkBlock } from "./blocks/PhoneLinkBlock";
 export { PixelImageBlock } from "./blocks/PixelImageBlock";
 export { SvgImageBlock } from "./blocks/SvgImageBlock";
+export { TableBlock } from "./blocks/table/TableBlock";
 export { useCmsBlockContext } from "./blocks/useCmsBlockContext";
 export { VimeoVideoBlock } from "./blocks/VimeoVideoBlock";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock";
