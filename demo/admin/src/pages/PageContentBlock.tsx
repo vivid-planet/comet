@@ -1,5 +1,5 @@
 import { createBlocksBlock } from "@comet/blocks-admin";
-import { AnchorBlock, DamImageBlock } from "@comet/cms-admin";
+import { AnchorBlock, DamImageBlock, TableBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
@@ -36,6 +36,7 @@ export const PageContentBlock = createBlocksBlock({
         newsDetail: NewsDetailBlock,
         imageLink: ImageLinkBlock,
         newsList: NewsListBlock,
+        table: TableBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,
