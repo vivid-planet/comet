@@ -5,6 +5,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
+import { v5 } from "uuid";
 
 import { Warning } from "./entities/warning.entity";
 
@@ -49,22 +50,21 @@ export class WarningCheckerConsole {
 
                         for (const warning of warnings) {
                             const type = "Block";
-                            const uniqueIdentifier = `${metadata.tableName};${rootBlock["id"]};${type};${node.pathToString()};${warning.message}`;
-                            const warningEntity = await this.warningsRepository.findOne({ uniqueIdentifier });
+                            const id = v5(`${metadata.tableName}${rootBlock["id"]};${warning.message}`, v5.DNS);
+                            // TODO: (in the next PRs) add blockInfos/metadata
+                            const warningEntity = await this.warningsRepository.findOne({ id });
 
                             if (warningEntity) {
                                 warningEntity.assign({
                                     type,
-                                    message: warning.message,
                                     severity: warning.severity,
-                                    uniqueIdentifier,
                                 });
                             } else {
                                 await this.warningsRepository.create({
+                                    id,
                                     type,
                                     message: warning.message,
                                     severity: warning.severity,
-                                    uniqueIdentifier,
                                 });
                             }
                         }

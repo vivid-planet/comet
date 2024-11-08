@@ -29,11 +29,6 @@ export class Warning extends BaseEntity<Warning, "id"> {
     @Property({ columnType: "text" })
     @Field()
     @CrudField()
-    uniqueIdentifier: string;
-
-    @Property({ columnType: "text" })
-    @Field()
-    @CrudField()
     message: string;
 
     @Property()

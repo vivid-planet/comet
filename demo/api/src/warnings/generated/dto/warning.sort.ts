@@ -7,7 +7,6 @@ import { IsEnum } from "class-validator";
 export enum WarningSortField {
     createdAt = "createdAt",
     updatedAt = "updatedAt",
-    uniqueIdentifier = "uniqueIdentifier",
     message = "message",
     type = "type",
     severity = "severity",
