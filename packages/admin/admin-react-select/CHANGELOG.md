@@ -1,5 +1,12 @@
 # @comet/admin-react-select
 
+## 6.17.12
+
+### Patch Changes
+
+-   @comet/admin@6.17.12
+-   @comet/admin-icons@6.17.12
+
 ## 6.17.11
 
 ### Patch Changes
