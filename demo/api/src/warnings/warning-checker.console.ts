@@ -50,7 +50,8 @@ export class WarningCheckerConsole {
 
                         for (const warning of warnings) {
                             const type = "Block";
-                            const id = v5(`${metadata.tableName}${rootBlock["id"]};${warning.message}`, v5.DNS);
+                            const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
+                            const id = v5(`${metadata.tableName}${rootBlock["id"]};${warning.message}`, staticNamespace);
                             // TODO: (in the next PRs) add blockInfos/metadata
                             const warningEntity = await this.warningsRepository.findOne({ id });
 
