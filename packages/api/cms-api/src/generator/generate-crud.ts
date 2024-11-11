@@ -470,7 +470,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
                       throw new Error(`Not supported reference-type for position-group. ${prop.name}`);
                   }
                   return `${prop.name}${prop.nullable ? `?` : ``}: ${
-                      [ReferenceType.EMBEDDED, ReferenceType.SCALAR].includes(prop.reference) ? prop.type : "string"
+                      [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference) ? "string" : prop.type
                   }`;
               })
               .join(",")} }`
