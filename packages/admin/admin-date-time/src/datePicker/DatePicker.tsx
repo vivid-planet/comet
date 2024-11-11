@@ -47,7 +47,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
             value={value ? intl.formatDate(value, formatDateOptions) : ""}
             startAdornment={
                 <StartAdornment position="start" disablePointerEvents {...slotProps?.startAdornment}>
-                    {startAdornment ? startAdornment : <CalendarIcon />}
+                    <CalendarIcon />
                 </StartAdornment>
             }
             placeholder={placeholder ?? intl.formatMessage({ id: "comet.datePicker.selectDate", defaultMessage: "Select date" })}
@@ -62,7 +62,7 @@ export const DatePicker = (inProps: DatePickerProps) => {
                         {endAdornment}
                     </>
                 ) : (
-                    { endAdornment }
+                    endAdornment
                 )
             }
         >
