@@ -84,10 +84,11 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
 
     for (const file of acceptedFiles) {
         let harmonizedPath: string | undefined;
-        // when files are uploaded via input field, the path does not have a "/" prefix
-        // when files are uploaded via drag and drop, the path does have a "/" prefix
-        // if the path has a "/" prefix, this prefix is removed => path is harmonized
-        if (file.path?.startsWith("/")) {
+        // when a file is uploaded, the file path is prefixed with "./"
+        // when a folder is uploaded via drag and drop, the file paths are prefixed with "/"
+        // when a folder is uploaded via input field, the file paths don't have any prefix
+        if (file.path?.startsWith("./") || file.path?.startsWith("/")) {
+            // if the path has a "./" or "/" prefix, this prefix is removed => path is harmonized
             harmonizedPath = file.path?.split("/").splice(1).join("/");
         } else {
             harmonizedPath = file.path;
