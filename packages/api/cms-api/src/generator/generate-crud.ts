@@ -464,12 +464,15 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
 
     const positionGroupType = positionGroupProps.length
         ? `{ ${positionGroupProps
-              .map(
-                  (prop) =>
-                      `${prop.name}${prop.nullable ? `?` : ``}: ${
-                          [ReferenceType.EMBEDDED, ReferenceType.SCALAR].includes(prop.reference) ? prop.type : "string"
-                      }`,
-              )
+              .map((prop) => {
+                  const notSupportedReferenceTypes = [ReferenceType.ONE_TO_MANY, ReferenceType.MANY_TO_MANY];
+                  if (notSupportedReferenceTypes.includes(prop.reference)) {
+                      throw new Error(`Not supported reference-type for position-group. ${prop.name}`);
+                  }
+                  return `${prop.name}${prop.nullable ? `?` : ``}: ${
+                      [ReferenceType.EMBEDDED, ReferenceType.SCALAR].includes(prop.reference) ? prop.type : "string"
+                  }`;
+              })
               .join(",")} }`
         : false;
 
