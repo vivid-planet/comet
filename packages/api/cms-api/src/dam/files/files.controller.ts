@@ -231,7 +231,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 });
 
                 res.on("close", () => {
-                    this.logger.debug("Client disconnected");
                     stream.destroy();
                 });
 
