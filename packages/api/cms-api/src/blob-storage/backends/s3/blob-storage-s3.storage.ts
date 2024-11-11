@@ -14,7 +14,9 @@ export class BlobStorageS3Storage implements BlobStorageBackendInterface {
         this.client = new AWS.S3({
             requestHandler: config.requestHandler ?? {
                 // https://github.com/aws/aws-sdk-js-v3/blob/main/supplemental-docs/CLIENTS.md#request-handler-requesthandler
-                requestTimeout: 60000, // clean up unused connections after 60 seconds
+                // Workaround to prevent socket exhaustion caused by dangling streams (e.g., when the user leaves the site).
+                // Close the connection when no request/response was sent for 60 seconds, indicating that the file stream was terminated.
+                requestTimeout: 60000,
                 connectionTimeout: 6000, // fail faster if there are no available connections
             },
             credentials: {
