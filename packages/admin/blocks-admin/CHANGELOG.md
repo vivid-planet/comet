@@ -1,5 +1,16 @@
 # @comet/blocks-admin
 
+## 5.9.4
+
+### Patch Changes
+
+-   c8e6f5543: Fix linking from block preview to block admin for composite + list/blocks/columns block combinations
+
+    Previously, the generated route was wrong if a composite contained multiple nested list, blocks or columns blocks.
+
+    -   @comet/admin@5.9.4
+    -   @comet/admin-icons@5.9.4
+
 ## 5.9.3
 
 ### Patch Changes
