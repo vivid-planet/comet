@@ -30,8 +30,8 @@ const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): Ador
         if ("import" in adornmentData.icon) {
             adornmentString = `<${adornmentData.icon.name} />`;
             adornmentImport = {
-                name: `${adornmentData.icon.name} as ${adornmentData.icon.name}Icon`,
-                importPath: "@comet/admin-icons",
+                name: `${adornmentData.icon.name}`,
+                importPath: `${adornmentData.icon.import}`,
             };
         } else {
             const { name, ...iconProps } = adornmentData.icon;
