@@ -1,0 +1,15 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+
+import * as FieldStories from "./Field.stories";
+
+<Meta of={FieldStories} />
+
+# Field
+
+`Field` is used to create input-fields within a form, build using final-form.
+
+_Note: If your form is not built with final-form, use [FieldContainer](/docs/docs-form-components-fieldcontainer--page) instead._
+
+<Canvas>
+    <Story of={FieldStories.Basic} />
+</Canvas>

@@ -4,8 +4,7 @@ import { Meta } from "@storybook/react";
 import * as React from "react";
 
 export default {
-    title: "stories/components/FileSelect",
-
+    title: "Docs/Components/FileSelect",
     decorators: [
         (story) => (
             <Card>
@@ -15,7 +14,7 @@ export default {
     ],
 } as Meta<typeof FileSelect>;
 
-export const _FileSelect = {
+export const Basic = {
     render: () => {
         const value: FileSelectItem[] = [
             {
@@ -54,11 +53,10 @@ export const _FileSelect = {
             />
         );
     },
-
     name: "FileSelect",
 };
 
-export const ReadOnlyFileSelect = {
+export const Readonly = {
     render: () => {
         const value: FileSelectItem[] = [
             {
@@ -81,7 +79,6 @@ export const ReadOnlyFileSelect = {
             />
         );
     },
-
     name: "ReadOnly FileSelect",
 };
 
@@ -125,6 +122,5 @@ export const GridWithPreview = {
             />
         );
     },
-
     name: "Grid with preview",
 };

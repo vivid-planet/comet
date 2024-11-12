@@ -3,7 +3,7 @@ import { Button, InputBase } from "@mui/material";
 import * as React from "react";
 
 export default {
-    title: "stories/hooks/useStoredState",
+    title: "Docs/Hooks/useStoredState",
 };
 
 export const LocalStorage = {

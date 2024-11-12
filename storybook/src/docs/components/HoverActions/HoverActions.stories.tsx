@@ -4,10 +4,10 @@ import { IconButton } from "@mui/material";
 import * as React from "react";
 
 export default {
-    title: "stories/components/HoverActions",
+    title: "Docs/Components/HoverActions",
 };
 
-export const _HoverActions = {
+export const Basic = {
     render: () => {
         interface Row {
             id: number;
@@ -66,6 +66,5 @@ export const _HoverActions = {
             />
         );
     },
-
     name: "HoverActions",
 };

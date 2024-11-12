@@ -7,7 +7,7 @@ import * as React from "react";
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 
 export default {
-    title: "stories/hooks/useFocusAwarePolling",
+    title: "Docs/Hooks/useFocusAwarePolling",
     decorators: [apolloStoryDecorator(`https://api.spacex.land/graphql/`)],
 };
 

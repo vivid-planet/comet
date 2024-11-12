@@ -3,10 +3,10 @@ import { Card, CardContent, Grid, Typography, useTheme } from "@mui/material";
 import * as React from "react";
 
 export default {
-    title: "stories/components/CopyToClipboardButton",
+    title: "Docs/Components/CopyToClipboardButton",
 };
 
-export const _CopyToClipboardButton = {
+export const Basic = {
     render: () => {
         const {
             typography: { fontWeightMedium },
@@ -37,6 +37,5 @@ export const _CopyToClipboardButton = {
             </Grid>
         );
     },
-
     name: "CopyToClipboardButton",
 };

@@ -4,8 +4,7 @@ import { Meta } from "@storybook/react";
 import * as React from "react";
 
 export default {
-    title: "stories/components/FileDropzone",
-
+    title: "Docs/Components/FileDropzone",
     decorators: [
         (story) => (
             <Card>
@@ -19,14 +18,16 @@ export default {
     ],
 } as Meta<typeof FileDropzone>;
 
-export const Default = () => {
-    return (
-        <FileDropzone
-            onDrop={(acceptedFiles, fileRejections) => {
-                // Handle what happens with the dropped files
-            }}
-        />
-    );
+export const Default = {
+    render: () => {
+        return (
+            <FileDropzone
+                onDrop={(acceptedFiles, fileRejections) => {
+                    // Handle what happens with the dropped files
+                }}
+            />
+        );
+    },
 };
 
 export const DisabledAndErrorStates = {
@@ -48,6 +49,5 @@ export const DisabledAndErrorStates = {
             </>
         );
     },
-
     name: "Disabled and error states",
 };

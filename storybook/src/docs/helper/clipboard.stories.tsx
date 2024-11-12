@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import * as React from "react";
 
 export default {
-    title: "stories/helper/clipboard",
+    title: "Docs/Helper/Clipboard",
 };
 
 export const Write = () => {

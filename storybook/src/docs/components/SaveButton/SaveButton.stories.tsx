@@ -3,10 +3,10 @@ import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 export default {
-    title: "stories/components/Save Button",
+    title: "Docs/Components/SaveButton",
 };
 
-export const _SaveButton = {
+export const Basic = {
     render: () => {
         const [saving, setSaving] = React.useState(false);
         return (

@@ -2,7 +2,7 @@ import * as path from "path";
 
 export default {
     framework: "@storybook/react-webpack5",
-    stories: ["../src/**/*.stories.@(mdx|tsx)"],
+    stories: ["../src/**/*.@(mdx|stories.tsx)"],
     features: {
         // Workaround for storybook's incompatibility with emotion >= 11
         // See: https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#emotion11-quasi-compatibility

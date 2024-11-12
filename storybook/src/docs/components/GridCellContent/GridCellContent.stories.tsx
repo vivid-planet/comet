@@ -5,10 +5,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import * as React from "react";
 
 export default {
-    title: "stories/components/GridCellContent",
+    title: "Docs/Components/GridCellContent",
 };
 
-export const _GridCellContent = {
+export const Basic = {
     render: () => {
         const gridRows = Array.from({ length: 5 }).map((_, index) => ({
             id: index + 1,
@@ -50,6 +50,5 @@ export const _GridCellContent = {
 
         return <DataGrid autoHeight rows={gridRows} columns={gridColumns} disableSelectionOnClick />;
     },
-
     name: "GridCellContent",
 };

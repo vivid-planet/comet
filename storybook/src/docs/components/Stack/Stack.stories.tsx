@@ -21,55 +21,57 @@ import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
 export default {
-    title: "stories/components/Stack",
+    title: "Docs/Components/Stack",
     decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
 
-export const Basic = () => {
-    return (
-        <Stack topLevelTitle="Example Stack">
-            <StackSwitch>
-                <StackPage name="page1">
-                    <Page1 />
-                </StackPage>
-                <StackPage name="page2">
-                    <Page2 />
-                </StackPage>
-            </StackSwitch>
-        </Stack>
-    );
-
-    function Page1() {
-        const switchApi = useStackSwitchApi();
+export const Basic = {
+    render: () => {
         return (
-            <>
-                <h3>Page 1</h3>
-                <button
-                    onClick={(e) => {
-                        switchApi.activatePage("page2", "test");
-                    }}
-                >
-                    activate page2
-                </button>
-            </>
+            <Stack topLevelTitle="Example Stack">
+                <StackSwitch>
+                    <StackPage name="page1">
+                        <Page1 />
+                    </StackPage>
+                    <StackPage name="page2">
+                        <Page2 />
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
         );
-    }
 
-    function Page2() {
-        const switchApi = useStackSwitchApi();
-        return (
-            <>
-                <h3>Page 2</h3>
-                <button
-                    onClick={(e) => {
-                        switchApi.activatePage("page1", "");
-                    }}
-                >
-                    activate page1
-                </button>
-            </>
-        );
-    }
+        function Page1() {
+            const switchApi = useStackSwitchApi();
+            return (
+                <>
+                    <h3>Page 1</h3>
+                    <button
+                        onClick={(e) => {
+                            switchApi.activatePage("page2", "test");
+                        }}
+                    >
+                        activate page2
+                    </button>
+                </>
+            );
+        }
+
+        function Page2() {
+            const switchApi = useStackSwitchApi();
+            return (
+                <>
+                    <h3>Page 2</h3>
+                    <button
+                        onClick={(e) => {
+                            switchApi.activatePage("page1", "");
+                        }}
+                    >
+                        activate page1
+                    </button>
+                </>
+            );
+        }
+    },
 };
 
 export const Payload = () => {
@@ -159,7 +161,7 @@ export const Nested = () => {
     }
 };
 
-export const BreadrumbsToolbar = {
+export const BreadcrumbsToolbar = {
     render: () => {
         return (
             <Stack topLevelTitle="Example Stack">

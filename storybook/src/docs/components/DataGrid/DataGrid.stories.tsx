@@ -74,7 +74,7 @@ const exampleColumns: GridColDef[] = [
 ];
 
 export default {
-    title: "stories/components/DataGrid",
+    title: "Docs/Components/DataGrid",
     decorators: [storyRouterDecorator(), apolloStoryDecorator("/graphql")],
 };
 
@@ -128,7 +128,6 @@ export const UseDataGridRemote = {
             </Box>
         );
     },
-
     name: "useDataGridRemote",
 };
 
@@ -182,7 +181,6 @@ export const UseDataGridRemoteInitialSort = {
             </Box>
         );
     },
-
     name: "useDataGridRemoteInitialSort",
 };
 
@@ -239,7 +237,6 @@ export const UseDataGridRemoteInitialFilter = {
             </Box>
         );
     },
-
     name: "useDataGridRemoteInitialFilter",
 };
 
@@ -253,7 +250,6 @@ export const UsePersistentColumnState = {
             </Box>
         );
     },
-
     name: "usePersistentColumnState",
 };
 
@@ -291,8 +287,7 @@ export const ResponsiveColumns = {
 
         return <DataGridPro sx={{ height: 200 }} rows={exampleRows} columns={columns} {...dataGridProps} />;
     },
-
-    name: "responsiveColumns",
+    name: "Responsive columns",
 };
 
 export const _GridFilterButton = {
@@ -320,7 +315,6 @@ export const _GridFilterButton = {
             </Box>
         );
     },
-
     name: "GridFilterButton",
 };
 
@@ -392,7 +386,6 @@ export const _CrudContextMenu = {
             </Box>
         );
     },
-
     name: "CrudContextMenu",
 };
 
@@ -507,7 +500,6 @@ export const UseDataGridExcelExport = {
             </Box>
         );
     },
-
     name: "useDataGridExcelExport",
 };
 
@@ -585,6 +577,5 @@ export const _CrudMoreActionsMenu = {
             </Box>
         );
     },
-
     name: "CrudMoreActionsMenu",
 };

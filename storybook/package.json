@@ -68,6 +68,7 @@
         "@comet/eslint-config": "workspace:*",
         "@faker-js/faker": "^7.6.0",
         "@graphql-mocks/network-msw": "^0.3.0",
+        "@storybook/blocks": "7.6.20",
         "@storybook/react-webpack5": "7.6.20",
         "@types/draft-js": "^0.11.10",
         "@types/faker": "^5.5.8",

@@ -4,8 +4,7 @@ import { Meta } from "@storybook/react";
 import * as React from "react";
 
 export default {
-    title: "stories/components/FileSelectListItem",
-
+    title: "Docs/Components/FileSelectListItem",
     decorators: [
         (story) => (
             <Card>
@@ -15,7 +14,7 @@ export default {
     ],
 } as Meta<typeof FileSelectListItem>;
 
-export const _FileSelectListItem = {
+export const Basic = {
     render: () => {
         return (
             <>
@@ -77,66 +76,68 @@ export const _FileSelectListItem = {
     name: "FileSelectListItem",
 };
 
-export const Preview = () => {
-    return (
-        <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
-            <FileSelectListItem
-                file={{
-                    loading: true,
-                }}
-                filePreview
-            />
-            <FileSelectListItem
-                file={{
-                    name: "Filename.zip",
-                    size: 4.3 * 1024 * 1024, // 4.3 MB
-                }}
-                onClickDownload={() => {
-                    // Handle download
-                }}
-                onClickDelete={() => {
-                    // Handle delete
-                }}
-                filePreview
-            />
-            <FileSelectListItem
-                file={{
-                    name: "Filename.jpg",
-                    size: 4.3 * 1024 * 1024, // 4.3 MB
-                }}
-                onClickDownload={() => {
-                    // Handle download
-                }}
-                onClickDelete={() => {
-                    // Handle delete
-                }}
-                filePreview="https://picsum.photos/528/528"
-            />
-            <FileSelectListItem
-                file={{
-                    name: "File that is uploading.jpg",
-                    loading: true,
-                }}
-                filePreview
-            />
-            <FileSelectListItem
-                file={{
-                    name: "Filename.xyz",
-                    error: true,
-                }}
-                filePreview
-            />
-            <FileSelectListItem
-                file={{
-                    name: "Filename.xyz",
-                    size: 200 * 1024 * 1024, // 200 MB
-                    error: "File too large",
-                }}
-                onClickDelete={() => {
-                    // Handle delete
-                }}
-                filePreview
-            />
-        </Box>
-    );
+export const Preview = {
+    render: () => {
+        return (
+            <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
+                <FileSelectListItem
+                    file={{
+                        loading: true,
+                    }}
+                    filePreview
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.zip",
+                        size: 4.3 * 1024 * 1024, // 4.3 MB
+                    }}
+                    onClickDownload={() => {
+                        // Handle download
+                    }}
+                    onClickDelete={() => {
+                        // Handle delete
+                    }}
+                    filePreview
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.jpg",
+                        size: 4.3 * 1024 * 1024, // 4.3 MB
+                    }}
+                    onClickDownload={() => {
+                        // Handle download
+                    }}
+                    onClickDelete={() => {
+                        // Handle delete
+                    }}
+                    filePreview="https://picsum.photos/528/528"
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "File that is uploading.jpg",
+                        loading: true,
+                    }}
+                    filePreview
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.xyz",
+                        error: true,
+                    }}
+                    filePreview
+                />
+                <FileSelectListItem
+                    file={{
+                        name: "Filename.xyz",
+                        size: 200 * 1024 * 1024, // 200 MB
+                        error: "File too large",
+                    }}
+                    onClickDelete={() => {
+                        // Handle delete
+                    }}
+                    filePreview
+                />
+            </Box>
+        );
+    },
 };

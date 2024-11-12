@@ -1,0 +1,46 @@
+import { Meta, Canvas, Story } from "@storybook/addon-docs";
+
+import * as IconsUsageStories from "./IconsUsage.stories";
+
+<Meta of={IconsUsageStories} />
+
+# @comet/admin-icons
+
+## Simple Icon Rendering
+
+Import desired icon from `comet/admin-icons` and use it like a regular React Component
+
+```typescript jsx
+import { Attachment } from "@comet/admin-icons";
+```
+
+<Canvas>
+    <Story of={IconsUsageStories.Icon} />
+</Canvas>
+
+## Sizes
+
+<Canvas>
+    <Story of={IconsUsageStories.SmallSizeIcon} />
+    <Story of={IconsUsageStories.DefaultSizeIcon} />
+    <Story of={IconsUsageStories.LargeSizeIcon} />
+    <Story of={IconsUsageStories.CustomSizeIcon} />
+</Canvas>
+
+## Render icon in text
+
+<Canvas>
+    <Story of={IconsUsageStories.RenderIconInText} />
+</Canvas>
+
+## Colors
+
+<Canvas>
+    <Story of={IconsUsageStories.DefaultColor} />
+    <Story of={IconsUsageStories.PrimaryColor} />
+    <Story of={IconsUsageStories.SecondaryColor} />
+    <Story of={IconsUsageStories.ErrorColor} />
+    <Story of={IconsUsageStories.DisabledColor} />
+    <Story of={IconsUsageStories.ActionColor} />
+    <Story of={IconsUsageStories.CustomColor} />
+</Canvas>
