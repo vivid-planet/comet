@@ -34,7 +34,6 @@ export const DatePicker = (inProps: DatePickerProps) => {
         minDate = defaultMinDate,
         maxDate = defaultMaxDate,
         slotProps,
-        startAdornment,
         endAdornment,
         ...inputWithPopperProps
     } = useThemeProps({ props: inProps, name: "CometAdminDatePicker" });
