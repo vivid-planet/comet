@@ -1,5 +1,12 @@
 # @comet/admin-color-picker
 
+## 6.17.14
+
+### Patch Changes
+
+-   @comet/admin@6.17.14
+-   @comet/admin-icons@6.17.14
+
 ## 6.17.13
 
 ### Patch Changes
