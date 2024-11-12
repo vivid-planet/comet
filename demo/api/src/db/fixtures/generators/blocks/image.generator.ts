@@ -1,5 +1,4 @@
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { DamImageBlock, FileInterface, FocalPoint, ImageCropAreaInput } from "@comet/cms-api";
+import { DamImageBlock, ExtractBlockInputFactoryProps, FileInterface, FocalPoint, ImageCropAreaInput } from "@comet/cms-api";
 import faker from "faker";
 
 export const generateImageBlock = (

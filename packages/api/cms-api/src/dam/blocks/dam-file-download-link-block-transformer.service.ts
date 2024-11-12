@@ -1,6 +1,6 @@
-import { BlockContext, BlockTransformerServiceInterface, TraversableTransformResponse } from "@comet/blocks-api";
 import { Injectable } from "@nestjs/common";
 
+import { BlockContext, BlockTransformerServiceInterface, TraversableTransformBlockResponse } from "../../blocks/block";
 import { FilesService } from "../files/files.service";
 import { DamFileDownloadLinkBlockData } from "./dam-file-download-link.block";
 
@@ -18,7 +18,7 @@ export class DamFileDownloadLinkBlockTransformerService implements BlockTransfor
     constructor(private readonly filesService: FilesService) {}
 
     async transformToPlain(block: DamFileDownloadLinkBlockData, { includeInvisibleContent, previewDamUrls, relativeDamUrls }: BlockContext) {
-        const ret: TraversableTransformResponse = {
+        const ret: TraversableTransformBlockResponse = {
             openFileType: block.openFileType,
         };
 

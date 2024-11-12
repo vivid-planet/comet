@@ -1,5 +1,4 @@
-import { ColumnsBlockFactory, createBlocksBlock, SpaceBlock } from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
+import { ColumnsBlockFactory, createBlocksBlock, DamImageBlock, SpaceBlock } from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 
 import { HeadlineBlock } from "./headline.block";

@@ -27,7 +27,7 @@ The BlocksBlock factory is used to create a block that consists of multiple chil
 ### API
 
 ```ts title="page-content.block.ts"
-import { createBlocksBlock } from "@comet/blocks-api";
+import { createBlocksBlock } from "@comet/cms-api";
 
 ...
 
@@ -94,7 +94,7 @@ The main difference is that the ListBlock factory only supports a single child b
 ### API
 
 ```ts title="link-list.block.ts"
-import { createListBlock } from "@comet/blocks-api";
+import { createListBlock } from "@comet/cms-api";
 
 ...
 
@@ -143,7 +143,7 @@ For instance, two columns could be represented by three layouts: Same width, wei
 ### API
 
 ```ts title="columns.block.ts"
-import { ColumnsBlockFactory, createBlocksBlock } from "@comet/blocks-api";
+import { ColumnsBlockFactory, createBlocksBlock } from "@comet/cms-api";
 
 ...
 
@@ -269,7 +269,7 @@ Think of it as a switch or select.
 ### API
 
 ```ts title="link.block.ts"
-import { createOneOfBlock } from "@comet/blocks-api";
+import { createOneOfBlock } from "@comet/cms-api";
 
 ...
 
@@ -339,7 +339,7 @@ Using an OptionalBlock adds additional complexity for users by requiring them to
 ### API
 
 ```ts title="optional-image.block.ts"
-import { createOptionalBlock } from "@comet/blocks-api";
+import { createOptionalBlock } from "@comet/cms-api";
 
 ...
 

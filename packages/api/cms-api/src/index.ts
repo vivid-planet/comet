@@ -16,18 +16,90 @@ export { BlobStorageFileConfig } from "./blob-storage/backends/file/blob-storage
 export { BlobStorageFileStorage } from "./blob-storage/backends/file/blob-storage-file.storage";
 export { BlobStorageConfig } from "./blob-storage/blob-storage.config";
 export { BlobStorageModule } from "./blob-storage/blob-storage.module";
+export {
+    Block,
+    BlockContext,
+    BlockData,
+    BlockDataFactory,
+    BlockDataInterface,
+    BlockIndexData,
+    BlockInput,
+    BlockInputFactory,
+    BlockInputInterface,
+    blockInputToData,
+    BlockMetaField,
+    BlockMetaFieldKind,
+    BlockMetaInterface,
+    BlockMetaLiteralFieldKind,
+    BlockTransformerServiceInterface,
+    createBlock,
+    ExtractBlockData,
+    ExtractBlockInput,
+    ExtractBlockInputFactoryProps,
+    getRegisteredBlocks,
+    isBlockDataInterface,
+    isBlockInputInterface,
+    registerBlock,
+    SimpleBlockInputInterface,
+    TransformBlockResponse,
+    TransformBlockResponseArray,
+    transformToBlockSave,
+    TraversableTransformBlockResponse,
+    TraversableTransformBlockResponseArray,
+} from "./blocks/block";
 export { BlocksModule } from "./blocks/blocks.module";
+export { getBlocksMeta } from "./blocks/blocks-meta";
 export { BlocksTransformerService } from "./blocks/blocks-transformer.service";
 export { BlocksTransformerMiddlewareFactory } from "./blocks/blocks-transformer-middleware.factory";
-export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
-export { createLinkBlock } from "./blocks/createLinkBlock";
-export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/createSeoBlock";
-export { createTextImageBlock, ImagePosition } from "./blocks/createTextImageBlock";
+export { ChildBlock } from "./blocks/decorators/child-block";
+export { ChildBlockInput } from "./blocks/decorators/child-block-input";
+export { AnnotationBlockMeta, BlockField } from "./blocks/decorators/field";
+export { RootBlock } from "./blocks/decorators/root-block";
+export { RootBlockEntity } from "./blocks/decorators/root-block-entity";
 export { EmailLinkBlock } from "./blocks/email-link.block";
+export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
+export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
+export {
+    BaseBlocksBlockItemData,
+    BaseBlocksBlockItemInput,
+    BlocksBlockFixturesGeneratorMap,
+    createBlocksBlock,
+} from "./blocks/factories/createBlocksBlock";
+export { createImageLinkBlock } from "./blocks/factories/createImageLinkBlock";
+export { createLinkBlock } from "./blocks/factories/createLinkBlock";
+export { BaseListBlockItemData, BaseListBlockItemInput, createListBlock } from "./blocks/factories/createListBlock";
+export {
+    BaseOneOfBlockData,
+    BaseOneOfBlockInput,
+    BaseOneOfBlockItemData,
+    BaseOneOfBlockItemInput,
+    createOneOfBlock,
+    CreateOneOfBlockOptions,
+    OneOfBlock,
+} from "./blocks/factories/createOneOfBlock";
+export { createOptionalBlock, OptionalBlockInputInterface } from "./blocks/factories/createOptionalBlock";
+export { createRichTextBlock } from "./blocks/factories/createRichTextBlock";
+export { createSeoBlock, SitemapPageChangeFrequency, SitemapPagePriority } from "./blocks/factories/createSeoBlock";
+export { createSpaceBlock } from "./blocks/factories/createSpaceBlock";
+export { createTextImageBlock, ImagePosition } from "./blocks/factories/createTextImageBlock";
+export { createTextLinkBlock } from "./blocks/factories/createTextLinkBlock";
+export type { BlockFactoryNameOrOptions } from "./blocks/factories/types";
+export { FlatBlocks } from "./blocks/flat-blocks/flat-blocks";
+export { getMostSignificantPreviewImageUrlTemplateFromBlock, getPreviewImageUrlTemplatesFromBlock } from "./blocks/get-preview-image-url-templates";
+export { composeBlocks } from "./blocks/helpers/composeBlocks";
+export { strictBlockDataFactoryDecorator } from "./blocks/helpers/strictBlockDataFactoryDecorator";
+export { strictBlockInputFactoryDecorator } from "./blocks/helpers/strictBlockInputFactoryDecorator";
+export { BlockMigration } from "./blocks/migrations/BlockMigration";
+export { BlockDataMigrationVersion } from "./blocks/migrations/decorators/BlockDataMigrationVersion";
+export { BlockMigrationInterface } from "./blocks/migrations/types";
+export { typeSafeBlockMigrationPipe } from "./blocks/migrations/typeSafeBlockMigrationPipe";
 export { PhoneLinkBlock } from "./blocks/phone-link.block";
 export { RootBlockType } from "./blocks/root-block-type";
 export { RootBlockDataScalar } from "./blocks/rootBlocks/root-block-data.scalar";
 export { RootBlockInputScalar } from "./blocks/rootBlocks/root-block-input.scalar";
+export { getSearchTextFromBlock, SearchText, WeightedSearchText } from "./blocks/search/get-search-text";
+export { SpaceBlock } from "./blocks/SpaceBlock/SpaceBlock";
+export { transformToBlockSaveIndex } from "./blocks/transformToBlockSaveIndex/transformToBlockSaveIndex";
 export { VimeoVideoBlock } from "./blocks/vimeo-video.block";
 export { YouTubeVideoBlock } from "./blocks/YouTubeVideoBlock/you-tube-video.block";
 export { BUILDS_CONFIG, BUILDS_MODULE_OPTIONS } from "./builds/builds.constants";
