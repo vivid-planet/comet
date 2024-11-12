@@ -1,6 +1,7 @@
 import * as path from "path";
 
 export default {
+    framework: "@storybook/react-webpack5",
     stories: ["../src/**/*.stories.@(mdx|tsx)"],
     features: {
         // Workaround for storybook's incompatibility with emotion >= 11
@@ -28,7 +29,7 @@ export default {
         },
     ],
     staticDirs: ["../public"],
-    core: {
-        builder: "webpack5",
+    docs: {
+        autodocs: true,
     },
 };
