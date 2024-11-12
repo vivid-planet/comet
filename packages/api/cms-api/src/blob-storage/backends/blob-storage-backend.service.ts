@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { Readable } from "stream";
 
 import { createHashedPath } from "../../dam/files/files.utils";
 import { BlobStorageConfig } from "../blob-storage.config";
@@ -47,11 +48,11 @@ export class BlobStorageBackendService implements BlobStorageBackendInterface {
         return this.backend.createFile(folderName, fileName, data, { ...options, headers: normalizeHeaders(headers) });
     }
 
-    async getFile(folderName: string, fileName: string): Promise<NodeJS.ReadableStream> {
+    async getFile(folderName: string, fileName: string): Promise<Readable> {
         return this.backend.getFile(folderName, fileName);
     }
 
-    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<NodeJS.ReadableStream> {
+    async getPartialFile(folderName: string, fileName: string, offset: number, length: number): Promise<Readable> {
         return this.backend.getPartialFile(folderName, fileName, offset, length);
     }
 
