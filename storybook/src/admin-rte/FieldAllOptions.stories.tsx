@@ -4,7 +4,7 @@ import { Button, Card, CardContent, Grid } from "@mui/material";
 import * as React from "react";
 import { Form } from "react-final-form";
 
-import { ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions";
+import { ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions.stories";
 
 const { RteField, RteReadOnly } = createFinalFormRte<ContentFormat>({
     rteApiOptions: makeApiOptions, // see ./RteAllOptions for details
