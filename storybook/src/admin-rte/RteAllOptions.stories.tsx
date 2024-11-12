@@ -107,25 +107,27 @@ export default {
     excludeStories: ["ContentFormat", "defaultContent", "makeApiOptions", "apiOptions", "rteOptions"],
 };
 
-export const RteAllOptions = () => {
-    const { editorState, setEditorState } = useRteApi(apiOptions);
+export const RteAllOptions = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi(apiOptions);
 
-    // focus the editor to see the cursor immediately
-    const editorRef = React.useRef<IRteRef>();
-    useAutoFocus(editorRef);
+        // focus the editor to see the cursor immediately
+        const editorRef = React.useRef<IRteRef>();
+        useAutoFocus(editorRef);
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintEditorState editorState={editorState} />
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintEditorState editorState={editorState} />
+            </>
+        );
+    },
+
+    name: "Rte, all options",
 };
-
-RteAllOptions.storyName = "Rte, all options";

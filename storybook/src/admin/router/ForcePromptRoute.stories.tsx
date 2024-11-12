@@ -56,13 +56,15 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const _ForcePromptRoute = () => {
-    return (
-        <>
-            <Path />
-            <Story />
-        </>
-    );
-};
+export const _ForcePromptRoute = {
+    render: () => {
+        return (
+            <>
+                <Path />
+                <Story />
+            </>
+        );
+    },
 
-_ForcePromptRoute.storyName = "ForcePromptRoute";
+    name: "ForcePromptRoute",
+};

@@ -19,22 +19,24 @@ export default {
     title: "stories/rte/Setup",
 };
 
-export const SourceDataHtml = () => {
-    const { editorState, setEditorState } = useRteApi({
-        defaultValue: `
-<h1>Headline 1</h1>
-<p>This is html</p>
-    `,
-    });
+export const SourceDataHtml = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi({
+            defaultValue: `
+    <h1>Headline 1</h1>
+    <p>This is html</p>
+        `,
+        });
 
-    return (
-        <>
-            <Rte value={editorState} onChange={setEditorState} />
+        return (
+            <>
+                <Rte value={editorState} onChange={setEditorState} />
 
-            <p>Send this to the server:</p>
-            <pre>{convertStateToRawContent(editorState)}</pre>
-        </>
-    );
+                <p>Send this to the server:</p>
+                <pre>{convertStateToRawContent(editorState)}</pre>
+            </>
+        );
+    },
+
+    name: "source-data-html",
 };
-
-SourceDataHtml.storyName = "source-data-html";

@@ -83,12 +83,14 @@ export default {
     excludeStories: ["Story"],
 };
 
-export const _AppHeader = () => {
-    return (
-        <MasterLayout menuComponent={Menu} headerComponent={MasterHeader}>
-            <MainContent>Some content</MainContent>
-        </MasterLayout>
-    );
-};
+export const _AppHeader = {
+    render: () => {
+        return (
+            <MasterLayout menuComponent={Menu} headerComponent={MasterHeader}>
+                <MainContent>Some content</MainContent>
+            </MasterLayout>
+        );
+    },
 
-_AppHeader.parameters = { layout: "fullscreen" };
+    parameters: { layout: "fullscreen" },
+};

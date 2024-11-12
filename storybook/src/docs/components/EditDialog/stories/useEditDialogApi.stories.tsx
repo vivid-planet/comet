@@ -9,34 +9,36 @@ export default {
     decorators: [editDialogDecorator()],
 };
 
-export const UseEditDialogApi = () => {
-    const ChildComponentWithOpenButton: React.VoidFunctionComponent = () => {
-        const editDialogApi = useEditDialogApi();
+export const UseEditDialogApi = {
+    render: () => {
+        const ChildComponentWithOpenButton: React.VoidFunctionComponent = () => {
+            const editDialogApi = useEditDialogApi();
+
+            return (
+                <Button onClick={() => editDialogApi?.openAddDialog()} variant="contained" color="primary">
+                    Open Edit Dialog with useEditDialogApi()
+                </Button>
+            );
+        };
+
+        const [EditDialog, , editDialogApi] = useEditDialog();
 
         return (
-            <Button onClick={() => editDialogApi?.openAddDialog()} variant="contained" color="primary">
-                Open Edit Dialog with useEditDialogApi()
-            </Button>
+            <EditDialogApiContext.Provider value={editDialogApi}>
+                <ChildComponentWithOpenButton />
+                <EditDialog>
+                    <FinalForm
+                        mode="add"
+                        onSubmit={async ({ name }) => {
+                            window.alert(`Name: ${name}`);
+                        }}
+                    >
+                        <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
+                    </FinalForm>
+                </EditDialog>
+            </EditDialogApiContext.Provider>
         );
-    };
+    },
 
-    const [EditDialog, , editDialogApi] = useEditDialog();
-
-    return (
-        <EditDialogApiContext.Provider value={editDialogApi}>
-            <ChildComponentWithOpenButton />
-            <EditDialog>
-                <FinalForm
-                    mode="add"
-                    onSubmit={async ({ name }) => {
-                        window.alert(`Name: ${name}`);
-                    }}
-                >
-                    <Field label="Name" name="name" component={FinalFormInput} fullWidth autoFocus required />
-                </FinalForm>
-            </EditDialog>
-        </EditDialogApiContext.Provider>
-    );
+    name: "useEditDialogApi",
 };
-
-UseEditDialogApi.storyName = "useEditDialogApi";

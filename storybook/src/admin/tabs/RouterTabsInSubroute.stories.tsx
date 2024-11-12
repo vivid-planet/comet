@@ -39,20 +39,22 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const RouterTabsInSubRoute = () => {
-    return (
-        <>
-            <Path />
-            <Switch>
-                <Route exact path="/">
-                    <Redirect to="/foo" />
-                </Route>
-                <Route path="/foo">
-                    <Story />
-                </Route>
-            </Switch>
-        </>
-    );
-};
+export const RouterTabsInSubRoute = {
+    render: () => {
+        return (
+            <>
+                <Path />
+                <Switch>
+                    <Route exact path="/">
+                        <Redirect to="/foo" />
+                    </Route>
+                    <Route path="/foo">
+                        <Story />
+                    </Route>
+                </Switch>
+            </>
+        );
+    },
 
-RouterTabsInSubRoute.storyName = "Router Tabs in SubRoute";
+    name: "Router Tabs in SubRoute",
+};

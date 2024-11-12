@@ -6,21 +6,23 @@ export default {
     title: "stories/components/Save Button",
 };
 
-export const _SaveButton = () => {
-    const [saving, setSaving] = React.useState(false);
-    return (
-        <SaveButton
-            saving={saving}
-            onClick={() => {
-                setSaving(true);
-                setTimeout(() => {
-                    setSaving(false);
-                }, 1000);
-            }}
-        >
-            <FormattedMessage id="comet.save" defaultMessage="Save" />
-        </SaveButton>
-    );
-};
+export const _SaveButton = {
+    render: () => {
+        const [saving, setSaving] = React.useState(false);
+        return (
+            <SaveButton
+                saving={saving}
+                onClick={() => {
+                    setSaving(true);
+                    setTimeout(() => {
+                        setSaving(false);
+                    }, 1000);
+                }}
+            >
+                <FormattedMessage id="comet.save" defaultMessage="Save" />
+            </SaveButton>
+        );
+    },
 
-_SaveButton.storyName = "SaveButton";
+    name: "SaveButton",
+};

@@ -16,23 +16,25 @@ export default {
     title: "stories/rte/Setup",
 };
 
-export const SourceDataMarkdown = () => {
-    const { editorState, setEditorState } = useRteApi({
-        defaultValue: `
-# Headline 1
-    
-This is markdown
-    `,
-    });
+export const SourceDataMarkdown = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi({
+            defaultValue: `
+    # Headline 1
+        
+    This is markdown
+        `,
+        });
 
-    return (
-        <>
-            <Rte value={editorState} onChange={setEditorState} />
+        return (
+            <>
+                <Rte value={editorState} onChange={setEditorState} />
 
-            <p>Send this to the server:</p>
-            <pre>{convertStateToRawContent(editorState)}</pre>
-        </>
-    );
+                <p>Send this to the server:</p>
+                <pre>{convertStateToRawContent(editorState)}</pre>
+            </>
+        );
+    },
+
+    name: "source-data-markdown",
 };
-
-SourceDataMarkdown.storyName = "source-data-markdown";

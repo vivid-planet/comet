@@ -44,18 +44,20 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const _RouteWithErrorBoundary = () => {
-    return (
-        <MasterLayout menuComponent={MasterMenu}>
-            <Switch>
-                <RouteWithErrorBoundary path="/no-error-route" component={ViewWithNoError} />
-                <RouteWithErrorBoundary path="/error-route" component={ViewWithError} />
-                <Route exact path="/">
-                    <Redirect to="/no-error-route" />
-                </Route>
-            </Switch>
-        </MasterLayout>
-    );
-};
+export const _RouteWithErrorBoundary = {
+    render: () => {
+        return (
+            <MasterLayout menuComponent={MasterMenu}>
+                <Switch>
+                    <RouteWithErrorBoundary path="/no-error-route" component={ViewWithNoError} />
+                    <RouteWithErrorBoundary path="/error-route" component={ViewWithError} />
+                    <Route exact path="/">
+                        <Redirect to="/no-error-route" />
+                    </Route>
+                </Switch>
+            </MasterLayout>
+        );
+    },
 
-_RouteWithErrorBoundary.storyName = "RouteWithErrorBoundary";
+    name: "RouteWithErrorBoundary",
+};

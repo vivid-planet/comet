@@ -42,29 +42,31 @@ type Args = {
     selectedDialogSize: DialogSize;
 };
 
-export const _Dialog = ({ selectedDialogSize }: Args) => {
-    return (
-        <div>
-            <Form
-                onSubmit={() => {}}
-                initialValues={{
-                    dialogSize: "sm",
-                }}
-                render={({ handleSubmit }) => (
-                    <form onSubmit={handleSubmit}>
-                        <Dialog
-                            scroll="body"
-                            open={true}
-                            fullWidth={selectedDialogSize === "fullWidth"}
-                            maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize}
-                        >
-                            <>{selectedDialogSize === "xs" ? <ConfirmationDialogContent /> : <DefaultDialogContent />}</>
-                        </Dialog>
-                    </form>
-                )}
-            />
-        </div>
-    );
+export const _Dialog = {
+    render: ({ selectedDialogSize }: Args) => {
+        return (
+            <div>
+                <Form
+                    onSubmit={() => {}}
+                    initialValues={{
+                        dialogSize: "sm",
+                    }}
+                    render={({ handleSubmit }) => (
+                        <form onSubmit={handleSubmit}>
+                            <Dialog
+                                scroll="body"
+                                open={true}
+                                fullWidth={selectedDialogSize === "fullWidth"}
+                                maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize}
+                            >
+                                <>{selectedDialogSize === "xs" ? <ConfirmationDialogContent /> : <DefaultDialogContent />}</>
+                            </Dialog>
+                        </form>
+                    )}
+                />
+            </div>
+        );
+    },
 };
 
 function ConfirmationDialogContent(): React.ReactElement {

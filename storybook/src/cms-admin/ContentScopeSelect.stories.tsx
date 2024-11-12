@@ -2,7 +2,7 @@ import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@
 import { Domain, Language } from "@comet/admin-icons";
 import { ContentScopeSelect } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
-import { ComponentMeta } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import React, { useState } from "react";
 
 export default {
@@ -18,7 +18,7 @@ export default {
             </AppHeader>
         ),
     ],
-} as ComponentMeta<typeof ContentScopeSelect>;
+} as Meta<typeof ContentScopeSelect>;
 
 export const Basic = function () {
     const [value, setValue] = useState({ domain: "main" });

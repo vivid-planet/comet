@@ -48,15 +48,17 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const _SaveBoundary = () => {
-    return (
-        <SaveBoundary>
-            <DemoForm />
-            <DemoForm />
-            <UnrelatedChild />
-            <SaveButtonContainer />
-        </SaveBoundary>
-    );
-};
+export const _SaveBoundary = {
+    render: () => {
+        return (
+            <SaveBoundary>
+                <DemoForm />
+                <DemoForm />
+                <UnrelatedChild />
+                <SaveButtonContainer />
+            </SaveBoundary>
+        );
+    },
 
-_SaveBoundary.storyName = "SaveBoundary";
+    name: "SaveBoundary",
+};

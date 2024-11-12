@@ -19,46 +19,48 @@ export default {
     title: "@comet/admin-rte",
 };
 
-export const RteMaxBlocksSet = () => {
-    const { editorState, setEditorState } = useRteApi({
-        defaultValue: JSON.stringify({
-            blocks: [
-                {
-                    key: "fe4ti",
-                    text: "Only one block is accepted",
-                    type: "header-one",
-                    depth: 0,
-                    inlineStyleRanges: [
-                        {
-                            offset: 9,
-                            length: 5,
-                            style: "ITALIC",
-                        },
-                    ],
-                    entityRanges: [],
-                    data: {},
-                },
-            ],
-            entityMap: {},
-        }),
-    });
+export const RteMaxBlocksSet = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi({
+            defaultValue: JSON.stringify({
+                blocks: [
+                    {
+                        key: "fe4ti",
+                        text: "Only one block is accepted",
+                        type: "header-one",
+                        depth: 0,
+                        inlineStyleRanges: [
+                            {
+                                offset: 9,
+                                length: 5,
+                                style: "ITALIC",
+                            },
+                        ],
+                        entityRanges: [],
+                        data: {},
+                    },
+                ],
+                entityMap: {},
+            }),
+        });
 
-    // focus the editor to see the cursor immediately
-    const editorRef = React.useRef<IRteRef>();
-    useAutoFocus(editorRef);
+        // focus the editor to see the cursor immediately
+        const editorRef = React.useRef<IRteRef>();
+        useAutoFocus(editorRef);
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintEditorState editorState={editorState} />
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintEditorState editorState={editorState} />
+            </>
+        );
+    },
+
+    name: "Rte, maxBlocks set",
 };
-
-RteMaxBlocksSet.storyName = "Rte, maxBlocks set";

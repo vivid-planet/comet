@@ -44,48 +44,50 @@ type Args = {
     strategy: ShowStrategy;
 };
 
-export const ShowErrorStrategies = ({ strategy }: Args) => {
-    const initialValues = {
-        foo: "foo",
-        bar: "",
-    };
+export const ShowErrorStrategies = {
+    render: ({ strategy }: Args) => {
+        const initialValues = {
+            foo: "foo",
+            bar: "",
+        };
 
-    const shouldShowFieldError = strategies[strategy];
-    return (
-        <FinalForm<FormValues>
-            mode="edit"
-            onSubmit={() => {
-                // noop
-            }}
-            initialValues={initialValues}
-            validate={validate}
-            formContext={{ shouldShowFieldError }}
-        >
-            {({ form }) => (
-                <>
-                    <Typography variant="body1">
-                        Demonstrates different implementations of &quot;shouldShowFieldError&quot;. Use Knob to switch strategies.
-                    </Typography>
+        const shouldShowFieldError = strategies[strategy];
+        return (
+            <FinalForm<FormValues>
+                mode="edit"
+                onSubmit={() => {
+                    // noop
+                }}
+                initialValues={initialValues}
+                validate={validate}
+                formContext={{ shouldShowFieldError }}
+            >
+                {({ form }) => (
+                    <>
+                        <Typography variant="body1">
+                            Demonstrates different implementations of &quot;shouldShowFieldError&quot;. Use Knob to switch strategies.
+                        </Typography>
 
-                    <Typography variant="h3">Show-Error-Strategy: &quot;{strategy}&quot;</Typography>
-                    <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
-                    <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
-                    <Button variant="contained" color="primary" type="submit">
-                        Submit
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => {
-                            form.reset();
-                            form.resetFieldState("foo");
-                            form.resetFieldState("bar");
-                        }}
-                    >
-                        Reset form and field state
-                    </Button>
-                </>
-            )}
-        </FinalForm>
-    );
+                        <Typography variant="h3">Show-Error-Strategy: &quot;{strategy}&quot;</Typography>
+                        <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
+                        <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
+                        <Button variant="contained" color="primary" type="submit">
+                            Submit
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => {
+                                form.reset();
+                                form.resetFieldState("foo");
+                                form.resetFieldState("bar");
+                            }}
+                        >
+                            Reset form and field state
+                        </Button>
+                    </>
+                )}
+            </FinalForm>
+        );
+    },
 };

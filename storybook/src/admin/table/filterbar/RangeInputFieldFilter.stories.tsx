@@ -62,14 +62,16 @@ export default {
     title: "@comet/admin/table/filterbar",
 };
 
-export const FilterbarWithRangeInputFieldFilter = () => {
-    const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
-        return {
-            id: i,
-            horsepower: faker.datatype.number({ min: 50, max: 200 }),
-        };
-    });
-    return <Story tableData={randomTableData} />;
-};
+export const FilterbarWithRangeInputFieldFilter = {
+    render: () => {
+        const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
+            return {
+                id: i,
+                horsepower: faker.datatype.number({ min: 50, max: 200 }),
+            };
+        });
+        return <Story tableData={randomTableData} />;
+    },
 
-FilterbarWithRangeInputFieldFilter.storyName = "Filterbar with Range Input Field Filter";
+    name: "Filterbar with Range Input Field Filter",
+};

@@ -7,33 +7,35 @@ export default {
     title: "stories/components/Tooltip",
 };
 
-export const BasicTooltip = () => {
-    return (
-        <Grid container justifyContent="center" spacing={4}>
-            <Grid item>
-                <Tooltip title="This is a basic tooltip">
-                    <div>Hover over me</div>
-                </Tooltip>
+export const BasicTooltip = {
+    render: () => {
+        return (
+            <Grid container justifyContent="center" spacing={4}>
+                <Grid item>
+                    <Tooltip title="This is a basic tooltip">
+                        <div>Hover over me</div>
+                    </Tooltip>
+                </Grid>
+                <Grid item>
+                    <Tooltip title="This is a focus or touch tooltip" trigger="focus">
+                        <div>Focus or touch</div>
+                    </Tooltip>
+                </Grid>
+                <Grid item>
+                    <Tooltip trigger="click" title="This is a clickable tooltip">
+                        <div>Click here to show tooltip</div>
+                    </Tooltip>
+                </Grid>
+                <Grid item>
+                    <Tooltip trigger="click" title="This is a clickable tooltip with an info icon">
+                        <IconButton>
+                            <Info />
+                        </IconButton>
+                    </Tooltip>
+                </Grid>
             </Grid>
-            <Grid item>
-                <Tooltip title="This is a focus or touch tooltip" trigger="focus">
-                    <div>Focus or touch</div>
-                </Tooltip>
-            </Grid>
-            <Grid item>
-                <Tooltip trigger="click" title="This is a clickable tooltip">
-                    <div>Click here to show tooltip</div>
-                </Tooltip>
-            </Grid>
-            <Grid item>
-                <Tooltip trigger="click" title="This is a clickable tooltip with an info icon">
-                    <IconButton>
-                        <Info />
-                    </IconButton>
-                </Tooltip>
-            </Grid>
-        </Grid>
-    );
-};
+        );
+    },
 
-BasicTooltip.storyName = "BasicTooltip";
+    name: "BasicTooltip",
+};

@@ -6,12 +6,14 @@ export default {
     title: "stories/Icons/Render Icon in Text",
 };
 
-export const RenderIconInText = () => {
-    return (
-        <Typography>
-            This is an error <Error /> icon.
-        </Typography>
-    );
-};
+export const RenderIconInText = {
+    render: () => {
+        return (
+            <Typography>
+                This is an error <Error /> icon.
+            </Typography>
+        );
+    },
 
-RenderIconInText.storyName = "Render Icon in Text";
+    name: "Render Icon in Text",
+};

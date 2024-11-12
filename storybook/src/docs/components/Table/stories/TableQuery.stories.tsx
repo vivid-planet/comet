@@ -35,37 +35,39 @@ export default {
     decorators: [apolloRestStoryDecorator()],
 };
 
-export const _TableQuery = () => {
-    const { tableData, api, loading, error } = useTableQuery<QueryData, QueryVariables>()(query, {
-        resolveTableData: (data) => ({
-            data: data.users,
-            totalCount: data.users.length,
-        }),
-    });
+export const _TableQuery = {
+    render: () => {
+        const { tableData, api, loading, error } = useTableQuery<QueryData, QueryVariables>()(query, {
+            resolveTableData: (data) => ({
+                data: data.users,
+                totalCount: data.users.length,
+            }),
+        });
 
-    return (
-        <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <Table
-                    {...tableData}
-                    columns={[
-                        {
-                            name: "name",
-                            header: "Name",
-                        },
-                        {
-                            name: "username",
-                            header: "Username",
-                        },
-                        {
-                            name: "email",
-                            header: "E-Mail",
-                        },
-                    ]}
-                />
-            )}
-        </TableQuery>
-    );
+        return (
+            <TableQuery api={api} loading={loading} error={error}>
+                {tableData && (
+                    <Table
+                        {...tableData}
+                        columns={[
+                            {
+                                name: "name",
+                                header: "Name",
+                            },
+                            {
+                                name: "username",
+                                header: "Username",
+                            },
+                            {
+                                name: "email",
+                                header: "E-Mail",
+                            },
+                        ]}
+                    />
+                )}
+            </TableQuery>
+        );
+    },
+
+    name: "TableQuery",
 };
-
-_TableQuery.storyName = "TableQuery";

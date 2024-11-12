@@ -82,20 +82,22 @@ export default {
     excludeStories: ["Story"],
 };
 
-export const _Menu = () => (
-    <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
-        <Switch>
-            <Route path="/" exact render={() => <Content>Root</Content>} />
-            <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
-            <Route path="/settings" render={() => <Content>Settings</Content>} />
-            <Route path="/foo1" render={() => <Content>Foo 1</Content>} />
-            <Route path="/foo2" render={() => <Content>Foo 2</Content>} />
-            <Route path="/foo3" render={() => <Content>Foo 3</Content>} />
-            <Route path="/foo4" render={() => <Content>Foo 4</Content>} />
-            <Route path="/foo5" render={() => <Content>Foo 5</Content>} />
-            <Route path="/foo6" render={() => <Content>Foo 6</Content>} />
-        </Switch>
-    </MasterLayout>
-);
+export const _Menu = {
+    render: () => (
+        <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
+            <Switch>
+                <Route path="/" exact render={() => <Content>Root</Content>} />
+                <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
+                <Route path="/settings" render={() => <Content>Settings</Content>} />
+                <Route path="/foo1" render={() => <Content>Foo 1</Content>} />
+                <Route path="/foo2" render={() => <Content>Foo 2</Content>} />
+                <Route path="/foo3" render={() => <Content>Foo 3</Content>} />
+                <Route path="/foo4" render={() => <Content>Foo 4</Content>} />
+                <Route path="/foo5" render={() => <Content>Foo 5</Content>} />
+                <Route path="/foo6" render={() => <Content>Foo 6</Content>} />
+            </Switch>
+        </MasterLayout>
+    ),
 
-_Menu.parameters = { layout: "fullscreen" };
+    parameters: { layout: "fullscreen" },
+};

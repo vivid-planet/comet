@@ -1,6 +1,6 @@
 import { FileSelectItem, FileSelectListItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { ComponentMeta } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import React from "react";
 
 const fileSize = 1.8 * 1024 * 1024; // 1.8 MB
@@ -70,7 +70,7 @@ export default {
             control: "boolean",
         },
     },
-} as ComponentMeta<typeof FileSelectListItem>;
+} as Meta<typeof FileSelectListItem>;
 
 type Args = {
     selectedFile: FileSelectItem;
@@ -80,17 +80,19 @@ type Args = {
     disabled: boolean;
 };
 
-export const _FileSelectListItem = ({ selectedFile, showFilePreview, downloadMethod, canBeDeleted, disabled }: Args) => {
-    return (
-        <FileSelectListItem
-            file={selectedFile}
-            onClickDownload={downloadMethod === "Download function" ? () => alert("Downloading file") : undefined}
-            downloadUrl={downloadMethod === "Download URL" ? "https://example.com" : undefined}
-            onClickDelete={canBeDeleted ? () => alert("Delete") : undefined}
-            filePreview={showFilePreview}
-            disabled={disabled}
-        />
-    );
-};
+export const _FileSelectListItem = {
+    render: ({ selectedFile, showFilePreview, downloadMethod, canBeDeleted, disabled }: Args) => {
+        return (
+            <FileSelectListItem
+                file={selectedFile}
+                onClickDownload={downloadMethod === "Download function" ? () => alert("Downloading file") : undefined}
+                downloadUrl={downloadMethod === "Download URL" ? "https://example.com" : undefined}
+                onClickDelete={canBeDeleted ? () => alert("Delete") : undefined}
+                filePreview={showFilePreview}
+                disabled={disabled}
+            />
+        );
+    },
 
-_FileSelectListItem.storyName = "FileSelectListItem";
+    name: "FileSelectListItem",
+};

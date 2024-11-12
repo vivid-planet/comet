@@ -7,21 +7,23 @@ export default {
     title: "stories/components/AppHeader/Button icon",
 };
 
-export const AppHeaderButtonIcon = () => {
-    return (
-        <AppHeader position="relative" headerHeight={60}>
-            <Typography style={{ padding: 20 }}>Header buttons with icon only</Typography>
-            <AppHeaderFillSpace />
+export const AppHeaderButtonIcon = {
+    render: () => {
+        return (
+            <AppHeader position="relative" headerHeight={60}>
+                <Typography style={{ padding: 20 }}>Header buttons with icon only</Typography>
+                <AppHeaderFillSpace />
 
-            <AppHeaderButton>
-                <SwitchUser />
-            </AppHeaderButton>
+                <AppHeaderButton>
+                    <SwitchUser />
+                </AppHeaderButton>
 
-            <AppHeaderButton>
-                <Wrench color="primary" />
-            </AppHeaderButton>
-        </AppHeader>
-    );
+                <AppHeaderButton>
+                    <Wrench color="primary" />
+                </AppHeaderButton>
+            </AppHeader>
+        );
+    },
+
+    name: "AppHeader Button icon",
 };
-
-AppHeaderButtonIcon.storyName = "AppHeader Button icon";

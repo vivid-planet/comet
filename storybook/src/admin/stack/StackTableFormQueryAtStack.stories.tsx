@@ -167,31 +167,33 @@ export default {
     decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
 
-export const StackTableFormQueryAtStack = () => {
-    const filterApi = useTableQueryFilter<IFilterValues>({ query: "" });
+export const StackTableFormQueryAtStack = {
+    render: () => {
+        const filterApi = useTableQueryFilter<IFilterValues>({ query: "" });
 
-    const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
-        variables: {
-            ...filterApi.current,
-        },
-        resolveTableData: (data) => ({
-            data: data.users,
-            totalCount: data.users.length,
-        }),
-    });
+        const { tableData, api, loading, error } = useTableQuery<IQueryData, IVariables>()(query, {
+            variables: {
+                ...filterApi.current,
+            },
+            resolveTableData: (data) => ({
+                data: data.users,
+                totalCount: data.users.length,
+            }),
+        });
 
-    return (
-        <Stack topLevelTitle="Stack">
-            <TableQuery api={api} loading={loading} error={error}>
-                <StackSwitch>
-                    <StackPage name="table">{tableData && <ExampleTable tableData={tableData} filterApi={filterApi} />}</StackPage>
-                    <StackPage name="form" title="bearbeiten">
-                        {(selectedId) => <ExampleForm id={+selectedId} />}
-                    </StackPage>
-                </StackSwitch>
-            </TableQuery>
-        </Stack>
-    );
+        return (
+            <Stack topLevelTitle="Stack">
+                <TableQuery api={api} loading={loading} error={error}>
+                    <StackSwitch>
+                        <StackPage name="table">{tableData && <ExampleTable tableData={tableData} filterApi={filterApi} />}</StackPage>
+                        <StackPage name="form" title="bearbeiten">
+                            {(selectedId) => <ExampleForm id={+selectedId} />}
+                        </StackPage>
+                    </StackSwitch>
+                </TableQuery>
+            </Stack>
+        );
+    },
+
+    name: "Stack Table Form Query at stack",
 };
-
-StackTableFormQueryAtStack.storyName = "Stack Table Form Query at stack";

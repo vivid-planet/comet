@@ -15,44 +15,46 @@ export default {
     title: "@comet/admin-rte/field",
 };
 
-export const FieldAllOptions = () => {
-    const [submittedValue, setSubmittedValue] = React.useState<{ rteContent: any }>({ rteContent: defaultContent });
+export const FieldAllOptions = {
+    render: () => {
+        const [submittedValue, setSubmittedValue] = React.useState<{ rteContent: any }>({ rteContent: defaultContent });
 
-    return (
-        <Grid container spacing={4} style={{ maxWidth: 800 }}>
-            <Grid item xs={12}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Form
-                            initialValues={{
-                                rteContent: defaultContent,
-                            }}
-                            onSubmit={(values) => {
-                                setSubmittedValue({ rteContent: values.rteContent });
-                            }}
-                            render={({ handleSubmit }) => (
-                                <form onSubmit={handleSubmit}>
-                                    <Field name="rteContent" label="Rich Text" component={RteField} fullWidth />
-                                    <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
-                                        Submit
-                                    </Button>
-                                </form>
-                            )}
-                        />
-                    </CardContent>
-                </Card>
+        return (
+            <Grid container spacing={4} style={{ maxWidth: 800 }}>
+                <Grid item xs={12}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Form
+                                initialValues={{
+                                    rteContent: defaultContent,
+                                }}
+                                onSubmit={(values) => {
+                                    setSubmittedValue({ rteContent: values.rteContent });
+                                }}
+                                render={({ handleSubmit }) => (
+                                    <form onSubmit={handleSubmit}>
+                                        <Field name="rteContent" label="Rich Text" component={RteField} fullWidth />
+                                        <Button color="primary" variant="contained" type="submit" component="button" disableTouchRipple>
+                                            Submit
+                                        </Button>
+                                    </form>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <FormSection title="Readonly Component" disableMarginBottom>
+                                <RteReadOnly content={submittedValue.rteContent} />
+                            </FormSection>
+                        </CardContent>
+                    </Card>
+                </Grid>
             </Grid>
-            <Grid item xs={12}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <FormSection title="Readonly Component" disableMarginBottom>
-                            <RteReadOnly content={submittedValue.rteContent} />
-                        </FormSection>
-                    </CardContent>
-                </Card>
-            </Grid>
-        </Grid>
-    );
+        );
+    },
+
+    name: "Field, all options",
 };
-
-FieldAllOptions.storyName = "Field, all options";

@@ -46,26 +46,28 @@ export default {
     title: "@comet/admin-rte/save-as",
 };
 
-export const SaveAsRawDraftJsObject = () => {
-    const [savableContent, setSavableContent] = React.useState<RawDraftContentState>(defaultValue);
+export const SaveAsRawDraftJsObject = {
+    render: () => {
+        const [savableContent, setSavableContent] = React.useState<RawDraftContentState>(defaultValue);
 
-    const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
-        setSavableContent(convertStateToRawContent(innerEditorState));
-    };
-    const { editorState, setEditorState } = useRteApi({ defaultValue, onDebouncedContentChange: handleDebouncedContentChange });
+        const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
+            setSavableContent(convertStateToRawContent(innerEditorState));
+        };
+        const { editorState, setEditorState } = useRteApi({ defaultValue, onDebouncedContentChange: handleDebouncedContentChange });
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintAnything label="Save Value: RawDraftJs (not stringified)">{savableContent}</PrintAnything>
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Rte value={editorState} onChange={setEditorState} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintAnything label="Save Value: RawDraftJs (not stringified)">{savableContent}</PrintAnything>
+            </>
+        );
+    },
+
+    name: "Save as Raw DraftJs Object",
 };
-
-SaveAsRawDraftJsObject.storyName = "Save as Raw DraftJs Object";

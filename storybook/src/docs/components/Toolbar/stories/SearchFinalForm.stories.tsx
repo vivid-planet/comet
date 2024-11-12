@@ -33,35 +33,37 @@ export const SearchFinalForm = () => {
     );
 };
 
-export const SearchFinalFormCustomIcon = () => {
-    return (
-        <Form
-            onSubmit={() => {
-                alert("on submit");
-            }}
-            render={({ values }) => {
-                return (
-                    <form>
-                        <Toolbar>
-                            <ToolbarItem>
-                                <Field
-                                    name="query"
-                                    type="text"
-                                    component={FinalFormSearchTextField}
-                                    icon={<CometColor />}
-                                    placeholder="Comet Search"
-                                />
-                            </ToolbarItem>
-                            <ToolbarItem>Debug Final Form Values: {JSON.stringify(values)}</ToolbarItem>
-                        </Toolbar>
-                    </form>
-                );
-            }}
-        />
-    );
-};
+export const SearchFinalFormCustomIcon = {
+    render: () => {
+        return (
+            <Form
+                onSubmit={() => {
+                    alert("on submit");
+                }}
+                render={({ values }) => {
+                    return (
+                        <form>
+                            <Toolbar>
+                                <ToolbarItem>
+                                    <Field
+                                        name="query"
+                                        type="text"
+                                        component={FinalFormSearchTextField}
+                                        icon={<CometColor />}
+                                        placeholder="Comet Search"
+                                    />
+                                </ToolbarItem>
+                                <ToolbarItem>Debug Final Form Values: {JSON.stringify(values)}</ToolbarItem>
+                            </Toolbar>
+                        </form>
+                    );
+                }}
+            />
+        );
+    },
 
-SearchFinalFormCustomIcon.storyName = "Search Final Form custom icon";
+    name: "Search Final Form custom icon",
+};
 
 export const SearchFinalFormInput = () => {
     return (

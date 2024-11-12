@@ -139,20 +139,22 @@ export default {
     title: "@comet/admin/helpers",
 };
 
-export const _PrettyBytes = () => {
-    return (
-        <Grid container spacing={4}>
-            <Grid item xs={12}>
-                <Normal />
+export const _PrettyBytes = {
+    render: () => {
+        return (
+            <Grid container spacing={4}>
+                <Grid item xs={12}>
+                    <Normal />
+                </Grid>
+                <Grid item xs={12}>
+                    <FixedUnit />
+                </Grid>
+                <Grid item xs={12}>
+                    <CustomMaximumFractionDigits />
+                </Grid>
             </Grid>
-            <Grid item xs={12}>
-                <FixedUnit />
-            </Grid>
-            <Grid item xs={12}>
-                <CustomMaximumFractionDigits />
-            </Grid>
-        </Grid>
-    );
-};
+        );
+    },
 
-_PrettyBytes.storyName = "PrettyBytes";
+    name: "PrettyBytes",
+};

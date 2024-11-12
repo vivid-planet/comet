@@ -121,19 +121,21 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const MenuDynamicVariants = () => (
-    <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
-        <Switch>
-            <Route path="/" exact render={() => <Content>Root</Content>} />
-            <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
-            <Route path="/settings" render={() => <Content>Settings</Content>} />
-            <Route path="/foo1" render={() => <Content>Foo 1</Content>} />
-            <Route path="/foo2" render={() => <Content>Foo 2</Content>} />
-            <Route path="/foo3" render={() => <Content>Foo 3</Content>} />
-            <Route path="/foo4" render={() => <Content>Foo 4</Content>} />
-        </Switch>
-    </MasterLayout>
-);
+export const MenuDynamicVariants = {
+    render: () => (
+        <MasterLayout headerComponent={Header} menuComponent={AppMenu}>
+            <Switch>
+                <Route path="/" exact render={() => <Content>Root</Content>} />
+                <Route path="/dashboard" render={() => <Content>Dashboard</Content>} />
+                <Route path="/settings" render={() => <Content>Settings</Content>} />
+                <Route path="/foo1" render={() => <Content>Foo 1</Content>} />
+                <Route path="/foo2" render={() => <Content>Foo 2</Content>} />
+                <Route path="/foo3" render={() => <Content>Foo 3</Content>} />
+                <Route path="/foo4" render={() => <Content>Foo 4</Content>} />
+            </Switch>
+        </MasterLayout>
+    ),
 
-MenuDynamicVariants.storyName = "Menu (dynamic variants)";
-MenuDynamicVariants.parameters = { layout: "fullscreen" };
+    name: "Menu (dynamic variants)",
+    parameters: { layout: "fullscreen" },
+};

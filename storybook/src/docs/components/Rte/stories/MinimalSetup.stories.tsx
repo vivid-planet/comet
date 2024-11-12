@@ -7,10 +7,12 @@ export default {
     title: "stories/rte/Setup",
 };
 
-export const Minimal = () => {
-    const { editorState, setEditorState } = useRteApi();
+export const Minimal = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi();
 
-    return <Rte value={editorState} onChange={setEditorState} />;
+        return <Rte value={editorState} onChange={setEditorState} />;
+    },
+
+    name: "minimal",
 };
-
-Minimal.storyName = "minimal";

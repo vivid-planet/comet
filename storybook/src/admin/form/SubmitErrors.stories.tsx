@@ -35,30 +35,32 @@ export default {
     decorators: [apolloRestStoryDecorator()],
 };
 
-export const SubmitErrors = () => {
-    const initialValues = {
-        foo: "foo",
-    };
+export const SubmitErrors = {
+    render: () => {
+        const initialValues = {
+            foo: "foo",
+        };
 
-    return (
-        <FinalForm mode="edit" onSubmit={onSubmit} initialValues={initialValues} resolveSubmitErrors={resolveSubmitErrors}>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Field label="Foo" name="foo" component={FinalFormInput} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Field label="Bar" name="bar" component={FinalFormInput} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <FinalFormSaveCancelButtonsLegacy />
-        </FinalForm>
-    );
+        return (
+            <FinalForm mode="edit" onSubmit={onSubmit} initialValues={initialValues} resolveSubmitErrors={resolveSubmitErrors}>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Field label="Foo" name="foo" component={FinalFormInput} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Field label="Bar" name="bar" component={FinalFormInput} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <FinalFormSaveCancelButtonsLegacy />
+            </FinalForm>
+        );
+    },
+
+    name: "SubmitErrors",
 };
-
-SubmitErrors.storyName = "SubmitErrors";

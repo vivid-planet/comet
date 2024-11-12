@@ -10,61 +10,65 @@ export default {
     decorators: [toolbarDecorator(), storyRouterDecorator()],
 };
 
-export const ToolbarActionsOneAction = () => {
-    return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
-            <ToolbarFillSpace />
-            <ToolbarActions>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={() => {
-                        alert("clicked Action");
-                    }}
-                >
-                    Action
-                </Button>
-            </ToolbarActions>
-        </Toolbar>
-    );
+export const ToolbarActionsOneAction = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarAutomaticTitleItem />
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => {
+                            alert("clicked Action");
+                        }}
+                    >
+                        Action
+                    </Button>
+                </ToolbarActions>
+            </Toolbar>
+        );
+    },
+
+    name: "Toolbar Actions one action",
 };
 
-ToolbarActionsOneAction.storyName = "Toolbar Actions one action";
+export const ToolbarActionsTwoActions = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarAutomaticTitleItem />
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <Grid container spacing={4}>
+                        <Grid item>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    alert("clicked Action 1");
+                                }}
+                            >
+                                Action 1
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                onClick={() => {
+                                    alert("clicked Action 2");
+                                }}
+                            >
+                                Action 2
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </ToolbarActions>
+            </Toolbar>
+        );
+    },
 
-export const ToolbarActionsTwoActions = () => {
-    return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
-            <ToolbarFillSpace />
-            <ToolbarActions>
-                <Grid container spacing={4}>
-                    <Grid item>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={() => {
-                                alert("clicked Action 1");
-                            }}
-                        >
-                            Action 1
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            color="secondary"
-                            variant="contained"
-                            onClick={() => {
-                                alert("clicked Action 2");
-                            }}
-                        >
-                            Action 2
-                        </Button>
-                    </Grid>
-                </Grid>
-            </ToolbarActions>
-        </Toolbar>
-    );
+    name: "Toolbar Actions two actions",
 };
-
-ToolbarActionsTwoActions.storyName = "Toolbar Actions two actions";

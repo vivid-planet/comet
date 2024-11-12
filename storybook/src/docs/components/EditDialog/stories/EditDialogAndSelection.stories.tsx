@@ -21,66 +21,68 @@ export default {
     decorators: [editDialogDecorator()],
 };
 
-export const EditDialogAndSelectionEditDialogComponent = () => {
-    const location = useLocation();
-    const editDialogApi = React.useRef<IEditDialogApi>(null);
+export const EditDialogAndSelectionEditDialogComponent = {
+    render: () => {
+        const location = useLocation();
+        const editDialogApi = React.useRef<IEditDialogApi>(null);
 
-    return (
-        <>
-            <h2>Click on a button to see the current selection values:</h2>
-            <Toolbar>
-                <ToolbarFillSpace />
-                <ToolbarItem>
-                    <Button onClick={() => editDialogApi.current?.openAddDialog()} variant="contained" color="primary">
-                        Add User
-                    </Button>
-                </ToolbarItem>
-            </Toolbar>
-            <Table
-                data={users}
-                totalCount={users.length}
-                columns={[
-                    { name: "name", header: "Name" },
-                    {
-                        name: "edit",
-                        cellProps: {
-                            align: "right",
+        return (
+            <>
+                <h2>Click on a button to see the current selection values:</h2>
+                <Toolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarItem>
+                        <Button onClick={() => editDialogApi.current?.openAddDialog()} variant="contained" color="primary">
+                            Add User
+                        </Button>
+                    </ToolbarItem>
+                </Toolbar>
+                <Table
+                    data={users}
+                    totalCount={users.length}
+                    columns={[
+                        { name: "name", header: "Name" },
+                        {
+                            name: "edit",
+                            cellProps: {
+                                align: "right",
+                            },
+                            render: (row) => {
+                                return (
+                                    <Button
+                                        onClick={() => {
+                                            editDialogApi.current?.openEditDialog(row.id);
+                                        }}
+                                    >
+                                        Change Name
+                                    </Button>
+                                );
+                            },
                         },
-                        render: (row) => {
-                            return (
-                                <Button
-                                    onClick={() => {
-                                        editDialogApi.current?.openEditDialog(row.id);
-                                    }}
-                                >
-                                    Change Name
-                                </Button>
-                            );
-                        },
-                    },
-                ]}
-            />
-            <EditDialog ref={editDialogApi}>
-                {({ selectionMode, selectedId }) => {
-                    return (
-                        <>
-                            <Typography>
-                                <strong>Mode:</strong> {selectionMode}
-                            </Typography>
+                    ]}
+                />
+                <EditDialog ref={editDialogApi}>
+                    {({ selectionMode, selectedId }) => {
+                        return (
+                            <>
+                                <Typography>
+                                    <strong>Mode:</strong> {selectionMode}
+                                </Typography>
 
-                            <Typography>
-                                <strong>ID:</strong> {selectedId}
-                            </Typography>
+                                <Typography>
+                                    <strong>ID:</strong> {selectedId}
+                                </Typography>
 
-                            <Typography>
-                                <strong>URL:</strong> {location.pathname}
-                            </Typography>
-                        </>
-                    );
-                }}
-            </EditDialog>
-        </>
-    );
+                                <Typography>
+                                    <strong>URL:</strong> {location.pathname}
+                                </Typography>
+                            </>
+                        );
+                    }}
+                </EditDialog>
+            </>
+        );
+    },
+
+    name: "Edit Dialog and Selection (EditDialog Component)",
 };
-
-EditDialogAndSelectionEditDialogComponent.storyName = "Edit Dialog and Selection (EditDialog Component)";

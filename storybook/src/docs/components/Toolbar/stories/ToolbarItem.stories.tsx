@@ -26,21 +26,23 @@ export const _ToolbarItem = () => {
     );
 };
 
-export const ToolbarItemMixingWithOtherComponents = () => {
-    return (
-        <Toolbar>
-            <ToolbarItem>
-                <Typography>Item 1</Typography>
-            </ToolbarItem>
-            <ToolbarAutomaticTitleItem />
-            <ToolbarItem>
-                <Typography>Item 2</Typography>
-            </ToolbarItem>
-            <ToolbarItem>
-                <Typography>Item 3</Typography>
-            </ToolbarItem>
-        </Toolbar>
-    );
-};
+export const ToolbarItemMixingWithOtherComponents = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography>Item 1</Typography>
+                </ToolbarItem>
+                <ToolbarAutomaticTitleItem />
+                <ToolbarItem>
+                    <Typography>Item 2</Typography>
+                </ToolbarItem>
+                <ToolbarItem>
+                    <Typography>Item 3</Typography>
+                </ToolbarItem>
+            </Toolbar>
+        );
+    },
 
-ToolbarItemMixingWithOtherComponents.storyName = "Toolbar Item mixing with other components";
+    name: "Toolbar Item mixing with other components",
+};

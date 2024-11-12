@@ -11,51 +11,53 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const UseSelectionRouteHook = () => {
-    const SelectionList = () => {
-        const [SelectionRoute, selection, selectionApi] = useSelectionRoute();
+export const UseSelectionRouteHook = {
+    render: () => {
+        const SelectionList = () => {
+            const [SelectionRoute, selection, selectionApi] = useSelectionRoute();
+
+            return (
+                <SelectionRoute>
+                    <div>
+                        <p>id: {selection.id}</p>
+                        <p>mode: {selection.mode}</p>
+                        <List>
+                            {["1", "2", "3"].map((id) => {
+                                return (
+                                    <ListItem key={id} button onClick={() => selectionApi.handleSelectId(id)}>
+                                        <ListItemText primary={`Item ${id}`} />
+                                    </ListItem>
+                                );
+                            })}
+                            <ListItem button onClick={() => selectionApi.handleAdd()}>
+                                <ListItemIcon>
+                                    <Add />
+                                </ListItemIcon>
+                                <ListItemText primary="Add Item" />
+                            </ListItem>
+                        </List>
+                    </div>
+                </SelectionRoute>
+            );
+        };
+
+        const location = useLocation();
 
         return (
-            <SelectionRoute>
-                <div>
-                    <p>id: {selection.id}</p>
-                    <p>mode: {selection.mode}</p>
-                    <List>
-                        {["1", "2", "3"].map((id) => {
-                            return (
-                                <ListItem key={id} button onClick={() => selectionApi.handleSelectId(id)}>
-                                    <ListItemText primary={`Item ${id}`} />
-                                </ListItem>
-                            );
-                        })}
-                        <ListItem button onClick={() => selectionApi.handleAdd()}>
-                            <ListItemIcon>
-                                <Add />
-                            </ListItemIcon>
-                            <ListItemText primary="Add Item" />
-                        </ListItem>
-                    </List>
-                </div>
-            </SelectionRoute>
+            <Paper style={{ padding: "10px" }}>
+                <h2>useSelectionRoute Hook:</h2>
+                <p>
+                    <strong>Current URL: </strong> {location.pathname}
+                </p>
+                <Route exact path="/">
+                    <Redirect to="/example" />
+                </Route>
+                <Route path="/example">
+                    <SelectionList />
+                </Route>
+            </Paper>
         );
-    };
+    },
 
-    const location = useLocation();
-
-    return (
-        <Paper style={{ padding: "10px" }}>
-            <h2>useSelectionRoute Hook:</h2>
-            <p>
-                <strong>Current URL: </strong> {location.pathname}
-            </p>
-            <Route exact path="/">
-                <Redirect to="/example" />
-            </Route>
-            <Route path="/example">
-                <SelectionList />
-            </Route>
-        </Paper>
-    );
+    name: "useSelectionRoute Hook",
 };
-
-UseSelectionRouteHook.storyName = "useSelectionRoute Hook";

@@ -18,18 +18,20 @@ export default {
     title: "@comet/admin/fetch-provider",
 };
 
-export const _FetchProvider = () => {
-    const fetch = createFetch({
-        interceptHeaders: async (headers: Headers) => {
-            // headers.append("x-foo", "bar");
-        },
-    });
+export const _FetchProvider = {
+    render: () => {
+        const fetch = createFetch({
+            interceptHeaders: async (headers: Headers) => {
+                // headers.append("x-foo", "bar");
+            },
+        });
 
-    return (
-        <FetchProvider value={fetch}>
-            <ExampleFetch />
-        </FetchProvider>
-    );
+        return (
+            <FetchProvider value={fetch}>
+                <ExampleFetch />
+            </FetchProvider>
+        );
+    },
+
+    name: "FetchProvider",
 };
-
-_FetchProvider.storyName = "FetchProvider";

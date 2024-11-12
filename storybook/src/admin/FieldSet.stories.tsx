@@ -11,41 +11,43 @@ export default {
     title: "@comet/admin/FieldSet",
 };
 
-export const _FieldSet = () => (
-    <Stack spacing={4}>
-        <FieldSet title="FieldSet Title" supportText="Support text">
-            {textContent}
-        </FieldSet>
+export const _FieldSet = {
+    render: () => (
+        <Stack spacing={4}>
+            <FieldSet title="FieldSet Title" supportText="Support text">
+                {textContent}
+            </FieldSet>
 
-        <FieldSet
-            title={
-                <>
-                    FieldSet with an icon
-                    <Tooltip title="Lorem ipsum info." sx={{ ml: 1 }}>
-                        <Info />
-                    </Tooltip>
-                </>
-            }
-        >
-            {textContent}
-        </FieldSet>
+            <FieldSet
+                title={
+                    <>
+                        FieldSet with an icon
+                        <Tooltip title="Lorem ipsum info." sx={{ ml: 1 }}>
+                            <Info />
+                        </Tooltip>
+                    </>
+                }
+            >
+                {textContent}
+            </FieldSet>
 
-        <FieldSet title="FieldSet closed by default" initiallyExpanded={false}>
-            {textContent}
-        </FieldSet>
+            <FieldSet title="FieldSet closed by default" initiallyExpanded={false}>
+                {textContent}
+            </FieldSet>
 
-        <FieldSet title="FieldSet with a chip" endAdornment={<Chip color="default" label="Chip text" />}>
-            {textContent}
-        </FieldSet>
+            <FieldSet title="FieldSet with a chip" endAdornment={<Chip color="default" label="Chip text" />}>
+                {textContent}
+            </FieldSet>
 
-        <FieldSet title="FieldSet with full-width content" disablePadding>
-            <Box sx={({ palette }) => ({ p: 4, background: palette.primary.light })}>{textContent}</Box>
-        </FieldSet>
+            <FieldSet title="FieldSet with full-width content" disablePadding>
+                <Box sx={({ palette }) => ({ p: 4, background: palette.primary.light })}>{textContent}</Box>
+            </FieldSet>
 
-        <FieldSet title="FieldSet not collapsible" collapsible={false}>
-            {textContent}
-        </FieldSet>
-    </Stack>
-);
+            <FieldSet title="FieldSet not collapsible" collapsible={false}>
+                {textContent}
+            </FieldSet>
+        </Stack>
+    ),
 
-_FieldSet.storyName = "FieldSet";
+    name: "FieldSet",
+};

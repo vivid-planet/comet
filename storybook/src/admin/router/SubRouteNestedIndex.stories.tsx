@@ -52,20 +52,22 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const SubrouteNestedIndex = () => {
-    return (
-        <>
-            <Path />
-            <Switch>
-                <Route exact path="/">
-                    <Redirect to="/foo" />
-                </Route>
-                <Route path="/foo">
-                    <Story />
-                </Route>
-            </Switch>
-        </>
-    );
-};
+export const SubrouteNestedIndex = {
+    render: () => {
+        return (
+            <>
+                <Path />
+                <Switch>
+                    <Route exact path="/">
+                        <Redirect to="/foo" />
+                    </Route>
+                    <Route path="/foo">
+                        <Story />
+                    </Route>
+                </Switch>
+            </>
+        );
+    },
 
-SubrouteNestedIndex.storyName = "Subroute nested index";
+    name: "Subroute nested index",
+};

@@ -11,97 +11,101 @@ export default {
     decorators: [apolloStoryDecorator(`https://api.spacex.land/graphql/`)],
 };
 
-export const BasicExample = () => {
-    const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
-        gql`
-            query LaunchesPast {
-                launchesPastResult(limit: 1) {
-                    data {
-                        id
-                        mission_name
-                        launch_date_local
+export const BasicExample = {
+    render: () => {
+        const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
+            gql`
+                query LaunchesPast {
+                    launchesPastResult(limit: 1) {
+                        data {
+                            id
+                            mission_name
+                            launch_date_local
+                        }
                     }
                 }
-            }
-        `,
-        {
-            notifyOnNetworkStatusChange: true, // Only necessary to show loading indicator while polling
-        },
-    );
+            `,
+            {
+                notifyOnNetworkStatusChange: true, // Only necessary to show loading indicator while polling
+            },
+        );
 
-    useFocusAwarePolling({
-        pollInterval: 10000,
-        refetch,
-        startPolling,
-        stopPolling,
-    });
+        useFocusAwarePolling({
+            pollInterval: 10000,
+            refetch,
+            startPolling,
+            stopPolling,
+        });
 
-    return (
-        <>
-            <Typography>
-                Most recent launch:
-                {loading
-                    ? "Checking..."
-                    : data && (
-                          <>
-                              {data.launchesPastResult.data[0].mission_name}, {data.launchesPastResult.data[0].launch_date_local}
-                          </>
-                      )}
-            </Typography>
-            {error && <Typography color="error">Error: {JSON.stringify(error)}</Typography>}
-        </>
-    );
+        return (
+            <>
+                <Typography>
+                    Most recent launch:
+                    {loading
+                        ? "Checking..."
+                        : data && (
+                              <>
+                                  {data.launchesPastResult.data[0].mission_name}, {data.launchesPastResult.data[0].launch_date_local}
+                              </>
+                          )}
+                </Typography>
+                {error && <Typography color="error">Error: {JSON.stringify(error)}</Typography>}
+            </>
+        );
+    },
+
+    name: "Basic example",
 };
 
-BasicExample.storyName = "Basic example";
+export const WithSkipOption = {
+    render: () => {
+        const [paused, setPaused] = React.useState(false);
 
-export const WithSkipOption = () => {
-    const [paused, setPaused] = React.useState(false);
-
-    const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
-        gql`
-            query LaunchesPast {
-                launchesPastResult(limit: 1) {
-                    data {
-                        id
-                        mission_name
-                        launch_date_local
+        const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
+            gql`
+                query LaunchesPast {
+                    launchesPastResult(limit: 1) {
+                        data {
+                            id
+                            mission_name
+                            launch_date_local
+                        }
                     }
                 }
-            }
-        `,
-        {
-            notifyOnNetworkStatusChange: true, // Only necessary to show loading indicator while polling
-            skip: paused,
-        },
-    );
+            `,
+            {
+                notifyOnNetworkStatusChange: true, // Only necessary to show loading indicator while polling
+                skip: paused,
+            },
+        );
 
-    useFocusAwarePolling({
-        pollInterval: 10000,
-        skip: paused, // <-- Make sure to add skip here too!
-        refetch,
-        startPolling,
-        stopPolling,
-    });
+        useFocusAwarePolling({
+            pollInterval: 10000,
+            skip: paused, // <-- Make sure to add skip here too!
+            refetch,
+            startPolling,
+            stopPolling,
+        });
 
-    return (
-        <>
-            <Typography>
-                Most recent launch:
-                {loading
-                    ? "Checking..."
-                    : data && (
-                          <>
-                              {data.launchesPastResult.data[0].mission_name}, {data.launchesPastResult.data[0].launch_date_local}
-                          </>
-                      )}
-            </Typography>
-            <Button onClick={() => setPaused(!paused)} startIcon={paused ? <Play /> : <Pause />}>
-                {paused ? "Resume" : "Pause"}
-            </Button>
-            {error && <Typography color="error">Error: {JSON.stringify(error)}</Typography>}
-        </>
-    );
+        return (
+            <>
+                <Typography>
+                    Most recent launch:
+                    {loading
+                        ? "Checking..."
+                        : data && (
+                              <>
+                                  {data.launchesPastResult.data[0].mission_name}, {data.launchesPastResult.data[0].launch_date_local}
+                              </>
+                          )}
+                </Typography>
+                <Button onClick={() => setPaused(!paused)} startIcon={paused ? <Play /> : <Pause />}>
+                    {paused ? "Resume" : "Pause"}
+                </Button>
+                {error && <Typography color="error">Error: {JSON.stringify(error)}</Typography>}
+            </>
+        );
+    },
+
+    name: "With skip option",
 };
-
-WithSkipOption.storyName = "With skip option";

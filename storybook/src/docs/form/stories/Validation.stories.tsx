@@ -9,88 +9,92 @@ export default {
     decorators: [apolloRestStoryDecorator()],
 };
 
-export const RecordLevelValidation = () => {
-    interface FormValues {
-        name: string;
-        email: string;
-    }
-
-    const validate = (values: FormValues) => {
-        if (values.name === "Max Mustermann" || values.email.endsWith("@example.com")) {
-            return {
-                name: values.name === "Max Mustermann" ? "Example name" : undefined,
-                email: values.email.endsWith("@example.com") ? "Example email" : undefined,
-                [FORM_ERROR]: "Example values not allowed",
-            };
+export const RecordLevelValidation = {
+    render: () => {
+        interface FormValues {
+            name: string;
+            email: string;
         }
-    };
 
-    return (
-        <FinalForm<FormValues>
-            mode="add"
-            onSubmit={() => {
-                // noop
-            }}
-            validate={validate}
-            initialValues={{ name: "", email: "" }}
-        >
-            <Field type="text" name="name" label="Name" placeholder="Must not be 'Max Mustermann'" component={FinalFormInput} fullWidth />
-            <Field type="email" name="email" label="Email" placeholder="Must not end with '@example.com'" component={FinalFormInput} fullWidth />
-        </FinalForm>
-    );
+        const validate = (values: FormValues) => {
+            if (values.name === "Max Mustermann" || values.email.endsWith("@example.com")) {
+                return {
+                    name: values.name === "Max Mustermann" ? "Example name" : undefined,
+                    email: values.email.endsWith("@example.com") ? "Example email" : undefined,
+                    [FORM_ERROR]: "Example values not allowed",
+                };
+            }
+        };
+
+        return (
+            <FinalForm<FormValues>
+                mode="add"
+                onSubmit={() => {
+                    // noop
+                }}
+                validate={validate}
+                initialValues={{ name: "", email: "" }}
+            >
+                <Field type="text" name="name" label="Name" placeholder="Must not be 'Max Mustermann'" component={FinalFormInput} fullWidth />
+                <Field type="email" name="email" label="Email" placeholder="Must not end with '@example.com'" component={FinalFormInput} fullWidth />
+            </FinalForm>
+        );
+    },
+
+    name: "Record-level validation",
 };
 
-RecordLevelValidation.storyName = "Record-level validation";
-
-export const FieldLevelValidation = () => {
-    interface FormValues {
-        name: string;
-        email: string;
-    }
-
-    const validateName = (name: string) => {
-        if (name === "Max Mustermann") {
-            return "Example name";
+export const FieldLevelValidation = {
+    render: () => {
+        interface FormValues {
+            name: string;
+            email: string;
         }
-    };
 
-    const validateEmail = (email: string) => {
-        if (email.endsWith("@example.com")) {
-            return "Example email";
-        }
-    };
+        const validateName = (name: string) => {
+            if (name === "Max Mustermann") {
+                return "Example name";
+            }
+        };
 
-    return (
-        <FinalForm<FormValues>
-            mode="add"
-            onSubmit={() => {
-                // noop
-            }}
-            initialValues={{ name: "", email: "" }}
-        >
-            <Field
-                type="text"
-                name="name"
-                label="Name"
-                placeholder="Must not be 'Max Mustermann'"
-                component={FinalFormInput}
-                fullWidth
-                validate={validateName}
-            />
-            <Field
-                type="email"
-                name="email"
-                label="Email"
-                placeholder="Must not end with '@example.com'"
-                component={FinalFormInput}
-                fullWidth
-                validate={validateEmail}
-            />
-        </FinalForm>
-    );
+        const validateEmail = (email: string) => {
+            if (email.endsWith("@example.com")) {
+                return "Example email";
+            }
+        };
+
+        return (
+            <FinalForm<FormValues>
+                mode="add"
+                onSubmit={() => {
+                    // noop
+                }}
+                initialValues={{ name: "", email: "" }}
+            >
+                <Field
+                    type="text"
+                    name="name"
+                    label="Name"
+                    placeholder="Must not be 'Max Mustermann'"
+                    component={FinalFormInput}
+                    fullWidth
+                    validate={validateName}
+                />
+                <Field
+                    type="email"
+                    name="email"
+                    label="Email"
+                    placeholder="Must not end with '@example.com'"
+                    component={FinalFormInput}
+                    fullWidth
+                    validate={validateEmail}
+                />
+            </FinalForm>
+        );
+    },
+
+    name: "Field-level validation",
 };
-
-FieldLevelValidation.storyName = "Field-level validation";
 
 export const Warnings = () => {
     interface FormValues {

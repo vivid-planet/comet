@@ -46,27 +46,29 @@ export default {
     decorators: [apolloRestStoryDecorator()],
 };
 
-export const _CustomButtons = () => {
-    return (
-        <div style={{ width: 300 }}>
-            <FinalForm
-                mode="edit"
-                onSubmit={() => {
-                    // add your form-submit function here
-                }}
-            >
-                <Card variant="outlined">
-                    <CardContent>
-                        <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
-                        <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
-                    </CardContent>
-                </Card>
-                <Box paddingTop={4}>
-                    <CustomButtons />
-                </Box>
-            </FinalForm>
-        </div>
-    );
-};
+export const _CustomButtons = {
+    render: () => {
+        return (
+            <div style={{ width: 300 }}>
+                <FinalForm
+                    mode="edit"
+                    onSubmit={() => {
+                        // add your form-submit function here
+                    }}
+                >
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Field label="Foo" name="foo" component={FinalFormInput} fullWidth />
+                            <Field label="Bar" name="bar" component={FinalFormInput} fullWidth />
+                        </CardContent>
+                    </Card>
+                    <Box paddingTop={4}>
+                        <CustomButtons />
+                    </Box>
+                </FinalForm>
+            </div>
+        );
+    },
 
-_CustomButtons.storyName = "CustomButtons";
+    name: "CustomButtons",
+};

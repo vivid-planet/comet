@@ -176,20 +176,22 @@ export default {
     decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
 
-export const StackTableFormQueryInTable = () => {
-    const persistedStateId = usePersistedStateId();
-    return (
-        <Stack topLevelTitle="Stack">
-            <StackSwitch>
-                <StackPage name="table">
-                    <ExampleTable persistedStateId={persistedStateId} />
-                </StackPage>
-                <StackPage name="form" title="bearbeiten">
-                    {(selectedId) => <ExampleForm id={+selectedId} />}
-                </StackPage>
-            </StackSwitch>
-        </Stack>
-    );
-};
+export const StackTableFormQueryInTable = {
+    render: () => {
+        const persistedStateId = usePersistedStateId();
+        return (
+            <Stack topLevelTitle="Stack">
+                <StackSwitch>
+                    <StackPage name="table">
+                        <ExampleTable persistedStateId={persistedStateId} />
+                    </StackPage>
+                    <StackPage name="form" title="bearbeiten">
+                        {(selectedId) => <ExampleForm id={+selectedId} />}
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
+        );
+    },
 
-StackTableFormQueryInTable.storyName = "Stack Table Form Query in Table";
+    name: "Stack Table Form Query in Table",
+};

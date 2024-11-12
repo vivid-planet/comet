@@ -91,15 +91,17 @@ export default {
     title: "@comet/admin/table/filterbar",
 };
 
-export const FilterbarWithCombinedFieldsFilterPriceDelivery = () => {
-    const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
-        return {
-            id: i,
-            price: faker.commerce.price(100, 1000, 2),
-            expressDelivery: faker.datatype.boolean(),
-        };
-    });
-    return <Story tableData={randomTableData} />;
-};
+export const FilterbarWithCombinedFieldsFilterPriceDelivery = {
+    render: () => {
+        const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
+            return {
+                id: i,
+                price: faker.commerce.price(100, 1000, 2),
+                expressDelivery: faker.datatype.boolean(),
+            };
+        });
+        return <Story tableData={randomTableData} />;
+    },
 
-FilterbarWithCombinedFieldsFilterPriceDelivery.storyName = "Filterbar with Combined Fields Filter (Price/Delivery)";
+    name: "Filterbar with Combined Fields Filter (Price/Delivery)",
+};

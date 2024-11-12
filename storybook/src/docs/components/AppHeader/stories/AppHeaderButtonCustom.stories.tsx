@@ -7,22 +7,24 @@ export default {
     title: "stories/components/AppHeader/Button custom",
 };
 
-export const AppHeaderButtonCustom = () => {
-    return (
-        <AppHeader position="relative" headerHeight={60}>
-            <Typography style={{ padding: 20 }}>Header button custom content</Typography>
-            <AppHeaderFillSpace />
+export const AppHeaderButtonCustom = {
+    render: () => {
+        return (
+            <AppHeader position="relative" headerHeight={60}>
+                <Typography style={{ padding: 20 }}>Header button custom content</Typography>
+                <AppHeaderFillSpace />
 
-            <AppHeaderButton>
-                <Box display="flex" alignItems="center">
-                    <Avatar style={{ marginRight: 10 }}>
-                        <Account />
-                    </Avatar>
-                    User Name
-                </Box>
-            </AppHeaderButton>
-        </AppHeader>
-    );
+                <AppHeaderButton>
+                    <Box display="flex" alignItems="center">
+                        <Avatar style={{ marginRight: 10 }}>
+                            <Account />
+                        </Avatar>
+                        User Name
+                    </Box>
+                </AppHeaderButton>
+            </AppHeader>
+        );
+    },
+
+    name: "AppHeader Button custom",
 };
-
-AppHeaderButtonCustom.storyName = "AppHeader Button custom";

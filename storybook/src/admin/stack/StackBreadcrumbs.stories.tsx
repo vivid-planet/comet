@@ -72,8 +72,10 @@ export default {
     },
 };
 
-export const _StackBreadcrumbs = ({ selectedBreadcrumbsGroup, selectedBreadcrumbsNumber }: Args) => (
-    <Stack topLevelTitle="Stack">
-        <Story selectedBreadcrumbsGroup={selectedBreadcrumbsGroup} selectedBreadcrumbsNumber={selectedBreadcrumbsNumber} />
-    </Stack>
-);
+export const _StackBreadcrumbs = {
+    render: ({ selectedBreadcrumbsGroup, selectedBreadcrumbsNumber }: Args) => (
+        <Stack topLevelTitle="Stack">
+            <Story selectedBreadcrumbsGroup={selectedBreadcrumbsGroup} selectedBreadcrumbsNumber={selectedBreadcrumbsNumber} />
+        </Stack>
+    ),
+};

@@ -10,25 +10,27 @@ export default {
     title: "@comet/admin-rte",
 };
 
-export const RteMinimalConfiguration = () => {
-    const { editorState, setEditorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
+export const RteMinimalConfiguration = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
 
-    // focus the editor to see the cursor immediately
-    const editorRef = React.useRef<IRteRef>();
-    useAutoFocus(editorRef);
+        // focus the editor to see the cursor immediately
+        const editorRef = React.useRef<IRteRef>();
+        useAutoFocus(editorRef);
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintEditorState editorState={editorState} />
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Rte value={editorState} onChange={setEditorState} ref={editorRef} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintEditorState editorState={editorState} />
+            </>
+        );
+    },
+
+    name: "Rte, minimal configuration",
 };
-
-RteMinimalConfiguration.storyName = "Rte, minimal configuration";

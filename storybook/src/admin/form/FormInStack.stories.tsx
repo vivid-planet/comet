@@ -98,19 +98,21 @@ export default {
     decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
 };
 
-export const FormInStack = () => {
-    return (
-        <Stack topLevelTitle="Stack">
-            <StackSwitch>
-                <StackPage name="page1">
-                    <Page1 />
-                </StackPage>
-                <StackPage name="page2">
-                    <Page2 />
-                </StackPage>
-            </StackSwitch>
-        </Stack>
-    );
-};
+export const FormInStack = {
+    render: () => {
+        return (
+            <Stack topLevelTitle="Stack">
+                <StackSwitch>
+                    <StackPage name="page1">
+                        <Page1 />
+                    </StackPage>
+                    <StackPage name="page2">
+                        <Page2 />
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
+        );
+    },
 
-FormInStack.storyName = "FormInStack";
+    name: "FormInStack",
+};

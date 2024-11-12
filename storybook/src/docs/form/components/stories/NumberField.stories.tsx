@@ -5,25 +5,29 @@ export default {
     title: "stories/Form/Components/NumberField",
 };
 
-export const _NumberField = () => {
-    return (
-        <FinalForm mode="add" onSubmit={() => {}}>
-            <NumberField name="number" label="Number" fullWidth />
-        </FinalForm>
-    );
+export const _NumberField = {
+    render: () => {
+        return (
+            <FinalForm mode="add" onSubmit={() => {}}>
+                <NumberField name="number" label="Number" fullWidth />
+            </FinalForm>
+        );
+    },
+
+    name: "NumberField",
 };
 
-_NumberField.storyName = "NumberField";
+export const WithDecimals = {
+    render: () => {
+        return (
+            <FinalForm mode="add" onSubmit={() => {}}>
+                <NumberField name="number" label="Number with three decimals" decimals={3} fullWidth />
+            </FinalForm>
+        );
+    },
 
-export const WithDecimals = () => {
-    return (
-        <FinalForm mode="add" onSubmit={() => {}}>
-            <NumberField name="number" label="Number with three decimals" decimals={3} fullWidth />
-        </FinalForm>
-    );
+    name: "WithDecimals",
 };
-
-WithDecimals.storyName = "WithDecimals";
 
 export const Currency = () => {
     return (

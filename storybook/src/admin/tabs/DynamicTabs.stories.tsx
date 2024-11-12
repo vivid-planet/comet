@@ -48,24 +48,26 @@ export default {
     excludeStories: ["DynamicRouterTabs", "DynamicTabs"],
 };
 
-export const DynamicTabsAndRouterTabs = () => {
-    const [showFourthTab, setShowFourthTab] = React.useState(false);
+export const DynamicTabsAndRouterTabs = {
+    render: () => {
+        const [showFourthTab, setShowFourthTab] = React.useState(false);
 
-    return (
-        <>
-            <Button onClick={() => setShowFourthTab((show) => !show)}>{showFourthTab ? "Hide" : "Show"} fourth tab</Button>
+        return (
+            <>
+                <Button onClick={() => setShowFourthTab((show) => !show)}>{showFourthTab ? "Hide" : "Show"} fourth tab</Button>
 
-            <Typography py={4} variant="h2">
-                Tabs:
-            </Typography>
-            <DynamicTabs showFourthTab={showFourthTab} />
+                <Typography py={4} variant="h2">
+                    Tabs:
+                </Typography>
+                <DynamicTabs showFourthTab={showFourthTab} />
 
-            <Typography py={4} variant="h2">
-                RouterTabs:
-            </Typography>
-            <DynamicRouterTabs showFourthTab={showFourthTab} />
-        </>
-    );
+                <Typography py={4} variant="h2">
+                    RouterTabs:
+                </Typography>
+                <DynamicRouterTabs showFourthTab={showFourthTab} />
+            </>
+        );
+    },
+
+    name: "Dynamic Tabs and RouterTabs",
 };
-
-DynamicTabsAndRouterTabs.storyName = "Dynamic Tabs and RouterTabs";

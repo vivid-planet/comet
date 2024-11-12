@@ -17,37 +17,46 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const _DataGridToolbar = () => {
-    const columns = [
-        { field: "firstname", headerName: "First Name", width: 150 },
-        { field: "lastname", headerName: "Last Name", width: 150 },
-    ];
+export const _DataGridToolbar = {
+    render: () => {
+        const columns = [
+            { field: "firstname", headerName: "First Name", width: 150 },
+            { field: "lastname", headerName: "Last Name", width: 150 },
+        ];
 
-    return (
-        <DataGrid
-            autoHeight
-            columns={columns}
-            rows={data}
-            components={{
-                Toolbar: () => (
-                    <DataGridToolbar>
-                        <ToolbarItem>
-                            <GridToolbarQuickFilter />
-                        </ToolbarItem>
-                        <ToolbarItem>
-                            <GridFilterButton />
-                        </ToolbarItem>
-                        <ToolbarFillSpace />
-                        <ToolbarActions>
-                            <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                                Add person
-                            </Button>
-                        </ToolbarActions>
-                    </DataGridToolbar>
-                ),
-            }}
-        />
-    );
+        return (
+            <DataGrid
+                autoHeight
+                columns={columns}
+                rows={data}
+                components={{
+                    Toolbar: () => (
+                        <DataGridToolbar>
+                            <ToolbarItem>
+                                <GridToolbarQuickFilter />
+                            </ToolbarItem>
+                            <ToolbarItem>
+                                <GridFilterButton />
+                            </ToolbarItem>
+                            <ToolbarFillSpace />
+                            <ToolbarActions>
+                                <Button
+                                    startIcon={<AddIcon />}
+                                    component={StackLink}
+                                    pageName="add"
+                                    payload="add"
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    Add person
+                                </Button>
+                            </ToolbarActions>
+                        </DataGridToolbar>
+                    ),
+                }}
+            />
+        );
+    },
+
+    name: "DataGrid Toolbar",
 };
-
-_DataGridToolbar.storyName = "DataGrid Toolbar";

@@ -24,21 +24,23 @@ export default {
     title: "@comet/admin-rte",
 };
 
-export const RteReadonly = () => {
-    const { editorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
+export const RteReadonly = {
+    render: () => {
+        const { editorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <RteReadOnly value={editorState} options={rteOptions} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintEditorState editorState={editorState} />
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <RteReadOnly value={editorState} options={rteOptions} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintEditorState editorState={editorState} />
+            </>
+        );
+    },
+
+    name: "Rte readonly",
 };
-
-RteReadonly.storyName = "Rte readonly";

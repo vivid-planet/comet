@@ -52,20 +52,22 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const StackNestedOneStack = () => {
-    return (
-        <>
-            <Path />
-            <Switch>
-                <Route exact path="/">
-                    <Redirect to="/foo" />
-                </Route>
-                <Route path="/foo">
-                    <Story />
-                </Route>
-            </Switch>
-        </>
-    );
-};
+export const StackNestedOneStack = {
+    render: () => {
+        return (
+            <>
+                <Path />
+                <Switch>
+                    <Route exact path="/">
+                        <Redirect to="/foo" />
+                    </Route>
+                    <Route path="/foo">
+                        <Story />
+                    </Route>
+                </Switch>
+            </>
+        );
+    },
 
-StackNestedOneStack.storyName = "Stack Nested one Stack";
+    name: "Stack Nested one Stack",
+};

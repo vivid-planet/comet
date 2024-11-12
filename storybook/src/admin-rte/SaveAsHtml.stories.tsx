@@ -26,26 +26,28 @@ export default {
     title: "@comet/admin-rte/save-as",
 };
 
-export const SaveAsHtml = () => {
-    const [savableContent, setSavableContent] = React.useState<Html>(defaultValue);
+export const SaveAsHtml = {
+    render: () => {
+        const [savableContent, setSavableContent] = React.useState<Html>(defaultValue);
 
-    const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
-        setSavableContent(convertStateToRawContent(innerEditorState));
-    };
-    const { editorState, setEditorState } = useRteApi({ defaultValue, onDebouncedContentChange: handleDebouncedContentChange });
+        const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
+            setSavableContent(convertStateToRawContent(innerEditorState));
+        };
+        const { editorState, setEditorState } = useRteApi({ defaultValue, onDebouncedContentChange: handleDebouncedContentChange });
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintAnything label="Save Value: Html">{savableContent}</PrintAnything>
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Rte value={editorState} onChange={setEditorState} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintAnything label="Save Value: Html">{savableContent}</PrintAnything>
+            </>
+        );
+    },
+
+    name: "Save as HTML",
 };
-
-SaveAsHtml.storyName = "Save as HTML";

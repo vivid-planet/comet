@@ -16,18 +16,20 @@ export default {
     title: "@comet/admin-rte",
 };
 
-export const RteSortBlockTypes = () => {
-    const { editorState, setEditorState } = useRteApi();
+export const RteSortBlockTypes = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi();
 
-    return (
-        <Box marginBottom={4}>
-            <Card variant="outlined">
-                <CardContent>
-                    <Rte value={editorState} onChange={setEditorState} options={rteOptions} />
-                </CardContent>
-            </Card>
-        </Box>
-    );
+        return (
+            <Box marginBottom={4}>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Rte value={editorState} onChange={setEditorState} options={rteOptions} />
+                    </CardContent>
+                </Card>
+            </Box>
+        );
+    },
+
+    name: "Rte, sort block types",
 };
-
-RteSortBlockTypes.storyName = "Rte, sort block types";

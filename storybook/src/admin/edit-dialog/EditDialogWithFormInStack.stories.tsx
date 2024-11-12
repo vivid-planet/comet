@@ -103,12 +103,14 @@ export default {
     decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
 };
 
-export const EditDialogWithFormInStack = () => {
-    return (
-        <Stack topLevelTitle="Page 1">
-            <InnerNestedStack counter={1} />
-        </Stack>
-    );
-};
+export const EditDialogWithFormInStack = {
+    render: () => {
+        return (
+            <Stack topLevelTitle="Page 1">
+                <InnerNestedStack counter={1} />
+            </Stack>
+        );
+    },
 
-EditDialogWithFormInStack.storyName = "Edit Dialog with Form in Stack";
+    name: "Edit Dialog with Form in Stack",
+};

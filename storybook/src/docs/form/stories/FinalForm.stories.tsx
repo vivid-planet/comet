@@ -9,31 +9,10 @@ export default {
     decorators: [apolloRestStoryDecorator()],
 };
 
-export const BasicFinalForm = () => {
-    return (
-        <FinalForm
-            mode="add"
-            onSubmit={(values) => {
-                window.alert(JSON.stringify(values));
-            }}
-        >
-            <FormSection>
-                <Field label="First name" name="firstname" placeholder="John" component={FinalFormInput} fullWidth />
-                <Field label="Last name" name="lastname" placeholder="Doe" component={FinalFormInput} fullWidth />
-            </FormSection>
-            <SaveButton type="submit" />
-        </FinalForm>
-    );
-};
-
-BasicFinalForm.storyName = "Basic FinalForm";
-
-export const FinalFormApiRef = () => {
-    const apiRef = useFormApiRef();
-    return (
-        <div>
+export const BasicFinalForm = {
+    render: () => {
+        return (
             <FinalForm
-                apiRef={apiRef}
                 mode="add"
                 onSubmit={(values) => {
                     window.alert(JSON.stringify(values));
@@ -43,17 +22,42 @@ export const FinalFormApiRef = () => {
                     <Field label="First name" name="firstname" placeholder="John" component={FinalFormInput} fullWidth />
                     <Field label="Last name" name="lastname" placeholder="Doe" component={FinalFormInput} fullWidth />
                 </FormSection>
+                <SaveButton type="submit" />
             </FinalForm>
-            <button
-                onClick={() => {
-                    //Using apiRef can access FormApi outside of <FinalForm>
-                    apiRef.current?.submit();
-                }}
-            >
-                submit
-            </button>
-        </div>
-    );
+        );
+    },
+
+    name: "Basic FinalForm",
 };
 
-FinalFormApiRef.storyName = "FinalForm ApiRef";
+export const FinalFormApiRef = {
+    render: () => {
+        const apiRef = useFormApiRef();
+        return (
+            <div>
+                <FinalForm
+                    apiRef={apiRef}
+                    mode="add"
+                    onSubmit={(values) => {
+                        window.alert(JSON.stringify(values));
+                    }}
+                >
+                    <FormSection>
+                        <Field label="First name" name="firstname" placeholder="John" component={FinalFormInput} fullWidth />
+                        <Field label="Last name" name="lastname" placeholder="Doe" component={FinalFormInput} fullWidth />
+                    </FormSection>
+                </FinalForm>
+                <button
+                    onClick={() => {
+                        //Using apiRef can access FormApi outside of <FinalForm>
+                        apiRef.current?.submit();
+                    }}
+                >
+                    submit
+                </button>
+            </div>
+        );
+    },
+
+    name: "FinalForm ApiRef",
+};

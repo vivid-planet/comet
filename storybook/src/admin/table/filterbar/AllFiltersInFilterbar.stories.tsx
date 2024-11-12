@@ -187,22 +187,24 @@ export default {
     title: "@comet/admin/table/filterbar",
 };
 
-export const FilterbarWithAllKindsOfFilters = () => {
-    const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
-        return {
-            id: i,
-            model: faker.vehicle.model(),
-            brand: faker.vehicle.manufacturer(),
-            color: faker.commerce.color(),
-            horsepower: faker.datatype.number({ min: 50, max: 200 }),
-            price: faker.commerce.price(100, 1000, 2),
-            owner: {
-                firstname: faker.name.firstName(),
-                lastname: faker.name.lastName(),
-            },
-        };
-    });
-    return <Story tableData={randomTableData} />;
-};
+export const FilterbarWithAllKindsOfFilters = {
+    render: () => {
+        const randomTableData = Array.from(Array(30).keys()).map((i): IExampleRow => {
+            return {
+                id: i,
+                model: faker.vehicle.model(),
+                brand: faker.vehicle.manufacturer(),
+                color: faker.commerce.color(),
+                horsepower: faker.datatype.number({ min: 50, max: 200 }),
+                price: faker.commerce.price(100, 1000, 2),
+                owner: {
+                    firstname: faker.name.firstName(),
+                    lastname: faker.name.lastName(),
+                },
+            };
+        });
+        return <Story tableData={randomTableData} />;
+    },
 
-FilterbarWithAllKindsOfFilters.storyName = "Filterbar with all kinds of Filters";
+    name: "Filterbar with all kinds of Filters",
+};

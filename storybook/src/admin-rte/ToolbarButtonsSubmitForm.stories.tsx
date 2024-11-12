@@ -9,20 +9,19 @@ export default {
     title: "@comet/admin-rte",
 };
 
-/**
- * Dev story to fix a bug where buttons in the RTE's toolbar trigger submission when used in a form.
- */
-export const ToolbarButtonsSubmitForm = () => {
-    return (
-        <Form
-            onSubmit={() => alert("submit")}
-            render={({ handleSubmit }) => (
-                <form onSubmit={handleSubmit}>
-                    <Field name="text" component={RteField} />
-                </form>
-            )}
-        />
-    );
-};
+export const ToolbarButtonsSubmitForm = {
+    render: () => {
+        return (
+            <Form
+                onSubmit={() => alert("submit")}
+                render={({ handleSubmit }) => (
+                    <form onSubmit={handleSubmit}>
+                        <Field name="text" component={RteField} />
+                    </form>
+                )}
+            />
+        );
+    },
 
-ToolbarButtonsSubmitForm.storyName = "Toolbar buttons submit form";
+    name: "Toolbar buttons submit form",
+};

@@ -50,87 +50,89 @@ export default {
     decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
 };
 
-export const StackEditDialogHooks = () => {
-    const data: IExampleRow[] = [
-        { id: 1, foo: "blub", bar: "blub" },
-        { id: 2, foo: "blub", bar: "blub" },
-    ];
+export const StackEditDialogHooks = {
+    render: () => {
+        const data: IExampleRow[] = [
+            { id: 1, foo: "blub", bar: "blub" },
+            { id: 2, foo: "blub", bar: "blub" },
+        ];
 
-    const [EditDialog, selection, api] = useEditDialog();
+        const [EditDialog, selection, api] = useEditDialog();
 
-    return (
-        <>
-            <Stack topLevelTitle="Stack">
-                <StackSwitch>
-                    <StackPage name="table">
-                        <Toolbar>
-                            <ToolbarItem>
-                                <Typography variant="h3">Table Stack Edit Dialog</Typography>
-                            </ToolbarItem>
-                            <ToolbarFillSpace />
-                            <ToolbarActions>
-                                <Button
-                                    color="primary"
-                                    variant="contained"
-                                    startIcon={<AddIcon />}
-                                    onClick={(ev) => {
-                                        api.openAddDialog();
-                                    }}
-                                >
-                                    Add
-                                </Button>
-                            </ToolbarActions>
-                        </Toolbar>
+        return (
+            <>
+                <Stack topLevelTitle="Stack">
+                    <StackSwitch>
+                        <StackPage name="table">
+                            <Toolbar>
+                                <ToolbarItem>
+                                    <Typography variant="h3">Table Stack Edit Dialog</Typography>
+                                </ToolbarItem>
+                                <ToolbarFillSpace />
+                                <ToolbarActions>
+                                    <Button
+                                        color="primary"
+                                        variant="contained"
+                                        startIcon={<AddIcon />}
+                                        onClick={(ev) => {
+                                            api.openAddDialog();
+                                        }}
+                                    >
+                                        Add
+                                    </Button>
+                                </ToolbarActions>
+                            </Toolbar>
 
-                        <MainContent>
-                            <Table
-                                data={data}
-                                totalCount={data.length}
-                                columns={[
-                                    {
-                                        name: "foo",
-                                        header: "Foo",
-                                    },
-                                    {
-                                        name: "bar",
-                                        header: "Bar",
-                                    },
-                                    {
-                                        name: "edit",
-                                        header: "Edit",
-                                        render: (row) => (
-                                            <IconButton
-                                                onClick={(ev) => {
-                                                    api.openEditDialog(String(row.id));
-                                                }}
-                                                size="large"
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </MainContent>
-                    </StackPage>
-                    <StackPage name="form" title="bearbeiten">
-                        edit....
-                    </StackPage>
-                </StackSwitch>
-            </Stack>
+                            <MainContent>
+                                <Table
+                                    data={data}
+                                    totalCount={data.length}
+                                    columns={[
+                                        {
+                                            name: "foo",
+                                            header: "Foo",
+                                        },
+                                        {
+                                            name: "bar",
+                                            header: "Bar",
+                                        },
+                                        {
+                                            name: "edit",
+                                            header: "Edit",
+                                            render: (row) => (
+                                                <IconButton
+                                                    onClick={(ev) => {
+                                                        api.openEditDialog(String(row.id));
+                                                    }}
+                                                    size="large"
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </MainContent>
+                        </StackPage>
+                        <StackPage name="form" title="bearbeiten">
+                            edit....
+                        </StackPage>
+                    </StackSwitch>
+                </Stack>
 
-            <EditDialog>
-                {selection.mode && (
-                    <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
-                        {(row, { selectionMode: sm }) => {
-                            return <EditForm mode={sm} row={row} />;
-                        }}
-                    </Selected>
-                )}
-            </EditDialog>
-            <p>This story uses a Stack plus an EditDialog</p>
-        </>
-    );
+                <EditDialog>
+                    {selection.mode && (
+                        <Selected selectionMode={selection.mode} selectedId={selection.id} rows={data}>
+                            {(row, { selectionMode: sm }) => {
+                                return <EditForm mode={sm} row={row} />;
+                            }}
+                        </Selected>
+                    )}
+                </EditDialog>
+                <p>This story uses a Stack plus an EditDialog</p>
+            </>
+        );
+    },
+
+    name: "Stack + EditDialog Hooks",
 };
-
-StackEditDialogHooks.storyName = "Stack + EditDialog Hooks";

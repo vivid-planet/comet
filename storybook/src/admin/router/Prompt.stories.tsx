@@ -47,13 +47,15 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const NestedRouteWithNonSubPathRouteInPrompt = () => {
-    return (
-        <>
-            <Path />
-            <Story />
-        </>
-    );
-};
+export const NestedRouteWithNonSubPathRouteInPrompt = {
+    render: () => {
+        return (
+            <>
+                <Path />
+                <Story />
+            </>
+        );
+    },
 
-NestedRouteWithNonSubPathRouteInPrompt.storyName = "Nested route with non-sub-path route in Prompt";
+    name: "Nested route with non-sub-path route in Prompt",
+};

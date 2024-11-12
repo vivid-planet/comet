@@ -34,28 +34,30 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const RouterTabsInStack = () => {
-    return (
-        <Stack topLevelTitle="Nested Stack">
-            <PrintMountCount />
-            <StackSwitch>
-                <StackPage name="xxx">
-                    <RenderCount name="StackPage" />
-                    <RouterTabs>
-                        <RouterTab label="Foo" path="" forceRender={true}>
-                            Foo
-                            <RenderCount name="Foo" />
-                        </RouterTab>
-                        <RouterTab label="Bar" path="/bar" forceRender={true}>
-                            Bar
-                            <RenderCount name="Bar" />
-                        </RouterTab>
-                    </RouterTabs>
-                </StackPage>
-                <StackPage name="yyy">yyy</StackPage>
-            </StackSwitch>
-        </Stack>
-    );
-};
+export const RouterTabsInStack = {
+    render: () => {
+        return (
+            <Stack topLevelTitle="Nested Stack">
+                <PrintMountCount />
+                <StackSwitch>
+                    <StackPage name="xxx">
+                        <RenderCount name="StackPage" />
+                        <RouterTabs>
+                            <RouterTab label="Foo" path="" forceRender={true}>
+                                Foo
+                                <RenderCount name="Foo" />
+                            </RouterTab>
+                            <RouterTab label="Bar" path="/bar" forceRender={true}>
+                                Bar
+                                <RenderCount name="Bar" />
+                            </RouterTab>
+                        </RouterTabs>
+                    </StackPage>
+                    <StackPage name="yyy">yyy</StackPage>
+                </StackSwitch>
+            </Stack>
+        );
+    },
 
-RouterTabsInStack.storyName = "RouterTabs in Stack";
+    name: "RouterTabs in Stack",
+};

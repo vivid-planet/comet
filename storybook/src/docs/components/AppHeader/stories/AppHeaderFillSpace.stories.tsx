@@ -6,16 +6,18 @@ export default {
     title: "stories/components/AppHeader/FillSpace",
 };
 
-export const _AppHeaderFillSpace = () => {
-    return (
-        <AppHeader position="relative" headerHeight={60}>
-            <Typography style={{ padding: 20 }}>Left Content</Typography>
+export const _AppHeaderFillSpace = {
+    render: () => {
+        return (
+            <AppHeader position="relative" headerHeight={60}>
+                <Typography style={{ padding: 20 }}>Left Content</Typography>
 
-            <AppHeaderFillSpace />
+                <AppHeaderFillSpace />
 
-            <Typography style={{ padding: 20 }}>Right Content</Typography>
-        </AppHeader>
-    );
+                <Typography style={{ padding: 20 }}>Right Content</Typography>
+            </AppHeader>
+        );
+    },
+
+    name: "AppHeader FillSpace",
 };
-
-_AppHeaderFillSpace.storyName = "AppHeader FillSpace";

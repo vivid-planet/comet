@@ -37,49 +37,51 @@ type Args = {
     query: string;
 };
 
-export const GlobalErrorHandling = ({ query }: Args) => {
-    const { tableData, api, loading, error } = useTableQuery<QueryData, Record<string, any>>()(
-        gql`
-            ${query}
-        `,
-        {
-            resolveTableData: (data) => ({
-                data: data.allPeople.people,
-                totalCount: data.allPeople.people.length,
-            }),
-            globalErrorHandling: true,
-        },
-    );
+export const GlobalErrorHandling = {
+    render: ({ query }: Args) => {
+        const { tableData, api, loading, error } = useTableQuery<QueryData, Record<string, any>>()(
+            gql`
+                ${query}
+            `,
+            {
+                resolveTableData: (data) => ({
+                    data: data.allPeople.people,
+                    totalCount: data.allPeople.people.length,
+                }),
+                globalErrorHandling: true,
+            },
+        );
 
-    return (
-        <TableQuery api={api} loading={loading} error={error}>
-            {tableData && (
-                <Table
-                    {...tableData}
-                    columns={[
-                        {
-                            name: "id",
-                            header: "Id",
-                        },
-                        {
-                            name: "name",
-                            header: "Name",
-                        },
-                        {
-                            name: "birthYear",
-                            header: "Birthyear",
-                        },
-                        {
-                            name: "gender",
-                            header: "Gender",
-                        },
-                        {
-                            name: "homeworld.name",
-                            header: "Homeworld",
-                        },
-                    ]}
-                />
-            )}
-        </TableQuery>
-    );
+        return (
+            <TableQuery api={api} loading={loading} error={error}>
+                {tableData && (
+                    <Table
+                        {...tableData}
+                        columns={[
+                            {
+                                name: "id",
+                                header: "Id",
+                            },
+                            {
+                                name: "name",
+                                header: "Name",
+                            },
+                            {
+                                name: "birthYear",
+                                header: "Birthyear",
+                            },
+                            {
+                                name: "gender",
+                                header: "Gender",
+                            },
+                            {
+                                name: "homeworld.name",
+                                header: "Homeworld",
+                            },
+                        ]}
+                    />
+                )}
+            </TableQuery>
+        );
+    },
 };

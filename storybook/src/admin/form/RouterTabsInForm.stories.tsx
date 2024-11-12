@@ -21,33 +21,35 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const RouterTabsInForm = () => {
-    return (
-        <>
-            <Path />
-            <FinalForm
-                mode="edit"
-                onSubmit={(values: any) => {
-                    alert(JSON.stringify(values));
-                }}
-                initialValues={{
-                    foo: "foo",
-                    bar: "bar",
-                }}
-            >
-                {() => (
-                    <RouterTabs>
-                        <RouterTab label="Form 1" path="" forceRender={true}>
-                            <Field label="Foo" name="foo" component={FinalFormInput} />
-                        </RouterTab>
-                        <RouterTab label="Form 2" path="/form2" forceRender={true}>
-                            <Field label="Bar" name="bar" component={FinalFormInput} />
-                        </RouterTab>
-                    </RouterTabs>
-                )}
-            </FinalForm>
-        </>
-    );
-};
+export const RouterTabsInForm = {
+    render: () => {
+        return (
+            <>
+                <Path />
+                <FinalForm
+                    mode="edit"
+                    onSubmit={(values: any) => {
+                        alert(JSON.stringify(values));
+                    }}
+                    initialValues={{
+                        foo: "foo",
+                        bar: "bar",
+                    }}
+                >
+                    {() => (
+                        <RouterTabs>
+                            <RouterTab label="Form 1" path="" forceRender={true}>
+                                <Field label="Foo" name="foo" component={FinalFormInput} />
+                            </RouterTab>
+                            <RouterTab label="Form 2" path="/form2" forceRender={true}>
+                                <Field label="Bar" name="bar" component={FinalFormInput} />
+                            </RouterTab>
+                        </RouterTabs>
+                    )}
+                </FinalForm>
+            </>
+        );
+    },
 
-RouterTabsInForm.storyName = "RouterTabsInForm";
+    name: "RouterTabsInForm",
+};

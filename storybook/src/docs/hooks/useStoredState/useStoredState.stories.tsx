@@ -6,45 +6,49 @@ export default {
     title: "stories/hooks/useStoredState",
 };
 
-export const LocalStorage = () => {
-    const [storedState, setStoredState] = useStoredState<number>("stored_state_stories_key", 0);
-    return (
-        <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                    setStoredState(storedState + 1);
-                }}
-            >
-                Increment Stored State
-            </Button>
-            <Button
-                color="primary"
-                onClick={() => {
-                    setStoredState(0);
-                }}
-            >
-                Reset
-            </Button>
-        </FormSection>
-    );
+export const LocalStorage = {
+    render: () => {
+        const [storedState, setStoredState] = useStoredState<number>("stored_state_stories_key", 0);
+        return (
+            <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        setStoredState(storedState + 1);
+                    }}
+                >
+                    Increment Stored State
+                </Button>
+                <Button
+                    color="primary"
+                    onClick={() => {
+                        setStoredState(0);
+                    }}
+                >
+                    Reset
+                </Button>
+            </FormSection>
+        );
+    },
+
+    name: "LocalStorage",
 };
 
-LocalStorage.storyName = "LocalStorage";
+export const SessionStorage = {
+    render: () => {
+        const [storedState, setStoredState] = useStoredState<string>("stored_state_stories_session_storage_key", "☄️ Comet", window.sessionStorage);
+        return (
+            <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
+                <InputBase
+                    value={storedState}
+                    onChange={(event) => {
+                        setStoredState(event.target.value);
+                    }}
+                />
+            </FormSection>
+        );
+    },
 
-export const SessionStorage = () => {
-    const [storedState, setStoredState] = useStoredState<string>("stored_state_stories_session_storage_key", "☄️ Comet", window.sessionStorage);
-    return (
-        <FormSection title={`Stored State: ${storedState}`} disableMarginBottom>
-            <InputBase
-                value={storedState}
-                onChange={(event) => {
-                    setStoredState(event.target.value);
-                }}
-            />
-        </FormSection>
-    );
+    name: "SessionStorage",
 };
-
-SessionStorage.storyName = "SessionStorage";

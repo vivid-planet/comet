@@ -29,26 +29,28 @@ export default {
     title: "@comet/admin-rte/save-as",
 };
 
-export const SaveAsMd = () => {
-    const [savableContent, setSavableContent] = React.useState<Markdown>(defaultValue);
+export const SaveAsMd = {
+    render: () => {
+        const [savableContent, setSavableContent] = React.useState<Markdown>(defaultValue);
 
-    const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
-        setSavableContent(convertStateToRawContent(innerEditorState));
-    };
-    const { editorState, setEditorState } = useRteApi({ defaultValue, onDebouncedContentChange: handleDebouncedContentChange });
+        const handleDebouncedContentChange: OnDebouncedContentChangeFn = (innerEditorState, convertStateToRawContent) => {
+            setSavableContent(convertStateToRawContent(innerEditorState));
+        };
+        const { editorState, setEditorState } = useRteApi({ defaultValue, onDebouncedContentChange: handleDebouncedContentChange });
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintAnything label="Save Value: Markdown">{savableContent}</PrintAnything>
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Rte value={editorState} onChange={setEditorState} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintAnything label="Save Value: Markdown">{savableContent}</PrintAnything>
+            </>
+        );
+    },
+
+    name: "Save as MD",
 };
-
-SaveAsMd.storyName = "Save as MD";

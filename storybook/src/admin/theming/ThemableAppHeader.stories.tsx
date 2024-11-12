@@ -6,37 +6,39 @@ export default {
     title: "@comet/admin/theming",
 };
 
-export const ThemableAppHeader = () => {
-    const theme = createCometTheme({
-        components: {
-            CometAdminAppHeader: {
-                defaultProps: {
-                    headerHeight: 60,
-                },
-                styleOverrides: {
-                    root: {
-                        border: "1px solid black",
+export const ThemableAppHeader = {
+    render: () => {
+        const theme = createCometTheme({
+            components: {
+                CometAdminAppHeader: {
+                    defaultProps: {
+                        headerHeight: 60,
                     },
-                    positionRelative: {
-                        backgroundColor: "red",
-                    },
-                    colorSecondary: {
-                        backgroundColor: "teal",
+                    styleOverrides: {
+                        root: {
+                            border: "1px solid black",
+                        },
+                        positionRelative: {
+                            backgroundColor: "red",
+                        },
+                        colorSecondary: {
+                            backgroundColor: "teal",
+                        },
                     },
                 },
             },
-        },
-    });
-    return (
-        <MuiThemeProvider theme={theme}>
-            <AppHeader position="relative">
-                <CometLogo />
-            </AppHeader>
-            <AppHeader position="static" color="secondary">
-                <CometLogo />
-            </AppHeader>
-        </MuiThemeProvider>
-    );
-};
+        });
+        return (
+            <MuiThemeProvider theme={theme}>
+                <AppHeader position="relative">
+                    <CometLogo />
+                </AppHeader>
+                <AppHeader position="static" color="secondary">
+                    <CometLogo />
+                </AppHeader>
+            </MuiThemeProvider>
+        );
+    },
 
-ThemableAppHeader.storyName = "Themable AppHeader";
+    name: "Themable AppHeader",
+};

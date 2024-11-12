@@ -11,59 +11,67 @@ export default {
     decorators: [toolbarDecorator(), storyRouterDecorator()],
 };
 
-export const CustomTitleH1 = () => {
-    return (
-        <Toolbar>
-            <ToolbarItem>
-                <Typography variant="h1">Custom Title H1</Typography>
-            </ToolbarItem>
-        </Toolbar>
-    );
+export const CustomTitleH1 = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography variant="h1">Custom Title H1</Typography>
+                </ToolbarItem>
+            </Toolbar>
+        );
+    },
+
+    name: "Custom Title H1",
 };
 
-CustomTitleH1.storyName = "Custom Title H1";
+export const CustomTitleH2 = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarItem>
+                    <>
+                        <CometColor fontSize="large" />
+                        <Typography variant="h2">Custom Title H2</Typography>
+                    </>
+                </ToolbarItem>
+            </Toolbar>
+        );
+    },
 
-export const CustomTitleH2 = () => {
-    return (
-        <Toolbar>
-            <ToolbarItem>
-                <>
-                    <CometColor fontSize="large" />
-                    <Typography variant="h2">Custom Title H2</Typography>
-                </>
-            </ToolbarItem>
-        </Toolbar>
-    );
+    name: "Custom Title H2",
 };
 
-CustomTitleH2.storyName = "Custom Title H2";
-
-export const CustomTitleH3 = () => {
-    return (
-        <Toolbar>
-            <div style={{ display: "flex", backgroundColor: "black", alignItems: "center", paddingLeft: 20, paddingRight: 20 }}>
-                <Typography variant="h3" color="primary">
-                    Custom Title H3
-                </Typography>
-            </div>
-        </Toolbar>
-    );
-};
-
-CustomTitleH3.storyName = "Custom Title H3";
-
-export const CustomTitleH4 = () => {
-    return (
-        <Toolbar>
-            <ToolbarItem>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                    <Typography variant="h4">Multi Line - Custom Title H4</Typography>
-                    <Typography variant="h4">Multi Line - Custom Title H4</Typography>
-                    <Typography variant="h4">Multi Line - Custom Title H4</Typography>
+export const CustomTitleH3 = {
+    render: () => {
+        return (
+            <Toolbar>
+                <div style={{ display: "flex", backgroundColor: "black", alignItems: "center", paddingLeft: 20, paddingRight: 20 }}>
+                    <Typography variant="h3" color="primary">
+                        Custom Title H3
+                    </Typography>
                 </div>
-            </ToolbarItem>
-        </Toolbar>
-    );
+            </Toolbar>
+        );
+    },
+
+    name: "Custom Title H3",
 };
 
-CustomTitleH4.storyName = "Custom Title H4";
+export const CustomTitleH4 = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarItem>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <Typography variant="h4">Multi Line - Custom Title H4</Typography>
+                        <Typography variant="h4">Multi Line - Custom Title H4</Typography>
+                        <Typography variant="h4">Multi Line - Custom Title H4</Typography>
+                    </div>
+                </ToolbarItem>
+            </Toolbar>
+        );
+    },
+
+    name: "Custom Title H4",
+};

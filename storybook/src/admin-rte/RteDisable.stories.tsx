@@ -11,36 +11,38 @@ export default {
     title: "comet-admin-rte",
 };
 
-export const RteDisable = () => {
-    const { editorState, setEditorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
-    const [disabled, toggleDisabled] = React.useReducer((s) => !s, false);
+export const RteDisable = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi({ defaultValue: JSON.stringify(exampleContent) }); // defaultValue is optional
+        const [disabled, toggleDisabled] = React.useReducer((s) => !s, false);
 
-    // focus the editor to see the cursor immediately
-    const editorRef = React.useRef<IRteRef>();
-    useAutoFocus(editorRef);
+        // focus the editor to see the cursor immediately
+        const editorRef = React.useRef<IRteRef>();
+        useAutoFocus(editorRef);
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Toolbar>
-                    <ToolbarFillSpace />
-                    <ToolbarActions>
-                        <Button variant="contained" color="primary" onClick={toggleDisabled}>
-                            {disabled ? "Enable" : "Disable"}
-                        </Button>
-                    </ToolbarActions>
-                </Toolbar>
-            </Box>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} disabled={disabled} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintEditorState editorState={editorState} />
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Toolbar>
+                        <ToolbarFillSpace />
+                        <ToolbarActions>
+                            <Button variant="contained" color="primary" onClick={toggleDisabled}>
+                                {disabled ? "Enable" : "Disable"}
+                            </Button>
+                        </ToolbarActions>
+                    </Toolbar>
+                </Box>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Rte value={editorState} onChange={setEditorState} ref={editorRef} disabled={disabled} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintEditorState editorState={editorState} />
+            </>
+        );
+    },
+
+    name: "Rte, disable",
 };
-
-RteDisable.storyName = "Rte, disable";

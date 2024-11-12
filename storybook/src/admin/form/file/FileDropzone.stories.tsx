@@ -1,6 +1,6 @@
 import { FileDropzone, FileDropzoneProps } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { ComponentMeta } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import React from "react";
 
 type FileRejections = Parameters<Required<FileDropzoneProps>["onDropRejected"]>[0];
@@ -35,7 +35,7 @@ export default {
             control: "boolean",
         },
     },
-} as ComponentMeta<typeof FileDropzone>;
+} as Meta<typeof FileDropzone>;
 
 type Args = {
     disabled: boolean;
@@ -43,28 +43,30 @@ type Args = {
     hasError: boolean;
 };
 
-export const _FileDropzone = ({ disabled, multiple, hasError }: Args) => {
-    const [files, setFiles] = React.useState<File[]>([]);
-    const [rejectedFiles, setRejectedFiles] = React.useState<FileRejections>([]);
+export const _FileDropzone = {
+    render: ({ disabled, multiple, hasError }: Args) => {
+        const [files, setFiles] = React.useState<File[]>([]);
+        const [rejectedFiles, setRejectedFiles] = React.useState<FileRejections>([]);
 
-    return (
-        <>
-            <FileDropzone
-                disabled={disabled}
-                multiple={multiple}
-                hasError={hasError}
-                onDrop={(files) => {
-                    setFiles(files);
-                    setRejectedFiles([]);
-                }}
-                onDropRejected={(rejectedFiles) => {
-                    setFiles([]);
-                    setRejectedFiles(rejectedFiles);
-                }}
-            />
-            <pre>{JSON.stringify({ files, rejectedFiles }, null, 2)}</pre>
-        </>
-    );
+        return (
+            <>
+                <FileDropzone
+                    disabled={disabled}
+                    multiple={multiple}
+                    hasError={hasError}
+                    onDrop={(files) => {
+                        setFiles(files);
+                        setRejectedFiles([]);
+                    }}
+                    onDropRejected={(rejectedFiles) => {
+                        setFiles([]);
+                        setRejectedFiles(rejectedFiles);
+                    }}
+                />
+                <pre>{JSON.stringify({ files, rejectedFiles }, null, 2)}</pre>
+            </>
+        );
+    },
+
+    name: "FileDropzone",
 };
-
-_FileDropzone.storyName = "FileDropzone";

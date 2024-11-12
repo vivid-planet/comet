@@ -36,29 +36,31 @@ export default {
     title: "@comet/admin-rte",
 };
 
-export const RteFilterContent = () => {
-    const { editorState, setEditorState } = useRteApi();
+export const RteFilterContent = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi();
 
-    // focus the editor to see the cursor immediately
-    const editorRef = React.useRef<IRteRef>();
-    useAutoFocus(editorRef);
+        // focus the editor to see the cursor immediately
+        const editorRef = React.useRef<IRteRef>();
+        useAutoFocus(editorRef);
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Typography gutterBottom>
-                            <a href="https://google.com">Copy and paste this link into the editor</a>, and see in the editor-state that the link-data
-                            has changed.
-                        </Typography>
-                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={{ filterEditorStateBeforeUpdate }} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintEditorState editorState={editorState} />
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Typography gutterBottom>
+                                <a href="https://google.com">Copy and paste this link into the editor</a>, and see in the editor-state that the
+                                link-data has changed.
+                            </Typography>
+                            <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={{ filterEditorStateBeforeUpdate }} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintEditorState editorState={editorState} />
+            </>
+        );
+    },
+
+    name: "Rte, filter content",
 };
-
-RteFilterContent.storyName = "Rte, filter content";

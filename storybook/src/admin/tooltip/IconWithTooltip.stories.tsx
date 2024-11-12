@@ -6,12 +6,14 @@ export default {
     title: "@comet/admin",
 };
 
-export const IconWithTooltip = () => {
-    return (
-        <Tooltip title="Add something">
-            <Add />
-        </Tooltip>
-    );
-};
+export const IconWithTooltip = {
+    render: () => {
+        return (
+            <Tooltip title="Add something">
+                <Add />
+            </Tooltip>
+        );
+    },
 
-IconWithTooltip.storyName = "Icon with Tooltip";
+    name: "Icon with Tooltip",
+};

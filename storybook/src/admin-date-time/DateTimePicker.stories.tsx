@@ -8,34 +8,36 @@ export default {
     title: "@comet/admin-date-time",
 };
 
-export const DateTimePicker = () => {
-    interface Values {
-        dateTimeOne?: Date;
-        dateTimeTwo?: Date;
-    }
+export const DateTimePicker = {
+    render: () => {
+        interface Values {
+            dateTimeOne?: Date;
+            dateTimeTwo?: Date;
+        }
 
-    const initialValues: Partial<Values> = {
-        dateTimeOne: undefined,
-        dateTimeTwo: new Date(),
-    };
+        const initialValues: Partial<Values> = {
+            dateTimeOne: undefined,
+            dateTimeTwo: new Date(),
+        };
 
-    return (
-        <div style={{ width: 500 }}>
-            <Form<Values> onSubmit={() => {}} initialValues={initialValues}>
-                {({ values, form: { change } }) => (
-                    <form>
-                        <Card>
-                            <CardContent>
-                                <Field name="dateTimeOne" label="Date-Time" fullWidth component={FinalFormDateTimePicker} />
-                                <Field name="dateTimeTwo" label="Required" fullWidth required component={FinalFormDateTimePicker} />
-                            </CardContent>
-                        </Card>
-                        <pre>{JSON.stringify(values, null, 4)}</pre>
-                    </form>
-                )}
-            </Form>
-        </div>
-    );
+        return (
+            <div style={{ width: 500 }}>
+                <Form<Values> onSubmit={() => {}} initialValues={initialValues}>
+                    {({ values, form: { change } }) => (
+                        <form>
+                            <Card>
+                                <CardContent>
+                                    <Field name="dateTimeOne" label="Date-Time" fullWidth component={FinalFormDateTimePicker} />
+                                    <Field name="dateTimeTwo" label="Required" fullWidth required component={FinalFormDateTimePicker} />
+                                </CardContent>
+                            </Card>
+                            <pre>{JSON.stringify(values, null, 4)}</pre>
+                        </form>
+                    )}
+                </Form>
+            </div>
+        );
+    },
+
+    name: "Date-Time Picker",
 };
-
-DateTimePicker.storyName = "Date-Time Picker";

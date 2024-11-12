@@ -10,88 +10,96 @@ export default {
     decorators: [toolbarDecorator(), storyRouterDecorator()],
 };
 
-export const FillSpaceLeft = () => {
-    return (
-        <Toolbar>
-            <ToolbarFillSpace />
-            <ToolbarItem>
-                <Typography>Item</Typography>
-            </ToolbarItem>
-        </Toolbar>
-    );
+export const FillSpaceLeft = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarFillSpace />
+                <ToolbarItem>
+                    <Typography>Item</Typography>
+                </ToolbarItem>
+            </Toolbar>
+        );
+    },
+
+    name: "Fill Space left",
 };
 
-FillSpaceLeft.storyName = "Fill Space left";
+export const FillSpaceRight = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarFillSpace />
+                <ToolbarItem>
+                    <Typography>Item</Typography>
+                </ToolbarItem>
+                <ToolbarFillSpace />
+            </Toolbar>
+        );
+    },
 
-export const FillSpaceRight = () => {
-    return (
-        <Toolbar>
-            <ToolbarFillSpace />
-            <ToolbarItem>
-                <Typography>Item</Typography>
-            </ToolbarItem>
-            <ToolbarFillSpace />
-        </Toolbar>
-    );
+    name: "Fill Space right",
 };
 
-FillSpaceRight.storyName = "Fill Space right";
+export const FillSpaceMiddle = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography>Item</Typography>
+                </ToolbarItem>
+                <ToolbarFillSpace />
+                <ToolbarItem>
+                    <Typography>Item</Typography>
+                </ToolbarItem>
+            </Toolbar>
+        );
+    },
 
-export const FillSpaceMiddle = () => {
-    return (
-        <Toolbar>
-            <ToolbarItem>
-                <Typography>Item</Typography>
-            </ToolbarItem>
-            <ToolbarFillSpace />
-            <ToolbarItem>
-                <Typography>Item</Typography>
-            </ToolbarItem>
-        </Toolbar>
-    );
+    name: "Fill Space middle",
 };
 
-FillSpaceMiddle.storyName = "Fill Space middle";
-
-export const FillSpaceMiddle2 = () => {
-    return (
-        <Toolbar>
-            <ToolbarItem>
-                <Typography>Item</Typography>
-            </ToolbarItem>
-            <ToolbarFillSpace />
-            <ToolbarActions>
-                <Grid container spacing={4}>
-                    <Grid item>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={() => {
-                                alert("clicked Action 1");
-                            }}
-                        >
-                            Action 1
-                        </Button>
+export const FillSpaceMiddle2 = {
+    render: () => {
+        return (
+            <Toolbar>
+                <ToolbarItem>
+                    <Typography>Item</Typography>
+                </ToolbarItem>
+                <ToolbarFillSpace />
+                <ToolbarActions>
+                    <Grid container spacing={4}>
+                        <Grid item>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={() => {
+                                    alert("clicked Action 1");
+                                }}
+                            >
+                                Action 1
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                onClick={() => {
+                                    alert("clicked Action 2");
+                                }}
+                            >
+                                Action 2
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <Button
-                            color="secondary"
-                            variant="contained"
-                            onClick={() => {
-                                alert("clicked Action 2");
-                            }}
-                        >
-                            Action 2
-                        </Button>
-                    </Grid>
-                </Grid>
-            </ToolbarActions>
-            <ToolbarFillSpace />
-            <ToolbarItem>
-                <Typography>Item</Typography>
-            </ToolbarItem>
-        </Toolbar>
-    );
-};
+                </ToolbarActions>
+                <ToolbarFillSpace />
+                <ToolbarItem>
+                    <Typography>Item</Typography>
+                </ToolbarItem>
+            </Toolbar>
+        );
+    },
 
-FillSpaceMiddle2.storyName = "Fill Space middle 2";
+    name: "Fill Space middle 2",
+};

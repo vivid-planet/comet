@@ -8,36 +8,38 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const StackInForm = () => {
-    return (
-        <FinalForm
-            mode="edit"
-            onSubmit={(values: any) => {
-                alert(JSON.stringify(values));
-            }}
-            initialValues={{
-                foo: "foo",
-                bar: "bar",
-            }}
-        >
-            {() => (
-                <Stack topLevelTitle="Stack">
-                    <StackBreadcrumbs />
-                    <StackSwitch>
-                        <StackPage name="page1">
-                            <Field label="Foo" name="foo" component={FinalFormInput} />
-                            <StackLink pageName="page2" payload="xx">
-                                go to page2
-                            </StackLink>
-                        </StackPage>
-                        <StackPage name="page2">
-                            <Field label="Bar" name="bar" component={FinalFormInput} />
-                        </StackPage>
-                    </StackSwitch>
-                </Stack>
-            )}
-        </FinalForm>
-    );
-};
+export const StackInForm = {
+    render: () => {
+        return (
+            <FinalForm
+                mode="edit"
+                onSubmit={(values: any) => {
+                    alert(JSON.stringify(values));
+                }}
+                initialValues={{
+                    foo: "foo",
+                    bar: "bar",
+                }}
+            >
+                {() => (
+                    <Stack topLevelTitle="Stack">
+                        <StackBreadcrumbs />
+                        <StackSwitch>
+                            <StackPage name="page1">
+                                <Field label="Foo" name="foo" component={FinalFormInput} />
+                                <StackLink pageName="page2" payload="xx">
+                                    go to page2
+                                </StackLink>
+                            </StackPage>
+                            <StackPage name="page2">
+                                <Field label="Bar" name="bar" component={FinalFormInput} />
+                            </StackPage>
+                        </StackSwitch>
+                    </Stack>
+                )}
+            </FinalForm>
+        );
+    },
 
-StackInForm.storyName = "StackInForm";
+    name: "StackInForm",
+};

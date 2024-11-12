@@ -22,18 +22,20 @@ type Args = {
     minHeight: number;
 };
 
-export const RteMinHeight = ({ minHeight }: Args) => {
-    const { editorState, setEditorState } = useRteApi();
+export const RteMinHeight = {
+    render: ({ minHeight }: Args) => {
+        const { editorState, setEditorState } = useRteApi();
 
-    return (
-        <Box marginBottom={4}>
-            <Card variant="outlined">
-                <CardContent>
-                    <Rte value={editorState} onChange={setEditorState} minHeight={minHeight} />
-                </CardContent>
-            </Card>
-        </Box>
-    );
+        return (
+            <Box marginBottom={4}>
+                <Card variant="outlined">
+                    <CardContent>
+                        <Rte value={editorState} onChange={setEditorState} minHeight={minHeight} />
+                    </CardContent>
+                </Card>
+            </Box>
+        );
+    },
+
+    name: "Rte, minHeight",
 };
-
-RteMinHeight.storyName = "Rte, minHeight";

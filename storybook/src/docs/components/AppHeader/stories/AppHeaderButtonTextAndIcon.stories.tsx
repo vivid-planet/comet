@@ -7,17 +7,19 @@ export default {
     title: "stories/components/AppHeader/Button text and icon",
 };
 
-export const AppHeaderButtonTextAndIcon = () => {
-    return (
-        <AppHeader position="relative" headerHeight={60}>
-            <Typography style={{ padding: 20 }}>Header buttons with icon</Typography>
-            <AppHeaderFillSpace />
+export const AppHeaderButtonTextAndIcon = {
+    render: () => {
+        return (
+            <AppHeader position="relative" headerHeight={60}>
+                <Typography style={{ padding: 20 }}>Header buttons with icon</Typography>
+                <AppHeaderFillSpace />
 
-            <AppHeaderButton startIcon={<Wrench />}>My Button</AppHeaderButton>
+                <AppHeaderButton startIcon={<Wrench />}>My Button</AppHeaderButton>
 
-            <AppHeaderButton endIcon={<Wrench />}>My Button</AppHeaderButton>
-        </AppHeader>
-    );
+                <AppHeaderButton endIcon={<Wrench />}>My Button</AppHeaderButton>
+            </AppHeader>
+        );
+    },
+
+    name: "AppHeader Button text and icon",
 };
-
-AppHeaderButtonTextAndIcon.storyName = "AppHeader Button text and icon";

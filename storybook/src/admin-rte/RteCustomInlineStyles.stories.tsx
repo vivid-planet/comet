@@ -24,25 +24,27 @@ export default {
     title: "@comet/admin-rte",
 };
 
-export const CustomInlineStyles = () => {
-    const { editorState, setEditorState } = useRteApi();
+export const CustomInlineStyles = {
+    render: () => {
+        const { editorState, setEditorState } = useRteApi();
 
-    // focus the editor to see the cursor immediately
-    const editorRef = React.useRef<IRteRef>();
-    useAutoFocus(editorRef);
+        // focus the editor to see the cursor immediately
+        const editorRef = React.useRef<IRteRef>();
+        useAutoFocus(editorRef);
 
-    return (
-        <>
-            <Box marginBottom={4}>
-                <Card variant="outlined">
-                    <CardContent>
-                        <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
-                    </CardContent>
-                </Card>
-            </Box>
-            <PrintEditorState editorState={editorState} />
-        </>
-    );
+        return (
+            <>
+                <Box marginBottom={4}>
+                    <Card variant="outlined">
+                        <CardContent>
+                            <Rte value={editorState} onChange={setEditorState} ref={editorRef} options={rteOptions} />
+                        </CardContent>
+                    </Card>
+                </Box>
+                <PrintEditorState editorState={editorState} />
+            </>
+        );
+    },
+
+    name: "Custom inline styles",
 };
-
-CustomInlineStyles.storyName = "Custom inline styles";

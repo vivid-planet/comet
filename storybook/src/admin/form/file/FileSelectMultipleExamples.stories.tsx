@@ -133,25 +133,27 @@ type Args = {
     noBackground: boolean;
 };
 
-export const FileSelectMultipleExamples = ({ noBackground }: Args) => {
-    return (
-        <div>
-            <Grid container spacing={4}>
-                <Grid item xs={6}>
-                    <SingleFileSelectStory noBackground={noBackground} />
+export const FileSelectMultipleExamples = {
+    render: ({ noBackground }: Args) => {
+        return (
+            <div>
+                <Grid container spacing={4}>
+                    <Grid item xs={6}>
+                        <SingleFileSelectStory noBackground={noBackground} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <MultipleFileSelectStory noBackground={noBackground} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <SingleFileSelectStory noBackground={noBackground} hasExistingFiles />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <MultipleFileSelectStory noBackground={noBackground} hasExistingFiles />
+                    </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                    <MultipleFileSelectStory noBackground={noBackground} />
-                </Grid>
-                <Grid item xs={6}>
-                    <SingleFileSelectStory noBackground={noBackground} hasExistingFiles />
-                </Grid>
-                <Grid item xs={6}>
-                    <MultipleFileSelectStory noBackground={noBackground} hasExistingFiles />
-                </Grid>
-            </Grid>
-        </div>
-    );
-};
+            </div>
+        );
+    },
 
-FileSelectMultipleExamples.storyName = "File Select (multiple examples)";
+    name: "File Select (multiple examples)",
+};

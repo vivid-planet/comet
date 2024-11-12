@@ -9,25 +9,27 @@ export default {
     decorators: [storyRouterDecorator()],
 };
 
-export const _RouterTabs = () => {
-    const location = useLocation();
+export const _RouterTabs = {
+    render: () => {
+        const location = useLocation();
 
-    return (
-        <div>
-            <p>Location: {location.pathname}</p>
-            <RouterTabs>
-                <RouterTab path="" label="Label One">
-                    Content One
-                </RouterTab>
-                <RouterTab path="/tab2" label="Label Two">
-                    Content Two
-                </RouterTab>
-                <RouterTab path="/tab3" label="Label Three">
-                    Content Three
-                </RouterTab>
-            </RouterTabs>
-        </div>
-    );
+        return (
+            <div>
+                <p>Location: {location.pathname}</p>
+                <RouterTabs>
+                    <RouterTab path="" label="Label One">
+                        Content One
+                    </RouterTab>
+                    <RouterTab path="/tab2" label="Label Two">
+                        Content Two
+                    </RouterTab>
+                    <RouterTab path="/tab3" label="Label Three">
+                        Content Three
+                    </RouterTab>
+                </RouterTabs>
+            </div>
+        );
+    },
+
+    name: "RouterTabs",
 };
-
-_RouterTabs.storyName = "RouterTabs";

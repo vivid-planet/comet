@@ -1,6 +1,6 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { ComponentMeta } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import React from "react";
 
 export default {
@@ -65,7 +65,7 @@ export default {
             options: ["No files", "One valid file", "Three valid files", "Four files (one too large)", "Four files (one uploading)"],
         },
     },
-} as ComponentMeta<typeof FileSelect>;
+} as Meta<typeof FileSelect>;
 
 type Args = {
     layout: "list" | "grid";
@@ -79,86 +79,78 @@ type Args = {
     filesSelection: "No files" | "One valid file" | "Three valid files" | "Four files (one too large)" | "Four files (one uploading)";
 };
 
-export const _FileSelect = ({
-    layout,
-    disabled,
-    readOnly,
-    multiple,
-    hasError,
-    hasMaxFileSize,
-    hasMaxFiles,
-    onlyAllowImages,
-    filesSelection,
-}: Args) => {
-    console.log(layout);
-    const exampleFiles: Record<string, FileSelectItem> = {
-        "fileName.xyz": {
-            name: "Filename.xyz",
-            size: 4.3 * 1024 * 1024, // 4.3 MB
-        },
-        "anotherFile.png": {
-            name: "Another file.png",
-            size: 568 * 1024, // 568 KB
-        },
-        "fileNumberThree.jpg": {
-            name: "File number three.jpg",
-            size: 1.8 * 1024 * 1024, // 1.8 MB
-        },
-        "fileUploading.jpg": {
-            name: "File that is uploading.jpg",
-            loading: true,
-        },
-        "fileTooLarge.png": {
-            name: "Failed to upload.png",
-            size: 200 * 1024 * 1024, // 200 MB
-            error: "The file is too large",
-        },
-    };
+export const _FileSelect = {
+    render: ({ layout, disabled, readOnly, multiple, hasError, hasMaxFileSize, hasMaxFiles, onlyAllowImages, filesSelection }: Args) => {
+        console.log(layout);
+        const exampleFiles: Record<string, FileSelectItem> = {
+            "fileName.xyz": {
+                name: "Filename.xyz",
+                size: 4.3 * 1024 * 1024, // 4.3 MB
+            },
+            "anotherFile.png": {
+                name: "Another file.png",
+                size: 568 * 1024, // 568 KB
+            },
+            "fileNumberThree.jpg": {
+                name: "File number three.jpg",
+                size: 1.8 * 1024 * 1024, // 1.8 MB
+            },
+            "fileUploading.jpg": {
+                name: "File that is uploading.jpg",
+                loading: true,
+            },
+            "fileTooLarge.png": {
+                name: "Failed to upload.png",
+                size: 200 * 1024 * 1024, // 200 MB
+                error: "The file is too large",
+            },
+        };
 
-    const filesMapping = {
-        "No files": [] as FileSelectItem[],
-        "One valid file": [exampleFiles["fileName.xyz"]],
-        "Three valid files": [exampleFiles["fileName.xyz"], exampleFiles["anotherFile.png"], exampleFiles["fileNumberThree.jpg"]],
-        "Four files (one too large)": [
-            exampleFiles["fileName.xyz"],
-            exampleFiles["anotherFile.png"],
-            exampleFiles["fileNumberThree.jpg"],
-            exampleFiles["fileTooLarge.png"],
-        ],
-        "Four files (one uploading)": [
-            exampleFiles["fileName.xyz"],
-            exampleFiles["anotherFile.png"],
-            exampleFiles["fileNumberThree.jpg"],
-            exampleFiles["fileUploading.jpg"],
-        ],
-    };
+        const filesMapping = {
+            "No files": [] as FileSelectItem[],
+            "One valid file": [exampleFiles["fileName.xyz"]],
+            "Three valid files": [exampleFiles["fileName.xyz"], exampleFiles["anotherFile.png"], exampleFiles["fileNumberThree.jpg"]],
+            "Four files (one too large)": [
+                exampleFiles["fileName.xyz"],
+                exampleFiles["anotherFile.png"],
+                exampleFiles["fileNumberThree.jpg"],
+                exampleFiles["fileTooLarge.png"],
+            ],
+            "Four files (one uploading)": [
+                exampleFiles["fileName.xyz"],
+                exampleFiles["anotherFile.png"],
+                exampleFiles["fileNumberThree.jpg"],
+                exampleFiles["fileUploading.jpg"],
+            ],
+        };
 
-    return (
-        <FileSelect
-            onDrop={(acceptedFiles, rejectedFiles) => {
-                console.log(acceptedFiles, rejectedFiles);
-            }}
-            onRemove={() => {
-                console.log("Removing file");
-            }}
-            onDownload={() => {
-                console.log("Downloading file");
-            }}
-            layout={layout}
-            files={filesMapping[filesSelection]}
-            disabled={disabled}
-            readOnly={readOnly}
-            multiple={multiple}
-            maxFileSize={
-                hasMaxFileSize
-                    ? 5 * 1024 * 1024 // 5 MB
-                    : undefined
-            }
-            maxFiles={hasMaxFiles ? 4 : undefined}
-            error={hasError ? "An error occurred" : undefined}
-            accept={onlyAllowImages ? { "image/*": [] } : undefined}
-        />
-    );
+        return (
+            <FileSelect
+                onDrop={(acceptedFiles, rejectedFiles) => {
+                    console.log(acceptedFiles, rejectedFiles);
+                }}
+                onRemove={() => {
+                    console.log("Removing file");
+                }}
+                onDownload={() => {
+                    console.log("Downloading file");
+                }}
+                layout={layout}
+                files={filesMapping[filesSelection]}
+                disabled={disabled}
+                readOnly={readOnly}
+                multiple={multiple}
+                maxFileSize={
+                    hasMaxFileSize
+                        ? 5 * 1024 * 1024 // 5 MB
+                        : undefined
+                }
+                maxFiles={hasMaxFiles ? 4 : undefined}
+                error={hasError ? "An error occurred" : undefined}
+                accept={onlyAllowImages ? { "image/*": [] } : undefined}
+            />
+        );
+    },
+
+    name: "FileSelect",
 };
-
-_FileSelect.storyName = "FileSelect";

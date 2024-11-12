@@ -11,49 +11,51 @@ export default {
     decorators: [apolloSwapiStoryDecorator(), errorDialogStoryProviderDecorator()],
 };
 
-export const AutomaticErrorOnGraphqlError = () => {
-    const Story = () => {
-        const [brokenQuery, setBrokenQuery] = React.useState(false);
-        const query = brokenQuery ? "{ allFilms { films { somenotavailablefield } } }" : "{ allFilms { films { title } } }";
-        const { data, error } = useQuery(gql`
-            ${query}
-        `);
-        return (
-            <div>
-                <div style={{ backgroundColor: brokenQuery ? "red" : "green" }}>
-                    <Typography variant="h4">Current Query: {brokenQuery ? "broken" : "working"}</Typography>
+export const AutomaticErrorOnGraphqlError = {
+    render: () => {
+        const Story = () => {
+            const [brokenQuery, setBrokenQuery] = React.useState(false);
+            const query = brokenQuery ? "{ allFilms { films { somenotavailablefield } } }" : "{ allFilms { films { title } } }";
+            const { data, error } = useQuery(gql`
+                ${query}
+            `);
+            return (
+                <div>
+                    <div style={{ backgroundColor: brokenQuery ? "red" : "green" }}>
+                        <Typography variant="h4">Current Query: {brokenQuery ? "broken" : "working"}</Typography>
+                    </div>
+                    <Typography>Query: {query}</Typography>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            setBrokenQuery(!brokenQuery);
+                        }}
+                    >
+                        <Typography>Change Query</Typography>
+                    </Button>
+                    {error ? (
+                        <div>
+                            <Typography>
+                                Error:
+                                <br />
+                                {JSON.stringify(error)}
+                            </Typography>
+                        </div>
+                    ) : (
+                        <div>
+                            <Typography>
+                                Response:
+                                <br />
+                                {JSON.stringify(data)}
+                            </Typography>
+                        </div>
+                    )}
                 </div>
-                <Typography>Query: {query}</Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                        setBrokenQuery(!brokenQuery);
-                    }}
-                >
-                    <Typography>Change Query</Typography>
-                </Button>
-                {error ? (
-                    <div>
-                        <Typography>
-                            Error:
-                            <br />
-                            {JSON.stringify(error)}
-                        </Typography>
-                    </div>
-                ) : (
-                    <div>
-                        <Typography>
-                            Response:
-                            <br />
-                            {JSON.stringify(data)}
-                        </Typography>
-                    </div>
-                )}
-            </div>
-        );
-    };
-    return <Story />;
-};
+            );
+        };
+        return <Story />;
+    },
 
-AutomaticErrorOnGraphqlError.storyName = "Automatic Error on Graphql Error";
+    name: "Automatic Error on Graphql Error",
+};

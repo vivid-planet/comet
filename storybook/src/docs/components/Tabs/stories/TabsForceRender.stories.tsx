@@ -21,166 +21,174 @@ export default {
     decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
 };
 
-export const TabsInFormWithForceRender = () => {
-    return (
-        <div>
-            <FinalForm
-                mode="edit"
-                onSubmit={(values: any) => {
-                    alert(JSON.stringify(values));
-                }}
-                initialValues={{
-                    foo: "foo",
-                    bar: "bar",
-                }}
-            >
-                {({ pristine, dirty, hasValidationErrors, submitting, hasSubmitErrors, handleSubmit, ...formVars }) => {
-                    return (
-                        <>
-                            Pristine: {String(pristine)} <br />
-                            Dirty: {String(dirty)}
-                            <Toolbar>
-                                <ToolbarBackButton />
-                                <ToolbarFillSpace />
-                                <ToolbarActions>
-                                    <FinalFormSaveButton />
-                                </ToolbarActions>
-                            </Toolbar>
-                            <Tabs>
-                                <Tab label="Tab 1" forceRender>
-                                    <Card variant="outlined">
-                                        <CardContent>
-                                            <Field label="Foo" name="foo" component={FinalFormInput} />
-                                        </CardContent>
-                                    </Card>
-                                </Tab>
-                                <Tab label="Tab 2" forceRender>
-                                    <Card variant="outlined">
-                                        <CardContent>
-                                            <Field label="Bar" name="bar" component={FinalFormInput} />
-                                        </CardContent>
-                                    </Card>
-                                </Tab>
-                            </Tabs>
-                        </>
-                    );
-                }}
-            </FinalForm>
-        </div>
-    );
+export const TabsInFormWithForceRender = {
+    render: () => {
+        return (
+            <div>
+                <FinalForm
+                    mode="edit"
+                    onSubmit={(values: any) => {
+                        alert(JSON.stringify(values));
+                    }}
+                    initialValues={{
+                        foo: "foo",
+                        bar: "bar",
+                    }}
+                >
+                    {({ pristine, dirty, hasValidationErrors, submitting, hasSubmitErrors, handleSubmit, ...formVars }) => {
+                        return (
+                            <>
+                                Pristine: {String(pristine)} <br />
+                                Dirty: {String(dirty)}
+                                <Toolbar>
+                                    <ToolbarBackButton />
+                                    <ToolbarFillSpace />
+                                    <ToolbarActions>
+                                        <FinalFormSaveButton />
+                                    </ToolbarActions>
+                                </Toolbar>
+                                <Tabs>
+                                    <Tab label="Tab 1" forceRender>
+                                        <Card variant="outlined">
+                                            <CardContent>
+                                                <Field label="Foo" name="foo" component={FinalFormInput} />
+                                            </CardContent>
+                                        </Card>
+                                    </Tab>
+                                    <Tab label="Tab 2" forceRender>
+                                        <Card variant="outlined">
+                                            <CardContent>
+                                                <Field label="Bar" name="bar" component={FinalFormInput} />
+                                            </CardContent>
+                                        </Card>
+                                    </Tab>
+                                </Tabs>
+                            </>
+                        );
+                    }}
+                </FinalForm>
+            </div>
+        );
+    },
+
+    name: "Tabs in Form with forceRender",
 };
 
-TabsInFormWithForceRender.storyName = "Tabs in Form with forceRender";
+export const TabsInFormWithoutForceRender = {
+    render: () => {
+        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
+        return (
+            <div>
+                <FinalForm
+                    mode="edit"
+                    onSubmit={(values: any) => {
+                        alert(JSON.stringify(values));
+                    }}
+                    initialValues={{
+                        foo: "foo",
+                        bar: "bar",
+                    }}
+                >
+                    {({ pristine, dirty, hasValidationErrors, submitting, hasSubmitErrors, handleSubmit, ...formVars }) => {
+                        return (
+                            <>
+                                Pristine: {String(pristine)} <br />
+                                Dirty: {String(dirty)}
+                                <Toolbar>
+                                    <ToolbarBackButton />
+                                    <ToolbarFillSpace />
+                                    <ToolbarActions>
+                                        <FinalFormSaveButton />
+                                    </ToolbarActions>
+                                </Toolbar>
+                                <Tabs>
+                                    <Tab label="Tab 1">
+                                        <Card variant="outlined">
+                                            <CardContent>
+                                                <Field label="Foo" name="foo" component={FinalFormInput} />
+                                            </CardContent>
+                                        </Card>
+                                    </Tab>
+                                    <Tab label="Tab 2">
+                                        <Card variant="outlined">
+                                            <CardContent>
+                                                <Field label="Bar" name="bar" component={FinalFormInput} />
+                                            </CardContent>
+                                        </Card>
+                                    </Tab>
+                                </Tabs>
+                            </>
+                        );
+                    }}
+                </FinalForm>
+            </div>
+        );
+    },
 
-export const TabsInFormWithoutForceRender = () => {
-    // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
-    return (
-        <div>
-            <FinalForm
-                mode="edit"
-                onSubmit={(values: any) => {
-                    alert(JSON.stringify(values));
-                }}
-                initialValues={{
-                    foo: "foo",
-                    bar: "bar",
-                }}
-            >
-                {({ pristine, dirty, hasValidationErrors, submitting, hasSubmitErrors, handleSubmit, ...formVars }) => {
-                    return (
-                        <>
-                            Pristine: {String(pristine)} <br />
-                            Dirty: {String(dirty)}
-                            <Toolbar>
-                                <ToolbarBackButton />
-                                <ToolbarFillSpace />
-                                <ToolbarActions>
-                                    <FinalFormSaveButton />
-                                </ToolbarActions>
-                            </Toolbar>
-                            <Tabs>
-                                <Tab label="Tab 1">
-                                    <Card variant="outlined">
-                                        <CardContent>
-                                            <Field label="Foo" name="foo" component={FinalFormInput} />
-                                        </CardContent>
-                                    </Card>
-                                </Tab>
-                                <Tab label="Tab 2">
-                                    <Card variant="outlined">
-                                        <CardContent>
-                                            <Field label="Bar" name="bar" component={FinalFormInput} />
-                                        </CardContent>
-                                    </Card>
-                                </Tab>
-                            </Tabs>
-                        </>
-                    );
-                }}
-            </FinalForm>
-        </div>
-    );
+    name: "Tabs in Form without forceRender",
 };
 
-TabsInFormWithoutForceRender.storyName = "Tabs in Form without forceRender";
+export const FormInTabsWithForceRender = {
+    render: () => {
+        return (
+            <div>
+                <Tabs>
+                    <Tab label="Form" forceRender>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <FinalForm
+                                    mode="add"
+                                    onSubmit={(values: any) => {
+                                        alert(JSON.stringify(values));
+                                    }}
+                                >
+                                    <Field label="Name" name="name" component={FinalFormInput} />
+                                </FinalForm>
+                            </CardContent>
+                        </Card>
+                    </Tab>
+                    <Tab label="Tab 2">
+                        <Card variant="outlined">
+                            <CardContent>Tab 2</CardContent>
+                        </Card>
+                    </Tab>
+                </Tabs>
+            </div>
+        );
+    },
 
-export const FormInTabsWithForceRender = () => {
-    return (
-        <div>
-            <Tabs>
-                <Tab label="Form" forceRender>
-                    <Card variant="outlined">
-                        <CardContent>
-                            <FinalForm
-                                mode="add"
-                                onSubmit={(values: any) => {
-                                    alert(JSON.stringify(values));
-                                }}
-                            >
-                                <Field label="Name" name="name" component={FinalFormInput} />
-                            </FinalForm>
-                        </CardContent>
-                    </Card>
-                </Tab>
-                <Tab label="Tab 2">
-                    <Card variant="outlined">
-                        <CardContent>Tab 2</CardContent>
-                    </Card>
-                </Tab>
-            </Tabs>
-        </div>
-    );
+    name: "Form in Tabs with forceRender",
 };
 
-FormInTabsWithForceRender.storyName = "Form in Tabs with forceRender";
+export const FormInTabsWithoutForceRender = {
+    render: () => {
+        // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
+        return (
+            <div>
+                <Tabs>
+                    <Tab label="Form">
+                        <Card variant="outlined">
+                            <CardContent>
+                                <FinalForm
+                                    mode="add"
+                                    onSubmit={(values: any) => {
+                                        alert(JSON.stringify(values));
+                                    }}
+                                >
+                                    <Field label="Name" name="name" component={FinalFormInput} />
+                                </FinalForm>
+                            </CardContent>
+                        </Card>
+                    </Tab>
+                    <Tab label="Tab 2">
+                        <Card variant="outlined">
+                            <CardContent>Tab 2</CardContent>
+                        </Card>
+                    </Tab>
+                </Tabs>
+            </div>
+        );
+    },
 
-export const FormInTabsWithoutForceRender = () => {
-    // !!!!!!!! Note: This example is how NOT to do it !!!!!!!!
-    return (
-        <div>
-            <Tabs>
-                <Tab label="Form">
-                    <Card variant="outlined">
-                        <CardContent>
-                            <FinalForm
-                                mode="add"
-                                onSubmit={(values: any) => {
-                                    alert(JSON.stringify(values));
-                                }}
-                            >
-                                <Field label="Name" name="name" component={FinalFormInput} />
-                            </FinalForm>
-                        </CardContent>
-                    </Card>
-                </Tab>
-                <Tab label="Tab 2">
-                    <Card variant="outlined">
-                        <CardContent>Tab 2</CardContent>
-                    </Card>
-                </Tab>
-            </Tabs>
-        </div>
-    );
+    name: "Form in Tabs without forceRender",
 };
-
-FormInTabsWithoutForceRender.storyName = "Form in Tabs without forceRender";
