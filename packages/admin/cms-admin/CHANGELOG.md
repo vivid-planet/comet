@@ -1,5 +1,20 @@
 # @comet/cms-admin
 
+## 6.17.14
+
+### Patch Changes
+
+-   1515d0a1a: Don't move files to a folder called "." when uploading them to the DAM
+
+    This bug only occurred in projects with a `react-dropzone` version >= 14.3.2.
+
+    -   @comet/admin@6.17.14
+    -   @comet/admin-date-time@6.17.14
+    -   @comet/admin-icons@6.17.14
+    -   @comet/admin-rte@6.17.14
+    -   @comet/admin-theme@6.17.14
+    -   @comet/blocks-admin@6.17.14
+
 ## 6.17.13
 
 ### Patch Changes
