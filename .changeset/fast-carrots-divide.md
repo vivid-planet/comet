@@ -2,6 +2,6 @@
 "@comet/cms-site": minor
 ---
 
-Add rel=0 to youtube search parameters
+Disable showing related videos from other channels in `YouTubeVideoBlock`
 
-By setting the parameter rel to 0 in the `YouTubeVideoBlock` only related videos from the same channel as the embedded video are shown.
+By setting the parameter `rel` to `0` only related videos from the same channel as the embedded video are shown.
