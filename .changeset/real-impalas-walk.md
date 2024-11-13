@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-Fix generated typing for position code
+API Generator: Fix generated types for position code
