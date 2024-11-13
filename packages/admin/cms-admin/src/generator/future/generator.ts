@@ -128,6 +128,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
+    queryParamsPrefix?: string;
     columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
     excelExport?: boolean;
     add?: boolean;
