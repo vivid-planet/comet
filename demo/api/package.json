@@ -44,7 +44,7 @@
         "@opentelemetry/auto-instrumentations-node": "^0.36.1",
         "@opentelemetry/exporter-trace-otlp-http": "^0.35.1",
         "@opentelemetry/sdk-node": "^0.35.1",
-        "@sentry/node": "^7.118.0",
+        "@sentry/node": "^8.0.0",
         "apollo-server-core": "^3.0.0",
         "apollo-server-express": "^3.0.0",
         "async": "^3.0.0",
