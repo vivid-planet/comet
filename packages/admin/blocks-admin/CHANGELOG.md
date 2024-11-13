@@ -1,5 +1,17 @@
 # @comet/blocks-admin
 
+## 7.7.0
+
+### Patch Changes
+
+-   8ffc90eb1: Set the select field in `OneOfBlock` to `required` based on the `allowEmpty` prop
+-   a9d2e2e25: Fix linking from block preview to block admin for composite + list/blocks/columns block combinations
+
+    Previously, the generated route was wrong if a composite contained multiple nested list, blocks or columns blocks.
+
+    -   @comet/admin@7.7.0
+    -   @comet/admin-icons@7.7.0
+
 ## 7.6.0
 
 ### Patch Changes
