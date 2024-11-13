@@ -61,11 +61,11 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                 if (row.id === rowId) {
                     return {
                         ...row,
-                        columnValues: row.columnValues.map((columnValue) => {
-                            if (columnValue.columnId === columnId) {
-                                return { ...columnValue, value: newValue };
+                        cellValues: row.cellValues.map((cellValue) => {
+                            if (cellValue.columnId === columnId) {
+                                return { ...cellValue, value: newValue };
                             }
-                            return columnValue;
+                            return cellValue;
                         }),
                     };
                 }
@@ -179,8 +179,8 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         const newRow: Record<string, string> = {
             id: row.id,
         };
-        row.columnValues.forEach((columnValue) => {
-            newRow[columnValue.columnId] = columnValue.value;
+        row.cellValues.forEach((cellValue) => {
+            newRow[cellValue.columnId] = cellValue.value;
         });
         return newRow;
     });

@@ -15,7 +15,7 @@ export const getInitialTableData = (): {
                 id: uuid(),
                 position: 1,
                 highlighted: false,
-                columnValues: [
+                cellValues: [
                     { columnId: columnIdOne, value: "" },
                     { columnId: columnIdTwo, value: "" },
                 ],
@@ -24,7 +24,7 @@ export const getInitialTableData = (): {
                 id: uuid(),
                 position: 2,
                 highlighted: false,
-                columnValues: [
+                cellValues: [
                     { columnId: columnIdOne, value: "" },
                     { columnId: columnIdTwo, value: "" },
                 ],

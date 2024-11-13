@@ -2082,7 +2082,7 @@
                             "nullable": false
                         },
                         {
-                            "name": "columnValues",
+                            "name": "cellValues",
                             "kind": "NestedObjectList",
                             "object": {
                                 "fields": [
@@ -2163,7 +2163,7 @@
                             "nullable": false
                         },
                         {
-                            "name": "columnValues",
+                            "name": "cellValues",
                             "kind": "NestedObjectList",
                             "object": {
                                 "fields": [

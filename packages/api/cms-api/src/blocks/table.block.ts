@@ -80,7 +80,7 @@ class TableBlockRowData extends BlockData {
 
     @BlockField(TableBlockRowColumnValueData)
     @Type(() => TableBlockRowColumnValueData)
-    columnValues: TableBlockRowColumnValueData[] = [];
+    cellValues: TableBlockRowColumnValueData[] = [];
 }
 
 class TableBlockRowInput extends BlockInput {
@@ -98,7 +98,7 @@ class TableBlockRowInput extends BlockInput {
 
     @BlockField(TableBlockRowColumnValueInput)
     @Type(() => TableBlockRowColumnValueInput)
-    columnValues: TableBlockRowColumnValueInput[] = [];
+    cellValues: TableBlockRowColumnValueInput[] = [];
 
     transformToBlockData(): TableBlockRowData {
         return inputToData(TableBlockRowData, this);
