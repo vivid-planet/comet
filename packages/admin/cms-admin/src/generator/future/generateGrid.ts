@@ -492,7 +492,7 @@ export function generateGrid(
                             .join(",\n")} ], `
                       : ""
               }
-              ${config.queryParamsPrefix ? `, queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
+              ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
               }`
             : "";
 

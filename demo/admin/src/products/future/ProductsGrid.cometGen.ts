@@ -11,6 +11,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     toolbarActionProp: true,
     rowActionProp: true,
     excelExport: true,
+    queryParamsPrefix: "products",
     initialSort: [
         { field: "inStock", sort: "desc" },
         { field: "price", sort: "asc" },
