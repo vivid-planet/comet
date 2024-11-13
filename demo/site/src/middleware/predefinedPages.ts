@@ -1,9 +1,11 @@
 import { gql } from "@comet/cms-site";
 import { predefinedPagePaths } from "@src/documents/predefinedPages/predefinedPagePaths";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
-import { getSiteConfigForDomain } from "@src/util/siteConfig";
+import { getHostByHeaders, getSiteConfigForDomain, getSiteConfigForHost } from "@src/util/siteConfig";
+import { NextRequest, NextResponse } from "next/server";
 
 import { memoryCache } from "./cache";
+import { CustomMiddleware } from "./chain";
 import { GQLPredefinedPagesQuery, GQLPredefinedPagesQueryVariables } from "./predefinedPages.generated";
 
 async function getPredefinedPageRedirect(domain: string, pathname: string): Promise<string | undefined> {
@@ -74,4 +76,29 @@ async function fetchPredefinedPages(domain: string) {
     });
 }
 
-export { getPredefinedPageRedirect, getPredefinedPageRewrite };
+export function withPredefinedPagesMiddleware(middleware: CustomMiddleware) {
+    return async (request: NextRequest) => {
+        const headers = request.headers;
+        const host = getHostByHeaders(headers);
+        const siteConfig = await getSiteConfigForHost(host);
+        if (!siteConfig) {
+            throw new Error(`Cannot get siteConfig for host ${host}`);
+        }
+
+        const { pathname } = new URL(request.url);
+
+        const predefinedPageRedirect = await getPredefinedPageRedirect(siteConfig.scope.domain, pathname);
+
+        if (predefinedPageRedirect) {
+            return NextResponse.redirect(new URL(predefinedPageRedirect, request.url), 307);
+        }
+
+        const predefinedPageRewrite = await getPredefinedPageRewrite(siteConfig.scope.domain, pathname);
+
+        if (predefinedPageRewrite) {
+            return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
+        }
+
+        return middleware(request);
+    };
+}
