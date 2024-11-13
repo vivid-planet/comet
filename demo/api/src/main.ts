@@ -22,9 +22,7 @@ async function bootstrap(): Promise<void> {
     const appModule = AppModule.forRoot(config);
     const app = await NestFactory.create<NestExpressApplication>(appModule);
 
-    app.use(Sentry.Handlers.requestHandler());
-    app.use(Sentry.Handlers.tracingHandler());
-    app.use(Sentry.Handlers.errorHandler());
+    Sentry.setupExpressErrorHandler(app);
 
     // class-validator should use Nest for dependency injection.
     // See https://github.com/nestjs/nest/issues/528,
