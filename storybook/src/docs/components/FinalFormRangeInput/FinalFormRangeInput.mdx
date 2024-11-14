@@ -1,0 +1,46 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+
+import * as FinalFormRangeInputStories from "./FinalFormRangeInput.stories";
+
+<Meta of={FinalFormRangeInputStories} />
+
+# Final Form Range Input
+
+The Final Form Range Input Component lets you set a Range Value (min/max) either by dragging a slider or setting the value in the associated input fields.
+**This Component can only operate inside a Final Form Component.**
+
+<Canvas>
+    <Story of={FinalFormRangeInputStories.Default} />
+</Canvas>
+
+## Examples
+
+### With Initial Values
+
+<Canvas>
+    <Story of={FinalFormRangeInputStories.WithInitialValues} />
+</Canvas>
+
+### With StartAdornment Prop
+
+<Canvas>
+    <Story of={FinalFormRangeInputStories.StartAdornment} />
+</Canvas>
+
+### With EndAdornment Prop
+
+<Canvas>
+    <Story of={FinalFormRangeInputStories.EndAdornment} />
+</Canvas>
+
+### Different Initial Values and Range Values
+
+<Canvas>
+    <Story of={FinalFormRangeInputStories.WithDifferentInitialAndRangeValues} />
+</Canvas>
+
+### Different Slider Thumb
+
+<Canvas>
+    <Story of={FinalFormRangeInputStories.DifferentSliderThumb} />
+</Canvas>

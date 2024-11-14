@@ -1,11 +1,10 @@
 import { FileSelect, FileSelectItem } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
-import { ComponentMeta } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import * as React from "react";
 
 export default {
-    title: "stories/components/FileSelect",
-
+    title: "Docs/Components/FileSelect",
     decorators: [
         (story) => (
             <Card>
@@ -13,112 +12,115 @@ export default {
             </Card>
         ),
     ],
-} as ComponentMeta<typeof FileSelect>;
+} as Meta<typeof FileSelect>;
 
-export const _FileSelect = () => {
-    const value: FileSelectItem[] = [
-        {
-            name: "Filename.xyz",
-            size: 4.3 * 1024 * 1024, // 4.3 MB
-        },
-        {
-            name: "Another file.png",
-            size: 568 * 1024, // 568 KB
-        },
-        {
-            name: "File that is uploading.jpg",
-            loading: true,
-        },
-        {
-            name: "Failed to upload.png",
-            size: 200 * 1024 * 1024, // 200 MB
-            error: "The file is too large",
-        },
-    ];
+export const Basic = {
+    render: () => {
+        const value: FileSelectItem[] = [
+            {
+                name: "Filename.xyz",
+                size: 4.3 * 1024 * 1024, // 4.3 MB
+            },
+            {
+                name: "Another file.png",
+                size: 568 * 1024, // 568 KB
+            },
+            {
+                name: "File that is uploading.jpg",
+                loading: true,
+            },
+            {
+                name: "Failed to upload.png",
+                size: 200 * 1024 * 1024, // 200 MB
+                error: "The file is too large",
+            },
+        ];
 
-    return (
-        <FileSelect
-            onDrop={(acceptedFiles, fileRejections) => {
-                // Handle what happens with the dropped files
-            }}
-            onRemove={(file) => {
-                // Handle remove
-            }}
-            onDownload={(file) => {
-                // Handle download
-            }}
-            files={value}
-            maxFileSize={10 * 1024 * 1024} // 10 MB
-            maxFiles={5}
-        />
-    );
+        return (
+            <FileSelect
+                onDrop={(acceptedFiles, fileRejections) => {
+                    // Handle what happens with the dropped files
+                }}
+                onRemove={(file) => {
+                    // Handle remove
+                }}
+                onDownload={(file) => {
+                    // Handle download
+                }}
+                files={value}
+                maxFileSize={10 * 1024 * 1024} // 10 MB
+                maxFiles={5}
+            />
+        );
+    },
+    name: "FileSelect",
 };
 
-_FileSelect.storyName = "FileSelect";
+export const Readonly = {
+    render: () => {
+        const value: FileSelectItem[] = [
+            {
+                name: "Filename.xyz",
+                size: 4.3 * 1024 * 1024, // 4.3 MB
+            },
+            {
+                name: "Another file.png",
+                size: 568 * 1024, // 568 KB
+            },
+        ];
 
-export const ReadOnlyFileSelect = () => {
-    const value: FileSelectItem[] = [
-        {
-            name: "Filename.xyz",
-            size: 4.3 * 1024 * 1024, // 4.3 MB
-        },
-        {
-            name: "Another file.png",
-            size: 568 * 1024, // 568 KB
-        },
-    ];
-
-    return (
-        <FileSelect
-            onDownload={(file) => {
-                // Handle download
-            }}
-            files={value}
-            readOnly
-        />
-    );
+        return (
+            <FileSelect
+                onDownload={(file) => {
+                    // Handle download
+                }}
+                files={value}
+                readOnly
+            />
+        );
+    },
+    name: "ReadOnly FileSelect",
 };
 
-ReadOnlyFileSelect.storyName = "ReadOnly FileSelect";
+export const GridWithPreview = {
+    render: () => {
+        const value: FileSelectItem[] = [
+            {
+                name: "Filename.xyz",
+                size: 4.3 * 1024 * 1024, // 4.3 MB
+            },
+            {
+                name: "Another file.png",
+                size: 568 * 1024, // 568 KB
+            },
+            {
+                name: "And another file.png",
+                size: 5.6 * 1024 * 1024, // 5.6 MB
+            },
+            {
+                name: "Yet another file.pdf",
+                size: 8.2 * 1024 * 1024, // 8.2 MB
+            },
+            {
+                name: "And again another file.jpg",
+                size: 3.4 * 1024 * 1024, // 3.4 MB
+            },
+            {
+                name: "One last file.png",
+                size: 1.2 * 1024 * 1024, // 1.2 MB
+            },
+        ];
 
-export const GridWithPreview = () => {
-    const value: FileSelectItem[] = [
-        {
-            name: "Filename.xyz",
-            size: 4.3 * 1024 * 1024, // 4.3 MB
-        },
-        {
-            name: "Another file.png",
-            size: 568 * 1024, // 568 KB
-        },
-        {
-            name: "And another file.png",
-            size: 5.6 * 1024 * 1024, // 5.6 MB
-        },
-        {
-            name: "Yet another file.pdf",
-            size: 8.2 * 1024 * 1024, // 8.2 MB
-        },
-        {
-            name: "And again another file.jpg",
-            size: 3.4 * 1024 * 1024, // 3.4 MB
-        },
-        {
-            name: "One last file.png",
-            size: 1.2 * 1024 * 1024, // 1.2 MB
-        },
-    ];
-
-    return (
-        <FileSelect
-            onDownload={(file) => {
-                // Handle download
-            }}
-            files={value}
-            readOnly
-            layout="grid"
-        />
-    );
+        return (
+            <FileSelect
+                onDownload={(file) => {
+                    // Handle download
+                }}
+                files={value}
+                readOnly
+                layout="grid"
+            />
+        );
+    },
+    name: "Grid with preview",
 };
-
-GridWithPreview.storyName = "Grid with preview";

@@ -1,11 +1,10 @@
 import { FileDropzone } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
-import { ComponentMeta } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import * as React from "react";
 
 export default {
-    title: "stories/components/FileDropzone",
-
+    title: "Docs/Components/FileDropzone",
     decorators: [
         (story) => (
             <Card>
@@ -17,35 +16,38 @@ export default {
             </Card>
         ),
     ],
-} as ComponentMeta<typeof FileDropzone>;
+} as Meta<typeof FileDropzone>;
 
-export const Default = () => {
-    return (
-        <FileDropzone
-            onDrop={(acceptedFiles, fileRejections) => {
-                // Handle what happens with the dropped files
-            }}
-        />
-    );
-};
-
-export const DisabledAndErrorStates = () => {
-    return (
-        <>
+export const Default = {
+    render: () => {
+        return (
             <FileDropzone
-                disabled
                 onDrop={(acceptedFiles, fileRejections) => {
                     // Handle what happens with the dropped files
                 }}
             />
-            <FileDropzone
-                hasError
-                onDrop={(acceptedFiles, fileRejections) => {
-                    // Handle what happens with the dropped files
-                }}
-            />
-        </>
-    );
+        );
+    },
 };
 
-DisabledAndErrorStates.storyName = "Disabled and error states";
+export const DisabledAndErrorStates = {
+    render: () => {
+        return (
+            <>
+                <FileDropzone
+                    disabled
+                    onDrop={(acceptedFiles, fileRejections) => {
+                        // Handle what happens with the dropped files
+                    }}
+                />
+                <FileDropzone
+                    hasError
+                    onDrop={(acceptedFiles, fileRejections) => {
+                        // Handle what happens with the dropped files
+                    }}
+                />
+            </>
+        );
+    },
+    name: "Disabled and error states",
+};

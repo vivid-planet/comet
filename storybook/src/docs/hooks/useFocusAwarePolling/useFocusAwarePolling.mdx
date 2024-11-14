@@ -1,0 +1,25 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs";
+
+import * as UseFocusAwarePollingStories from "./useFocusAwarePolling.stories";
+
+<Meta of={UseFocusAwarePollingStories} />
+
+# useFocusAwarePolling()
+
+The `useFocusAwarePolling` hook prevents a `useQuery` hook from polling when the current browser tab is not in focus.
+Polling will resume once the tab is back in focus.
+Additionally, the query will be updated immediately on focus using `refetch`.
+
+## Basic example
+
+<Canvas>
+    <Story of={UseFocusAwarePollingStories.BasicExample} />
+</Canvas>
+
+### Query with `skip` option
+
+When using the `useQuery` hook with the `skip` option enabled (for instance, to pause polling when a dialog is not open), add the `skip` option to `useFocusAwarePolling`.
+
+<Canvas>
+    <Story of={UseFocusAwarePollingStories.WithSkipOption} />
+</Canvas>
