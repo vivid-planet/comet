@@ -6,18 +6,18 @@ import { useIFrameBridge } from "./useIFrameBridge";
 
 const cachingFetch = createFetchInMemoryCache(fetch);
 
-export function useBlockPreviewFetch(graphqlApiUrl: string) {
-    const iFrameBridge = useIFrameBridge();
+export function useBlockPreviewFetch() {
+    const { showOnlyVisible, graphQLApiUrl } = useIFrameBridge();
 
     const graphQLFetchRef = useRef(
-        createGraphQLFetch(createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !iFrameBridge.showOnlyVisible }), graphqlApiUrl),
+        createGraphQLFetch(createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !showOnlyVisible }), graphQLApiUrl),
     );
     useEffect(() => {
         graphQLFetchRef.current = createGraphQLFetch(
-            createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !iFrameBridge.showOnlyVisible }),
-            graphqlApiUrl,
+            createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !showOnlyVisible }),
+            graphQLApiUrl,
         );
-    }, [iFrameBridge.showOnlyVisible, graphqlApiUrl]);
+    }, [showOnlyVisible, graphQLApiUrl]);
     return {
         graphQLFetch: graphQLFetchRef.current,
         fetch: cachingFetch,
