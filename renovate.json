@@ -72,9 +72,10 @@
         },
         {
             "matchUpdateTypes": ["major"],
-            "labels": ["major"]
+            "labels": ["major", "dependencies"]
         }
     ],
     "rangeStrategy": "bump",
-    "labels": ["dependencies"]
+    "labels": ["dependencies"],
+    "baseBranches": ["next"]
 }
