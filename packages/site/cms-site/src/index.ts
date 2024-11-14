@@ -26,10 +26,10 @@ export { useOneTrustCookieApi } from "./cookies/useOneTrustCookieApi";
 export { ErrorHandlerBoundary } from "./errorHandler/ErrorHandlerBoundary";
 export { ErrorHandlerProvider } from "./errorHandler/ErrorHandlerProvider";
 export {
+    convertPreviewDataToHeaders,
     createFetchWithDefaults,
     createFetchWithPreviewHeaders,
     createGraphQLFetch,
-    getPreviewHeaders,
     gql,
     GraphQLFetch,
 } from "./graphQLFetch/graphQLFetch";

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { createFetchInMemoryCache } from "../graphQLFetch/fetchInMemoryCache";
-import { createFetchWithDefaults, createGraphQLFetch, getPreviewHeaders } from "../graphQLFetch/graphQLFetch";
+import { convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch } from "../graphQLFetch/graphQLFetch";
 import { useIFrameBridge } from "./useIFrameBridge";
 
 const cachingFetch = createFetchInMemoryCache(fetch);
@@ -20,5 +20,5 @@ export function useBlockPreviewFetch(graphqlApiUrl: string) {
 }
 
 function createBlockPreviewFetch(graphqlApiUrl: string, includeInvisible: boolean) {
-    return createGraphQLFetch(createFetchWithDefaults(cachingFetch, { headers: getPreviewHeaders({ includeInvisible }) }), graphqlApiUrl);
+    return createGraphQLFetch(createFetchWithDefaults(cachingFetch, { headers: convertPreviewDataToHeaders({ includeInvisible }) }), graphqlApiUrl);
 }
