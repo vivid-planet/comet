@@ -27,9 +27,13 @@ export default {
                 },
             },
         },
+        "@storybook/addon-webpack5-compiler-babel",
     ],
     staticDirs: ["../public"],
     docs: {
         autodocs: true,
+    },
+    typescript: {
+        reactDocgen: "react-docgen-typescript",
     },
 };
