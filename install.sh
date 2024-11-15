@@ -7,7 +7,7 @@ cd $(dirname $0)
 # use correct node version and install dependencies
 nvm install
 nvm use
-corepack enable pnpm
+corepack enable
 
 pnpm install
 
