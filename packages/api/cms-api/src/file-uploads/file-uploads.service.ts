@@ -93,4 +93,11 @@ export class FileUploadsService {
 
         return ["/file-uploads", hash, file.id, timeout, resizeWidth, filename].join("/");
     }
+
+    async delete(file: FileUpload): Promise<void> {
+        if (await this.blobStorageBackendService.fileExists(this.config.directory, file.name)) {
+            await this.blobStorageBackendService.removeFile(this.config.directory, file.name);
+            await this.repository.nativeDelete({ id: file.id });
+        }
+    }
 }
