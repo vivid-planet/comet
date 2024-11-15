@@ -73,7 +73,10 @@ export function Field<FieldValue = any, FieldElement extends HTMLElement = HTMLE
         fieldContainerProps,
         ...rest
     }: FieldRenderProps<FieldValue, FieldElement> & { warning?: string; disabled?: boolean; required?: boolean }) {
-        // fix for problem with conditional validation https://github.com/final-form/react-final-form/issues/980
+        // Workaround for stale validation errors when using conditional validation.
+        // The meta passed to renderField isn't updated yet when re-rendering the field.
+        // We therefore fall back to the meta from getFieldState, which is updated correctly.
+        // See https://github.com/final-form/react-final-form/issues/980 for more information.
         const formMeta = getFieldState(name);
 
         if (formMeta) {
