@@ -2,7 +2,7 @@ import { Field, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
-import { User } from "./user";
+import { CometUser } from "./user";
 
 @ObjectType()
 export class CurrentUserPermission {
@@ -24,6 +24,6 @@ export class CurrentUser {
     permissions: CurrentUserPermission[];
     @Field({ nullable: true })
     impersonated?: boolean;
-    @Field(() => User, { nullable: true })
-    authenticatedUser?: User;
+    @Field(() => CometUser, { nullable: true })
+    authenticatedUser?: CometUser;
 }

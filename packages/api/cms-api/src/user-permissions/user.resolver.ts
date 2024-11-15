@@ -3,35 +3,35 @@ import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@n
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { FindUsersArgs } from "./dto/paginated-user-list";
-import { User } from "./dto/user";
+import { CometUser } from "./dto/user";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ObjectType()
-class PaginatedUserList extends PaginatedResponseFactory.create(User) {}
+class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(CometUser) {}
 
-@Resolver(() => User)
+@Resolver(() => CometUser)
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
 export class UserResolver {
     constructor(private readonly userService: UserPermissionsService) {}
 
-    @Query(() => User)
-    async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<User> {
+    @Query(() => CometUser)
+    async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<CometUser> {
         return this.userService.getUser(id);
     }
 
-    @Query(() => PaginatedUserList)
-    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<PaginatedUserList> {
+    @Query(() => UserPermissionPaginatedUserList)
+    async userPermissionsUsers(@Args() args: FindUsersArgs): Promise<UserPermissionPaginatedUserList> {
         const [users, totalCount] = await this.userService.findUsers(args);
-        return new PaginatedUserList(users, totalCount, args);
+        return new UserPermissionPaginatedUserList(users, totalCount, args);
     }
 
     @ResolveField(() => Int)
-    async permissionsCount(@Parent() user: User): Promise<number> {
+    async permissionsCount(@Parent() user: CometUser): Promise<number> {
         return (await this.userService.getPermissions(user)).length;
     }
 
     @ResolveField(() => Int)
-    async contentScopesCount(@Parent() user: User): Promise<number> {
+    async contentScopesCount(@Parent() user: CometUser): Promise<number> {
         return (await this.userService.getContentScopes(user)).length;
     }
 }
