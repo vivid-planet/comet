@@ -42,7 +42,7 @@ export const YouTubeVideoBlock = withPreview(
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
         if (!youtubeIdentifier) {
-            return <PreviewSkeleton type="media" hasContent={false} />;
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
         const identifier = parseYoutubeIdentifier(youtubeIdentifier);

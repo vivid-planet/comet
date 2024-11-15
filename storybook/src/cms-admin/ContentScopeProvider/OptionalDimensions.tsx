@@ -1,5 +1,5 @@
 import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo, MainContent } from "@comet/admin";
-import { ContentScopeControls, ContentScopeProvider, ContentScopeValues, useContentScope } from "@comet/cms-admin";
+import { ContentScopeControls, ContentScopeIndicator, ContentScopeProvider, ContentScopeValues, useContentScope } from "@comet/cms-admin";
 import { Typography } from "@mui/material";
 import { storiesOf } from "@storybook/react";
 import React from "react";
@@ -49,6 +49,7 @@ storiesOf("@comet/cms-admin/Content Scope Provider", module)
                                 <ContentScopeControls />
                             </AppHeader>
                             <MainContent>
+                                <ContentScopeIndicator />
                                 <Typography gutterBottom>
                                     This is a development story to test optional scope dimensions in the content scope provider. Try changing the
                                     scope in the content scope select.

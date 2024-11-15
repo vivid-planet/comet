@@ -134,8 +134,6 @@ export function generateForm(
         gqlArgs.push(...forwardedGqlArgs);
     }
 
-    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
-
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
         fragment ${formFragmentName} on ${gqlType} {
             ${formFragmentFields.join("\n")}
@@ -247,6 +245,8 @@ export function generateForm(
 
         filterByFragmentType = `${formFragmentName}Fragment`;
     }
+
+    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
     const code = `import { useApolloClient, useQuery, gql } from "@apollo/client";
     import {
