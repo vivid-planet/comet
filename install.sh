@@ -7,7 +7,8 @@ cd $(dirname $0)
 # use correct node version and install dependencies
 nvm install
 nvm use
-npm i -g pnpm@8
+corepack enable pnpm
+
 pnpm install
 
 # admin Blocks
