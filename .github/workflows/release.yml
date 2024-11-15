@@ -40,7 +40,7 @@ jobs:
 
             - name: Create Release Pull Request or Publish to npm
               id: changesets
-              uses: dotansimha/changesets-action@cbc5ff3569ae9861100a48b290f4e9c1b94e45b5
+              uses: dotansimha/changesets-action@v1.5.2
               with:
                   version: pnpm run version
                   publish: pnpm run publish

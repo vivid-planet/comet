@@ -37,12 +37,7 @@ import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import {
-    GQLManufacturersSelectQuery,
-    GQLManufacturersSelectQueryVariables,
-    GQLProductCategoriesSelectQuery,
-    GQLProductCategoriesSelectQueryVariables,
-} from "./ProductForm.generated";
+import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -71,13 +66,12 @@ type FormValues = Omit<ProductFormDetailsFragment, "priceRange"> & {
 interface FormProps {
     showAvailableSince?: boolean;
     availableSince?: Date;
-    manufacturerCountry: string;
     type?: GQLProductType;
     title?: string;
     id?: string;
 }
 
-export function ProductForm({ showAvailableSince, availableSince, manufacturerCountry, type, title, id }: FormProps): React.ReactElement {
+export function ProductForm({ showAvailableSince, availableSince, type, title, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -127,7 +121,6 @@ export function ProductForm({ showAvailableSince, availableSince, manufacturerCo
             ...formValues,
             category: formValues.category?.id,
             priceRange: formValues.priceRange ? { min: parseFloat(formValues.priceRange.min), max: parseFloat(formValues.priceRange.max) } : null,
-            manufacturer: formValues.manufacturer?.id,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
@@ -168,9 +161,9 @@ export function ProductForm({ showAvailableSince, availableSince, manufacturerCo
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{ values: true }}
+            subscription={{}}
         >
-            {({ values, form }) => (
+            {() => (
                 <>
                     {saveConflict.dialogs}
                     <>
@@ -288,29 +281,6 @@ export function ProductForm({ showAvailableSince, availableSince, manufacturerCo
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
-                            <AsyncSelectField
-                                variant="horizontal"
-                                fullWidth
-                                name="manufacturer"
-                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
-                                loadOptions={async () => {
-                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
-                                        query: gql`
-                                            query ManufacturersSelect($filter: ManufacturerFilter) {
-                                                manufacturers(filter: $filter) {
-                                                    nodes {
-                                                        id
-                                                        name
-                                                    }
-                                                }
-                                            }
-                                        `,
-                                        variables: { filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } } },
-                                    });
-                                    return data.manufacturers.nodes;
-                                }}
-                                getOptionLabel={(option) => option.name}
-                            />
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel

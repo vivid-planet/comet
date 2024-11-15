@@ -18,10 +18,6 @@ export const productFormFragment = gql`
             min
             max
         }
-        manufacturer {
-            id
-            name
-        }
         inStock
         availableSince
         image

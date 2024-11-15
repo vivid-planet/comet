@@ -777,8 +777,8 @@ export function generateGrid(
                                       ? forwardRowAction
                                           ? `{rowAction && rowAction(params)}`
                                           : `
-                                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                            <EditIcon color="primary" />
+                                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                                            <EditIcon />
                                         </IconButton>`
                                       : ""
                               }${

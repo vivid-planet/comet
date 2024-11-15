@@ -8,7 +8,6 @@ import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
 import { basename, dirname } from "path";
-import { ReactNode } from "react";
 
 import { FinalFormFileUploadProps } from "../../form/file/FinalFormFileUpload";
 import { generateForm } from "./generateForm";
@@ -23,12 +22,12 @@ type ImportReference = {
     import: string;
 };
 
-type SingleFileFormFieldConfig = { type: "fileUpload"; name: string; multiple?: false; maxFiles?: 1 } & Pick<
+type SingleFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple?: false; maxFiles?: 1 } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-type MultiFileFormFieldConfig = { type: "fileUpload"; name: string; multiple: true; maxFiles?: number } & Pick<
+type MultiFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple: true; maxFiles?: number } & Pick<
     Partial<FinalFormFileUploadProps<true>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
@@ -42,8 +41,8 @@ export type FormFieldConfig<T> = (
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
-          startAdornment?: ReactNode;
-          endAdornment?: ReactNode;
+          startAdornment?: string;
+          endAdornment?: string;
       }
     | { type: "boolean"; name: keyof T }
     | { type: "date"; name: keyof T }
@@ -60,8 +59,8 @@ export type FormFieldConfig<T> = (
           filter?: { type: "field" | "prop"; name: string; gqlName?: string };
       }
     | { type: "block"; name: keyof T; block: ImportReference }
-    | SingleFileFormFieldConfig
-    | MultiFileFormFieldConfig
+    | SingleFileFormFieldConfig<T>
+    | MultiFileFormFieldConfig<T>
 ) & {
     label?: string;
     required?: boolean;

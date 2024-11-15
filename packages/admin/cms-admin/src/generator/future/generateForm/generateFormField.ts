@@ -121,7 +121,7 @@ export function generateFormField({
             )}: Required input can not be optionalRender. Try generating a second form without this field to enable providing a value via prop.`,
         );
     }
-    // console.log("Field", config.name, introspectionFieldType);
+
     const required = !isFieldOptional({ config, gqlFieldName, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
@@ -650,7 +650,45 @@ export function generateFormField({
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
         const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
 
-        formFragmentField = `${name} { id ${labelField} }`;
+        const initQueryIdPath = config.initQueryIdPath ?? `id`;
+        const initQueryIdSelection = config.initQueryIdPath
+            ? `id: ${config.initQueryIdPath
+                  .split(".")
+                  .reverse()
+                  .reduce((acc, part) => `${part}${acc ? ` { ${acc} }` : ``}`, ``)}`
+            : `id`;
+        const initQueryLabelPath = config.initQueryLabelPath ?? labelField ?? ``;
+        const initQueryLabelSelection = config.initQueryLabelPath
+            ? `${labelField}: ${config.initQueryLabelPath
+                  .split(".")
+                  .reverse()
+                  .reduce((acc, part) => `${part}${acc ? ` { ${acc} }` : ``}`, ``)}`
+            : labelField;
+
+        formFragmentField = `${name}${
+            config.gqlFieldName ? `: ${String(config.gqlFieldName)}` : ``
+        } { ${initQueryIdSelection} ${initQueryLabelSelection} }`;
+
+        if (initQueryIdPath.indexOf(".") !== -1 || initQueryLabelPath.indexOf(".") !== -1) {
+            // fetched nested values for id or label, formValues needs to be adjusted for asyncSelect to work
+            formValuesConfig = [
+                {
+                    ...defaultFormValuesConfig,
+                    ...{
+                        omitFromFragmentType: name,
+                        typeCode: `${name}?: { id: string, ${labelField}: string };`,
+                        initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? {
+                                id: data.${dataRootName}.${nameWithPrefix}?.id${
+                            initQueryIdPath.split(".").length > 1 ? initQueryIdPath.substring(initQueryIdPath.indexOf(".")) : ``
+                        },
+                                ${labelField}: data.${dataRootName}.${nameWithPrefix}?.${labelField}${
+                            initQueryLabelPath.split(".").length > 1 ? initQueryLabelPath.substring(initQueryLabelPath.indexOf(".")) : ``
+                        }
+                            } : undefined`,
+                    },
+                },
+            ];
+        }
 
         const filterConfig = config.filter
             ? (() => {
@@ -757,51 +795,6 @@ export function generateFormField({
         if (filterConfig) {
             imports.push({ name: "OnChangeField", importPath: "@comet/admin" });
             finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
-        }
-
-        const initQueryIdPath = config.initQueryIdPath ?? `id`;
-        const initQueryIdSelection = config.initQueryIdPath
-            ? `id: ${config.initQueryIdPath
-                  .split(".")
-                  .reverse()
-                  .reduce((acc, part) => `${part}${acc ? ` { ${acc} }` : ``}`, ``)}`
-            : `id`;
-        const initQueryLabelPath = config.initQueryLabelPath ?? labelField ?? ``;
-        const initQueryLabelSelection = config.initQueryLabelPath
-            ? `${labelField}: ${config.initQueryLabelPath
-                  .split(".")
-                  .reverse()
-                  .reduce((acc, part) => `${part}${acc ? ` { ${acc} }` : ``}`, ``)}`
-            : labelField;
-
-        formFragmentField = `${name}${
-            config.gqlFieldName ? `: ${String(config.gqlFieldName)}` : ``
-        } { ${initQueryIdSelection} ${initQueryLabelSelection} }`;
-
-        // handle asyncSelect submitted via gql-root-prop
-        if (defaultFormValuesConfig.destructFromFormValues && gqlArgConfig?.isFieldForRootProp) {
-            defaultFormValuesConfig.destructFromFormValues = `${name}: { id: ${name}}`;
-        }
-
-        if (initQueryIdPath.indexOf(".") !== -1 || initQueryLabelPath.indexOf(".") !== -1) {
-            // fetched nested values for id or label, formValues needs to be adjusted for asyncSelect to work
-            formValuesConfig = [
-                {
-                    ...defaultFormValuesConfig,
-                    ...{
-                        omitFromFragmentType: name,
-                        typeCode: `${name}?: { id: string, ${labelField}: string };`,
-                        initializationCode: `${name}: data.${dataRootName}.${String(config.name)} ? {
-                                id: data.${dataRootName}.${String(config.name)}?.id${
-                            initQueryIdPath.split(".").length > 1 ? initQueryIdPath.substring(initQueryIdPath.indexOf(".")) : ``
-                        },
-                                ${labelField}: data.${dataRootName}.${String(config.name)}?.${labelField}${
-                            initQueryLabelPath.split(".").length > 1 ? initQueryLabelPath.substring(initQueryLabelPath.indexOf(".")) : ``
-                        }
-                            } : undefined`,
-                    },
-                },
-            ];
         }
 
         formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
