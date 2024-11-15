@@ -1,5 +1,5 @@
 import { Tooltip } from "@comet/admin";
-import { Image, Video, Vimeo, YouTube } from "@comet/admin-icons";
+import { Image, Video, Vimeo, Youtube } from "@comet/admin-icons";
 import { BlockCategory, createOneOfBlock } from "@comet/blocks-admin";
 import { DamImageBlock, DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from "@comet/cms-admin";
 import { FormattedMessage } from "react-intl";
@@ -24,7 +24,7 @@ export const MediaBlock = createOneOfBlock({
         ),
         youTubeVideo: (
             <Tooltip trigger="hover" title={<FormattedMessage id="pages.blocks.media.video.youtube" defaultMessage="Video (YouTube)" />}>
-                <YouTube />
+                <Youtube />
             </Tooltip>
         ),
         vimeoVideo: (

@@ -10,8 +10,6 @@ export { default as MovePage } from "./MovePage";
 export { default as RadioChecked } from "./RadioChecked";
 export { default as RadioUnchecked } from "./RadioUnchecked";
 export { default as ThreeDotSaving } from "./ThreeDotSaving";
-export { default as Vimeo } from "./Vimeo";
-export { default as YouTube } from "./YouTube";
 
 export type IconName =
     | GeneratedIconName
@@ -23,6 +21,4 @@ export type IconName =
     | "MovePage"
     | "RadioChecked"
     | "RadioUnchecked"
-    | "ThreeDotSaving"
-    | "Vimeo"
-    | "YouTube";
+    | "ThreeDotSaving";
