@@ -10,7 +10,6 @@ import {
     GridColDef,
     GridFilterButton,
     Loading,
-    MainContent,
     MasterLayout,
     Menu,
     MenuItemRouterLink,
@@ -21,6 +20,7 @@ import {
     SaveBoundarySaveButton,
     Stack,
     StackLink,
+    StackMainContent,
     StackPage,
     StackPageTitle,
     StackSwitch,
@@ -172,11 +172,11 @@ export const SimpleFormOnAPage = {
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
                 </StackToolbar>
-                <MainContent>
+                <StackMainContent>
                     <FieldSet>
                         <Form id={editingId} />
                     </FieldSet>
-                </MainContent>
+                </StackMainContent>
             </SaveBoundary>
         );
     },
@@ -229,9 +229,9 @@ export const LargeFormOnAPage = {
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
                 </StackToolbar>
-                <MainContent>
+                <StackMainContent>
                     <Form id={editingId} />
-                </MainContent>
+                </StackMainContent>
             </SaveBoundary>
         );
     },
@@ -276,7 +276,7 @@ export const SimpleFormInADialog = {
                         </Button>
                     </ToolbarActions>
                 </StackToolbar>
-                <MainContent>
+                <StackMainContent>
                     <Typography variant="h3">Open the dialog to see the form.</Typography>
                     <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
                         <DialogTitle>Dialog title</DialogTitle>
@@ -288,7 +288,7 @@ export const SimpleFormInADialog = {
                             <SaveBoundarySaveButton />
                         </DialogActions>
                     </Dialog>
-                </MainContent>
+                </StackMainContent>
             </SaveBoundary>
         );
     },
@@ -344,7 +344,7 @@ export const LargeFormInADialog = {
                         </Button>
                     </ToolbarActions>
                 </StackToolbar>
-                <MainContent>
+                <StackMainContent>
                     <Typography variant="h3">Open the dialog to see the form.</Typography>
                     <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
                         <DialogTitle>Dialog title</DialogTitle>
@@ -356,7 +356,7 @@ export const LargeFormInADialog = {
                             <SaveBoundarySaveButton />
                         </DialogActions>
                     </Dialog>
-                </MainContent>
+                </StackMainContent>
             </SaveBoundary>
         );
     },
@@ -390,9 +390,9 @@ export const SingleGridFullHeight = {
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
-                <MainContent fullHeight>
+                <StackMainContent fullHeight>
                     <DataGrid disableSelectionOnClick columns={columns} rows={rows} loading={loading} components={{ Toolbar: GridToolbar }} />
-                </MainContent>
+                </StackMainContent>
             </>
         );
     },
@@ -426,7 +426,7 @@ export const SingleGridAutoHeight = {
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
-                <MainContent>
+                <StackMainContent>
                     <DataGrid
                         disableSelectionOnClick
                         columns={columns}
@@ -435,7 +435,7 @@ export const SingleGridAutoHeight = {
                         components={{ Toolbar: GridToolbar }}
                         autoHeight
                     />
-                </MainContent>
+                </StackMainContent>
             </>
         );
     },
@@ -508,9 +508,9 @@ export const GridWithFormInADialog = {
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
-                <MainContent fullHeight>
+                <StackMainContent fullHeight>
                     <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
-                </MainContent>
+                </StackMainContent>
                 <Dialog open={!!editingId} onClose={() => setEditingId(undefined)}>
                     <SaveBoundary onAfterSave={() => setEditingId(undefined)}>
                         <DialogTitle>{editingId === "add" ? "Add new item" : `${rows.find((row) => row.id === editingId)?.title}`}</DialogTitle>
@@ -606,18 +606,18 @@ export const GridWithFormOnAPage = {
                         <ToolbarBackButton />
                         <ToolbarAutomaticTitleItem />
                     </StackToolbar>
-                    <MainContent fullHeight>
+                    <StackMainContent fullHeight>
                         <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
-                    </MainContent>
+                    </StackMainContent>
                 </StackPage>
                 <StackPage name="add">
                     <SaveBoundary>
                         <StackPageTitle title="Add new item">{formToolbar}</StackPageTitle>
-                        <MainContent>
+                        <StackMainContent>
                             <FieldSet>
                                 <Form />
                             </FieldSet>
-                        </MainContent>
+                        </StackMainContent>
                     </SaveBoundary>
                 </StackPage>
                 <StackPage name="edit">
@@ -625,11 +625,11 @@ export const GridWithFormOnAPage = {
                         return (
                             <SaveBoundary>
                                 <StackPageTitle title={rows.find((row) => row.id === id)?.title}>{formToolbar}</StackPageTitle>
-                                <MainContent>
+                                <StackMainContent>
                                     <FieldSet>
                                         <Form id={id} />
                                     </FieldSet>
-                                </MainContent>
+                                </StackMainContent>
                             </SaveBoundary>
                         );
                     }}
@@ -724,16 +724,16 @@ export const NestedGridsAndFormsWithTabs = {
                             <ToolbarBackButton />
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
-                        <MainContent fullHeight>
+                        <StackMainContent fullHeight>
                             <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
-                        </MainContent>
+                        </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
                         {(id) => {
                             return (
                                 <SaveBoundary>
                                     <StackPageTitle title={rows.find((row) => row.id === id)?.title}>{formToolbar}</StackPageTitle>
-                                    <MainContent>
+                                    <StackMainContent>
                                         <RouterTabs>
                                             <RouterTab path="" label="Details Form">
                                                 <FieldSet>
@@ -746,7 +746,7 @@ export const NestedGridsAndFormsWithTabs = {
                                                 </FullHeightGridContainer>
                                             </RouterTab>
                                         </RouterTabs>
-                                    </MainContent>
+                                    </StackMainContent>
                                 </SaveBoundary>
                             );
                         }}
@@ -849,16 +849,16 @@ export const NestedFormInGridInTabsInGrid = {
                             <ToolbarBackButton />
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
-                        <MainContent fullHeight>
+                        <StackMainContent fullHeight>
                             <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
-                        </MainContent>
+                        </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
                         {(id) => {
                             return (
                                 <SaveBoundary>
                                     <StackPageTitle title={rows.find((row) => row.id === id)?.title}>{formToolbar}</StackPageTitle>
-                                    <MainContent>
+                                    <StackMainContent>
                                         <RouterTabs>
                                             <RouterTab path="" label="Details Form">
                                                 <FieldSet>
@@ -875,23 +875,23 @@ export const NestedFormInGridInTabsInGrid = {
                                                     <StackPage name="edit">
                                                         {(id) => {
                                                             return (
-                                                                <Box m={-4}>
+                                                                <>
                                                                     <StackPageTitle title={rows.find((row) => row.id === id)?.title}>
                                                                         {formToolbar}
                                                                     </StackPageTitle>
-                                                                    <MainContent>
+                                                                    <StackMainContent>
                                                                         <FieldSet>
                                                                             <Form id={id} />
                                                                         </FieldSet>
-                                                                    </MainContent>
-                                                                </Box>
+                                                                    </StackMainContent>
+                                                                </>
                                                             );
                                                         }}
                                                     </StackPage>
                                                 </StackSwitch>
                                             </RouterTab>
                                         </RouterTabs>
-                                    </MainContent>
+                                    </StackMainContent>
                                 </SaveBoundary>
                             );
                         }}
@@ -970,7 +970,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
-                <MainContent fullHeight>
+                <StackMainContent fullHeight>
                     <DataGrid
                         disableSelectionOnClick
                         rows={rows}
@@ -981,7 +981,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
                         selectionModel={selectionModel}
                         onSelectionModelChange={setSelectionModel}
                     />
-                </MainContent>
+                </StackMainContent>
             </>
         );
     },
@@ -1023,7 +1023,7 @@ export const GridWithSelectionInDialog = {
                         </Button>
                     </ToolbarActions>
                 </StackToolbar>
-                <MainContent>
+                <StackMainContent>
                     {selectionModel.length > 0 ? (
                         <>
                             <Typography variant="h4" gutterBottom>
@@ -1045,7 +1045,7 @@ export const GridWithSelectionInDialog = {
                     ) : (
                         <Typography variant="h4">No items selected :(</Typography>
                     )}
-                </MainContent>
+                </StackMainContent>
                 <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
                     <DialogTitle>Selected items</DialogTitle>
                     <DataGrid
