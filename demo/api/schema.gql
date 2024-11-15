@@ -463,11 +463,6 @@ type Manufacturer {
   updatedAt: DateTime!
 }
 
-type ManufacturerCountry {
-  id: String!
-  used: Float!
-}
-
 type ProductCategory {
   id: ID!
   title: String!
@@ -507,15 +502,6 @@ type ProductTag {
   updatedAt: DateTime!
   productsWithStatus: [ProductToTag!]!
   products: [Product!]!
-}
-
-type ProductVariant {
-  id: ID!
-  name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  product: Product!
-  image: DamImageBlockData!
 }
 
 type ProductDiscounts {
@@ -581,6 +567,21 @@ enum ProductType {
 A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar Date
+
+type ProductVariant {
+  id: ID!
+  name: String!
+  position: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  image: DamImageBlockData!
+}
+
+type ManufacturerCountry {
+  id: String!
+  used: Float!
+}
 
 type PaginatedManufacturers {
   nodes: [Manufacturer!]!
@@ -1122,6 +1123,7 @@ input ProductVariantSort {
 
 enum ProductVariantSortField {
   name
+  position
   product
   createdAt
   updatedAt
@@ -1504,11 +1506,13 @@ input ProductTagUpdateInput {
 input ProductVariantInput {
   name: String!
   image: DamImageBlockInput!
+  position: Int
 }
 
 input ProductVariantUpdateInput {
   name: String
   image: DamImageBlockInput
+  position: Int
 }
 
 input ManufacturerInput {

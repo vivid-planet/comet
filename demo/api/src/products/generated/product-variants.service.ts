@@ -44,9 +44,9 @@ export class ProductVariantsService {
         return this.repository.count(this.getPositionGroupCondition(group));
     }
 
-    getPositionGroupCondition(data: { product: string }): FilterQuery<ProductVariant> {
+    getPositionGroupCondition(group: { product: string }): FilterQuery<ProductVariant> {
         return {
-            product: { $eq: data.product },
+            product: { $eq: group.product },
         };
     }
 }
