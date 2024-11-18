@@ -97,6 +97,7 @@
         "react-dnd-html5-backend": "^16.0.0",
         "react-router": "^5.0.1",
         "react-router-dom": "^5.0.1",
+        "remark-gfm": "^4.0.0",
         "storybook": "^8.4.4",
         "ts-loader": "^6.0.4",
         "ts-node": "^10.0.0",
