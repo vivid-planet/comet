@@ -2,8 +2,6 @@ import { Field, FinalForm, FinalFormInput, FormSection } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
 function VerticalFields() {
     return (
         <Card variant="outlined">
@@ -61,7 +59,6 @@ function FieldsInGrid() {
 
 export default {
     title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const FormLayouts = () => {

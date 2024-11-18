@@ -3,8 +3,6 @@ import { Box, Card, CardContent } from "@mui/material";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     const errors = [];
     if (foo !== "foo") {
@@ -32,7 +30,6 @@ const resolveSubmitErrors = (error: SubmissionErrors) => {
 
 export default {
     title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const SubmitErrors = {

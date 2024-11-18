@@ -2,7 +2,6 @@ import { Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, S
 import { Button } from "@mui/material";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 interface RootPageProps {
@@ -100,7 +99,7 @@ const InnerNestedStack = ({ counter }: InnerNestedStackProps) => {
 
 export default {
     title: "@comet/admin/edit-dialog",
-    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+    decorators: [storyRouterDecorator()],
 };
 
 export const EditDialogWithFormInStack = {

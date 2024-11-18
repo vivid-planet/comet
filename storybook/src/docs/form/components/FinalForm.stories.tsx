@@ -4,11 +4,8 @@ import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@come
 import { useFormApiRef } from "@comet/admin/lib/FinalForm";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
-
 export default {
     title: "Docs/Form/Components/FinalForm",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const BasicFinalForm = {

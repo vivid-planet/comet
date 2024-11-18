@@ -1,18 +1,21 @@
+import type { StorybookConfig } from "@storybook/react-webpack5";
 import * as path from "path";
+import remarkGfm from "remark-gfm";
 
-export default {
+const config: StorybookConfig = {
     framework: "@storybook/react-webpack5",
     stories: ["../src/**/*.@(mdx|stories.tsx)"],
-    features: {
-        // Workaround for storybook's incompatibility with emotion >= 11
-        // See: https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#emotion11-quasi-compatibility
-        emotionAlias: false,
-    },
     addons: [
         "@storybook/addon-controls",
         {
             name: "@storybook/addon-docs",
-            options: {},
+            options: {
+                mdxPluginOptions: {
+                    mdxCompileOptions: {
+                        remarkPlugins: [remarkGfm],
+                    },
+                },
+            },
         },
         {
             name: "@storybook/addon-storysource",
@@ -37,3 +40,5 @@ export default {
         reactDocgen: "react-docgen-typescript",
     },
 };
+
+export default config;

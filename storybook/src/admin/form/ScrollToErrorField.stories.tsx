@@ -2,8 +2,6 @@ import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
 interface FormValues {
     foo: string;
     bar: string;
@@ -22,7 +20,6 @@ function validate({ foo, bar }: FormValues) {
 
 export default {
     title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const ScrollToErrorField = () => {

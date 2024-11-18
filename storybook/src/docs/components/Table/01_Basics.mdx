@@ -1,12 +1,11 @@
-import { Meta, Canvas, Story, Source } from "@storybook/addon-docs";
-import { Alert, Link } from "@mui/material";
+import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
 import dedent from "ts-dedent";
 
 import * as BasicsStories from "./01_Basics.stories";
 
 <Meta of={BasicsStories} />
 
-**The `Table` component has been deprecated in favor of [MUI X Data Grid](https://mui.com/x/react-data-grid/) in combination with `useDataGridRemote`. View [docs](?path=/story/docs-components-datagrid--page).**
+**The `Table` component has been deprecated in favor of [MUI X Data Grid](https://mui.com/x/react-data-grid/) in combination with `useDataGridRemote`. View [docs](?path=/docs/docs-components-datagrid--docs).**
 
 # Table
 
@@ -15,7 +14,7 @@ import * as BasicsStories from "./01_Basics.stories";
 > \- [MUI Docs](https://mui.com/components/tables/)
 
 The Comet Admin `Table` internally uses [Material UI's `Table` component](https://v4.mui.com/components/tables/) and its [associated components](https://v4.mui.com/components/tables/#api).
-It provides an additional layer of abstraction and adds common table functionalities like [sorting by column](/story/docs-components-table-sorting--page) or [pagination](/story/docs-components-table-pagination--page).
+It provides an additional layer of abstraction and adds common table functionalities like [sorting by column](?path=/docs/docs-components-table-sorting--docs) or [pagination](?path=/docs/docs-components-table-pagination--docs).
 
 In the following text, `Table` refers to the Comet Admin Table, while `MuiTable` refers to Material UI's Table.
 
@@ -29,15 +28,15 @@ Comet Admin `Table` adds a layer of abstraction to `MuiTable`.
 It allows you to define simple tables without writing any additional JSX and also has a lot of configuration options for more complex use cases.
 Additionally, it has common table functionalities built-in, as listed below:
 
-|                                                                                     | Material UI `Table` | Comet Admin `Table` |
-| ----------------------------------------------------------------------------------- | ------------------- | ------------------- |
-| Layer of Abstraction                                                                | low-level           | higher-level        |
-| [Managing GraphQL Queries](/story/docs-components-table-tablequery--page)           | -                   | built-in            |
-| [Sorting by column](/story/docs-components-table-sorting--page)                     | -                   | built-in            |
-| [Pagination](/story/docs-components-table-pagination--page)                         | -                   | built-in            |
-| [Filtering](/story/docs-components-table-filterbar--page)                           | -                   | built-in            |
-| [Excel Export](/story/docs-components-table-excel-export--page)                     | -                   | built-in            |
-| [Ordering Rows via Drag and Drop](/story/docs-components-table-tabledndorder--page) | -                   | built-in            |
+|                                                                                          | Material UI `Table` | Comet Admin `Table` |
+| ---------------------------------------------------------------------------------------- | ------------------- | ------------------- |
+| Layer of Abstraction                                                                     | low-level           | higher-level        |
+| [Managing GraphQL Queries](?path=/docs/docs-components-table-tablequery--docs)           | -                   | built-in            |
+| [Sorting by column](?path=/docs/docs-components-table-sorting--docs)                     | -                   | built-in            |
+| [Pagination](?path=/docs/docs-components-table-pagination--docs)                         | -                   | built-in            |
+| [Filtering](?path=/docs/docs-components-table-filterbar--docs)                           | -                   | built-in            |
+| [Excel Export](?path=/docs/docs-components-table-excel-export--docs)                     | -                   | built-in            |
+| [Ordering Rows via Drag and Drop](?path=/docs/docs-components-table-tabledndorder--docs) | -                   | built-in            |
 
 The following example shows the definition of a simple table with `MuiTable` and Comet Admin `Table`.
 It demonstrates their different layers of abstraction.
@@ -165,9 +164,9 @@ You can find more information in the [Material UI Docs](https://v4.mui.com/api/t
 ### sortable
 
 The `sortable` property can be used for sorting the table.
-See [Sorting page](/story/docs-components-table-sorting--page#sorting) for more information.
+See [Sorting page](?path=/docs/docs-components-table-sorting--docs) for more information.
 
 ### headerExcel & renderExcel & formatForExcel
 
 These properties can be used for formatting the table data when exporting it to an Excel file.
-See [Excel Export page](/story/docs-components-table-excel-export--page#excel-export-and-custom-rendered-columns) for more information.
+See [Excel Export page](?path=/docs/docs-components-table-excel-export--docs#excel-export-and-custom-rendered-columns) for more information.

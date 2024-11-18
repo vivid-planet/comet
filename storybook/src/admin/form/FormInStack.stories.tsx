@@ -15,7 +15,6 @@ import { Box, Button, Card, CardContent } from "@mui/material";
 import { SubmissionErrors } from "final-form";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
@@ -95,7 +94,7 @@ function Page2() {
 
 export default {
     title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator(), storyRouterDecorator()],
+    decorators: [storyRouterDecorator()],
 };
 
 export const FormInStack = {
