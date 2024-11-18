@@ -19,8 +19,6 @@ import {
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 const ButtonsRow = styled("div")`
     display: flex;
     justify-content: space-between;
@@ -32,7 +30,6 @@ const ButtonsRow = styled("div")`
 
 export default {
     title: "@comet/admin/mui",
-    decorators: [storyRouterDecorator()],
     excludeStories: ["Story"],
 };
 

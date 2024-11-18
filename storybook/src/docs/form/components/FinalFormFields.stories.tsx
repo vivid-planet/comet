@@ -16,8 +16,6 @@ import {
 import { Button, FormControlLabel } from "@mui/material";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
-
 interface Option {
     value: string;
     label: string;
@@ -25,7 +23,6 @@ interface Option {
 
 export default {
     title: "Docs/Form/Components/FinalForm Fields",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const _FinalFormInput = {

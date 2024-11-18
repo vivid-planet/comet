@@ -1,8 +1,6 @@
 import { Savable, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
 import * as React from "react";
 
-import { storyRouterDecorator } from "../../story-router.decorator";
-
 async function delay(ms: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -45,7 +43,6 @@ function SaveButtonContainer() {
 
 export default {
     title: "@comet/admin/save-range",
-    decorators: [storyRouterDecorator()],
 };
 
 export const _SaveBoundary = {

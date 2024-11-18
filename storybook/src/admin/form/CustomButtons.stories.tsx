@@ -5,8 +5,6 @@ import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useFormState } from "react-final-form";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
 const StyledButton = styled(Button)`
     text-transform: capitalize;
     background-color: #006699;
@@ -43,7 +41,6 @@ const CustomButtons: React.FC = () => {
 
 export default {
     title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const _CustomButtons = {

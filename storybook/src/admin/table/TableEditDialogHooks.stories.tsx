@@ -15,12 +15,11 @@ import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 export default {
     title: "@comet/admin/table",
-    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+    decorators: [storyRouterDecorator()],
 };
 
 export const EditDialogHooks = {

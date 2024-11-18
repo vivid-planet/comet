@@ -2,11 +2,8 @@ import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { FORM_ERROR } from "final-form";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
 export default {
     title: "Docs/Form/Validation",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const RecordLevelValidation = {

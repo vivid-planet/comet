@@ -8,6 +8,7 @@ import { storyRouterDecorator } from "../../../story-router.decorator";
 
 export default {
     title: "Docs/Components/Selection",
+    decorators: [storyRouterDecorator()],
 };
 
 export const UseSelectionHook = {
@@ -123,7 +124,6 @@ export const UseSelectionRouteHook = {
         );
     },
     name: "useSelectionRoute Hook",
-    decorators: [storyRouterDecorator()],
 };
 
 export const SelectionRouteComponent = {
@@ -176,5 +176,4 @@ export const SelectionRouteComponent = {
         );
     },
     name: "SelectionRoute Component",
-    decorators: [storyRouterDecorator()],
 };
