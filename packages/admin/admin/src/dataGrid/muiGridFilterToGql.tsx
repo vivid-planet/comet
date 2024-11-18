@@ -60,23 +60,17 @@ function convertValueByType(value: any, type?: string) {
 
 export function muiGridFilterToGql(columns: GridColDef[], filterModel?: GridFilterModel): { filter: GqlFilter; search?: string } {
     if (!filterModel) return { filter: {} };
-    const filterItems = filterModel.items
-        .filter(
-            (filterItem) =>
-                (filterItem.operatorValue && ["isEmpty", "isNotEmpty"].includes(filterItem.operatorValue)) || // those operators do not set value
-                filterItem.value !== undefined,
-        )
-        .map((filterItem) => {
-            if (!filterItem.operatorValue) throw new Error("operatorValue not set");
-            const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operatorValue] || filterItem.operatorValue;
-            const column = columns.find((i) => i.field == filterItem.columnField);
-            const convertedValue = convertValueByType(filterItem.value, column?.type);
-            return {
-                [filterItem.columnField]: {
-                    [gqlOperator]: convertedValue,
-                } as GqlStringFilter | GqlNumberFilter,
-            };
-        });
+    const filterItems = filterModel.items.map((filterItem) => {
+        if (!filterItem.operatorValue) throw new Error("operatorValue not set");
+        const gqlOperator = muiGridOperatorValueToGqlOperator[filterItem.operatorValue] || filterItem.operatorValue;
+        const column = columns.find((i) => i.field == filterItem.columnField);
+        const convertedValue = ["isEmpty", "isNotEmpty"].includes(gqlOperator) ? true : convertValueByType(filterItem.value, column?.type);
+        return {
+            [filterItem.columnField]: {
+                [gqlOperator]: convertedValue,
+            } as GqlStringFilter | GqlNumberFilter,
+        };
+    });
     const filter: GqlFilter = {};
     const op: "and" | "or" = filterModel.linkOperator ?? "and";
     filter[op] = filterItems;
