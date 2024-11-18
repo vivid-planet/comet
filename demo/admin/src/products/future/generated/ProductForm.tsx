@@ -8,9 +8,13 @@ import {
     filterByFragment,
     FinalForm,
     FinalFormCheckbox,
+    FinalFormInput,
     FinalFormRangeInput,
     FinalFormSubmitEvent,
+    FinalFormSwitch,
     Loading,
+    messages,
+    OnChangeField,
     RadioGroupField,
     TextAreaField,
     TextField,
@@ -37,7 +41,14 @@ import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
+import {
+    GQLManufacturerCountriesSelectQuery,
+    GQLManufacturerCountriesSelectQueryVariables,
+    GQLManufacturersSelectQuery,
+    GQLManufacturersSelectQueryVariables,
+    GQLProductCategoriesSelectQuery,
+    GQLProductCategoriesSelectQueryVariables,
+} from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -58,8 +69,15 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = Omit<ProductFormDetailsFragment, "priceRange"> & {
+type FormValues = Omit<ProductFormDetailsFragment, "priceRange" | "dimensions" | "manufacturerCountry"> & {
     priceRange?: { min: string; max: string };
+    dimensionsEnabled: boolean;
+    dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
+        width: string;
+        height: string;
+        depth: string;
+    };
+    manufacturerCountry?: { id: string; label: string };
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -91,6 +109,20 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                       priceRange: data.product.priceRange
                           ? { min: String(data.product.priceRange.min), max: String(data.product.priceRange.max) }
                           : undefined,
+                      dimensionsEnabled: !!data.product.dimensions,
+                      dimensions: data.product.dimensions
+                          ? {
+                                width: String(data.product.dimensions.width),
+                                height: String(data.product.dimensions.height),
+                                depth: String(data.product.dimensions.depth),
+                            }
+                          : undefined,
+                      manufacturerCountry: data.product.manufacturerCountry
+                          ? {
+                                id: data.product.manufacturerCountry?.id.country,
+                                label: data.product.manufacturerCountry?.label.country,
+                            }
+                          : undefined,
                       availableSince: showAvailableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
@@ -115,12 +147,25 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
         },
     });
 
-    const handleSubmit = async (formValues: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (
+        { dimensionsEnabled, manufacturerCountry, ...formValues }: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
             category: formValues.category?.id,
             priceRange: formValues.priceRange ? { min: parseFloat(formValues.priceRange.min), max: parseFloat(formValues.priceRange.max) } : null,
+            dimensions:
+                dimensionsEnabled && formValues.dimensions
+                    ? {
+                          width: parseFloat(formValues.dimensions.width),
+                          height: parseFloat(formValues.dimensions.height),
+                          depth: parseFloat(formValues.dimensions.depth),
+                      }
+                    : null,
+            manufacturer: formValues.manufacturer?.id,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
@@ -161,9 +206,9 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{}}
+            subscription={{ values: true }}
         >
-            {() => (
+            {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
                     <>
@@ -278,9 +323,115 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                                 disableSlider
                                 startAdornment={<InputAdornment position="start">€</InputAdornment>}
                             />
+                            <Field
+                                fullWidth
+                                name="dimensionsEnabled"
+                                type="checkbox"
+                                label={<FormattedMessage id="product.dimensions.dimensionsEnabled" defaultMessage="Configure dimensions" />}
+                            >
+                                {(props) => (
+                                    <FormControlLabel
+                                        control={<FinalFormSwitch {...props} />}
+                                        label={props.input.checked ? <FormattedMessage {...messages.yes} /> : <FormattedMessage {...messages.no} />}
+                                    />
+                                )}
+                            </Field>
+                            <Field name="dimensionsEnabled" subscription={{ value: true }}>
+                                {({ input: { value } }) =>
+                                    value ? (
+                                        <>
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.width"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.width" defaultMessage="Width" />}
+                                            />
+
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.height"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.height" defaultMessage="Height" />}
+                                            />
+
+                                            <Field
+                                                required
+                                                variant="horizontal"
+                                                fullWidth
+                                                name="dimensions.depth"
+                                                component={FinalFormInput}
+                                                type="number"
+                                                label={<FormattedMessage id="product.depth" defaultMessage="Depth" />}
+                                            />
+                                        </>
+                                    ) : null
+                                }
+                            </Field>
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
+                                name="manufacturerCountry"
+                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<
+                                        GQLManufacturerCountriesSelectQuery,
+                                        GQLManufacturerCountriesSelectQueryVariables
+                                    >({
+                                        query: gql`
+                                            query ManufacturerCountriesSelect {
+                                                manufacturerCountries {
+                                                    nodes {
+                                                        id
+                                                        label
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                    });
+                                    return data.manufacturerCountries.nodes;
+                                }}
+                                getOptionLabel={(option) => option.label}
+                            />
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
+                                name="manufacturer"
+                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
+                                        query: gql`
+                                            query ManufacturersSelect($filter: ManufacturerFilter) {
+                                                manufacturers(filter: $filter) {
+                                                    nodes {
+                                                        id
+                                                        name
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.manufacturerCountry?.id } } },
+                                    });
+                                    return data.manufacturers.nodes;
+                                }}
+                                getOptionLabel={(option) => option.name}
+                                disabled={!values?.manufacturerCountry}
+                            />
+                            <OnChangeField name="manufacturerCountry">
+                                {(value, previousValue) => {
+                                    if (value.id !== previousValue.id) {
+                                        form.change("manufacturer", undefined);
+                                    }
+                                }}
+                            </OnChangeField>
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel

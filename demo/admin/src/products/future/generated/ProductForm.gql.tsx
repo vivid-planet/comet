@@ -18,6 +18,23 @@ export const productFormFragment = gql`
             min
             max
         }
+        dimensions {
+            width
+            height
+            depth
+        }
+        manufacturerCountry: manufacturer {
+            id: addressAsEmbeddable {
+                country
+            }
+            label: addressAsEmbeddable {
+                country
+            }
+        }
+        manufacturer {
+            id
+            name
+        }
         inStock
         availableSince
         image

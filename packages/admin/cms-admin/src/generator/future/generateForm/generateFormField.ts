@@ -128,18 +128,36 @@ export function generateFormField({
     const gqlArgConfig =
         !config.readOnly && createMutationType
             ? (() => {
+                  // TODO auslagern in extra funktion, das ist zu viel für getInputArgField
                   const inputArg = createMutationType.args.find((arg) => arg.name === "input");
-                  if (!inputArg) throw new Error(`Field ${String(config.name)}: No input arg found`);
+                  if (!inputArg) throw new Error(`Field ${nameWithPrefix}: No input arg found`);
                   let inputArgTypeRef = inputArg.type;
                   if (inputArgTypeRef.kind === "NON_NULL") inputArgTypeRef = inputArgTypeRef.ofType;
-                  if (inputArgTypeRef.kind !== "INPUT_OBJECT") throw new Error(`Field ${String(config.name)}: input-arg is usually input-object.`);
+                  if (inputArgTypeRef.kind !== "INPUT_OBJECT") throw new Error(`Field ${nameWithPrefix}: input-arg is usually input-object.`);
                   const inputArgTypeName = inputArgTypeRef.name;
-                  const inputArgType = gqlIntrospection.__schema.types.find((type) => type.name === inputArgTypeName);
-                  if (!inputArgType) throw new Error(`Field ${String(config.name)}: Input-Type ${inputArgTypeName} not found.`);
+                  let inputArgType = gqlIntrospection.__schema.types.find((type) => type.name === inputArgTypeName);
+                  if (!inputArgType) throw new Error(`Field ${nameWithPrefix}: Input-Type ${inputArgTypeName} not found.`);
                   if (inputArgType.kind !== "INPUT_OBJECT") {
-                      throw new Error(`Field ${String(config.name)}: Input-Type ${inputArgTypeName} is no input-object.`);
+                      throw new Error(`Field ${nameWithPrefix}: Input-Type ${inputArgTypeName} is no input-object.`);
                   }
-                  const inputArgField = inputArgType.inputFields.find((field) => field.name === name);
+                  if (namePrefix) {
+                      const inputArgPrefixField = inputArgType.inputFields.find((field) => field.name === namePrefix);
+                      if (!inputArgPrefixField) throw new Error(`Field ${nameWithPrefix}: No input field for ${namePrefix} found.`);
+                      const inputArgPrefixFieldTypeRef = inputArgPrefixField.type;
+                      if (inputArgPrefixFieldTypeRef.kind !== "INPUT_OBJECT") {
+                          throw new Error(`Field ${nameWithPrefix}: Field ${namePrefix} in Input-Type ${inputArgTypeName} is no input-object.`);
+                      }
+                      const inputArgPrefixFieldTypeName = inputArgPrefixFieldTypeRef.name;
+                      inputArgType = gqlIntrospection.__schema.types.find((type) => type.name === inputArgPrefixFieldTypeName);
+                      if (!inputArgType) {
+                          throw new Error(`Field ${nameWithPrefix}: Type ${inputArgPrefixFieldTypeName} of Field ${namePrefix} not found.`);
+                      }
+                      if (inputArgType.kind !== "INPUT_OBJECT") {
+                          throw new Error(`Field ${nameWithPrefix}: Type ${inputArgPrefixFieldTypeName} of Field ${namePrefix} is no input-object.`);
+                      }
+                  }
+
+                  const inputArgField = inputArgType.inputFields.find((field) => field.name === gqlFieldName);
 
                   let gqlArgField = inputArgField;
                   let isInputArgSubfield = true;
