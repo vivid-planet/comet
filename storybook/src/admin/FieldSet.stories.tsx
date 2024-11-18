@@ -1,6 +1,6 @@
 import { FieldSet, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
-import { Chip, Stack } from "@mui/material";
+import { Chip, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 
@@ -15,6 +15,11 @@ export const _FieldSet = {
     render: () => (
         <Stack spacing={4}>
             <FieldSet title="FieldSet Title" supportText="Support text">
+                {textContent}
+            </FieldSet>
+
+            <FieldSet supportText="Support text">
+                <Typography variant="h6">FieldSet without a header/summary</Typography>
                 {textContent}
             </FieldSet>
 

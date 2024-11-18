@@ -23,7 +23,7 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
 
     const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
         const label = values.find((value) => {
-            return value[scopePart].value === scope[scopePart];
+            return value[scopePart] && value[scopePart].value === scope[scopePart];
         })?.[scopePart].label;
 
         return label ?? capitalizeString(scope[scopePart]);
