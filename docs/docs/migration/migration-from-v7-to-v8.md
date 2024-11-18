@@ -60,3 +60,25 @@ Perform the following changes:
     -   useContentScopeConfig({ redirectPathAfterChange: "/structured-content/products" });
     }
     ```
+
+## Site
+
+### Remove unused argument from site preview api handler
+
+-   App-Router (`src/app/api/site-preview/route.ts`):
+
+    ```diff
+    export async function GET(request: NextRequest) {
+    -    return sitePreviewRoute(request, createGraphQLFetch());
+    +    return sitePreviewRoute(request);
+    }
+    ```
+
+-   Pages-Router (`src/pages/api/site-preview.ts`):
+
+    ```diff
+    const SitePreviewApiHandler: NextApiHandler = async (req, res) => {
+    -    await legacyPagesRouterSitePreviewApiHandler(req, res, createGraphQLClient());
+    +    await legacyPagesRouterSitePreviewApiHandler(req, res);
+    };
+    ```
