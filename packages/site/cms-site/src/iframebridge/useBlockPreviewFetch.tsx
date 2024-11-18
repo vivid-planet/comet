@@ -9,6 +9,8 @@ const cachingFetch = createFetchInMemoryCache(fetch);
 export function useBlockPreviewFetch() {
     const { showOnlyVisible, graphQLApiUrl } = useIFrameBridge();
 
+    if (!graphQLApiUrl) throw new Error("graphQLApiUrl not available");
+
     const graphQLFetchRef = useRef(
         createGraphQLFetch(createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !showOnlyVisible }), graphQLApiUrl),
     );

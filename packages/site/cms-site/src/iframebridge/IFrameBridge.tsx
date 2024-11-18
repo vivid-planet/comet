@@ -41,7 +41,7 @@ export interface IFrameBridgeContext {
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
     contentScope: unknown;
-    graphQLApiUrl: string;
+    graphQLApiUrl: string | undefined;
     previewElementsData: OverlayElementData[];
     addPreviewElement: (element: PreviewElement) => void;
     removePreviewElement: (element: PreviewElement) => void;
@@ -61,7 +61,7 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
         //empty
     },
     contentScope: undefined,
-    graphQLApiUrl: "",
+    graphQLApiUrl: undefined,
     previewElementsData: [],
     removePreviewElement: () => {
         // empty
