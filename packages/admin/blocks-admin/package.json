@@ -53,7 +53,7 @@
         "@mui/system": "^5.0.0",
         "@types/jest": "^29.5.0",
         "@types/lodash.isequal": "^4.0.0",
-        "@types/node": "^18.0.0",
+        "@types/node": "^22.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-router": "^5.0.0",
