@@ -9,10 +9,18 @@ import { ConsoleModule } from "nestjs-console";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { ImageFileFixtureService } from "./generators/image-file-fixture.service";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
+import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 import { SvgImageFileFixtureService } from "./generators/svg-image-file-fixture.service";
 
 @Module({
     imports: [ConfigModule, ConsoleModule, PagesModule, LinksModule, DependenciesModule],
-    providers: [FixturesConsole, ManyImagesTestPageFixtureService, ImageFileFixtureService, SvgImageFileFixtureService, FileUploadsFixtureService],
+    providers: [
+        FixturesConsole,
+        ManyImagesTestPageFixtureService,
+        ImageFileFixtureService,
+        SvgImageFileFixtureService,
+        FileUploadsFixtureService,
+        RedirectsFixtureService,
+    ],
 })
 export class FixturesModule {}

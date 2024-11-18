@@ -126,7 +126,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 recalculatePreviewElementsData();
             });
 
-            mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true });
+            mutationObserver.observe(childrenWrapperRef.current, { childList: true, subtree: true, attributes: true });
             resizeObserver.observe(childrenWrapperRef.current);
 
             return () => {
