@@ -1,4 +1,5 @@
 import * as path from "path";
+import remarkGfm from "remark-gfm";
 
 export default {
     framework: "@storybook/react-webpack5",
@@ -12,7 +13,13 @@ export default {
         "@storybook/addon-controls",
         {
             name: "@storybook/addon-docs",
-            options: {},
+            options: {
+                mdxPluginOptions: {
+                    mdxCompileOptions: {
+                        remarkPlugins: [remarkGfm],
+                    },
+                },
+            },
         },
         {
             name: "@storybook/addon-storysource",
