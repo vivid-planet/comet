@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Allow empty values for `staticSelect` columns in `DataGrid`
+Render empty values correctly when using `renderStaticSelectCell` as a `DataGrid` column's `renderCell` function
