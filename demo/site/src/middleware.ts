@@ -28,14 +28,20 @@ export async function middleware(request: NextRequest) {
         throw new Error(`Cannot get siteConfig for host ${host}`);
     }
 
-    const predefinedPageRedirect = await getPredefinedPageRedirect(siteConfig.scope.domain, pathname);
+    if (pathname.startsWith("/dam/")) {
+        return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
+    }
 
+    if (request.nextUrl.pathname === "/admin" && process.env.ADMIN_URL) {
+        return NextResponse.redirect(new URL(process.env.ADMIN_URL));
+    }
+
+    const predefinedPageRedirect = await getPredefinedPageRedirect(siteConfig.scope.domain, pathname);
     if (predefinedPageRedirect) {
         return NextResponse.redirect(new URL(predefinedPageRedirect, request.url), 307);
     }
 
     const predefinedPageRewrite = await getPredefinedPageRewrite(siteConfig.scope.domain, pathname);
-
     if (predefinedPageRewrite) {
         return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
     }
