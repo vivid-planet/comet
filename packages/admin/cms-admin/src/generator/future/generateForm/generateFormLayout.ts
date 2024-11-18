@@ -129,6 +129,10 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        // TODO problem: const output wird so generiert: certificateConfig: certificateConfigEnabled && formValues.certificateConfig ? {} : null, sollte so generiert werden: certificateConfig: certificateConfigEnabled && formValues.certificateConfig ? { ...formValues.certificateConfig } : null,
+        // TODO problem: FormValues-Type macht zwar Omit<certificateConfig> fügt aber nix alternatives hinzu
+        // TODO problem: initValues wird für fetched-values nicht mit boolean-fallback befüllt
+        // TODO problem: initValues hat für eigentliche initial-values bei optional-string werten nichts gesetzt.
         // TODO handle gqlArgs
         // TODO handle props?
 
