@@ -87,6 +87,7 @@
         "draft-js-export-markdown": "^1.4.0",
         "draft-js-import-markdown": "^1.4.0",
         "eslint": "^8.57.0",
+        "eslint-plugin-mdx": "^3.1.5",
         "eslint-plugin-storybook": "^0.11.0",
         "graphql-mocks": "^0.10.0",
         "immutable": "~3.7.4",

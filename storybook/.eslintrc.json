@@ -8,5 +8,11 @@
         "@typescript-eslint/no-non-null-assertion": "off",
         "no-console": "off",
         "@comet/no-other-module-relative-import": "off"
-    }
+    },
+    "overrides": [
+        {
+            "files": "*.mdx",
+            "extends": "plugin:mdx/recommended"
+        }
+    ]
 }
