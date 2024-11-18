@@ -17,7 +17,6 @@ import { Box, Card, CardContent, IconButton, Paper, Typography } from "@mui/mate
 import * as React from "react";
 import { Switch } from "react-router";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 const SampleTable: React.FunctionComponent = () => {
@@ -99,7 +98,7 @@ const SampleForm: React.FunctionComponent = () => {
 
 export default {
     title: "@comet/admin/form",
-    decorators: [storyRouterDecorator(), apolloRestStoryDecorator()],
+    decorators: [storyRouterDecorator()],
 };
 
 export const DisableAutoNavigation = () => {

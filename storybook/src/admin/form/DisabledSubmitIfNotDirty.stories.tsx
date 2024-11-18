@@ -1,11 +1,8 @@
 import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@comet/admin";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
 export default {
     title: "stories/form/FinalForm",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const DisabledSubmitIfNotDirty = () => {

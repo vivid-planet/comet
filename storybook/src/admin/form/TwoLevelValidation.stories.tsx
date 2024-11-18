@@ -3,8 +3,6 @@ import { Card, CardContent, Grid } from "@mui/material";
 import { FieldValidator } from "final-form";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
-
 const validateWarning = (value: number | undefined) => {
     if (value === undefined) {
         return undefined;
@@ -35,7 +33,6 @@ const validateError: FieldValidator<number | undefined> = (value) => {
 
 export default {
     title: "@comet/admin/form",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const TwoLevelValidationWarningAndError = {

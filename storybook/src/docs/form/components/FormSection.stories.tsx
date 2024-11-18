@@ -1,11 +1,8 @@
 import { Field, FinalForm, FinalFormInput, FormSection } from "@comet/admin";
 import * as React from "react";
 
-import { apolloRestStoryDecorator } from "../../../apollo-rest-story.decorator";
-
 export default {
     title: "Docs/Form/Components/FormSection",
-    decorators: [apolloRestStoryDecorator()],
 };
 
 export const Basic = {
