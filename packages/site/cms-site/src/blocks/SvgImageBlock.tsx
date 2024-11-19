@@ -15,12 +15,12 @@ export const SvgImageBlock = withPreview(
         if (!damFile) return <PreviewSkeleton type="media" hasContent={false} height={height === "auto" ? undefined : height} />;
         return (
             // eslint-disable-next-line @next/next/no-img-element
-            (<img
+            <img
                 src={damFile.fileUrl}
                 width={width === "auto" ? undefined : width}
                 height={height === "auto" ? undefined : height}
                 alt={damFile.altText}
-            />)
+            />
         );
     },
     { label: "SvgImage" },
