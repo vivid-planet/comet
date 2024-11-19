@@ -46,11 +46,13 @@ export class RedirectsModule {
             useValue: linkBlock,
         };
 
+        const mikroOrmModule = MikroOrmModule.forFeature([Redirect]);
+
         return {
             module: RedirectsModule,
-            imports: [MikroOrmModule.forFeature([Redirect])],
+            imports: [mikroOrmModule],
             providers: [RedirectsResolver, RedirectsDependenciesResolver, RedirectsService, linkBlockProvider, ImportRedirectsConsole],
-            exports: [RedirectsService],
+            exports: [RedirectsService, REDIRECTS_LINK_BLOCK, mikroOrmModule],
         };
     }
 }

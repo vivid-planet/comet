@@ -1,5 +1,6 @@
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
+import { LinkListBlock } from "@src/blocks/LinkListBlock";
 import styled from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
@@ -12,6 +13,7 @@ const supportedBlocks: SupportedBlocks = {
     richtext: (props) => <RichTextBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />,
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
+    linkList: (props) => <LinkListBlock data={props} />,
 };
 
 const ColumnsContentBlock = withPreview(
