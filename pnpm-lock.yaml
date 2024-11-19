@@ -2251,9 +2251,6 @@ importers:
       class-transformer:
         specifier: ^0.5.0
         version: 0.5.1
-      class-validator:
-        specifier: 0.13.2
-        version: 0.13.2
       rimraf:
         specifier: ^3.0.0
         version: 3.0.2
@@ -2276,6 +2273,9 @@ importers:
       chokidar-cli:
         specifier: ^2.0.0
         version: 2.1.0
+      class-validator:
+        specifier: ^0.13.0
+        version: 0.13.2
       eslint:
         specifier: ^8.0.0
         version: 8.32.0
@@ -2357,9 +2357,6 @@ importers:
       class-transformer:
         specifier: ^0.5.0
         version: 0.5.1
-      class-validator:
-        specifier: 0.13.2
-        version: 0.13.2
       commander:
         specifier: ^9.3.0
         version: 9.5.0
@@ -2556,6 +2553,9 @@ importers:
       chokidar-cli:
         specifier: ^2.0.0
         version: 2.1.0
+      class-validator:
+        specifier: ^0.13.0
+        version: 0.13.2
       eslint:
         specifier: ^8.0.0
         version: 8.32.0
