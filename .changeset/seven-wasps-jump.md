@@ -1,5 +1,4 @@
 ---
-"@comet/blocks-api": patch
 "@comet/cms-api": patch
 ---
 
