@@ -5,18 +5,11 @@ import { FormattedMessage } from "react-intl";
 
 import { messages } from "../messages";
 
-type Props = Omit<ComponentProps<typeof GridToolbarColumnsButton>, "onResize" | "onResizeCapture">;
+type Props = ComponentProps<typeof GridToolbarColumnsButton>;
 
 export function GridColumnsButton(props: Props) {
     return (
-        <GridToolbarColumnsButton
-            startIcon={<Columns4 />}
-            variant="outlined"
-            color="info"
-            onResize={undefined}
-            onResizeCapture={undefined}
-            {...props}
-        >
+        <GridToolbarColumnsButton startIcon={<Columns4 />} variant="outlined" color="info" {...props}>
             <FormattedMessage {...messages.columns} />
         </GridToolbarColumnsButton>
     );

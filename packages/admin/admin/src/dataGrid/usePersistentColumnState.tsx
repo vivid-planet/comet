@@ -14,7 +14,10 @@ const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
 
     useEffect(() => {
         // This will be `undefined` if the free version of DataGrid V5 is used.
-        setColumns(apiRef.current?.getAllColumns?.());
+        setColumns(
+            // TODO: find a better solution than as cast
+            apiRef.current?.getAllColumns?.() as GridColDef[] | undefined,
+        );
     }, [apiRef]);
 
     return columns;
