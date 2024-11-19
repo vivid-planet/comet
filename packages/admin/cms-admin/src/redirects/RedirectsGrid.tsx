@@ -172,7 +172,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
     const rowCount = useBufferedRowCount(data?.paginatedRedirects.totalCount);
 
     return (
-        <MainContent fullHeight>
+        (<MainContent fullHeight>
             <DataGrid
                 {...dataGridProps}
                 rows={rows}
@@ -180,10 +180,10 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 columns={columns}
                 loading={loading}
                 error={error}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 components={{ Toolbar: RedirectsGridToolbar }}
             />
-        </MainContent>
+        </MainContent>)
     );
 }
 

@@ -375,9 +375,9 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
     const rows = data?.products.nodes ?? [];
 
     return (
-        <DataGridPro
+        (<DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
@@ -388,6 +388,6 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             componentsProps={{
                 toolbar: { toolbarAction },
             }}
-        />
+        />)
     );
 }

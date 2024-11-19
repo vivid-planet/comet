@@ -24,14 +24,14 @@ export const Story = ({ path, ...props }: StoryProps) => {
     }, [path]);
 
     return (
-        <BrowserOnly>
+        (<BrowserOnly>
             {() => {
                 // https://docusaurus.io/docs/docusaurus-core/#browseronly
                 // eslint-disable-next-line @typescript-eslint/no-var-requires
                 const { MuiThemeProvider } = require("@comet/admin");
 
                 return (
-                    <IntlProvider locale="en">
+                    (<IntlProvider locale="en">
                         <MuiThemeProvider theme={theme}>
                             <CodeBlock
                                 language="tsx"
@@ -49,9 +49,9 @@ export const Story = ({ path, ...props }: StoryProps) => {
                                 {code}
                             </CodeBlock>
                         </MuiThemeProvider>
-                    </IntlProvider>
+                    </IntlProvider>)
                 );
             }}
-        </BrowserOnly>
+        </BrowserOnly>)
     );
 };

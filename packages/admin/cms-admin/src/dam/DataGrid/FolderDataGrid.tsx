@@ -550,7 +550,7 @@ const FolderDataGrid = ({
     ];
 
     return (
-        <sc.FolderWrapper>
+        (<sc.FolderWrapper>
             <FolderHead
                 isSearching={isSearching}
                 numberItems={dataGridData?.damItemsList.totalCount ?? 0}
@@ -565,13 +565,13 @@ const FolderDataGrid = ({
                     rowCount={dataGridData?.damItemsList.totalCount ?? 0}
                     loading={loading}
                     error={error}
-                    rowsPerPageOptions={[10, 20, 50]}
+                    pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-                    disableSelectionOnClick
-                    selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
-                    onSelectionModelChange={handleSelectionModelChange}
+                    disableRowSelectionOnClick
+                    rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
+                    onRowSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                 />
@@ -601,7 +601,7 @@ const FolderDataGrid = ({
                     closeMoveDialog();
                 }}
             />
-        </sc.FolderWrapper>
+        </sc.FolderWrapper>)
     );
 };
 

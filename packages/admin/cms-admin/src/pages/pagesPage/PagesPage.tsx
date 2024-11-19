@@ -122,7 +122,7 @@ export function PagesPage({
     }
 
     return (
-        <DamScopeProvider>
+        (<DamScopeProvider>
             <Stack topLevelTitle={intl.formatMessage({ id: "comet.pages.pages", defaultMessage: "Pages" })}>
                 <StackSwitch>
                     <StackPage name="table">
@@ -187,7 +187,7 @@ export function PagesPage({
                                                 <LinearProgress />
                                             ) : (
                                                 /* Placeholder to avoid content jumping when the loading bar appears */
-                                                <Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />
+                                                (<Box sx={{ backgroundColor: "white", width: "100%", height: 2 }} />)
                                             )}
                                             <PageTree
                                                 ref={refPageTree}
@@ -266,6 +266,6 @@ export function PagesPage({
                     </StackPage>
                 </StackSwitch>
             </Stack>
-        </DamScopeProvider>
+        </DamScopeProvider>)
     );
 }

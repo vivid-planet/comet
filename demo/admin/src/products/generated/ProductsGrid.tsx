@@ -235,10 +235,10 @@ export function ProductsGrid(): React.ReactElement {
     const rows = data?.products.nodes ?? [];
 
     return (
-        <MainContent fullHeight>
+        (<MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
@@ -247,6 +247,6 @@ export function ProductsGrid(): React.ReactElement {
                     Toolbar: ProductsGridToolbar,
                 }}
             />
-        </MainContent>
+        </MainContent>)
     );
 }

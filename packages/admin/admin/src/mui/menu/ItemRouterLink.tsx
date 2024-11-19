@@ -20,14 +20,14 @@ export const MenuItemRouterLink = ({ badgeContent, secondaryAction: passedSecond
     const { badge, ...menuItemSlotProps } = slotProps ?? {};
 
     const secondaryAction = badgeContent ? ( // prioritize badgeContent over passed secondaryAction
-        <Badge
+        (<Badge
             variant={restProps.isMenuOpen ? "standard" : "dot"}
             color="error"
             overlap="circular"
             {...badge}
             badgeContent={badgeContent}
             sx={{ marginLeft: 2, ...badge?.sx }}
-        />
+        />)
     ) : (
         passedSecondaryAction
     );

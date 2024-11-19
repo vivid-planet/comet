@@ -36,9 +36,9 @@ export const LatestBuildsDashboardWidget = () => {
     ];
 
     return (
-        <DashboardWidgetRoot header={<FormattedMessage id="dashboard.latestBuildsWidget.title" defaultMessage="Latest Builds" />}>
+        (<DashboardWidgetRoot header={<FormattedMessage id="dashboard.latestBuildsWidget.title" defaultMessage="Latest Builds" />}>
             <DataGrid
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 disableColumnMenu
                 hideFooter
                 autoHeight
@@ -47,7 +47,7 @@ export const LatestBuildsDashboardWidget = () => {
                 loading={loading}
                 error={error}
             />
-        </DashboardWidgetRoot>
+        </DashboardWidgetRoot>)
     );
 };
 

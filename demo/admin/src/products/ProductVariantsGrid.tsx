@@ -118,10 +118,10 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
     const rowCount = useBufferedRowCount(data?.productVariants.totalCount);
 
     return (
-        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
+        (<Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
@@ -131,7 +131,7 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
                     Toolbar: ProductVariantsGridToolbar,
                 }}
             />
-        </Box>
+        </Box>)
     );
 }
 const productVariantsFragment = gql`

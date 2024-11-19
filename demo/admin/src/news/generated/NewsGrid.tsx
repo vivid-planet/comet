@@ -230,10 +230,10 @@ export function NewsGrid(): React.ReactElement {
     const rows = data?.newsList.nodes ?? [];
 
     return (
-        <MainContent fullHeight>
+        (<MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
@@ -242,6 +242,6 @@ export function NewsGrid(): React.ReactElement {
                     Toolbar: NewsGridToolbar,
                 }}
             />
-        </MainContent>
+        </MainContent>)
     );
 }

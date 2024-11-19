@@ -289,9 +289,9 @@ export function ManufacturersGrid(): React.ReactElement {
     const rows = data?.manufacturers.nodes ?? [];
 
     return (
-        <DataGridPro
+        (<DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
@@ -299,6 +299,6 @@ export function ManufacturersGrid(): React.ReactElement {
             components={{
                 Toolbar: ManufacturersGridToolbar,
             }}
-        />
+        />)
     );
 }

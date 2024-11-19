@@ -46,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         // for a complete strategy to couple next with react-intl
         // defaultLocale prevents missing message warning for locale defined in code,
         // see https://github.com/formatjs/formatjs/issues/251
-        <IntlProvider locale="de" defaultLocale="de">
+        (<IntlProvider locale="de" defaultLocale="de">
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 {process.env.NEXT_PUBLIC_GTM_ID && (
@@ -76,6 +76,6 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
                     <Component {...pageProps} />
                 )}
             </ThemeProvider>
-        </IntlProvider>
+        </IntlProvider>)
     );
 }

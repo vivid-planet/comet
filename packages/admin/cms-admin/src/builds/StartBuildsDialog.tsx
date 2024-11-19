@@ -45,7 +45,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
     const rows = data?.buildTemplates ?? [];
 
     return (
-        <Dialog open={open} onClose={onClose}>
+        (<Dialog open={open} onClose={onClose}>
             <DialogTitle>
                 <FormattedMessage id="comet.pages.publisher.startBuildsDialog.header" defaultMessage="Start manual builds" />
             </DialogTitle>
@@ -74,10 +74,10 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     ]}
                     checkboxSelection
                     disableColumnSelector
-                    onSelectionModelChange={(newSelectionModel) => {
+                    onRowSelectionModelChange={(newSelectionModel) => {
                         setSelectionModel(newSelectionModel);
                     }}
-                    selectionModel={selectionModel}
+                    rowSelectionModel={selectionModel}
                     pageSize={5}
                     hideFooterPagination={rows.length <= 5}
                 />
@@ -99,6 +99,6 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     <FormattedMessage id="comet.pages.publisher.startBuildsDialog.button" defaultMessage="Start builds" />
                 </Button>
             </DialogActions>
-        </Dialog>
+        </Dialog>)
     );
 }

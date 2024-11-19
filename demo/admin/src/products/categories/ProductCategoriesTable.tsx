@@ -111,9 +111,9 @@ function ProductCategoriesTable() {
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
 
     return (
-        <DataGridPro
+        (<DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
@@ -122,7 +122,7 @@ function ProductCategoriesTable() {
             components={{
                 Toolbar: ProductCategoriesTableToolbar,
             }}
-        />
+        />)
     );
 }
 

@@ -372,9 +372,9 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     });
 
     return (
-        <DataGridPro
+        (<DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
@@ -385,6 +385,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             componentsProps={{
                 toolbar: { toolbarAction, exportApi },
             }}
-        />
+        />)
     );
 }

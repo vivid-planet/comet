@@ -180,9 +180,9 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const rows = data?.productVariants.nodes ?? [];
 
     return (
-        <DataGridPro
+        (<DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
@@ -190,6 +190,6 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             components={{
                 Toolbar: ProductVariantsGridToolbar,
             }}
-        />
+        />)
     );
 }

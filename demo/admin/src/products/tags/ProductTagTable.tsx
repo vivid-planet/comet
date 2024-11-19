@@ -108,10 +108,10 @@ function ProductTagsTable() {
     const rowCount = useBufferedRowCount(data?.productTags.totalCount);
 
     return (
-        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
+        (<Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
@@ -121,7 +121,7 @@ function ProductTagsTable() {
                     Toolbar: ProductTagsTableToolbar,
                 }}
             />
-        </Box>
+        </Box>)
     );
 }
 

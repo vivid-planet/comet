@@ -162,7 +162,8 @@ export function generateGrid(
     const fieldList = generateGqlFieldList({
         columns: config.columns.filter((column) => {
             return (
-                column.type !== "actions" && column.name !== "id" // exclude id because it's always required
+                // exclude id because it's always required
+                (column.type !== "actions" && column.name !== "id")
             );
         }),
     });

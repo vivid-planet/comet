@@ -287,10 +287,10 @@ export function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <MainContent fullHeight>
+        (<MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
@@ -300,7 +300,7 @@ export function ProductsGrid() {
                     Toolbar: ProductsGridToolbar,
                 }}
             />
-        </MainContent>
+        </MainContent>)
     );
 }
 
