@@ -39,7 +39,7 @@
         "@comet/dev-process-manager": "^2.5.1",
         "@comet/eslint-plugin": "workspace:*",
         "@formatjs/cli": "^6.0.0",
-        "@types/node": "^18.0.0",
+        "@types/node": "^22.0.0",
         "cspell": "^8.15.4",
         "dotenv-cli": "^7.0.0",
         "husky": "^7.0.4",
@@ -51,7 +51,7 @@
     },
     "packageManager": "pnpm@8.15.5",
     "engines": {
-        "node": "18",
+        "node": "22",
         "pnpm": "8"
     },
     "dependencies": {
