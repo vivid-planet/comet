@@ -1,6 +1,6 @@
 import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
 import { Domain, Language } from "@comet/admin-icons";
-import { ContentScopeSelect } from "@comet/cms-admin";
+import { ContentScopeSelect, findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import { Meta } from "@storybook/react";
 import React, { useState } from "react";
@@ -150,6 +150,33 @@ export const CustomRenderOption = function () {
 };
 
 CustomRenderOption.storyName = "Custom renderOption";
+
+export const CustomRenderOptionWithSearchHighlighting = {
+    render: () => {
+        const [value, setValue] = useState({ domain: "main", language: "en" });
+        return (
+            <ContentScopeSelect
+                value={value}
+                searchable
+                onChange={(value) => {
+                    setValue(value);
+                }}
+                options={[
+                    { domain: { label: "Main", value: "main" }, language: { label: "English", value: "en" } },
+                    { domain: { label: "Main", value: "main" }, language: { label: "German", value: "de" } },
+                    { domain: { label: "Secondary", value: "secondary" }, language: { label: "English", value: "en" } },
+                    { domain: { label: "Secondary", value: "secondary" }, language: { label: "German", value: "de" } },
+                ]}
+                renderOption={(option, query) => {
+                    const text = `${option.domain.label} – ${option.language.label}`;
+                    const matches = findTextMatches(text, query);
+                    return <ListItemText primary={<MarkedMatches text={text} matches={matches} />} />;
+                }}
+            />
+        );
+    },
+    name: "Custom renderOption with search highlighting",
+};
 
 export const CustomRenderSelectedOption = function () {
     const [value, setValue] = useState({ domain: "main", language: "en" });

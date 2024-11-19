@@ -6,6 +6,7 @@ import {
     Get,
     Headers,
     Inject,
+    Logger,
     NotFoundException,
     Param,
     Post,
@@ -18,6 +19,7 @@ import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
+import { Readable } from "stream";
 
 import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
 import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator";
@@ -55,6 +57,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     @Controller("dam/files")
     @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
     class FilesController {
+        private readonly logger = new Logger(FilesController.name);
         constructor(
             @Inject(DAM_CONFIG) private readonly damConfig: DamConfig,
             private readonly filesService: FilesService,
@@ -185,7 +188,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             };
 
             // https://medium.com/@vishal1909/how-to-handle-partial-content-in-node-js-8b0a5aea216
-            let response: NodeJS.ReadableStream;
+            let stream: Readable;
             if (options?.range) {
                 const { start, end, contentLength } = calculatePartialRanges(file.size, options.range);
 
@@ -198,7 +201,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 }
 
                 try {
-                    response = await this.blobStorageBackendService.getPartialFile(
+                    stream = await this.blobStorageBackendService.getPartialFile(
                         this.damConfig.filesDirectory,
                         createHashedPath(file.contentHash),
                         start,
@@ -217,10 +220,19 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 });
             } else {
                 try {
-                    response = await this.blobStorageBackendService.getFile(this.damConfig.filesDirectory, createHashedPath(file.contentHash));
+                    stream = await this.blobStorageBackendService.getFile(this.damConfig.filesDirectory, createHashedPath(file.contentHash));
                 } catch (err) {
                     throw new Error(`File-Stream error: (storage.getFile) - ${(err as Error).message}`);
                 }
+
+                stream.on("error", (error) => {
+                    this.logger.error("Stream error:", error);
+                    res.end();
+                });
+
+                res.on("close", () => {
+                    stream.destroy();
+                });
 
                 res.writeHead(200, {
                     ...headers,
@@ -228,7 +240,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 });
             }
 
-            response.pipe(res);
+            stream.pipe(res);
         }
     }
 

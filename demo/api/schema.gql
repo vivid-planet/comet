@@ -6,6 +6,8 @@ type User {
   id: String!
   name: String!
   email: String!
+  permissionsCount: Int!
+  contentScopesCount: Int!
 }
 
 type CurrentUserPermission {
@@ -338,13 +340,6 @@ enum UserGroup {
 
 union PageContentUnion = Page | Link | PredefinedPage
 
-type PredefinedPage implements DocumentInterface {
-  id: ID!
-  updatedAt: DateTime!
-  createdAt: DateTime!
-  type: String
-}
-
 type DamScope {
   domain: String!
 }
@@ -385,6 +380,17 @@ type DamFile {
   duplicates: [DamFile!]!
   damPath: String!
   dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+type PredefinedPage implements DocumentInterface {
+  id: ID!
+  updatedAt: DateTime!
+  createdAt: DateTime!
+  type: PredefinedPageType
+}
+
+enum PredefinedPageType {
+  News
 }
 
 type FooterContentScope {
@@ -788,8 +794,7 @@ type Query {
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
   footer(scope: FooterContentScopeInput!): Footer
-  predefinedPage(id: ID!): PredefinedPage
-  pageTreeNodeForPredefinedPage(type: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
+  predefinedPage(id: ID!): PredefinedPage!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
   kubernetesJobs(cronJobName: String!): [KubernetesJob!]!
@@ -1403,7 +1408,7 @@ input FooterInput {
 scalar FooterContentBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 input PredefinedPageInput {
-  type: String
+  type: PredefinedPageType
 }
 
 input ProductInput {
