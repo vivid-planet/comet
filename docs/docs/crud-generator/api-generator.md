@@ -1,7 +1,7 @@
 ---
 title: API Generator
 sidebar_position: 1
-id: apigenerator
+id: api-generator
 ---
 
 The API Generator can be used to generate the usual CRUD operations in GraphQL for an entity.

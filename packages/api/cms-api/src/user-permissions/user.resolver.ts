@@ -1,8 +1,7 @@
-import { Args, Context, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
-import { Request } from "express";
+import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
-import { DisablePermissionCheck, RequiredPermission } from "./decorators/required-permission.decorator";
+import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { FindUsersArgs } from "./dto/paginated-user-list";
 import { User } from "./dto/user";
 import { UserPermissionsService } from "./user-permissions.service";
@@ -26,17 +25,13 @@ export class UserResolver {
         return new PaginatedUserList(users, totalCount, args);
     }
 
-    @Mutation(() => Boolean)
-    @RequiredPermission("impersonation", { skipScopeCheck: true })
-    async userPermissionsStartImpersonation(@Args("userId", { type: () => String }) userId: string, @Context() request: Request): Promise<boolean> {
-        this.userService.setImpersonatedUser(userId, request);
-        return true;
+    @ResolveField(() => Int)
+    async permissionsCount(@Parent() user: User): Promise<number> {
+        return (await this.userService.getPermissions(user)).length;
     }
 
-    @Mutation(() => Boolean)
-    @RequiredPermission(DisablePermissionCheck)
-    async userPermissionsStopImpersonation(@Context() request: Request): Promise<boolean> {
-        this.userService.unsetImpersonatedUser(request);
-        return true;
+    @ResolveField(() => Int)
+    async contentScopesCount(@Parent() user: User): Promise<number> {
+        return (await this.userService.getContentScopes(user)).length;
     }
 }

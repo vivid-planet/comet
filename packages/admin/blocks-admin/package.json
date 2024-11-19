@@ -1,6 +1,6 @@
 {
     "name": "@comet/blocks-admin",
-    "version": "7.5.0",
+    "version": "7.7.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -30,9 +30,15 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
+<<<<<<< HEAD
         "@comet/admin": "workspace:^7.5.0",
         "@comet/admin-icons": "workspace:^7.5.0",
         "@mui/lab": "^6.0.0-beta.10",
+=======
+        "@comet/admin": "workspace:^7.7.0",
+        "@comet/admin-icons": "workspace:^7.7.0",
+        "@mui/lab": "^5.0.0-alpha.76",
+>>>>>>> main
         "clipboard-copy": "^4.0.0",
         "clsx": "^1.1.1",
         "lodash.isequal": "^4.0.0",
@@ -43,9 +49,9 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^7.5.0",
-        "@comet/cli": "workspace:^7.5.0",
-        "@comet/eslint-config": "workspace:^7.5.0",
+        "@comet/admin-babel-preset": "workspace:^7.7.0",
+        "@comet/cli": "workspace:^7.7.0",
+        "@comet/eslint-config": "workspace:^7.7.0",
         "@emotion/react": "^11.5.0",
         "@emotion/styled": "^11.3.0",
         "@mui/lab": "^6.0.0-beta.10",
@@ -53,7 +59,7 @@
         "@mui/system": "^6.0.0",
         "@types/jest": "^29.5.0",
         "@types/lodash.isequal": "^4.0.0",
-        "@types/node": "^18.0.0",
+        "@types/node": "^22.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-router": "^5.0.0",

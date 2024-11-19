@@ -7,6 +7,7 @@ type BlockMetaField =
           name: string;
           kind: "String" | "Number" | "Boolean" | "Json";
           nullable: boolean;
+          array?: boolean;
       }
     | {
           name: string;
@@ -48,12 +49,28 @@ let content = "";
 function writeFieldType(field: BlockMetaField, blockNamePostfix: string) {
     if (field.kind === "String") {
         content += "string";
+
+        if (field.array) {
+            content += "[]";
+        }
     } else if (field.kind === "Number") {
         content += "number";
+
+        if (field.array) {
+            content += "[]";
+        }
     } else if (field.kind === "Boolean") {
         content += "boolean";
+
+        if (field.array) {
+            content += "[]";
+        }
     } else if (field.kind === "Json") {
         content += "unknown";
+
+        if (field.array) {
+            content += "[]";
+        }
     } else if (field.kind === "Enum") {
         content += `"${field.enum.join('" | "')}"`;
     } else if (field.kind === "Block") {

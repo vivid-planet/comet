@@ -145,8 +145,8 @@ Use this occasion to check if all operations decorated with this decorator **sho
     }
     ```
 
-4. Convert existing `BlockData#transformToPlain` calls to new technqiue.
-   This is only necessary if you have blocks that load additional data in `tranformToPlain`:
+4. Convert existing `BlockData#transformToPlain` calls to new technique.
+   This is only necessary if you have blocks that load additional data in `transformToPlain`:
 
     **Before**
 
