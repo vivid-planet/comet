@@ -31,7 +31,7 @@ interface PageTreeModuleOptions {
     Documents: Type<DocumentInterface>[];
     Scope?: Type<ScopeInterface>;
     reservedPaths?: string[];
-    sitePreviewSecret?: string;
+    sitePreviewSecret: string;
 }
 
 @Global()
@@ -42,15 +42,6 @@ export class PageTreeModule {
 
         if (PageTreeNode.name !== PAGE_TREE_ENTITY) {
             throw new Error(`PageTreeModule: Your PageTreeNode entity must be named ${PAGE_TREE_ENTITY}`);
-        }
-
-        // TODO v8: Make sitePreviewSecret mandatory and remove this error
-        if (!options.sitePreviewSecret) {
-            throw new Error(
-                "This update of Comet v7 requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.\n" +
-                    "Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.\n" +
-                    "Changes to the deployment setup might still be necessary.",
-            );
         }
 
         const PageTreeResolver = createPageTreeResolver({
