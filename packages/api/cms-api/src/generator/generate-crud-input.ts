@@ -392,8 +392,8 @@ export async function generateCrudInput(
                 const decorator = definedDecorators.find((decorator) => {
                     return (
                         // ignore casing since class validator is inconsistent with casing
-                        (decorator.getName().toUpperCase() === constraint.name.toUpperCase() || // some class validator decorators have a prefix "Is" but not in the constraint name
-                        `Is${decorator.getName()}`.toUpperCase() === constraint.name.toUpperCase())
+                        decorator.getName().toUpperCase() === constraint.name.toUpperCase() || // some class validator decorators have a prefix "Is" but not in the constraint name
+                        `Is${decorator.getName()}`.toUpperCase() === constraint.name.toUpperCase()
                     );
                 });
                 if (decorator) {
