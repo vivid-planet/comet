@@ -28,17 +28,10 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-<<<<<<< HEAD
-        "@comet/admin-icons": "workspace:^7.5.0",
-        "@comet/admin-theme": "workspace:^7.5.0",
-        "@mui/lab": "^6.0.0-beta.10",
-        "@mui/private-theming": "^6.0.0",
-=======
         "@comet/admin-icons": "workspace:^7.7.0",
         "@comet/admin-theme": "workspace:^7.7.0",
-        "@mui/lab": "^5.0.0-alpha.76",
-        "@mui/private-theming": "^5.0.0",
->>>>>>> main
+        "@mui/lab": "^6.0.0-beta.10",
+        "@mui/private-theming": "^6.0.0",
         "clsx": "^1.1.1",
         "exceljs": "^3.4.0",
         "file-saver": "^2.0.2",

@@ -66,57 +66,6 @@ const supportedBlocks: SupportedBlocks = {
 
 export function PageContentBlock({ data }: PropsWithData<PageContentBlockData>) {
     return <BlocksBlock data={data} supportedBlocks={supportedBlocks} />;
-<<<<<<< HEAD
-};
-```
-
-## ListBlock
-
-Similar to the BlocksBlock factory, the ListBlock factory is used to create a block that consists of multiple child blocks.
-The main difference is that the ListBlock factory only supports a single child block type.
-
-<figure>
-
-<img src={ListBlock} width="500px" />
-
-<figcaption>A ListBlock based on a link block</figcaption>
-</figure>
-
-### API
-
-```ts title="link-list.block.ts"
-import { createListBlock } from "@comet/cms-api";
-
-...
-
-export const LinkListBlock = createListBlock({ block: TextLinkBlock }, "LinkList");
-```
-
-### Admin
-
-```tsx title="LinkListBlock.tsx"
-import { createListBlock } from "@comet/blocks-admin";
-
-...
-
-export const LinkListBlock = createListBlock({
-    name: "LinkList",
-    block: TextLinkBlock,
-});
-```
-
-### Site
-
-```tsx title="LinkListBlock.tsx"
-import { ListBlock, PropsWithData } from "@comet/cms-site";
-import { LinkListBlockData } from "@src/blocks.generated";
-
-...
-
-export function LinkListBlock({ data }: PropsWithData<LinkListBlockData>) {
-    return <ListBlock data={data} block={(props) => <TextLinkBlock data={props} />} />;
-=======
->>>>>>> main
 }
 ```
 
@@ -444,7 +393,7 @@ import ListBlock from "./images/list-block.png";
 ### API
 
 ```ts title="link-list.block.ts"
-import { createListBlock } from "@comet/blocks-api";
+import { createListBlock } from "@comet/cms-api";
 
 export const LinkListBlock = createListBlock({ block: TextLinkBlock }, "LinkList");
 ```
@@ -610,7 +559,7 @@ import RichTextBlock from "./images/rich-text-block.png";
 ### API
 
 ```ts title="rich-text.block.ts"
-import { createRichTextBlock } from "@comet/blocks-api";
+import { createRichTextBlock } from "@comet/cms-api";
 
 import { LinkBlock } from "./linkBlock/link.block";
 
@@ -738,7 +687,7 @@ import SpaceBlock from "./images/space-block.png";
 ### API
 
 ```ts title="space.block.ts"
-import { createSpaceBlock } from "@comet/blocks-api";
+import { createSpaceBlock } from "@comet/cms-api";
 
 export enum Spacing {
     d150 = "d150",
@@ -875,7 +824,7 @@ import TextLinkBlock from "./images/text-link-block.png";
 ### API
 
 ```ts title="text-link.block.ts"
-import { createTextLinkBlock } from "@comet/blocks-api";
+import { createTextLinkBlock } from "@comet/cms-api";
 
 import { LinkBlock } from "./linkBlock/link.block";
 

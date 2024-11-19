@@ -159,19 +159,14 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                             return (
                                 <Fragment key={group.value}>
                                     {showGroupHeader && (
-<<<<<<< HEAD
                                         <ListSubheader
                                             sx={(theme) => ({
                                                 paddingX: theme.spacing(3),
                                             })}
                                         >
-                                            <Typography variant="overline">{humanReadableLabel(group)}</Typography>
-=======
-                                        <ListSubheader sx={{ paddingX: (theme) => theme.spacing(3) }}>
                                             <Typography variant="overline">
                                                 {matches ? <MarkedMatches text={groupLabel} matches={matches} /> : groupLabel}
                                             </Typography>
->>>>>>> main
                                         </ListSubheader>
                                     )}
                                     {group.options.map((option) => (

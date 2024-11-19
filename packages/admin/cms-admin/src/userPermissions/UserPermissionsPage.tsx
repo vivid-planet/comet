@@ -4,17 +4,10 @@ import { IconButton } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
-<<<<<<< HEAD
-import { UserPage } from "./user/UserPage";
-import { UserGrid } from "./UserGrid";
-=======
-import { useContentScope } from "../contentScope/Provider";
-import { useContentScopeConfig } from "../contentScope/useContentScopeConfig";
 import { UserPermissionsUserPageBasicDataPanel } from "./user/basicData/UserBasicData";
 import { UserPermissionsUserPagePermissionsPanel } from "./user/permissions/PermissionsPanel";
 import { UserPermissionsUserPageToolbar } from "./user/UserPageToolbar";
 import { UserPermissionsUserGrid } from "./UserGrid";
->>>>>>> main
 
 export const UserPermissionsPage = () => {
     return (

@@ -1,9 +1,5 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useMemo, useState } from "react";
-<<<<<<< HEAD
-import { generatePath, match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
-=======
-import { match, Redirect, Route, Switch, useHistory, useRouteMatch } from "react-router";
->>>>>>> main
+import { match, Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router";
 
 export interface ContentScopeInterface {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -164,17 +160,13 @@ export function ContentScopeProvider<S extends ContentScopeInterface = ContentSc
 
     return (
         <Context.Provider
-<<<<<<< HEAD
-            value={{ path, redirectPathAfterChange: redirectPathAfterChange ?? defaultRedirectPathAfterChange, setRedirectPathAfterChange, values }}
-=======
             value={{
                 path,
-                redirectPathAfterChange,
+                redirectPathAfterChange: redirectPathAfterChange ?? defaultRedirectPathAfterChange,
                 setRedirectPathAfterChange,
                 values,
                 location: location as ContentScopeLocation,
             }}
->>>>>>> main
         >
             <Switch>
                 {match && (
