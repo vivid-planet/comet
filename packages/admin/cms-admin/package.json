@@ -97,7 +97,7 @@
         "@mui/lab": "^6.0.0-beta.10",
         "@mui/material": "^6.0.0",
         "@mui/system": "^6.0.0",
-        "@mui/x-data-grid": "^5.0.0",
+        "@mui/x-data-grid": "^6.20.4",
         "@types/draft-js": "^0.11.10",
         "@types/file-saver": "^2.0.0",
         "@types/final-form-set-field-touched": "^1.0.0",

@@ -38,7 +38,7 @@
         "@mui/lab": "^6.0.0-beta.10",
         "@mui/material": "^6.0.0",
         "@mui/system": "^6.0.0",
-        "@mui/x-data-grid": "^5.15.2",
+        "@mui/x-data-grid": "^6.20.4",
         "@mui/x-data-grid-pro": "^5.15.2",
         "change-case": "^5.2.0",
         "dnd-core": "^16.0.0",

@@ -36,7 +36,7 @@
         "@comet/eslint-config": "workspace:^7.7.0",
         "@mui/material": "^6.0.0",
         "@mui/system": "^6.0.0",
-        "@mui/x-data-grid": "^5.0.0",
+        "@mui/x-data-grid": "^6.20.4",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "eslint": "^8.0.0",
