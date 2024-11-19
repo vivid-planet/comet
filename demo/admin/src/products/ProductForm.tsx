@@ -34,7 +34,6 @@ import {
     GQLManufacturersQuery,
     GQLManufacturersQueryVariables,
 } from "@src/products/ProductForm.generated";
-import { parseISO } from "date-fns";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
@@ -106,7 +105,7 @@ export function ProductForm({ id }: FormProps) {
                       id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
                   }
                 : undefined,
-            lastCheckedAt: filteredData.lastCheckedAt ? parseISO(filteredData.lastCheckedAt) : null,
+            lastCheckedAt: filteredData.lastCheckedAt ? new Date(filteredData.lastCheckedAt) : null,
         };
     }, [data]);
 
