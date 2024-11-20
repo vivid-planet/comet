@@ -134,6 +134,7 @@
             "matchPackageNames": ["@swc/plugin-emotion", "@vitejs/plugin-react-swc"]
         }
     ],
+    "lockFileMaintenance": { "enabled": true },
     "labels": ["dependencies"],
     "baseBranches": ["main"]
 }
