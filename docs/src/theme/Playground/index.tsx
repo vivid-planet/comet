@@ -83,7 +83,7 @@ export default function Playground({ children, transformCode, ...props }: Props)
     const noInline = props.metastring?.includes("noInline") ?? false;
 
     return (
-        (<div className={styles.playgroundContainer}>
+        <div className={styles.playgroundContainer}>
             {/* @ts-expect-error: type incompatibility with refs */}
             <LiveProvider
                 code={children.replace(/\n$/, "")}
@@ -106,6 +106,6 @@ export default function Playground({ children, transformCode, ...props }: Props)
                     </>
                 )}
             </LiveProvider>
-        </div>)
+        </div>
     );
 }
