@@ -17,12 +17,11 @@ type MinimalRow = {
 
 export type LatestContentUpdatesDashboardWidgetProps<Row extends MinimalRow> = {
     rows: DataGridProps<Row>["rows"] | undefined;
-} & Pick<DataGridProps<Row>, "loading" | "error">;
+} & DataGridProps<Row>;
 
 export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
     rows = [],
     loading,
-    error,
 }: LatestContentUpdatesDashboardWidgetProps<Row>) => {
     const intl = useIntl();
     const columns: GridColDef<Row>[] = [
@@ -64,12 +63,12 @@ export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
     ];
 
     return (
-        (<DashboardWidgetRoot
+        <DashboardWidgetRoot
             icon={<Reload />}
             header={<FormattedMessage id="dashboard.latestContentUpdatesWidget.title" defaultMessage="Latest Content Updates" />}
         >
-            <DataGrid disableRowSelectionOnClick disableColumnMenu hideFooter autoHeight columns={columns} rows={rows} loading={loading} error={error} />
-        </DashboardWidgetRoot>)
+            <DataGrid disableRowSelectionOnClick disableColumnMenu hideFooter autoHeight columns={columns} rows={rows} loading={loading} />
+        </DashboardWidgetRoot>
     );
 };
 

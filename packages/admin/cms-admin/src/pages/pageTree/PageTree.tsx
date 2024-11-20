@@ -313,56 +313,58 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
 
     const propsForVirtualList = useDndWindowScroll();
 
-    return (<>
-        <PageTreeDragLayer numberSelectedPages={selectedPages.length} />
-        <Root>
-            <Table>
-                <AutoSizer>
-                    {({ height, width }) => {
-                        return (
-                            // @TODO: adjust itemSize for smaller screens
-                            (<List
-                                ref={refList}
-                                height={height}
-                                itemCount={pages.length}
-                                width={width}
-                                itemSize={51}
-                                overscanCount={1} // do not increase this for performance reasons
-                                style={{ scrollBehavior: "smooth" }}
-                                innerElementType={VirtualListPadder}
-                                {...propsForVirtualList}
-                            >
-                                {({ index, style }) => {
-                                    const [prevPage, page, nextPage] = getLinkedPages(pages, index);
-                                    return (
-                                        <PageTreeRow
-                                            key={page.id}
-                                            virtualizedStyle={{
-                                                ...style,
-                                                top: `${parseFloat(String(style?.top)) + VIRTUAL_LIST_PADDING_SIZE}px`,
-                                            }}
-                                            slideIn={newPageIds.current.includes(page.id)}
-                                            page={page}
-                                            prevPage={prevPage}
-                                            nextPage={nextPage}
-                                            editDialogApi={editDialogApi}
-                                            toggleExpand={toggleExpand}
-                                            onDrop={onDrop}
-                                            onSelectChanged={onSelectChanged}
-                                            pageTreeService={pageTreeService}
-                                            debouncedSetHoverState={debouncedSetHoverState}
-                                            siteUrl={siteUrl}
-                                            selectedPages={selectedPages}
-                                        />
-                                    );
-                                }}
-                            </List>)
-                        );
-                    }}
-                </AutoSizer>
-            </Table>
-        </Root>
-    </>);
+    return (
+        <>
+            <PageTreeDragLayer numberSelectedPages={selectedPages.length} />
+            <Root>
+                <Table>
+                    <AutoSizer>
+                        {({ height, width }) => {
+                            return (
+                                // @TODO: adjust itemSize for smaller screens
+                                <List
+                                    ref={refList}
+                                    height={height}
+                                    itemCount={pages.length}
+                                    width={width}
+                                    itemSize={51}
+                                    overscanCount={1} // do not increase this for performance reasons
+                                    style={{ scrollBehavior: "smooth" }}
+                                    innerElementType={VirtualListPadder}
+                                    {...propsForVirtualList}
+                                >
+                                    {({ index, style }) => {
+                                        const [prevPage, page, nextPage] = getLinkedPages(pages, index);
+                                        return (
+                                            <PageTreeRow
+                                                key={page.id}
+                                                virtualizedStyle={{
+                                                    ...style,
+                                                    top: `${parseFloat(String(style?.top)) + VIRTUAL_LIST_PADDING_SIZE}px`,
+                                                }}
+                                                slideIn={newPageIds.current.includes(page.id)}
+                                                page={page}
+                                                prevPage={prevPage}
+                                                nextPage={nextPage}
+                                                editDialogApi={editDialogApi}
+                                                toggleExpand={toggleExpand}
+                                                onDrop={onDrop}
+                                                onSelectChanged={onSelectChanged}
+                                                pageTreeService={pageTreeService}
+                                                debouncedSetHoverState={debouncedSetHoverState}
+                                                siteUrl={siteUrl}
+                                                selectedPages={selectedPages}
+                                            />
+                                        );
+                                    }}
+                                </List>
+                            );
+                        }}
+                    </AutoSizer>
+                </Table>
+            </Root>
+        </>
+    );
 };
 
 const VIRTUAL_LIST_PADDING_SIZE = 24;

@@ -53,8 +53,8 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
         variables: {
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             ...variables,
         },
     });
@@ -134,6 +134,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     let items: DependencyItem[] = [];
     let totalCount = 0;
 
+    if (error) {
+        throw error;
+    }
+
     if (data?.item.dependencies) {
         items = data.item.dependencies.nodes.map((node) => ({
             ...node,
@@ -152,63 +156,64 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
         throw new Error("Neither dependencies nor dependents is defined");
     }
 
-    return (<>
-        <sc.Toolbar>
-            <Tooltip trigger="hover" title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
-                <IconButton
-                    onClick={() => {
-                        refetch({
-                            forceRefresh: true,
-                        });
-                    }}
-                >
-                    <Reload />
-                </IconButton>
-            </Tooltip>
-        </sc.Toolbar>
-        <DataGrid
-            {...dataGridProps}
-            components={{
-                LoadingOverlay: loading && data ? LinearProgress : undefined,
-            }}
-            componentsProps={{
-                pagination: {
-                    labelDisplayedRows: DisplayedRows,
-                    sx: {
-                        flexGrow: 1,
-                        [`& .${tablePaginationClasses.spacer}`]: {
-                            width: 0,
-                            flex: 0,
-                        },
-                        [`& .${tablePaginationClasses.displayedRows}`]: {
+    return (
+        <>
+            <sc.Toolbar>
+                <Tooltip trigger="hover" title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
+                    <IconButton
+                        onClick={() => {
+                            refetch({
+                                forceRefresh: true,
+                            });
+                        }}
+                    >
+                        <Reload />
+                    </IconButton>
+                </Tooltip>
+            </sc.Toolbar>
+            <DataGrid
+                {...dataGridProps}
+                components={{
+                    LoadingOverlay: loading && data ? LinearProgress : undefined,
+                }}
+                componentsProps={{
+                    pagination: {
+                        labelDisplayedRows: DisplayedRows,
+                        sx: {
                             flexGrow: 1,
-                        },
-                        [`& .${tablePaginationClasses.toolbar} .${tablePaginationClasses.actions}`]: {
-                            marginLeft: "5px",
+                            [`& .${tablePaginationClasses.spacer}`]: {
+                                width: 0,
+                                flex: 0,
+                            },
+                            [`& .${tablePaginationClasses.displayedRows}`]: {
+                                flexGrow: 1,
+                            },
+                            [`& .${tablePaginationClasses.toolbar} .${tablePaginationClasses.actions}`]: {
+                                marginLeft: "5px",
+                            },
                         },
                     },
-                },
-            }}
-            rowHeight={60}
-            disableRowSelectionOnClick
-            disableColumnMenu
-            loading={loading}
-            error={error}
-            autoHeight={true}
-            columns={columns}
-            rows={items}
-            rowCount={totalCount}
-            getRowId={(row) => {
-                return `${row.id}_${row.rootColumnName}_${row.jsonPath}`;
-            }}
-        />
-        <Alert title={<FormattedMessage id="comet.dam.file.dependents.info.title" defaultMessage="What are dependents?" />} sx={{ marginTop: 4 }}>
-            <FormattedMessage
-                id="comet.dam.file.dependents.info.content"
-                defaultMessage="Dependents are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it's easy to manage or reorganize the integration of your assets."
+                }}
+                rowHeight={60}
+                disableRowSelectionOnClick
+                disableColumnMenu
+                loading={loading}
+                autoHeight={true}
+                columns={columns}
+                rows={items}
+                rowCount={totalCount}
+                getRowId={(row) => {
+                    return `${row.id}_${row.rootColumnName}_${row.jsonPath}`;
+                }}
             />
-        </Alert>
-    </>);
+            <Alert title={<FormattedMessage id="comet.dam.file.dependents.info.title" defaultMessage="What are dependents?" />} sx={{ marginTop: 4 }}>
+                <FormattedMessage
+                    id="comet.dam.file.dependents.info.content"
+                    defaultMessage="Dependents are all pages, snippets and content in which a particular asset is used, linked or included. With this list, it's easy to manage or reorganize the integration of your assets."
+                />
+            </Alert>
+        </>
+    );
 };
 
 const DisplayedRows = ({ from, to, count, page }: LabelDisplayedRowsArgs) => {

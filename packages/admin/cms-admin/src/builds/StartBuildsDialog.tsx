@@ -1,7 +1,7 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { Alert, CancelButton, LocalErrorScopeApolloContext } from "@comet/admin";
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -40,12 +40,12 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
         refetchQueries: ["Builds"],
     });
 
-    const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+    const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
 
     const rows = data?.buildTemplates ?? [];
 
     return (
-        (<Dialog open={open} onClose={onClose}>
+        <Dialog open={open} onClose={onClose}>
             <DialogTitle>
                 <FormattedMessage id="comet.pages.publisher.startBuildsDialog.header" defaultMessage="Start manual builds" />
             </DialogTitle>
@@ -78,7 +78,7 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                         setSelectionModel(newSelectionModel);
                     }}
                     rowSelectionModel={selectionModel}
-                    pageSize={5}
+                    paginationModel={{ page: 0, pageSize: 5 }}
                     hideFooterPagination={rows.length <= 5}
                 />
             </DialogContent>
@@ -99,6 +99,6 @@ export function StartBuildsDialog(props: StartBuildsDialogProps) {
                     <FormattedMessage id="comet.pages.publisher.startBuildsDialog.button" defaultMessage="Start builds" />
                 </Button>
             </DialogActions>
-        </Dialog>)
+        </Dialog>
     );
 }

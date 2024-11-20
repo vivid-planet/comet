@@ -161,29 +161,31 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
         variables: {
             scope,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
+            ...muiGridPagingToGql({ page: dataGridProps.paginationModel.page, pageSize: dataGridProps.paginationModel.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
         context: LocalErrorScopeApolloContext,
         fetchPolicy: "cache-and-network",
     });
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.paginatedRedirects.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.paginatedRedirects.totalCount);
 
     return (
-        (<MainContent fullHeight>
+        <MainContent fullHeight>
             <DataGrid
                 {...dataGridProps}
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                error={error}
                 disableRowSelectionOnClick
                 components={{ Toolbar: RedirectsGridToolbar }}
             />
-        </MainContent>)
+        </MainContent>
     );
 }
 

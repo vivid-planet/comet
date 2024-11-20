@@ -81,6 +81,9 @@ export function JobsGrid(props: JobsGridProps) {
         pollInterval: 10 * 1000,
     });
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.kubernetesJobs ?? [];
 
     return (
@@ -88,7 +91,6 @@ export function JobsGrid(props: JobsGridProps) {
             <DataGrid
                 rows={rows}
                 loading={loading}
-                error={error}
                 hideFooterPagination
                 columns={[
                     {

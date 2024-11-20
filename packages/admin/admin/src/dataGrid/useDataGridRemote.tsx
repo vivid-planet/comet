@@ -16,7 +16,7 @@ export function useDataGridRemote({
     pageSize?: number;
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
     initialFilter?: GridFilterModel;
-} = {}): Omit<DataGridProps, "rows" | "columns"> & { sortModel: GridSortModel } {
+} = {}): Omit<DataGridProps, "rows" | "columns" | "paginationModel"> & { paginationModel: GridPaginationModel; sortModel: GridSortModel } {
     const history = useHistory();
     const location = useLocation();
 

@@ -163,7 +163,7 @@ export function generateGrid(
         columns: config.columns.filter((column) => {
             return (
                 // exclude id because it's always required
-                (column.type !== "actions" && column.name !== "id")
+                column.type !== "actions" && column.name !== "id"
             );
         }),
     });
