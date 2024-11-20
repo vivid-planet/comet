@@ -22,6 +22,13 @@ type ImportReference = {
     import: string;
 };
 
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconName;
+};
+
+type Icon = IconName | IconObject | ImportReference;
+export type Adornment = string | { icon: Icon };
+
 type SingleFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple?: false; maxFiles?: 1 } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
@@ -41,8 +48,6 @@ export type FormFieldConfig<T> = (
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
-          startAdornment?: string;
-          endAdornment?: string;
       }
     | { type: "boolean"; name: keyof T }
     | { type: "date"; name: keyof T }
@@ -62,6 +67,7 @@ export type FormFieldConfig<T> = (
     | SingleFileFormFieldConfig<T>
     | MultiFileFormFieldConfig<T>
 ) & {
+    name: keyof T;
     label?: string;
     required?: boolean;
     initialValueProp?: boolean;
@@ -70,6 +76,8 @@ export type FormFieldConfig<T> = (
     validate?: ImportReference;
     helperText?: string;
     readOnly?: boolean;
+    startAdornment?: Adornment;
+    endAdornment?: Adornment;
 };
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
@@ -115,14 +123,10 @@ export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWid
     visible?: ColumnVisibleOption;
 };
 
-type IconObject = Pick<IconProps, "color" | "fontSize"> & {
-    name: IconName;
-};
-
 export type StaticSelectLabelCellContent = {
     primaryText?: string;
     secondaryText?: string;
-    icon?: IconName | IconObject | ImportReference;
+    icon?: Icon;
 };
 
 export type GridColumnConfig<T> = (
