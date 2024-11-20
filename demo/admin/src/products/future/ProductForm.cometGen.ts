@@ -58,27 +58,26 @@ export const ProductForm: FormConfig<GQLProduct> = {
             type: "fieldSet",
             name: "additionalData",
             fields: [
-                // {
-                //     type: "asyncSelect",
-                //     virtual: true,
-                //     name: "manufacturerCountry", // TODO  not found in GQL
-                //     // name: "manufacturer.addressAsEmbeddable.alternativeAddress.country",
-                //     gqlFieldName: "manufacturer",
-                //     initQueryIdPath: "addressAsEmbeddable.country",
-                //     initQueryLabelPath: "addressAsEmbeddable.country",
-                //     rootQuery: "manufacturerCountries",
-                //     labelField: "label",
-                // },
-                // {
-                //     type: "asyncSelect",
-                //     name: "manufacturer",
-                //     rootQuery: "manufacturers",
-                //     filter: {
-                //         type: "field",
-                //         name: "manufacturerCountry",
-                //         gqlName: "addressAsEmbeddable_country",
-                //     },
-                // },
+                {
+                    type: "asyncSelect",
+                    virtual: true,
+                    name: "manufacturerCountry",
+                    gqlFieldName: "manufacturer",
+                    initQueryIdPath: "addressAsEmbeddable.country",
+                    initQueryLabelPath: "addressAsEmbeddable.country",
+                    rootQuery: "manufacturerCountries",
+                    labelField: "label",
+                },
+                {
+                    type: "asyncSelect",
+                    name: "manufacturer",
+                    rootQuery: "manufacturers",
+                    filter: {
+                        type: "field",
+                        name: "manufacturerCountry",
+                        gqlName: "addressAsEmbeddable_country",
+                    },
+                },
                 { type: "boolean", name: "inStock" },
                 { type: "date", name: "availableSince", initialValueProp: true, optionalRenderProp: true, startAdornment: { icon: "CalendarToday" } },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
