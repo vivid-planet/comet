@@ -77,7 +77,13 @@ const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): Ador
     return { adornmentString, adornmentImport };
 };
 
-function getTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
+// TODO: Was following function before. The behaviour has been added into the newer version. Is this correct?
+// function getTypeInfo(arg: IntrospectionInputValue | undefined, gqlIntrospection: IntrospectionQuery) {
+//     if (!arg) return undefined;
+
+function getTypeInfo(arg: IntrospectionInputValue | undefined, gqlIntrospection: IntrospectionQuery) {
+    if (!arg) return undefined;
+
     let typeKind = undefined;
     let typeClass = "unknown";
     let required = false;

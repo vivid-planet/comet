@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
-import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "@src/products/ManufacturerFilter.generated";
+import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "@src/products/future/ManufacturerFilter.generated";
 import * as React from "react";
 import { useIntl } from "react-intl";
 

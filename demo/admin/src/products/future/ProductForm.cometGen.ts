@@ -61,7 +61,8 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 {
                     type: "asyncSelect",
                     virtual: true,
-                    name: "manufacturerCountry",
+                    name: "manufacturerCountry", // TODO  not found in GQL
+                    // name: "manufacturer.addressAsEmbeddable.alternativeAddress.country",
                     gqlFieldName: "manufacturer",
                     initQueryIdPath: "addressAsEmbeddable.country",
                     initQueryLabelPath: "addressAsEmbeddable.country",

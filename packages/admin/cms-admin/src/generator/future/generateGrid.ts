@@ -520,6 +520,20 @@ export function generateGrid(
 
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
+    const dataGridRemoteParameters =
+        config.initialSort || config.queryParamsPrefix
+            ? `{${
+                  config.initialSort
+                      ? ` initialSort: [${config.initialSort
+                            .map((item) => {
+                                return `{field: "${item.field}", sort: "${item.sort}"}`;
+                            })
+                            .join(",\n")} ], `
+                      : ""
+              }
+              ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
+              }`
+            : "";
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
@@ -656,15 +670,8 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(${
-            config.initialSort
-                ? `{ initialSort: [${config.initialSort
-                      .map((item) => {
-                          return `{field: "${item.field}", sort: "${item.sort}"}`;
-                      })
-                      .join(",\n")} ] }`
-                : ""
-        }), ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}),
+         ...usePersistentColumnState("${gqlTypePlural}Grid")${
         config.selectionProps === "multiSelect"
             ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
             : config.selectionProps === "singleSelect"

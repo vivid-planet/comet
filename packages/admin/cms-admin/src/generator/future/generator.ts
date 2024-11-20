@@ -151,6 +151,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     fragmentName?: string;
     query?: string;
     exportQuery?: boolean; // to refetch from outside
+    queryParamsPrefix?: string;
     columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
     excelExport?: boolean;
     add?: boolean;
