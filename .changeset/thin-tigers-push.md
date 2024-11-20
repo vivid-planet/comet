@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix bug that delayed validation if validation was set conditionally
+Field: Prevent stale validation errors when using conditional validation
