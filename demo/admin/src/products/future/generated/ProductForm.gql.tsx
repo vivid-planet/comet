@@ -23,18 +23,6 @@ export const productFormFragment = gql`
             height
             depth
         }
-        manufacturerCountry: manufacturer {
-            id: addressAsEmbeddable {
-                country
-            }
-            label: addressAsEmbeddable {
-                country
-            }
-        }
-        manufacturer {
-            id
-            name
-        }
         inStock
         availableSince
         image

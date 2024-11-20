@@ -14,7 +14,6 @@ import {
     FinalFormSwitch,
     Loading,
     messages,
-    OnChangeField,
     RadioGroupField,
     TextAreaField,
     TextField,
@@ -41,14 +40,7 @@ import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
-import {
-    GQLManufacturerCountriesSelectQuery,
-    GQLManufacturerCountriesSelectQueryVariables,
-    GQLManufacturersSelectQuery,
-    GQLManufacturersSelectQueryVariables,
-    GQLProductCategoriesSelectQuery,
-    GQLProductCategoriesSelectQueryVariables,
-} from "./ProductForm.generated";
+import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./ProductForm.generated";
 import { createProductMutation, productFormFragment, productQuery, updateProductMutation } from "./ProductForm.gql";
 import {
     GQLCreateProductMutation,
@@ -69,15 +61,13 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = Omit<ProductFormDetailsFragment, "priceRange" | "dimensions" | "manufacturerCountry"> & {
-    priceRange?: { min: string; max: string };
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
     dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
         depth: string;
     };
-    manufacturerCountry?: { id: string; label: string };
     image: BlockState<typeof rootBlocks.image>;
 };
 
@@ -106,21 +96,12 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
                       createdAt: data.product.createdAt ? new Date(data.product.createdAt) : undefined,
-                      priceRange: data.product.priceRange
-                          ? { min: String(data.product.priceRange.min), max: String(data.product.priceRange.max) }
-                          : undefined,
                       dimensionsEnabled: !!data.product.dimensions,
                       dimensions: data.product.dimensions
                           ? {
                                 width: String(data.product.dimensions.width),
                                 height: String(data.product.dimensions.height),
                                 depth: String(data.product.dimensions.depth),
-                            }
-                          : undefined,
-                      manufacturerCountry: data.product.manufacturerCountry
-                          ? {
-                                id: data.product.manufacturerCountry?.id.country,
-                                label: data.product.manufacturerCountry?.label.country,
                             }
                           : undefined,
                       availableSince: showAvailableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
@@ -147,16 +128,11 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
         },
     });
 
-    const handleSubmit = async (
-        { dimensionsEnabled, manufacturerCountry, ...formValues }: FormValues,
-        form: FormApi<FormValues>,
-        event: FinalFormSubmitEvent,
-    ) => {
+    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
             category: formValues.category?.id,
-            priceRange: formValues.priceRange ? { min: parseFloat(formValues.priceRange.min), max: parseFloat(formValues.priceRange.max) } : null,
             dimensions:
                 dimensionsEnabled && formValues.dimensions
                     ? {
@@ -165,7 +141,6 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                           depth: parseFloat(formValues.dimensions.depth),
                       }
                     : null,
-            manufacturer: formValues.manufacturer?.id,
             image: rootBlocks.image.state2Output(formValues.image),
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
@@ -206,9 +181,9 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
             mode={mode}
             initialValues={initialValues}
             initialValuesEqual={isEqual} //required to compare block data correctly
-            subscription={{ values: true }}
+            subscription={{}}
         >
-            {({ values, form }) => (
+            {() => (
                 <>
                     {saveConflict.dialogs}
                     <>
@@ -376,62 +351,6 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                         </FieldSet>
 
                         <FieldSet collapsible title={<FormattedMessage id="product.additionalData.title" defaultMessage="Additional Data" />}>
-                            <AsyncSelectField
-                                variant="horizontal"
-                                fullWidth
-                                name="manufacturerCountry"
-                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
-                                loadOptions={async () => {
-                                    const { data } = await client.query<
-                                        GQLManufacturerCountriesSelectQuery,
-                                        GQLManufacturerCountriesSelectQueryVariables
-                                    >({
-                                        query: gql`
-                                            query ManufacturerCountriesSelect {
-                                                manufacturerCountries {
-                                                    nodes {
-                                                        id
-                                                        label
-                                                    }
-                                                }
-                                            }
-                                        `,
-                                    });
-                                    return data.manufacturerCountries.nodes;
-                                }}
-                                getOptionLabel={(option) => option.label}
-                            />
-                            <AsyncSelectField
-                                variant="horizontal"
-                                fullWidth
-                                name="manufacturer"
-                                label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
-                                loadOptions={async () => {
-                                    const { data } = await client.query<GQLManufacturersSelectQuery, GQLManufacturersSelectQueryVariables>({
-                                        query: gql`
-                                            query ManufacturersSelect($filter: ManufacturerFilter) {
-                                                manufacturers(filter: $filter) {
-                                                    nodes {
-                                                        id
-                                                        name
-                                                    }
-                                                }
-                                            }
-                                        `,
-                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.manufacturerCountry?.id } } },
-                                    });
-                                    return data.manufacturers.nodes;
-                                }}
-                                getOptionLabel={(option) => option.name}
-                                disabled={!values?.manufacturerCountry}
-                            />
-                            <OnChangeField name="manufacturerCountry">
-                                {(value, previousValue) => {
-                                    if (value.id !== previousValue.id) {
-                                        form.change("manufacturer", undefined);
-                                    }
-                                }}
-                            </OnChangeField>
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel
@@ -454,7 +373,6 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                                     }
                                 />
                             )}
-
                             <Field
                                 name="image"
                                 isEqual={isEqual}

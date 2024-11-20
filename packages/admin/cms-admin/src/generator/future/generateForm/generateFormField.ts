@@ -453,29 +453,6 @@ export function generateFormField({
                 }
                 ${validateCode}
             />`;
-
-        //TODO MUI suggest not using type=number https://mui.com/material-ui/react-text-field/#type-quot-number-quot
-        let assignment = `{min: parseFloat(formValues.${nameWithPrefix}.min), max: parseFloat(formValues.${nameWithPrefix}.max)}`;
-        if (isFieldOptional({ config, gqlFieldName, gqlIntrospection: gqlIntrospection, gqlType: gqlType })) {
-            assignment = `formValues.${nameWithPrefix} ? ${assignment} : null`;
-        }
-        formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
-
-        let initializationAssignment = `{min: String(data.${dataRootName}.${nameWithPrefix}.min), max: String(data.${dataRootName}.${nameWithPrefix}.max)}`;
-        if (!required) {
-            initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
-        }
-        formValuesConfig = [
-            {
-                ...defaultFormValuesConfig,
-                ...{
-                    omitFromFragmentType: name,
-                    typeCode: `${name}${!required ? `?` : ``}: {min: string, max: string};`,
-                    initializationCode: `${name}: ${initializationAssignment}`,
-                },
-            },
-        ];
-
         formFragmentField = `${name} { min max }`;
     } else if (config.type == "boolean") {
         code = `<Field name="${nameWithPrefix}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
