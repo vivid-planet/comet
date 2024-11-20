@@ -1,5 +1,5 @@
 ---
-"@comet/cms-site": patch
+"@comet/cms-site": minor
 ---
 
 Export `convertPreviewDataToHeaders` to make `createGraphQLFetch` more configurable.
