@@ -31,9 +31,6 @@ function convertGqlScalarToTypescript(scalarName: string) {
     }
 }
 
-// function getTypeInfo(arg: IntrospectionInputValue | undefined, gqlIntrospection: IntrospectionQuery) {
-//     if (!arg) return undefined;
-
 type AdornmentData = {
     adornmentString: string;
     adornmentImport?: { name: string; importPath: string };
@@ -76,10 +73,6 @@ const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): Ador
 
     return { adornmentString, adornmentImport };
 };
-
-// TODO: Was following function before. The behaviour has been added into the newer version. Is this correct?
-// function getTypeInfo(arg: IntrospectionInputValue | undefined, gqlIntrospection: IntrospectionQuery) {
-//     if (!arg) return undefined;
 
 function getTypeInfo(arg: IntrospectionInputValue | undefined, gqlIntrospection: IntrospectionQuery) {
     if (!arg) return undefined;
