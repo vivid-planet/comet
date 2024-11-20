@@ -1,4 +1,4 @@
-type CometUser {
+type UserPermissionsUser {
   id: String!
   name: String!
   email: String!
@@ -22,7 +22,7 @@ type CurrentUser {
   email: String!
   permissions: [CurrentUserPermission!]!
   impersonated: Boolean
-  authenticatedUser: CometUser
+  authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
 }
 
@@ -196,7 +196,7 @@ type FileUpload {
 }
 
 type UserPermissionPaginatedUserList {
-  nodes: [CometUser!]!
+  nodes: [UserPermissionsUser!]!
   totalCount: Int!
 }
 
@@ -375,7 +375,7 @@ type Query {
   kubernetesJob(name: String!): KubernetesJob!
   kubernetesJobLogs(name: String!): String!
   currentUser: CurrentUser!
-  userPermissionsUserById(id: String!): CometUser!
+  userPermissionsUserById(id: String!): UserPermissionsUser!
   userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!

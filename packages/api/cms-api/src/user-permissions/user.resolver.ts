@@ -3,19 +3,19 @@ import { Args, Int, ObjectType, Parent, Query, ResolveField, Resolver } from "@n
 import { PaginatedResponseFactory } from "../common/pagination/paginated-response.factory";
 import { RequiredPermission } from "./decorators/required-permission.decorator";
 import { FindUsersArgs } from "./dto/paginated-user-list";
-import { CometUser } from "./dto/user";
+import { UserPermissionsUser } from "./dto/user";
 import { UserPermissionsService } from "./user-permissions.service";
 
 @ObjectType()
-class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(CometUser) {}
+class UserPermissionPaginatedUserList extends PaginatedResponseFactory.create(UserPermissionsUser) {}
 
-@Resolver(() => CometUser)
+@Resolver(() => UserPermissionsUser)
 @RequiredPermission(["userPermissions"], { skipScopeCheck: true })
 export class UserResolver {
     constructor(private readonly userService: UserPermissionsService) {}
 
-    @Query(() => CometUser)
-    async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<CometUser> {
+    @Query(() => UserPermissionsUser)
+    async userPermissionsUserById(@Args("id", { type: () => String }) id: string): Promise<UserPermissionsUser> {
         return this.userService.getUser(id);
     }
 
@@ -26,12 +26,12 @@ export class UserResolver {
     }
 
     @ResolveField(() => Int)
-    async permissionsCount(@Parent() user: CometUser): Promise<number> {
+    async permissionsCount(@Parent() user: UserPermissionsUser): Promise<number> {
         return (await this.userService.getPermissions(user)).length;
     }
 
     @ResolveField(() => Int)
-    async contentScopesCount(@Parent() user: CometUser): Promise<number> {
+    async contentScopesCount(@Parent() user: UserPermissionsUser): Promise<number> {
         return (await this.userService.getContentScopes(user)).length;
     }
 }

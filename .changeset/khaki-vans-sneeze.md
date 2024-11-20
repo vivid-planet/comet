@@ -2,7 +2,7 @@
 "@comet/cms-api": minor
 ---
 
-Rename `User` to `CometUser` in GraphQL schema
+Rename `User` to `UserPermissionsUser` in GraphQL schema
 
 This prevents naming collisions if a web wants to use a `User` type.
 
