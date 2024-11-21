@@ -246,47 +246,18 @@ export class FilesService {
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
-            const contentHash = await this.calculateHashForFile(file.path);
-            let image: probe.ProbeResult | undefined;
-            try {
-                image = await probe(createReadStream(file.path));
-                if (image.type == "svg") image = undefined;
-                if (image !== undefined && image.orientation !== undefined && [6, 8].includes(image.orientation)) {
-                    image = {
-                        ...image,
-                        width: image.height,
-                        height: image.width,
-                    };
-                }
-            } catch (e) {
-                // empty
-            }
-
-            if (
-                image !== undefined &&
-                image.width &&
-                image.height &&
-                Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
-            ) {
-                throw new CometImageResolutionException(`Maximal image resolution exceeded`);
-            }
-
             if (folderId) {
                 const folder = await this.foldersService.findOneById(folderId);
-                if (!folder) throw new Error("Folder not found");
+                if (!folder) throw new Error(`Folder ${folderId} not found`);
                 if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
                     throw new Error("Folder scope doesn't match passed scope");
                 }
             }
 
-            let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
-            if (exifrSupportedMimetypes.includes(file.mimetype)) {
-                exifData = await exifr.parse(file.path);
-            }
-
             const exisitingFile = await this.findOneByFilenameAndFolder({ filename: file.originalname, folderId });
             if (!exisitingFile) throw new Error("File not found");
 
+            const { exifData, contentHash, image } = await this.getFileMetadataForUpload(file);
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
             // Check if the current file is the only one using the contentHash before deleting from blob storage
@@ -402,47 +373,18 @@ export class FilesService {
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
-            const contentHash = await this.calculateHashForFile(file.path);
-            let image: probe.ProbeResult | undefined;
-            try {
-                image = await probe(createReadStream(file.path));
-                if (image.type == "svg") image = undefined;
-                if (image !== undefined && image.orientation !== undefined && [6, 8].includes(image.orientation)) {
-                    image = {
-                        ...image,
-                        width: image.height,
-                        height: image.width,
-                    };
-                }
-            } catch (e) {
-                // empty
-            }
-
-            if (
-                image !== undefined &&
-                image.width &&
-                image.height &&
-                Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
-            ) {
-                throw new CometImageResolutionException(`Maximal image resolution exceeded`);
-            }
-
             if (folderId) {
                 const folder = await this.foldersService.findOneById(folderId);
-                if (!folder) throw new Error("Folder not found");
+                if (!folder) throw new Error(`Folder ${folderId} not found`);
                 if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
                     throw new Error("Folder scope doesn't match passed scope");
                 }
             }
 
+            const { exifData, contentHash, image } = await this.getFileMetadataForUpload(file);
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
             const name = await this.findNextAvailableFilename({ filePath: file.originalname, folderId, scope });
-
-            let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
-            if (exifrSupportedMimetypes.includes(file.mimetype)) {
-                exifData = await exifr.parse(file.path);
-            }
 
             result = await this.create({
                 name,
@@ -681,5 +623,43 @@ export class FilesService {
     createHash(params: FileParams): string {
         const fileHash = `file:${params.fileId}:${params.filename}`;
         return createHmac("sha1", this.config.secret).update(fileHash).digest("hex");
+    }
+
+    private async getFileMetadataForUpload(file: FileUploadInput): Promise<{
+        exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
+        contentHash: string;
+        image: probe.ProbeResult | undefined;
+    }> {
+        const contentHash = await this.calculateHashForFile(file.path);
+        let image: probe.ProbeResult | undefined;
+        try {
+            image = await probe(createReadStream(file.path));
+            if (image.type == "svg") image = undefined;
+            if (image !== undefined && image.orientation !== undefined && [6, 8].includes(image.orientation)) {
+                image = {
+                    ...image,
+                    width: image.height,
+                    height: image.width,
+                };
+            }
+        } catch (e) {
+            // empty
+        }
+
+        if (
+            image !== undefined &&
+            image.width &&
+            image.height &&
+            Math.round(((image.width * image.height) / 1000000) * 10) / 10 >= this.imgproxyConfig.maxSrcResolution
+        ) {
+            throw new CometImageResolutionException(`Maximal image resolution exceeded`);
+        }
+
+        let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
+        if (exifrSupportedMimetypes.includes(file.mimetype)) {
+            exifData = await exifr.parse(file.path);
+        }
+
+        return { exifData, contentHash, image };
     }
 }
