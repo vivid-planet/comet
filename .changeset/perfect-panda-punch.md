@@ -3,6 +3,7 @@
 "@comet/cms-api": minor
 ---
 
-Add support for DAM file replacement
+Add support for file replacement on upload in the DAM
 
-Adds an "Replace file" button to the duplicate filename dialog
+When uploading a file to the DAM with the same filename as an existing file, it's now possible to replace the existing file.
+This is useful when you want to update a file without changing its URL.
