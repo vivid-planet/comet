@@ -268,13 +268,7 @@ export class FilesService {
                 await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(exisitingFile.contentHash));
             }
 
-            if (
-                image &&
-                image.width &&
-                image.height &&
-                exisitingFile.image &&
-                (image.height !== exisitingFile.image.height || image.width !== exisitingFile.image.width)
-            ) {
+            if (image && image.width && image.height && exisitingFile.image) {
                 exisitingFile.image.width = image.width;
                 exisitingFile.image.height = image.height;
                 exisitingFile.image.exif = exifData;
