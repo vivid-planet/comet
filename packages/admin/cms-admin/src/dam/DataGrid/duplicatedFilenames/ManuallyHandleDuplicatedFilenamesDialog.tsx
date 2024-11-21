@@ -47,39 +47,35 @@ export const ManuallyHandleDuplicatedFilenamesDialog: React.VoidFunctionComponen
                     title={
                         <FormattedMessage
                             id="comet.dam.duplicateFilenameDialog.actionAlert"
-                            defaultMessage="The following {count, plural, one {filename} other {filenames}} already exist. Please choose an action."
+                            defaultMessage="The following {count, plural, one {filename} other {filenames}} already {count, plural, one {exists} other {exist}}. Please choose an action:"
                             values={{ count: filenameData.length }}
                         />
                     }
                 >
-                    <Typography variant="body2">
-                        <Typography variant="body2" style={{ fontWeight: "bold" }} sx={{ display: "inline" }}>
-                            <FormattedMessage id="comet.dam.duplicateFilenameDialog.skip" defaultMessage="Skip" />:
-                        </Typography>{" "}
-                        <FormattedMessage
-                            id="comet.dam.duplicateFilenameDialog.skipDescription"
-                            defaultMessage="All duplicates are skipped. All other images are uploaded as usual."
-                        />
-                    </Typography>
+                    <Typography variant="list">
+                        <Typography variant="listItem" sx={{ fontSize: 14 }}>
+                            <FormattedMessage
+                                id="comet.dam.duplicateFilenameDialog.skipDescription"
+                                defaultMessage="<strong>Skip:</strong> Skip uploading duplicates. All other files will be uploaded as usual."
+                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                            />
+                        </Typography>
 
-                    <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
-                        <Typography variant="body2" style={{ fontWeight: "bold" }} sx={{ display: "inline" }}>
-                            <FormattedMessage id="comet.dam.duplicateFilenameDialog.replace" defaultMessage="Replace" />:
-                        </Typography>{" "}
-                        <FormattedMessage
-                            id="comet.dam.duplicateFilenameDialog.replaceDescription"
-                            defaultMessage="Originals will be replaced fully by duplicates. This does not affect the cropping settings of the image."
-                        />
-                    </Typography>
+                        <Typography variant="listItem" sx={{ fontSize: 14 }}>
+                            <FormattedMessage
+                                id="comet.dam.duplicateFilenameDialog.replaceDescription"
+                                defaultMessage="<strong>Replace:</strong> Replace existing files with duplicates. <strong>Attention:</strong> This will not affect image cropping settings."
+                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                            />
+                        </Typography>
 
-                    <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
-                        <Typography variant="body2" style={{ fontWeight: "bold" }} sx={{ display: "inline" }}>
-                            <FormattedMessage id="comet.dam.duplicateFilenameDialog.saveAsCopy" defaultMessage="Save as copy" />:
-                        </Typography>{" "}
-                        <FormattedMessage
-                            id="comet.dam.duplicateFilenameDialog.saveAsCopyDescription"
-                            defaultMessage="The duplicates are uploaded as copies and “copy” is added to the end of the file names."
-                        />
+                        <Typography variant="listItem" sx={{ fontSize: 14 }}>
+                            <FormattedMessage
+                                id="comet.dam.duplicateFilenameDialog.saveAsCopyDescription"
+                                defaultMessage="<strong>Save as copy:</strong> Upload duplicates as new files with “copy” added to the end of the file names."
+                                values={{ strong: (chunks: string) => <strong>{chunks}</strong> }}
+                            />
+                        </Typography>
                     </Typography>
                 </Alert>
 
