@@ -22,6 +22,13 @@ type ImportReference = {
     import: string;
 };
 
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconName;
+};
+
+type Icon = IconName | IconObject | ImportReference;
+export type Adornment = string | { icon: Icon };
+
 type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1 } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
@@ -35,10 +42,20 @@ type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?:
 export type FormFieldConfig<T> = (
     | { type: "text"; multiline?: boolean }
     | { type: "number" }
+    | {
+          type: "numberRange";
+          minValue: number;
+          maxValue: number;
+          disableSlider?: boolean;
+      }
     | { type: "boolean" }
     | { type: "date" }
-    // TODO | { type: "dateTime" }
-    | { type: "staticSelect"; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
+    // TODO | { type: "dateTime"; }
+    | {
+          type: "staticSelect";
+          values?: Array<{ value: string; label: string } | string>;
+          inputType?: "select" | "radio";
+      }
     | {
           type: "asyncSelect";
           rootQuery: string;
@@ -48,7 +65,17 @@ export type FormFieldConfig<T> = (
     | { type: "block"; block: ImportReference }
     | SingleFileFormFieldConfig
     | MultiFileFormFieldConfig
-) & { name: keyof T; label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & {
+    name: keyof T;
+    label?: string;
+    required?: boolean;
+    virtual?: boolean;
+    validate?: ImportReference;
+    helperText?: string;
+    readOnly?: boolean;
+    startAdornment?: Adornment;
+    endAdornment?: Adornment;
+};
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
@@ -88,19 +115,15 @@ export type FormConfig<T extends { __typename?: string }> = {
 
 export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
-export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned"> & {
+export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
-};
-
-type IconObject = Pick<IconProps, "color" | "fontSize"> & {
-    name: IconName;
 };
 
 export type StaticSelectLabelCellContent = {
     primaryText?: string;
     secondaryText?: string;
-    icon?: IconName | IconObject | ImportReference;
+    icon?: Icon;
 };
 
 export type GridColumnConfig<T> = (
@@ -120,7 +143,9 @@ export type GridConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
+    queryParamsPrefix?: string;
     columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
+    excelExport?: boolean;
     add?: boolean;
     edit?: boolean;
     delete?: boolean;

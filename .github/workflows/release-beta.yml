@@ -36,10 +36,10 @@ jobs:
 
             - uses: pnpm/action-setup@v4
 
-            - name: Use Node.js 18.x
+            - name: Use Node.js 22.x
               uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 22
                   registry-url: "https://registry.npmjs.org"
                   cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 
@@ -56,7 +56,7 @@ jobs:
 
             - name: Create Release Pull Request or Publish to npm
               id: changesets
-              uses: dotansimha/changesets-action@cbc5ff3569ae9861100a48b290f4e9c1b94e45b5
+              uses: dotansimha/changesets-action@v1.5.2
               with:
                   version: pnpm run version
                   publish: pnpm run publish

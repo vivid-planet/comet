@@ -5,6 +5,7 @@ import {
     Field,
     filterByFragment,
     FinalForm,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
     Loading,
     MainContent,
@@ -24,7 +25,7 @@ import {
     resolveHasSaveConflict,
     useFormSaveConflict,
 } from "@comet/cms-admin";
-import { MenuItem } from "@mui/material";
+import { InputAdornment, MenuItem } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import {
     GQLManufacturerCountriesQuery,
@@ -35,6 +36,7 @@ import {
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
+import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 import {
@@ -56,6 +58,7 @@ import {
 
 interface FormProps {
     id?: string;
+    width?: number;
 }
 
 const rootBlocks = {
@@ -73,7 +76,12 @@ type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry
     manufacturerCountry?: { id: string };
 };
 
-export function ProductForm({ id }: FormProps) {
+// TODO should we use a deep partial here?
+type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
+    dimensions?: { width?: number; height?: number; depth?: number } | null;
+};
+
+export function ProductForm({ id, width }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -84,7 +92,7 @@ export function ProductForm({ id }: FormProps) {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormValues> = useMemo<Partial<FormValues>>(() => {
+    const initialValues = useMemo<InitialFormValues>(() => {
         const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
         if (!filteredData) {
             return {
@@ -92,6 +100,7 @@ export function ProductForm({ id }: FormProps) {
                 inStock: false,
                 additionalTypes: [],
                 tags: [],
+                dimensions: { width },
             };
         }
         return {
@@ -103,7 +112,7 @@ export function ProductForm({ id }: FormProps) {
                   }
                 : undefined,
         };
-    }, [data]);
+    }, [data, width]);
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -162,7 +171,7 @@ export function ProductForm({ id }: FormProps) {
     }
 
     return (
-        <FinalForm<FormValues>
+        <FinalForm<FormValues, InitialFormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}
@@ -177,6 +186,16 @@ export function ProductForm({ id }: FormProps) {
                         <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                         <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
 
+                        <Field
+                            name="priceRange"
+                            label={<FormattedMessage id="product.priceRange" defaultMessage="Price range" />}
+                            fullWidth
+                            component={FinalFormRangeInput}
+                            min={5}
+                            max={100}
+                            startAdornment={<InputAdornment position="start">€</InputAdornment>}
+                            disableSlider
+                        />
                         <TextAreaField
                             required
                             fullWidth

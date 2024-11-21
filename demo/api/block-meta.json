@@ -113,7 +113,8 @@
                                 "space": "Space",
                                 "richtext": "RichText",
                                 "headline": "Headline",
-                                "image": "DamImage"
+                                "image": "DamImage",
+                                "linkList": "LinkList"
                             },
                             "nullable": false
                         }
@@ -150,7 +151,8 @@
                                 "space": "Space",
                                 "richtext": "RichText",
                                 "headline": "Headline",
-                                "image": "DamImage"
+                                "image": "DamImage",
+                                "linkList": "LinkList"
                             },
                             "nullable": false
                         }
@@ -187,6 +189,11 @@
                             "name": "size",
                             "kind": "Number",
                             "nullable": false
+                        },
+                        {
+                            "name": "scope",
+                            "kind": "Json",
+                            "nullable": true
                         }
                     ]
                 },
@@ -755,6 +762,37 @@
         ]
     },
     {
+        "name": "ImageLink",
+        "fields": [
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "link",
+                "kind": "Block",
+                "block": "Link",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "InternalLink",
         "fields": [
             {
@@ -807,6 +845,89 @@
                 "name": "targetPageAnchor",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "Layout",
+        "fields": [
+            {
+                "name": "layout",
+                "kind": "Enum",
+                "enum": [
+                    "layout1",
+                    "layout2",
+                    "layout3",
+                    "layout4",
+                    "layout5",
+                    "layout6",
+                    "layout7"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "media1",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text1",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "media2",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text2",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "layout",
+                "kind": "Enum",
+                "enum": [
+                    "layout1",
+                    "layout2",
+                    "layout3",
+                    "layout4",
+                    "layout5",
+                    "layout6",
+                    "layout7"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "media1",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text1",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "media2",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text2",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
             }
         ]
     },
@@ -1185,6 +1306,25 @@
         ]
     },
     {
+        "name": "NewsList",
+        "fields": [
+            {
+                "name": "ids",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "ids",
+                "kind": "String",
+                "nullable": false,
+                "array": true
+            }
+        ]
+    },
+    {
         "name": "OptionalPixelImage",
         "fields": [
             {
@@ -1281,7 +1421,10 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "imageLink": "ImageLink",
+                                "newsList": "NewsList",
+                                "layout": "Layout"
                             },
                             "nullable": false
                         },
@@ -1337,7 +1480,10 @@
                                 "twoLists": "TwoLists",
                                 "media": "Media",
                                 "teaser": "Teaser",
-                                "newsDetail": "NewsDetail"
+                                "newsDetail": "NewsDetail",
+                                "imageLink": "ImageLink",
+                                "newsList": "NewsList",
+                                "layout": "Layout"
                             },
                             "nullable": false
                         },
@@ -1987,6 +2133,12 @@
                 "kind": "Block",
                 "block": "LinkList",
                 "nullable": false
+            },
+            {
+                "name": "columns",
+                "kind": "Block",
+                "block": "Columns",
+                "nullable": false
             }
         ],
         "inputFields": [
@@ -2012,6 +2164,12 @@
                 "name": "buttons",
                 "kind": "Block",
                 "block": "LinkList",
+                "nullable": false
+            },
+            {
+                "name": "columns",
+                "kind": "Block",
+                "block": "Columns",
                 "nullable": false
             }
         ]

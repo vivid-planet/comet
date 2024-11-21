@@ -68,7 +68,7 @@ export class ImagesController {
         }
 
         return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "private",
+            "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
 
@@ -98,7 +98,7 @@ export class ImagesController {
         }
 
         return this.getCroppedImage(file, params, accept, res, {
-            "cache-control": "private",
+            "cache-control": "max-age=31536000, private", // Local caches only (1 year)
         });
     }
 
@@ -119,7 +119,9 @@ export class ImagesController {
             throw new BadRequestException("Content Hash mismatch!");
         }
 
-        return this.getCroppedImage(file, params, accept, res);
+        return this.getCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=86400, public", // Public cache (1 day)
+        });
     }
 
     @DisableCometGuards()
@@ -139,7 +141,9 @@ export class ImagesController {
             throw new BadRequestException("Content Hash mismatch!");
         }
 
-        return this.getCroppedImage(file, params, accept, res);
+        return this.getCroppedImage(file, params, accept, res, {
+            "cache-control": "max-age=86400, public", // Public cache (1 day)
+        });
     }
 
     private isValidHash({ hash, ...imageParams }: HashImageParams): boolean {

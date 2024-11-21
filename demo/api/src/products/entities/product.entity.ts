@@ -65,6 +65,18 @@ export class ProductDimensions {
 }
 
 @ObjectType()
+@InputType("ProductPriceRangeInput")
+export class ProductPriceRange {
+    @Field()
+    @IsNumber()
+    min: number;
+
+    @Field()
+    @IsNumber()
+    max: number;
+}
+
+@ObjectType()
 @Entity()
 @RootBlockEntity<Product>({ isVisible: (product) => product.status === ProductStatus.Published })
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
@@ -108,6 +120,10 @@ export class Product extends BaseEntity<Product, "id"> {
     @Property({ type: types.decimal, nullable: true })
     @Field({ nullable: true })
     price?: number = undefined;
+
+    @Property({ type: "json", nullable: true })
+    @Field(() => ProductPriceRange, { nullable: true })
+    priceRange?: ProductPriceRange = undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-inferrable-types
     @Property({ type: types.boolean })

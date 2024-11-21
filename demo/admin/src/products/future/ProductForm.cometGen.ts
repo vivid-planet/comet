@@ -33,6 +33,14 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
                 {
+                    type: "numberRange",
+                    name: "priceRange",
+                    minValue: 25,
+                    maxValue: 500,
+                    disableSlider: true,
+                    startAdornment: "€",
+                },
+                {
                     type: "optionalNestedFields",
                     name: "dimensions",
                     checkboxLabel: "Configure dimensions",
@@ -58,7 +66,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     },
                 },
                 { type: "boolean", name: "inStock" },
-                { type: "date", name: "availableSince" },
+                { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
                 { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4 },
                 { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4 },

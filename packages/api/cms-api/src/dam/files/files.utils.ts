@@ -5,6 +5,7 @@ import { unlink } from "fs/promises";
 import got from "got";
 import * as mimedb from "mime-db";
 import os from "os";
+import { basename, extname } from "path";
 import slugify from "slugify";
 import stream from "stream";
 import { promisify } from "util";
@@ -116,11 +117,11 @@ export async function createFileUploadInputFromUrl(url: string): Promise<FileUpl
 
     const fileType = await FileType.fromFile(tempFile);
     const stats = fs.statSync(tempFile); // TODO don't use sync
-    const filename = url.substring(url.lastIndexOf("/") + 1);
+    const filenameWithoutExtension = basename(url, extname(url));
 
     return {
         fieldname: FilesService.UPLOAD_FIELD,
-        originalname: `${filename}.${fileType?.ext}`,
+        originalname: `${filenameWithoutExtension}.${fileType?.ext}`,
         encoding: "utf8",
         mimetype: fileType?.mime as string,
         size: stats.size,
