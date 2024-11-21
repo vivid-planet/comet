@@ -1,5 +1,6 @@
 import { BaseEntity } from "@mikro-orm/core";
 import {
+    BadRequestException,
     Body,
     Controller,
     ForbiddenException,
@@ -95,9 +96,40 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return { ...uploadedFile, fileUrl };
         }
 
-        @Get(`/preview/${fileUrl}`)
+        @Post("replace-by-filename-and-folder")
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        async replaceByFilenameAndFolder(
+            @UploadedFile() file: FileUploadInput,
+            @Body() body: UploadFileBodyInterface,
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
+        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
+            const transformedBody = plainToInstance(UploadFileBody, body);
+            const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
+
+            if (errors.length > 0) {
+                throw new CometValidationException("Validation failed", errors);
+            }
+            const scope = nonEmptyScopeOrNothing(transformedBody.scope);
+
+            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
+                throw new ForbiddenException();
+            }
+
+            const replacedFile = await this.filesService.replace(file, { ...transformedBody, scope });
+
+            const fileUrl = await this.filesService.createFileUrl(replacedFile, {
+                previewDamUrls: Boolean(previewDamUrls),
+                relativeDamUrls: Boolean(relativeDamUrls),
+            });
+
+            return { ...replacedFile, fileUrl };
+        }
+
+        @Get(`/preview/:contentHash?/${fileUrl}`)
         async previewFileUrl(
-            @Param() { fileId }: FileParams,
+            @Param() { fileId, contentHash }: FileParams,
             @Res() res: Response,
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
@@ -106,6 +138,10 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
             if (file === null) {
                 throw new NotFoundException();
+            }
+
+            if (contentHash && file.contentHash !== contentHash) {
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
@@ -115,9 +151,9 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
         }
 
-        @Get(`/download/preview/${fileUrl}`)
+        @Get(`/download/preview/:contentHash?/${fileUrl}`)
         async previewDownloadFile(
-            @Param() { fileId }: FileParams,
+            @Param() { fileId, contentHash }: FileParams,
             @Res() res: Response,
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
@@ -126,6 +162,10 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
             if (file === null) {
                 throw new NotFoundException();
+            }
+
+            if (contentHash && file.contentHash !== contentHash) {
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
@@ -137,16 +177,24 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @DisableCometGuards()
-        @Get(`/download/:hash/${fileUrl}`)
-        async downloadFile(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+        @Get(`/download/:hash/:contentHash?/${fileUrl}`)
+        async downloadFile(
+            @Param() { hash, contentHash, ...params }: HashFileParams,
+            @Res() res: Response,
+            @Headers("range") range?: string,
+        ): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid hash");
             }
 
             const file = await this.filesService.findOneById(params.fileId);
 
             if (file === null) {
                 throw new NotFoundException();
+            }
+
+            if (contentHash && file.contentHash !== contentHash) {
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             res.setHeader("Content-Disposition", "attachment");
@@ -154,16 +202,24 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @DisableCometGuards()
-        @Get(`/:hash/${fileUrl}`)
-        async hashedFileUrl(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+        @Get(`/:hash/:contentHash?/${fileUrl}`)
+        async hashedFileUrl(
+            @Param() { hash, contentHash, ...params }: HashFileParams,
+            @Res() res: Response,
+            @Headers("range") range?: string,
+        ): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid hash");
             }
 
             const file = await this.filesService.findOneById(params.fileId);
 
             if (file === null) {
                 throw new NotFoundException();
+            }
+
+            if (contentHash && file.contentHash !== contentHash) {
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
