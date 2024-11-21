@@ -4,9 +4,18 @@
 
 Add new custom `Dialog`
 
--   `title` props allows setting DialogTitle
--   optional `onClose` prop adds Close Button to the Component
+The component extends the MUI `Dialog` component to enable common use cases:
 
-Example:
+-   The `title` prop can be used to set the dialog title
+-   A close button is shown when the `onClose` is used
 
--   `<Dialog title="Dialog Title" onClose={() => {...}} />`
+**Example**
+
+```tsx
+<Dialog
+    title="Dialog Title"
+    onClose={() => {
+        // Handle dialog closing here
+    }}
+/>
+```
