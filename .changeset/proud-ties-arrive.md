@@ -1,5 +1,5 @@
 ---
-"@comet/cms-admin": patch
+"@comet/cms-admin": minor
 ---
 
-Adapt the styling of the DAM image settings
+Rework the DAM crop/focus settings UI
