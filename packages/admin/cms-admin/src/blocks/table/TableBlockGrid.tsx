@@ -94,7 +94,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             minWidth: 36,
             maxWidth: 36,
             disableReorder: true,
-            renderCell: ({ row }) => <ActionsCell row={row} />,
+            renderCell: ({ row }) => <ActionsCell row={row} updateState={updateState} />,
         },
     ];
 
