@@ -10,8 +10,12 @@ const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
 
     useEffect(() => {
         // This will be `undefined` if the free version of DataGrid V5 is used.
+
         setColumns(
-            // TODO: find a better solution than as cast
+            // TODO: find a better solution than the `as GridColDef[] | undefined` cast.
+            // The problem is, that due to the more complicated GridColDef type, introduced in Mui-X v6 and the override
+            // GridColDef type from @comet/admin, the types returned from apiRef.current?.getAllColumns?.() are not
+            // compatible with the @comet/admin GridColDef.
             apiRef.current?.getAllColumns?.() as GridColDef[] | undefined,
         );
     }, [apiRef]);
