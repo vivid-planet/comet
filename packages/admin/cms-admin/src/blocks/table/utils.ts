@@ -2,6 +2,10 @@ import { v4 as uuid } from "uuid";
 
 import { TableBlockData } from "../../blocks.generated";
 
+export const getNewColumn = (): TableBlockData["columns"][number] => {
+    return { id: uuid(), highlighted: false, size: "standard" };
+};
+
 export const getInitialTableData = (): {
     rows: TableBlockData["rows"];
     columns: TableBlockData["columns"];
@@ -13,7 +17,6 @@ export const getInitialTableData = (): {
         rows: [
             {
                 id: uuid(),
-                position: 1,
                 highlighted: false,
                 cellValues: [
                     { columnId: columnIdOne, value: "" },
@@ -22,7 +25,6 @@ export const getInitialTableData = (): {
             },
             {
                 id: uuid(),
-                position: 2,
                 highlighted: false,
                 cellValues: [
                     { columnId: columnIdOne, value: "" },
@@ -33,13 +35,11 @@ export const getInitialTableData = (): {
         columns: [
             {
                 id: columnIdOne,
-                position: 1,
                 size: "standard",
                 highlighted: false,
             },
             {
                 id: columnIdTwo,
-                position: 2,
                 size: "standard",
                 highlighted: false,
             },

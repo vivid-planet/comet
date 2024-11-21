@@ -1,7 +1,8 @@
-import { GridColDef, RowActionsItem, RowActionsMenu } from "@comet/admin";
+import { RowActionsItem, RowActionsMenu } from "@comet/admin";
 import { Add, ArrowDown, ArrowUp, Copy, Delete, DragIndicator, Duplicate, Paste, Remove } from "@comet/admin-icons";
 import { DispatchSetStateAction } from "@comet/blocks-admin";
 import { Divider } from "@mui/material";
+import { GridColDef, GridColumnHeaderParams } from "@mui/x-data-grid";
 import {
     DataGridPro,
     GRID_REORDER_COL_DEF,
@@ -11,7 +12,6 @@ import {
     useGridApiRef,
 } from "@mui/x-data-grid-pro";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuid } from "uuid";
 
 import { TableBlockData } from "../../blocks.generated";
 import { CellValue } from "./CellValue";
@@ -35,10 +35,6 @@ const flexForColumnSize: Record<ColumnSize, number> = {
     standard: 3,
     large: 4,
     extraLarge: 5,
-};
-
-export const getNewColumn = (position: number): TableBlockData["columns"][number] => {
-    return { id: uuid(), position, highlighted: false, size: "standard" };
 };
 
 type Props = {
@@ -74,21 +70,22 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         });
     };
 
-    const dataGridColumns: GridColDef<Pick<TableBlockData["rows"][number], "id" | "position" | "highlighted">>[] = [
+    const dataGridColumns: GridColDef[] = [
         {
             ...GRID_REORDER_COL_DEF,
             minWidth: 36,
             maxWidth: 36,
         },
-        ...state.columns.map(({ id: columnId, highlighted, size }) => ({
+        ...state.columns.map(({ id: columnId, highlighted, size }, index) => ({
             field: columnId,
             editable: true,
             sortable: false,
             type: "string",
             flex: flexForColumnSize[size],
             minWidth: widthForColumnSize[size],
-            // @ts-expect-error TODO: Fix the type of `params`
-            renderHeader: (params) => <ColumnHeader {...params} columnSize={size} highlighted={highlighted} />,
+            renderHeader: (params: GridColumnHeaderParams) => (
+                <ColumnHeader {...params} columnSize={size} highlighted={highlighted} updateState={updateState} columnIndex={index} />
+            ),
             renderCell: ({ value, row }: GridRenderCellParams) => <CellValue value={value} highlighted={row.highlighted || highlighted} />,
             renderEditCell: (params: GridRenderEditCellParams) => <EditCell {...params} />,
         })),
@@ -189,7 +186,6 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
         <DataGridPro
             columns={dataGridColumns}
             apiRef={apiRef}
-            // @ts-expect-error TODO: Make `id` always included in the type of the individual rows
             rows={gridRows}
             rowHeight={55}
             rowReordering

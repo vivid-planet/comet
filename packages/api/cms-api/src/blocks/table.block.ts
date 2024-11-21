@@ -1,6 +1,6 @@
 import { BlockData, BlockField, BlockInput, createBlock, inputToData } from "@comet/blocks-api";
 import { plainToInstance, Type } from "class-transformer";
-import { IsArray, IsBoolean, IsEnum, IsNumber, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEnum, IsString } from "class-validator";
 
 enum ColumnSize {
     extraSmall = "extraSmall",
@@ -14,9 +14,6 @@ class TableBlockColumnData extends BlockData {
     @BlockField()
     id: string;
 
-    @BlockField()
-    position: number;
-
     @BlockField({ type: "enum", enum: ColumnSize })
     size: ColumnSize;
 
@@ -28,10 +25,6 @@ class TableBlockColumnInput extends BlockInput {
     @BlockField()
     @IsString()
     id: string;
-
-    @BlockField()
-    @IsNumber()
-    position: number;
 
     @BlockField({ type: "enum", enum: ColumnSize })
     @IsEnum(ColumnSize)
@@ -73,9 +66,6 @@ class TableBlockRowData extends BlockData {
     id: string;
 
     @BlockField()
-    position: number;
-
-    @BlockField()
     highlighted: boolean;
 
     @BlockField(TableBlockRowColumnValueData)
@@ -87,10 +77,6 @@ class TableBlockRowInput extends BlockInput {
     @BlockField()
     @IsString()
     id: string;
-
-    @BlockField()
-    @IsNumber()
-    position: number;
 
     @BlockField()
     @IsBoolean()

@@ -2038,11 +2038,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "position",
-                            "kind": "Number",
-                            "nullable": false
-                        },
-                        {
                             "name": "size",
                             "kind": "Enum",
                             "enum": [
@@ -2071,11 +2066,6 @@
                         {
                             "name": "id",
                             "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "position",
-                            "kind": "Number",
                             "nullable": false
                         },
                         {
@@ -2119,11 +2109,6 @@
                             "nullable": false
                         },
                         {
-                            "name": "position",
-                            "kind": "Number",
-                            "nullable": false
-                        },
-                        {
                             "name": "size",
                             "kind": "Enum",
                             "enum": [
@@ -2152,11 +2137,6 @@
                         {
                             "name": "id",
                             "kind": "String",
-                            "nullable": false
-                        },
-                        {
-                            "name": "position",
-                            "kind": "Number",
                             "nullable": false
                         },
                         {
