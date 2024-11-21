@@ -1,6 +1,6 @@
 import { V1CronJob, V1Job } from "@kubernetes/client-node";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import parser from "cron-parser";
 import { format } from "date-fns";
@@ -29,6 +29,7 @@ export class BuildsService {
         private readonly buildTemplatesService: BuildTemplatesService,
         private readonly kubernetesService: KubernetesService,
         @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+        private readonly entityManager: EntityManager,
     ) {}
 
     private async getAllowedBuildJobs(user: CurrentUser): Promise<V1Job[]> {
@@ -133,7 +134,7 @@ export class BuildsService {
         }
 
         if ((await this.changesRepository.findOne({ scope })) === null) {
-            await this.changesRepository.persistAndFlush(this.changesRepository.create({ scope }));
+            await this.entityManager.persistAndFlush(this.changesRepository.create({ scope }));
         }
     }
 
