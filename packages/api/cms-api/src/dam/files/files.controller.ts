@@ -96,9 +96,9 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return { ...uploadedFile, fileUrl };
         }
 
-        @Post("replace")
+        @Post("replace-by-filename-and-folder")
         @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
-        async replace(
+        async replaceByFilenameAndFolder(
             @UploadedFile() file: FileUploadInput,
             @Body() body: UploadFileBodyInterface,
             @GetCurrentUser() user: CurrentUser,

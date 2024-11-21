@@ -47,7 +47,7 @@ function uploadOrReplace<ResponseData>({
         formData.append("folderId", data.folderId);
     }
 
-    const endpoint = replace ? "/dam/files/replace" : "/dam/files/upload";
+    const endpoint = replace ? "/dam/files/replace-by-filename-and-folder" : "/dam/files/upload";
 
     return apiClient.post<ResponseData>(endpoint, formData, {
         ...options,
