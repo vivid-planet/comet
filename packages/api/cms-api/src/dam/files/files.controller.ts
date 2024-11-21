@@ -27,6 +27,7 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometValidationException } from "../../common/errors/validation.exception";
+import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
@@ -36,12 +37,13 @@ import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
+import { createReplaceFileByIdBody, createUploadFileBody, ReplaceFileByIdBodyInterface, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInput } from "./dto/file-upload.input";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
 import { calculatePartialRanges } from "./files.utils";
+import { FoldersService } from "./folders.service";
 
 const fileUrl = `:fileId/:filename`;
 
@@ -54,6 +56,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     }
 
     const UploadFileBody = createUploadFileBody({ Scope });
+    const ReplaceFileByIdBody = createReplaceFileByIdBody({ Scope });
 
     @Controller("dam/files")
     @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
@@ -64,6 +67,8 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             private readonly filesService: FilesService,
             private readonly blobStorageBackendService: BlobStorageBackendService,
             @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+            private readonly contentScopeService: ContentScopeService,
+            private readonly foldersService: FoldersService,
         ) {}
 
         @Post("upload")
@@ -87,7 +92,16 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new ForbiddenException();
             }
 
-            const uploadedFile = await this.filesService.upload(file, { ...transformedBody, scope });
+            const folderId = transformedBody.folderId;
+            if (folderId) {
+                const folder = await this.foldersService.findOneById(folderId);
+                if (!folder) throw new BadRequestException(`Folder ${folderId} not found`);
+                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                    throw new BadRequestException("Folder scope doesn't match passed scope");
+                }
+            }
+
+            const uploadedFile = await this.filesService.upload(file, { ...transformedBody, folderId, scope });
             const fileUrl = await this.filesService.createFileUrl(uploadedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
                 relativeDamUrls: Boolean(relativeDamUrls),
@@ -117,7 +131,58 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new ForbiddenException();
             }
 
-            const replacedFile = await this.filesService.replace(file, { ...transformedBody, scope });
+            const folderId = transformedBody.folderId;
+            if (folderId) {
+                const folder = await this.foldersService.findOneById(folderId);
+                if (!folder) throw new BadRequestException(`Folder ${folderId} not found`);
+                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                    throw new BadRequestException("Folder scope doesn't match passed scope");
+                }
+            }
+
+            const fileToReplace = await this.filesService.findOneByFilenameAndFolder({ filename: file.originalname, folderId });
+            if (!fileToReplace) {
+                throw new NotFoundException(`File not found`);
+            }
+            if (!this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
+                throw new ForbiddenException();
+            }
+
+            const replacedFile = await this.filesService.replace(fileToReplace, file, transformedBody);
+
+            const fileUrl = await this.filesService.createFileUrl(replacedFile, {
+                previewDamUrls: Boolean(previewDamUrls),
+                relativeDamUrls: Boolean(relativeDamUrls),
+            });
+
+            return { ...replacedFile, fileUrl };
+        }
+
+        @Post("replace-by-id")
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        async replaceById(
+            @UploadedFile() file: FileUploadInput,
+            @Body() body: ReplaceFileByIdBodyInterface,
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
+        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
+            const { fileId, ...transformedBody } = plainToInstance(ReplaceFileByIdBody, body);
+            const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
+
+            if (errors.length > 0) {
+                throw new CometValidationException("Validation failed", errors);
+            }
+
+            const fileToReplace = await this.filesService.findOneById(fileId);
+            if (!fileToReplace) {
+                throw new NotFoundException(`File ${fileId} not found`);
+            }
+            if (!this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
+                throw new ForbiddenException();
+            }
+
+            const replacedFile = await this.filesService.replace(fileToReplace, file, transformedBody);
 
             const fileUrl = await this.filesService.createFileUrl(replacedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
