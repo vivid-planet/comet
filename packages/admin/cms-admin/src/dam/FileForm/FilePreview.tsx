@@ -1,6 +1,6 @@
 import { useApolloClient } from "@apollo/client";
-import { useStackApi } from "@comet/admin";
-import { Archive, Delete, Download, Restore, Upload, ZipFile } from "@comet/admin-icons";
+import { useErrorDialog, useStackApi } from "@comet/admin";
+import { Archive, Delete, Download, Restore, ThreeDotSaving, Upload, ZipFile } from "@comet/admin-icons";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import axios, { CancelTokenSource } from "axios";
@@ -62,7 +62,7 @@ interface FilePreviewProps {
 }
 
 export const FilePreview = ({ file }: FilePreviewProps) => {
-    const client = useApolloClient();
+    const apolloClient = useApolloClient();
     const stackApi = useStackApi();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
@@ -88,17 +88,59 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
     const maxFileSizeInMegabytes = cmsBlockContext.damConfig.maxFileSize;
     const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
     const cancelUpload = useRef<CancelTokenSource>(axios.CancelToken.source());
+    const errorDialog = useErrorDialog();
+    const [replaceLoading, setReplaceLoading] = useState(false);
 
     const { getInputProps } = useDropzone({
         maxSize: maxFileSizeInBytes,
         multiple: false,
         accept: convertMimetypesToDropzoneAccept([file.mimetype]),
         onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            await replaceById({
-                apiClient: cmsBlockContext.damConfig.apiClient,
-                data: { file: acceptedFiles[0], fileId: file.id },
-                cancelToken: cancelUpload.current.token,
-            });
+            if (fileRejections.length > 0) {
+                errorDialog?.showError({
+                    userMessage: (
+                        <FormattedMessage
+                            id="comet.dam.file.replace.fileRejection"
+                            defaultMessage="The selected file could not be uploaded because it doesn't meet the required criteria. Please choose a valid file to replace the existing one."
+                        />
+                    ),
+                    error: fileRejections.toString(),
+                });
+            }
+
+            try {
+                setReplaceLoading(true);
+                const response = await replaceById({
+                    apiClient: cmsBlockContext.damConfig.apiClient,
+                    data: { file: acceptedFiles[0], fileId: file.id },
+                    cancelToken: cancelUpload.current.token,
+                });
+
+                if (response.status === 201 && response.data) {
+                    const fileUrl = (response.data as { fileUrl?: string })?.fileUrl;
+                    if (fileUrl) {
+                        apolloClient.cache.modify({
+                            id: `DamFile:${file.id}`,
+                            fields: {
+                                fileUrl: () => fileUrl,
+                            },
+                        });
+                    }
+                }
+                setReplaceLoading(false);
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                    errorDialog?.showError({
+                        userMessage: (
+                            <FormattedMessage
+                                id="comet.dam.file.replace.error"
+                                defaultMessage="An error occurred while replacing the file. Please try again later."
+                            />
+                        ),
+                        error: error.response?.data,
+                    });
+                }
+            }
         },
     });
 
@@ -114,7 +156,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                     <FormattedMessage id="comet.dam.file.downloadFile" defaultMessage="Download File" />
                 </ActionButton>
                 <ActionButton
-                    startIcon={<Upload />}
+                    startIcon={replaceLoading ? <ThreeDotSaving /> : <Upload />}
                     onClick={() => {
                         // Trigger file input with button click
                         fileInputRef.current?.click();
@@ -127,12 +169,12 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                     startIcon={file.archived ? <Restore /> : <Archive />}
                     onClick={() => {
                         if (file.archived) {
-                            client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
+                            apolloClient.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
                                 mutation: restoreDamFileMutation,
                                 variables: { id: file.id },
                             });
                         } else {
-                            client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
+                            apolloClient.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
                                 mutation: archiveDamFileMutation,
                                 variables: { id: file.id },
                             });
@@ -159,7 +201,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                 open={deleteDialogOpen}
                 onCloseDialog={async (confirmed) => {
                     if (confirmed) {
-                        await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
+                        await apolloClient.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
                             mutation: deleteDamFileMutation,
                             variables: { id: file.id },
                             refetchQueries: ["DamItemsList"],
