@@ -279,8 +279,8 @@ export function ManufacturersGrid(): React.ReactElement {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -289,7 +289,7 @@ export function ManufacturersGrid(): React.ReactElement {
     const rows = data?.manufacturers.nodes ?? [];
 
     return (
-        (<DataGridPro
+        <DataGridPro
             {...dataGridProps}
             disableRowSelectionOnClick
             rows={rows}
@@ -299,6 +299,6 @@ export function ManufacturersGrid(): React.ReactElement {
             components={{
                 Toolbar: ManufacturersGridToolbar,
             }}
-        />)
+        />
     );
 }

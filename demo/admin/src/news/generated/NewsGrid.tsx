@@ -220,8 +220,8 @@ export function NewsGrid(): React.ReactElement {
             scope,
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -230,7 +230,7 @@ export function NewsGrid(): React.ReactElement {
     const rows = data?.newsList.nodes ?? [];
 
     return (
-        (<MainContent fullHeight>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableRowSelectionOnClick
@@ -242,6 +242,6 @@ export function NewsGrid(): React.ReactElement {
                     Toolbar: NewsGridToolbar,
                 }}
             />
-        </MainContent>)
+        </MainContent>
     );
 }

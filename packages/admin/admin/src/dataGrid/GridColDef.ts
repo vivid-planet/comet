@@ -5,8 +5,7 @@ import {
     GridValueOptionsParams,
 } from "@mui/x-data-grid";
 import { GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
-
-import { GridPinnedColumns } from "./usePersistentColumnState";
+import { type GridPinnedColumns } from "@mui/x-data-grid-pro";
 
 export type ValueOption =
     | string

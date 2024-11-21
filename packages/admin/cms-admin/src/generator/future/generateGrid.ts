@@ -834,8 +834,8 @@ export function generateGrid(
                         : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
                     ...[
-                        `offset: dataGridProps.page * dataGridProps.pageSize`,
-                        `limit: dataGridProps.pageSize`,
+                        `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
+                        `limit: dataGridProps.paginationModel.pageSize`,
                         `sort: muiGridSortToGql(dataGridProps.sortModel)`,
                     ],
                 ].join(", ")}
@@ -850,7 +850,7 @@ export function generateGrid(
         return (
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}

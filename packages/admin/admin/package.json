@@ -56,6 +56,7 @@
         "@mui/material": "^6.0.0",
         "@mui/system": "^6.0.0",
         "@mui/x-data-grid": "^6.20.4",
+        "@mui/x-data-grid-pro": "^6.20.4",
         "@testing-library/dom": "^9.3.3",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^12.1.5",

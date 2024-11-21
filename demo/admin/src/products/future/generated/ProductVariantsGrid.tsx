@@ -170,8 +170,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             product,
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -180,7 +180,7 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const rows = data?.productVariants.nodes ?? [];
 
     return (
-        (<DataGridPro
+        <DataGridPro
             {...dataGridProps}
             disableRowSelectionOnClick
             rows={rows}
@@ -190,6 +190,6 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             components={{
                 Toolbar: ProductVariantsGridToolbar,
             }}
-        />)
+        />
     );
 }

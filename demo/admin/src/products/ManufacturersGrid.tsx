@@ -164,8 +164,8 @@ export function ManufacturersGrid() {
     const { data, loading, error } = useQuery<GQLManufacturersListQuery, GQLManufacturersListQueryVariables>(manufacturersQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
     });
@@ -175,7 +175,7 @@ export function ManufacturersGrid() {
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
 
     return (
-        (<MainContent fullHeight>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableRowSelectionOnClick
@@ -187,7 +187,7 @@ export function ManufacturersGrid() {
                     Toolbar: ManufacturersGridToolbar,
                 }}
             />
-        </MainContent>)
+        </MainContent>
     );
 }
 

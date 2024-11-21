@@ -365,8 +365,8 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -375,7 +375,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
     const rows = data?.products.nodes ?? [];
 
     return (
-        (<DataGridPro
+        <DataGridPro
             {...dataGridProps}
             disableRowSelectionOnClick
             rows={rows}
@@ -388,6 +388,6 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             componentsProps={{
                 toolbar: { toolbarAction },
             }}
-        />)
+        />
     );
 }

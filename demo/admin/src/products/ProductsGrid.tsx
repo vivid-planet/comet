@@ -278,16 +278,19 @@ export function ProductsGrid() {
     const { data, loading, error } = useQuery<GQLProductsListQuery, GQLProductsListQueryVariables>(productsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
-            sort: muiGridSortToGql(sortModel, dataGridProps.apiRef),
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            sort: muiGridSortToGql(sortModel, columns),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.products.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        (<MainContent fullHeight>
+        <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
                 disableRowSelectionOnClick
@@ -295,12 +298,11 @@ export function ProductsGrid() {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                error={error}
                 components={{
                     Toolbar: ProductsGridToolbar,
                 }}
             />
-        </MainContent>)
+        </MainContent>
     );
 }
 

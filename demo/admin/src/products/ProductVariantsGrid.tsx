@@ -109,16 +109,19 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
         variables: {
             product: productId,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.productVariants.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productVariants.totalCount);
 
     return (
-        (<Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
+        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
             <DataGridPro
                 {...dataGridProps}
                 disableRowSelectionOnClick
@@ -126,12 +129,11 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                error={error}
                 components={{
                     Toolbar: ProductVariantsGridToolbar,
                 }}
             />
-        </Box>)
+        </Box>
     );
 }
 const productVariantsFragment = gql`

@@ -17,7 +17,7 @@ type MinimalRow = {
 
 export type LatestContentUpdatesDashboardWidgetProps<Row extends MinimalRow> = {
     rows: DataGridProps<Row>["rows"] | undefined;
-} & DataGridProps<Row>;
+} & Omit<DataGridProps<Row>, "columns">;
 
 export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
     rows = [],

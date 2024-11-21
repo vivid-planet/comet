@@ -103,26 +103,28 @@ function ProductCategoriesTable() {
     const { data, loading, error } = useQuery<GQLProductCategoriesListQuery, GQLProductCategoriesListQueryVariables>(productCategoriesQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            ...muiGridPagingToGql({ page: dataGridProps.page, pageSize: dataGridProps.pageSize }),
+            ...muiGridPagingToGql({ page: dataGridProps.paginationModel.page, pageSize: dataGridProps.paginationModel.pageSize }),
             sort: muiGridSortToGql(sortModel),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.productCategories.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productCategories.totalCount);
 
     return (
-        (<DataGridPro
+        <DataGridPro
             {...dataGridProps}
             disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            error={error}
             components={{
                 Toolbar: ProductCategoriesTableToolbar,
             }}
-        />)
+        />
     );
 }
 
