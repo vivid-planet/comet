@@ -278,10 +278,6 @@ export class FilesService {
                 exisitingFile.image.width = image.width;
                 exisitingFile.image.height = image.height;
                 exisitingFile.image.exif = exifData;
-
-                if (exisitingFile.image.cropArea.focalPoint !== FocalPoint.SMART) {
-                    exisitingFile.image.cropArea = { focalPoint: FocalPoint.SMART };
-                }
             }
 
             Object.assign(exisitingFile, {
