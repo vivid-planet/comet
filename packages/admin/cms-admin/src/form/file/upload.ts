@@ -1,6 +1,5 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
 
-import { DuplicateAction } from "../../dam/DataGrid/duplicatedFilenames/ManualDuplicatedFilenamesHandler";
 import { GQLLicenseInput } from "../../graphql.generated";
 
 interface UploadFileData {
@@ -16,11 +15,24 @@ interface UploadFileParams {
     apiClient: AxiosInstance;
     data: UploadFileData;
     cancelToken: CancelToken;
-    action: Omit<DuplicateAction, "skip">;
     options?: Omit<AxiosRequestConfig, "cancelToken">;
 }
 
-export function upload<ResponseData>({ apiClient, data, cancelToken, action, options }: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
+export function upload<ResponseData>(uploadFileParams: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
+    return uploadOrReplace(uploadFileParams);
+}
+
+export function replace<ResponseData>(uploadFileParams: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
+    return uploadOrReplace({ ...uploadFileParams, replace: true });
+}
+
+function uploadOrReplace<ResponseData>({
+    apiClient,
+    data,
+    cancelToken,
+    options,
+    replace = false,
+}: UploadFileParams & { replace?: boolean }): Promise<AxiosResponse<ResponseData>> {
     const formData = new FormData();
     formData.append("file", data.file);
     formData.append("scope", JSON.stringify(data.scope));
@@ -35,7 +47,7 @@ export function upload<ResponseData>({ apiClient, data, cancelToken, action, opt
         formData.append("folderId", data.folderId);
     }
 
-    const endpoint = action === "replace" ? "/dam/files/replace" : "/dam/files/upload";
+    const endpoint = replace ? "/dam/files/replace" : "/dam/files/upload";
 
     return apiClient.post<ResponseData>(endpoint, formData, {
         ...options,

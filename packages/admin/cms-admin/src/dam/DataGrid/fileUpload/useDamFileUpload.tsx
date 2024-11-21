@@ -6,7 +6,7 @@ import { Accept, FileRejection } from "react-dropzone";
 
 import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
-import { upload } from "../../../form/file/upload";
+import { replace, upload } from "../../../form/file/upload";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
@@ -427,11 +427,11 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         apiClient: context.damConfig.apiClient,
                         data: uploadConfig,
                         cancelToken: cancelUpload.current.token,
-                        action: duplicateAction,
                         options: { onUploadProgress },
                     };
 
-                    const response: { data: { id: string } } = await upload(uploadParams);
+                    const response: { data: { id: string } } =
+                        duplicateAction === "replace" ? await replace(uploadParams) : await upload(uploadParams);
 
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {
