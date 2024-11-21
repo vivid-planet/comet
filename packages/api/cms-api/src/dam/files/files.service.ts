@@ -257,6 +257,12 @@ export class FilesService {
             const exisitingFile = await this.findOneByFilenameAndFolder({ filename: file.originalname, folderId });
             if (!exisitingFile) throw new Error("File not found");
 
+            if (file.mimetype !== exisitingFile.mimetype) {
+                throw new Error(
+                    `File cannot be replaced by a file with a different mimetype. Existing mimetype: ${exisitingFile.mimetype}, new mimetype: ${file.mimetype}`,
+                );
+            }
+
             const { exifData, contentHash, image } = await this.getFileMetadataForUpload(file);
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
