@@ -1,12 +1,17 @@
 import { useApolloClient } from "@apollo/client";
 import { useStackApi } from "@comet/admin";
-import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
+import { Archive, Delete, Download, Restore, Upload, ZipFile } from "@comet/admin-icons";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import axios, { CancelTokenSource } from "axios";
 import saveAs from "file-saver";
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
+import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedMessage } from "react-intl";
 
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
+import { replaceById } from "../../form/file/upload";
+import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { DamFileDetails } from "./EditFile";
@@ -77,9 +82,28 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
         preview = <DefaultFilePreview />;
     }
 
+    const cmsBlockContext = useCmsBlockContext(); // TODO create separate CmsContext?
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const maxFileSizeInMegabytes = cmsBlockContext.damConfig.maxFileSize;
+    const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
+    const cancelUpload = useRef<CancelTokenSource>(axios.CancelToken.source());
+
+    const { getInputProps } = useDropzone({
+        maxSize: maxFileSizeInBytes,
+        multiple: false,
+        accept: convertMimetypesToDropzoneAccept([file.mimetype]),
+        onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+            await replaceById({
+                apiClient: cmsBlockContext.damConfig.apiClient,
+                data: { file: acceptedFiles[0], fileId: file.id },
+                cancelToken: cancelUpload.current.token,
+            });
+        },
+    });
+
     return (
         <FilePreviewWrapper>
-            {/*// @TODO: Add functionality for these buttons*/}
             <ActionsContainer>
                 <ActionButton
                     startIcon={<Download />}
@@ -89,9 +113,16 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                 >
                     <FormattedMessage id="comet.dam.file.downloadFile" defaultMessage="Download File" />
                 </ActionButton>
-                {/*<ActionButton startIcon={<Upload />}>*/}
-                {/*    <FormattedMessage id="comet.dam.file.replaceFile" defaultMessage="Replace File" />*/}
-                {/*</ActionButton>*/}
+                <ActionButton
+                    startIcon={<Upload />}
+                    onClick={() => {
+                        // Trigger file input with button click
+                        fileInputRef.current?.click();
+                    }}
+                >
+                    <FormattedMessage id="comet.dam.file.replaceFile" defaultMessage="Replace File" />
+                </ActionButton>
+                <input type="file" hidden {...getInputProps()} ref={fileInputRef} />
                 <ActionButton
                     startIcon={file.archived ? <Restore /> : <Archive />}
                     onClick={() => {

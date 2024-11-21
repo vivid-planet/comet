@@ -1,16 +1,16 @@
 import { useApolloClient } from "@apollo/client";
 import axios, { AxiosError, CancelTokenSource } from "axios";
-import * as mimedb from "mime-db";
 import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import { Accept, FileRejection } from "react-dropzone";
 
 import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
-import { replace, upload } from "../../../form/file/upload";
+import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
 import { DuplicateAction, FilenameData, useManualDuplicatedFilenamesHandler } from "../duplicatedFilenames/ManualDuplicatedFilenamesHandler";
+import { convertMimetypesToDropzoneAccept } from "./fileUpload.utils";
 import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
@@ -121,25 +121,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
 
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const accept: Accept = useMemo(() => {
-        const acceptObj: Accept = {};
-        const acceptedMimetypes = options.acceptedMimetypes ?? allAcceptedMimeTypes;
-
-        acceptedMimetypes.forEach((mimetype) => {
-            let extensions: readonly string[] | undefined;
-            if (mimetype === "application/x-zip-compressed") {
-                // zip files in Windows, not supported by mime-db
-                // see https://github.com/jshttp/mime-db/issues/245
-                extensions = ["zip"];
-            } else {
-                extensions = mimedb[mimetype]?.extensions;
-            }
-
-            if (extensions) {
-                acceptObj[mimetype] = extensions.map((extension) => `.${extension}`);
-            }
-        });
-
-        return acceptObj;
+        return convertMimetypesToDropzoneAccept(options.acceptedMimetypes ?? allAcceptedMimeTypes);
     }, [allAcceptedMimeTypes, options.acceptedMimetypes]);
 
     const { newlyUploadedItems, addNewlyUploadedItems } = useFileUploadContext();
@@ -431,7 +413,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                     };
 
                     const response: { data: { id: string } } =
-                        duplicateAction === "replace" ? await replace(uploadParams) : await upload(uploadParams);
+                        duplicateAction === "replace" ? await replaceByFilenameAndFolder(uploadParams) : await upload(uploadParams);
 
                     uploadedFiles.push({ id: response.data.id, parentId: targetFolderId, type: "file", file });
                 } catch (err) {
