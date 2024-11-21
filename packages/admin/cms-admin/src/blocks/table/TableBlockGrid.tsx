@@ -9,6 +9,7 @@ import {
     GridRenderEditCellParams,
     useGridApiRef,
 } from "@mui/x-data-grid-pro";
+import { useEffect } from "react";
 
 import { TableBlockData } from "../../blocks.generated";
 import { ActionsCell } from "./ActionsCell";
@@ -67,6 +68,42 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             });
         });
     };
+
+    const moveRow = (targetIndex: number, rowId: string) => {
+        updateState((state) => {
+            const movingRow = state.rows.find((row) => row.id === rowId);
+            if (!movingRow) {
+                return state;
+            }
+
+            const otherRows = state.rows.filter((row) => row.id !== rowId);
+            return {
+                ...state,
+                rows: [...otherRows.slice(0, targetIndex), movingRow, ...otherRows.slice(targetIndex)],
+            };
+        });
+    };
+
+    useEffect(() => {
+        const handleMoveColumn: GridEventListener<"columnHeaderDragEnd"> = ({ field: columnId }) => {
+            const targetIndex = apiRef.current.getColumnIndex(columnId) - 1;
+
+            updateState((state) => {
+                const movingColumn = state.columns.find((column) => column.id === columnId);
+                if (!movingColumn) {
+                    return state;
+                }
+
+                const otherColumns = state.columns.filter((column) => column.id !== columnId);
+                return {
+                    ...state,
+                    columns: [...otherColumns.slice(0, targetIndex), movingColumn, ...otherColumns.slice(targetIndex)],
+                };
+            });
+        };
+
+        return apiRef.current.subscribeEvent("columnHeaderDragEnd", handleMoveColumn);
+    }, [apiRef, updateState]);
 
     const dataGridColumns: GridColDef[] = [
         {
@@ -128,11 +165,8 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
                 RowReorderIcon: DragIndicator,
             }}
             sx={dataGridStyles}
-            onRowOrderChange={() => {
-                // TODO: Implement this
-            }}
-            onColumnOrderChange={() => {
-                // TODO: Implement this
+            onRowOrderChange={({ targetIndex, row }) => {
+                moveRow(targetIndex, row.id);
             }}
             onCellEditCommit={handleCellEditCommit}
         />
