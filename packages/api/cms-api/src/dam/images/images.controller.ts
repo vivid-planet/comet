@@ -106,7 +106,7 @@ export class ImagesController {
     @Get(`/:hash/:contentHash?/${smartImageUrl}`)
     async smartCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint !== FocalPoint.SMART) {
-            throw new NotFoundException();
+            throw new BadRequestException("Invalid content hash");
         }
 
         const file = await this.filesService.findOneById(params.fileId);
@@ -128,7 +128,7 @@ export class ImagesController {
     @Get(`/:hash/:contentHash?/${focusImageUrl}`)
     async focusCroppedImage(@Param() params: HashImageParams, @Headers("Accept") accept: string, @Res() res: Response): Promise<void> {
         if (!this.isValidHash(params) || params.cropArea.focalPoint === FocalPoint.SMART) {
-            throw new NotFoundException();
+            throw new BadRequestException("Invalid content hash");
         }
 
         const file = await this.filesService.findOneById(params.fileId);

@@ -184,7 +184,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @Headers("range") range?: string,
         ): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid content hash");
             }
 
             const file = await this.filesService.findOneById(params.fileId);
@@ -209,7 +209,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @Headers("range") range?: string,
         ): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid content hash");
             }
 
             const file = await this.filesService.findOneById(params.fileId);
