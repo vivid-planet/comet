@@ -1,17 +1,12 @@
 import { useApolloClient } from "@apollo/client";
-import { useErrorDialog, useStackApi } from "@comet/admin";
-import { Archive, Delete, Download, Restore, ThreeDotSaving, Upload, ZipFile } from "@comet/admin-icons";
+import { useStackApi } from "@comet/admin";
+import { Archive, Delete, Download, Restore, ZipFile } from "@comet/admin-icons";
 import { Button, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import axios, { CancelTokenSource } from "axios";
 import saveAs from "file-saver";
-import { ReactNode, useRef, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
-import { replaceById } from "../../form/file/upload";
-import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import { ConfirmDeleteDialog } from "../FileActions/ConfirmDeleteDialog";
 import { clearDamItemCache } from "../helpers/clearDamItemCache";
 import { DamFileDetails } from "./EditFile";
@@ -29,6 +24,7 @@ import { DefaultFilePreview } from "./previews/DefaultFilePreview";
 import { ImagePreview } from "./previews/ImagePreview";
 import { PdfPreview } from "./previews/PdfPreview";
 import { VideoPreview } from "./previews/VideoPreview";
+import { ReplaceFileButton } from "./ReplaceFileButton";
 
 const ActionsContainer = styled("div")`
     background-color: ${({ theme }) => theme.palette.grey["A400"]};
@@ -36,7 +32,7 @@ const ActionsContainer = styled("div")`
     justify-content: center;
 `;
 
-const ActionButton = styled(Button)`
+export const ActionButton = styled(Button)`
     color: white;
 `;
 
@@ -62,7 +58,7 @@ interface FilePreviewProps {
 }
 
 export const FilePreview = ({ file }: FilePreviewProps) => {
-    const apolloClient = useApolloClient();
+    const client = useApolloClient();
     const stackApi = useStackApi();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
@@ -82,68 +78,6 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
         preview = <DefaultFilePreview />;
     }
 
-    const cmsBlockContext = useCmsBlockContext(); // TODO create separate CmsContext?
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const maxFileSizeInMegabytes = cmsBlockContext.damConfig.maxFileSize;
-    const maxFileSizeInBytes = maxFileSizeInMegabytes * 1024 * 1024;
-    const cancelUpload = useRef<CancelTokenSource>(axios.CancelToken.source());
-    const errorDialog = useErrorDialog();
-    const [replaceLoading, setReplaceLoading] = useState(false);
-
-    const { getInputProps } = useDropzone({
-        maxSize: maxFileSizeInBytes,
-        multiple: false,
-        accept: convertMimetypesToDropzoneAccept([file.mimetype]),
-        onDrop: async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-            if (fileRejections.length > 0) {
-                errorDialog?.showError({
-                    userMessage: (
-                        <FormattedMessage
-                            id="comet.dam.file.replace.fileRejection"
-                            defaultMessage="The selected file could not be uploaded because it doesn't meet the required criteria. Please choose a valid file to replace the existing one."
-                        />
-                    ),
-                    error: fileRejections.toString(),
-                });
-            }
-
-            try {
-                setReplaceLoading(true);
-                const response = await replaceById({
-                    apiClient: cmsBlockContext.damConfig.apiClient,
-                    data: { file: acceptedFiles[0], fileId: file.id },
-                    cancelToken: cancelUpload.current.token,
-                });
-
-                if (response.status === 201 && response.data) {
-                    const fileUrl = (response.data as { fileUrl?: string })?.fileUrl;
-                    if (fileUrl) {
-                        apolloClient.cache.modify({
-                            id: `DamFile:${file.id}`,
-                            fields: {
-                                fileUrl: () => fileUrl,
-                            },
-                        });
-                    }
-                }
-                setReplaceLoading(false);
-            } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    errorDialog?.showError({
-                        userMessage: (
-                            <FormattedMessage
-                                id="comet.dam.file.replace.error"
-                                defaultMessage="An error occurred while replacing the file. Please try again later."
-                            />
-                        ),
-                        error: error.response?.data,
-                    });
-                }
-            }
-        },
-    });
-
     return (
         <FilePreviewWrapper>
             <ActionsContainer>
@@ -155,26 +89,17 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                 >
                     <FormattedMessage id="comet.dam.file.downloadFile" defaultMessage="Download File" />
                 </ActionButton>
-                <ActionButton
-                    startIcon={replaceLoading ? <ThreeDotSaving /> : <Upload />}
-                    onClick={() => {
-                        // Trigger file input with button click
-                        fileInputRef.current?.click();
-                    }}
-                >
-                    <FormattedMessage id="comet.dam.file.replaceFile" defaultMessage="Replace File" />
-                </ActionButton>
-                <input type="file" hidden {...getInputProps()} ref={fileInputRef} />
+                <ReplaceFileButton file={file} />
                 <ActionButton
                     startIcon={file.archived ? <Restore /> : <Archive />}
                     onClick={() => {
                         if (file.archived) {
-                            apolloClient.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
+                            client.mutate<GQLRestoreFileMutation, GQLRestoreFileMutationVariables>({
                                 mutation: restoreDamFileMutation,
                                 variables: { id: file.id },
                             });
                         } else {
-                            apolloClient.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
+                            client.mutate<GQLArchiveFileMutation, GQLArchiveFileMutationVariables>({
                                 mutation: archiveDamFileMutation,
                                 variables: { id: file.id },
                             });
@@ -201,7 +126,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                 open={deleteDialogOpen}
                 onCloseDialog={async (confirmed) => {
                     if (confirmed) {
-                        await apolloClient.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
+                        await client.mutate<GQLDeleteDamFileMutation, GQLDeleteDamFileMutationVariables>({
                             mutation: deleteDamFileMutation,
                             variables: { id: file.id },
                             refetchQueries: ["DamItemsList"],
