@@ -1,4 +1,4 @@
-import { createAuthResolver, createCometAuthGuard, createStaticAuthedUserStrategy, createStaticCredentialsBasicStrategy } from "@comet/cms-api";
+import { CometAuthGuard, createAuthGuardProviders, createAuthResolver, createBasicAuthService, createStaticUserAuthService } from "@comet/cms-api";
 import { DynamicModule, Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 import { Config } from "@src/config/config";
@@ -15,18 +15,17 @@ export class AuthModule {
         return {
             module: AuthModule,
             providers: [
-                createStaticCredentialsBasicStrategy({
-                    username: SYSTEM_USER_NAME,
-                    password: config.auth.systemUserPassword,
-                    strategyName: "system-user",
-                }),
-                createStaticAuthedUserStrategy({
-                    staticAuthedUser: staticUsers[0],
-                }),
+                ...createAuthGuardProviders(
+                    createBasicAuthService({
+                        username: SYSTEM_USER_NAME,
+                        password: config.auth.systemUserPassword,
+                    }),
+                    createStaticUserAuthService({ staticUser: staticUsers[0] }),
+                ),
                 createAuthResolver(),
                 {
                     provide: APP_GUARD,
-                    useClass: createCometAuthGuard(["system-user", "static-authed-user"]),
+                    useClass: CometAuthGuard,
                 },
                 UserService,
                 AccessControlService,
