@@ -36,12 +36,62 @@ import {
 import { Add, Dashboard, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { StoryContext } from "@storybook/addons";
-import { storiesOf } from "@storybook/react";
+import { Decorator } from "@storybook/react";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { Route } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
+
+const MasterHeader = () => (
+    <AppHeader>
+        <AppHeaderMenuButton />
+    </AppHeader>
+);
+
+const MasterMenu = () => (
+    <Menu>
+        <MenuItemRouterLink primary="This page" to="/example-page" icon={<Dashboard />} />
+    </Menu>
+);
+
+function stackDecorator(): Decorator {
+    return (Story) => {
+        return (
+            <Route
+                render={() => (
+                    <Stack topLevelTitle="Example Stack Root">
+                        <Story />
+                    </Stack>
+                )}
+            />
+        );
+    };
+}
+
+function masterLayoutDecorator(): Decorator {
+    return (Story) => {
+        return (
+            <MasterLayout menuComponent={MasterMenu} headerComponent={MasterHeader}>
+                <Story />
+            </MasterLayout>
+        );
+    };
+}
+
+export default {
+    title: "Docs/Best Practices/Grid and Form Layouts",
+    decorators: [masterLayoutDecorator(), stackDecorator(), storyRouterDecorator()],
+    parameters: {
+        layout: "none",
+        docs: {
+            inlineStories: false,
+            story: {
+                inline: false,
+                iframeHeight: 600,
+            },
+        },
+    },
+};
 
 const LOADING_DURATION = 1000;
 
@@ -86,53 +136,8 @@ const useData = () => {
     return { rows: loading ? [] : exampleRows, loading };
 };
 
-const MasterHeader = () => (
-    <AppHeader>
-        <AppHeaderMenuButton />
-    </AppHeader>
-);
-
-const MasterMenu = () => (
-    <Menu>
-        <MenuItemRouterLink primary="This page" to="/example-page" icon={<Dashboard />} />
-    </Menu>
-);
-
-function stackDecorator() {
-    return (Story: React.ComponentType, c: StoryContext) => {
-        return (
-            <Route
-                render={() => (
-                    <Stack topLevelTitle="Example Stack Root">
-                        <Story />
-                    </Stack>
-                )}
-            />
-        );
-    };
-}
-
-function masterLayoutDecorator() {
-    return (Story: React.ComponentType, c: StoryContext) => {
-        return (
-            <MasterLayout menuComponent={MasterMenu} headerComponent={MasterHeader}>
-                <Story />
-            </MasterLayout>
-        );
-    };
-}
-
-storiesOf("stories/bestPractices/gridAndFormLayouts", module)
-    .addParameters({
-        layout: "none",
-        docs: {
-            inlineStories: false,
-        },
-    })
-    .addDecorator(masterLayoutDecorator())
-    .addDecorator(stackDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("Simple form on a page", () => {
+export const SimpleFormOnAPage = {
+    render: () => {
         const Form = ({ id }: { id?: string }) => {
             const { rows, loading } = useData();
             const editingExistingItem = Boolean(id);
@@ -174,8 +179,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </MainContent>
             </SaveBoundary>
         );
-    })
-    .add("Large form on a page", () => {
+    },
+};
+
+export const LargeFormOnAPage = {
+    render: () => {
         const Form = ({ id }: { id?: string }) => {
             const { rows, loading } = useData();
             const editingExistingItem = Boolean(id);
@@ -226,8 +234,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </MainContent>
             </SaveBoundary>
         );
-    })
-    .add("Simple form in a Dialog", () => {
+    },
+};
+
+export const SimpleFormInADialog = {
+    render: () => {
         const Form = ({ id }: { id?: string }) => {
             const { rows, loading } = useData();
             const editingExistingItem = Boolean(id);
@@ -280,8 +291,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </MainContent>
             </SaveBoundary>
         );
-    })
-    .add("Large form in a Dialog", () => {
+    },
+};
+
+export const LargeFormInADialog = {
+    render: () => {
         const Form = ({ id }: { id?: string }) => {
             const { rows, loading } = useData();
             const editingExistingItem = Boolean(id);
@@ -345,8 +359,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </MainContent>
             </SaveBoundary>
         );
-    })
-    .add("Single Grid (full height)", () => {
+    },
+};
+
+export const SingleGridFullHeight = {
+    render: () => {
         const { rows, loading } = useData();
 
         const GridToolbar = () => {
@@ -378,8 +395,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </MainContent>
             </>
         );
-    })
-    .add("Single Grid (auto height)", () => {
+    },
+};
+
+export const SingleGridAutoHeight = {
+    render: () => {
         const { rows, loading } = useData();
 
         const GridToolbar = () => {
@@ -418,8 +438,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </MainContent>
             </>
         );
-    })
-    .add("Grid with Form Dialog", () => {
+    },
+};
+
+export const GridWithFormInADialog = {
+    render: () => {
         const Form = ({ id }: { id?: string }) => {
             const { rows, loading } = useData();
             const editingExistingItem = Boolean(id);
@@ -502,8 +525,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </Dialog>
             </>
         );
-    })
-    .add("Grid with Form Page", () => {
+    },
+};
+
+export const GridWithFormOnAPage = {
+    render: () => {
         const Form = ({ id }: { id?: string }) => {
             const { rows, loading } = useData();
             const editingExistingItem = Boolean(id);
@@ -610,8 +636,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </StackPage>
             </StackSwitch>
         );
-    })
-    .add("Nested Grids and Forms with Tabs", () => {
+    },
+};
+
+export const NestedGridsAndFormsWithTabs = {
+    render: () => {
         const Form = ({ id }: { id?: string }) => {
             const { rows, loading } = useData();
             const editingExistingItem = Boolean(id);
@@ -737,8 +766,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </Dialog>
             </>
         );
-    })
-    .add("Nested Form in Grid in Tabs in Grid", () => {
+    },
+};
+
+export const NestedFormInGridInTabsInGrid = {
+    render: () => {
         const Form = ({ id }: { id?: string }) => {
             const { rows, loading } = useData();
             const editingExistingItem = Boolean(id);
@@ -879,8 +911,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </Dialog>
             </>
         );
-    })
-    .add("Grid with selection and more actions menu", () => {
+    },
+};
+
+export const GridWithSelectionAndMoreActionsMenu = {
+    render: () => {
         const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
         const { rows, loading } = useData();
 
@@ -949,8 +984,11 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </MainContent>
             </>
         );
-    })
-    .add("Grid with selection in dialog", () => {
+    },
+};
+
+export const GridWithSelectionInDialog = {
+    render: () => {
         const [showDialog, setShowDialog] = useState(true); // In a real application, this would generally be `false` by default
         const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]); // TODO: Check why this is reset every time the dialog is opened. Is this only in storybook?
         const { rows, loading } = useData();
@@ -1027,7 +1065,8 @@ storiesOf("stories/bestPractices/gridAndFormLayouts", module)
                 </Dialog>
             </>
         );
-    });
+    },
+};
 
 // TODO: Use new/updated component: https://vivid-planet.atlassian.net/browse/COM-1231
 const FullHeightGridContainer = ({ children }: { children: ReactNode }) => {
