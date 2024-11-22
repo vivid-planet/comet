@@ -1,0 +1,75 @@
+import { Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import * as SplitButtonStories from "./SplitButton.stories";
+
+<Meta of={SplitButtonStories} />
+
+> ⚠️`SplitButton` is deprecated since v7 and shouldn't be used
+
+## Uncontrolled Split Button
+
+<Canvas>
+    <Story of={SplitButtonStories.Uncontrolled} />
+</Canvas>
+
+## Controlled Split Button
+
+<Canvas>
+    <Story of={SplitButtonStories.Controlled} />
+</Canvas>
+
+## LocalStorage Index
+
+<Canvas>
+    <Story of={SplitButtonStories.LocalStorageIndex} />
+</Canvas>
+
+## SessionStorage Index
+
+<Canvas>
+    <Story of={SplitButtonStories.SessionStorageIndex} />
+</Canvas>
+
+## One Button
+
+With only one Child the `SplitButton` automatically hides Split Button Selector, but it can be enabled by manually setting the `showSelectButton={true}`s
+
+<Canvas>
+    <Story of={SplitButtonStories.OneChild} />
+</Canvas>
+
+## One Button with select
+
+<Canvas>
+    <Story of={SplitButtonStories.OneChildWithSelect} />
+</Canvas>
+
+## One Button Disabled
+
+<Canvas>
+    <Story of={SplitButtonStories.OneChildDisabled} />
+</Canvas>
+
+## Color Change
+
+<Canvas>
+    <Story of={SplitButtonStories.ColorChange} />
+</Canvas>
+
+### Variant Change
+
+<Canvas>
+    <Story of={SplitButtonStories.VariantChange} />
+</Canvas>
+
+### Custom Component
+
+<Canvas>
+    <Story of={SplitButtonStories.CustomComponent} />
+</Canvas>
+
+### Override Popover props
+
+<Canvas>
+    <Story of={SplitButtonStories.OverridePopoverProps} />
+</Canvas>

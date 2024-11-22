@@ -1,0 +1,21 @@
+import { Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import * as ClipboardStories from "./clipboard.stories";
+
+<Meta of={ClipboardStories} />
+
+# Clipboard helpers
+
+Comet Admin contains small helpers to make the browser clipboard API easier to use.
+
+## writeClipboardText
+
+<Canvas>
+    <Story of={ClipboardStories.Write} />
+</Canvas>
+
+## readClipboardText
+
+<Canvas>
+    <Story of={ClipboardStories.Read} />
+</Canvas>

@@ -25,7 +25,7 @@
         "postinstall": "husky install",
         "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm recursive run lint",
-        "lint:root": "$npm_execpath prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}'",
+        "lint:root": "$npm_execpath prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
         "lint:eslint": "pnpm recursive run lint:eslint",
         "lint:tsc": "pnpm recursive run lint:tsc",
         "storybook": "dev-pm start storybook",
@@ -39,7 +39,8 @@
         "@comet/dev-process-manager": "^2.5.1",
         "@comet/eslint-plugin": "workspace:*",
         "@formatjs/cli": "^6.0.0",
-        "@types/node": "^18.0.0",
+        "@types/node": "^22.0.0",
+        "cspell": "^8.15.4",
         "dotenv-cli": "^7.0.0",
         "husky": "^7.0.4",
         "lint-staged": "^12.3.7",
@@ -50,7 +51,7 @@
     },
     "packageManager": "pnpm@8.15.5",
     "engines": {
-        "node": "18",
+        "node": "22",
         "pnpm": "8"
     },
     "dependencies": {
