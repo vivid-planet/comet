@@ -1,7 +1,7 @@
 import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
 import { Prop } from "../generateForm";
-import { FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
+import { Adornment, FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
@@ -21,6 +21,49 @@ function convertGqlScalarToTypescript(scalarName: string) {
         return "unknown";
     }
 }
+
+type AdornmentData = {
+    adornmentString: string;
+    adornmentImport?: { name: string; importPath: string };
+};
+
+const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): AdornmentData => {
+    let adornmentString = "";
+    let adornmentImport = { name: "", importPath: "" };
+
+    if (typeof adornmentData === "string") {
+        return { adornmentString: adornmentData };
+    }
+
+    if (typeof adornmentData.icon === "string") {
+        adornmentString = `<${adornmentData.icon}Icon />`;
+        adornmentImport = {
+            name: `${adornmentData.icon} as ${adornmentData.icon}Icon`,
+            importPath: "@comet/admin-icons",
+        };
+    } else if (typeof adornmentData.icon === "object") {
+        if ("import" in adornmentData.icon) {
+            adornmentString = `<${adornmentData.icon.name} />`;
+            adornmentImport = {
+                name: `${adornmentData.icon.name}`,
+                importPath: `${adornmentData.icon.import}`,
+            };
+        } else {
+            const { name, ...iconProps } = adornmentData.icon;
+            adornmentString = `<${name}Icon
+                ${Object.entries(iconProps)
+                    .map(([key, value]) => `${key}="${value}"`)
+                    .join("\n")}
+            />`;
+            adornmentImport = {
+                name: `${adornmentData.icon.name} as ${adornmentData.icon.name}Icon`,
+                importPath: "@comet/admin-icons",
+            };
+        }
+    }
+
+    return { adornmentString, adornmentImport };
+};
 
 function getTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
     let typeKind = undefined;
@@ -147,6 +190,27 @@ export function generateFormField({
 
     const fieldLabel = `<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />`;
 
+    let startAdornment: AdornmentData = { adornmentString: "" };
+    let endAdornment: AdornmentData = { adornmentString: "" };
+
+    if (config.startAdornment) {
+        startAdornment = getAdornmentData({
+            adornmentData: config.startAdornment,
+        });
+        if (startAdornment.adornmentImport) {
+            imports.push(startAdornment.adornmentImport);
+        }
+    }
+
+    if (config.endAdornment) {
+        endAdornment = getAdornmentData({
+            adornmentData: config.endAdornment,
+        });
+        if (endAdornment.adornmentImport) {
+            imports.push(endAdornment.adornmentImport);
+        }
+    }
+
     let code = "";
     let formValueToGqlInputCode = "";
     let formFragmentField = name;
@@ -160,6 +224,8 @@ export function generateFormField({
             fullWidth
             name="${nameWithPrefix}"
             label={${fieldLabel}}
+            ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+            ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` +
@@ -180,6 +246,8 @@ export function generateFormField({
                 component={FinalFormInput}
                 type="number"
                 label={${fieldLabel}}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
@@ -223,8 +291,8 @@ export function generateFormField({
                 min={${config.minValue}}
                 max={${config.maxValue}}
                 ${config.disableSlider ? "disableSlider" : ""}
-                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${config.startAdornment}</InputAdornment>}` : ""}
-                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${config.endAdornment}</InputAdornment>}` : ""}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
@@ -270,6 +338,8 @@ export function generateFormField({
                 name="${nameWithPrefix}"
                 component={FinalFormDatePicker}
                 label={${fieldLabel}}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +

@@ -2,14 +2,17 @@ import { gql, useQuery } from "@apollo/client";
 import { useFocusAwarePolling } from "@comet/admin";
 import { Pause, Play } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 
-storiesOf("stories/hooks/useFocusAwarePolling", module)
-    .addDecorator(apolloStoryDecorator(`https://api.spacex.land/graphql/`))
-    .add("Basic example", () => {
+export default {
+    title: "Docs/Hooks/useFocusAwarePolling",
+    decorators: [apolloStoryDecorator(`https://api.spacex.land/graphql/`)],
+};
+
+export const BasicExample = {
+    render: () => {
         const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
             gql`
                 query LaunchesPast {
@@ -49,8 +52,13 @@ storiesOf("stories/hooks/useFocusAwarePolling", module)
                 {error && <Typography color="error">Error: {JSON.stringify(error)}</Typography>}
             </>
         );
-    })
-    .add("With skip option", () => {
+    },
+
+    name: "Basic example",
+};
+
+export const WithSkipOption = {
+    render: () => {
         const [paused, setPaused] = React.useState(false);
 
         const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(
@@ -97,4 +105,7 @@ storiesOf("stories/hooks/useFocusAwarePolling", module)
                 {error && <Typography color="error">Error: {JSON.stringify(error)}</Typography>}
             </>
         );
-    });
+    },
+
+    name: "With skip option",
+};

@@ -1,5 +1,38 @@
 # @comet/cms-admin
 
+## 7.7.0
+
+### Minor Changes
+
+-   6cb498f51: Add search results highlighting to `ContentScopeSelect`
+
+    Also, add the helper function `findTextMatches`, which can be used to add search highlighting to a custom `renderOption` implementation:
+
+    ```tsx
+    <ContentScopeSelect
+        renderOption={(option, query) => {
+            const text = `${option.domain.label} – ${option.language.label}`;
+            const matches = findTextMatches(text, query);
+            return <ListItemText primary={<MarkedMatches text={text} matches={matches} />} />;
+        }}
+    />
+    ```
+
+### Patch Changes
+
+-   bb9215f25: Don't move files to a folder called "." when uploading them to the DAM
+
+    This bug only occurred in projects with a `react-dropzone` version >= 14.3.2.
+
+-   Updated dependencies [8ffc90eb1]
+-   Updated dependencies [a9d2e2e25]
+    -   @comet/blocks-admin@7.7.0
+    -   @comet/admin@7.7.0
+    -   @comet/admin-date-time@7.7.0
+    -   @comet/admin-icons@7.7.0
+    -   @comet/admin-rte@7.7.0
+    -   @comet/admin-theme@7.7.0
+
 ## 7.6.0
 
 ### Minor Changes

@@ -79,23 +79,23 @@ export class EnvironmentVariables {
     @IsString()
     BLOB_STORAGE_DIRECTORY_PREFIX: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_REGION: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_ENDPOINT: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_ACCESS_KEY_ID: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_SECRET_ACCESS_KEY: string;
 
-    @ValidateIf((v) => v.DAM_STORAGE_DRIVER === "s3")
+    @ValidateIf((v) => v.BLOB_STORAGE_DRIVER === "s3")
     @IsString()
     S3_BUCKET: string;
 

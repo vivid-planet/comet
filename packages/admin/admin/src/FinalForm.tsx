@@ -124,7 +124,10 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
     }: FormRenderProps<FormValues, InitialFormValues> & { formContext: Partial<FinalFormContext> }) {
         const subRoutePrefix = useSubRoutePrefix();
         const saveBoundaryApi = useSaveBoundaryApi();
-        if (props.apiRef) props.apiRef.current = formRenderProps.form as FormApi<FormValues, InitialFormValues>; // typ bug in https://github.com/final-form/react-final-form/blob/main/typescript/index.d.ts#L61, missing InitialValues
+        // Explicit cast to set InitialFormValues because FormRenderProps doesn't pass InitialFormValues to RenderableProps here:
+        // https://github.com/final-form/react-final-form/blob/main/typescript/index.d.ts#L56-L67.
+        // See https://github.com/final-form/react-final-form/pull/998.
+        if (props.apiRef) props.apiRef.current = formRenderProps.form as FormApi<FormValues, InitialFormValues>;
         const { mutators } = formRenderProps.form;
         const setFieldData = mutators.setFieldData as (...args: any[]) => any;
         const subRoutePath = props.subRoutePath ?? `${subRoutePrefix}/form`;
@@ -259,7 +262,7 @@ export function FinalForm<FormValues = AnyObject, InitialFormValues = Partial<Fo
             .then(
                 (data) => {
                     // for final-form undefined means success, an obj means error
-                    form.reset(props.initialValues);
+                    form.reset(values as unknown as InitialFormValues);
                     return undefined;
                 },
                 (error) => {

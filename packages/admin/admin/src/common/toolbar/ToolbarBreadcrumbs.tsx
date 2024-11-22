@@ -8,22 +8,6 @@ import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps
 import { useStackApi } from "../../stack/Api";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 
-// TODO: Remove debug code when we have stories for the new Toolbar to simulate a large stack
-const __DEBUG__numberOfPages = 6;
-const __DEBUG__dummyStackPages = [
-    { title: "Lorem ipsum", url: "/lorem-ipsum" },
-    { title: "Foo Bar", url: "/foo-bar" },
-    { title: "Nested page", url: "/nested-page" },
-    { title: "Another page", url: "/another-page" },
-    { title: "More nested pages", url: "/more-nested-pages" },
-    { title: "And even more nested pages", url: "/and-even-more-nested-pages" },
-    { title: "Foo", url: "/foo" },
-    { title: "Lorem", url: "/lorem" },
-    { title: "More pages", url: "/more-pages" },
-];
-const __DEBUG__usedNumberOfStackPages = __DEBUG__dummyStackPages.slice(0, __DEBUG__numberOfPages);
-const __DEBUG__useDebugBreadcrumbData = false;
-
 type ToolbarBreadcrumbsClassKey =
     | "root"
     | "breadcrumbsList"
@@ -71,7 +55,7 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
     const rootRef = useRef<HTMLDivElement>(null);
     const stackApi = useStackApi();
 
-    const breadcrumbs = __DEBUG__useDebugBreadcrumbData ? __DEBUG__usedNumberOfStackPages : stackApi?.breadCrumbs ?? [];
+    const breadcrumbs = stackApi?.breadCrumbs ?? [];
     const menuWidth = useObservedWidth(rootRef);
 
     if (!breadcrumbs.length) {
