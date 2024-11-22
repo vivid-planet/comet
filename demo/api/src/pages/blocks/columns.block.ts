@@ -1,5 +1,6 @@
 import { ColumnsBlockFactory, createBlocksBlock, SpaceBlock } from "@comet/blocks-api";
 import { DamImageBlock } from "@comet/cms-api";
+import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 
 import { HeadlineBlock } from "./headline.block";
@@ -11,6 +12,7 @@ const ColumnsContentBlock = createBlocksBlock(
             richtext: RichTextBlock,
             headline: HeadlineBlock,
             image: DamImageBlock,
+            linkList: LinkListBlock,
         },
     },
     "ColumnsContent",

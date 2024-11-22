@@ -21,6 +21,14 @@ export async function middleware(request: NextRequest) {
         return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
     }
 
+    if (pathname.startsWith("/dam/")) {
+        return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
+    }
+
+    if (request.nextUrl.pathname === "/admin" && process.env.ADMIN_URL) {
+        return NextResponse.redirect(new URL(process.env.ADMIN_URL));
+    }
+
     return NextResponse.next();
 }
 
