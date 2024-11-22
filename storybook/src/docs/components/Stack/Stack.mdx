@@ -1,4 +1,4 @@
-import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
+import { Canvas, Meta, Source } from "@storybook/addon-docs";
 import dedent from "ts-dedent";
 
 import * as StackStories from "./Stack.stories";
@@ -12,9 +12,7 @@ A single page will be displayed at a time.
 
 ## Stack Components
 
-<Canvas>
-    <Story of={StackStories.Basic} />
-</Canvas>
+<Canvas of={StackStories.Basic} />
 
 A stack consists of 3 components: `Stack`, `StackSwitch` and `StackPage`:
 
@@ -44,15 +42,11 @@ More infos on this functionality can be found in the [Routing Libraries section 
 
 #### Material UI Link with underlying StackLink
 
-<Canvas>
-    <Story of={StackStories.StackLinkMuiLink} />
-</Canvas>
+<Canvas of={StackStories.StackLinkMuiLink} />
 
 #### Material UI Button and IconButton with underlying StackLink
 
-<Canvas>
-    <Story of={StackStories.StackLinkButton} />
-</Canvas>
+<Canvas of={StackStories.StackLinkButton} />
 
 ### activatePage
 
@@ -106,17 +100,13 @@ The payload needs to be a string as it is used in the url.
 
 ### Example
 
-<Canvas>
-    <Story of={StackStories.Payload} />
-</Canvas>
+<Canvas of={StackStories.Payload} />
 
 ## Nested Stacks
 
 It is possible to nest `StackSwitch`, just render another `StackSwitch` (plus `StackPage`s) in a `StackPage`. You will get automatic Breadcrumbs showing this nesting.
 
-<Canvas>
-    <Story of={StackStories.Nested} />
-</Canvas>
+<Canvas of={StackStories.Nested} />
 
 A nested `Stack` component is usually not desired, as it will have it's own breadcrumbs.
 
@@ -126,9 +116,7 @@ A nested `Stack` component is usually not desired, as it will have it's own brea
 
 Comet Admin Stack provides a unique way to create a StackSwitch associated with its api using `useStackSwitch` hook:
 
-<Canvas>
-    <Story of={StackStories.UseStackSwitch} />
-</Canvas>
+<Canvas of={StackStories.UseStackSwitch} />
 
 ## Breadcrumbs
 
@@ -144,16 +132,12 @@ Simple components showing breadcrumbs of the current stack, see Nested Stacks ex
 
 Toolbar components that integrate stack nicely into the Comet Toolbar System.
 
-<Canvas>
-    <Story of={StackStories.BreadcrumbsToolbar} />
-</Canvas>
+<Canvas of={StackStories.BreadcrumbsToolbar} />
 
 ### Custom/Dynamic Breadcrumb Title
 
 Breadcrumbs by default show the title of the `StackPage`. If you want to show something dynamic based on the payload (like the name of the selected item) you can use `StackPageTitle` component:
 
-<Canvas>
-    <Story of={StackStories.DynamicTitle} />
-</Canvas>
+<Canvas of={StackStories.DynamicTitle} />
 
 You can also do a graphql query to fetch data needed for creating the title.

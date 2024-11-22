@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as NumberFieldStories from "./NumberField.stories";
 
@@ -10,20 +10,14 @@ The NumberField can be used for number inputs. It automatically formats the numb
 
 ## Basic usage
 
-<Canvas>
-    <Story of={NumberFieldStories.Basic} />
-</Canvas>
+<Canvas of={NumberFieldStories.Basic} />
 
 ## Usage with decimals
 
 The decimals prop is used to define, how many decimal digits the value should have.
 
-<Canvas>
-    <Story of={NumberFieldStories.WithDecimals} />
-</Canvas>
+<Canvas of={NumberFieldStories.WithDecimals} />
 
 ## Usage as Currency Field
 
-<Canvas>
-    <Story of={NumberFieldStories.Currency} />
-</Canvas>
+<Canvas of={NumberFieldStories.Currency} />

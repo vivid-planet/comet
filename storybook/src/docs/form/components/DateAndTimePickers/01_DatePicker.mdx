@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as DatePickerStories from "./01_DatePicker.stories";
 import DatePickerLocalisation from "./common/DatePickerLocalization.mdx";
@@ -17,12 +17,8 @@ The `value` prop and the value returned by `onChange` are a string in the format
 
 ## Basic usage
 
-<Canvas>
-    <Story of={DatePickerStories.Basic} />
-</Canvas>
+<Canvas of={DatePickerStories.Basic} />
 
 ## Usage inside a Final Form
 
-<Canvas>
-    <Story of={DatePickerStories.FinalForm} />
-</Canvas>
+<Canvas of={DatePickerStories.FinalForm} />
