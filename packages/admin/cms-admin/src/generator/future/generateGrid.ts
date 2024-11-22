@@ -325,9 +325,9 @@ export function generateGrid(
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         if (type == "dateTime") {
-            gridColumnType = "...gridColumnTypes.dateTime(intl),";
+            gridColumnType = "...dataGridDateTimeColumn,";
         } else if (type == "date") {
-            gridColumnType = "...gridColumnTypes.date(intl),";
+            gridColumnType = "...dataGridDateColumn,";
         } else if (type == "number") {
             gridType = "number";
         } else if (type == "boolean") {
@@ -490,7 +490,8 @@ export function generateGrid(
         GridFilterButton,
         GridCellContent,
         GridColDef,
-        gridColumnTypes,
+        dataGridDateTimeColumn,
+        dataGridDateColumn,
         renderStaticSelectCell,
         messages,
         muiGridFilterToGql,

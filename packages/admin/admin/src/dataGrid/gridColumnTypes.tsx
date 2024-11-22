@@ -1,19 +1,14 @@
 import { GridColTypeDef } from "@mui/x-data-grid";
-import { IntlShape } from "react-intl";
+import { FormattedDate } from "react-intl";
 
-const date = (intl: IntlShape): GridColTypeDef => ({
+export const dataGridDateColumn: GridColTypeDef = {
     type: "date",
     valueGetter: ({ value }) => value && new Date(value),
-    valueFormatter: ({ value }) => value && intl.formatDate(value, { dateStyle: "medium" }),
-});
+    renderCell: ({ value }) => <FormattedDate value={value} dateStyle="medium" />,
+};
 
-const dateTime = (intl: IntlShape): GridColTypeDef => ({
+export const dataGridDateTimeColumn: GridColTypeDef = {
     type: "dateTime",
     valueGetter: ({ value }) => value && new Date(value),
-    valueFormatter: ({ value }) => value && intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }),
-});
-
-export const gridColumnTypes = {
-    date,
-    dateTime,
+    renderCell: ({ value }) => <FormattedDate value={value} dateStyle="medium" timeStyle="short" />,
 };

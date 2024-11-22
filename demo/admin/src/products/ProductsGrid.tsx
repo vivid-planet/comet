@@ -2,12 +2,12 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
     GridCellContent,
     GridColDef,
     GridColumnsButton,
-    gridColumnTypes,
     GridFilterButton,
     MainContent,
     muiGridFilterToGql,
@@ -191,7 +191,7 @@ export function ProductsGrid() {
             minWidth: 80,
         },
         {
-            ...gridColumnTypes.date(intl),
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: "Available Since",
             width: 130,

@@ -3,10 +3,10 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
     GridColDef,
-    gridColumnTypes,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
@@ -107,7 +107,7 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
         { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
-            ...gridColumnTypes.date(intl),
+            ...dataGridDateColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
             flex: 1,
