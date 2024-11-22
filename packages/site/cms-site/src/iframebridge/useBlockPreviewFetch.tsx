@@ -9,8 +9,6 @@ const cachingFetch = createFetchInMemoryCache(fetch);
 export function useBlockPreviewFetch() {
     const { showOnlyVisible, graphQLApiUrl } = useIFrameBridge();
 
-    if (!graphQLApiUrl) throw new Error("graphQLApiUrl not available");
-
     const graphQLFetchRef = useRef(createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible));
     useEffect(() => {
         graphQLFetchRef.current = createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible);
@@ -21,6 +19,7 @@ export function useBlockPreviewFetch() {
     };
 }
 
-function createBlockPreviewFetch(graphqlApiUrl: string, includeInvisible: boolean) {
+function createBlockPreviewFetch(graphqlApiUrl: string | undefined, includeInvisible: boolean) {
+    if (!graphqlApiUrl) return undefined;
     return createGraphQLFetch(createFetchWithDefaults(cachingFetch, { headers: convertPreviewDataToHeaders({ includeInvisible }) }), graphqlApiUrl);
 }

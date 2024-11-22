@@ -13,6 +13,7 @@ const PreviewPage = () => {
     const [blockData, setBlockData] = useState<PageContentBlockData>();
     useEffect(() => {
         async function load() {
+            if (!graphQLFetch) return;
             if (!iFrameBridge.block) {
                 setBlockData(undefined);
                 return;
