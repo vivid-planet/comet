@@ -1,13 +1,13 @@
 import { ComponentProps } from "react";
 
-import { useIsLastVisibleSwitch } from "../../stack/useIsLastVisibleSwitch";
+import { useIsActiveStackSwitch } from "../../stack/useIsActiveStackSwitch";
 import { Toolbar } from "./Toolbar";
 
 export function StackToolbar(props: ComponentProps<typeof Toolbar>) {
-    const isLastVisibleSwitch = useIsLastVisibleSwitch();
+    const isActiveStackSwitch = useIsActiveStackSwitch();
 
     // When inside a Stack, only the last Toolbar should be shown
-    if (!isLastVisibleSwitch) {
+    if (!isActiveStackSwitch) {
         return null;
     }
 

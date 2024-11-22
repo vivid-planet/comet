@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { useIsLastVisibleSwitch } from "../stack/useIsLastVisibleSwitch";
+import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
 
@@ -105,10 +105,10 @@ declare module "@mui/material/styles" {
 }
 
 export const StackMainContent = ({ children, ...props }: MainContentProps) => {
-    const isLastVisibleSwitch = useIsLastVisibleSwitch();
+    const isActiveStackSwitch = useIsActiveStackSwitch();
 
     // When inside a Stack, only the last MainContent should add content-spacing and height
-    if (!isLastVisibleSwitch) {
+    if (!isActiveStackSwitch) {
         return <>{children}</>;
     }
 

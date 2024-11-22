@@ -1,7 +1,7 @@
 import { useStackApi } from "./Api";
 import { useStackSwitchApi } from "./Switch";
 
-export const useIsLastVisibleSwitch = () => {
+export const useIsActiveStackSwitch = () => {
     const stackApi = useStackApi();
     const stackSwitchApi = useStackSwitchApi();
 
