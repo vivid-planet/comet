@@ -12,19 +12,22 @@ import {
 import { Add } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Button } from "@mui/material";
-import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import { ExampleDataGrid } from "../helpers/ExampleDataGrid";
 import { masterLayoutDecorator, stackRouteDecorator } from "../helpers/storyDecorators";
 import { storyRouterDecorator } from "../story-router.decorator";
 
-storiesOf("@comet/admin/FullHeightContent", module)
-    .addParameters({ layout: "none" })
-    .addDecorator(masterLayoutDecorator())
-    .addDecorator(stackRouteDecorator())
-    .addDecorator(storyRouterDecorator())
-    .add("With Toolbar, MainContent and Tabs", () => (
+export default {
+    title: "@comet/admin/FullHeightContent",
+    decorators: [masterLayoutDecorator(), stackRouteDecorator(), storyRouterDecorator()],
+    parameters: {
+        layout: "none",
+    },
+};
+
+export const WithToolbarMainContentAndTabs = {
+    render: () => (
         <>
             <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                 <ToolbarBackButton />
@@ -52,4 +55,5 @@ storiesOf("@comet/admin/FullHeightContent", module)
                 </RouterTabs>
             </MainContent>
         </>
-    ));
+    ),
+};
