@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { createFetchInMemoryCache } from "../graphQLFetch/fetchInMemoryCache";
-import { createFetchWithPreviewHeaders, createGraphQLFetch } from "../graphQLFetch/graphQLFetch";
+import { convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch } from "../graphQLFetch/graphQLFetch";
 import { useIFrameBridge } from "./useIFrameBridge";
 
 const cachingFetch = createFetchInMemoryCache(fetch);
@@ -11,17 +11,16 @@ export function useBlockPreviewFetch() {
 
     if (!graphQLApiUrl) throw new Error("graphQLApiUrl not available");
 
-    const graphQLFetchRef = useRef(
-        createGraphQLFetch(createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !showOnlyVisible }), graphQLApiUrl),
-    );
+    const graphQLFetchRef = useRef(createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible));
     useEffect(() => {
-        graphQLFetchRef.current = createGraphQLFetch(
-            createFetchWithPreviewHeaders(cachingFetch, { includeInvisible: !showOnlyVisible }),
-            graphQLApiUrl,
-        );
+        graphQLFetchRef.current = createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible);
     }, [showOnlyVisible, graphQLApiUrl]);
     return {
         graphQLFetch: graphQLFetchRef.current,
         fetch: cachingFetch,
     };
+}
+
+function createBlockPreviewFetch(graphqlApiUrl: string, includeInvisible: boolean) {
+    return createGraphQLFetch(createFetchWithDefaults(cachingFetch, { headers: convertPreviewDataToHeaders({ includeInvisible }) }), graphqlApiUrl);
 }

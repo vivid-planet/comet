@@ -2,7 +2,7 @@
 
 import { createContext, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useDebouncedCallback } from "use-debounce";
+import { useDebounceCallback } from "usehooks-ts";
 
 import { AdminMessage, AdminMessageType, IFrameMessage, IFrameMessageType } from "./IFrameMessage";
 import { PreviewOverlay } from "./PreviewOverlay";
@@ -143,7 +143,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
         window.parent.postMessage(JSON.stringify(message), "*");
     };
 
-    const debounceDeactivateOutlines = useDebouncedCallback(() => {
+    const debounceDeactivateOutlines = useDebounceCallback(() => {
         setShowOutlines(false);
     }, 2500);
 

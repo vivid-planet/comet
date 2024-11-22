@@ -1,5 +1,5 @@
 import * as csv from "@fast-csv/parse";
-import { EntityManager, EntityRepository, MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/core";
 import type { FilterQuery } from "@mikro-orm/core/typings";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
@@ -37,7 +37,7 @@ export class ImportRedirectsConsole {
         command: "import-redirects [filepath] [comment]",
         description: "Import redirects from csv file",
     })
-    @UseRequestContext()
+    @CreateRequestContext()
     async execute(filepath: string, comment = "Imported"): Promise<void> {
         const rows = await this.readRedirectsCsv(filepath);
         let successes = 0;
