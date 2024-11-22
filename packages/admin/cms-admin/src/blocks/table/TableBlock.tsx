@@ -1,7 +1,6 @@
-import { OkayButton } from "@comet/admin";
-import { Edit } from "@comet/admin-icons";
+import { OkayButton, useStackApi } from "@comet/admin";
 import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
-import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -16,26 +15,24 @@ export const TableBlock: BlockInterface<TableBlockData, TableBlockData, TableBlo
     displayName: <FormattedMessage id="comet.blocks.table.displayName" defaultMessage="Table" />,
     category: BlockCategory.TextAndContent,
     AdminComponent: ({ state, updateState }) => {
+        const stackApi = useStackApi();
         const [showDialog, setShowDialog] = useState(true);
+
+        const closeTableBlock = () => {
+            setShowDialog(false);
+            stackApi?.goBack();
+        };
 
         return (
             <SelectPreviewComponent>
                 <BlocksFinalForm<TableBlockData> onSubmit={updateState} initialValues={state}>
-                    <Button onClick={() => setShowDialog(true)} variant="contained" color="primary" startIcon={<Edit />}>
-                        {/**
-                         * TODO: Remove the need for this button:
-                         * - The Dialog should open when navigating to the block
-                         * - The Dialog should contain the Save-Button to save the data and close the Dialog
-                         */}
-                        <FormattedMessage id="comet.tableBlock.temporary.edit" defaultMessage="Edit table" />
-                    </Button>
-                    <Dialog open={showDialog} maxWidth="xl" onClose={() => setShowDialog(false)}>
+                    <Dialog open={showDialog} maxWidth="xl" onClose={closeTableBlock}>
                         <DialogTitle>
                             <FormattedMessage id="comet.blocks.table.displayName" defaultMessage="Table" />
                         </DialogTitle>
                         <TableBlockGrid state={state} updateState={updateState} />
                         <DialogActions>
-                            <OkayButton onClick={() => setShowDialog(false)} />
+                            <OkayButton onClick={closeTableBlock} />
                         </DialogActions>
                     </Dialog>
                 </BlocksFinalForm>
