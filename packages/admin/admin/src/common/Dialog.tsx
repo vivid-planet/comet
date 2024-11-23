@@ -2,6 +2,7 @@ import { Close } from "@comet/admin-icons";
 import {
     ComponentsOverrides,
     css,
+    // eslint-disable-next-line no-restricted-imports
     Dialog as MuiDialog,
     DialogProps as MuiDialogProps,
     DialogTitle as MuiDialogTitle,
@@ -14,13 +15,12 @@ import { ReactNode } from "react";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type DialogClassKey = "root" | "iconButton" | "titleWrapper" | "dialogTitle";
+export type DialogClassKey = "root" | "closeButton" | "dialogTitle";
 
 export type DialogProps = ThemedComponentBaseProps<{
-    iconButton: typeof MuiIconButton;
+    closeButton: typeof MuiIconButton;
     root: typeof MuiDialog;
     dialogTitle: typeof MuiDialogTitle;
-    titleWrapper: "div";
 }> & {
     children?: ReactNode;
     title?: ReactNode;
@@ -29,6 +29,10 @@ export type DialogProps = ThemedComponentBaseProps<{
         closeIcon?: ReactNode;
     };
 } & MuiDialogProps;
+
+type OwnerState = {
+    hasClose: boolean;
+};
 
 export function Dialog(inProps: DialogProps) {
     const {
@@ -41,15 +45,18 @@ export function Dialog(inProps: DialogProps) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminDialog" });
     const { closeIcon = <Close color="inherit" /> } = iconMapping;
+    const ownerState: OwnerState = {
+        hasClose: Boolean(onClose),
+    };
     return (
         <Root open={open} {...slotProps?.root} {...restProps}>
-            <DialogTitle {...slotProps?.dialogTitle}>
-                <TitleWrapper {...slotProps?.titleWrapper}>{title}</TitleWrapper>
-                {onClose && (
-                    <IconButton {...slotProps?.iconButton} onClick={onClose}>
-                        {closeIcon}
-                    </IconButton>
-                )}
+            {onClose && (
+                <CloseButton {...slotProps?.closeButton} onClick={onClose}>
+                    {closeIcon}
+                </CloseButton>
+            )}
+            <DialogTitle ownerState={ownerState} {...slotProps?.dialogTitle}>
+                {title}
             </DialogTitle>
             {children}
         </Root>
@@ -61,32 +68,33 @@ const Root = createComponentSlot(MuiDialog)<DialogClassKey>({
     slotName: "root",
 })();
 
-const DialogTitle = createComponentSlot(MuiDialogTitle)<DialogClassKey>({
+const DialogTitle = createComponentSlot(MuiDialogTitle)<DialogClassKey, OwnerState>({
     componentName: "Dialog",
     slotName: "dialogTitle",
-})(css`
-    display: flex;
-    align-items: center;
-`);
+})(
+    ({ ownerState }) => css`
+        ${ownerState.hasClose &&
+        css`
+            padding-right: 40px;
+        `}
+        min-height: 20px;
+        display: flex;
+        align-items: center;
+    `,
+);
 
-const IconButton = createComponentSlot(MuiIconButton)<DialogClassKey>({
+const CloseButton = createComponentSlot(MuiIconButton)<DialogClassKey>({
     componentName: "Dialog",
-    slotName: "iconButton",
-})(css`
-    color: inherit;
-    position: absolute;
-    right: 20px;
-`);
-
-const TitleWrapper = createComponentSlot("div")<DialogClassKey>({
-    componentName: "Dialog",
-    slotName: "titleWrapper",
-})(css`
-    color: inherit;
-    width: 100%;
-    padding-right: 40px;
-    min-height: 20px;
-`);
+    slotName: "closeButton",
+})(
+    ({ theme }) => css`
+        position: absolute;
+        padding: 0;
+        right: 20px;
+        top: 20px;
+        color: ${theme.palette.secondary.contrastText};
+    `,
+);
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
