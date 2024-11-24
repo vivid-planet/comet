@@ -61,51 +61,37 @@ export function createUploadFileBody({ Scope }: { Scope: Type<DamScopeInterface>
     return UploadFileBody;
 }
 
-export interface ReplaceFileByIdBodyInterface {
+export class ReplaceFileByIdBody {
+    @IsString()
     fileId: string;
+
+    @IsOptional()
+    @IsString()
     title?: string;
+
+    @IsOptional()
+    @IsString()
     altText?: string;
+
+    @Transform(({ value }) => plainToInstance(LicenseInput, JSON.parse(value)))
+    @IsOptional()
+    @ClassTransformerType(() => LicenseInput)
+    @ValidateNested()
     license?: LicenseInput;
+
+    @Transform(({ value }) => plainToInstance(ImageCropAreaInput, JSON.parse(value)))
+    @IsOptional()
+    @ClassTransformerType(() => ImageCropAreaInput)
+    @ValidateNested()
     imageCropArea?: ImageCropAreaInput;
+
+    @IsString()
+    @IsNotEmpty()
+    @ValidateIf((input) => input.importSourceType !== undefined)
     importSourceId?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @ValidateIf((input) => input.importSourceId !== undefined)
     importSourceType?: string;
-}
-
-export function createReplaceFileByIdBody({ Scope }: { Scope: Type<DamScopeInterface> }): Type<ReplaceFileByIdBodyInterface> {
-    class ReplaceFileByIdBody implements ReplaceFileByIdBodyInterface {
-        @IsString()
-        fileId: string;
-
-        @IsOptional()
-        @IsString()
-        title?: string;
-
-        @IsOptional()
-        @IsString()
-        altText?: string;
-
-        @Transform(({ value }) => plainToInstance(LicenseInput, JSON.parse(value)))
-        @IsOptional()
-        @ClassTransformerType(() => LicenseInput)
-        @ValidateNested()
-        license?: LicenseInput;
-
-        @Transform(({ value }) => plainToInstance(ImageCropAreaInput, JSON.parse(value)))
-        @IsOptional()
-        @ClassTransformerType(() => ImageCropAreaInput)
-        @ValidateNested()
-        imageCropArea?: ImageCropAreaInput;
-
-        @IsString()
-        @IsNotEmpty()
-        @ValidateIf((input) => input.importSourceType !== undefined)
-        importSourceId?: string;
-
-        @IsString()
-        @IsNotEmpty()
-        @ValidateIf((input) => input.importSourceId !== undefined)
-        importSourceType?: string;
-    }
-
-    return ReplaceFileByIdBody;
 }

@@ -37,7 +37,7 @@ import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createReplaceFileByIdBody, createUploadFileBody, ReplaceFileByIdBodyInterface, UploadFileBodyInterface } from "./dto/file.body";
+import { createUploadFileBody, ReplaceFileByIdBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInput } from "./dto/file-upload.input";
 import { FileInterface } from "./entities/file.entity";
@@ -56,7 +56,6 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
     }
 
     const UploadFileBody = createUploadFileBody({ Scope });
-    const ReplaceFileByIdBody = createReplaceFileByIdBody({ Scope });
 
     @Controller("dam/files")
     @RequiredPermission(["dam"], { skipScopeCheck: true }) // Scope is checked in actions
@@ -162,7 +161,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
         async replaceById(
             @UploadedFile() file: FileUploadInput,
-            @Body() body: ReplaceFileByIdBodyInterface,
+            @Body() body: ReplaceFileByIdBody,
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
             @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
