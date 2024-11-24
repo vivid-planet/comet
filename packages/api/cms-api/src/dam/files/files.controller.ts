@@ -20,6 +20,7 @@ import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
+import { basename, extname } from "path";
 import { Readable } from "stream";
 
 import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
@@ -42,7 +43,7 @@ import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInput } from "./dto/file-upload.input";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
-import { calculatePartialRanges } from "./files.utils";
+import { calculatePartialRanges, slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
 const fileUrl = `:fileId/:filename`;
@@ -139,7 +140,11 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 }
             }
 
-            const fileToReplace = await this.filesService.findOneByFilenameAndFolder({ filename: file.originalname, folderId });
+            const extension = extname(file.originalname);
+            const filename = basename(file.originalname, extension);
+            const slugifiedFilename = slugifyFilename(filename, extension);
+
+            const fileToReplace = await this.filesService.findOneByFilenameAndFolder({ filename: slugifiedFilename, folderId });
             if (!fileToReplace) {
                 throw new NotFoundException(`File not found`);
             }
