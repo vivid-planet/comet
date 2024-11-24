@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { useErrorDialog } from "@comet/admin";
 import { ThreeDotSaving, Upload } from "@comet/admin-icons";
+import { Button } from "@mui/material";
 import axios, { CancelTokenSource } from "axios";
 import { useRef, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
@@ -10,7 +11,6 @@ import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { replaceById } from "../../form/file/upload";
 import { convertMimetypesToDropzoneAccept } from "../DataGrid/fileUpload/fileUpload.utils";
 import { DamFileDetails } from "./EditFile";
-import { ActionButton } from "./FilePreview";
 
 interface ReplaceFileButtonProps {
     file: DamFileDetails;
@@ -82,7 +82,8 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
 
     return (
         <>
-            <ActionButton
+            <Button
+                sx={{ color: "white" }}
                 startIcon={replaceLoading ? <ThreeDotSaving /> : <Upload />}
                 onClick={() => {
                     // Trigger file input with button click
@@ -90,7 +91,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 }}
             >
                 <FormattedMessage id="comet.dam.file.replaceFile" defaultMessage="Replace File" />
-            </ActionButton>
+            </Button>
             <input type="file" hidden {...getInputProps()} ref={fileInputRef} />
         </>
     );

@@ -32,10 +32,6 @@ const ActionsContainer = styled("div")`
     justify-content: center;
 `;
 
-export const ActionButton = styled(Button)`
-    color: white;
-`;
-
 const FileWrapper = styled(Paper)`
     padding: 20px;
     display: flex;
@@ -81,16 +77,18 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
     return (
         <FilePreviewWrapper>
             <ActionsContainer>
-                <ActionButton
+                <Button
+                    sx={{ color: "white" }}
                     startIcon={<Download />}
                     onClick={() => {
                         saveAs(file.fileUrl, file.name);
                     }}
                 >
                     <FormattedMessage id="comet.dam.file.downloadFile" defaultMessage="Download File" />
-                </ActionButton>
+                </Button>
                 <ReplaceFileButton file={file} />
-                <ActionButton
+                <Button
+                    sx={{ color: "white" }}
                     startIcon={file.archived ? <Restore /> : <Archive />}
                     onClick={() => {
                         if (file.archived) {
@@ -111,15 +109,16 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
                     ) : (
                         <FormattedMessage id="comet.dam.file.archive" defaultMessage="Archive" />
                     )}
-                </ActionButton>
-                <ActionButton
+                </Button>
+                <Button
+                    sx={{ color: "white" }}
                     startIcon={<Delete />}
                     onClick={() => {
                         setDeleteDialogOpen(true);
                     }}
                 >
                     <FormattedMessage id="comet.dam.file.delete" defaultMessage="Delete" />
-                </ActionButton>
+                </Button>
             </ActionsContainer>
             <FileWrapper>{preview}</FileWrapper>
             <ConfirmDeleteDialog
