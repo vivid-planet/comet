@@ -17,8 +17,6 @@ import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.ut
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
@@ -35,7 +33,6 @@ import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { FileValidationService } from "./file-validation.service";
 import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
@@ -109,7 +106,6 @@ export class FilesService {
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
-        @InjectRepository(DamFileImage) private readonly fileImagesRepository: EntityRepository<DamFileImage>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
@@ -117,8 +113,6 @@ export class FilesService {
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
-        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
-        private readonly fileValidationService: FileValidationService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
