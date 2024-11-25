@@ -1,5 +1,15 @@
 # @comet/cms-api
 
+## 6.17.16
+
+### Patch Changes
+
+-   ee5b5aebf: DAM: Fix/set cache-control headers
+
+    -   Public endpoints should cache files for 1 day
+    -   Private endpoints should cache files for 1 year - but only in local caches (not CDN)
+    -   @comet/blocks-api@6.17.16
+
 ## 6.17.15
 
 ### Patch Changes
