@@ -10,4 +10,4 @@ Add UI for Impersonation Feature
 -   Add button to allow users to switch on impersonation in the `UserGrid`
 -   Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
 -   Add util functions `startPersonation` and `stopPersonation`
--   Add `impersonate-user` icon
+-   Add `ImpersonateUser` icon
