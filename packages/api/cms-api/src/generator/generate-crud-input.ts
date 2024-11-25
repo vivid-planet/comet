@@ -64,7 +64,14 @@ export async function generateCrudInput(
         .filter((prop) => !options.excludeFields.includes(prop.name));
 
     let fieldsOut = "";
-    const imports: Imports = [];
+    const imports: Imports = [
+        { name: "IsSlug", importPath: "@comet/cms-api" },
+        { name: "RootBlockInputScalar", importPath: "@comet/cms-api" },
+        { name: "IsNullable", importPath: "@comet/cms-api" },
+        { name: "PartialType", importPath: "@comet/cms-api" },
+        { name: "BlockInputInterface", importPath: "@comet/cms-api" },
+        { name: "isBlockInputInterface", importPath: "@comet/cms-api" },
+    ];
     for (const prop of props) {
         let type = prop.type;
         const fieldName = prop.name;
@@ -413,7 +420,6 @@ export async function generateCrudInput(
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
 import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt, Min } from "class-validator";
-import { IsSlug, RootBlockInputScalar, IsNullable, PartialType, BlockInputInterface, isBlockInputInterface } from "@comet/cms-api";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { GraphQLDate } from "graphql-scalars";
 ${generateImportsCode(imports)}

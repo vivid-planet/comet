@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as TableDndOrderStories from "./07_TableDndOrder.stories";
 
@@ -19,6 +19,4 @@ For most use cases, you can wrap the `TableDndOrder` in a `TableLocalChanges` co
 `TableLocalChanges` provides a built-in `moveRow()` function for simple reordering (amongst other convenience functions).
 You can see it in action in the example below.
 
-<Canvas>
-    <Story of={TableDndOrderStories._TableDndOrder} />
-</Canvas>
+<Canvas of={TableDndOrderStories._TableDndOrder} />

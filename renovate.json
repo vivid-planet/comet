@@ -3,10 +3,6 @@
     "extends": ["config:recommended", ":semanticCommitsDisabled"],
     "packageRules": [
         {
-            "groupName": "types",
-            "matchPackageNames": ["/@types/*/"]
-        },
-        {
             "groupName": "babel",
             "matchPackageNames": ["/@babel/*/"]
         },

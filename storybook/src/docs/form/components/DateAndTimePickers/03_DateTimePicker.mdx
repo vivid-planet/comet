@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as DateTimePickerStories from "./03_DateTimePicker.stories";
 import DatePickerLocalisation from "./common/DatePickerLocalization.mdx";
@@ -17,12 +17,8 @@ The `value` prop and the value returned by `onChange` are of type `Date`.
 
 ## Basic usage
 
-<Canvas>
-    <Story of={DateTimePickerStories.Basic} />
-</Canvas>
+<Canvas of={DateTimePickerStories.Basic} />
 
 ## Usage inside a Final Form
 
-<Canvas>
-    <Story of={DateTimePickerStories.FinalForm} />
-</Canvas>
+<Canvas of={DateTimePickerStories.FinalForm} />

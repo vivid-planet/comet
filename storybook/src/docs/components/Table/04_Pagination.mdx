@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as PaginationStories from "./04_Pagination.stories";
 
@@ -27,6 +27,4 @@ Comet Admin supports multiple types of pagination:
 -   Offset-based Pagination for REST APIs (`createRestStartLimitPagingActions()`)
 -   Page-based Pagination for REST APIs (`createRestPagingActions()`)
 
-<Canvas>
-    <Story of={PaginationStories.PaginationTable} />
-</Canvas>
+<Canvas of={PaginationStories.PaginationTable} />
