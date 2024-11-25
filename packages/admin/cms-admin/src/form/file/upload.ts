@@ -40,6 +40,9 @@ function uploadOrReplace<ResponseData>({
         formData.append("importSourceId", data.importSourceId);
         formData.append("importSourceType", data.importSourceType);
     }
+    if (data.license) {
+        formData.append("license", JSON.stringify(data.license));
+    }
     if (data.folderId !== undefined) {
         formData.append("folderId", data.folderId);
     }
