@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as AppHeaderStories from "./AppHeader.stories";
 
@@ -11,9 +11,7 @@ It should contain the controls for the main-menu and other commonly needed actio
 
 _**Note:** When using the component inside `MasterLayout`, the props `position` and `headerHeight` should not be set, they may only be useful, if the component is used on it's own._
 
-<Canvas>
-    <Story of={AppHeaderStories.Basic} />
-</Canvas>
+<Canvas of={AppHeaderStories.Basic} />
 
 ## Components
 
@@ -29,52 +27,36 @@ The AppHeader system consists of multiple basic components that can be combined 
 
 `AppHeader` gives you a blank header, to which you can add things like a menu-button, a application-specific logo and buttons to the `children`.
 
-<Canvas>
-    <Story of={AppHeaderStories.Empty} />
-</Canvas>
+<Canvas of={AppHeaderStories.Empty} />
 
 ### AppHeaderMenuButton
 
 `AppHeaderMenuButton` will give you the default menu-button.
 Optionally you can add a custom icon as `children` or add a custom `onClick` if you want it to do something other than toggling the menu in `MasterLayout`.
 
-<Canvas>
-    <Story of={AppHeaderStories.MenuButton} />
-</Canvas>
+<Canvas of={AppHeaderStories.MenuButton} />
 
 ### AppHeaderFillSpace
 
 The `AppHeaderFillSpace` component is used to separate the left and right elements of the `AppHeader` children.
 Basically everything after `AppHeaderFillSpace` is pushed to the right of the `AppHeader`.
 
-<Canvas>
-    <Story of={AppHeaderStories.FillSpace} />
-</Canvas>
+<Canvas of={AppHeaderStories.FillSpace} />
 
 ### AppHeaderButton
 
 `AppHeaderButton` should generally be used for buttons on the right side of the `AppHeader`.
 
-<Canvas>
-    <Story of={AppHeaderStories.ButtonText} />
-</Canvas>
+<Canvas of={AppHeaderStories.ButtonText} />
 
-<Canvas>
-    <Story of={AppHeaderStories.ButtonTextAndIcon} />
-</Canvas>
+<Canvas of={AppHeaderStories.ButtonTextAndIcon} />
 
-<Canvas>
-    <Story of={AppHeaderStories.ButtonIcon} />
-</Canvas>
+<Canvas of={AppHeaderStories.ButtonIcon} />
 
-<Canvas>
-    <Story of={AppHeaderStories.CustomButton} />
-</Canvas>
+<Canvas of={AppHeaderStories.CustomButton} />
 
 ### AppHeaderDropdown
 
 `AppHeaderDropdown` can be used for dropdown menus or other dropdown content.
 
-<Canvas>
-    <Story of={AppHeaderStories.Dropdown} />
-</Canvas>
+<Canvas of={AppHeaderStories.Dropdown} />

@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as SplitButtonStories from "./SplitButton.stories";
 
@@ -8,68 +8,46 @@ import * as SplitButtonStories from "./SplitButton.stories";
 
 ## Uncontrolled Split Button
 
-<Canvas>
-    <Story of={SplitButtonStories.Uncontrolled} />
-</Canvas>
+<Canvas of={SplitButtonStories.Uncontrolled} />
 
 ## Controlled Split Button
 
-<Canvas>
-    <Story of={SplitButtonStories.Controlled} />
-</Canvas>
+<Canvas of={SplitButtonStories.Controlled} />
 
 ## LocalStorage Index
 
-<Canvas>
-    <Story of={SplitButtonStories.LocalStorageIndex} />
-</Canvas>
+<Canvas of={SplitButtonStories.LocalStorageIndex} />
 
 ## SessionStorage Index
 
-<Canvas>
-    <Story of={SplitButtonStories.SessionStorageIndex} />
-</Canvas>
+<Canvas of={SplitButtonStories.SessionStorageIndex} />
 
 ## One Button
 
 With only one Child the `SplitButton` automatically hides Split Button Selector, but it can be enabled by manually setting the `showSelectButton={true}`s
 
-<Canvas>
-    <Story of={SplitButtonStories.OneChild} />
-</Canvas>
+<Canvas of={SplitButtonStories.OneChild} />
 
 ## One Button with select
 
-<Canvas>
-    <Story of={SplitButtonStories.OneChildWithSelect} />
-</Canvas>
+<Canvas of={SplitButtonStories.OneChildWithSelect} />
 
 ## One Button Disabled
 
-<Canvas>
-    <Story of={SplitButtonStories.OneChildDisabled} />
-</Canvas>
+<Canvas of={SplitButtonStories.OneChildDisabled} />
 
 ## Color Change
 
-<Canvas>
-    <Story of={SplitButtonStories.ColorChange} />
-</Canvas>
+<Canvas of={SplitButtonStories.ColorChange} />
 
 ### Variant Change
 
-<Canvas>
-    <Story of={SplitButtonStories.VariantChange} />
-</Canvas>
+<Canvas of={SplitButtonStories.VariantChange} />
 
 ### Custom Component
 
-<Canvas>
-    <Story of={SplitButtonStories.CustomComponent} />
-</Canvas>
+<Canvas of={SplitButtonStories.CustomComponent} />
 
 ### Override Popover props
 
-<Canvas>
-    <Story of={SplitButtonStories.OverridePopoverProps} />
-</Canvas>
+<Canvas of={SplitButtonStories.OverridePopoverProps} />

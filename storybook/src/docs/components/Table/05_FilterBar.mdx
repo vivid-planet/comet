@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as FilterBarStories from "./05_FilterBar.stories";
 
@@ -17,9 +17,7 @@ To implement various filters, stick to the following steps:
 4. add filters to the `FilterBar`. A filter typically consists of a `FilterBarPopoverFilter` with one or multiple `Field`s
 5. use the values of `filterApi` for filtering. Typically, this will happen by passing them as variables to a GraphQL query (in the following example, filtering is done on the client-side for simplicity reasons)
 
-<Canvas>
-    <Story of={FilterBarStories.TableWithFilterbar} />
-</Canvas>
+<Canvas of={FilterBarStories.TableWithFilterbar} />
 
 ## Filterbar and Persisted State
 
@@ -30,6 +28,4 @@ To prevent this behaviour, you can pass a `persistedStateId` to the `useTableQue
 Then, the filters are saved in a global variable once the user leaves the table page.
 When the user returns, the filters are recovered from the global variable.
 
-<Canvas>
-    <Story of={FilterBarStories.TableWithFilterbarAndPersistedState} />
-</Canvas>
+<Canvas of={FilterBarStories.TableWithFilterbarAndPersistedState} />
