@@ -60,21 +60,16 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
     const breadcrumbs = stackApi?.breadCrumbs ?? [];
     const menuWidth = useObservedWidth(rootRef);
 
-    if (!breadcrumbs.length) {
-        return null;
-    }
-
-    const lastBreadcrumb = breadcrumbs[breadcrumbs.length - 1];
-
     const toggleMobileMenu = () => {
         setShowMobileMenu((val) => !val);
     };
 
     const itemSeparator = <BreadcrumbsItemSeparator>{itemSeparatorIcon}</BreadcrumbsItemSeparator>;
 
+    const lastBreadcrumbTitle = breadcrumbs.length ? breadcrumbs[breadcrumbs.length - 1].title : null;
     const currentBreadcrumbItem = (
         <CurrentBreadcrumbsItem variant="body2" {...slotProps?.currentBreadcrumbsItem}>
-            {lastBreadcrumb.title}
+            {lastBreadcrumbTitle}
         </CurrentBreadcrumbsItem>
     );
 
@@ -317,6 +312,10 @@ const MobileMenu = createComponentSlot(Menu)<ToolbarBreadcrumbsClassKey>({
     slotName: "mobileMenu",
 })(
     ({ theme }) => css`
+        .MuiPopover-paper {
+            min-width: 220px;
+        }
+
         .MuiMenu-list {
             padding-top: ${theme.spacing(3)};
             padding-bottom: ${theme.spacing(3)};
