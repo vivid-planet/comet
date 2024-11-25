@@ -17,8 +17,8 @@ import {
     OptionalBlockInputInterface,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
+    WarningSeverity,
 } from "@comet/blocks-api";
-import { WarningSeverity } from "@comet/blocks-api/lib/blocks/block";
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsJSON, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
