@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as FileDropzoneStories from "./FileDropzone.stories";
 
@@ -14,12 +14,8 @@ A wrapper around [react-dropzone](https://www.npmjs.com/package/react-dropzone) 
 -   Use the `disabled` and `hasError` props to manage the disabled and error states.
 -   Use the `hideDroppableArea` and `hideButton` props to hide the droppable area and button, respectively.
 
-<Canvas>
-    <Story of={FileDropzoneStories.Default} />
-</Canvas>
+<Canvas of={FileDropzoneStories.Default} />
 
 ### Example of disabled and error states
 
-<Canvas>
-    <Story of={FileDropzoneStories.DisabledAndErrorStates} />
-</Canvas>
+<Canvas of={FileDropzoneStories.DisabledAndErrorStates} />

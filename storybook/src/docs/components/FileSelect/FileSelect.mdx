@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as FileSelectStories from "./FileSelect.stories";
 
@@ -16,18 +16,12 @@ Used to combine `FileDropzone` and `FileSelectListItem` to handle the user's sel
 -   Set the `layout` prop to `grid` to display the files as a grid of cards with a file preview.
 -   Limit the amount of files and the size of the individual files with the `maxFiles` and `maxFileSize` props.
 
-<Canvas>
-    <Story of={FileSelectStories.Basic} />
-</Canvas>
+<Canvas of={FileSelectStories.Basic} />
 
 ### ReadOnly FileSelect
 
-<Canvas>
-    <Story of={FileSelectStories.Readonly} />
-</Canvas>
+<Canvas of={FileSelectStories.Readonly} />
 
 ### ReadOnly FileSelect (Grid with preview)
 
-<Canvas>
-    <Story of={FileSelectStories.GridWithPreview} />
-</Canvas>
+<Canvas of={FileSelectStories.GridWithPreview} />

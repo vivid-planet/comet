@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as HoverActionsStories from "./HoverActions.stories";
 
@@ -12,6 +12,4 @@ For example, a `CopyToClipboardButton` inside a table cell.
 _Note: `HoverActions` uses absolute positioning to show the actions when hovering above the parent.  
 This may require setting `position: relative` to the parent to prevent overlaying other content._
 
-<Canvas>
-    <Story of={HoverActionsStories.Basic} />
-</Canvas>
+<Canvas of={HoverActionsStories.Basic} />
