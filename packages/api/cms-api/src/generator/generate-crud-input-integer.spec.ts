@@ -8,7 +8,7 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntityWithIntegerTypes extends BaseEntity<TestEntityWithIntegerTypes, "id"> {
+class TestEntityWithIntegerTypes extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

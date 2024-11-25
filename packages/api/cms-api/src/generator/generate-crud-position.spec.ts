@@ -11,7 +11,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntityWithPositionField extends BaseEntity<TestEntityWithPositionField, "id"> {
+class TestEntityWithPositionField extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -27,7 +27,7 @@ export class TestEntityScope {
     language: string;
 }
 @Entity()
-class TestEntityWithPositionFieldAndScope extends BaseEntity<TestEntityWithPositionFieldAndScope, "id"> {
+class TestEntityWithPositionFieldAndScope extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -42,7 +42,7 @@ class TestEntityWithPositionFieldAndScope extends BaseEntity<TestEntityWithPosit
 
 @Entity()
 @CrudGenerator({ targetDirectory: __dirname, position: { groupByFields: ["country"] } })
-class TestEntityWithPositionGroup extends BaseEntity<TestEntityWithPositionGroup, "id"> {
+class TestEntityWithPositionGroup extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

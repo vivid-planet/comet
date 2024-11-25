@@ -25,7 +25,7 @@ class AnyEntity {
 
     @RootBlock(DamImageBlock)
     // highlight-next-line
-    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Property({ type: new RootBlockType(DamImageBlock) })
     image: BlockDataInterface;
 }
 ```

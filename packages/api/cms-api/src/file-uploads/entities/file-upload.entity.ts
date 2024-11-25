@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 
 @ObjectType("FileUpload")
 @Entity({ tableName: "CometFileUpload" })
-export class FileUpload extends BaseEntity<FileUpload, "id"> {
+export class FileUpload extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @Field(() => ID)

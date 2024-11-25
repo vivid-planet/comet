@@ -16,7 +16,7 @@ registerEnumType(TestEnum, {
 });
 
 @Entity()
-class TestEntity extends BaseEntity<TestEntity, "id"> {
+class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

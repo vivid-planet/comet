@@ -8,18 +8,18 @@ import { v4 as uuid } from "uuid";
 @Entity()
 @ObjectType()
 @RootBlockEntity()
-export class MainMenuItem extends BaseEntity<MainMenuItem, "id"> {
+export class MainMenuItem extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
 
-    @OneToOne({ joinColumn: "nodeId", onDelete: "CASCADE" })
+    @OneToOne({ joinColumn: "nodeId", deleteRule: "CASCADE" })
     @Field(() => PageTreeNode)
     node: PageTreeNode;
 
-    @Property({ customType: new RootBlockType(RichTextBlock), nullable: true })
+    @Property({ type: new RootBlockType(RichTextBlock), nullable: true })
     @RootBlock(RichTextBlock)
     @Field(() => RootBlockDataScalar(RichTextBlock), { nullable: true })
     content: BlockDataInterface | null;

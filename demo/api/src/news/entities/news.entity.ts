@@ -52,7 +52,7 @@ export class NewsContentScope {
 @ObjectType()
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class News extends BaseEntity<News, "id"> {
+export class News extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt" | "status";
 
     @PrimaryKey({ type: "uuid" })
@@ -84,12 +84,12 @@ export class News extends BaseEntity<News, "id"> {
     category: NewsCategory;
 
     @RootBlock(DamImageBlock)
-    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Property({ type: new RootBlockType(DamImageBlock) })
     @Field(() => RootBlockDataScalar(DamImageBlock))
     image: BlockDataInterface;
 
     @RootBlock(NewsContentBlock)
-    @Property({ customType: new RootBlockType(NewsContentBlock) })
+    @Property({ type: new RootBlockType(NewsContentBlock) })
     @Field(() => RootBlockDataScalar(NewsContentBlock))
     content: BlockDataInterface;
 

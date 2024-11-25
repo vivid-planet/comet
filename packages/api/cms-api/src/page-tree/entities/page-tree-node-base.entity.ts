@@ -6,7 +6,7 @@ import { PageTreeNodeCategory, PageTreeNodeVisibility } from "../types";
 
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))
-export abstract class PageTreeNodeBase extends BaseEntity<PageTreeNodeBase, "id"> {
+export abstract class PageTreeNodeBase extends BaseEntity {
     static tableName = "PageTreeNode";
     [OptionalProps]?: "createdAt" | "updatedAt" | "hideInMenu";
 

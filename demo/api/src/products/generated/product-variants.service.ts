@@ -2,7 +2,7 @@
 // You may choose to use this file as scaffold by moving this file out of generated folder and removing this comment.
 import { FilterQuery } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, raw } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 
 import { ProductVariant } from "../entities/product-variant.entity";
@@ -23,7 +23,7 @@ export class ProductVariantsService {
                     this.getPositionGroupCondition(group),
                 ],
             },
-            { position: this.entityManager.raw("position + 1") },
+            { position: raw("position + 1") },
         );
     }
 
@@ -36,7 +36,7 @@ export class ProductVariantsService {
                     this.getPositionGroupCondition(group),
                 ],
             },
-            { position: this.entityManager.raw("position - 1") },
+            { position: raw("position - 1") },
         );
     }
 

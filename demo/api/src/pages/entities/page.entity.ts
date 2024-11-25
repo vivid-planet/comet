@@ -24,7 +24,7 @@ import { SeoBlock } from "../blocks/seo.block";
 })
 @RootBlockEntity()
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
-export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
+export class Page extends BaseEntity implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ columnType: "uuid" })
@@ -32,12 +32,12 @@ export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
     id: string = uuid();
 
     @RootBlock(PageContentBlock)
-    @Property({ customType: new RootBlockType(PageContentBlock) })
+    @Property({ type: new RootBlockType(PageContentBlock) })
     @Field(() => RootBlockDataScalar(PageContentBlock))
     content: BlockDataInterface;
 
     @RootBlock(SeoBlock)
-    @Property({ customType: new RootBlockType(SeoBlock) })
+    @Property({ type: new RootBlockType(SeoBlock) })
     @Field(() => RootBlockDataScalar(SeoBlock))
     seo: BlockDataInterface;
 

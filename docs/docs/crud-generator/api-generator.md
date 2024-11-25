@@ -14,7 +14,7 @@ The API Generator uses the entity and the fields defined within it to generate r
 
 ```ts
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> implements DocumentInterface {
+export class Product extends BaseEntity implements DocumentInterface {
     ...
 }
 ```

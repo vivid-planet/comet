@@ -112,7 +112,7 @@ export class PageTreeService {
             throw new CometValidationException("Slug leads to duplicate path");
         }
 
-        const { attachedDocument: attachedDocumentInput, ...restInput } = input;
+        const { attachedDocument: attachedDocumentInput, createAutomaticRedirectsOnSlugChange, ...restInput } = input;
 
         existingNode.assign(restInput);
 

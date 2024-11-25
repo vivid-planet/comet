@@ -145,7 +145,7 @@ export class ProductVariantResolver {
 
     @ResolveField(() => Product)
     async product(@Parent() productVariant: ProductVariant): Promise<Product> {
-        return productVariant.product.load();
+        return productVariant.product.loadOrFail();
     }
 
     @ResolveField(() => RootBlockDataScalar(DamImageBlock))

@@ -8,7 +8,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityArrayString extends BaseEntity<TestEntityArrayString, "id"> {
+export class TestEntityArrayString extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

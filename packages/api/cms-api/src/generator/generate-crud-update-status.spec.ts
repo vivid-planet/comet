@@ -17,7 +17,7 @@ export enum TestEntity1Status {
 registerEnumType(TestEntity1Status, { name: "TestEntity1Status" });
 
 @Entity()
-class TestEntity1 extends BaseEntity<TestEntity1, "id"> {
+class TestEntity1 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -110,7 +110,7 @@ export enum TestEntity2Status {
 registerEnumType(TestEntity2Status, { name: "TestEntity2Status" });
 
 @Entity()
-class TestEntity2 extends BaseEntity<TestEntity2, "id"> {
+class TestEntity2 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -174,7 +174,7 @@ export enum TestEntity3Status {
 registerEnumType(TestEntity3Status, { name: "TestEntity3Status" });
 
 @Entity()
-class TestEntity3 extends BaseEntity<TestEntity3, "id"> {
+class TestEntity3 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

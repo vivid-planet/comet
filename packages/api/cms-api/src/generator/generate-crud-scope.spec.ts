@@ -11,7 +11,7 @@ import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 @ScopedEntity<TestEntityWithScopedEntity>((entity) => {
     return { language: entity.langauge };
 })
-export class TestEntityWithScopedEntity extends BaseEntity<TestEntityWithScopedEntity, "id"> {
+export class TestEntityWithScopedEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -56,7 +56,7 @@ export class TestEntityScope {
 }
 
 @Entity()
-export class TestEntityWithScope extends BaseEntity<TestEntityWithScope, "id"> {
+export class TestEntityWithScope extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

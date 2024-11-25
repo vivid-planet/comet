@@ -41,7 +41,7 @@ class IsSlugConstraint implements ValidatorConstraintInterface {
 }
 
 @Entity()
-export class TestEntityWithEmail extends BaseEntity<TestEntityWithEmail, "id"> {
+export class TestEntityWithEmail extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -52,7 +52,7 @@ export class TestEntityWithEmail extends BaseEntity<TestEntityWithEmail, "id"> {
 }
 
 @Entity()
-export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity<TestEntityWithCaseSensitiveConstraintName, "id"> {
+export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -62,7 +62,7 @@ export class TestEntityWithCaseSensitiveConstraintName extends BaseEntity<TestEn
 }
 
 @Entity()
-export class TestEntityWithShortenedDecoratorName extends BaseEntity<TestEntityWithShortenedDecoratorName, "id"> {
+export class TestEntityWithShortenedDecoratorName extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -72,7 +72,7 @@ export class TestEntityWithShortenedDecoratorName extends BaseEntity<TestEntityW
 }
 
 @Entity()
-export class TestEntityWithRelativeImportDecorator extends BaseEntity<TestEntityWithRelativeImportDecorator, "id"> {
+export class TestEntityWithRelativeImportDecorator extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -82,7 +82,7 @@ export class TestEntityWithRelativeImportDecorator extends BaseEntity<TestEntity
 }
 
 @Entity()
-export class TestEntityWithValidatorDefinedInFile extends BaseEntity<TestEntityWithValidatorDefinedInFile, "id"> {
+export class TestEntityWithValidatorDefinedInFile extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

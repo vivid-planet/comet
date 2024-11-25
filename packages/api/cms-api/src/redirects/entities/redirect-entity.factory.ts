@@ -47,7 +47,7 @@ export class RedirectEntityFactory {
             source: string;
 
             @RootBlock(linkBlock)
-            @Property({ customType: new RootBlockType(linkBlock) })
+            @Property({ type: new RootBlockType(linkBlock) })
             @Field(() => GraphQLJSONObject)
             target: BlockDataInterface;
 

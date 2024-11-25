@@ -28,7 +28,7 @@ export class NewsContentScope {
 }
 
 @Entity()
-export class News extends BaseEntity<News, "id"> {
+export class News extends BaseEntity {
     @Embedded(() => NewsContentScope)
     @Field(() => NewsContentScope)
     scope: NewsContentScope;

@@ -8,7 +8,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id"> {
+export class TestEntityWithString extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -16,7 +16,7 @@ export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id">
     title: string;
 }
 @Entity()
-export class TestEntityWithDate extends BaseEntity<TestEntityWithDate, "id"> {
+export class TestEntityWithDate extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -24,7 +24,7 @@ export class TestEntityWithDate extends BaseEntity<TestEntityWithDate, "id"> {
     foo: Date;
 }
 @Entity()
-export class TestEntityWithBoolean extends BaseEntity<TestEntityWithBoolean, "id"> {
+export class TestEntityWithBoolean extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -42,7 +42,7 @@ registerEnumType(TestEnumType, {
 });
 @Entity()
 @ObjectType()
-export class TestEntityWithEnum extends BaseEntity<TestEntityWithEnum, "id"> {
+export class TestEntityWithEnum extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -52,7 +52,7 @@ export class TestEntityWithEnum extends BaseEntity<TestEntityWithEnum, "id"> {
 }
 
 @Entity()
-export class TestEntityWithUuid extends BaseEntity<TestEntityWithUuid, "id"> {
+export class TestEntityWithUuid extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -61,7 +61,7 @@ export class TestEntityWithUuid extends BaseEntity<TestEntityWithUuid, "id"> {
 }
 
 @Entity()
-export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithTextRuntimeType, "id"> {
+export class TestEntityWithTextRuntimeType extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -70,7 +70,7 @@ export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithText
 }
 
 @Entity()
-export class TestEntityWithNullablePropWithInitializer extends BaseEntity<TestEntityWithNullablePropWithInitializer, "id"> {
+export class TestEntityWithNullablePropWithInitializer extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -79,7 +79,7 @@ export class TestEntityWithNullablePropWithInitializer extends BaseEntity<TestEn
 }
 
 @Entity()
-export class TestEntityWithNullablePropWithoutInitializer extends BaseEntity<TestEntityWithNullablePropWithoutInitializer, "id"> {
+export class TestEntityWithNullablePropWithoutInitializer extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

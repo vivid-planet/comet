@@ -13,7 +13,7 @@ import { CurrentUser } from "../dto/current-user";
 import { UserPermissionsGuard } from "./user-permissions.guard";
 
 @Entity()
-class TestEntity extends BaseEntity<TestEntity, "id"> {
+class TestEntity extends BaseEntity {
     @PrimaryKey()
     id: number;
 }

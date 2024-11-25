@@ -13,7 +13,7 @@ export class TestEntityScope {
 }
 
 @Entity()
-export class TestEntity extends BaseEntity<TestEntity, "id"> {
+export class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

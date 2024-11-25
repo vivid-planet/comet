@@ -7,7 +7,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
+export class ProductCategory extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -16,7 +16,7 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
 }
 
 @Entity()
-export class Product extends BaseEntity<Product, "id"> {
+export class Product extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

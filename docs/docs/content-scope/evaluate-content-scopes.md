@@ -63,7 +63,7 @@ Use this decorator at the **entity level** to return the scope of an entity.
     };
 })
 @Entity()
-export class Product extends BaseEntity<Product, "id"> {}
+export class Product extends BaseEntity {}
 ```
 
 :::info
@@ -74,5 +74,5 @@ It's also possible to pass a function which returns the content scope to the `@S
 
 ```ts
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
-export class PredefinedPage extends BaseEntity<PredefinedPage, "id"> implements DocumentInterface {
+export class PredefinedPage extends BaseEntity implements DocumentInterface {
 ```

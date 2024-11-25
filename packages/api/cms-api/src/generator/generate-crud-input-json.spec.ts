@@ -8,7 +8,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityWithJsonLiteralArray extends BaseEntity<TestEntityWithJsonLiteralArray, "id"> {
+export class TestEntityWithJsonLiteralArray extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -25,7 +25,7 @@ export class NestedObject {
 }
 
 @Entity()
-export class TestEntityWithJsonObject extends BaseEntity<TestEntityWithJsonObject, "id"> {
+export class TestEntityWithJsonObject extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -37,7 +37,7 @@ export class TestEntityWithJsonObject extends BaseEntity<TestEntityWithJsonObjec
 }
 
 @Entity()
-export class TestEntityWithRecord extends BaseEntity<TestEntityWithRecord, "id"> {
+export class TestEntityWithRecord extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

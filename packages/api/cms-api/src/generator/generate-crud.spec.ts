@@ -7,7 +7,7 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id"> {
+export class TestEntityWithString extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -16,7 +16,7 @@ export class TestEntityWithString extends BaseEntity<TestEntityWithString, "id">
 }
 
 @Entity()
-export class TestEntityWithNumber extends BaseEntity<TestEntityWithNumber, "id"> {
+export class TestEntityWithNumber extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -25,7 +25,7 @@ export class TestEntityWithNumber extends BaseEntity<TestEntityWithNumber, "id">
 }
 
 @Entity()
-export class TestEntityWithTextRuntimeType extends BaseEntity<TestEntityWithTextRuntimeType, "id"> {
+export class TestEntityWithTextRuntimeType extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 

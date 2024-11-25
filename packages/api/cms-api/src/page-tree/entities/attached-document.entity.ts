@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 @ObjectType()
 @Entity({ tableName: "PageTreeNodeDocument" })
 @Unique({ properties: ["pageTreeNodeId", "documentId"] })
-export class AttachedDocument extends BaseEntity<AttachedDocument, "id"> {
+export class AttachedDocument extends BaseEntity {
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
