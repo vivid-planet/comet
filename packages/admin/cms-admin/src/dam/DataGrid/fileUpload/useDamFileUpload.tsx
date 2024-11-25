@@ -6,6 +6,7 @@ import { Accept, FileRejection } from "react-dropzone";
 import { useCmsBlockContext } from "../../..";
 import { NetworkError, UnknownError } from "../../../common/errors/errorMessages";
 import { replaceByFilenameAndFolder, upload } from "../../../form/file/upload";
+import { GQLLicenseInput } from "../../../graphql.generated";
 import { useDamAcceptedMimeTypes } from "../../config/useDamAcceptedMimeTypes";
 import { useDamScope } from "../../config/useDamScope";
 import { clearDamItemCache } from "../../helpers/clearDamItemCache";
@@ -30,11 +31,12 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
-interface FileWithPath extends File {
+interface FileWithPathAndLicenseInfo extends File {
     path?: string;
+    license?: GQLLicenseInput;
 }
 
-export interface FileWithFolderPath extends FileWithPath {
+export interface FileWithFolderPath extends FileWithPathAndLicenseInfo {
     folderPath?: string;
 }
 
@@ -43,7 +45,7 @@ interface UploadDamFileOptions {
 }
 
 interface Files {
-    acceptedFiles: FileWithPath[];
+    acceptedFiles: FileWithPathAndLicenseInfo[];
     fileRejections: FileRejection[];
 }
 
@@ -52,6 +54,7 @@ type ImportSource = { importSourceType: never; importSourceId: never } | { impor
 interface UploadFilesOptions {
     folderId?: string;
     importSource?: ImportSource;
+    license?: GQLLicenseInput;
 }
 
 export interface FileUploadApi {
@@ -79,7 +82,7 @@ interface RejectedFile {
     file: File;
 }
 
-const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<FileWithFolderPath[]> => {
+const addFolderPathToFiles = async (acceptedFiles: FileWithPathAndLicenseInfo[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
@@ -103,6 +106,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPath[]): Promise<File
         const buffer = await file.arrayBuffer();
         const newFile: FileWithFolderPath = new File([buffer], file.name, { lastModified: file.lastModified, type: file.type });
         newFile.path = file.path;
+        newFile.license = file.license;
 
         const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
         newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
@@ -350,7 +354,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
 
     const uploadFiles = async (
         { acceptedFiles, fileRejections }: Files,
-        { folderId, importSource }: UploadFilesOptions,
+        { folderId, importSource, license }: UploadFilesOptions,
     ): Promise<{ hasError: boolean; rejectedFiles: RejectedFile[]; uploadedItems: NewlyUploadedItem[] }> => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
@@ -399,6 +403,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         scope,
                         importSourceId: importSource?.importSourceId,
                         importSourceType: importSource?.importSourceType,
+                        license,
                     };
 
                     const onUploadProgress = (progressEvent: ProgressEvent) => {
