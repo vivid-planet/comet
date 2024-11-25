@@ -18,7 +18,7 @@ interface ReplaceFileButtonProps {
 
 export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
     const apolloClient = useApolloClient();
-    const cmsBlockContext = useCmsBlockContext(); // TODO create separate CmsContext?
+    const cmsBlockContext = useCmsBlockContext();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const maxFileSizeInMegabytes = cmsBlockContext.damConfig.maxFileSize;
