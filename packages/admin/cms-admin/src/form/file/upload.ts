@@ -60,6 +60,7 @@ interface ReplaceFileByIdData {
     fileId: string;
     importSourceId?: string;
     importSourceType?: string;
+    license?: GQLLicenseInput;
 }
 
 export function replaceById<ResponseData>({
@@ -74,6 +75,9 @@ export function replaceById<ResponseData>({
     if (data.importSourceId && data.importSourceType) {
         formData.append("importSourceId", data.importSourceId);
         formData.append("importSourceType", data.importSourceType);
+    }
+    if (data.license) {
+        formData.append("license", JSON.stringify(data.license));
     }
 
     return apiClient.post<ResponseData>("/dam/files/replace-by-id", formData, {
