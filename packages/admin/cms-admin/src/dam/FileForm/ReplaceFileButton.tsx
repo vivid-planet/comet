@@ -55,12 +55,7 @@ export function ReplaceFileButton({ file }: ReplaceFileButtonProps) {
                 if (response.status === 201 && response.data) {
                     const fileUrl = (response.data as { fileUrl?: string })?.fileUrl;
                     if (fileUrl) {
-                        apolloClient.cache.modify({
-                            id: `DamFile:${file.id}`,
-                            fields: {
-                                fileUrl: () => fileUrl,
-                            },
-                        });
+                        apolloClient.cache.evict({ id: `DamFile:${file.id}` });
                     }
                 }
                 setReplaceLoading(false);
