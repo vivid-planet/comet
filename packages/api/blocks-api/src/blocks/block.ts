@@ -60,7 +60,7 @@ export enum WarningSeverity {
     low = "low",
 }
 
-export interface BlockWarning {
+interface BlockWarning {
     message: string;
     severity: WarningSeverity;
 }
