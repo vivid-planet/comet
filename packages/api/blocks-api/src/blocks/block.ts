@@ -60,7 +60,7 @@ export enum WarningSeverity {
     low = "low",
 }
 
-export interface BlockWarningReport {
+export interface BlockWarning {
     message: string;
     severity: WarningSeverity;
 }
@@ -69,7 +69,7 @@ export interface BlockDataInterface {
     transformToPlain(context: BlockContext): Promise<Type<BlockTransformerServiceInterface> | TraversableTransformResponse>;
     transformToSave(): TraversableTransformResponse;
     indexData(): BlockIndexData;
-    warnings(): BlockWarningReport[];
+    warnings(): BlockWarning[];
     searchText(): SearchText[];
     childBlocksInfo(): ChildBlockInfo[]; // @TODO: better name for method and Type, maybe ReflectChildBlocks ?
     previewImageUrlTemplate(dependencies: Record<string, any>, context: BlockContext): Promise<string | undefined>;
@@ -88,7 +88,7 @@ export abstract class BlockData implements BlockDataInterface {
         return {};
     }
 
-    warnings(): BlockWarningReport[] {
+    warnings(): BlockWarning[] {
         return [];
     }
 
