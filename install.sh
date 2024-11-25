@@ -10,6 +10,9 @@ nvm use
 npm i -g pnpm@8
 pnpm install
 
+# create site-config-envs
+npm run create-site-configs-env
+
 # admin Blocks
 ln -sf ../../api/blocks-api/block-meta.json ./packages/admin/blocks-admin/block-meta.json
 
