@@ -14,6 +14,7 @@ type ToolbarBreadcrumbsClassKey =
     | "mobileBreadcrumbsButton"
     | "currentBreadcrumbsItem"
     | "breadcrumbsItem"
+    | "mobileStandaloneCurrentBreadcrumbItem"
     | "breadcrumbsItemSeparator"
     | "breadcrumbsEllipsisItem"
     | "mobileMenu"
@@ -29,6 +30,7 @@ interface ToolbarBreadcrumbsProps
         mobileBreadcrumbsButton: typeof ButtonBase;
         currentBreadcrumbsItem: typeof Typography;
         breadcrumbsItem: typeof Typography;
+        mobileStandaloneCurrentBreadcrumbItem: "div";
         breadcrumbsItemSeparator: "div";
         breadcrumbsEllipsisItem: typeof Typography;
         mobileMenu: typeof Menu;
@@ -70,6 +72,12 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
 
     const itemSeparator = <BreadcrumbsItemSeparator>{itemSeparatorIcon}</BreadcrumbsItemSeparator>;
 
+    const currentBreadcrumbItem = (
+        <CurrentBreadcrumbsItem variant="body2" {...slotProps?.currentBreadcrumbsItem}>
+            {lastBreadcrumb.title}
+        </CurrentBreadcrumbsItem>
+    );
+
     return (
         <>
             <Root ref={rootRef} {...slotProps?.root} {...restProps}>
@@ -106,20 +114,22 @@ export const ToolbarBreadcrumbs = (inProps: ToolbarBreadcrumbsProps) => {
                         );
                     })}
                 </BreadcrumbsList>
-                <MobileBreadcrumbsButton disableRipple {...slotProps?.mobileBreadcrumbsButton} onClick={toggleMobileMenu}>
-                    {breadcrumbs.length > 1 && (
+                {breadcrumbs.length > 1 ? (
+                    <MobileBreadcrumbsButton disableRipple {...slotProps?.mobileBreadcrumbsButton} onClick={toggleMobileMenu}>
                         <>
                             <BreadcrumbsEllipsisItem variant="body2" {...slotProps?.breadcrumbsEllipsisItem}>
                                 ...
                             </BreadcrumbsEllipsisItem>
                             {itemSeparator}
                         </>
-                    )}
-                    <CurrentBreadcrumbsItem variant="body2" {...slotProps?.currentBreadcrumbsItem}>
-                        {lastBreadcrumb.title}
-                    </CurrentBreadcrumbsItem>
-                    <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{showMobileMenu ? closeMobileMenuIcon : openMobileMenuIcon}</MobileMenuIcon>
-                </MobileBreadcrumbsButton>
+                        {currentBreadcrumbItem}
+                        <MobileMenuIcon {...slotProps?.mobileMenuIcon}>{showMobileMenu ? closeMobileMenuIcon : openMobileMenuIcon}</MobileMenuIcon>
+                    </MobileBreadcrumbsButton>
+                ) : (
+                    <MobileStandaloneCurrentBreadcrumbItem {...slotProps?.mobileStandaloneCurrentBreadcrumbItem}>
+                        {currentBreadcrumbItem}
+                    </MobileStandaloneCurrentBreadcrumbItem>
+                )}
             </Root>
             <MobileMenu
                 open={showMobileMenu}
@@ -214,6 +224,17 @@ const MobileBreadcrumbsButton = createComponentSlot(ButtonBase)<ToolbarBreadcrum
         padding-top: ${theme.spacing(2)};
         padding-bottom: ${theme.spacing(2)};
 
+        ${theme.breakpoints.up("md")} {
+            display: none;
+        }
+    `,
+);
+
+const MobileStandaloneCurrentBreadcrumbItem = createComponentSlot("div")<ToolbarBreadcrumbsClassKey>({
+    componentName: "ToolbarBreadcrumbs",
+    slotName: "mobileStandaloneCurrentBreadcrumbItem",
+})(
+    ({ theme }) => css`
         ${theme.breakpoints.up("md")} {
             display: none;
         }
