@@ -25,6 +25,7 @@ const warningsFragment = gql`
         id
         createdAt
         updatedAt
+        message
         type
         severity
         status
@@ -105,6 +106,11 @@ export function WarningsGrid(): React.ReactElement {
             headerName: intl.formatMessage({ id: "warning.type", defaultMessage: "Type" }),
             width: 150,
             renderCell: (params) => <Chip label={params.value} />,
+        },
+        {
+            field: "message",
+            headerName: intl.formatMessage({ id: "warning.message", defaultMessage: "Message" }),
+            flex: 1,
         },
         {
             field: "status",
