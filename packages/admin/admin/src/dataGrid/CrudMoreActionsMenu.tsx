@@ -145,7 +145,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                             const { divider, label, icon, onClick, ...rest } = item;
 
                             return (
-                                <>
+                                <div key={index}>
                                     <MoreActionsMenuItem
                                         key={index}
                                         disabled={!!selectionSize}
@@ -159,7 +159,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                         <ListItemText primary={label} />
                                     </MoreActionsMenuItem>
                                     {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
-                                </>
+                                </div>
                             );
                         })}
                     </CrudMoreActionsGroup>
@@ -178,7 +178,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                             const { divider, label, icon, onClick, ...rest } = item;
 
                             return (
-                                <>
+                                <div key={index}>
                                     <MoreActionsMenuItem
                                         key={index}
                                         disabled={!selectionSize}
@@ -195,7 +195,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                         )}
                                     </MoreActionsMenuItem>
                                     {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
-                                </>
+                                </div>
                             );
                         })}
                     </CrudMoreActionsGroup>

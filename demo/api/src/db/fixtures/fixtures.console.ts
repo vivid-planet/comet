@@ -1,5 +1,5 @@
 import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
-import { MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
@@ -58,7 +58,7 @@ export class FixturesConsole {
         command: "fixtures",
         description: "Create fixtures with faker.js",
     })
-    @UseRequestContext()
+    @CreateRequestContext()
     async execute(): Promise<void> {
         const pageTreeNodes: PageTreeNodesFixtures = {};
         // ensure repeatable runs

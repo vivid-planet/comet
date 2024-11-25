@@ -1,5 +1,5 @@
 {
-    "extends": "@comet/eslint-config/react",
+    "extends": ["@comet/eslint-config/react", "plugin:storybook/recommended"],
     "ignorePatterns": ["src/*.generated.ts", "lib/**"],
     "rules": {
         "@calm/react-intl/missing-formatted-message": "off",
@@ -8,5 +8,11 @@
         "@typescript-eslint/no-non-null-assertion": "off",
         "no-console": "off",
         "@comet/no-other-module-relative-import": "off"
-    }
+    },
+    "overrides": [
+        {
+            "files": "*.mdx",
+            "extends": "plugin:mdx/recommended"
+        }
+    ]
 }

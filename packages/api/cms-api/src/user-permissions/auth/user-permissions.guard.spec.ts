@@ -1,5 +1,6 @@
 import { createMock } from "@golevelup/ts-jest";
 import { BaseEntity, Entity, MikroORM, PrimaryKey } from "@mikro-orm/core";
+import { defineConfig } from "@mikro-orm/postgresql";
 import { ExecutionContext } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 
@@ -31,25 +32,29 @@ describe("UserPermissionsGuard", () => {
         requiredPermission?: RequiredPermissionMetadata;
         affectedEntities?: AffectedEntityMeta[];
         scopedEntity?: ScopedEntityMeta<TestEntity>;
+        disableCometGuards?: boolean;
     }) => {
         reflector.getAllAndOverride = jest.fn().mockImplementation((decorator: string) => {
             if (decorator === "requiredPermission") return annotations.requiredPermission;
             if (decorator === "affectedEntities") return annotations.affectedEntities;
             if (decorator === "scopedEntity") return annotations.scopedEntity;
+            if (decorator === "disableCometGuards") return annotations.disableCometGuards;
             return false;
         });
     };
-    const mockContext = (context: { userPermissions: CurrentUser["permissions"]; args?: unknown }) => {
+    const mockContext = (options: { userPermissions?: CurrentUser["permissions"]; args?: unknown } = {}) => {
         return createMock<ExecutionContext>({
             switchToHttp: () => ({
                 getRequest: () => ({
-                    user: {
-                        id: "1",
-                        name: "Admin",
-                        email: "demo@comet-dxp.com",
-                        permissions: context.userPermissions,
-                    } satisfies CurrentUser,
-                    params: context.args,
+                    user: options.userPermissions
+                        ? ({
+                              id: "1",
+                              name: "Admin",
+                              email: "demo@comet-dxp.com",
+                              permissions: options.userPermissions,
+                          } satisfies CurrentUser)
+                        : undefined,
+                    params: options.args,
                 }),
             }),
         });
@@ -62,17 +67,29 @@ describe("UserPermissionsGuard", () => {
 
     beforeEach(async () => {
         reflector = new Reflector();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity],
-            connect: false,
-            allowGlobalContext: true,
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntity],
+                connect: false,
+                allowGlobalContext: true,
+            }),
+        );
         moduleRef = createMock<ModuleRef>();
         contentScopeService = new ContentScopeService(reflector, orm, moduleRef);
         accessControlService = new AccessControlService();
         guard = new UserPermissionsGuard(reflector, contentScopeService, accessControlService, {});
+    });
+
+    it("allows bypassing", async () => {
+        mockAnnotations({
+            disableCometGuards: true,
+        });
+        expect(await guard.canActivate(mockContext())).toBe(true);
+    });
+
+    it("denies if no user is provided", async () => {
+        expect(await guard.canActivate(mockContext())).toBe(false);
     });
 
     it("allows user with exact permission", async () => {

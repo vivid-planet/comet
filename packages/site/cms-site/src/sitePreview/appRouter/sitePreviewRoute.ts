@@ -1,8 +1,9 @@
 import "server-only";
 
+import { SignJWT } from "jose";
 import { cookies, draftMode } from "next/headers";
 import { redirect } from "next/navigation";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { SitePreviewParams, verifySitePreviewJwt } from "../SitePreviewUtils";
 
@@ -10,12 +11,23 @@ export async function sitePreviewRoute(request: NextRequest, _graphQLFetch: unkn
     const params = request.nextUrl.searchParams;
     const jwt = params.get("jwt");
     if (!jwt) {
-        throw new Error("Missing jwt parameter");
+        return NextResponse.json({ error: "JWT-Parameter is missing." }, { status: 400 });
     }
 
     const data = await verifySitePreviewJwt(jwt);
+    if (!data) {
+        return NextResponse.json({ error: "JWT-validation failed." }, { status: 400 });
+    }
 
-    cookies().set("__comet_preview", jwt);
+    const cookieJwt = await new SignJWT({
+        scope: data.scope,
+        path: data.path,
+        previewData: data.previewData,
+    })
+        .setProtectedHeader({ alg: "HS256" })
+        .setExpirationTime("1 day")
+        .sign(new TextEncoder().encode(process.env.SITE_PREVIEW_SECRET));
+    cookies().set("__comet_preview", cookieJwt, { httpOnly: true, sameSite: "lax" });
 
     draftMode().enable();
 
