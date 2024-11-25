@@ -1,5 +1,5 @@
 export { BlockLoader, BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
-export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
+export { convertToFileSize, DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
@@ -42,4 +42,3 @@ export { SitePreviewIFrameMessageType } from "./sitePreview/iframebridge/SitePre
 export { legacyPagesRouterSitePreviewApiHandler } from "./sitePreview/pagesRouter/legacyPagesRouterSitePreviewApiHandler";
 export { SitePreviewProvider } from "./sitePreview/SitePreviewProvider";
 export { previewParams, SitePreviewData, SitePreviewParams, sitePreviewRoute } from "./sitePreview/SitePreviewUtils";
-export { filesize as convertToFileSize } from "filesize";
