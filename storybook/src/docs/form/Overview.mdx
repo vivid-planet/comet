@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as OverviewStories from "./Overview.stories";
 
@@ -38,9 +38,7 @@ It's built on top of [React Final Form's `Form` component](https://final-form.or
 
 You can find more information on the [FinalForm component page](?path=/docs/docs-form-components-finalform--docs).
 
-<Canvas>
-    <Story of={OverviewStories.BasicFinalForm} />
-</Canvas>
+<Canvas of={OverviewStories.BasicFinalForm} />
 
 ### FieldContainer
 

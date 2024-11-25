@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as TimePickerStories from "./02_TimePicker.stories";
 
@@ -20,12 +20,8 @@ The `value` prop and the value returned by `onChange` are 24-hour strings format
 
 ## Basic usage
 
-<Canvas>
-    <Story of={TimePickerStories.Basic} />
-</Canvas>
+<Canvas of={TimePickerStories.Basic} />
 
 ## Usage inside a Final Form
 
-<Canvas>
-    <Story of={TimePickerStories.FinalForm} />
-</Canvas>
+<Canvas of={TimePickerStories.FinalForm} />

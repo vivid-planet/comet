@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as RouterTabsStories from "./02_RouterTabs.stories";
 
@@ -21,9 +21,7 @@ Each `RouterTab` needs:
 -   a unique `path` of the tab that is attached to the URL
 -   optionally a `forceRender` flag ([see Tabs docs for examples](?path=/docs/docs-components-tabs-tabs--docs#tabs-and-forcerender))
 
-<Canvas>
-    <Story of={RouterTabsStories.Basic} />
-</Canvas>
+<Canvas of={RouterTabsStories.Basic} />
 
 ## RouterTabs and Nested Stack
 
@@ -31,6 +29,4 @@ When used on a nested `StackPage`, `RouterTabs` automatically hides other `Route
 In this way, only the `RouterTabs` on the current level are shown.
 That ensures that the UI doesn't appear cluttered with tabs.
 
-<Canvas>
-    <Story of={RouterTabsStories.NestedStackSwitchWithRouterTabs} />
-</Canvas>
+<Canvas of={RouterTabsStories.NestedStackSwitchWithRouterTabs} />

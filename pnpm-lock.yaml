@@ -1963,8 +1963,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2
       class-validator:
-        specifier: 0.13.2
-        version: 0.13.2
+        specifier: ^0.14.1
+        version: 0.14.1
       clsx:
         specifier: ^1.1.1
         version: 1.2.1
@@ -2665,9 +2665,6 @@ importers:
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
-      use-debounce:
-        specifier: ^6.0.0
-        version: 6.0.1(react@18.3.1)
       usehooks-ts:
         specifier: ^3.1.0
         version: 3.1.0(react@18.3.1)
@@ -26141,7 +26138,16 @@ snapshots:
 
   '@types/uuid@9.0.8': {}
 
+<<<<<<< HEAD
   '@types/webpack@5.28.0(@swc/core@1.4.8(@swc/helpers@0.5.5))':
+=======
+  /@types/validator@13.12.2:
+    resolution: {integrity: sha512-6SlHBzUW8Jhf3liqrGGXyTJSIFe4nqlJ5A5KaMZ2l/vbM3Wh3KSybots/wfWVzNLK4D1NZluDlSQIbIEPx6oyA==}
+    dev: false
+
+  /@types/webpack@5.28.0:
+    resolution: {integrity: sha512-8cP0CzcxUiFuA9xGJkfeVpqmWTk9nx6CWwamRGCj95ph1SmlRRk9KlCZ6avhCbZd4L68LvYT6l1kpdEnQXrF8w==}
+>>>>>>> main
     dependencies:
       '@types/node': 22.9.0
       tapable: 2.2.1
@@ -27773,7 +27779,21 @@ snapshots:
       libphonenumber-js: 1.10.18
       validator: 13.7.0
 
+<<<<<<< HEAD
   classnames@2.3.2: {}
+=======
+  /class-validator@0.14.1:
+    resolution: {integrity: sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==}
+    dependencies:
+      '@types/validator': 13.12.2
+      libphonenumber-js: 1.11.14
+      validator: 13.12.0
+    dev: false
+
+  /classnames@2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: false
+>>>>>>> main
 
   clean-css@5.3.2:
     dependencies:
@@ -32374,7 +32394,16 @@ snapshots:
 
   libphonenumber-js@1.10.18: {}
 
+<<<<<<< HEAD
   lie@3.1.1:
+=======
+  /libphonenumber-js@1.11.14:
+    resolution: {integrity: sha512-sexvAfwcW1Lqws4zFp8heAtAEXbEDnvkYCEGzvOoMgZR7JhXo/IkE9MkkGACgBed5fWqh3ShBGnJBdDnU9N8EQ==}
+    dev: false
+
+  /lie@3.1.1:
+    resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
+>>>>>>> main
     dependencies:
       immediate: 3.0.6
 
@@ -37105,11 +37134,22 @@ snapshots:
     dependencies:
       react: 17.0.2
 
+<<<<<<< HEAD
   use-debounce@6.0.1(react@18.3.1):
     dependencies:
       react: 18.3.1
 
   use-isomorphic-layout-effect@1.1.2(@types/react@17.0.53)(react@17.0.2):
+=======
+  /use-isomorphic-layout-effect@1.1.2(@types/react@17.0.53)(react@17.0.2):
+    resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+>>>>>>> main
     dependencies:
       react: 17.0.2
     optionalDependencies:
@@ -37192,7 +37232,18 @@ snapshots:
 
   validate-npm-package-name@5.0.1: {}
 
+<<<<<<< HEAD
   validator@13.7.0: {}
+=======
+  /validator@13.12.0:
+    resolution: {integrity: sha512-c1Q0mCiPlgdTVVVIJIrBuxNicYE+t/7oKeI9MWLj3fh/uq2Pxh/3eeWbVZ4OcGW1TUf53At0njHw5SMdA3tmMg==}
+    engines: {node: '>= 0.10'}
+    dev: false
+
+  /validator@13.7.0:
+    resolution: {integrity: sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==}
+    engines: {node: '>= 0.10'}
+>>>>>>> main
 
   value-equal@1.0.1: {}
 

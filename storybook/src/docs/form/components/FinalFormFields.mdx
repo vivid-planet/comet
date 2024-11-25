@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as FinalFormFieldsStories from "./FinalFormFields.stories";
 
@@ -13,9 +13,7 @@ Comet Admin provides a set of FinalForm compatible form fields.
 `FinalFormInput` is a plain input field.
 You can use it like the HTML input element.
 
-<Canvas>
-    <Story of={FinalFormFieldsStories._FinalFormInput} />
-</Canvas>
+<Canvas of={FinalFormFieldsStories._FinalFormInput} />
 
 ## FinalFormSearchTextField
 
@@ -23,9 +21,7 @@ You can use it like the HTML input element.
 You can use it for implementing a search field.
 It doesn't have any built-in search functionality.
 
-<Canvas>
-    <Story of={FinalFormFieldsStories._FinalFormSearchTextField} />
-</Canvas>
+<Canvas of={FinalFormFieldsStories._FinalFormSearchTextField} />
 
 ## FinalFormSelect
 
@@ -33,36 +29,28 @@ It doesn't have any built-in search functionality.
 For async options, use the special `FinalFormAsyncSelect` component that uses the `useAsyncOptionsProps()` hook internally.
 It expects the value to be an object to be able to display the current value without having to load the async options.
 
-<Canvas>
-    <Story of={FinalFormFieldsStories._FinalFormSelect} />
-</Canvas>
+<Canvas of={FinalFormFieldsStories._FinalFormSelect} />
 
 ## FinalFormAutocomplete
 
 `FinalFormAutocomplete` provides a select with a search field.
 It can be used similarly to [FinalFormSelect](#finalformselect).
 
-<Canvas>
-    <Story of={FinalFormFieldsStories._FinalFormAutocomplete} />
-</Canvas>
+<Canvas of={FinalFormFieldsStories._FinalFormAutocomplete} />
 
 ## FinalFormCheckbox
 
 `FinalFormCheckbox` provides a checkbox.
 It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/api/form-control-label/#formcontrollabel-api).
 
-<Canvas>
-    <Story of={FinalFormFieldsStories._FinalFormCheckbox} />
-</Canvas>
+<Canvas of={FinalFormFieldsStories._FinalFormCheckbox} />
 
 ## FinalFormSwitch
 
 `FinalFormSwitch` provides a switch.
 It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/api/form-control-label/#formcontrollabel-api).
 
-<Canvas>
-    <Story of={FinalFormFieldsStories._FinalFormSwitch} />
-</Canvas>
+<Canvas of={FinalFormFieldsStories._FinalFormSwitch} />
 
 ## FinalFormRadio
 
@@ -72,9 +60,7 @@ It should be used inside a [Material UI `FormControlLabel`](https://v4.mui.com/a
 Each radio option must be a separate `Field`.
 All the Fields should be wrapped in a `FieldContainer`.
 
-<Canvas>
-    <Story of={FinalFormFieldsStories._FinalFormRadio} />
-</Canvas>
+<Canvas of={FinalFormFieldsStories._FinalFormRadio} />
 
 ## FinalFormRangeInput
 
@@ -82,6 +68,4 @@ All the Fields should be wrapped in a `FieldContainer`.
 It consists of two text input fields and a slider.
 This range input can, for example, be used for filtering products by price.
 
-<Canvas>
-    <Story of={FinalFormFieldsStories._FinalFormRangeInput} />
-</Canvas>
+<Canvas of={FinalFormFieldsStories._FinalFormRangeInput} />
