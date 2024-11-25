@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as FieldContainerStories from "./FieldContainer.stories";
 
@@ -11,6 +11,4 @@ It is also used to set a label, error--messages and other common form-field attr
 
 _Note: If your form is built with final-form, use [Field](?path=/docs/docs-form-components-field--docs) instead._
 
-<Canvas>
-    <Story of={FieldContainerStories.Basic} />
-</Canvas>
+<Canvas of={FieldContainerStories.Basic} />

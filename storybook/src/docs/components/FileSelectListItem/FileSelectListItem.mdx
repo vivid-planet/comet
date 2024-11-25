@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as FileSelectListItemStories from "./FileSelectListItem.stories";
 
@@ -18,12 +18,8 @@ Used to display a list of files, including loading, skeleton, and error states a
 -   Use the `downloadUrl`, `onClickDownload` and `onClickDelete` props to handle what happens when clicking the download and delete buttons.
 -   Set the `filePreview` prop to `true` or pass in a image url to display the item as a card with a preview.
 
-<Canvas>
-    <Story of={FileSelectListItemStories.Basic} />
-</Canvas>
+<Canvas of={FileSelectListItemStories.Basic} />
 
 ### File preview card
 
-<Canvas>
-    <Story of={FileSelectListItemStories.Preview} />
-</Canvas>
+<Canvas of={FileSelectListItemStories.Preview} />
