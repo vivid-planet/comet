@@ -132,7 +132,7 @@ export function createEditPageNode({
         let parentPath: string | null = null;
 
         if (parentNodeData?.pageTreeNode) {
-            parentPath = parentNodeData.pageTreeNode.slug === "home" ? "/home" : parentNodeData.pageTreeNode.path;
+            parentPath = parentNodeData.pageTreeNode.slug === "home" && parentNodeData.pageTreeNode.path ? "/home" : parentNodeData.pageTreeNode.path;
         }
 
         const options = Object.keys(documentTypes).map((type) => ({
@@ -150,6 +150,11 @@ export function createEditPageNode({
                     // The unchanged slug is expected to be available
                     return "Available";
                 }
+                if (parentNodeData?.pageTreeNode?.path != undefined && newSlug === "home") {
+                    // The slug "home" is reserved for the home page
+                    return "Reserved";
+                }
+
                 const { data } = await apollo.query<GQLIsPathAvailableQuery, GQLIsPathAvailableQueryVariables>({
                     query: isPathAvailableQuery,
                     variables: {
@@ -162,7 +167,7 @@ export function createEditPageNode({
 
                 return data.availability;
             },
-            [apollo, scope, parentId, slug],
+            [apollo, scope, parentId, slug, parentNodeData?.pageTreeNode?.path],
         );
 
         const validateSlug = async (value: string) => {
@@ -338,7 +343,7 @@ export function createEditPageNode({
                                                     variant="horizontal"
                                                 >
                                                     <Typography>
-                                                        {values.slug === "home"
+                                                        {values.slug === "home" && parentPath === null
                                                             ? "/"
                                                             : parentPath === null
                                                             ? `/${values.slug}`
