@@ -53,25 +53,24 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
             </ToolbarTitleItem>
             <ToolbarFillSpace />
             <ToolbarActions>
-                <CrudMoreActionsMenu
-                    overallActions={[
-                        isAllowed("impersonation")
-                            ? {
-                                  label: <FormattedMessage {...messages.impersonate} />,
-                                  icon: <ImpersonateUser />,
-                                  disabled: userId === currentUser.id,
-                                  onClick: () => startImpersonation(userId),
-                              }
-                            : null,
-                        currentUser.impersonated
-                            ? {
-                                  icon: <Reset />,
-                                  label: <FormattedMessage {...messages.stopImpersonation} />,
-                                  onClick: () => stopImpersonation,
-                              }
-                            : null,
-                    ]}
-                />
+                {isAllowed("impersonation") && (
+                    <CrudMoreActionsMenu
+                        overallActions={[
+                            currentUser.impersonated
+                                ? {
+                                      icon: <Reset />,
+                                      label: <FormattedMessage {...messages.stopImpersonation} />,
+                                      onClick: () => stopImpersonation,
+                                  }
+                                : {
+                                      label: <FormattedMessage {...messages.impersonate} />,
+                                      icon: <ImpersonateUser />,
+                                      disabled: userId === currentUser.id,
+                                      onClick: () => startImpersonation(userId),
+                                  },
+                        ]}
+                    />
+                )}
             </ToolbarActions>
         </StackToolbar>
     );
