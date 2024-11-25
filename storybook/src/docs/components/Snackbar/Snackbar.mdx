@@ -1,4 +1,4 @@
-import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
+import { Canvas, Meta, Source } from "@storybook/addon-docs";
 import dedent from "ts-dedent";
 
 import * as SnackbarStories from "./Snackbar.stories";
@@ -33,9 +33,7 @@ This ensures that there is only one snackbar at a time as recommended by the [Ma
 The `useSnackbarApi()` hook provides an Api to interact with the snackbar.
 It is only available if a `SnackbarProvider` is present higher up in the tree.
 
-<Canvas>
-    <Story of={SnackbarStories.UseSnackbarApi} />
-</Canvas>
+<Canvas of={SnackbarStories.UseSnackbarApi} />
 
 ### showSnackbar()
 
@@ -45,17 +43,13 @@ More info on the `Snackbar` and a list of available props can be found [in the M
 
 Only `open` is not available since the `SnackbarProvider` manages the open state.
 
-<Canvas>
-    <Story of={SnackbarStories.ShowSnackbar} />
-</Canvas>
+<Canvas of={SnackbarStories.ShowSnackbar} />
 
 ### hideSnackbar()
 
 `hideSnackbar()` hides the currently visible snackbar.
 
-<Canvas>
-    <Story of={SnackbarStories.HideSnackbar} />
-</Canvas>
+<Canvas of={SnackbarStories.HideSnackbar} />
 
 ## UndoSnackbar
 
@@ -66,6 +60,4 @@ It has three distinctions compared to the vanilla `Snackbar`:
 -   a `payload` prop. After a change, the previous state should be passed as payload
 -   a `onUndoClick` prop. This method is called once the user clicks on the undo button. The method receives the payload as parameter and can utilize it to restore the previous state
 
-<Canvas>
-    <Story of={SnackbarStories.Undo} />
-</Canvas>
+<Canvas of={SnackbarStories.Undo} />

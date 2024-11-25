@@ -1,6 +1,6 @@
 import { MikroORM, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
@@ -113,6 +113,7 @@ export class FilesService {
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -343,7 +344,7 @@ export class FilesService {
     }
 
     async save(entity: FileInterface): Promise<FileInterface> {
-        await this.filesRepository.persistAndFlush(entity);
+        await this.entityManager.persistAndFlush(entity);
         return entity;
     }
 

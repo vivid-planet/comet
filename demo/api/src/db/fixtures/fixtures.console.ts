@@ -1,7 +1,7 @@
 import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
@@ -52,6 +52,7 @@ export class FixturesConsole {
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
         private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly dependenciesService: DependenciesService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     @Command({
@@ -201,7 +202,7 @@ export class FixturesConsole {
         for (const attachedDocumentId of attachedDocumentIds) {
             const pageInput = getDefaultPageInput();
 
-            await this.pagesRepository.persistAndFlush(
+            await this.entityManager.persistAndFlush(
                 this.pagesRepository.create({
                     id: attachedDocumentId,
                     createdAt: new Date(),
@@ -255,7 +256,7 @@ export class FixturesConsole {
 
                     const pageId = faker.datatype.uuid();
 
-                    await this.pagesRepository.persistAndFlush(
+                    await this.entityManager.persistAndFlush(
                         this.pagesRepository.create({
                             id: pageId,
                             content: pageInput.content.transformToBlockData(),

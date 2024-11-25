@@ -27,7 +27,7 @@ interface Row {
 export class ImportRedirectsConsole {
     constructor(
         private readonly orm: MikroORM,
-        private readonly em: EntityManager,
+        private readonly entityManager: EntityManager,
         @Inject(forwardRef(() => PageTreeService)) private readonly pageTreeService: PageTreeService,
         @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
         @Inject(REDIRECTS_LINK_BLOCK) private readonly linkBlock: RedirectsLinkBlock,
@@ -96,7 +96,7 @@ export class ImportRedirectsConsole {
 
                     successes++;
 
-                    this.repository.persist(redirect);
+                    this.entityManager.persist(redirect);
                 }
             } else if (row["target_type"] === "external") {
                 if (existingRedirect) {
@@ -143,7 +143,7 @@ export class ImportRedirectsConsole {
                     });
 
                     successes++;
-                    this.repository.persist(redirect);
+                    this.entityManager.persist(redirect);
                 }
             } else {
                 console.log(`Error for Redirect ${row["source"]}`);
@@ -151,7 +151,7 @@ export class ImportRedirectsConsole {
             }
         }
 
-        await this.repository.flush();
+        await this.entityManager.flush();
         console.log(`\nSuccess: ${successes}`);
         console.log(`Error: ${errors}`);
     }

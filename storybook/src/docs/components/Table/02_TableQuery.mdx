@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as TableQueryStories from "./02_TableQuery.stories";
 
@@ -20,6 +20,4 @@ The `useTableQuery()` hook returns the converted response (`tableData`), an `api
 It has a built-in loading state and error handling.
 All you have to do is pass the `api`, `error` and `loading` props returned by `useTableQuery()` to `TableQuery`.
 
-<Canvas>
-    <Story of={TableQueryStories._TableQuery} />
-</Canvas>
+<Canvas of={TableQueryStories._TableQuery} />

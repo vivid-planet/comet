@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as EditDialogStories from "./EditDialog.stories";
 
@@ -18,18 +18,14 @@ There are two ways to integrate an EditDialog.
 The recommended way is to use the `useEditDialog` hook.
 It returns an instance of `EditDialog` and the corresponding `editDialogApi`.
 
-<Canvas>
-    <Story of={EditDialogStories.Hook} />
-</Canvas>
+<Canvas of={EditDialogStories.Hook} />
 
 ### 2) EditDialog Component
 
 Alternatively, you can import the `EditDialog` component from `@comet/admin` and use it directly.
 To gain access to the `editDialogApi`, you need to attach a ref to the component.
 
-<Canvas>
-    <Story of={EditDialogStories.Component} />
-</Canvas>
+<Canvas of={EditDialogStories.Component} />
 
 ## useEditDialogApi and EditDialogApiContext
 
@@ -37,26 +33,20 @@ You can access the `editDialogApi` using the `useEditDialogApi` hook.
 As a prerequisite, you need to pass the `editDialogApi` to the `EditDialogApiContext.Provider` somewhere higher up
 in the component tree.
 
-<Canvas>
-    <Story of={EditDialogStories.UseEditDialogApi} />
-</Canvas>
+<Canvas of={EditDialogStories.UseEditDialogApi} />
 
 ## Form in EditDialog
 
 The `EditDialog` typically contains a form for editing a resource.
 When submitting the changes to an API via GraphQL mutation, the loading and error states are displayed automatically by the `SaveButton`.
 
-<Canvas>
-    <Story of={EditDialogStories.WithForm} />
-</Canvas>
+<Canvas of={EditDialogStories.WithForm} />
 
 ## EditDialog and Table
 
 The most common use case for an EditDialog is for editing single rows in a table.
 
-<Canvas>
-    <Story of={EditDialogStories.WithTable} />
-</Canvas>
+<Canvas of={EditDialogStories.WithTable} />
 
 ## EditDialog and Selection API
 
@@ -75,12 +65,8 @@ The `id` then specifies which resource is edited and is appended to the URL (e.g
 
 ### Example with useEditDialog (Recommended)
 
-<Canvas>
-    <Story of={EditDialogStories.SelectionWithHook} />
-</Canvas>
+<Canvas of={EditDialogStories.SelectionWithHook} />
 
 ### Example with EditDialog Component
 
-<Canvas>
-    <Story of={EditDialogStories.SelectionWithComponent} />
-</Canvas>
+<Canvas of={EditDialogStories.SelectionWithComponent} />
