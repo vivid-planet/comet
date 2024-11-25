@@ -19,14 +19,14 @@ interface UploadFileParams {
 }
 
 export function upload<ResponseData>(uploadFileParams: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
-    return uploadOrReplace(uploadFileParams);
+    return uploadOrReplaceByFilenameAndFolder(uploadFileParams);
 }
 
-export function replace<ResponseData>(uploadFileParams: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
-    return uploadOrReplace({ ...uploadFileParams, replace: true });
+export function replaceByFilenameAndFolder<ResponseData>(uploadFileParams: UploadFileParams): Promise<AxiosResponse<ResponseData>> {
+    return uploadOrReplaceByFilenameAndFolder({ ...uploadFileParams, replace: true });
 }
 
-function uploadOrReplace<ResponseData>({
+function uploadOrReplaceByFilenameAndFolder<ResponseData>({
     apiClient,
     data,
     cancelToken,
@@ -50,6 +50,40 @@ function uploadOrReplace<ResponseData>({
     const endpoint = replace ? "/dam/files/replace-by-filename-and-folder" : "/dam/files/upload";
 
     return apiClient.post<ResponseData>(endpoint, formData, {
+        ...options,
+        cancelToken,
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+}
+
+interface ReplaceFileByIdData {
+    file: File;
+    fileId: string;
+    importSourceId?: string;
+    importSourceType?: string;
+    license?: GQLLicenseInput;
+}
+
+export function replaceById<ResponseData>({
+    apiClient,
+    data,
+    cancelToken,
+    options,
+}: Omit<UploadFileParams, "data"> & { data: ReplaceFileByIdData }): Promise<AxiosResponse<ResponseData>> {
+    const formData = new FormData();
+    formData.append("file", data.file);
+    formData.append("fileId", data.fileId);
+    if (data.importSourceId && data.importSourceType) {
+        formData.append("importSourceId", data.importSourceId);
+        formData.append("importSourceType", data.importSourceType);
+    }
+    if (data.license) {
+        formData.append("license", JSON.stringify(data.license));
+    }
+
+    return apiClient.post<ResponseData>("/dam/files/replace-by-id", formData, {
         ...options,
         cancelToken,
         headers: {

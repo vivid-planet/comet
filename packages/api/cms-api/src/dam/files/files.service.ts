@@ -17,8 +17,6 @@ import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.ut
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { ContentScopeService } from "../../user-permissions/content-scope.service";
-import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
-import { AccessControlServiceInterface } from "../../user-permissions/user-permissions.types";
 import { FocalPoint } from "../common/enums/focal-point.enum";
 import { CometImageResolutionException } from "../common/errors/image-resolution.exception";
 import { DamConfig } from "../dam.config";
@@ -35,7 +33,6 @@ import { FileUploadInput } from "./dto/file-upload.input";
 import { FILE_TABLE_NAME, FileInterface } from "./entities/file.entity";
 import { DamFileImage } from "./entities/file-image.entity";
 import { FolderInterface } from "./entities/folder.entity";
-import { FileValidationService } from "./file-validation.service";
 import { slugifyFilename } from "./files.utils";
 import { FoldersService } from "./folders.service";
 
@@ -109,7 +106,6 @@ export class FilesService {
 
     constructor(
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
-        @InjectRepository(DamFileImage) private readonly fileImagesRepository: EntityRepository<DamFileImage>,
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         private readonly foldersService: FoldersService,
         @Inject(IMGPROXY_CONFIG) private readonly imgproxyConfig: ImgproxyConfig,
@@ -117,8 +113,6 @@ export class FilesService {
         private readonly imgproxyService: ImgproxyService,
         private readonly orm: MikroORM,
         private readonly contentScopeService: ContentScopeService,
-        @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
-        private readonly fileValidationService: FileValidationService,
     ) {}
 
     private selectQueryBuilder(): QueryBuilder<FileInterface> {
@@ -241,57 +235,47 @@ export class FilesService {
     }
 
     async replace(
-        file: FileUploadInput,
-        { folderId, scope, ...assignData }: Omit<UploadFileBodyInterface, "scope"> & { scope?: DamScopeInterface },
+        fileToReplace: FileInterface,
+        uploadedFile: FileUploadInput,
+        assignData: Omit<UploadFileBodyInterface, "scope" | "folderId">,
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
-            if (folderId) {
-                const folder = await this.foldersService.findOneById(folderId);
-                if (!folder) throw new Error(`Folder ${folderId} not found`);
-                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
-                    throw new Error("Folder scope doesn't match passed scope");
-                }
-            }
-
-            const exisitingFile = await this.findOneByFilenameAndFolder({ filename: file.originalname, folderId });
-            if (!exisitingFile) throw new Error("File not found");
-
-            if (file.mimetype !== exisitingFile.mimetype) {
+            if (uploadedFile.mimetype !== fileToReplace.mimetype) {
                 throw new Error(
-                    `File cannot be replaced by a file with a different mimetype. Existing mimetype: ${exisitingFile.mimetype}, new mimetype: ${file.mimetype}`,
+                    `File cannot be replaced by a file with a different mimetype. Existing mimetype: ${fileToReplace.mimetype}, new mimetype: ${uploadedFile.mimetype}`,
                 );
             }
 
-            const { exifData, contentHash, image } = await this.getFileMetadataForUpload(file);
-            await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
+            const { exifData, contentHash, image } = await this.getFileMetadataForUpload(uploadedFile);
+            await this.blobStorageBackendService.upload(uploadedFile, contentHash, this.config.filesDirectory);
 
             // Check if the current file is the only one using the contentHash before deleting from blob storage
             if (
-                (await withFilesSelect(this.filesRepository.createQueryBuilder("file"), { contentHash: exisitingFile.contentHash }).getResult())
+                (await withFilesSelect(this.filesRepository.createQueryBuilder("file"), { contentHash: fileToReplace.contentHash }).getResult())
                     .length === 1
             ) {
-                await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(exisitingFile.contentHash));
+                await this.blobStorageBackendService.removeFile(this.config.filesDirectory, createHashedPath(fileToReplace.contentHash));
             }
 
-            if (image && image.width && image.height && exisitingFile.image) {
-                exisitingFile.image.width = image.width;
-                exisitingFile.image.height = image.height;
-                exisitingFile.image.exif = exifData;
+            if (image && image.width && image.height && fileToReplace.image) {
+                fileToReplace.image.width = image.width;
+                fileToReplace.image.height = image.height;
+                fileToReplace.image.exif = exifData;
             }
 
-            Object.assign(exisitingFile, {
-                size: file.size,
-                mimetype: file.mimetype,
+            Object.assign(fileToReplace, {
+                size: uploadedFile.size,
+                mimetype: uploadedFile.mimetype,
                 contentHash,
                 ...assignData,
             });
 
-            result = await this.save(exisitingFile);
+            result = await this.save(fileToReplace);
 
-            rimraf.sync(file.path);
+            rimraf.sync(uploadedFile.path);
         } catch (e) {
-            rimraf.sync(file.path);
+            rimraf.sync(uploadedFile.path);
             throw e;
         }
 
@@ -369,14 +353,6 @@ export class FilesService {
     ): Promise<FileInterface> {
         let result: FileInterface | undefined = undefined;
         try {
-            if (folderId) {
-                const folder = await this.foldersService.findOneById(folderId);
-                if (!folder) throw new Error(`Folder ${folderId} not found`);
-                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
-                    throw new Error("Folder scope doesn't match passed scope");
-                }
-            }
-
             const { exifData, contentHash, image } = await this.getFileMetadataForUpload(file);
             await this.blobStorageBackendService.upload(file, contentHash, this.config.filesDirectory);
 
