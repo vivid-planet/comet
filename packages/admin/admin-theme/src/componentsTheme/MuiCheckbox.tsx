@@ -1,4 +1,4 @@
-import { CheckboxChecked, CheckboxUnchecked } from "@comet/admin-icons";
+import { CheckboxChecked, CheckboxIndeterminated, CheckboxUnchecked } from "@comet/admin-icons";
 import { checkboxClasses, svgIconClasses } from "@mui/material";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
@@ -10,6 +10,7 @@ export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (component, {
         color: "primary",
         icon: <CheckboxUnchecked />,
         checkedIcon: <CheckboxChecked />,
+        indeterminateIcon: <CheckboxIndeterminated />,
         ...component?.defaultProps,
     },
     styleOverrides: mergeOverrideStyles<"MuiCheckbox">(component?.styleOverrides, {
@@ -43,6 +44,14 @@ export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (component, {
                     fill: palette.grey[200],
                 },
             },
+            [`&.${checkboxClasses.indeterminate} .${svgIconClasses.root}`]: {
+                "& .checkIcon": {
+                    fill: "#fff",
+                },
+                "& .background": {
+                    fill: palette.grey[300],
+                },
+            },
         },
         colorPrimary: {
             [`&.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
@@ -50,11 +59,21 @@ export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (component, {
                     fill: palette.primary.main,
                 },
             },
+            [`&.${checkboxClasses.indeterminate} .${svgIconClasses.root}`]: {
+                "& .background": {
+                    fill: palette.grey[300],
+                },
+            },
         },
         colorSecondary: {
             [`&.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
                 "& .background": {
                     fill: palette.secondary.main,
+                },
+            },
+            [`&.${checkboxClasses.indeterminate} .${svgIconClasses.root}`]: {
+                "& .background": {
+                    fill: palette.grey[300],
                 },
             },
         },
