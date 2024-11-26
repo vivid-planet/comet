@@ -1,0 +1,29 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as MasterStories from "./Master.stories";
+
+<Meta of={MasterStories} />
+
+# Master
+
+The master components are used to create the root of your application.
+
+```tsx
+<MasterLayout menuComponent={MasterMenu} headerComponent={MasterHeader}>
+    <MainContent>{/* Application content */}</MainContent>
+</MasterLayout>
+```
+
+<Canvas of={MasterStories.Master} height="500px" />
+
+## MasterLayout
+
+`MasterLayout` is used to contain the application's global components, such as the header and the menu.  
+It's children will be the content of the application.
+
+_Note: `MasterLayout` can only be used inside `RouterBrowserRouter`._
+
+## MainContent
+
+Content within the `MasterLayout`, should generally be wrapped by `MainContent` to add spacing between the content and the header and menu.  
+A toolbar would be an exception, because it should be shown right below the header, without any spacing.
