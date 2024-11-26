@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix spacing of `MoreActionsSelectedItemsChip` in `CrudMoreActionsMenu`
+Fix the spacing between the text and chip in `CrudMoreActionsMenu`
