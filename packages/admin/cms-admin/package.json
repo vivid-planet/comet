@@ -163,6 +163,11 @@
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0"
     },
+    "peerDependenciesMeta": {
+        "@mui/x-data-grid-pro": {
+            "optional": true
+        }
+    },
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"
