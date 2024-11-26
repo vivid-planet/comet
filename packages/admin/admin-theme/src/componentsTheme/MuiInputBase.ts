@@ -17,9 +17,17 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
         },
         adornedStart: {
             paddingLeft: spacing(2),
+
+            [`> span`]: {
+                fontWeight: 600,
+            },
         },
         adornedEnd: {
             paddingRight: spacing(2),
+
+            [`> span`]: {
+                fontWeight: 600,
+            },
         },
         multiline: {
             paddingTop: 0,
