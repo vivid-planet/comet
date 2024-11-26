@@ -1,12 +1,12 @@
-import { GridColDef, ValueOption } from "./GridColDef";
+import { GridColDef } from "./GridColDef";
 
 export const renderStaticSelectCell: GridColDef["renderCell"] = ({ value, colDef }) => {
     // TODO: find a better solution than as cast
     const gridColDef = colDef as GridColDef;
     if (Array.isArray(gridColDef.valueOptions)) {
-        const renderCellValue: ValueOption | undefined = gridColDef.valueOptions.find((option) =>
-            typeof option === "object" && option.value === value ? value.toString() : "",
-        );
+        const renderCellValue = gridColDef.valueOptions.find((option) => {
+            return typeof option === "object" && option.value === value.toString();
+        });
 
         if (typeof renderCellValue === "object") {
             if ("cellContent" in renderCellValue) {
