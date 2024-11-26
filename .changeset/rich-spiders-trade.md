@@ -2,4 +2,6 @@
 "@comet/admin": major
 ---
 
-Remove old `ToolbarBreadcrumbs`, `ToolbarBreadcrumbsClassKey` and `ToolbarBreadcrumbsProps`. Use new ones instead.
+Redesign the `ToolbarBreadcrumbs` component
+
+Due to internal changes, including the props and class keys, custom usages and styling may need to be adjusted. 
