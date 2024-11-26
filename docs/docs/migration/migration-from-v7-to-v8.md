@@ -63,9 +63,9 @@ Perform the following changes:
 
 ## Site
 
-### Remove unused argument from site preview api handler
+### Remove unused GraphQL client/fetch from site preview API handler
 
--   App-Router (`src/app/api/site-preview/route.ts`):
+-   App Router (`src/app/api/site-preview/route.ts`):
 
     ```diff
     export async function GET(request: NextRequest) {
@@ -74,7 +74,7 @@ Perform the following changes:
     }
     ```
 
--   Pages-Router (`src/pages/api/site-preview.ts`):
+-   Pages Router (`src/pages/api/site-preview.ts`):
 
     ```diff
     const SitePreviewApiHandler: NextApiHandler = async (req, res) => {
