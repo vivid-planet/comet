@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const damFileFieldFragment = gql`
+const damFileFieldFragment = gql`
     fragment DamFileFieldFile on DamFile {
         id
         name

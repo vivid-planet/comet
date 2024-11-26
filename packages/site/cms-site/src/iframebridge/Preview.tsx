@@ -68,6 +68,6 @@ export const Preview = ({ adminRoute, children, label, enabledAutoScrolling = tr
     return <>{children}</>;
 };
 
-export const PreviewElementContainer = styled.div`
+const PreviewElementContainer = styled.div`
     display: contents;
 `;

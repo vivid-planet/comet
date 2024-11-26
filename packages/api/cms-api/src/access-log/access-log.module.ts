@@ -8,7 +8,7 @@ import { SystemUser } from "../user-permissions/user-permissions.types";
 import { ACCESS_LOG_CONFIG } from "./access-log.constants";
 import { AccessLogInterceptor } from "./access-log.interceptor";
 
-export type ShouldLogRequest = ({ user, req }: { user?: CurrentUser | SystemUser; req: Request }) => boolean;
+type ShouldLogRequest = ({ user, req }: { user?: CurrentUser | SystemUser; req: Request }) => boolean;
 
 type AccessLogModuleOptions = AccessLogConfig;
 export interface AccessLogConfig {

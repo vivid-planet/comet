@@ -39,7 +39,7 @@ export interface AdminComponentPart {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BlockContext = any;
 
-export interface PreviewImage {
+interface PreviewImage {
     src: string;
     width: number;
     height: number;
@@ -50,7 +50,7 @@ export function isPreviewContentTextRule(content: PreviewContent): content is Pr
     return content.type === "text";
 }
 
-export type PreviewContentText = { type: "text"; content: ReactNode };
+type PreviewContentText = { type: "text"; content: ReactNode };
 
 export function isPreviewContentImageRule(content: PreviewContent): content is PreviewContentImage {
     return content.type === "image";

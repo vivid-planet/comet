@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Toolbar, ToolbarActions, ToolbarFillSpace, useFocusAwarePolling } from "@comet/admin";
 import { ArrowRight, Close, Delete } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, Select } from "@mui/material";
@@ -24,15 +24,6 @@ import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
 
 export { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
-
-export const selectedPageFragment = gql`
-    fragment SelectedPage on PageTreeNode {
-        id
-        name
-        path
-        documentType
-    }
-`;
 
 const StyledDialogTitle = styled(DialogTitle)`
     display: flex;

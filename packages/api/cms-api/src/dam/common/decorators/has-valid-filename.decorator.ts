@@ -20,7 +20,7 @@ export const HasValidFilename = () => {
     };
 };
 
-export interface HasValidFilenameValidationArguments extends ValidationArguments {
+interface HasValidFilenameValidationArguments extends ValidationArguments {
     object: UpdateDamFileArgs;
 }
 

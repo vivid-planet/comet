@@ -28,7 +28,7 @@ interface ColumnsBlockFactoryOptions<B extends Block> {
     layouts: ColumnsBlockLayout[];
 }
 
-export interface ColumnsBlockInputInterface<B extends BlockInputInterface> extends SimpleBlockInputInterface {
+interface ColumnsBlockInputInterface<B extends BlockInputInterface> extends SimpleBlockInputInterface {
     layout: string;
     columns: Array<
         {

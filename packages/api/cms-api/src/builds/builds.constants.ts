@@ -1,9 +1,6 @@
 export const BUILDS_MODULE_OPTIONS = "builds-module-options";
 export const BUILDS_CONFIG = "builds-config";
 
-/** Label which identifies the CronJob that checks if a build is needed */
-export const BUILD_CHECKER_LABEL = "comet-dxp.com/build-checker";
-
 /** Annotation for the build Job: defines who triggered the build (CronJob, Manual, ChangesDetected) */
 export const TRIGGER_ANNOTATION = "comet-dxp.com/trigger";
 
