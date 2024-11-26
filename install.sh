@@ -27,6 +27,7 @@ ln -sf ../../api/cms-api/block-meta.json ./packages/site/cms-site/block-meta.jso
 ln -sf ../../.env ./demo/api/.env
 ln -sf ../.env.site-configs ./demo/api/.env.site-configs
 ln -sf ../../.env.local ./demo/api/.env.local
+ln -sf ../../site-configs/site-configs.d.ts ./demo/api/src/
 
 # admin DEMO
 ln -sf ../../.env ./demo/admin/.env
@@ -34,6 +35,7 @@ ln -sf ../.env.site-configs ./demo/admin/.env.site-configs
 ln -sf ../api/schema.gql ./demo/admin/schema.gql
 ln -sf ../api/block-meta.json ./demo/admin/block-meta.json
 ln -sf ../../api/src/comet-config.json ./demo/admin/src/comet-config.json
+ln -sf ../../site-configs/site-configs.d.ts ./demo/admin/src/
 
 # site DEMO
 ln -sf ../../.env ./demo/site/.env
@@ -41,6 +43,7 @@ ln -sf ../.env.site-configs ./demo/site/.env.site-configs
 ln -sf ../api/schema.gql ./demo/site/schema.gql
 ln -sf ../api/block-meta.json ./demo/site/block-meta.json
 ln -sf ../../api/src/comet-config.json ./demo/site/src/comet-config.json
+ln -sf ../../site-configs/site-configs.d.ts ./demo/site/src/
 
 # site-pages DEMO
 ln -sf ../../.env ./demo/site-pages/.env
