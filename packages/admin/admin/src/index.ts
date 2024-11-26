@@ -192,7 +192,7 @@ export { useStoredState } from "./hooks/useStoredState";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots";
 export { messages } from "./messages";
-export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainContent";
+export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./mui/MainContent";
 export { MasterLayout, MasterLayoutClassKey, MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutContext } from "./mui/MasterLayoutContext";
 export { MenuCollapsibleItem, MenuCollapsibleItemProps } from "./mui/menu/CollapsibleItem";
