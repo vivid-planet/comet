@@ -124,6 +124,14 @@ Due to `useDataGridRemote` is intended to return Mui DataGrid compatible props, 
 > The error and onError props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the error boundary. The components.ErrorOverlay slot was also removed.
 > [Mui - Migration Guide v5 to v6 - removed props](https://mui.com/x/migration/migration-data-grid-v5/#removed-props)
 
+> **_Codemod available:_**
+>
+> ```
+> npx @comet/upgrade v8/mui-data-grid-remove-error-prop.ts
+> ```
+>
+> **Note:** error handling must be implemented manually, the codemod simple removes all usages of the error prop on DataGrids and adds and @comet/upgrade TODO: comment.
+
 The recommended way to handle errors is to use the `ErrorBoundary` in the parent component and throw errors where the query error happens.
 
 ```diff
