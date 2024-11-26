@@ -404,6 +404,7 @@ export function generateGrid(
 
             return {
                 name,
+                headerName: column.headerName,
                 type,
                 gridType: "singleSelect" as const,
                 valueOptions,
