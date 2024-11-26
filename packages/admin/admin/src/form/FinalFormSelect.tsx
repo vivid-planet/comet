@@ -1,6 +1,5 @@
 import { CircularProgress, InputAdornment, MenuItem, Select, SelectProps } from "@mui/material";
 import { ReactNode } from "react";
-import * as React from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
