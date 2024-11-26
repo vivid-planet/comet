@@ -27,6 +27,7 @@ import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
     FileUploadField,
+    GQLFinalFormFileUploadDownloadableFragment,
     GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -62,7 +63,7 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
+    priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 

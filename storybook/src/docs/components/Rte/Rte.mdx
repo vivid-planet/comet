@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as RteStories from "./Rte.stories";
 
@@ -31,9 +31,7 @@ export default function MyRte() {
 }
 ```
 
-<Canvas>
-    <Story of={RteStories.Minimal} />
-</Canvas>
+<Canvas of={RteStories.Minimal} />
 
 ## Define format of your source data
 
@@ -51,9 +49,7 @@ const [useRteApi] = makeRteApi({
 });
 ```
 
-<Canvas>
-    <Story of={RteStories.SourceDataDefault} />
-</Canvas>
+<Canvas of={RteStories.SourceDataDefault} />
 
 When your persistence layer supports storing JSON-objects, string serialization is not needed. This is the implementation in Comet CMS.
 
@@ -80,9 +76,7 @@ const [useRteApi] = makeRteApi<Markdown>({
 });
 ```
 
-<Canvas>
-    <Story of={RteStories.SourceDataMarkdown} />
-</Canvas>
+<Canvas of={RteStories.SourceDataMarkdown} />
 
 ### Setup with HTML as source data
 
@@ -103,6 +97,4 @@ const [useRteApi] = makeRteApi<Html>({
 });
 ```
 
-<Canvas>
-    <Story of={RteStories.SourceDataHtml} />
-</Canvas>
+<Canvas of={RteStories.SourceDataHtml} />
