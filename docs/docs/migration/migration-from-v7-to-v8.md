@@ -111,7 +111,13 @@ Due to `useDataGridRemote` is intended to return Mui DataGrid compatible props, 
 +  muiGridSortToGql(dataGridRemote.sortModel, columns);
 ```
 
-> **_Codemod available:_** work in progress - TODO: ADD COMMAND
+> **_Codemod available:_**
+>
+> ```
+> npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
+> ```
+
+**NOTE:** Be aware, this will naivly change the second argument of `muiGridSortToGql` function to columns variable, attempting that this variable is available in the current scope.
 
 #### MUI removed error prop on DataGrid
 
