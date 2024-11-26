@@ -16,7 +16,7 @@ import { FormattedMessage } from "react-intl";
 
 import { GQLDamFileDuplicatesQuery, GQLDamFileDuplicatesQueryVariables } from "./Duplicates.generated";
 
-export const damFileDuplicatesQuery = gql`
+const damFileDuplicatesQuery = gql`
     query DamFileDuplicates($id: ID!) {
         damFile(id: $id) {
             duplicates {

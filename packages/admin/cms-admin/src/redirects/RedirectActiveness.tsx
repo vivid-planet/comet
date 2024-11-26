@@ -11,7 +11,7 @@ import {
     GQLUpdateRedirectActivenessMutationVariables,
 } from "./RedirectActiveness.generated";
 
-export const updateRedirectActivenessMutation = gql`
+const updateRedirectActivenessMutation = gql`
     mutation UpdateRedirectActiveness($id: ID!, $input: RedirectUpdateActivenessInput!) {
         updateRedirectActiveness(id: $id, input: $input) {
             id

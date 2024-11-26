@@ -20,7 +20,7 @@ import {
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
 
-export interface ListBlockItemDataInterface extends BlockData {
+interface ListBlockItemDataInterface extends BlockData {
     key: string;
     visible: boolean;
     props: BlockDataInterface;
@@ -53,7 +53,7 @@ export function BaseListBlockItemData<B extends Block>(block: B): ClassConstruct
     return ListBlockItemData;
 }
 
-export interface ListBlockItemInputInterface<Input extends BlockInputInterface> extends BlockInput {
+interface ListBlockItemInputInterface<Input extends BlockInputInterface> extends BlockInput {
     key: string;
     visible: boolean;
     props: Input;
@@ -92,7 +92,7 @@ export function BaseListBlockItemInput<B extends Block>(
     return ListBlockItemInput;
 }
 
-export interface ListBlockInputInterface<B extends BlockInputInterface> extends SimpleBlockInputInterface {
+interface ListBlockInputInterface<B extends BlockInputInterface> extends SimpleBlockInputInterface {
     blocks: Array<
         {
             key: string;

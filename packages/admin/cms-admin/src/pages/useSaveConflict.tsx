@@ -5,7 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { SaveConflictDialog } from "./SaveConflictDialog";
 
-export interface SaveConflictOptions {
+interface SaveConflictOptions {
     checkConflict: () => Promise<boolean>;
     hasChanges: () => boolean;
     loadLatestVersion: () => Promise<void>;

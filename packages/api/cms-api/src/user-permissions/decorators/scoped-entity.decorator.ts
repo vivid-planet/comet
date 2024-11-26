@@ -3,7 +3,7 @@ import { CustomDecorator, SetMetadata, Type } from "@nestjs/common";
 
 import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
 
-export type EntityScopeFunction<Entity extends AnyEntity = AnyEntity> = (
+type EntityScopeFunction<Entity extends AnyEntity = AnyEntity> = (
     item: Entity,
 ) => ContentScope | ContentScope[] | Promise<ContentScope | ContentScope[]>;
 export interface EntityScopeServiceInterface<Entity extends AnyEntity = AnyEntity> {

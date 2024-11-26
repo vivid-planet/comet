@@ -6,7 +6,7 @@ interface EntityInfoInterface {
     secondaryInformation?: string;
 }
 
-export type GetEntityInfo<Entity extends AnyEntity = AnyEntity> = (item: Entity) => EntityInfoInterface | Promise<EntityInfoInterface>;
+type GetEntityInfo<Entity extends AnyEntity = AnyEntity> = (item: Entity) => EntityInfoInterface | Promise<EntityInfoInterface>;
 export interface EntityInfoServiceInterface<Entity extends AnyEntity = AnyEntity> {
     getEntityInfo: GetEntityInfo<Entity>;
 }

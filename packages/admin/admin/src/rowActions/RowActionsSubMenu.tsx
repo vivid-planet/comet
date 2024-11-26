@@ -6,7 +6,7 @@ import { RowActionsIconItem, RowActionsIconItemProps } from "./RowActionsIconIte
 import { RowActionsListItem, RowActionsListItemProps } from "./RowActionsListItem";
 import { RowActionsMenuContext } from "./RowActionsMenu";
 
-export interface RowActionsSubMenuComponentsProps {
+interface RowActionsSubMenuComponentsProps {
     rowActionsIconItem?: Partial<RowActionsIconItemProps>;
     rowActionsListItem?: Partial<RowActionsListItemProps>;
 }

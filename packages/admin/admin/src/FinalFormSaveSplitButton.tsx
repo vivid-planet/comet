@@ -9,7 +9,7 @@ import { FinalFormSubmitEvent } from "./FinalForm";
 import { messages } from "./messages";
 import { useStackApi } from "./stack/Api";
 
-export interface FormSaveButtonProps {
+interface FormSaveButtonProps {
     localStorageKey?: string;
     hasConflict?: boolean;
 }

@@ -5,7 +5,7 @@ import { ContentGenerationServiceInterface } from "./content-generation-service.
 import { GenerateAltTextResolver } from "./generate-alt-text.resolver";
 import { GenerateImageTitleResolver } from "./generate-image-title.resolver";
 
-export interface ContentGenerationModuleOptions {
+interface ContentGenerationModuleOptions {
     Service: Type<ContentGenerationServiceInterface>;
     imports?: ModuleMetadata["imports"];
 }

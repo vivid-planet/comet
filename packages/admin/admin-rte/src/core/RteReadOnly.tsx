@@ -8,7 +8,7 @@ import { styleMap } from "./Rte";
 import { IBlocktypeMap as IBlocktypeMap, ICustomBlockTypeMap_Deprecated } from "./types";
 import createBlockRenderMap from "./utils/createBlockRenderMap";
 
-export interface IRteReadOnlyOptions {
+interface IRteReadOnlyOptions {
     blocktypeMap: IBlocktypeMap;
     /**
      * @deprecated use `blocktypeMap` instead

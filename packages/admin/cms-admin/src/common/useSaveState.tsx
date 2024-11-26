@@ -83,7 +83,7 @@ interface SaveStateSaveButtonProps {
     saving: boolean;
     saveError: "invalid" | "conflict" | "error" | undefined;
 }
-export function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }: SaveStateSaveButtonProps): JSX.Element {
+function SaveStateSaveButton({ handleSaveClick, hasChanges, saving, saveError }: SaveStateSaveButtonProps): JSX.Element {
     const saveButtonProps: Omit<SaveButtonProps, "children" | "onClick"> = {
         color: "primary",
         variant: "contained",

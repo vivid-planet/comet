@@ -1,13 +1,13 @@
 import { DropTarget, DropTargetBeforeAfter } from "./PageTreeRow";
 import { PageTreePage } from "./usePageTree";
 
-export interface PageTreeUpdateInfo {
+interface PageTreeUpdateInfo {
     parentId: string | null;
     position: number;
     neighbourPage: PageTreePage;
 }
 
-export interface PageTreeUndoUpdateInfo {
+interface PageTreeUndoUpdateInfo {
     afterId: string | null;
     beforeId: string | null;
 }

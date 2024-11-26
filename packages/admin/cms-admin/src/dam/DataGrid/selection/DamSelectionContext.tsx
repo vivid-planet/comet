@@ -19,7 +19,7 @@ import {
     GQLRestoreFilesMutationVariables,
 } from "./DamSelectionContext.generated";
 
-export const damFileDownloadInfoFragment = gql`
+const damFileDownloadInfoFragment = gql`
     fragment DamFileDownloadInfo on DamFile {
         id
         fileUrl
@@ -57,7 +57,7 @@ interface DamSelectionApi {
     hasDownloadErrors: boolean;
 }
 
-export const DamSelectionContext = createContext<DamSelectionApi>({
+const DamSelectionContext = createContext<DamSelectionApi>({
     selectionMap: new Map(),
     setSelectionMap: () => {
         throw new Error("Missing DamSelectionContext. Please add a <DamSelectionProvider /> somewhere up in the tree.");
