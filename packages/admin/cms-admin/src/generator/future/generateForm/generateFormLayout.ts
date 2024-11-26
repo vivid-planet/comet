@@ -153,6 +153,12 @@ export function generateFormLayout({
         if (subfieldsFormValuesDefaultInitCode.length) {
             wrappingFormValuesConfig.defaultInitializationCode = `${name}: { ${subfieldsFormValuesDefaultInitCode.join(", ")}}`;
         }
+        const subfieldsFormValuesInitVarDependency = generatedFields.formValuesConfig
+            .filter((config) => !!config.initializationVarDependency)
+            .map((config) => config.initializationVarDependency);
+        if (subfieldsFormValuesInitVarDependency.length) {
+            wrappingFormValuesConfig.initializationVarDependency = subfieldsFormValuesInitVarDependency.join(", ");
+        }
         formValuesConfig.push(wrappingFormValuesConfig);
 
         imports.push({ name: "FinalFormSwitch", importPath: "@comet/admin" });

@@ -271,6 +271,7 @@ export function generateFormField({
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,
+                defaultInitializationCode: initialValuePropConfig ? `${name}: ${name} ? String(${name}) : undefined` : undefined,
                 ...{
                     omitFromFragmentType: name,
                     typeCode: `${name}${!required ? `?` : ``}: string;`,

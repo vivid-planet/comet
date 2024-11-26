@@ -366,6 +366,9 @@ importers:
       ts-node:
         specifier: ^10.0.0
         version: 10.9.1(@types/node@22.9.0)(typescript@4.9.4)
+      type-fest:
+        specifier: ^4.28.1
+        version: 4.28.1
       typescript:
         specifier: ^4.0.0
         version: 4.9.4
@@ -32929,6 +32932,11 @@ packages:
   /type-fest@3.13.1:
     resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
     engines: {node: '>=14.16'}
+
+  /type-fest@4.28.1:
+    resolution: {integrity: sha512-LO/+yb3mf46YqfUC7QkkoAlpa7CTYh//V1Xy9+NQ+pKqDqXIq0NTfPfQRwFfCt+if4Qkwb9gzZfsl6E5TkXZGw==}
+    engines: {node: '>=16'}
+    dev: true
 
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}

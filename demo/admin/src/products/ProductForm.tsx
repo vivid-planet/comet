@@ -38,6 +38,7 @@ import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import * as React from "react";
 import { FormattedMessage } from "react-intl";
+import { PartialDeep } from "type-fest";
 
 import {
     GQLProductCategoriesSelectQuery,
@@ -71,15 +72,16 @@ type ProductFormManualFragment = Omit<GQLProductFormManualFragment, "priceList" 
     datasheets: Array<GQLFinalFormFileUploadFragment>;
 };
 
-type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry"> & {
+type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry" | "dimensions"> & {
     image: BlockState<typeof rootBlocks.image>;
     manufacturerCountry?: { id: string };
+    dimensions: Omit<NonNullable<ProductFormManualFragment["dimensions"]>, "width" | "height" | "depth"> & {
+        width: string;
+        height: string;
+        depth: string;
+    };
 };
-
-// TODO should we use a deep partial here?
-type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
-    dimensions?: { width?: number; height?: number; depth?: number } | null;
-};
+type InitialFormValues = PartialDeep<FormValues>;
 
 export function ProductForm({ id, width }: FormProps) {
     const client = useApolloClient();
@@ -92,7 +94,7 @@ export function ProductForm({ id, width }: FormProps) {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = useMemo<InitialFormValues>(() => {
+    const initialValues = useMemo<InitialFormValues>((): InitialFormValues => {
         const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
         if (!filteredData) {
             return {
@@ -100,7 +102,7 @@ export function ProductForm({ id, width }: FormProps) {
                 inStock: false,
                 additionalTypes: [],
                 tags: [],
-                dimensions: { width },
+                dimensions: { width: width ? String(width) : undefined },
             };
         }
         return {
@@ -109,6 +111,13 @@ export function ProductForm({ id, width }: FormProps) {
             manufacturerCountry: filteredData.manufacturerCountry
                 ? {
                       id: filteredData.manufacturerCountry?.addressAsEmbeddable.country,
+                  }
+                : undefined,
+            dimensions: filteredData.dimensions
+                ? {
+                      width: filteredData.dimensions?.width ? String(filteredData.dimensions?.width) : undefined,
+                      height: filteredData.dimensions?.height ? String(filteredData.dimensions?.height) : undefined,
+                      depth: filteredData.dimensions?.depth ? String(filteredData.dimensions?.depth) : undefined,
                   }
                 : undefined,
         };
@@ -140,6 +149,13 @@ export function ProductForm({ id, width }: FormProps) {
             priceList: formValues.priceList ? formValues.priceList.id : null,
             datasheets: formValues.datasheets?.map(({ id }) => id),
             manufacturer: formValues.manufacturer?.id,
+            dimensions: formValues.dimensions
+                ? {
+                      width: parseFloat(formValues.dimensions.width),
+                      height: parseFloat(formValues.dimensions.height),
+                      depth: parseFloat(formValues.dimensions.depth),
+                  }
+                : undefined,
         };
 
         if (mode === "edit") {

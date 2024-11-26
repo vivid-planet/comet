@@ -268,6 +268,7 @@ export function generateForm(
     import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
+    import { PartialDeep } from "type-fest";
     import isEqual from "lodash.isequal";
     import React from "react";
     import { FormattedMessage } from "react-intl";
@@ -300,6 +301,8 @@ export function generateForm(
             : ""
     };
 
+    type InitialFormValues = PartialDeep<FormValues>;
+
     ${formPropsTypeCode}
 
     export function ${exportName}(${formPropsParamsCode}): React.ReactElement {
@@ -321,7 +324,7 @@ export function generateForm(
 
         ${
             editMode
-                ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
+                ? `const initialValues = React.useMemo<InitialFormValues>((): InitialFormValues => data?.${instanceGqlType}
         ? {
             ...filterByFragment<${filterByFragmentType}>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${formValuesConfig
@@ -441,7 +444,7 @@ export function generateForm(
         }
 
         return (
-            <FinalForm<FormValues>
+            <FinalForm<FormValues, InitialFormValues>
                 apiRef={formApiRef}
                 onSubmit={handleSubmit}
                 mode=${mode == "all" ? `{mode}` : editMode ? `"edit"` : `"add"`}
