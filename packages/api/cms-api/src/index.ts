@@ -59,6 +59,7 @@ export { RootBlockEntity } from "./blocks/decorators/root-block-entity";
 export { EmailLinkBlock } from "./blocks/email-link.block";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";
 export { ColumnsBlockFactory } from "./blocks/factories/columns-block.factory";
+export { BlocksBlockInputInterface } from "./blocks/factories/createBlocksBlock";
 export {
     BaseBlocksBlockItemData,
     BaseBlocksBlockItemInput,

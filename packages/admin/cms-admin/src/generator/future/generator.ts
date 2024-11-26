@@ -113,7 +113,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     fields: (FormFieldConfig<T> | FormLayoutConfig<T>)[];
 };
 
-export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
+type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
 export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;

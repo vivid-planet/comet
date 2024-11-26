@@ -15,16 +15,16 @@ import { FormatDateOptions, FormattedTime, useIntl } from "react-intl";
 
 import { getClosestDateToDate, getDateFromTimeValue, getDateRangeListByMinuteStep } from "../utils/timePickerHelpers";
 
-export type TimePickerClassKey = InputWithPopperClassKey | "startAdornment" | "timeOptionsList" | "timeOptionItem";
+type TimePickerClassKey = InputWithPopperClassKey | "startAdornment" | "timeOptionsList" | "timeOptionItem";
 
-export type SlotProps = ThemedComponentBaseProps<{
+type SlotProps = ThemedComponentBaseProps<{
     root: typeof InputWithPopper;
     startAdornment: typeof InputAdornment;
     timeOptionsList: typeof MenuList;
     timeOptionItem: typeof MenuItem;
 }>["slotProps"];
 
-export const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
+const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "root",
 })();

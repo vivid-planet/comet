@@ -3,7 +3,7 @@ import { CSSProperties } from "react";
 
 import { RteProps } from "../Rte";
 
-export interface RteTheme {
+interface RteTheme {
     colors: {
         border: CSSProperties["color"];
         toolbarBackground: CSSProperties["color"];

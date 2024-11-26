@@ -6,7 +6,7 @@ import { TextMatch } from "../../common/MarkedMatches";
 type DamItems = Array<{ id: string; name: string }>;
 export type DamItemMatches = Map<string, TextMatch[]>;
 
-export interface DamSearchHighlightingApi {
+interface DamSearchHighlightingApi {
     matches: DamItemMatches;
 }
 

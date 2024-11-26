@@ -5,7 +5,7 @@ import { css, Theme, useThemeProps } from "@mui/material/styles";
 import { useRef, useState } from "react";
 import { useIntl } from "react-intl";
 
-export interface DatePickerNavigationProps
+interface DatePickerNavigationProps
     extends ThemedComponentBaseProps<{
         root: "div";
         selectMonthButton: typeof Button;
@@ -107,7 +107,7 @@ export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
     );
 };
 
-export type DatePickerNavigationClassKey =
+type DatePickerNavigationClassKey =
     | "root"
     | "selectButton"
     | "selectMonthButton"

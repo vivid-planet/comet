@@ -87,7 +87,7 @@ export class BlobStorageBackendService implements BlobStorageBackendInterface {
     }
 }
 
-export const normalizeHeaders = (headers: CreateFileOptions["headers"]): CreateFileOptions["headers"] => {
+const normalizeHeaders = (headers: CreateFileOptions["headers"]): CreateFileOptions["headers"] => {
     const result: CreateFileOptions["headers"] = {};
 
     for (const [key, value] of Object.entries(headers)) {

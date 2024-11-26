@@ -24,7 +24,7 @@ export interface TreeMapNode {
  */
 export class TreeMap<T extends TreeMapNode> extends Map<string, Array<T>> {}
 
-export type TreeMapTraverseMode = "pre-order" | "post-order";
+type TreeMapTraverseMode = "pre-order" | "post-order";
 
 export const traverse = <T extends TreeMapNode>(
     tree: TreeMap<T>,
@@ -55,7 +55,7 @@ export const traversePreOrder = <T extends TreeMapNode>(tree: TreeMap<T>, onTrav
     traverse("root", 1);
 };
 
-export const traversePostOrder = <T extends TreeMapNode>(tree: TreeMap<T>, onTraverse: (element: T, level: number) => void): void => {
+const traversePostOrder = <T extends TreeMapNode>(tree: TreeMap<T>, onTraverse: (element: T, level: number) => void): void => {
     const traverse = (parentId: string, level = 1) => {
         const children = tree.get(parentId) || [];
 
@@ -210,16 +210,4 @@ export const subTreeFromNodes = <T extends TreeMapNode>(nodeIds: string[], tree:
     };
 
     return subTreeForParent(nodeIds);
-};
-
-export const printTreeMap = <T extends TreeMapNode>(tree: TreeMap<T>): void => {
-    traverse(
-        tree,
-        (element: T, level: number) => {
-            const indicator = "-".repeat(level);
-            // eslint-disable-next-line no-console
-            console.log(`${indicator} ${element.id}`);
-        },
-        "pre-order",
-    );
 };

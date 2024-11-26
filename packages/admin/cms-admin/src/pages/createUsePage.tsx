@@ -75,7 +75,7 @@ type ReplaceBlockInputDataWithBlockState<Doc extends Record<string, unknown> | n
           [K in keyof Doc]: K extends "id" ? string : K extends keyof RootBlocks ? BlockState<RootBlocks[K]> : Doc[K]; // key id is always a string and never a block
       };
 
-export type PageState<
+type PageState<
     GQLEditPageQuery extends GQLEditPageQueryInterface<PageType> | null,
     RootBlocks extends RootBlocksInterface,
     PageType extends string,

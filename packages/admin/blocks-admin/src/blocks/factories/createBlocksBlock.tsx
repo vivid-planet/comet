@@ -69,7 +69,7 @@ export interface BlocksBlockFragment<AdditionalItemFields extends Record<string,
     >;
 }
 
-export interface BlocksBlockOutput<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
+interface BlocksBlockOutput<AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields> {
     blocks: Array<
         {
             [key: string]: unknown;

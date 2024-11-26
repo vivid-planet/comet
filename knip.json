@@ -1,0 +1,73 @@
+{
+    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "workspaces": {
+        "packages/cli": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/eslint-config": {
+            "ignore": ["*"]
+        },
+        "packages/admin/admin-babel-preset": {
+            "ignore": ["*"]
+        },
+        "packages/eslint-plugin-react": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/admin-icons": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/admin": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["jest-junit"]
+        },
+        "packages/admin/admin-theme": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/admin-color-picker": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/admin-date-time": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/admin-react-select": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/admin-rte": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/blocks-admin": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/admin/cms-admin": {
+            "entry": ["./src/index.ts", "./src/generator/generate.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/cms-api": {
+            "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "packages/cms-site": {
+            "entry": ["./src/index.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
+        },
+        "demo/admin": {
+            "entry": ["./src/loader.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./codegen.ts", "./schema.gql"],
+            "ignoreDependencies": ["@swc/plugin-emotion"]
+        }
+    },
+    "rules": {
+        "enumMembers": "off"
+    }
+}
