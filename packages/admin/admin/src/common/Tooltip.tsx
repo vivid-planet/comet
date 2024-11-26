@@ -3,6 +3,7 @@ import {
     ComponentsOverrides,
     Popper as MuiPopper,
     Theme,
+    // eslint-disable-next-line no-restricted-imports
     Tooltip as MuiTooltip,
     tooltipClasses,
     TooltipClassKey as MuiTooltipClassKey,

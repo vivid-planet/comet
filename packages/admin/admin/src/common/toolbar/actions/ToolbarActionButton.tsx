@@ -1,6 +1,7 @@
-import { Button, ButtonProps, ComponentsOverrides, IconButton, Tooltip } from "@mui/material";
+import { Button, ButtonProps, ComponentsOverrides, IconButton } from "@mui/material";
 import { css, Theme, useTheme, useThemeProps } from "@mui/material/styles";
 
+import { Tooltip } from "../../../common/Tooltip";
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../../helpers/useWindowSize";
