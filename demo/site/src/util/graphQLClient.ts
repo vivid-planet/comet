@@ -1,6 +1,6 @@
 import {
+    convertPreviewDataToHeaders,
     createFetchWithDefaults,
-    createFetchWithPreviewHeaders,
     createGraphQLFetch as createGraphQLFetchLibrary,
     SitePreviewData,
 } from "@comet/cms-site";
@@ -14,7 +14,9 @@ export function createGraphQLFetch(previewData?: SitePreviewData) {
           }
         : undefined;
     return createGraphQLFetchLibrary(
-        createFetchWithDefaults(createFetchWithPreviewHeaders(fetch, previewData), { next: { revalidate: 15 * 60 }, headers }),
+        // set a default revalidate time of 7.5 minutes to get an effective cache duration of 15 minutes if a CDN cache is enabled
+        // see cache-handler.ts for maximum cache duration (24 hours)
+        createFetchWithDefaults(fetch, { next: { revalidate: 7.5 * 60 }, headers: { ...convertPreviewDataToHeaders(previewData), ...headers } }),
         graphQLApiUrl,
     );
 }

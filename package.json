@@ -22,14 +22,14 @@
         "dev:demo:admin": "dev-pm start @demo-admin",
         "dev:demo:api": "dev-pm start @demo-api",
         "dev:demo:site": "dev-pm start @demo-site",
+        "dev:docs": "dev-pm start docs",
         "postinstall": "husky install",
         "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm recursive run lint",
-        "lint:root": "$npm_execpath prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}'",
+        "lint:root": "$npm_execpath prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
         "lint:eslint": "pnpm recursive run lint:eslint",
         "lint:tsc": "pnpm recursive run lint:tsc",
         "storybook": "dev-pm start storybook",
-        "docs": "dev-pm start docs",
         "test": "pnpm recursive run test",
         "version": "$npm_execpath changeset version && pnpm install --lockfile-only",
         "publish": "pnpm run build:packages && $npm_execpath changeset publish"
@@ -39,7 +39,8 @@
         "@comet/dev-process-manager": "^2.5.1",
         "@comet/eslint-plugin": "workspace:*",
         "@formatjs/cli": "^6.0.0",
-        "@types/node": "^18.0.0",
+        "@types/node": "^22.0.0",
+        "cspell": "^8.15.4",
         "dotenv-cli": "^7.0.0",
         "husky": "^7.0.4",
         "lint-staged": "^12.3.7",
@@ -48,10 +49,10 @@
         "typescript": "^4.2.2",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@8.15.5",
+    "packageManager": "pnpm@9.14.2",
     "engines": {
-        "node": "18",
-        "pnpm": "8"
+        "node": "22",
+        "pnpm": "9.14.2"
     },
     "dependencies": {
         "@changesets/cli": "^2.26.0"

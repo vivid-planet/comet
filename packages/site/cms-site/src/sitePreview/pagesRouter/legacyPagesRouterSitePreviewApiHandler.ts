@@ -7,10 +7,13 @@ async function legacyPagesRouterSitePreviewApiHandler(req: NextApiRequest, res: 
     const jwt = params.jwt;
 
     if (typeof jwt !== "string") {
-        throw new Error("Missing jwt parameter");
+        return res.status(400).json({ error: "JWT-Parameter is missing." });
     }
 
     const data = await verifySitePreviewJwt(jwt);
+    if (!data) {
+        return res.status(400).json({ error: "JWT-validation failed." });
+    }
 
     res.setPreviewData(data);
     res.redirect(data.path);

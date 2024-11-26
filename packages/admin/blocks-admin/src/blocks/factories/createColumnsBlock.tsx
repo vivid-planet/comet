@@ -165,7 +165,11 @@ export function createColumnsBlock<T extends BlockInterface>({
                     return {
                         key: column.key,
                         visible: column.visible,
-                        props: contentBlock.createPreviewState(column.props, { ...previewContext, parentUrl: blockAdminRoute }),
+                        props: contentBlock.createPreviewState(column.props, {
+                            ...previewContext,
+                            parentUrlSubRoute: undefined,
+                            parentUrl: blockAdminRoute,
+                        }),
                         adminRoute: blockAdminRoute,
                         adminMeta: { route: blockAdminRoute },
                     };

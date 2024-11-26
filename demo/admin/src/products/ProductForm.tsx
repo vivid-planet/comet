@@ -58,6 +58,7 @@ import {
 
 interface FormProps {
     id?: string;
+    width?: number;
 }
 
 const rootBlocks = {
@@ -75,7 +76,12 @@ type FormValues = Omit<ProductFormManualFragment, "image" | "manufacturerCountry
     manufacturerCountry?: { id: string };
 };
 
-export function ProductForm({ id }: FormProps) {
+// TODO should we use a deep partial here?
+type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
+    dimensions?: { width?: number; height?: number; depth?: number } | null;
+};
+
+export function ProductForm({ id, width }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -86,7 +92,7 @@ export function ProductForm({ id }: FormProps) {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormValues> = useMemo<Partial<FormValues>>(() => {
+    const initialValues = useMemo<InitialFormValues>(() => {
         const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
         if (!filteredData) {
             return {
@@ -94,6 +100,7 @@ export function ProductForm({ id }: FormProps) {
                 inStock: false,
                 additionalTypes: [],
                 tags: [],
+                dimensions: { width },
             };
         }
         return {
@@ -105,7 +112,7 @@ export function ProductForm({ id }: FormProps) {
                   }
                 : undefined,
         };
-    }, [data]);
+    }, [data, width]);
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -164,7 +171,7 @@ export function ProductForm({ id }: FormProps) {
     }
 
     return (
-        <FinalForm<FormValues>
+        <FinalForm<FormValues, InitialFormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}

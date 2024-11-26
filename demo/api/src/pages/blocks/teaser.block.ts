@@ -11,6 +11,7 @@ import {
     ExtractBlockInput,
 } from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
+import { ColumnsBlock } from "@src/pages/blocks/columns.block";
 
 import { HeadlineBlock } from "./headline.block";
 
@@ -26,6 +27,9 @@ class TeaserBlockData extends BlockData {
 
     @ChildBlock(LinkListBlock)
     buttons: ExtractBlockData<typeof LinkListBlock>;
+
+    @ChildBlock(ColumnsBlock)
+    columns: ExtractBlockData<typeof ColumnsBlock>;
 }
 
 class TeaserBlockInput extends BlockInput {
@@ -40,6 +44,9 @@ class TeaserBlockInput extends BlockInput {
 
     @ChildBlockInput(LinkListBlock)
     buttons: ExtractBlockInput<typeof LinkListBlock>;
+
+    @ChildBlockInput(ColumnsBlock)
+    columns: ExtractBlockInput<typeof ColumnsBlock>;
 
     transformToBlockData(): BlockDataInterface {
         return blockInputToData(TeaserBlockData, this);

@@ -1,6 +1,8 @@
 import { future_GridConfig as GridConfig } from "@comet/cms-admin";
 import { GQLProduct } from "@src/graphql.generated";
 
+const typeValues = [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"];
+
 export const ProductsGrid: GridConfig<GQLProduct> = {
     type: "grid",
     gqlType: "Product",
@@ -9,6 +11,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     toolbarActionProp: true,
     rowActionProp: true,
     excelExport: true,
+    queryParamsPrefix: "products",
     initialSort: [
         { field: "inStock", sort: "desc" },
         { field: "price", sort: "asc" },
@@ -19,17 +22,47 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             name: "overview",
             headerName: "Overview",
             minWidth: 200,
-            maxWidth: 250,
             primaryText: "title",
-            secondaryText: "description",
+            secondaryText: {
+                // TODO: Change this to use the "group" type instead of "formattedMessage", once implemented (SVK-368)
+                type: "formattedMessage",
+                message: "{price} • {type} • {category} • {inStock}",
+                valueFields: {
+                    price: {
+                        type: "number",
+                        field: "price",
+                        currency: "EUR",
+                        emptyValue: "No price",
+                    },
+                    type: {
+                        type: "staticSelect",
+                        field: "type",
+                        values: typeValues,
+                        emptyValue: "No type",
+                    },
+                    category: {
+                        type: "text",
+                        field: "category.title",
+                        emptyValue: "No category",
+                    },
+                    inStock: {
+                        type: "staticSelect",
+                        field: "inStock",
+                        values: [
+                            { value: true, label: "In stock" },
+                            { value: false, label: "Out of stock" },
+                        ],
+                    },
+                },
+            },
             visible: "down('md')",
-            sortBy: ["title", "description"],
+            sortBy: ["title", "price", "type", "category", "inStock"],
             disableExport: true, // TODO: Implement `valueFormatter` for type "combination"
         },
         { type: "text", name: "title", headerName: "Titel", minWidth: 200, maxWidth: 250, visible: "up('md')" },
-        { type: "text", name: "description", headerName: "Description", visible: "up('md')" },
+        { type: "text", name: "description", headerName: "Description" },
         // TODO: Allow setting options for `intl.formatNumber` through `valueFormatter` (type "number")
-        { type: "number", name: "price", headerName: "Price", maxWidth: 150, headerInfoTooltip: "Price in EUR" },
+        { type: "number", name: "price", headerName: "Price", maxWidth: 150, headerInfoTooltip: "Price in EUR", visible: "up('md')" },
         {
             // TODO: Implement showing actual label in `valueFormatter` (type "staticSelect")
             type: "staticSelect",
@@ -37,6 +70,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             headerName: "In stock",
             flex: 1,
             minWidth: 80,
+            visible: "up('md')",
             values: [
                 {
                     value: "true",
@@ -55,7 +89,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
             ],
         },
         // TODO: Implement showing actual label in `valueFormatter` (type "staticSelect")
-        { type: "staticSelect", name: "type", maxWidth: 150, values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"] },
+        { type: "staticSelect", name: "type", maxWidth: 150, values: typeValues, visible: "up('md')" },
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "date")
         { type: "date", name: "availableSince", width: 140 },
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "dateTime")

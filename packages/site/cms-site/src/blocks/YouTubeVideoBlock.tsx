@@ -42,12 +42,13 @@ export const YouTubeVideoBlock = withPreview(
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
         if (!youtubeIdentifier) {
-            return <PreviewSkeleton type="media" hasContent={false} />;
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
         const identifier = parseYoutubeIdentifier(youtubeIdentifier);
         const searchParams = new URLSearchParams();
         searchParams.append("modestbranding", "1");
+        searchParams.append("rel", "0");
 
         if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
             searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
