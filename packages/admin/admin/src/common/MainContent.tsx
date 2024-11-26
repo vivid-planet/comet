@@ -1,8 +1,9 @@
 import { ComponentsOverrides, css, Theme, useThemeProps } from "@mui/material";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { useTopOffset } from "../helpers/useTopOffset";
 import { useIsActiveStackSwitch } from "../stack/useIsActiveStackSwitch";
 
 export type MainContentClassKey = "root" | "disablePaddingTop" | "disablePaddingBottom" | "disablePadding" | "fullHeight";
@@ -63,21 +64,14 @@ export function MainContent(inProps: MainContentProps) {
         props: inProps,
         name: "CometAdminMainContent",
     });
+
     const mainRef = useRef<HTMLElement>(null);
-    const [topOffset, setTopOffset] = useState(0);
-
-    useEffect(() => {
-        if (mainRef.current) {
-            setTopOffset(mainRef.current.offsetTop);
-        }
-    }, []);
-
     const ownerState: OwnerState = {
         fullHeight,
         disablePaddingTop,
         disablePaddingBottom,
         disablePadding,
-        topOffset,
+        topOffset: useTopOffset(mainRef),
     };
 
     return (

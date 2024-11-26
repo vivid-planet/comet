@@ -1,6 +1,4 @@
 import {
-    AppHeader,
-    AppHeaderMenuButton,
     CancelButton,
     CrudMoreActionsMenu,
     DataGridToolbar,
@@ -10,15 +8,11 @@ import {
     GridColDef,
     GridFilterButton,
     Loading,
-    MasterLayout,
-    Menu,
-    MenuItemRouterLink,
     OkayButton,
     RouterTab,
     RouterTabs,
     SaveBoundary,
     SaveBoundarySaveButton,
-    Stack,
     StackLink,
     StackMainContent,
     StackPage,
@@ -33,54 +27,17 @@ import {
     ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
-import { Add, Dashboard, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
+import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { Decorator } from "@storybook/react";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { Route } from "react-router";
 
+import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
-
-const MasterHeader = () => (
-    <AppHeader>
-        <AppHeaderMenuButton />
-    </AppHeader>
-);
-
-const MasterMenu = () => (
-    <Menu>
-        <MenuItemRouterLink primary="This page" to="/example-page" icon={<Dashboard />} />
-    </Menu>
-);
-
-function stackDecorator(): Decorator {
-    return (Story) => {
-        return (
-            <Route
-                render={() => (
-                    <Stack topLevelTitle="Example Stack Root">
-                        <Story />
-                    </Stack>
-                )}
-            />
-        );
-    };
-}
-
-function masterLayoutDecorator(): Decorator {
-    return (Story) => {
-        return (
-            <MasterLayout menuComponent={MasterMenu} headerComponent={MasterHeader}>
-                <Story />
-            </MasterLayout>
-        );
-    };
-}
 
 export default {
     title: "Docs/Best Practices/Grid and Form Layouts",
-    decorators: [masterLayoutDecorator(), stackDecorator(), storyRouterDecorator()],
+    decorators: [masterLayoutDecorator(), stackRouteDecorator(), storyRouterDecorator()],
     parameters: {
         layout: "none",
         docs: {
