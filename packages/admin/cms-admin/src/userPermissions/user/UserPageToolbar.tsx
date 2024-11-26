@@ -1,18 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
-import {
-    CrudMoreActionsMenu,
-    Loading,
-    messages,
-    StackToolbar,
-    ToolbarActions,
-    ToolbarBackButton,
-    ToolbarFillSpace,
-    ToolbarTitleItem,
-} from "@comet/admin";
+import { CrudMoreActionsMenu, Loading, StackToolbar, ToolbarActions, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { ImpersonateUser, Reset } from "@comet/admin-icons";
 import { styled } from "@mui/material/styles";
-import { FormattedMessage } from "react-intl";
 
+import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
 import { ContentScopeIndicator } from "../../contentScope/ContentScopeIndicator";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 import { startImpersonation, stopImpersonation } from "../utils/handleImpersonation";
@@ -59,11 +50,11 @@ export const UserPermissionsUserPageToolbar = ({ userId }: { userId: string }) =
                             currentUser.impersonated
                                 ? {
                                       icon: <Reset />,
-                                      label: <FormattedMessage {...messages.stopImpersonation} />,
+                                      label: commonImpersonationMessages.stopImpersonation,
                                       onClick: () => stopImpersonation,
                                   }
                                 : {
-                                      label: <FormattedMessage {...messages.impersonate} />,
+                                      label: commonImpersonationMessages.startImpersonation,
                                       icon: <ImpersonateUser />,
                                       disabled: userId === currentUser.id,
                                       onClick: () => startImpersonation(userId),

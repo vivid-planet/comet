@@ -1,8 +1,7 @@
-import { messages } from "@comet/admin";
 import { Button, ButtonProps } from "@mui/material";
 import Cookies from "js-cookie";
-import { FormattedMessage } from "react-intl";
 
+import { commonImpersonationMessages } from "../../common/impersonation/commonImpersonationMessages";
 import { useCurrentUser, useUserPermissionCheck } from "../hooks/currentUser";
 
 export const StopImpersonationButton = (buttonProps: ButtonProps) => {
@@ -13,7 +12,7 @@ export const StopImpersonationButton = (buttonProps: ButtonProps) => {
 
     return (
         <Button onClick={stopImpersonation} {...buttonProps}>
-            <FormattedMessage {...messages.stopImpersonation} />
+            {commonImpersonationMessages.stopImpersonation}
         </Button>
     );
 };
@@ -31,7 +30,7 @@ export const StartImpersonationButton = ({ userId }: { userId: string }) => {
     if (currentUser.id !== userId && !currentUser.impersonated) {
         return (
             <Button onClick={startImpersonation} variant="contained">
-                <FormattedMessage {...messages.startImpersonation} />
+                {commonImpersonationMessages.startImpersonation}
             </Button>
         );
     }

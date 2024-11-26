@@ -54,7 +54,4 @@ export const messages = defineMessages({
     deleteItem: { id: "comet.generic.deleteItem", defaultMessage: "Delete Item" },
     empty: { id: "comet.generic.empty", defaultMessage: "Empty" },
     downloadAsExcel: { id: "comet.generic.downloadAsExcel", defaultMessage: "Download as Excel" },
-    impersonate: { id: "comet.generic.impersonate", defaultMessage: "Impersonate" },
-    startImpersonation: { id: "comet.generic.startImpersonation", defaultMessage: "Start Impersonation" },
-    stopImpersonation: { id: "comet.generic.stopImpersonation", defaultMessage: "Stop Impersonation" },
 });

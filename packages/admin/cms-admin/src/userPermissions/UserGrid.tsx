@@ -3,7 +3,6 @@ import {
     DataGridToolbar,
     GridColDef,
     GridFilterButton,
-    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
@@ -20,6 +19,7 @@ import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-d
 import { useContext } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";
 import { useCurrentUser } from "./hooks/currentUser";
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 import { startImpersonation, stopImpersonation } from "./utils/handleImpersonation";
@@ -153,7 +153,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                                         defaultMessage="You can't impersonate yourself"
                                     />
                                 ) : (
-                                    <FormattedMessage {...messages.impersonate} />
+                                    commonImpersonationMessages.impersonate
                                 )
                             }
                         >
