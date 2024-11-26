@@ -27,12 +27,11 @@ export interface SelectFieldProps<Value extends string | number> extends SelectF
 
 export function SelectField<Value extends string | number>({ componentsProps = {}, children, options, ...restProps }: SelectFieldProps<Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;
-    const { startAdornment, endAdornment } = restProps;
 
     return (
         <Field {...restProps}>
             {(props) => (
-                <FinalFormSelect<Value> {...props} {...finalFormSelectProps} startAdornment={startAdornment} endAdornment={endAdornment}>
+                <FinalFormSelect<Value> {...props} {...finalFormSelectProps}>
                     {children
                         ? children
                         : options?.map(({ label, value, disabled }) => (
