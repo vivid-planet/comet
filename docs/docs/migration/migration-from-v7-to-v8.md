@@ -82,7 +82,7 @@ In `package.json` update the version of the MUI X packages to `^6.20.4`.
 > npx @comet/upgrade v8/mui-x-upgrade.ts
 > ```
 
-A lots of props have been renamed from Mui, for detail look, see [Mui - Migration from v5 to v6](https://mui.com/x/migration/migration-data-grid-v5). There is also a codmod from mui which handles most of the changes.
+A lots of props have been renamed from Mui, for detail look, see [Mui - Migration from v5 to v6](https://mui.com/x/migration/migration-data-grid-v5). There is also a codemod from mui which handles most of the changes.
 
 > **_Mui v5 to v6 Codemod:_**
 >
@@ -117,7 +117,7 @@ Due to `useDataGridRemote` is intended to return Mui DataGrid compatible props, 
 > npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
 > ```
 
-**NOTE:** Be aware, this will naivly change the second argument of `muiGridSortToGql` function to columns variable, attempting that this variable is available in the current scope.
+**NOTE:** Be aware, this will naively change the second argument of `muiGridSortToGql` function to columns variable, attempting that this variable is available in the current scope.
 
 #### MUI removed error prop on DataGrid
 
