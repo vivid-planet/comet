@@ -14,7 +14,7 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 
 -   Upgrade MUI packages to v6
 -   Run MUI codemods
--   Upgrade MUI-X packages to v6
+-   Upgrade MUI X packages to v6
 
 </details>
 
