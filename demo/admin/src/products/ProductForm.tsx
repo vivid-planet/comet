@@ -53,6 +53,7 @@ import {
 interface FormProps {
     id?: string;
     manufacturerCountry: string;
+    width?: number;
 }
 
 const rootBlocks = {
@@ -69,7 +70,12 @@ type FormValues = Omit<ProductFormManualFragment, "image"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
-export function ProductForm({ id, manufacturerCountry }: FormProps): React.ReactElement {
+// TODO should we use a deep partial here?
+type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
+    dimensions?: { width?: number; height?: number; depth?: number } | null;
+};
+
+export function ProductForm({ id, manufacturerCountry, width }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -80,7 +86,7 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues: Partial<FormValues> = useMemo<Partial<FormValues>>(() => {
+    const initialValues = useMemo<InitialFormValues>(() => {
         const filteredData = data ? filterByFragment<ProductFormManualFragment>(productFormFragment, data.product) : undefined;
         if (!filteredData) {
             return {
@@ -88,13 +94,14 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
                 inStock: false,
                 additionalTypes: [],
                 tags: [],
+                dimensions: { width },
             };
         }
         return {
             ...filteredData,
             image: rootBlocks.image.input2State(filteredData.image),
         };
-    }, [data]);
+    }, [data, width]);
 
     const saveConflict = useFormSaveConflict({
         checkConflict: async () => {
@@ -153,7 +160,7 @@ export function ProductForm({ id, manufacturerCountry }: FormProps): React.React
     }
 
     return (
-        <FinalForm<FormValues>
+        <FinalForm<FormValues, InitialFormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}

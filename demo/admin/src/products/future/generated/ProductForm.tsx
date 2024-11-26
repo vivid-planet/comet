@@ -27,6 +27,7 @@ import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
     FileUploadField,
+    GQLFinalFormFileUploadDownloadableFragment,
     GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -65,7 +66,7 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
+    priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
@@ -435,6 +436,7 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                                     />
                                 )}
                             </Field>
+
                             {showAvailableSince && (
                                 <Field
                                     variant="horizontal"
@@ -449,6 +451,7 @@ export function ProductForm({ showAvailableSince, availableSince, type, title, i
                                     }
                                 />
                             )}
+
                             <Field
                                 name="image"
                                 isEqual={isEqual}
