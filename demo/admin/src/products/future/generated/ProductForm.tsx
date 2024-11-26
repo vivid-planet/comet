@@ -34,6 +34,7 @@ import {
     useFormSaveConflict,
 } from "@comet/cms-admin";
 import { FormControlLabel, InputAdornment } from "@mui/material";
+import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
@@ -42,6 +43,8 @@ import { FormattedMessage } from "react-intl";
 
 import { validateTitle } from "../validateTitle";
 import {
+    GQLManufacturerCountriesSelectQuery,
+    GQLManufacturerCountriesSelectQueryVariables,
     GQLManufacturersSelectQuery,
     GQLManufacturersSelectQueryVariables,
     GQLProductCategoriesSelectQuery,
@@ -67,21 +70,26 @@ type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
-type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
+type FormValues = Omit<ProductFormDetailsFragment, "dimensions" | "manufacturerCountry"> & {
     dimensionsEnabled: boolean;
     dimensions: Omit<NonNullable<GQLProductFormDetailsFragment["dimensions"]>, "width" | "height" | "depth"> & {
         width: string;
         height: string;
         depth: string;
     };
+    manufacturerCountry?: { id: string; label: string };
     image: BlockState<typeof rootBlocks.image>;
 };
 
 interface FormProps {
+    showAvailableSince?: boolean;
+    availableSince?: Date;
+    type?: GQLProductType;
+    title?: string;
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ showAvailableSince, availableSince, type, title, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -106,14 +114,23 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 depth: String(data.product.dimensions.depth),
                             }
                           : undefined,
-                      availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
+                      manufacturerCountry: data.product.manufacturerCountry
+                          ? {
+                                id: data.product.manufacturerCountry?.id.country,
+                                label: data.product.manufacturerCountry?.label.country,
+                            }
+                          : undefined,
+                      availableSince: showAvailableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
+                      title: title,
+                      type: type,
                       inStock: false,
+                      availableSince: showAvailableSince ? availableSince : undefined,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data],
+        [data, title, type, showAvailableSince, availableSince],
     );
 
     const saveConflict = useFormSaveConflict({
@@ -127,7 +144,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         },
     });
 
-    const handleSubmit = async ({ dimensionsEnabled, ...formValues }: FormValues, form: FormApi<FormValues>, event: FinalFormSubmitEvent) => {
+    const handleSubmit = async (
+        { dimensionsEnabled, manufacturerCountry, ...formValues }: FormValues,
+        form: FormApi<FormValues>,
+        event: FinalFormSubmitEvent,
+    ) => {
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output = {
             ...formValues,
@@ -155,7 +176,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: output },
+                variables: { input: { ...output } },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProduct.id;
@@ -354,6 +375,31 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                             <AsyncSelectField
                                 variant="horizontal"
                                 fullWidth
+                                name="manufacturerCountry"
+                                label={<FormattedMessage id="product.manufacturerCountry" defaultMessage="Manufacturer Country" />}
+                                loadOptions={async () => {
+                                    const { data } = await client.query<
+                                        GQLManufacturerCountriesSelectQuery,
+                                        GQLManufacturerCountriesSelectQueryVariables
+                                    >({
+                                        query: gql`
+                                            query ManufacturerCountriesSelect {
+                                                manufacturerCountries {
+                                                    nodes {
+                                                        id
+                                                        label
+                                                    }
+                                                }
+                                            }
+                                        `,
+                                    });
+                                    return data.manufacturerCountries.nodes;
+                                }}
+                                getOptionLabel={(option) => option.label}
+                            />
+                            <AsyncSelectField
+                                variant="horizontal"
+                                fullWidth
                                 name="manufacturer"
                                 label={<FormattedMessage id="product.manufacturer" defaultMessage="Manufacturer" />}
                                 loadOptions={async () => {
@@ -368,14 +414,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                                 }
                                             }
                                         `,
-                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } },
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.manufacturerCountry?.id } } },
                                     });
                                     return data.manufacturers.nodes;
                                 }}
                                 getOptionLabel={(option) => option.name}
-                                disabled={!values?.type}
+                                disabled={!values?.manufacturerCountry}
                             />
-                            <OnChangeField name="type">
+                            <OnChangeField name="manufacturerCountry">
                                 {(value, previousValue) => {
                                     if (value.id !== previousValue.id) {
                                         form.change("manufacturer", undefined);
@@ -391,18 +437,21 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 )}
                             </Field>
 
-                            <Field
-                                variant="horizontal"
-                                fullWidth
-                                name="availableSince"
-                                component={FinalFormDatePicker}
-                                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <CalendarTodayIcon />
-                                    </InputAdornment>
-                                }
-                            />
+                            {showAvailableSince && (
+                                <Field
+                                    variant="horizontal"
+                                    fullWidth
+                                    name="availableSince"
+                                    component={FinalFormDatePicker}
+                                    label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <CalendarTodayIcon />
+                                        </InputAdornment>
+                                    }
+                                />
+                            )}
+
                             <Field
                                 name="image"
                                 isEqual={isEqual}

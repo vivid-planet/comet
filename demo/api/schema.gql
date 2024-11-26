@@ -586,6 +586,7 @@ type ProductVariant {
 
 type ManufacturerCountry {
   id: String!
+  label: String!
   used: Float!
 }
 
@@ -1171,6 +1172,7 @@ enum ManufacturerSortField {
 
 input ManufacturerCountryFilter {
   id: StringFilter
+  label: StringFilter
   used: NumberFilter
   and: [ManufacturerCountryFilter!]
   or: [ManufacturerCountryFilter!]
@@ -1483,12 +1485,14 @@ input ProductCategoryInput {
   title: String!
   slug: String!
   position: Int
+  products: [ID!]! = []
 }
 
 input ProductCategoryUpdateInput {
   title: String
   slug: String
   position: Int
+  products: [ID!]
 }
 
 input ProductTagInput {

@@ -32,6 +32,7 @@ import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
+import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -55,6 +56,9 @@ const productsFragment = gql`
         description
         availableSince
         createdAt
+        manufacturer {
+            name
+        }
     }
 `;
 
@@ -223,7 +227,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         },
         {
             field: "inStock",
-            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
             type: "singleSelect",
             valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
@@ -262,14 +266,17 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 {
                     value: "Cap",
                     label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                    cellContent: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
                 },
                 {
                     value: "Shirt",
                     label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                    cellContent: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
                 },
                 {
                     value: "Tie",
                     label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                    cellContent: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
                 },
             ],
             renderCell: renderStaticSelectCell,
@@ -294,6 +301,15 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             valueFormatter: ({ value }) =>
                 value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
             width: 170,
+        },
+        {
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: ({ row }) => row.manufacturer?.name,
+            filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "actions",
