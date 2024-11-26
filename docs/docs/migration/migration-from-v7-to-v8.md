@@ -76,15 +76,19 @@ In `package.json` update the version of the MUI X packages to `^6.20.4`.
 - "@mui/x-data-grid-premium": "^6.20.4",
 ```
 
-A lots of props have been renamed from Mui, for detail look, see [Mui - Migration from v5 to v6](https://mui.com/x/migration/migration-data-grid-v5):
+> **_Codemod available:_**
+>
+> ```
+> npx @comet/upgrade v8/mui-x-upgrade.ts
+> ```
+
+A lots of props have been renamed from Mui, for detail look, see [Mui - Migration from v5 to v6](https://mui.com/x/migration/migration-data-grid-v5). There is also a codmod from mui which handles most of the changes.
 
 > **_Mui v5 to v6 Codemod:_**
 >
 > ```
 > npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
 > ```
-
-> **_Codemod available:_** work in progress - TODO: ADD COMMAND
 
 #### `useDataGridRemote` Hook - Return Value
 
