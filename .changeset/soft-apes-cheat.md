@@ -1,19 +1,26 @@
-"use client";
-import { BlockPreviewProvider, IFrameBridgeProvider, useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
-import { PageContentBlockData } from "@src/blocks.generated";
-import { PageContentBlock } from "@src/blocks/PageContentBlock";
-import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
-import { useEffect, useState } from "react";
+---
+"@comet/blocks-admin": minor
+"@comet/cms-admin": minor
+"@comet/cms-site": minor
+---
 
+Pass the `graphQLApiUrl` for `useBlockPreviewFetch` through the `IFrameBridge`
+
+It's not necessary to set it in the site anymore. To migrate, remove the argument from `useBlockPreviewFetch()`:
+
+```diff
 const PreviewPage = () => {
     const iFrameBridge = useIFrameBridge();
 
-    const { fetch, graphQLFetch } = useBlockPreviewFetch();
+-   const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
++   const { fetch, graphQLFetch } = useBlockPreviewFetch();
 
     const [blockData, setBlockData] = useState<PageContentBlockData>();
     useEffect(() => {
         async function load() {
-            if (!graphQLFetch) return;
++           if (!graphQLFetch) {
++               return;
++           }
             if (!iFrameBridge.block) {
                 setBlockData(undefined);
                 return;
@@ -32,14 +39,4 @@ const PreviewPage = () => {
 
     return <div>{blockData && <PageContentBlock data={blockData} />}</div>;
 };
-const IFrameBridgePreviewPage = (): JSX.Element => {
-    return (
-        <IFrameBridgeProvider>
-            <BlockPreviewProvider>
-                <PreviewPage />
-            </BlockPreviewProvider>
-        </IFrameBridgeProvider>
-    );
-};
-
-export default IFrameBridgePreviewPage;
+```
