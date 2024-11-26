@@ -21,9 +21,10 @@ import {
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
 import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import * as React from "react";
+import { useState } from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { storyRouterDecorator } from "../../../story-router.decorator";
@@ -505,48 +506,16 @@ export const UseDataGridExcelExport = {
 
 export const _CrudMoreActionsMenu = {
     render: () => {
-        return (
-            <Box sx={{ height: 300, width: "100%" }}>
-                <h2>Without selection:</h2>
-                <DataGridToolbar>
-                    <ToolbarFillSpace />
-                    <ToolbarItem>
-                        <CrudMoreActionsMenu
-                            selectionSize={0}
-                            overallActions={[
-                                {
-                                    label: "Export to excel",
-                                    onClick: () => {},
-                                },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Move",
-                                    onClick: () => {},
-                                    icon: <Move />,
-                                },
-                                {
-                                    label: "Delete",
-                                    onClick: () => {},
-                                    icon: <Delete />,
-                                    divider: true,
-                                },
-                                {
-                                    label: "Download",
-                                    onClick: () => {},
-                                    icon: <Download />,
-                                },
-                            ]}
-                        />
-                    </ToolbarItem>
-                </DataGridToolbar>
+        const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+        const dataGridProps = useDataGridRemote();
 
-                <h2>With selection:</h2>
+        function DemoToolBar() {
+            return (
                 <DataGridToolbar>
                     <ToolbarFillSpace />
                     <ToolbarItem>
                         <CrudMoreActionsMenu
-                            selectionSize={2}
+                            selectionSize={selectionModel.length}
                             overallActions={[
                                 {
                                     label: "Export to excel",
@@ -574,6 +543,25 @@ export const _CrudMoreActionsMenu = {
                         />
                     </ToolbarItem>
                 </DataGridToolbar>
+            );
+        }
+
+        return (
+            <Box height={600}>
+                <DataGrid
+                    {...dataGridProps}
+                    rows={exampleRows}
+                    columns={exampleColumns}
+                    checkboxSelection
+                    disableSelectionOnClick
+                    onSelectionModelChange={(newSelectionModel) => {
+                        setSelectionModel(newSelectionModel);
+                    }}
+                    selectionModel={selectionModel}
+                    components={{
+                        Toolbar: DemoToolBar,
+                    }}
+                />
             </Box>
         );
     },
