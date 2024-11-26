@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
 
     const predefinedPageRewrite = await getPredefinedPageRewrite(siteConfig.scope.domain, pathname);
     if (predefinedPageRewrite) {
-        return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
+        return NextResponse.rewrite(new URL(`/${siteConfig.scope.domain}${predefinedPageRewrite}`, request.url));
     }
 
     return NextResponse.rewrite(
