@@ -132,10 +132,13 @@ const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>
             margin-top: ${theme.spacing(2)};
         `}
 
-        ${ownerState.disabled &&
-        css`
-            color: ${theme.palette.text.disabled};
-        `}
+        &.Mui-disabled {
+            color: ${theme.palette.text.primary};
+        }
+
+        &.Mui-focused {
+            color: ${theme.palette.text.primary};
+        }
 
         ${ownerState.hasError &&
         css`
