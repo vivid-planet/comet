@@ -8,6 +8,10 @@ const cachingFetch = createFetchInMemoryCache(fetch);
 
 type Fetch = typeof fetch;
 
+/**
+ * @deprecated Use useBlockPreviewFetch() without argument instead
+ * @param apiUrl the API URL
+ */
 export function useBlockPreviewFetch(apiUrl: string): { fetch: Fetch; graphQLFetch: GraphQLFetch };
 export function useBlockPreviewFetch(apiUrl?: string | undefined): { fetch: Fetch; graphQLFetch?: GraphQLFetch };
 export function useBlockPreviewFetch(apiUrl?: string | undefined) {
