@@ -547,7 +547,7 @@ export const _CrudMoreActionsMenu = {
         }
 
         return (
-            <Box sx={{ height: 600, width: "100%" }}>
+            <Box height={600}>
                 <DataGrid
                     {...dataGridProps}
                     rows={exampleRows}
