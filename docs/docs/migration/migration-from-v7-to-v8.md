@@ -71,66 +71,72 @@ In `package.json` update the version of the MUI X packages to `^6.20.4`.
 - "@mui/x-data-grid-pro": "^5.x.x",
 - "@mui/x-data-grid-premium": "^5.x.x",
 
-- "@mui/x-data-grid": "^6.20.4",
-- "@mui/x-data-grid-pro": "^6.20.4",
-- "@mui/x-data-grid-premium": "^6.20.4",
++ "@mui/x-data-grid": "^6.20.4",
++ "@mui/x-data-grid-pro": "^6.20.4",
++ "@mui/x-data-grid-premium": "^6.20.4",
 ```
 
-> **_Codemod available:_**
->
-> ```
-> npx @comet/upgrade v8/mui-x-upgrade.ts
-> ```
+:::note Codemod
 
-A lots of props have been renamed from Mui, for detail look, see [Mui - Migration from v5 to v6](https://mui.com/x/migration/migration-data-grid-v5). There is also a codemod from mui which handles most of the changes.
+```sh
+npx @comet/upgrade v8/mui-x-upgrade.ts
+```
 
-> **_Mui v5 to v6 Codemod:_**
->
-> ```
-> npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
-> ```
+:::
+
+A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide](https://mui.com/x/migration/migration-data-grid-v5). There is also a codemod from MUI which handles most of the changes:
+
+```sh
+npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
+```
 
 #### `useDataGridRemote` Hook - Return Value
 
-Due to `useDataGridRemote` is intended to return Mui DataGrid compatible props, the return value has been updated to match the new MUI-X DataGrid API.
+The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
 
-```typescript
+```diff
 - const { pageSize, page, onPageSizeChange } = useDataGridRemote();
-+ const { paginationModel, onPaginationModelChange } = useDataGridRemote(); // paginationModel is an object with pageSize, page and onPageSizeChange
++ const { paginationModel, onPaginationModelChange } = useDataGridRemote();
 ```
 
 #### `muiGridSortToGql` Function
 
-```diff
+The `muiGridSortToGql` helper now expects the columns instead of the `apiRef`:
 
-    const columns : GridColDef[] = [/* column definitions*/];
-    const dataGridRemote = useDataGridRemote();
-    const persistentColumnState = usePersistentColumnState("persistent_column_state");
+```diff
+const columns : GridColDef[] = [/* column definitions*/];
+const dataGridRemote = useDataGridRemote();
+const persistentColumnState = usePersistentColumnState("persistent_column_state");
 
 -  muiGridSortToGql(dataGridRemote.sortModel, persistentColumnState.apiRef);
 +  muiGridSortToGql(dataGridRemote.sortModel, columns);
 ```
 
-> **_Codemod available:_**
->
-> ```
-> npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
-> ```
+:::note Codemod
 
-**NOTE:** Be aware, this will naively change the second argument of `muiGridSortToGql` function to columns variable, attempting that this variable is available in the current scope.
+```sh
+npx @comet/upgrade v8/mui-grid-sort-to-gql.ts
+```
+
+**Note:** Be aware, this will naively change the second argument of `muiGridSortToGql` function to columns variable, attempting that this variable is available in the current scope.
+
+:::
 
 #### MUI removed error prop on DataGrid
 
 > The error and onError props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the error boundary. The components.ErrorOverlay slot was also removed.
-> [Mui - Migration Guide v5 to v6 - removed props](https://mui.com/x/migration/migration-data-grid-v5/#removed-props)
+>
+> – [MUI migration guide](https://mui.com/x/migration/migration-data-grid-v5/#removed-props)
 
-> **_Codemod available:_**
->
-> ```
-> npx @comet/upgrade v8/mui-data-grid-remove-error-prop.ts
-> ```
->
-> **Note:** error handling must be implemented manually, the codemod simple removes all usages of the error prop on DataGrids and adds and @comet/upgrade TODO: comment.
+:::note Codemod
+
+```sh
+npx @comet/upgrade v8/mui-data-grid-remove-error-prop.ts
+```
+
+**Note:** error handling must be implemented manually, the codemod simple removes all usages of the error prop on DataGrids and adds a TODO: comment.
+
+:::
 
 The recommended way to handle errors is to use the `ErrorBoundary` in the parent component and throw errors where the query error happens.
 
