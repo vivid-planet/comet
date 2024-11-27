@@ -32,7 +32,7 @@ export interface IFrameBridgeContext {
     block?: any;
     showOnlyVisible: boolean;
     selectedAdminRoute?: string;
-    hoveredAdminRoute?: string;
+    hoveredAdminRoute?: string | null;
     sendSelectComponent: (id: string) => void;
     sendHoverComponent: (route: string | null) => void;
     /**
@@ -73,7 +73,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [block, setBlock] = useState<unknown | undefined>(undefined);
     const [showOnlyVisible, setShowOnlyVisible] = useState<boolean>(false);
     const [selectedAdminRoute, setSelectedAdminRoute] = useState<string | undefined>(undefined);
-    const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | undefined>(undefined);
+    const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | null>(null);
     const [showOutlines, setShowOutlines] = useState<boolean>(false);
     const [contentScope, setContentScope] = useState<unknown>(undefined);
     const [previewElements, setPreviewElements] = useState<PreviewElement[]>([]);
