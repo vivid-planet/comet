@@ -6,7 +6,7 @@ id: api-generator
 
 The API Generator can be used to generate the usual CRUD operations in GraphQL for an entity.
 
-## Annotate Entity
+## Annotate entity
 
 The API Generator uses the entity and the fields defined within it to generate resolvers, services, inputs, and other
 DTOs for the feature. For this, the entity must be annotated with the `CrudGenerator` decorator:
@@ -25,19 +25,19 @@ For features that should exist only once per scope (e.g., a footer), there is th
 decorator. The usage of both decorators is the same.
 :::
 
-### `@CrudGenerator()` Options
+### `@CrudGenerator()` options
 
-| Parameter            | Type                 | Default     | Description                                                                                                                                                                                                                                 |
-| -------------------- | -------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `targetDirectory`    | `string`             | Required    | The directory where the CRUD operations are generated.                                                                                                                                                                                      |
-| `requiredPermission` | `string[] \| string` | `undefined` | Permission(s) required to access the CRUD operations.                                                                                                                                                                                       |
-| `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                                                                                                                                                                                                 |
-| `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                                                                                                                                                                                                 |
-| `delete`             | `boolean`            | `true`      | If `true`, includes the "delete" operation.                                                                                                                                                                                                 |
-| `list`               | `boolean`            | `true`      | If `true`, includes the "list" operation.                                                                                                                                                                                                   |
-| `position`           | `object`             | `undefined` | Only relevant if the entity has the magic `position` attribute. This option allows to split the position by specific fields. E.g. `{ groupByFields: ["country"] }` means the `position` starts over at 1 for each distinct `country` value. |
+| Parameter            | Type                 | Default     | Description                                                                                                                                                                                                                             |
+| -------------------- | -------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `targetDirectory`    | `string`             | Required    | The directory where the CRUD operations are generated.                                                                                                                                                                                  |
+| `requiredPermission` | `string[] \| string` | `undefined` | Permission(s) required to access the CRUD operations.                                                                                                                                                                                   |
+| `create`             | `boolean`            | `true`      | If `true`, includes the "create" operation.                                                                                                                                                                                             |
+| `update`             | `boolean`            | `true`      | If `true`, includes the "update" operation.                                                                                                                                                                                             |
+| `delete`             | `boolean`            | `true`      | If `true`, includes the "delete" operation.                                                                                                                                                                                             |
+| `list`               | `boolean`            | `true`      | If `true`, includes the "list" operation.                                                                                                                                                                                               |
+| `position`           | `object`             | `undefined` | Only relevant if the entity has the magic `position` field. This option allows to split the position by specific fields. E.g. `{ groupByFields: ["country"] }` means the `position` starts over at 1 for each distinct `country` value. |
 
-## Annotate Field
+## Annotate field
 
 By default, all entities' fields are used for search, filtering, sorting, and input. If you want to change this for a
 specific field (e.g., making `description` not filterable), you can adjust it with the `@CrudField` decorator.
@@ -52,7 +52,7 @@ specific field (e.g., making `description` not filterable), you can adjust it wi
 description: string;
 ```
 
-### `@CrudField()` Options
+### `@CrudField()` options
 
 | Parameter              | Type      | Default | Description                                                                                                                                        |
 | ---------------------- | --------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -63,7 +63,7 @@ description: string;
 | `resolveField`         | `boolean` | `true`  | Relevant for relations. Indicates if a field resolver for the relation should be added to the resolver.                                            |
 | `dedicatedResolverArg` | `boolean` | `false` | Relevant for relations. Adds a dedicated resolver argument for the relation to the create mutation. Otherwise it's included in the `input` object. |
 
-## Generating Code
+## Generating code
 
 After the entity has been successfully annotated, you can run the API Generator. Newer projects should already have an
 `api-generator` npm script.
@@ -102,7 +102,7 @@ export class ProductsModule {}
 ```
 
 :::info
-Depending on the magic attributes of the entity (e.g., `position`), the service might not be generated.
+Depending on the magic fields of the entity (e.g., `position`), the service might not be generated.
 :::
 
 Done! The CRUD operations now appear in the GraphQL schema and can be used.
@@ -113,7 +113,7 @@ Done! The CRUD operations now appear in the GraphQL schema and can be used.
 You should not reference the generated code externally (except, of course, to provide the resolver in the module).
 :::
 
-## Changing the Entity
+## Changing the entity
 
 When making changes (e.g., adding a new field) to an entity annotated with the CrudGenerator, the API Generator must be
 run again: `npm run api-generator`. The resulting changes must be checked into the repository.
@@ -122,6 +122,30 @@ run again: `npm run api-generator`. The resulting changes must be checked into t
 The CI/CD pipeline checks whether the checked-in code matches the generated code. See the
 `lint:generated-files-not-modified` script in `api/package.json`.
 :::
+
+## Magic fields
+
+The API generator supports the following magic fields:
+
+### position
+
+Adding a `position` field enables item ordering. The generated code ensures unique positions and updates them during
+create, update, or delete actions.
+
+### status
+
+A `status` field lets you filter items by status in the list query.
+
+### scope
+
+The API generator treats a `scope` as a [COMET content scope](/docs/content-scope/). A `scope` arg is added to the list
+and create operations, ensuring the [scope check](/docs/user-permissions/access-control/#scope-check) can be made.
+
+If no `scope` field is present, the scope check is skipped for all operations.
+
+### slug
+
+Adding a `slug` field generates a `entityBySlug` operation in the API.
 
 ## Customizing
 
