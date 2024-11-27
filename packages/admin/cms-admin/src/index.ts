@@ -27,7 +27,6 @@ export { BuildInformationProvider } from "./common/header/about/build-informatio
 export { useBuildInformation } from "./common/header/about/build-information/useBuildInformation";
 export { Header } from "./common/header/Header";
 export { UserHeaderItem } from "./common/header/UserHeaderItem";
-export { commonImpersonationMessages } from "./common/impersonation/commonImpersonationMessages";
 export type { TextMatch } from "./common/MarkedMatches";
 export { MarkedMatches } from "./common/MarkedMatches";
 export type { MasterMenuData, MasterMenuProps } from "./common/MasterMenu";
