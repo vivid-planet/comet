@@ -1053,6 +1053,79 @@
         ]
     },
     {
+        "name": "FormBuilder",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "textInput": "TextInput",
+                                "textArea": "TextArea"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "textInput": "TextInput",
+                                "textArea": "TextArea"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "FullWidthImage",
         "fields": [
             {
@@ -3077,6 +3150,53 @@
         ]
     },
     {
+        "name": "TextArea",
+        "fields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "required",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "required",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "TextImage",
         "fields": [
             {
@@ -3132,6 +3252,53 @@
                 "name": "imageAspectRatio",
                 "kind": "String",
                 "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TextInput",
+        "fields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "required",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "required",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "name",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "placeholder",
+                "kind": "String",
+                "nullable": true
             }
         ]
     },
