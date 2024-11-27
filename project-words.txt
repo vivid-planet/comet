@@ -17,4 +17,3 @@ rgba
 subcomponent
 subpage
 typesafe
-indeterminated

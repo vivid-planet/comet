@@ -1,6 +1,6 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
 
-export default function CheckboxIndeterminated(props: SvgIconProps) {
+export default function CheckboxIndeterminate(props: SvgIconProps) {
     return (
         <SvgIcon {...props} viewBox="0 0 16 16">
             <g fillRule="evenodd">

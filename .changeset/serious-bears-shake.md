@@ -3,4 +3,4 @@
 "@comet/admin-theme": patch
 ---
 
-Add icon for indeterminated checkbox
+Add icon for indeterminate checkbox

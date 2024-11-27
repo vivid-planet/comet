@@ -1,4 +1,4 @@
-import { CheckboxChecked, CheckboxIndeterminated, CheckboxUnchecked } from "@comet/admin-icons";
+import { CheckboxChecked, CheckboxIndeterminate, CheckboxUnchecked } from "@comet/admin-icons";
 import { checkboxClasses, svgIconClasses } from "@mui/material";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
@@ -10,7 +10,7 @@ export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (component, {
         color: "primary",
         icon: <CheckboxUnchecked />,
         checkedIcon: <CheckboxChecked />,
-        indeterminateIcon: <CheckboxIndeterminated />,
+        indeterminateIcon: <CheckboxIndeterminate />,
         ...component?.defaultProps,
     },
     styleOverrides: mergeOverrideStyles<"MuiCheckbox">(component?.styleOverrides, {
