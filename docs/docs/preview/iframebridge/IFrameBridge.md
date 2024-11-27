@@ -20,15 +20,15 @@ There are several messages that can be sent between the Comet Admin and the Bloc
 | `IFrameHoverComponentMessage`  | Site   | The `IFrameHoverComponentMessage` is sent from the site to the admin, when a component is hovered in the iFrame and should be highlighted in the admin interface.                                             | `iFrameBridge.sendHoverComponent("route")` |
 | `IFrameOpenLinkMessage`        | Site   | @deprecated                                                                                                                                                                                                   |
 | `IFrameLocationMessage`        | Site   | @deprecated                                                                                                                                                                                                   |
-| `IAdminBlockMessage`           | Admin  | The `IAdminBlockMessage` is sent from the admin to the site, whih block should be displayed in the iFrame.                                                                                                    | `iFrameBridge.sendBlockState()`            |
-| `IAdminShowOnlyVisibleMessage` | Admin  | The `IAdminBlockMessage` is sent from the admin to the site, whih block should be displayed in the iFrame.                                                                                                    | `iFrameBridge.sendShowOnlyVisible(true)`   |
+| `IAdminBlockMessage`           | Admin  | The `IAdminBlockMessage` is sent from the admin to the site, which block should be displayed in the iFrame.                                                                                                   | `iFrameBridge.sendBlockState()`            |
+| `IAdminShowOnlyVisibleMessage` | Admin  | The `IAdminBlockMessage` is sent from the admin to the site, which block should be displayed in the iFrame.                                                                                                   | `iFrameBridge.sendShowOnlyVisible(true)`   |
 | `IAdminSelectComponentMessage` | Admin  | The `IAdminSelectComponentMessage` is sent from the admin to the site, when a component is selected in the admin interface.                                                                                   | `iFrameBridge.sendSelectComponent("id")`   |
 | `IAdminHoverComponentMessage`  | Admin  | The `IAdminHoverComponentMessage` is sent from the admin to the site, when a component is hovered in the admin interface.                                                                                     | `iFrameBridge.sendHoverComponent("id")`    |
 | `IAdminContentScopeMessage`    | Admin  | The `IAdminContentScopeMessage` is sent from the admin to the site, when the content scope is changed in the admin interface.                                                                                 | `iFrameBridge.sendContentScope(scope)`     |
 
 ## block-preview
 
-To make the Block Preview embeedable in the Comet Admin, the client must provide an entry point where the client application renders the block preview and implements the `IFrameBridge` for communication. In a typical comet application the block preview is available at `sitedomain.com/block-preview/page`
+To make the Block Preview embeddable in the Comet Admin, the client must provide an entry point where the client application renders the block preview and implements the `IFrameBridge` for communication. In a typical comet application the block preview is available at `site-domain.com/block-preview/page`
 
 To Implement the `IFrameBridge` in any site client, you can use `IFrameBridgeProvider` and `useIFrameBridge` from `@comet/cms-site`.
 
