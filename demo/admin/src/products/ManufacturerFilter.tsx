@@ -55,14 +55,12 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
             renderInput={(params) => (
                 <InputBase
                     {...params}
+                    {...params.InputProps}
+                    autoComplete="off"
                     placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
                     value={search ? search : null}
                     onChange={(event) => {
                         setSearch(event.target.value);
-                    }}
-                    inputProps={{
-                        ...params.inputProps,
-                        autoComplete: "new-password", // disable autocomplete and autofill
                     }}
                 />
             )}
