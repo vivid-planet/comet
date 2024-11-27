@@ -6,6 +6,7 @@ import { getRequestFromExecutionContext } from "../../common/decorators/utils";
 import { ContentScopeService } from "../content-scope.service";
 import { DisablePermissionCheck, RequiredPermissionMetadata } from "../decorators/required-permission.decorator";
 import { CurrentUser } from "../dto/current-user";
+import { ContentScope } from "../interfaces/content-scope.interface";
 import { ACCESS_CONTROL_SERVICE, USER_PERMISSIONS_OPTIONS } from "../user-permissions.constants";
 import { AccessControlServiceInterface, SystemUser, UserPermissionsOptions } from "../user-permissions.types";
 
@@ -21,10 +22,15 @@ export class UserPermissionsGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const location = `${context.getClass().name}::${context.getHandler().name}()`;
 
-        const requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
+        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
+        const skipScopeCheck = requiredPermission?.options?.skipScopeCheck ?? false;
+
+        let requiredContentScopes: ContentScope[][] = [];
 
         // Ignore field resolvers as they have no scopes and would overwrite the scopes of the root query.
-        if (!this.isResolvingGraphQLField(context)) {
+        if (!this.isResolvingGraphQLField(context) && !skipScopeCheck) {
+            requiredContentScopes = await this.contentScopeService.getScopesForPermissionCheck(context);
+
             const request = getRequestFromExecutionContext(context);
             request.contentScopes = this.contentScopeService.getUniqueScopes(requiredContentScopes);
         }
@@ -37,13 +43,12 @@ export class UserPermissionsGuard implements CanActivate {
         // System user authenticated via basic auth
         if (typeof user === "string" && this.options.systemUsers?.includes(user)) return true;
 
-        const requiredPermission = this.getDecorator<RequiredPermissionMetadata>(context, "requiredPermission");
         if (!requiredPermission && this.isResolvingGraphQLField(context)) return true;
         if (!requiredPermission) throw new Error(`RequiredPermission decorator is missing in ${location}`);
         const requiredPermissions = requiredPermission.requiredPermission;
         if (requiredPermissions.includes(DisablePermissionCheck)) return true;
         if (requiredPermissions.length === 0) throw new Error(`RequiredPermission decorator has empty permissions in ${location}`);
-        if (this.isResolvingGraphQLField(context) || requiredPermission.options?.skipScopeCheck) {
+        if (this.isResolvingGraphQLField(context) || skipScopeCheck) {
             // At least one permission is required
             return requiredPermissions.some((permission) => this.accessControlService.isAllowed(user, permission));
         } else {
