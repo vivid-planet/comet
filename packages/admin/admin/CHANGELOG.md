@@ -1,5 +1,108 @@
 # @comet/admin
 
+## 7.8.0
+
+### Minor Changes
+
+-   139616be6: Add `FullHeightContent` component
+
+    Used to help components take advantage of all the available content height, e.g., when using a `DataGrid` inside `Tabs` already contained in a `MainContent` component.
+
+    Usage example for `FullHeightContent`:
+
+    ```tsx
+    <MainContent>
+        <RouterTabs>
+            <RouterTab label="DataGrid Example" path="">
+                <FullHeightContent>
+                    <DataGrid />
+                </FullHeightContent>
+            </RouterTab>
+            <RouterTab label="Another tab" path="/another-tab">
+                Content of another tab
+            </RouterTab>
+        </RouterTabs>
+    </MainContent>
+    ```
+
+    Example where `MainContent` with `fullHeight` should be used, instead of `FullHeightContent`:
+
+    ```tsx
+    <MainContent fullHeight>
+        <DataGrid />
+    </MainContent>
+    ```
+
+-   d8fca0522: Add second `InitialFormValues` generic to `FinalForm`
+
+    This allows differentiating between a form's values and initial values.
+
+-   d8298d59a: Add the `StackMainContent` component
+
+    This version of `MainContent` only adds content spacing and height when it's the last visible `StackSwitch`.
+    Using `StackMainContent` instead of `MainContent` prevents unintended or duplicate spacings in cases where multiple `MainContent` components are used inside nested `StackSwitch` components.
+
+### Patch Changes
+
+-   a168e5514: Open collapsible menu item on refresh if its child or sub-child is selected
+-   e16ad1a02: Fix a bug that prevented dynamically rendered tabs in `Tabs`
+-   139616be6: Fix the `fullHeight` behavior of `MainContent`
+
+    When used inside certain elements, e.g. with `position: relative`, the height would be calculated incorrectly.
+
+-   eefb0546f: Render empty values correctly when using `renderStaticSelectCell` as a `DataGrid` column's `renderCell` function
+-   795ec73d9: Fix the spacing between the text and chip in `CrudMoreActionsMenu`
+-   8617c3bcd: Fix URL prefix in `SubRouteIndexRoute`
+-   daacf1ea6: Fix a bug in `ToolbarBreadcrumbs` where it was possible to open the mobile breadcrumbs menu when there were no items to be shown in the menu
+-   9cc75c141: Prevent the width of the mobile breadcrumbs menu of `ToolbarBreadcrumbs` from being far too small
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+    -   @comet/admin-icons@7.8.0
+    -   @comet/admin-theme@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.7.0
+-   @comet/admin-theme@7.7.0
+
+## 7.6.0
+
+### Minor Changes
+
+-   bc19fb18c: `useDataGridExcelExport`: Add support for `number` and `null` values in the Data Grid Excel export without the need for a `valueFormatter`
+-   00d7ddae1: Allow hiding the header (summary) of `FieldSet` by making the `title` prop optional
+
+### Patch Changes
+
+-   37d71a89a: Fix hover styling of `ToolbarBackButton`
+-   cf2ee898f: Fix missing key error in `CrudMoreActionsMenu`
+-   03afcd073: Allow customizing `CrudContextMenu`
+
+    Customize existing parts of `CrudContextMenu` using the `slotProps`, `iconMapping` and `messagesMapping` props.
+    Add custom actions by adding instances of `RowActionsItem` to the `children`:
+
+    ```tsx
+    <CrudContextMenu
+    // ...
+    >
+        <RowActionsItem
+            icon={<Favorite />}
+            onClick={() => {
+                // Do something
+            }}
+        >
+            Custom action
+        </RowActionsItem>
+        <Divider />
+    </CrudContextMenu>
+    ```
+
+-   fe8909404: Slightly adjust the color of the clear button of inputs to match the Comet CI
+    -   @comet/admin-icons@7.6.0
+    -   @comet/admin-theme@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes

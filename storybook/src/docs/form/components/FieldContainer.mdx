@@ -1,0 +1,14 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as FieldContainerStories from "./FieldContainer.stories";
+
+<Meta of={FieldContainerStories} />
+
+# FieldContainer
+
+`FieldContainer` is used to contain an input and provide basic styling/layout within the form.  
+It is also used to set a label, error--messages and other common form-field attributes.
+
+_Note: If your form is built with final-form, use [Field](?path=/docs/docs-form-components-field--docs) instead._
+
+<Canvas of={FieldContainerStories.Basic} />

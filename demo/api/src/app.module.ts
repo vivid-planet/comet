@@ -31,7 +31,7 @@ import { ValidationError } from "apollo-server-express";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
-import { AuthModule } from "./auth/auth.module";
+import { AuthModule, SYSTEM_USER_NAME } from "./auth/auth.module";
 import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
@@ -54,6 +54,8 @@ import { RedirectScope } from "./redirects/dto/redirect-scope";
 @Module({})
 export class AppModule {
     static forRoot(config: Config): DynamicModule {
+        const authModule = AuthModule.forRoot(config);
+
         return {
             module: AppModule,
             imports: [
@@ -88,20 +90,21 @@ export class AppModule {
                     }),
                     inject: [ModuleRef],
                 }),
-                AuthModule,
+                authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availableContentScopes: [
-                            { domain: "main", language: "de" },
-                            { domain: "main", language: "en" },
-                            { domain: "secondary", language: "en" },
-                            { domain: "secondary", language: "de" },
-                        ],
+                        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
+                            siteConfig.scope.languages.map((language) => ({
+                                domain: siteConfig.scope.domain,
+                                language,
+                            })),
+                        ),
                         userService,
                         accessControlService,
+                        systemUsers: [SYSTEM_USER_NAME],
                     }),
                     inject: [UserService, AccessControlService],
-                    imports: [AuthModule],
+                    imports: [authModule],
                 }),
                 BlocksModule,
                 DependenciesModule,

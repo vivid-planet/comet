@@ -1,5 +1,25 @@
 # @comet/admin-theme
 
+## 7.8.0
+
+### Patch Changes
+
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+    -   @comet/admin-icons@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.7.0
+
+## 7.6.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.6.0
+
 ## 7.5.0
 
 ### Patch Changes

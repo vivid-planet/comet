@@ -2,6 +2,7 @@ import { BlockCategory, createCompositeBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
+import { ColumnsBlock } from "@src/pages/blocks/ColumnsBlock";
 import { FormattedMessage } from "react-intl";
 
 const TeaserBlock = createCompositeBlock(
@@ -30,6 +31,10 @@ const TeaserBlock = createCompositeBlock(
                 block: LinkListBlock,
                 title: <FormattedMessage id="blocks.teaser.buttons" defaultMessage="Buttons" />,
                 nested: true,
+            },
+            columns: {
+                block: ColumnsBlock,
+                title: <FormattedMessage id="blocks.teaser.columns" defaultMessage="Columns" />,
             },
         },
     },
