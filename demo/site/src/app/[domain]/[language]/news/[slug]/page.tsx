@@ -1,5 +1,4 @@
 import { gql, previewParams } from "@comet/cms-site";
-import { domain } from "@src/config";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { notFound } from "next/navigation";
@@ -8,8 +7,8 @@ import { Content } from "./content";
 import { fragment } from "./fragment";
 import { GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables } from "./page.generated";
 
-export default async function NewsDetailPage({ params }: { params: { slug: string; lang: string } }) {
-    const { scope, previewData } = (await previewParams()) || { scope: { domain, language: params.lang }, previewData: undefined };
+export default async function NewsDetailPage({ params }: { params: { domain: string; language: string; slug: string } }) {
+    const { scope, previewData } = (await previewParams()) || { scope: { domain: params.domain, language: params.language }, previewData: undefined };
     const graphqlFetch = createGraphQLFetch(previewData);
 
     const data = await graphqlFetch<GQLNewsDetailPageQuery, GQLNewsDetailPageQueryVariables>(
