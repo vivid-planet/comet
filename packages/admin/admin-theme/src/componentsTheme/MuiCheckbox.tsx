@@ -40,7 +40,7 @@ export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (component, {
                     fill: "#fff",
                 },
                 "& .background": {
-                    fill: palette.grey[200],
+                    fill: palette.grey[100],
                 },
             },
         },
@@ -48,13 +48,6 @@ export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (component, {
             [`&.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
                 "& .background": {
                     fill: palette.primary.main,
-                },
-            },
-        },
-        colorSecondary: {
-            [`&.${checkboxClasses.checked} .${svgIconClasses.root}`]: {
-                "& .background": {
-                    fill: palette.secondary.main,
                 },
             },
         },
