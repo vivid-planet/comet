@@ -1,4 +1,4 @@
-import { Assets, Dashboard as DashboardIcon, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
+import { Assets, Dashboard as DashboardIcon, Data, DensityStandard, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
     ContentScopeIndicator,
     createRedirectsPage,
@@ -20,6 +20,7 @@ import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/generated/NewsPage";
+import { FormBuilderPage } from "@src/pages/formBuilder/FormBuilderPage";
 import MainMenu from "@src/pages/mainMenu/MainMenu";
 import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
@@ -55,6 +56,15 @@ export const masterMenuData: MasterMenuData = [
         route: {
             path: "/dashboard",
             component: Dashboard,
+        },
+    },
+    {
+        type: "route",
+        primary: <FormattedMessage id="menu.formBuilder" defaultMessage="Form Builder" />,
+        icon: <DensityStandard />,
+        route: {
+            path: "/form-builder",
+            component: FormBuilderPage,
         },
     },
     {

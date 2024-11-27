@@ -39,6 +39,7 @@ import { DamFolder } from "./dam/entities/dam-folder.entity";
 import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
 import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
 import { FooterModule } from "./footer/footer.module";
+import { FormBuilderModule } from "./form-builder/form-builder.module";
 import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
@@ -169,6 +170,7 @@ export class AppModule {
                       ]
                     : []),
                 NewsModule,
+                FormBuilderModule,
                 MenusModule,
                 FooterModule,
                 PredefinedPagesModule,

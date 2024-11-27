@@ -16,7 +16,7 @@ const DefaultStyleLink = styled(LinkBlock)`
 /**
  * Define the renderers
  */
-const defaultRenderers: Renderers = {
+export const defaultRenderers: Renderers = {
     /**
      * Those callbacks will be called recursively to render a nested structure
      */

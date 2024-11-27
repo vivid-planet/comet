@@ -364,6 +364,36 @@ type Footer {
 """FooterContent root block data"""
 scalar FooterContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type FormRequest {
+  id: ID!
+  createdAt: DateTime!
+  form: FormBuilder!
+  submitData: JSONObject!
+}
+
+type FormBuilder {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  blocks: FormBuilderBlockData!
+  requests: [FormRequest!]!
+  submitButtonText: String
+}
+
+"""FormBuilder root block data"""
+scalar FormBuilderBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type PaginatedFormBuilders {
+  nodes: [FormBuilder!]!
+  totalCount: Int!
+}
+
+type PaginatedFormRequests {
+  nodes: [FormRequest!]!
+  totalCount: Int!
+}
+
 type MainMenuItem {
   id: ID!
   node: PageTreeNode!
@@ -791,6 +821,10 @@ type Query {
   newsBySlug(slug: String!, scope: NewsContentScopeInput!): News
   newsList(offset: Int! = 0, limit: Int! = 25, scope: NewsContentScopeInput!, status: [NewsStatus!]! = [Active], search: String, filter: NewsFilter, sort: [NewsSort!]): PaginatedNews!
   newsListByIds(ids: [ID!]!): [News!]!
+  formBuilder(id: ID!): FormBuilder!
+  formBuilders(offset: Int! = 0, limit: Int! = 25, search: String, filter: FormBuilderFilter, sort: [FormBuilderSort!]): PaginatedFormBuilders!
+  formRequest(id: ID!): FormRequest!
+  formRequests(offset: Int! = 0, limit: Int! = 25, search: String, filter: FormRequestFilter, sort: [FormRequestSort!]): PaginatedFormRequests!
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
@@ -976,6 +1010,55 @@ enum NewsSortField {
   updatedAt
 }
 
+input FormBuilderFilter {
+  id: StringFilter
+  createdAt: DateTimeFilter
+  updatedAt: DateTimeFilter
+  name: StringFilter
+  requests: OneToManyFilter
+  submitButtonText: StringFilter
+  and: [FormBuilderFilter!]
+  or: [FormBuilderFilter!]
+}
+
+input FormBuilderSort {
+  field: FormBuilderSortField!
+  direction: SortDirection! = ASC
+}
+
+enum FormBuilderSortField {
+  id
+  createdAt
+  updatedAt
+  name
+  submitButtonText
+}
+
+input FormRequestFilter {
+  id: StringFilter
+  createdAt: DateTimeFilter
+  form: ManyToOneFilter
+  and: [FormRequestFilter!]
+  or: [FormRequestFilter!]
+}
+
+input ManyToOneFilter {
+  isAnyOf: [ID!]
+  equal: ID
+  notEqual: ID
+}
+
+input FormRequestSort {
+  field: FormRequestSortField!
+  direction: SortDirection! = ASC
+}
+
+enum FormRequestSortField {
+  id
+  createdAt
+  form
+}
+
 input ProductFilter {
   title: StringFilter
   status: ProductStatusEnumFilter
@@ -1034,12 +1117,6 @@ input DateFilter {
   lowerThanEqual: Date
   greaterThanEqual: Date
   notEqual: Date
-}
-
-input ManyToOneFilter {
-  isAnyOf: [ID!]
-  equal: ID
-  notEqual: ID
 }
 
 input ManyToManyFilter {
@@ -1217,6 +1294,12 @@ type Mutation {
   createNewsComment(newsId: ID!, input: NewsCommentInput!): NewsComment!
   updateNewsComment(id: ID!, input: NewsCommentInput!): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
+  createFormBuilder(input: FormBuilderInput!): FormBuilder!
+  updateFormBuilder(id: ID!, input: FormBuilderUpdateInput!): FormBuilder!
+  deleteFormBuilder(id: ID!): Boolean!
+  createFormRequest(input: FormRequestInput!): FormRequest!
+  updateFormRequest(id: ID!, input: FormRequestUpdateInput!): FormRequest!
+  deleteFormRequest(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
   saveFooter(scope: FooterContentScopeInput!, input: FooterInput!): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
@@ -1393,6 +1476,33 @@ input NewsUpdateInput {
 
 input NewsCommentInput {
   comment: String!
+}
+
+input FormBuilderInput {
+  name: String!
+  blocks: FormBuilderBlockInput!
+  requests: [ID!]! = []
+  submitButtonText: String = null
+}
+
+"""FormBuilder root block input"""
+scalar FormBuilderBlockInput @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input FormBuilderUpdateInput {
+  name: String
+  blocks: FormBuilderBlockInput
+  requests: [ID!]
+  submitButtonText: String
+}
+
+input FormRequestInput {
+  form: ID!
+  submitData: JSONObject!
+}
+
+input FormRequestUpdateInput {
+  form: ID
+  submitData: JSONObject
 }
 
 input MainMenuItemInput {

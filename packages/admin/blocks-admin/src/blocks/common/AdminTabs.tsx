@@ -1,4 +1,4 @@
-import { RouteWithErrorBoundary } from "@comet/admin";
+import { RouterTab, RouterTabs, RouteWithErrorBoundary } from "@comet/admin";
 import { Tab as MuiTab, TabProps, Tabs as MuiTabs } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Switch, useRouteMatch } from "react-router";
@@ -20,6 +20,19 @@ export function AdminTabs({ children }: AdminTabsProps): JSX.Element | null {
     }
     const [firstTab, ...otherTabs] = children;
     const selectedTab = children.find((tab) => tab.key === selected) ? selected : firstTab.key; //fall back to first, as <Switch> does
+
+    return (
+        <Root key="tabs">
+            <RouterTabs>
+                {children.map((tab, index) => (
+                    <RouterTab key={tab.key} label={tab.label} path={index === 0 ? "" : `/${tab.key}`}>
+                        {tab.content}
+                    </RouterTab>
+                ))}
+            </RouterTabs>
+        </Root>
+    );
+
     return (
         <Root key="tabs">
             <Tabs value={selectedTab} variant="scrollable" scrollButtons="auto">
