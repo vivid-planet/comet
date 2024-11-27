@@ -1,5 +1,136 @@
 # @comet/cms-admin
 
+## 7.8.0
+
+### Minor Changes
+
+-   44a54554c: Allow replacing a file with a new one on the file detail page in the DAM
+-   b721ac044: Harmonize the size and alignment of the DAM filters
+-   c6d3ac36b: Add support for file replacement on upload in the DAM
+
+    When uploading a file to the DAM with the same filename as an existing file, it's now possible to replace the existing file.
+    This is useful when you want to update a file without changing its URL.
+
+-   4037b4d8c: Rework the DAM crop/focus settings UI
+-   059636aba: Pass the `graphQLApiUrl` for `useBlockPreviewFetch` through the `IFrameBridge`
+
+    It's not necessary to set it in the site anymore. To migrate, remove the argument from `useBlockPreviewFetch()`:
+
+    ```diff
+    const PreviewPage = () => {
+        const iFrameBridge = useIFrameBridge();
+
+    -   const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
+    +   const { fetch, graphQLFetch } = useBlockPreviewFetch();
+
+        const [blockData, setBlockData] = useState<PageContentBlockData>();
+        useEffect(() => {
+            async function load() {
+    +           if (!graphQLFetch) {
+    +               return;
+    +           }
+                if (!iFrameBridge.block) {
+                    setBlockData(undefined);
+                    return;
+                }
+                const newData = await recursivelyLoadBlockData({
+                    blockType: "PageContent",
+                    blockData: iFrameBridge.block,
+                    graphQLFetch,
+                    fetch,
+                    pageTreeNodeId: undefined, //we don't have a pageTreeNodeId in preview
+                });
+                setBlockData(newData);
+            }
+            load();
+        }, [iFrameBridge.block, fetch, graphQLFetch]);
+
+        return <div>{blockData && <PageContentBlock data={blockData} />}</div>;
+    };
+    ```
+
+### Patch Changes
+
+-   bfa5dbac8: Fix schema generation if `FileUpload` object type isn't used
+
+    Previously, the file uploads module always added the `downloadUrl` and `imageUrl` fields to the `FileUpload` object type, even if the type wasn't used in the application.
+    This lead to errors when generating the GraphQL schema.
+
+    Now, the fields are only added if the `download` option of the module is used.
+
+    Note: As a consequence, the `finalFormFileUploadFragment` doesn't include the fields anymore.
+    To enable downloading file uploads in forms, use the newly added `finalFormFileUploadDownloadableFragment`:
+
+    ```diff
+    export const productFormFragment = gql`
+        fragment ProductFormFragment on Product {
+            priceList {
+    -           ...FinalFormFileUpload
+    +           ...FinalFormFileUploadDownloadable
+            }
+        }
+
+    -   ${finalFormFileUploadFragment}
+    +   ${finalFormFileUploadDownloadableFragment}
+    `;
+    ```
+
+-   62ead06fa: Master Menu: render collapsible or grouped menu items only when at least one item of the submenu is allowed.
+-   Updated dependencies [139616be6]
+-   Updated dependencies [d8fca0522]
+-   Updated dependencies [a168e5514]
+-   Updated dependencies [e16ad1a02]
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+-   Updated dependencies [139616be6]
+-   Updated dependencies [eefb0546f]
+-   Updated dependencies [795ec73d9]
+-   Updated dependencies [8617c3bcd]
+-   Updated dependencies [d8298d59a]
+-   Updated dependencies [059636aba]
+-   Updated dependencies [daacf1ea6]
+-   Updated dependencies [4338a6c07]
+-   Updated dependencies [9cc75c141]
+    -   @comet/admin@7.8.0
+    -   @comet/admin-icons@7.8.0
+    -   @comet/blocks-admin@7.8.0
+    -   @comet/admin-date-time@7.8.0
+    -   @comet/admin-rte@7.8.0
+    -   @comet/admin-theme@7.8.0
+
+## 7.7.0
+
+### Minor Changes
+
+-   6cb498f51: Add search results highlighting to `ContentScopeSelect`
+
+    Also, add the helper function `findTextMatches`, which can be used to add search highlighting to a custom `renderOption` implementation:
+
+    ```tsx
+    <ContentScopeSelect
+        renderOption={(option, query) => {
+            const text = `${option.domain.label} – ${option.language.label}`;
+            const matches = findTextMatches(text, query);
+            return <ListItemText primary={<MarkedMatches text={text} matches={matches} />} />;
+        }}
+    />
+    ```
+
+### Patch Changes
+
+-   bb9215f25: Don't move files to a folder called "." when uploading them to the DAM
+
+    This bug only occurred in projects with a `react-dropzone` version >= 14.3.2.
+
+-   Updated dependencies [8ffc90eb1]
+-   Updated dependencies [a9d2e2e25]
+    -   @comet/blocks-admin@7.7.0
+    -   @comet/admin@7.7.0
+    -   @comet/admin-date-time@7.7.0
+    -   @comet/admin-icons@7.7.0
+    -   @comet/admin-rte@7.7.0
+    -   @comet/admin-theme@7.7.0
+
 ## 7.6.0
 
 ### Minor Changes

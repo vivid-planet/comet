@@ -1,5 +1,13 @@
 # @comet/blocks-api
 
+## 7.8.0
+
+### Patch Changes
+
+-   f20ec6ce5: Make class-validator a peer dependency
+
+## 7.7.0
+
 ## 7.6.0
 
 ### Minor Changes

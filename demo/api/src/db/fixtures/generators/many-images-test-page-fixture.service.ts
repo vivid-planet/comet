@@ -1,6 +1,6 @@
 import { PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { DamScope } from "@src/dam/dto/dam-scope";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
@@ -23,6 +23,7 @@ export class ManyImagesTestPageFixtureService {
         @InjectRepository(Page) private readonly pagesRespository: EntityRepository<Page>,
         private readonly imageFileFixtureService: ImageFileFixtureService,
         private readonly svgImageFileFixtureService: SvgImageFileFixtureService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     async execute(): Promise<void> {
@@ -74,7 +75,7 @@ export class ManyImagesTestPageFixtureService {
             })),
         });
 
-        await this.pagesRespository.persistAndFlush(
+        await this.entityManager.persistAndFlush(
             this.pagesRespository.create({
                 id: uuidDocument,
                 content: pageInput.content.transformToBlockData(),

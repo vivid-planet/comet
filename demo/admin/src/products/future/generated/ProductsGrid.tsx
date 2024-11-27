@@ -126,6 +126,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 { field: "inStock", sort: "desc" },
                 { field: "price", sort: "asc" },
             ],
+            queryParamsPrefix: "products",
         }),
         ...usePersistentColumnState("ProductsGrid"),
     };
@@ -222,7 +223,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         },
         {
             field: "inStock",
-            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
             type: "singleSelect",
             valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [

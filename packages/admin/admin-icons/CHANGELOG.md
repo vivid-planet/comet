@@ -1,5 +1,14 @@
 # @comet/admin-icons
 
+## 7.8.0
+
+### Minor Changes
+
+-   e78315c9c: Add `ContactPage` icon
+-   c6d3ac36b: Add new icons `Backward` and `Forward`
+
+## 7.7.0
+
 ## 7.6.0
 
 ## 7.5.0

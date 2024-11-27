@@ -1,5 +1,77 @@
 # @comet/blocks-admin
 
+## 7.8.0
+
+### Minor Changes
+
+-   059636aba: Pass the `graphQLApiUrl` for `useBlockPreviewFetch` through the `IFrameBridge`
+
+    It's not necessary to set it in the site anymore. To migrate, remove the argument from `useBlockPreviewFetch()`:
+
+    ```diff
+    const PreviewPage = () => {
+        const iFrameBridge = useIFrameBridge();
+
+    -   const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
+    +   const { fetch, graphQLFetch } = useBlockPreviewFetch();
+
+        const [blockData, setBlockData] = useState<PageContentBlockData>();
+        useEffect(() => {
+            async function load() {
+    +           if (!graphQLFetch) {
+    +               return;
+    +           }
+                if (!iFrameBridge.block) {
+                    setBlockData(undefined);
+                    return;
+                }
+                const newData = await recursivelyLoadBlockData({
+                    blockType: "PageContent",
+                    blockData: iFrameBridge.block,
+                    graphQLFetch,
+                    fetch,
+                    pageTreeNodeId: undefined, //we don't have a pageTreeNodeId in preview
+                });
+                setBlockData(newData);
+            }
+            load();
+        }, [iFrameBridge.block, fetch, graphQLFetch]);
+
+        return <div>{blockData && <PageContentBlock data={blockData} />}</div>;
+    };
+    ```
+
+### Patch Changes
+
+-   4338a6c07: Make the space select required in the form when using `createSpaceBlock()`
+-   Updated dependencies [139616be6]
+-   Updated dependencies [d8fca0522]
+-   Updated dependencies [a168e5514]
+-   Updated dependencies [e16ad1a02]
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+-   Updated dependencies [139616be6]
+-   Updated dependencies [eefb0546f]
+-   Updated dependencies [795ec73d9]
+-   Updated dependencies [8617c3bcd]
+-   Updated dependencies [d8298d59a]
+-   Updated dependencies [daacf1ea6]
+-   Updated dependencies [9cc75c141]
+    -   @comet/admin@7.8.0
+    -   @comet/admin-icons@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   8ffc90eb1: Set the select field in `OneOfBlock` to `required` based on the `allowEmpty` prop
+-   a9d2e2e25: Fix linking from block preview to block admin for composite + list/blocks/columns block combinations
+
+    Previously, the generated route was wrong if a composite contained multiple nested list, blocks or columns blocks.
+
+    -   @comet/admin@7.7.0
+    -   @comet/admin-icons@7.7.0
+
 ## 7.6.0
 
 ### Patch Changes

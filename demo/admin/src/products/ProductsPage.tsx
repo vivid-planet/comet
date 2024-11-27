@@ -1,10 +1,10 @@
 import {
-    MainContent,
     RouterTab,
     RouterTabs,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackMainContent,
     StackPage,
     StackSwitch,
     StackToolbar,
@@ -47,7 +47,7 @@ const ProductsPage = () => {
                     {(selectedProductId) => (
                         <SaveBoundary>
                             <FormToolbar />
-                            <MainContent>
+                            <StackMainContent>
                                 <RouterTabs>
                                     <RouterTab
                                         forceRender={true}
@@ -111,7 +111,7 @@ const ProductsPage = () => {
                                         </StackSwitch>
                                     </RouterTab>
                                 </RouterTabs>
-                            </MainContent>
+                            </StackMainContent>
                         </SaveBoundary>
                     )}
                 </StackPage>

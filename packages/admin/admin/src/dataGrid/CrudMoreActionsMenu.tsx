@@ -79,7 +79,7 @@ const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMe
         height: 20px;
         flex-shrink: 0;
         border-radius: 20px;
-        margin-left: 1px;
+        margin-left: 6px;
     `,
 );
 
