@@ -2,4 +2,4 @@
 "@comet/admin-color-picker": patch
 ---
 
-Add a gap to `FooterClearButton` slot to prevent the typography from sticking to the color preview
+Add missing spacing to the clear-color button of `ColorPicker`
