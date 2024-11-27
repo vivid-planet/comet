@@ -116,7 +116,7 @@ export interface IAdminSelectComponentMessage {
 export interface IAdminHoverComponentMessage {
     cometType: AdminMessageType.HoverComponent;
     data: {
-        adminRoute: string;
+        adminRoute: string | null;
     };
 }
 
