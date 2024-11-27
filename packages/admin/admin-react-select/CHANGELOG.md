@@ -1,5 +1,39 @@
 # @comet/admin-react-select
 
+## 7.7.0
+
+### Patch Changes
+
+-   @comet/admin@7.7.0
+-   @comet/admin-icons@7.7.0
+
+## 7.6.0
+
+### Patch Changes
+
+-   Updated dependencies [bc19fb18c]
+-   Updated dependencies [37d71a89a]
+-   Updated dependencies [cf2ee898f]
+-   Updated dependencies [03afcd073]
+-   Updated dependencies [00d7ddae1]
+-   Updated dependencies [fe8909404]
+    -   @comet/admin@7.6.0
+    -   @comet/admin-icons@7.6.0
+
+## 7.5.0
+
+### Patch Changes
+
+-   Updated dependencies [bb7c2de72]
+-   Updated dependencies [9a6a64ef3]
+-   Updated dependencies [c59a60023]
+-   Updated dependencies [b5838209b]
+-   Updated dependencies [c8f37fbd1]
+-   Updated dependencies [4cea3e31b]
+-   Updated dependencies [216d93a10]
+    -   @comet/admin@7.5.0
+    -   @comet/admin-icons@7.5.0
+
 ## 7.4.2
 
 ### Patch Changes

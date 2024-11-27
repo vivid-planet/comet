@@ -33,6 +33,9 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         apiPort: envVars.API_PORT,
         adminUrl: envVars.ADMIN_URL,
         corsAllowedOrigins: envVars.CORS_ALLOWED_ORIGINS.split(","),
+        auth: {
+            systemUserPassword: envVars.BASIC_AUTH_SYSTEM_USER_PASSWORD,
+        },
         imgproxy: {
             ...cometConfig.imgproxy,
             salt: envVars.IMGPROXY_SALT,
@@ -88,6 +91,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
                 secret: envVars.FILE_UPLOADS_DOWNLOAD_SECRET,
             },
         },
+        sitePreviewSecret: envVars.SITE_PREVIEW_SECRET,
     };
 }
 

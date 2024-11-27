@@ -1,5 +1,5 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
@@ -14,6 +14,7 @@ export class CalculateDominantImageColor {
         @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
         @InjectRepository(DamFileImage) private readonly fileImagesRepository: EntityRepository<DamFileImage>,
         private readonly fileService: FilesService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     @Command({
@@ -34,7 +35,7 @@ export class CalculateDominantImageColor {
                 if (dominantColor) {
                     console.log(`${dominantColor}, ${file.image.id}`);
 
-                    await this.fileImagesRepository.persistAndFlush(file.image.assign({ dominantColor }));
+                    await this.entityManager.persistAndFlush(file.image.assign({ dominantColor }));
                 } else {
                     console.log(`No color was determined, ${file.image.id}`);
                 }

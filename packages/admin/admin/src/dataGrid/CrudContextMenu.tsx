@@ -1,63 +1,100 @@
 import { ApolloClient, RefetchQueriesOptions, useApolloClient } from "@apollo/client";
 import { Copy, Delete as DeleteIcon, Domain, Paste, ThreeDotSaving } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
-import { useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { ComponentsOverrides, Divider, Theme, useThemeProps } from "@mui/material";
+import { ReactNode, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { readClipboardText } from "../clipboard/readClipboardText";
 import { writeClipboardText } from "../clipboard/writeClipboardText";
-import { FeedbackButton } from "../common/buttons/feedback/FeedbackButton";
+import { DeleteDialog as CommonDeleteDialog } from "../common/DeleteDialog";
 import { useErrorDialog } from "../error/errordialog/useErrorDialog";
+import { createComponentSlot } from "../helpers/createComponentSlot";
+import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { messages } from "../messages";
 import { RowActionsItem } from "../rowActions/RowActionsItem";
 import { RowActionsMenu } from "../rowActions/RowActionsMenu";
 
-interface DeleteDialogProps {
-    dialogOpen: boolean;
-    onDelete: () => Promise<void>;
-    onCancel: () => void;
-}
+export type CrudContextMenuClassKey =
+    | "root"
+    | "itemsMenu"
+    | "copyUrlItem"
+    | "deleteItem"
+    | "copyItem"
+    | "pasteItem"
+    | "itemsDivider"
+    | "deleteItem"
+    | "deleteDialog";
 
-const DeleteDialog = (props: DeleteDialogProps) => {
-    const { dialogOpen, onDelete, onCancel } = props;
-
-    return (
-        <Dialog open={dialogOpen} onClose={onDelete}>
-            <DialogTitle>
-                <FormattedMessage id="comet.table.deleteDialog.title" defaultMessage="Delete item?" />
-            </DialogTitle>
-            <DialogContent>
-                <FormattedMessage id="comet.table.deleteDialog.content" defaultMessage="WARNING: This cannot be undone!" />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onCancel} color="primary">
-                    <FormattedMessage {...messages.no} />
-                </Button>
-                <FeedbackButton
-                    startIcon={<DeleteIcon />}
-                    onClick={onDelete}
-                    color="primary"
-                    variant="contained"
-                    tooltipErrorMessage={<FormattedMessage id="comet.common.deleteFailed" defaultMessage="Failed to delete" />}
-                >
-                    <FormattedMessage {...messages.yes} />
-                </FeedbackButton>
-            </DialogActions>
-        </Dialog>
-    );
-};
-
-export interface CrudContextMenuProps<CopyData> {
+export interface CrudContextMenuProps<CopyData>
+    extends ThemedComponentBaseProps<{
+        root: typeof RowActionsMenu;
+        itemsMenu: typeof RowActionsMenu;
+        copyUrlItem: typeof RowActionsItem;
+        copyItem: typeof RowActionsItem;
+        pasteItem: typeof RowActionsItem;
+        itemsDivider: typeof Divider;
+        deleteItem: typeof RowActionsItem;
+        deleteDialog: typeof CommonDeleteDialog;
+    }> {
+    iconMapping?: {
+        copyUrl?: ReactNode;
+        copy?: ReactNode;
+        copyLoading?: ReactNode;
+        paste?: ReactNode;
+        pasteLoading?: ReactNode;
+        delete?: ReactNode;
+    };
+    messagesMapping?: {
+        copyUrl?: ReactNode;
+        copy?: ReactNode;
+        paste?: ReactNode;
+        delete?: ReactNode;
+    };
     url?: string;
     onPaste?: (options: { input: CopyData; client: ApolloClient<object> }) => Promise<void>;
     onDelete?: (options: { client: ApolloClient<object> }) => Promise<void>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     refetchQueries?: RefetchQueriesOptions<any, unknown>["include"];
     copyData?: () => Promise<CopyData> | CopyData;
+    /**
+     * Render custom `RowActionsItem` components to be added to the menu.
+     */
+    children?: ReactNode;
 }
 
-export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueries, copyData }: CrudContextMenuProps<CopyData>) {
-    const intl = useIntl();
+export function CrudContextMenu<CopyData>(inProps: CrudContextMenuProps<CopyData>) {
+    const {
+        url,
+        onPaste,
+        onDelete,
+        refetchQueries,
+        copyData,
+        slotProps,
+        iconMapping = {},
+        messagesMapping = {},
+        children,
+        ...restProp
+    } = useThemeProps({
+        props: inProps,
+        name: "CometAdminCrudContextMenu",
+    });
+
+    const {
+        copyUrl: copyUrlIcon = <Domain />,
+        copy: copyIcon = <Copy />,
+        copyLoading: copyLoadingIcon = <ThreeDotSaving />,
+        paste: pasteIcon = <Paste />,
+        pasteLoading: pasteLoadingIcon = <ThreeDotSaving />,
+        delete: deleteIcon = <DeleteIcon />,
+    } = iconMapping;
+
+    const {
+        copyUrl: copyUrlMessage = <FormattedMessage {...messages.copyUrl} />,
+        copy: copyMessage = <FormattedMessage {...messages.copy} />,
+        paste: pasteMessage = <FormattedMessage {...messages.paste} />,
+        delete: deleteMessage = <FormattedMessage {...messages.delete} />,
+    } = messagesMapping;
+
     const client = useApolloClient();
     const errorDialog = useErrorDialog();
 
@@ -127,56 +164,123 @@ export function CrudContextMenu<CopyData>({ url, onPaste, onDelete, refetchQueri
 
     return (
         <>
-            <RowActionsMenu>
-                <RowActionsMenu>
+            <Root {...slotProps?.root} {...restProp}>
+                <ItemsMenu {...slotProps?.itemsMenu}>
+                    {children}
                     {url && (
-                        <RowActionsItem
-                            icon={<Domain />}
+                        <CopyUrlItem
+                            icon={copyUrlIcon}
                             onClick={() => {
                                 writeClipboardText(url);
                             }}
+                            {...slotProps?.copyUrlItem}
                         >
-                            {intl.formatMessage(messages.copyUrl)}
-                        </RowActionsItem>
+                            {copyUrlMessage}
+                        </CopyUrlItem>
                     )}
                     {copyData && (
-                        <RowActionsItem
-                            icon={copyLoading ? <ThreeDotSaving /> : <Copy />}
+                        <CopyItem
+                            icon={copyLoading ? copyLoadingIcon : copyIcon}
                             onClick={async () => {
                                 setCopyLoading(true);
                                 await handleCopyClick();
                                 setCopyLoading(false);
                             }}
+                            {...slotProps?.copyItem}
                         >
-                            {intl.formatMessage(messages.copy)}
-                        </RowActionsItem>
+                            {copyMessage}
+                        </CopyItem>
                     )}
                     {onPaste && (
-                        <RowActionsItem
-                            icon={pasting ? <ThreeDotSaving /> : <Paste />}
+                        <PasteItem
+                            icon={pasting ? pasteLoadingIcon : pasteIcon}
                             onClick={async () => {
                                 setPasting(true);
                                 await handlePasteClick();
                                 setPasting(false);
                             }}
+                            {...slotProps?.pasteItem}
                         >
-                            {intl.formatMessage(messages.paste)}
-                        </RowActionsItem>
+                            {pasteMessage}
+                        </PasteItem>
                     )}
-                    {onDelete && (onPaste || copyData || url) && <Divider />}
+                    {onDelete && (onPaste || copyData || url) && <ItemsDivider {...slotProps?.itemsDivider} />}
                     {onDelete && (
-                        <RowActionsItem
-                            icon={<DeleteIcon />}
+                        <DeleteItem
+                            icon={deleteIcon}
                             onClick={() => {
                                 setDeleteDialogOpen(true);
                             }}
+                            {...slotProps?.deleteItem}
                         >
-                            {intl.formatMessage(messages.deleteItem)}
-                        </RowActionsItem>
+                            {deleteMessage}
+                        </DeleteItem>
                     )}
-                </RowActionsMenu>
-            </RowActionsMenu>
-            <DeleteDialog dialogOpen={deleteDialogOpen} onCancel={() => setDeleteDialogOpen(false)} onDelete={handleDeleteClick} />
+                </ItemsMenu>
+            </Root>
+            <DeleteDialog
+                dialogOpen={deleteDialogOpen}
+                onCancel={() => setDeleteDialogOpen(false)}
+                onDelete={handleDeleteClick}
+                {...slotProps?.deleteDialog}
+            />
         </>
     );
+}
+
+const Root = createComponentSlot(RowActionsMenu)<CrudContextMenuClassKey>({
+    componentName: "CrudContextMenu",
+    slotName: "root",
+})();
+
+const ItemsMenu = createComponentSlot(RowActionsMenu)<CrudContextMenuClassKey>({
+    componentName: "CrudContextMenu",
+    slotName: "itemsMenu",
+})();
+
+const CopyUrlItem = createComponentSlot(RowActionsItem)<CrudContextMenuClassKey>({
+    componentName: "CrudContextMenu",
+    slotName: "copyUrlItem",
+})();
+
+const CopyItem = createComponentSlot(RowActionsItem)<CrudContextMenuClassKey>({
+    componentName: "CrudContextMenu",
+    slotName: "copyItem",
+})();
+
+const PasteItem = createComponentSlot(RowActionsItem)<CrudContextMenuClassKey>({
+    componentName: "CrudContextMenu",
+    slotName: "pasteItem",
+})();
+
+const ItemsDivider = createComponentSlot(Divider)<CrudContextMenuClassKey>({
+    componentName: "CrudContextMenu",
+    slotName: "itemsDivider",
+})();
+
+const DeleteItem = createComponentSlot(RowActionsItem)<CrudContextMenuClassKey>({
+    componentName: "CrudContextMenu",
+    slotName: "deleteItem",
+})();
+
+const DeleteDialog = createComponentSlot(CommonDeleteDialog)<CrudContextMenuClassKey>({
+    componentName: "CrudContextMenu",
+    slotName: "deleteDialog",
+})();
+
+declare module "@mui/material/styles" {
+    interface ComponentsPropsList {
+        CometAdminCrudContextMenu: CrudContextMenuProps<unknown>;
+    }
+
+    interface ComponentNameToClassKey {
+        CometAdminCrudContextMenu: CrudContextMenuClassKey;
+    }
+
+    interface Components {
+        CometAdminCrudContextMenu?: {
+            defaultProps?: Partial<ComponentsPropsList["CometAdminCrudContextMenu"]>;
+            styleOverrides?: ComponentsOverrides<Theme>["CometAdminCrudContextMenu"];
+        };
+    }
 }

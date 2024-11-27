@@ -6,6 +6,7 @@ import {
     SaveBoundarySaveButton,
     Stack,
     StackLink,
+    StackMainContent,
     StackPage,
     StackSwitch,
     StackToolbar,
@@ -42,7 +43,7 @@ export function ProductsPage() {
             <StackSwitch>
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                    <MainContent fullHeight>
+                    <StackMainContent fullHeight>
                         <ProductsGrid
                             toolbarAction={
                                 <Button
@@ -61,29 +62,34 @@ export function ProductsPage() {
                                     <Edit color="primary" />
                                 </IconButton>
                             )}
+                            actionsColumnWidth={116}
                         />
-                    </MainContent>
+                    </StackMainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
-                            <FormToolbar />
-                            <RouterTabs>
-                                <RouterTab
-                                    forceRender={true}
-                                    path=""
-                                    label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
-                                >
-                                    <ProductForm id={selectedProductId} hideFields={{ availableSince: true }} />
-                                </RouterTab>
-                                <RouterTab
-                                    forceRender={true}
-                                    path="/price"
-                                    label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
-                                >
-                                    <ProductPriceForm id={selectedProductId} />
-                                </RouterTab>
-                            </RouterTabs>
+                            <>
+                                <FormToolbar />
+                                <StackMainContent>
+                                    <RouterTabs>
+                                        <RouterTab
+                                            forceRender={true}
+                                            path=""
+                                            label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
+                                        >
+                                            <ProductForm id={selectedProductId} hideFields={{ availableSince: true }} />
+                                        </RouterTab>
+                                        <RouterTab
+                                            forceRender={true}
+                                            path="/price"
+                                            label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
+                                        >
+                                            <ProductPriceForm id={selectedProductId} />
+                                        </RouterTab>
+                                    </RouterTabs>
+                                </StackMainContent>
+                            </>
                         </SaveBoundary>
                     )}
                 </StackPage>
@@ -106,7 +112,9 @@ export function ProductsPage() {
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add Product" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ProductForm />
+                        <MainContent>
+                            <ProductForm />
+                        </MainContent>
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>
