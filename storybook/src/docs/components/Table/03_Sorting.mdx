@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Canvas, Meta } from "@storybook/addon-docs";
 
 import * as SortingStories from "./03_Sorting.stories";
 
@@ -18,6 +18,4 @@ To use this functionality, you have to follow the following steps:
 
 You can then sort the table ascending or descending by column by clicking on the column header.
 
-<Canvas>
-    <Story of={SortingStories.SortableTable} />
-</Canvas>
+<Canvas of={SortingStories.SortableTable} />

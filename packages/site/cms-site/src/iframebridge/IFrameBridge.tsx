@@ -41,6 +41,7 @@ export interface IFrameBridgeContext {
     sendMessage: (message: IFrameMessage) => void;
     showOutlines: boolean;
     contentScope: unknown;
+    graphQLApiUrl: string | undefined;
     previewElementsData: OverlayElementData[];
     addPreviewElement: (element: PreviewElement) => void;
     removePreviewElement: (element: PreviewElement) => void;
@@ -60,6 +61,7 @@ export const IFrameBridgeContext = createContext<IFrameBridgeContext>({
         //empty
     },
     contentScope: undefined,
+    graphQLApiUrl: undefined,
     previewElementsData: [],
     removePreviewElement: () => {
         // empty
@@ -76,6 +78,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
     const [hoveredAdminRoute, setHoveredAdminRoute] = useState<string | undefined>(undefined);
     const [showOutlines, setShowOutlines] = useState<boolean>(false);
     const [contentScope, setContentScope] = useState<unknown>(undefined);
+    const [graphQLApiUrl, setGraphQLApiUrl] = useState<string>("");
     const [previewElements, setPreviewElements] = useState<PreviewElement[]>([]);
     const [previewElementsData, setPreviewElementsData] = useState<OverlayElementData[]>([]);
 
@@ -168,6 +171,9 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 case AdminMessageType.ContentScope:
                     setContentScope(message.data.contentScope);
                     break;
+                case AdminMessageType.GraphQLApiUrl:
+                    setGraphQLApiUrl(message.data.graphQLApiUrl);
+                    break;
             }
         },
         [debounceDeactivateOutlines],
@@ -232,6 +238,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
                 },
                 sendMessage,
                 contentScope,
+                graphQLApiUrl,
                 previewElementsData,
                 addPreviewElement,
                 removePreviewElement,

@@ -3,17 +3,17 @@ import { BlockPreviewProvider, IFrameBridgeProvider, useBlockPreviewFetch, useIF
 import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentBlock } from "@src/blocks/PageContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
-import { graphQLApiUrl } from "@src/util/graphQLClient";
 import { useEffect, useState } from "react";
 
 const PreviewPage = () => {
     const iFrameBridge = useIFrameBridge();
 
-    const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
+    const { fetch, graphQLFetch } = useBlockPreviewFetch();
 
     const [blockData, setBlockData] = useState<PageContentBlockData>();
     useEffect(() => {
         async function load() {
+            if (!graphQLFetch) return;
             if (!iFrameBridge.block) {
                 setBlockData(undefined);
                 return;
