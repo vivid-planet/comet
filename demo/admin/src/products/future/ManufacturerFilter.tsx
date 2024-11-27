@@ -1,9 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
+import { InputBase } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
 import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { useIntl } from "react-intl";
+import { useDebounce } from "use-debounce";
 
 import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
 
@@ -23,12 +24,13 @@ const manufacturersQuery = gql`
 function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
     const intl = useIntl();
     const [search, setSearch] = React.useState<string | undefined>(undefined);
+    const [debouncedSearch] = useDebounce(search, 500);
 
     const { data } = useQuery<GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables>(manufacturersQuery, {
         variables: {
             offset: 0,
             limit: 10,
-            search: search,
+            search: debouncedSearch,
         },
     });
 
@@ -50,19 +52,17 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
             }}
             onChange={(event, value, reason) => {
                 // value can't be "{ id: value.id, name: value.name }" because value is sent to api
-                applyValue({ ...item, value: value ? value.id : undefined });
+                applyValue({ id: item.id, operatorValue: "equals", value: value ? value.id : undefined, columnField: "manufacturer" });
             }}
             renderInput={(params) => (
-                <TextField
+                <InputBase
                     {...params}
+                    {...params.InputProps}
+                    autoComplete="off"
                     placeholder={intl.formatMessage({ id: "manufacturer-filter.placeholder", defaultMessage: "Choose a manufacturer" })}
                     value={search ? search : null}
                     onChange={(event) => {
                         setSearch(event.target.value);
-                    }}
-                    inputProps={{
-                        ...params.inputProps,
-                        autoComplete: "new-password", // disable autocomplete and autofill
                     }}
                 />
             )}
@@ -77,6 +77,5 @@ export const ManufacturerFilterOperators: GridFilterOperator[] = [
             throw new Error("not implemented, we filter server side");
         },
         InputComponent: ManufacturerFilter,
-        InputComponentProps: { column: "string" },
     },
 ];
