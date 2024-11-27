@@ -11,7 +11,12 @@ import { GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables } from "./LatestBui
 
 export const LatestBuildsDashboardWidget = () => {
     const { data, loading, error } = useQuery<GQLLatestBuildsQuery, GQLLatestBuildsQueryVariables>(LATEST_BUILDS);
+
     const intl = useIntl();
+
+    if (error) {
+        throw error;
+    }
 
     const columns: GridColDef<GQLLatestBuildsQuery["builds"][number]>[] = [
         {
@@ -38,14 +43,13 @@ export const LatestBuildsDashboardWidget = () => {
     return (
         <DashboardWidgetRoot header={<FormattedMessage id="dashboard.latestBuildsWidget.title" defaultMessage="Latest Builds" />}>
             <DataGrid
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 disableColumnMenu
                 hideFooter
                 autoHeight
                 columns={columns}
                 rows={data?.builds ?? []}
                 loading={loading}
-                error={error}
             />
         </DashboardWidgetRoot>
     );

@@ -95,7 +95,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             marginRight: "10px",
         },
         panelContent: {
-            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
+            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLogicOperatorInput}`]: {
                 ["@media (max-width: 900px)"]: {
                     display: "none",
                 },
@@ -119,7 +119,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 padding: 0,
             },
         },
-        filterFormLinkOperatorInput: {
+        filterFormLogicOperatorInput: {
             ["@media (max-width: 900px)"]: {
                 padding: spacing(2, 4),
                 width: "100%",

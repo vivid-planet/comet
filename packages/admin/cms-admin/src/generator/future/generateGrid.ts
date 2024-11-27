@@ -162,7 +162,8 @@ export function generateGrid(
     const fieldList = generateGqlFieldList({
         columns: config.columns.filter((column) => {
             return (
-                column.type !== "actions" && column.name !== "id" // exclude id because it's always required
+                // exclude id because it's always required
+                column.type !== "actions" && column.name !== "id"
             );
         }),
     });
@@ -833,8 +834,8 @@ export function generateGrid(
                         : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
                     ...[
-                        `offset: dataGridProps.page * dataGridProps.pageSize`,
-                        `limit: dataGridProps.pageSize`,
+                        `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
+                        `limit: dataGridProps.paginationModel.pageSize`,
                         `sort: muiGridSortToGql(dataGridProps.sortModel)`,
                     ],
                 ].join(", ")}
@@ -849,7 +850,7 @@ export function generateGrid(
         return (
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}

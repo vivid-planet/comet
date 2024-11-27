@@ -111,20 +111,24 @@ export const UseDataGridRemote = {
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     sort: dataGridProps.sortModel[0]?.field,
                     order: dataGridProps.sortModel[0]?.sort,
                 },
             },
         );
 
+        if (error) {
+            throw error;
+        }
+
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
     },
@@ -164,20 +168,24 @@ export const UseDataGridRemoteInitialSort = {
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     sort: dataGridProps.sortModel[0]?.field,
                     order: dataGridProps.sortModel[0]?.sort,
                 },
             },
         );
 
+        if (error) {
+            throw error;
+        }
+
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
     },
@@ -201,7 +209,7 @@ export const UseDataGridRemoteInitialFilter = {
         ];
 
         const dataGridProps = useDataGridRemote({
-            initialFilter: { items: [{ columnField: "mission_name", operatorValue: "contains", value: "able" }] },
+            initialFilter: { items: [{ field: "mission_name", operator: "contains", value: "able" }] },
         });
 
         const { data, loading, error } = useQuery(
@@ -221,8 +229,8 @@ export const UseDataGridRemoteInitialFilter = {
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     filter: muiGridFilterToGql(columns, dataGridProps.filterModel).filter,
                 },
             },
@@ -231,9 +239,12 @@ export const UseDataGridRemoteInitialFilter = {
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
+        if (error) {
+            throw error;
+        }
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
     },
@@ -394,8 +405,8 @@ export const UseDataGridExcelExport = {
         const dataGridProps = useDataGridRemote();
 
         const variables = {
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             sort: dataGridProps.sortModel[0]?.field,
             order: dataGridProps.sortModel[0]?.sort,
         };
@@ -484,6 +495,9 @@ export const UseDataGridExcelExport = {
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
+        if (error) {
+            throw error;
+        }
         return (
             <Box sx={{ height: 400, width: "100%" }}>
                 <DataGrid
@@ -492,7 +506,6 @@ export const UseDataGridExcelExport = {
                     columns={columns}
                     rowCount={rowCount}
                     loading={loading}
-                    error={error}
                     components={{
                         Toolbar: DemoToolbar,
                     }}
