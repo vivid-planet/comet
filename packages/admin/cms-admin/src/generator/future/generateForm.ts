@@ -8,9 +8,8 @@ import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 export type Prop = { type: string; optional: boolean; name: string };
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-function isProp(arg: any): arg is Prop {
-    return arg.name !== undefined && arg.type !== undefined;
+function isProp(arg: unknown): arg is Prop {
+    return typeof arg === "object" && arg !== null && "name" in arg && "type" in arg;
 }
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
