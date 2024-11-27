@@ -132,18 +132,6 @@ const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>
             margin-top: ${theme.spacing(2)};
         `}
 
-        &.Mui-disabled {
-            color: ${theme.palette.text.primary};
-        }
-
-        &.Mui-focused {
-            color: ${theme.palette.text.primary};
-        }
-
-        > .MuiFormLabel-asterisk {
-            margin-left: 4px;
-        }
-
         ${ownerState.hasError &&
         css`
             &:not([class*="${formLabelClasses.focused}"]) {
