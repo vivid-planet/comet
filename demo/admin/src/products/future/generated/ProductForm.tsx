@@ -107,7 +107,7 @@ export function ProductForm({ hideFields, id }: FormProps): React.ReactElement {
                                 depth: String(data.product.dimensions.depth),
                             }
                           : undefined,
-                      availableSince: hideFields.availableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
+                      availableSince: hideFields?.availableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
@@ -391,7 +391,7 @@ export function ProductForm({ hideFields, id }: FormProps): React.ReactElement {
                                     />
                                 )}
                             </Field>
-                            {!hideFields.availableSince && (
+                            {!hideFields?.availableSince && (
                                 <Field
                                     variant="horizontal"
                                     fullWidth
