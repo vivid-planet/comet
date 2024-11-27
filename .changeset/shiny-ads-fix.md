@@ -4,21 +4,24 @@
 "@comet/admin": major
 ---
 
-Bump @mui/x-data-grid from v5 to v6, which has breaking changes in DataGrid. see [Mui - Migration from v5 to v6](https://mui.com/x/migration/migration-data-grid-v5).
-Change public API of `useDataGridRemote` hook.
+Bump @mui/x-data-grid peer dependency to v6
+
+This has breaking changes in DataGrid.
+Follow the official [migration guide](<(https://mui.com/x/migration/migration-data-grid-v5)>) to upgrade.
+
+The `useDataGridRemote` hook has been changed to match the updated DataGrid props:
 
 ```diff
 - const { pageSize, page, onPageSizeChange } = useDataGridRemote();
-+ const { paginationModel, onPaginationModelChange } = useDataGridRemote(); // paginationModel is an object with pageSize, page and onPageSizeChange
++ const { paginationModel, onPaginationModelChange } = useDataGridRemote();
 ```
 
-Change public API from `muiGridSortToGql` function.
+The `muiGridSortToGql` helper now expects the columns instead of the `apiRef`:
 
 ```diff
-
-    const columns : GridColDef[] = [/* column definitions*/];
-    const dataGridRemote = useDataGridRemote();
-    const persistentColumnState = usePersistentColumnState("persistent_column_state");
+const columns : GridColDef[] = [/* column definitions */];
+const dataGridRemote = useDataGridRemote();
+const persistentColumnState = usePersistentColumnState("persistent_column_state");
 
 -  muiGridSortToGql(dataGridRemote.sortModel, persistentColumnState.apiRef);
 +  muiGridSortToGql(dataGridRemote.sortModel, columns);
