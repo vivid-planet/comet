@@ -4,6 +4,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { useIntl } from "react-intl";
+import { useDebounce } from "use-debounce";
 
 import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
 
@@ -23,12 +24,13 @@ const manufacturersQuery = gql`
 function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
     const intl = useIntl();
     const [search, setSearch] = React.useState<string | undefined>(undefined);
+    const [debouncedSearch] = useDebounce(search, 500);
 
     const { data } = useQuery<GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables>(manufacturersQuery, {
         variables: {
             offset: 0,
             limit: 10,
-            search: search,
+            search: debouncedSearch,
         },
     });
 
