@@ -22,12 +22,19 @@ type ImportReference = {
     import: string;
 };
 
-type SingleFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple?: false; maxFiles?: 1 } & Pick<
+type IconObject = Pick<IconProps, "color" | "fontSize"> & {
+    name: IconName;
+};
+
+type Icon = IconName | IconObject | ImportReference;
+export type Adornment = string | { icon: Icon };
+
+type SingleFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple?: false; maxFiles?: 1; download?: boolean } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-type MultiFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple: true; maxFiles?: number } & Pick<
+type MultiFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple: true; maxFiles?: number; download?: boolean } & Pick<
     Partial<FinalFormFileUploadProps<true>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
@@ -41,8 +48,6 @@ export type FormFieldConfig<T> = (
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
-          startAdornment?: string;
-          endAdornment?: string;
       }
     | { type: "boolean"; name: keyof T }
     | { type: "date"; name: keyof T }
@@ -61,7 +66,16 @@ export type FormFieldConfig<T> = (
     | { type: "block"; name: keyof T; block: ImportReference }
     | SingleFileFormFieldConfig<T>
     | MultiFileFormFieldConfig<T>
-) & { label?: string; required?: boolean; virtual?: boolean; validate?: ImportReference; helperText?: string; readOnly?: boolean };
+) & {
+    label?: string;
+    required?: boolean;
+    virtual?: boolean;
+    validate?: ImportReference;
+    helperText?: string;
+    readOnly?: boolean;
+    startAdornment?: Adornment;
+    endAdornment?: Adornment;
+};
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function isFormFieldConfig<T>(arg: any): arg is FormFieldConfig<T> {
     return !isFormLayoutConfig(arg);
@@ -106,14 +120,10 @@ export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWid
     visible?: ColumnVisibleOption;
 };
 
-type IconObject = Pick<IconProps, "color" | "fontSize"> & {
-    name: IconName;
-};
-
 export type StaticSelectLabelCellContent = {
     primaryText?: string;
     secondaryText?: string;
-    icon?: IconName | IconObject | ImportReference;
+    icon?: Icon;
 };
 
 export type GridColumnConfig<T> = (
@@ -133,6 +143,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     gqlType: T["__typename"];
     fragmentName?: string;
     query?: string;
+    queryParamsPrefix?: string;
     columns: Array<GridColumnConfig<T> | GridCombinationColumnConfig<UsableFields<T>> | ActionsGridColumnConfig>;
     excelExport?: boolean;
     add?: boolean;
@@ -194,7 +205,7 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
             const gqlDocumentsOuputFilename = `${targetDirectory}/${basename(file.replace(/\.cometGen\.ts$/, ""))}.gql.tsx`;
             await fs.rm(gqlDocumentsOuputFilename, { force: true });
             gqlDocumentsOutputCode = `import { gql } from "@apollo/client";
-                import { finalFormFileUploadFragment } from "@comet/cms-admin";
+                import { finalFormFileUploadFragment, finalFormFileUploadDownloadableFragment } from "@comet/cms-admin";
 
                 ${gqlDocumentsOutputCode}
             `;

@@ -19,7 +19,7 @@ type Props = PropsWithData<DamImageBlockData> &
 const DamImageBlock = withPreview(
     ({ data: { block }, aspectRatio, layout = "intrinsic", ...imageProps }: Props) => {
         if (!block) {
-            return <PreviewSkeleton type="media" hasContent={false} />;
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
         if (block.type === "pixelImage") {

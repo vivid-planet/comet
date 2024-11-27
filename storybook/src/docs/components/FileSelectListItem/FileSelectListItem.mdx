@@ -1,0 +1,25 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as FileSelectListItemStories from "./FileSelectListItem.stories";
+
+<Meta of={FileSelectListItemStories} />
+
+# FileSelectListItem
+
+Used to display a list of files, including loading, skeleton, and error states and options to download and delete the file.
+
+## Usage
+
+-   Pass a `file` prop to display the file.
+    -   The file will be rendered normally if `name` and optionally `size` are provided.
+    -   If the `loading` value is `true` and `name` is provided, the file will be rendered in a loading state.
+    -   If the `loading` value is `true` and no `name` is provided, the file will be rendered as a skeleton.
+    -   The file will be rendered in an error state if the `error` value is `true` or a string with an error message is provided.
+-   Use the `downloadUrl`, `onClickDownload` and `onClickDelete` props to handle what happens when clicking the download and delete buttons.
+-   Set the `filePreview` prop to `true` or pass in a image url to display the item as a card with a preview.
+
+<Canvas of={FileSelectListItemStories.Basic} />
+
+### File preview card
+
+<Canvas of={FileSelectListItemStories.Preview} />

@@ -177,7 +177,6 @@ export const masterMenuData: MasterMenuData = [
                 requiredPermission: "pageTree",
             },
         ],
-        requiredPermission: "pageTree",
     },
     {
         type: "route",
