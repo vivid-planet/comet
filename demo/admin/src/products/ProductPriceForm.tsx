@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, MainContent, useFormApiRef } from "@comet/admin";
+import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, useFormApiRef } from "@comet/admin";
 import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { CircularProgress } from "@mui/material";
 import { FormApi } from "final-form";
@@ -84,15 +84,13 @@ export function ProductPriceForm({ id }: FormProps) {
             {() => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
-                        <Field
-                            fullWidth
-                            name="price"
-                            component={FinalFormInput}
-                            inputProps={{ type: "number" }}
-                            label={<FormattedMessage id="product.price" defaultMessage="Price" />}
-                        />
-                    </MainContent>
+                    <Field
+                        fullWidth
+                        name="price"
+                        component={FinalFormInput}
+                        inputProps={{ type: "number" }}
+                        label={<FormattedMessage id="product.price" defaultMessage="Price" />}
+                    />
                 </>
             )}
         </FinalForm>
