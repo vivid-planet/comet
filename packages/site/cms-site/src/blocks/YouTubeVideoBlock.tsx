@@ -1,11 +1,13 @@
 "use client";
 
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { pauseYoutubeVideo, playYoutubeVideo } from "./helpers/controlVideos";
+import { useIsElementVisible } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -40,6 +42,12 @@ export const YouTubeVideoBlock = withPreview(
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
+        const inViewRef = useRef(null);
+        const inView = useIsElementVisible(inViewRef);
+
+        useEffect(() => {
+            inView && autoplay ? playYoutubeVideo() : pauseYoutubeVideo();
+        }, [autoplay, inView]);
 
         if (!youtubeIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -49,9 +57,8 @@ export const YouTubeVideoBlock = withPreview(
         const searchParams = new URLSearchParams();
         searchParams.append("modestbranding", "1");
         searchParams.append("rel", "0");
+        searchParams.append("enablejsapi", "1");
 
-        if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
-            searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
         if (autoplay) searchParams.append("mute", "1");
 
         if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
@@ -87,8 +94,8 @@ export const YouTubeVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <YouTubeContainer src={youtubeUrl.toString()} allow="autoplay" />
+                    <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
+                        <YouTubeContainer src={youtubeUrl.toString()} />
                     </VideoContainer>
                 )}
             </>

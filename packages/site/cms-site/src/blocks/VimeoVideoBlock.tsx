@@ -1,10 +1,12 @@
 "use client";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { pauseVimeoVideo, playVimeoVideo } from "./helpers/controlVideos";
+import { useIsElementVisible } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -43,6 +45,12 @@ export const VimeoVideoBlock = withPreview(
     }: VimeoVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
+        const inViewRef = useRef(null);
+        const inView = useIsElementVisible(inViewRef);
+
+        useEffect(() => {
+            inView && autoplay ? playVimeoVideo() : pauseVimeoVideo();
+        }, [autoplay, inView]);
 
         if (!vimeoIdentifier) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
 
@@ -50,8 +58,6 @@ export const VimeoVideoBlock = withPreview(
 
         const searchParams = new URLSearchParams();
 
-        if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
-            searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
         if (autoplay) searchParams.append("muted", "1");
 
         if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
@@ -87,7 +93,7 @@ export const VimeoVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
+                    <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
                         <VimeoContainer src={vimeoUrl.toString()} allow="autoplay" allowFullScreen style={{ border: 0 }} />
                     </VideoContainer>
                 )}

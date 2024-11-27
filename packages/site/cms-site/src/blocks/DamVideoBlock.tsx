@@ -1,11 +1,13 @@
 "use client";
 
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
+import { pauseDamVideo, playDamVideo } from "./helpers/controlVideos";
+import { useIsElementVisible } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -33,6 +35,13 @@ export const DamVideoBlock = withPreview(
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
+        const inViewRef = useRef<HTMLDivElement>(null);
+        const videoRef = useRef<HTMLVideoElement>(null);
+
+        const inView = useIsElementVisible(inViewRef);
+
+        inView && autoplay ? playDamVideo(videoRef) : pauseDamVideo(videoRef);
+
         return (
             <>
                 {hasPreviewImage && showPreviewImage ? (
@@ -56,17 +65,20 @@ export const DamVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <Video
-                        autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
-                        controls={showControls}
-                        loop={loop}
-                        playsInline
-                        muted={autoplay}
-                        $aspectRatio={aspectRatio.replace("x", " / ")}
-                        $fill={fill}
-                    >
-                        <source src={damFile.fileUrl} type={damFile.mimetype} />
-                    </Video>
+                    <div ref={inViewRef}>
+                        <Video
+                            autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
+                            controls={showControls}
+                            loop={loop}
+                            playsInline
+                            muted={autoplay}
+                            ref={videoRef}
+                            $aspectRatio={aspectRatio.replace("x", " / ")}
+                            $fill={fill}
+                        >
+                            <source src={damFile.fileUrl} type={damFile.mimetype} />
+                        </Video>
+                    </div>
                 )}
             </>
         );
