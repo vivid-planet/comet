@@ -19,10 +19,9 @@ export const getMuiFormLabel: GetMuiComponentTheme<"MuiFormLabel"> = (component,
             "&.Mui-focused": {
                 color: palette.text.primary,
             },
-
-            "> .MuiFormLabel-asterisk": {
-                marginLeft: "4px",
-            },
+        },
+        asterisk: {
+            marginLeft: "4px",
         },
     }),
 });
