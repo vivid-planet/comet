@@ -7,6 +7,11 @@ export const ProductVariantForm: FormConfig<GQLProductVariant> = {
     fragmentName: "ProductVariantFormDetails",
     fields: [
         {
+            name: "product",
+            type: "asyncSelect",
+            rootQuery: "products",
+        },
+        {
             name: "name",
             type: "text",
             label: "Name",

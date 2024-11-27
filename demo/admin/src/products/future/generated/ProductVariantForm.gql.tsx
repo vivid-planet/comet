@@ -4,6 +4,10 @@ import { gql } from "@apollo/client";
 
 export const productVariantFormFragment = gql`
     fragment ProductVariantFormDetails on ProductVariant {
+        product {
+            id
+            title
+        }
         name
         image
     }
