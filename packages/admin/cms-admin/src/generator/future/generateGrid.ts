@@ -325,7 +325,7 @@ export function generateGrid(
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         let filterOperators: string | undefined;
-        if (column.type !== "combination" && column.filterOperators) {
+        if (column.filterOperators) {
             let importPath = column.filterOperators.import;
             if (importPath.startsWith("./")) {
                 //go one level up as generated files are in generated subfolder

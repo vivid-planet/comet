@@ -100,6 +100,7 @@ export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWid
     headerInfoTooltip?: string;
     visible?: ColumnVisibleOption;
     fieldName?: string; // this can be used to overwrite field-prop of column-config
+    filterOperators?: ImportReference;
 };
 
 type IconObject = Pick<IconProps, "color" | "fontSize"> & {
@@ -120,7 +121,7 @@ export type GridColumnConfig<T> = (
     | { type: "dateTime" }
     | { type: "staticSelect"; values?: Array<{ value: string; label: string | StaticSelectLabelCellContent } | string> }
     | { type: "block"; block: ImportReference }
-) & { name: UsableFields<T>; filterOperators?: ImportReference } & BaseColumnConfig;
+) & { name: UsableFields<T> } & BaseColumnConfig;
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
 
