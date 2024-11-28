@@ -15,8 +15,97 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 -   Upgrade MUI packages to v6
 -   Run MUI codemods
 -   Upgrade MUI X packages to v6
+-   Upgrade NestJS packages to v10
 
 </details>
+
+## API
+
+### Upgrade peer dependencies
+
+#### NestJS
+
+The NestJS peer dependency has been bumped to v10.
+
+1.  Upgrade all your dependencies to support NestJS v10:
+
+    ```diff title=api/package.json
+    {
+        "dependencies": {
+    +       "@apollo/server": "^4.0.0",
+    -       "@nestjs/apollo": "^10.0.0",
+    -       "@nestjs/common": "^9.0.0",
+    -       "@nestjs/config": "^2.0.0",
+    -       "@nestjs/core": "^9.0.0",
+    -       "@nestjs/graphql": "^10.0.0",
+    -       "@nestjs/passport": "^9.0.0",
+    -       "@nestjs/platform-express": "^9.0.0",
+    +       "@nestjs/apollo": "^12.0.0",
+    +       "@nestjs/common": "^10.0.0",
+    +       "@nestjs/core": "^10.0.0",
+    +       "@nestjs/graphql": "^12.0.0",
+    +       "@nestjs/passport": "^10.0.0",
+    +       "@nestjs/platform-express": "^10.0.0",
+    -       "apollo-server-core": "^3.0.0",
+    -       "apollo-server-express": "^3.0.0",
+    -       "graphql": "^15.0.0",
+    +       "graphql": "^16.6.0",
+    -       "nestjs-console": "^8.0.0",
+    +       "nestjs-console": "^9.0.0"
+        },
+        "devDependencies": {
+    -       "@nestjs/cli": "^9.0.0",
+    -       "@nestjs/schematics": "^9.0.0",
+    -       "@nestjs/testing": "^9.0.0",
+    +       "@nestjs/cli": "^10.0.0",
+    +       "@nestjs/schematics": "^10.0.0",
+    +       "@nestjs/testing": "^10.0.0"
+        }
+    }
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/update-nest-dependencies.ts
+    ```
+
+    :::
+
+2.  Update the custom `formatError` function to hide GraphQL field suggestions:
+
+    ```diff title=api/src/app.module.ts
+    - import { ValidationError } from "apollo-server-express";
+    + import { ValidationError } from "@nestjs/apollo";
+
+    /* ... */
+
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+        /* ... */
+        useFactory: (moduleRef: ModuleRef) => ({
+            /* ... */,
+            formatError: (error) => {
+                // Disable GraphQL field suggestions in production
+                if (process.env.NODE_ENV !== "development") {
+    -               if (error instanceof ValidationError) {
+    +               if (error.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
+                        return new ValidationError("Invalid request.");
+                    }
+                }
+                return error;
+            },
+
+        }),
+    }),
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/update-graphql-format-error.ts
+    ```
+
+    :::
 
 ## Admin
 
