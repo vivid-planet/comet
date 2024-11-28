@@ -11,9 +11,6 @@ export function createStaticUserAuthService(config: StaticUserAuthServiceConfig)
     @Injectable()
     class StaticUserAuthService implements AuthServiceInterface {
         async authenticateUser() {
-            if (typeof config.staticUser === "string") {
-                return config.staticUser;
-            }
             return config.staticUser;
         }
     }
