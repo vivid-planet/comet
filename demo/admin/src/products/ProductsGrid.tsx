@@ -26,6 +26,7 @@ import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToo
 import gql from "graphql-tag";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
+import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -222,6 +223,13 @@ export function ProductsGrid() {
             },
         },
         {
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: ({ value }) => value?.name,
+            filterOperators: [ManufacturerFilterOperator],
+        },
+        {
             field: "action",
             headerName: "",
             sortable: false,
@@ -330,6 +338,9 @@ const productsFragment = gql`
         }
         variants {
             id
+        }
+        manufacturer {
+            name
         }
         articleNumbers
         discounts {
