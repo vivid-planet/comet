@@ -2,6 +2,7 @@
 "@comet/cms-site": minor
 ---
 
-Play videos on auto play only when visible
+Play/pause auto-play videos depending on their visibility
 
-Start videos depending on their visibility in `DamVideoBlock`, `YoutubeVideoBlock` and `VimeoVideoBlock`. Videos that are not in the viewport of the user, pause.
+Start videos in `DamVideoBlock`, `YoutubeVideoBlock` and `VimeoVideoBlock` when the block is in or enters the viewport.
+Pause them when the block is leaving the viewport.
