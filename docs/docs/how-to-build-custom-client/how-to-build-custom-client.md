@@ -472,7 +472,7 @@ export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) 
 
 ## Handle preview
 
-More Information how to integrate and work with Comet Admin's Preview can be found in the [IFrameBridge](preview/iframebridge) section.
+More Information how to integrate and work with Comet Admin's Preview can be found in the IFrameBridge section.
 
 # Further Reading / Information
 
