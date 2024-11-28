@@ -2,4 +2,4 @@
 "@comet/admin-theme": minor
 ---
 
-Add hover styling to `MuiSwitch`
+Add hover styling for MUI's `Switch`
