@@ -8,7 +8,7 @@ import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps
 import { useStackApi } from "../../stack/Api";
 import { useObservedWidth } from "../../utils/useObservedWidth";
 
-type ToolbarBreadcrumbsClassKey =
+export type ToolbarBreadcrumbsClassKey =
     | "root"
     | "breadcrumbsList"
     | "mobileBreadcrumbsButton"
@@ -22,7 +22,7 @@ type ToolbarBreadcrumbsClassKey =
     | "mobileMenuItemText"
     | "mobileMenuItemNestingIndicator";
 
-interface ToolbarBreadcrumbsProps
+export interface ToolbarBreadcrumbsProps
     extends ThemedComponentBaseProps<{
         root: "div";
         breadcrumbsList: "div";
