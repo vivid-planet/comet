@@ -162,8 +162,8 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         {
             variables: {
                 ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-                offset: dataGridProps.page * dataGridProps.pageSize,
-                limit: dataGridProps.pageSize,
+                offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+                limit: dataGridProps.paginationModel.pageSize ?? 0,
                 sort: muiGridSortToGql(dataGridProps.sortModel),
             },
         },

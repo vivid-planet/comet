@@ -345,8 +345,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         variables: {
             filter: filter ? { and: [gqlFilter, filter] } : gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -374,7 +374,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

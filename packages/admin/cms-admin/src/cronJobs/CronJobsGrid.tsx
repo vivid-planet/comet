@@ -71,6 +71,9 @@ export function CronJobsGrid() {
 
     const { data, loading, error } = useQuery<GQLKubernetesCronJobsQuery, GQLKubernetesCronJobsQueryVariables>(cronJobsQuery);
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.kubernetesCronJobs ?? [];
 
     const closeDialog = () => {
@@ -81,7 +84,6 @@ export function CronJobsGrid() {
             <DataGrid
                 rows={rows}
                 loading={loading}
-                error={error}
                 hideFooterPagination
                 columns={[
                     {

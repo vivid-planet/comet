@@ -3,6 +3,7 @@ import {
     BreadcrumbItem,
     EditDialog,
     GridCellContent,
+    GridColDef,
     IFilterApi,
     ISelectionApi,
     PrettyBytes,
@@ -12,7 +13,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Slide, SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, GridColumns, GridRowClassNameParams, GridSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, GridRowClassNameParams, GridRowSelectionModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
@@ -78,7 +79,7 @@ const FolderDataGrid = ({
     filterApi,
     breadcrumbs,
     selectionApi,
-    hideContextMenu,
+    hideContextMenu = false,
     hideArchiveFilter,
     hideMultiselect,
     renderDamLabel,
@@ -128,8 +129,8 @@ const FolderDataGrid = ({
             },
             sortColumnName: filterApi.current.sort?.columnName,
             sortDirection: filterApi.current.sort?.direction,
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             scope,
         },
     });
@@ -215,12 +216,12 @@ const FolderDataGrid = ({
             });
 
             const position = result.data.damItemListPosition;
-            const targetPage = Math.floor(position / dataGridProps.pageSize);
+            const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
 
             if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
                 switchApi.activatePage("folder", parentId);
             } else {
-                dataGridProps.onPageChange?.(targetPage, {});
+                dataGridProps.onPaginationModelChange?.({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize }, {});
             }
 
             setRedirectedToId(id);
@@ -304,7 +305,7 @@ const FolderDataGrid = ({
         setDamItemToMove(undefined);
     };
 
-    const handleSelectionModelChange = (newSelectionModel: GridSelectionModel) => {
+    const handleSelectionModelChange = (newSelectionModel: GridRowSelectionModel) => {
         const newMap: DamItemSelectionMap = new Map();
 
         newSelectionModel.forEach((selectedId) => {
@@ -345,7 +346,7 @@ const FolderDataGrid = ({
         return "";
     };
 
-    const dataGridColumns: GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment> = [
+    const dataGridColumns: GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[] = [
         {
             field: "name",
             headerName: intl.formatMessage({
@@ -488,7 +489,7 @@ const FolderDataGrid = ({
                       hideSortIcons: true,
                       disableColumnMenu: true,
                   },
-              ] as GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment>)
+              ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
             : []),
         {
             field: "createdAt",
@@ -545,10 +546,12 @@ const FolderDataGrid = ({
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
-            hide: hideContextMenu,
         },
     ];
 
+    if (error) {
+        throw error;
+    }
     return (
         <sc.FolderWrapper>
             <FolderHead
@@ -564,16 +567,18 @@ const FolderDataGrid = ({
                     rows={dataGridData?.damItemsList.nodes ?? []}
                     rowCount={dataGridData?.damItemsList.totalCount ?? 0}
                     loading={loading}
-                    error={error}
-                    rowsPerPageOptions={[10, 20, 50]}
+                    pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-                    disableSelectionOnClick
-                    selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
-                    onSelectionModelChange={handleSelectionModelChange}
+                    disableRowSelectionOnClick
+                    rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
+                    onRowSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
+                    columnVisibilityModel={{
+                        contextMenu: hideContextMenu,
+                    }}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />
