@@ -2,11 +2,14 @@
 "@comet/blocks-admin": minor
 ---
 
-Add `hiddenForState` to `createCompositeBlock`. This allows you to hide a block based on the state of another block.
-For example, you can hide a block if another block is empty, or if it has a specific value. This can be useful in many scenarios, like hiding a block for a specific variant of the block, when an attribute is not needed.
+Add `hiddenForState` option to `createCompositeBlock`
+
+This function can be used to hide a block in the `AdminComponent` for a given state.
+
+**Example**
 
 ```tsx
-createCompositeBlock({
+const TextWithMediaVariantBlock = createCompositeBlock({
     name: "TextWithMediaVariant",
     blocks: {
         variant: {
@@ -24,6 +27,7 @@ createCompositeBlock({
         },
         media: {
             block: MediaBlock,
+            // The media block isn't needed for the "text-only" variant
             hiddenForState: (state) => state.variant === "text-only",
         },
     },
