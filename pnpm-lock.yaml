@@ -379,7 +379,7 @@ importers:
         specifier: ^5.0.0
         version: 5.5.3
       graphql:
-        specifier: ^16.0.0
+        specifier: ^16.6.0
         version: 16.9.0
       graphql-scalars:
         specifier: ^1.23.0
