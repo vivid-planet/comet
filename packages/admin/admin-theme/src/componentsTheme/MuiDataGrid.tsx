@@ -30,25 +30,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         root: {
             backgroundColor: "white",
         },
-        /*
-        TODO: @ricky any clue what this is?
-        columnsPanelRow: {
-            marginBottom: spacing(2),
-
-            [`& .${switchClasses.root}`]: {
-                marginRight: 0,
-            },
-            [`& .${switchClasses.root} .${switchClasses.thumb}`]: {
-                width: 10,
-                height: 10,
-            },
-            [`& .${switchClasses.root} .${switchClasses.switchBase}`]: {
-                padding: 3,
-            },
-            [`& .${switchClasses.root} .${switchClasses.switchBase}.${getSwitchUtilityClass("checked")}`]: {
-                transform: "translateX(20px)",
-            },
-        },*/
         columnHeader: {
             "&:focus": {
                 outline: "none",
@@ -149,32 +130,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         paper: {
             boxShadow: shadows[1],
-        },
-        /*
-        TODO: check where this is needed
-        toolbarQuickFilter: {
-            paddingBottom: 0,
-
-            [`& .${svgIconClasses.root}`]: {
-                fontSize: 16,
-            },
-            [`& .${buttonBaseClasses.root}`]: {
-                alignSelf: "stretch",
-                color: palette.grey[200],
-                paddingLeft: 10,
-                paddingRight: 10,
-                fontSize: 12,
-                marginRight: spacing(-2),
-                borderRadius: 0,
-
-                [`& .${svgIconClasses.root}`]: {
-                    fontSize: "inherit",
-                },
-            },
-            [`& .${inputBaseClasses.input}`]: {
-                marginLeft: 0,
-            },
-        },
-        */
+        }
     }),
 });
