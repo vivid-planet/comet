@@ -3,12 +3,12 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class AccessControlService extends AbstractAccessControlService {
-    getPermissionsForUser(user: User, allowedPermissions: string[]): PermissionsForUser {
+    getPermissionsForUser(user: User, availablePermissions: string[]): PermissionsForUser {
         if (user.isAdmin) {
             return UserPermissions.allPermissions;
         } else {
             const deniedPermissions = ["userPermissions"];
-            return allowedPermissions.filter((permission) => !deniedPermissions.includes(permission)).map((permission) => ({ permission }));
+            return availablePermissions.filter((permission) => !deniedPermissions.includes(permission)).map((permission) => ({ permission }));
         }
     }
     getContentScopesForUser(user: User): ContentScopesForUser {
