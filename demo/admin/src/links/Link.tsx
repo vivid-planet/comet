@@ -4,6 +4,7 @@ import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, Depen
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
+import { ContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
 import { EditLink } from "@src/links/EditLink";
@@ -59,6 +60,17 @@ export const Link: DocumentInterface<Pick<GQLLink, "content">, GQLLinkInput> & D
     ...createDocumentDependencyMethods({
         rootQueryName: "link",
         rootBlocks,
-        basePath: ({ pageTreeNode }) => `/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${pageTreeNode.id}/edit`,
+        scopeFragment: gql`
+            fragment PageDependencyScope on PageTreeNodeScope {
+                domain
+                language
+            }
+        `,
+        basePath: ({ pageTreeNode, scope }) => {
+            const contentScope = scope as ContentScope;
+            return `/${contentScope.domain}/${contentScope.language}/pages/pagetree/${categoryToUrlParam(pageTreeNode.category)}/${
+                pageTreeNode.id
+            }/edit`;
+        },
     }),
 };

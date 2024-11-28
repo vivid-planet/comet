@@ -1,12 +1,16 @@
-import { gql } from "@apollo/client";
+import { DocumentNode, gql } from "@apollo/client";
 import { BlockInputApi, BlockInterface } from "@comet/blocks-admin";
+import { FragmentDefinitionNode } from "graphql/language/ast";
 
+import { ContentScopeInterface } from "../contentScope/Provider";
 import { GQLPageTreeNode, Maybe } from "../graphql.generated";
 import { DependencyInterface } from "./types";
 
 interface Query<RootBlocks extends Record<string, BlockInterface>> {
     node: Maybe<
-        { id: string; pageTreeNode: Maybe<Pick<GQLPageTreeNode, "id" | "category">> } & { [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]> }
+        { id: string; pageTreeNode: Pick<GQLPageTreeNode, "id" | "category"> & { scope?: ContentScopeInterface }; scope?: ContentScopeInterface } & {
+            [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]>;
+        }
     >;
 }
 
@@ -17,18 +21,20 @@ interface QueryVariables {
 export function createDocumentDependencyMethods<RootBlocks extends Record<string, BlockInterface>>({
     rootQueryName,
     rootBlocks,
+    scopeFragment,
     basePath,
 }: {
     rootQueryName: string;
     rootBlocks: { [Key in keyof RootBlocks]: RootBlocks[Key] | { block: RootBlocks[Key]; path?: string } };
-    basePath:
-        | string
-        | ((
-              node: { id: string; pageTreeNode: Pick<GQLPageTreeNode, "id" | "category"> } & {
-                  [Key in keyof RootBlocks]: BlockInputApi<RootBlocks[Key]>;
-              },
-          ) => string);
+    scopeFragment?: DocumentNode;
+    basePath: string | ((node: NonNullable<Query<RootBlocks>["node"]>) => string);
 }): Pick<DependencyInterface, "resolvePath"> {
+    const scopeFragmentName = (scopeFragment?.definitions?.[0] as FragmentDefinitionNode | undefined)?.name.value;
+
+    if (scopeFragment && !scopeFragmentName) {
+        throw new Error("Can't determine scope fragment name");
+    }
+
     return {
         resolvePath: async ({ rootColumnName, jsonPath, apolloClient, id }) => {
             const { data, error } = await apolloClient.query<Query<RootBlocks>, QueryVariables>({
@@ -40,9 +46,17 @@ export function createDocumentDependencyMethods<RootBlocks extends Record<string
                             pageTreeNode {
                                 id
                                 category
+                                ${
+                                    scopeFragment
+                                        ? `scope {
+                                            ...${scopeFragmentName}
+                                        }`
+                                        : ""
+                                }
                             }
                         }    
-                    }    
+                    }
+                    ${scopeFragment ?? ""}
                 `,
                 variables: {
                     id,
@@ -62,7 +76,7 @@ export function createDocumentDependencyMethods<RootBlocks extends Record<string
             if (typeof basePath === "string") {
                 url = basePath;
             } else {
-                url = basePath(data.node);
+                url = basePath({ ...data.node, scope: data.node.pageTreeNode.scope });
             }
 
             if (jsonPath && rootColumnName) {
