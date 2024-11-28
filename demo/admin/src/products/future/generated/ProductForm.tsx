@@ -155,7 +155,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         } else {
             const { data: mutationResponse } = await client.mutate<GQLCreateProductMutation, GQLCreateProductMutationVariables>({
                 mutation: createProductMutation,
-                variables: { input: output },
+                variables: { input: { ...output } },
             });
             if (!event.navigatingBack) {
                 const id = mutationResponse?.createProduct.id;
