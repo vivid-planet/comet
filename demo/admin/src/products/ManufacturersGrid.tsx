@@ -80,43 +80,43 @@ export function ManufacturersGrid() {
         {
             field: "address.street",
             headerName: intl.formatMessage({ id: "manufacturers.street", defaultMessage: "Street" }),
-            valueGetter: ({ row }) => `${row.address?.street} ${row.address?.streetNumber}`,
+            valueGetter: (params, row) => `${row.address?.street} ${row.address?.streetNumber}`,
         },
         {
             field: "address.zip",
             headerName: intl.formatMessage({ id: "manufacturers.zip", defaultMessage: "ZIP" }),
-            valueGetter: ({ row }) => row.address?.zip,
+            valueGetter: (params, row) => row.address?.zip,
         },
         {
             field: "address.alternativeAddress.street",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreet", defaultMessage: "alt. Street" }),
-            valueGetter: ({ row }) => `${row.address?.alternativeAddress?.street} ${row.address?.alternativeAddress?.streetNumber}`,
+            valueGetter: (params, row) => `${row.address?.alternativeAddress?.street} ${row.address?.alternativeAddress?.streetNumber}`,
         },
         {
             field: "address.alternativeAddress.zip",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressZip", defaultMessage: "alt. ZIP" }),
-            valueGetter: ({ row }) => row.address?.alternativeAddress?.zip,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.zip,
         },
         {
             field: "addressAsEmbeddable.street",
             headerName: intl.formatMessage({ id: "manufacturers.street2", defaultMessage: "Street2" }),
-            valueGetter: ({ row }) => `${row.addressAsEmbeddable?.street} ${row.addressAsEmbeddable?.streetNumber}`,
+            valueGetter: (params, row) => `${row.addressAsEmbeddable?.street} ${row.addressAsEmbeddable?.streetNumber}`,
         },
         {
             field: "addressAsEmbeddable.zip",
             headerName: intl.formatMessage({ id: "manufacturers.zip2", defaultMessage: "ZIP2" }),
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.zip,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.zip,
         },
         {
             field: "addressAsEmbeddable.alternativeAddress.street",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreet2", defaultMessage: "alt. Street2" }),
-            valueGetter: ({ row }) =>
+            valueGetter: (params, row) =>
                 `${row.addressAsEmbeddable?.alternativeAddress?.street} ${row.addressAsEmbeddable?.alternativeAddress?.streetNumber}`,
         },
         {
             field: "addressAsEmbeddable.alternativeAddress.zip",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressZip", defaultMessage: "alt. ZIP2" }),
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.zip,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
         },
         {
             field: "action",
@@ -183,8 +183,8 @@ export function ManufacturersGrid() {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: ManufacturersGridToolbar,
+                slots={{
+                    toolbar: ManufacturersGridToolbar,
                 }}
             />
         </MainContent>

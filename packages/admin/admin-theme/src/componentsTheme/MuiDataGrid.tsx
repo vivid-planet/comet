@@ -1,17 +1,5 @@
 import { ArrowDown, ArrowUp, Check, Clear, Close, MoreVertical, Search } from "@comet/admin-icons";
-import {
-    buttonBaseClasses,
-    getSwitchUtilityClass,
-    inputAdornmentClasses,
-    inputBaseClasses,
-    inputClasses,
-    inputLabelClasses,
-    svgIconClasses,
-    SvgIconProps,
-    switchClasses,
-    TextField,
-    TextFieldProps,
-} from "@mui/material";
+import { inputAdornmentClasses, inputClasses, inputLabelClasses, svgIconClasses, SvgIconProps, TextField, TextFieldProps } from "@mui/material";
 import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 
@@ -21,7 +9,7 @@ import { GetMuiComponentTheme } from "./getComponentsTheme";
 export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing }) => ({
     ...component,
     defaultProps: {
-        components: {
+        slots: {
             QuickFilterIcon: Search,
             QuickFilterClearIcon: Clear,
             FilterPanelDeleteIcon: Close,
@@ -31,7 +19,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ColumnSortedDescendingIcon: ArrowDown,
             BaseTextField: (props: TextFieldProps) => <TextField {...props} InputLabelProps={{ shrink: true }} />,
             ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
-            ...component?.defaultProps?.components,
+            ...component?.defaultProps?.slots,
         },
         localeText: {
             noRowsLabel: GRID_DEFAULT_LOCALE_TEXT.noResultsOverlayLabel,
@@ -42,6 +30,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         root: {
             backgroundColor: "white",
         },
+        /*
+        TODO: @ricky any clue what this is?
         columnsPanelRow: {
             marginBottom: spacing(2),
 
@@ -58,7 +48,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             [`& .${switchClasses.root} .${switchClasses.switchBase}.${getSwitchUtilityClass("checked")}`]: {
                 transform: "translateX(20px)",
             },
-        },
+        },*/
         columnHeader: {
             "&:focus": {
                 outline: "none",
@@ -66,10 +56,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             "&:focus-within": {
                 outline: "none",
             },
-        },
-        pinnedColumnHeaders: {
-            backgroundColor: "white",
-            boxShadow: shadows[2],
         },
         pinnedColumns: {
             backgroundColor: "white",
@@ -164,7 +150,8 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         paper: {
             boxShadow: shadows[1],
         },
-        // @ts-expect-error This key exists but is missing in the types.
+        /*
+        TODO: check where this is needed
         toolbarQuickFilter: {
             paddingBottom: 0,
 
@@ -188,5 +175,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 marginLeft: 0,
             },
         },
+        */
     }),
 });

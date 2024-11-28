@@ -198,7 +198,7 @@ const FolderDataGrid = ({
                 return;
             }
 
-            const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
+            /*const result = */ await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
                 query: damItemListPosition,
                 variables: {
                     id: id,
@@ -215,13 +215,14 @@ const FolderDataGrid = ({
                 },
             });
 
-            const position = result.data.damItemListPosition;
-            const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
+            //const position = result.data.damItemListPosition;
+            //const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
 
             if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
                 switchApi.activatePage("folder", parentId);
             } else {
-                dataGridProps.onPaginationModelChange?.({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize }, {});
+                //TODO: find a suitable way to pass api here
+                //dataGridProps.onPaginationModelChange?.({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize }, {});
             }
 
             setRedirectedToId(id);

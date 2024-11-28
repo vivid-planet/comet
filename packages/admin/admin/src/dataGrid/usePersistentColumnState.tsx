@@ -1,5 +1,5 @@
 import { DataGridProps, GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid";
-import { type DataGridProProps, type GridPinnedColumns } from "@mui/x-data-grid-pro";
+import { type DataGridProProps, type GridPinnedColumnFields } from "@mui/x-data-grid-pro";
 import { MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useStoredState } from "../hooks/useStoredState";
@@ -95,9 +95,9 @@ export function usePersistentColumnState(stateKey: string): GridProps {
         [mediaQueryColumnVisibilityModel, setStoredColumnVisibilityModel],
     );
 
-    const [pinnedColumns, setPinnedColumns] = useStoredState<GridPinnedColumns>(`${stateKey}PinnedColumns`, {});
+    const [pinnedColumns, setPinnedColumns] = useStoredState<GridPinnedColumnFields>(`${stateKey}PinnedColumns`, {});
     const handlePinnedColumnsChange = useCallback(
-        (newModel: GridPinnedColumns) => {
+        (newModel: GridPinnedColumnFields) => {
             setPinnedColumns(newModel);
         },
         [setPinnedColumns],

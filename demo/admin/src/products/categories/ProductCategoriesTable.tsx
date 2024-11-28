@@ -121,8 +121,8 @@ function ProductCategoriesTable() {
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductCategoriesTableToolbar,
+            slots={{
+                toolbar: ProductCategoriesTableToolbar,
             }}
         />
     );

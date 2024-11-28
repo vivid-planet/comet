@@ -178,8 +178,8 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             columns={columns}
             rowCount={data?.users.totalCount ?? 0}
             loading={loading}
-            components={{
-                Toolbar: () => (
+            slots={{
+                toolbar: () => (
                     <DataGridToolbar>
                         <ToolbarItem>
                             <GridToolbarQuickFilter />
@@ -191,9 +191,6 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                         {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
                     </DataGridToolbar>
                 ),
-            }}
-            componentsProps={{
-                toolbar: { toolbarAction },
             }}
         />
     );

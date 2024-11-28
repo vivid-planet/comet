@@ -129,8 +129,8 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: ProductVariantsGridToolbar,
+                slots={{
+                    toolbar: ProductVariantsGridToolbar,
                 }}
             />
         </Box>

@@ -320,30 +320,30 @@ export function generateGrid(
         const name = String(column.name);
 
         let renderCell: string | undefined = undefined;
-        let valueGetter: string | undefined = name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined;
+        let valueGetter: string | undefined = name.includes(".") ? `(params, row ) => row.${name.replace(/\./g, "?.")}` : undefined;
         let valueFormatter: string | undefined = undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         if (type == "dateTime") {
-            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
-            valueFormatter = `({ value }) => value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : ""`;
+            valueGetter = `(params, row) => row.${name} && new Date(row.${name})`;
+            valueFormatter = `(value, row) => row.${name} ? intl.formatDate(row.${name}, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : ""`;
             gridType = "dateTime";
         } else if (type == "date") {
-            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
-            valueFormatter = `({ value }) => value ? intl.formatDate(value) : ""`;
+            valueGetter = `(params, row ) => row.${name} && new Date(row.${name})`;
+            valueFormatter = `(value, row) => row.${name} ? intl.formatDate(row.${name}) : ""`;
             gridType = "date";
         } else if (type == "number") {
             gridType = "number";
         } else if (type == "boolean") {
             gridType = "boolean";
-            valueFormatter = `({ value }) => typeof value === "boolean" ? value.toString() : ""`;
+            valueFormatter = `(value, row) => typeof row.${name} === "boolean" ? row.${name}.toString() : ""`;
         } else if (column.type == "block") {
             renderCell = `(params) => {
                     return <BlockPreviewContent block={${column.block.name}} input={params.row.${name}} />;
                 }`;
         } else if (type == "staticSelect") {
-            valueFormatter = `({ value }) => value?.toString()`;
+            valueFormatter = `(value, row) => row.${name}?.toString()`;
             const introspectionField = schemaEntity.fields.find((field) => field.name === name);
             if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
             const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
@@ -423,7 +423,7 @@ export function generateGrid(
             renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
         }
 
-        //TODO suppoort n:1 relation with singleSelect
+        //TODO support n:1 relation with singleSelect
 
         return {
             name,
@@ -857,8 +857,8 @@ export function generateGrid(
                 loading={loading}
                 ${
                     renderToolbar
-                        ? `components={{
-                                Toolbar: ${gridToolbarComponentName},
+                        ? `slots={{
+                                toolbar: ${gridToolbarComponentName},
                             }}
                             ${getDataGridComponentsProps(forwardToolbarAction, config.excelExport)}`
                         : ""
@@ -901,7 +901,7 @@ const getDataGridComponentsProps = (forwardToolbarAction: boolean | undefined, e
         ${excelExport ? `exportApi,` : ""}
     }`.replace(/\n/g, "");
 
-    return `componentsProps={{
+    return `slotProps={{
         toolbar: ${values}
     }}`;
 };

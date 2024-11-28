@@ -119,8 +119,8 @@ function ProductTagsTable() {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: ProductTagsTableToolbar,
+                slots={{
+                    toolbar: ProductTagsTableToolbar,
                 }}
             />
         </Box>

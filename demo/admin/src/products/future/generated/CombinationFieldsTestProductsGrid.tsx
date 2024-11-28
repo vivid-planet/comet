@@ -71,6 +71,11 @@ const createProductMutation = gql`
     }
 `;
 
+declare module "@mui/x-data-grid-pro" {
+    interface ToolbarPropsOverrides {
+        toolbarAction: React.ReactNode;
+    }
+}
 function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
         <DataGridToolbar>
@@ -382,10 +387,10 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar,
             }}
-            componentsProps={{
+            slotProps={{
                 toolbar: { toolbarAction },
             }}
         />

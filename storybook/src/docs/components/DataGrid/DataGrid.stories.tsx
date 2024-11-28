@@ -319,8 +319,8 @@ export const _GridFilterButton = {
                 <DataGrid
                     rows={exampleRows}
                     columns={exampleColumns}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
@@ -506,8 +506,8 @@ export const UseDataGridExcelExport = {
                     columns={columns}
                     rowCount={rowCount}
                     loading={loading}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
