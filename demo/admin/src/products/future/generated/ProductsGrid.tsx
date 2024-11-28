@@ -32,6 +32,7 @@ import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
+import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -55,6 +56,9 @@ const productsFragment = gql`
         description
         availableSince
         createdAt
+        manufacturer {
+            name
+        }
     }
 `;
 
@@ -294,6 +298,15 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             valueFormatter: ({ value }) =>
                 value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
             width: 170,
+        },
+        {
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: ({ row }) => row.manufacturer?.name,
+            filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "actions",
