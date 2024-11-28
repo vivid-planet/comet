@@ -2,30 +2,34 @@
 "@comet/blocks-admin": minor
 ---
 
-Add `visibleOrderedBlocksForState` to `createCompositeBlocks` factory options base. The function should return an array of visible block keys for a given state. The blocks are returned in the order they should be rendered. If a block key is not present in the array, the block will not be rendered in the admin component.
+Add `visibleOrderedBlocksForState` option to `createCompositeBlock`
 
-Example usage:
+The option can be used to hide and order child blocks in the `AdminComponent`.
+It should return an array of visible block keys for a given state.
+The order of the keys define the order in which the blocks will be rendered.
+If key is not present in the array, the block will not be rendered.
 
-- declare some kind of options, which contain a string array of visible blocks for each option:
-
-```tsx
-const layoutOptions = [
-    {
-        name: 'layout1',
-        visibleBlocks: ['block1', 'block2', 'block3'],
-    },
-    {
-        name: 'layout2',
-        visibleBlocks: ['block4', 'block1', 'block2'],
-    },
-];
-```
-
-- return visible blocks for a given state in the `createCompositeBlocks` factory:
+**Example**
 
 ```tsx
-visibleOrderedBlocksForState: (state: LayoutBlockData) => layoutOptions.find((option) => option.name === state.layout)?.visibleBlocks
+const LayoutBlock = createCompositeBlock({
+    /* ... */
+    blocks: {
+        layout: {
+            /* A layout select */
+        },
+        headline1: { block: HeadlineBlock },
+        image1: { block: DamImageBlock },
+        headline2: { block: HeadlineBlock },
+        image2: { block: DamImageBlock },
+    },
+    visibleOrderedBlocksForState: (state: LayoutBlockData) => {
+        if (state.layout === "compact") {
+            // headline2 and image2 will be hidden
+            return ["headline1", "image1"];
+        } else {
+            return ["headline1", "image1", "headline2", "image2"];
+        }
+    },
+});
 ```
-
-
-
