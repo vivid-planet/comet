@@ -15,6 +15,7 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     helperText: typeof FormHelperText;
     secondaryHelperText: typeof FormHelperText;
     helperTextWrapper: "div";
+    helperTextContainer: "span";
 }> & {
     variant?: "vertical" | "horizontal";
     fullWidth?: boolean;
@@ -27,6 +28,7 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
     helperText?: ReactNode;
     secondaryHelperText?: ReactNode;
+    helperTextIcon?: ReactNode;
 };
 
 export type FieldContainerClassKey =
@@ -47,7 +49,8 @@ export type FieldContainerClassKey =
     | "warning"
     | "helperText"
     | "secondaryHelperText"
-    | "helperTextWrapper";
+    | "helperTextWrapper"
+    | "helperTextContainer";
 
 type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
     hasError: boolean;
@@ -222,8 +225,17 @@ const HelperTextWrapper = createComponentSlot("div")<FieldContainerClassKey>({
         align-items: center;
         justify-content: space-between;
         gap: ${theme.spacing(3)};
+
+        svg {
+            width: 12px;
+        }
     `,
 );
+
+const HelperTextContainer = createComponentSlot("span")<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "helperTextContainer",
+})();
 
 export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) => {
     const {
@@ -237,6 +249,7 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
         warning,
         helperText,
         secondaryHelperText,
+        helperTextIcon,
         scrollTo = false,
         fieldMargin = "onlyIfNotLast",
         slotProps,
@@ -281,11 +294,22 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
                     <HelperTextWrapper {...slotProps?.helperTextWrapper}>
                         {hasError && (
                             <Error error {...slotProps?.error}>
-                                {error}
+                                {helperTextIcon}
+                                <HelperTextContainer>{error}</HelperTextContainer>
                             </Error>
                         )}
-                        {hasWarning && !hasError && <Warning {...slotProps?.warning}>{warning}</Warning>}
-                        {helperText && !hasError && !hasWarning && <HelperText {...slotProps?.helperText}>{helperText}</HelperText>}
+                        {hasWarning && !hasError && (
+                            <Warning {...slotProps?.warning}>
+                                {helperTextIcon}
+                                <HelperTextContainer>{warning}</HelperTextContainer>
+                            </Warning>
+                        )}
+                        {helperText && !hasError && !hasWarning && (
+                            <HelperText {...slotProps?.helperText}>
+                                {helperTextIcon}
+                                <HelperTextContainer>{helperText}</HelperTextContainer>
+                            </HelperText>
+                        )}
                         {secondaryHelperText && <SecondaryHelperText {...slotProps?.secondaryHelperText}>{secondaryHelperText}</SecondaryHelperText>}
                     </HelperTextWrapper>
                 </InputContainer>

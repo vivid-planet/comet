@@ -13,6 +13,8 @@ export const getMuiFormHelperText: GetMuiComponentTheme<"MuiFormHelperText"> = (
             marginRight: 0,
             color: palette.grey[300],
             marginTop: "4px",
+            display: "flex",
+            gap: spacing(1),
         },
     }),
 });
