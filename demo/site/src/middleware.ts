@@ -6,8 +6,10 @@ import { withDamRewriteMiddleware } from "./middleware/damRewrite";
 import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
 import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
+import { withSitePreviewMiddleware } from "./middleware/sitePreview";
 
 export default chain([
+    withSitePreviewMiddleware,
     withRedirectToMainHostMiddleware,
     withAdminRedirectMiddleware,
     withDamRewriteMiddleware,
