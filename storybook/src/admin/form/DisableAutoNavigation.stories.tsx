@@ -51,8 +51,8 @@ const SampleTable: React.FunctionComponent = () => {
                         {
                             name: "actions",
                             render: (recipe) => (
-                                <IconButton onClick={() => stackApi.activatePage("edit", recipe.id)} size="large">
-                                    <Edit color="primary" />
+                                <IconButton color="primary" onClick={() => stackApi.activatePage("edit", recipe.id)} size="large">
+                                    <Edit />
                                 </IconButton>
                             ),
                         },

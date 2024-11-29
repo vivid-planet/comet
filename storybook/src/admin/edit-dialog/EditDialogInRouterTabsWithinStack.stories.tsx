@@ -192,8 +192,8 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
                                         width: 86,
                                         renderCell: (params) => {
                                             return (
-                                                <IconButton component={StackLink} pageName="stocksEdit" payload={params.row.id}>
-                                                    <Edit color="primary" />
+                                                <IconButton color="primary" component={StackLink} pageName="stocksEdit" payload={params.row.id}>
+                                                    <Edit />
                                                 </IconButton>
                                             );
                                         },
@@ -276,8 +276,8 @@ export const EditDialogInRouterTabsWithinStack = {
                                             width: 86,
                                             renderCell: (params) => {
                                                 return (
-                                                    <IconButton component={StackLink} pageName="productEdit" payload={params.row.id}>
-                                                        <Edit color="primary" />
+                                                    <IconButton color="primary" component={StackLink} pageName="productEdit" payload={params.row.id}>
+                                                        <Edit />
                                                     </IconButton>
                                                 );
                                             },
