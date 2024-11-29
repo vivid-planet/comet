@@ -152,9 +152,9 @@ describe("useDataGridRemote", () => {
 
         result.current.onPaginationModelChange?.({ page: mockedPage, pageSize: mockedPage }, { api: mockedApi });
         expect(mockedReplace.mock.calls[2]?.[0]?.search).toContain(`${prefix}page`);
-        expect(mockedReplace.mock.calls[3]?.[0]?.search).toContain(`${prefix}pageSize`);
+        expect(mockedReplace.mock.calls[2]?.[0]?.search).toContain(`${prefix}pageSize`);
 
-        expect(mockedReplace).toHaveBeenCalledTimes(4);
+        expect(mockedReplace).toHaveBeenCalledTimes(3);
     });
 
     it("uses initial default pageSize if no pageSize is set in the URL", () => {
