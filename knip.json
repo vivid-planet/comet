@@ -63,7 +63,6 @@
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
             "project": ["./src/**/*.{ts,tsx}", "!./src/**/generated/**"],
-            "ignore": ["./src/**/codegen.ts", "./schema.gql"],
             "ignoreDependencies": ["@swc/plugin-emotion"]
         }
     },
