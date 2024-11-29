@@ -378,7 +378,7 @@ Example:
 }
 ```
 
-**HeadlineBlock structure**
+**Block structure**
 
 -   `key`: A unique identifier for the block.
 -   `visible`: A boolean indicating whether the block is visible.
