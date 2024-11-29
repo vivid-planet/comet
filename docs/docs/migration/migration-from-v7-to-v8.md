@@ -192,7 +192,6 @@ In `package.json` update the version of the MUI X packages to `^7.22.3`.
 npx @comet/upgrade v8/mui-x-upgrade.ts
 ```
 
-
 :::
 
 A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/). There is also a codemod from MUI which handles most of the changes:
@@ -200,6 +199,7 @@ A lots of props have been renamed from MUI, for a detailed look, see the officia
 ! As well, be aware if you have a date in the datagrid, you will need to add a `valueGetter`
 
 before
+
 ```typescript
     <DataGrid
         //other props
@@ -207,11 +207,12 @@ before
         {
             field: "updatedAt",
             type: "dateTime",
-        }] 
+        }]
     />
 ```
 
 after:
+
 ```typescript
     <DataGrid
         //other props
@@ -220,10 +221,9 @@ after:
             field: "updatedAt",
             type: "dateTime",
             valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
-        }] 
+        }]
     />
 ```
-
 
 ```sh
 npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
