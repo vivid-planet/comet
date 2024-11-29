@@ -294,19 +294,19 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
                     <HelperTextWrapper {...slotProps?.helperTextWrapper}>
                         {hasError && (
                             <Error error {...slotProps?.error}>
-                                {helperTextIcon}
+                                {helperTextIcon && helperTextIcon}
                                 <HelperTextContainer>{error}</HelperTextContainer>
                             </Error>
                         )}
                         {hasWarning && !hasError && (
                             <Warning {...slotProps?.warning}>
-                                {helperTextIcon}
+                                {helperTextIcon && helperTextIcon}
                                 <HelperTextContainer>{warning}</HelperTextContainer>
                             </Warning>
                         )}
                         {helperText && !hasError && !hasWarning && (
                             <HelperText {...slotProps?.helperText}>
-                                {helperTextIcon}
+                                {helperTextIcon && helperTextIcon}
                                 <HelperTextContainer>{helperText}</HelperTextContainer>
                             </HelperText>
                         )}
