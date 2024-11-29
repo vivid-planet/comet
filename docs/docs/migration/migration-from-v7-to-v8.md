@@ -174,16 +174,16 @@ Perform the following changes:
 
 ### Update MUI - X Packages
 
-In `package.json` update the version of the MUI X packages to `^6.20.4`.
+In `package.json` update the version of the MUI X packages to `^7.22.3`.
 
 ```diff
 - "@mui/x-data-grid": "^5.x.x",
 - "@mui/x-data-grid-pro": "^5.x.x",
 - "@mui/x-data-grid-premium": "^5.x.x",
 
-+ "@mui/x-data-grid": "^6.20.4",
-+ "@mui/x-data-grid-pro": "^6.20.4",
-+ "@mui/x-data-grid-premium": "^6.20.4",
++ "@mui/x-data-grid": "^7.22.3",
++ "@mui/x-data-grid-pro": "^7.22.3",
++ "@mui/x-data-grid-premium": "^7.22.3",
 ```
 
 :::note Codemod
@@ -192,9 +192,38 @@ In `package.json` update the version of the MUI X packages to `^6.20.4`.
 npx @comet/upgrade v8/mui-x-upgrade.ts
 ```
 
+
 :::
 
-A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide](https://mui.com/x/migration/migration-data-grid-v5). There is also a codemod from MUI which handles most of the changes:
+A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/). There is also a codemod from MUI which handles most of the changes:
+
+! As well, be aware if you have a date in the datagrid, you will need to add a `valueGetter`
+
+before
+```typescript
+    <DataGrid
+        //other props
+        columns=[
+        {
+            field: "updatedAt",
+            type: "dateTime",
+        }] 
+    />
+```
+
+after:
+```typescript
+    <DataGrid
+        //other props
+        columns=[
+        {
+            field: "updatedAt",
+            type: "dateTime",
+            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+        }] 
+    />
+```
+
 
 ```sh
 npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>
