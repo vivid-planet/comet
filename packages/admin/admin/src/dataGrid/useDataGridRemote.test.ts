@@ -109,7 +109,7 @@ describe("useDataGridRemote", () => {
             },
         );
 
-        expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ page: mockedPage }) });
+        expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ page: mockedPage, pageSize: 25 }) });
     });
 
     it("writes pageSize param to URL", () => {
@@ -117,7 +117,7 @@ describe("useDataGridRemote", () => {
 
         result.current.onPaginationModelChange?.({ page: 0, pageSize: mockedPageSize }, { api: mockedApi });
 
-        expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ pageSize: mockedPageSize }) });
+        expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ pageSize: mockedPageSize, page: 0 }) });
     });
 
     it("uses queryParamsPrefix when reading params from URL", () => {

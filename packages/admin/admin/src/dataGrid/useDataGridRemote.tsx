@@ -49,12 +49,10 @@ export function useDataGridRemote({
 
     const onPaginationModelChange = useCallback(
         (model: GridPaginationModel, details: GridCallbackDetails) => {
-            if (model.page) {
-                history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [pageParamName]: model.page }) });
-            }
-            if (model.pageSize) {
-                history.replace({ ...location, search: queryString.stringify({ ...parsedSearch, [pageSizeParamName]: model.pageSize }) });
-            }
+            history.replace({
+                ...location,
+                search: queryString.stringify({ ...parsedSearch, [pageParamName]: model.page, [pageSizeParamName]: model.pageSize }),
+            });
         },
         [history, location, pageParamName, pageSizeParamName, parsedSearch],
     );

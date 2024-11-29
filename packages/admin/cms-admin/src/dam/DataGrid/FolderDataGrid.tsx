@@ -13,7 +13,7 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Slide, SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, GridRowClassNameParams, GridRowSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, GridRowClassNameParams, GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
@@ -115,6 +115,8 @@ const FolderDataGrid = ({
         skip: currentFolderId === undefined,
     });
 
+    const apiRef = useGridApiRef();
+
     const {
         data: dataGridData,
         loading,
@@ -198,7 +200,7 @@ const FolderDataGrid = ({
                 return;
             }
 
-            /*const result = */ await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
+            const result = await apolloClient.query<GQLDamItemListPositionQuery, GQLDamItemListPositionQueryVariables>({
                 query: damItemListPosition,
                 variables: {
                     id: id,
@@ -215,14 +217,13 @@ const FolderDataGrid = ({
                 },
             });
 
-            //const position = result.data.damItemListPosition;
-            //const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
+            const position = result.data.damItemListPosition;
+            const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
 
             if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
                 switchApi.activatePage("folder", parentId);
             } else {
-                //TODO: find a suitable way to pass api here
-                //dataGridProps.onPaginationModelChange?.({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize }, {});
+                apiRef.current.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
             }
 
             setRedirectedToId(id);
@@ -563,10 +564,11 @@ const FolderDataGrid = ({
             />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
+                    apiRef={apiRef}
                     {...dataGridProps}
                     rowHeight={58}
                     rows={dataGridData?.damItemsList.nodes ?? []}
-                    rowCount={dataGridData?.damItemsList.totalCount ?? 0}
+                    rowCount={dataGridData?.damItemsList.totalCount ?? undefined}
                     loading={loading}
                     pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
