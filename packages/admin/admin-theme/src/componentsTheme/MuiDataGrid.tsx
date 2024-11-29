@@ -130,6 +130,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         paper: {
             boxShadow: shadows[1],
-        }
+        },
     }),
 });
