@@ -6,7 +6,7 @@ We usually use [next.js](https://nextjs.org/) to build our site client. This gui
 
 ### Page Tree Node List
 
-To load/see all page tree node's, you need to query the `pageTreeNodeList` field in the `Query` type. This field allows you to fetch a list of `PageTreeNode` objects based on specific criteria such as `contentScope` and `category`. Those values differ from project to project and are defined by the project's requirements.
+To load/see all page tree node's, you need to query the `pageTreeNodeList` field in the `Query` type. This field allows you to fetch a list of `PageTreeNode` objects based on specific criteria such as `contentScope` and `category`. Those values differ from project to project and are defined by the project's requirements. There is also another query `paginatedPageTreeNodes` which is more performant for large page trees.
 
 A Sample Page tree list can look like this:
 
