@@ -39,7 +39,7 @@ export interface OneOfBlockFragment {
     };
 }
 
-interface OneOfBlockPreviewState extends PreviewStateInterface {
+export interface OneOfBlockPreviewState extends PreviewStateInterface {
     block?: {
         type: string;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
