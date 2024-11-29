@@ -1,4 +1,5 @@
 import { Field } from "@comet/admin";
+import { Hamburger, Image } from "@comet/admin-icons";
 import {
     BlockCategory,
     BlocksFinalForm,
@@ -22,11 +23,11 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
         columns: 3,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewContent width={10} />
+                <ColumnsLayoutPreviewContent width={10} label={<Image />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={7} />
+                <ColumnsLayoutPreviewContent width={7} label={<Hamburger />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={7} />
+                <ColumnsLayoutPreviewContent width={7} label={<Image />} />
             </ColumnsLayoutPreview>
         ),
         visibleBlocks: ["layout", "media1", "text1", "media2"],
@@ -37,11 +38,11 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
         columns: 3,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewContent width={7} />
+                <ColumnsLayoutPreviewContent width={7} label={<Hamburger />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={10} />
+                <ColumnsLayoutPreviewContent width={10} label={<Image />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={7} />
+                <ColumnsLayoutPreviewContent width={7} label={<Hamburger />} />
             </ColumnsLayoutPreview>
         ),
         visibleBlocks: ["layout", "text1", "media1", "text2"],
@@ -52,11 +53,11 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
         columns: 3,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewContent width={6} />
+                <ColumnsLayoutPreviewContent width={6} label={<Image />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={6} />
+                <ColumnsLayoutPreviewContent width={6} label={<Hamburger />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={12} />
+                <ColumnsLayoutPreviewContent width={12} label={<Image />} />
             </ColumnsLayoutPreview>
         ),
         visibleBlocks: ["layout", "media1", "text1", "media2"],
@@ -67,9 +68,9 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
         columns: 2,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewContent width={14} />
+                <ColumnsLayoutPreviewContent width={14} label={<Image />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={10} />
+                <ColumnsLayoutPreviewContent width={10} label={<Hamburger />} />
             </ColumnsLayoutPreview>
         ),
         visibleBlocks: ["layout", "media1", "text1"],
@@ -80,9 +81,9 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
         columns: 2,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewContent width={10} />
+                <ColumnsLayoutPreviewContent width={10} label={<Hamburger />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={14} />
+                <ColumnsLayoutPreviewContent width={14} label={<Image />} />
             </ColumnsLayoutPreview>
         ),
         visibleBlocks: ["layout", "text1", "media1"],
@@ -93,9 +94,9 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
         columns: 2,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewContent width={12} />
+                <ColumnsLayoutPreviewContent width={12} label={<Image />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={12} />
+                <ColumnsLayoutPreviewContent width={12} label={<Hamburger />} />
             </ColumnsLayoutPreview>
         ),
         visibleBlocks: ["layout", "media1", "text1"],
@@ -106,9 +107,9 @@ const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [
         columns: 2,
         preview: (
             <ColumnsLayoutPreview>
-                <ColumnsLayoutPreviewContent width={12} />
+                <ColumnsLayoutPreviewContent width={12} label={<Hamburger />} />
                 <ColumnsLayoutPreviewSpacing width={1} />
-                <ColumnsLayoutPreviewContent width={12} />
+                <ColumnsLayoutPreviewContent width={12} label={<Image />} />
             </ColumnsLayoutPreview>
         ),
         visibleBlocks: ["layout", "text1", "media1"],
