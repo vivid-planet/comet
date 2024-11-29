@@ -196,7 +196,7 @@ npx @comet/upgrade v8/mui-x-upgrade.ts
 
 A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/). There is also a codemod from MUI which handles most of the changes:
 
-! As well, be aware if you have a date in the datagrid, you will need to add a `valueGetter`
+! As well, be aware if you have a date in the data grid, you will need to add a `valueGetter`
 
 ```diff
     <DataGrid
