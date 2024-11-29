@@ -13,6 +13,8 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     error: typeof FormHelperText;
     warning: typeof FormHelperText;
     helperText: typeof FormHelperText;
+    secondaryHelperText: typeof FormHelperText;
+    helperTextWrapper: "div";
 }> & {
     variant?: "vertical" | "horizontal";
     fullWidth?: boolean;
@@ -24,6 +26,7 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
     helperText?: ReactNode;
+    secondaryHelperText?: ReactNode;
 };
 
 export type FieldContainerClassKey =
@@ -42,7 +45,9 @@ export type FieldContainerClassKey =
     | "error"
     | "hasWarning"
     | "warning"
-    | "helperText";
+    | "helperText"
+    | "secondaryHelperText"
+    | "helperTextWrapper";
 
 type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
     hasError: boolean;
@@ -199,6 +204,27 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     `,
 );
 
+const SecondaryHelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "secondaryHelperText",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[200]};
+    `,
+);
+
+const HelperTextWrapper = createComponentSlot("div")<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "helperTextWrapper",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: ${theme.spacing(3)};
+    `,
+);
+
 export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) => {
     const {
         variant = "vertical",
@@ -210,6 +236,7 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
         children,
         warning,
         helperText,
+        secondaryHelperText,
         scrollTo = false,
         fieldMargin = "onlyIfNotLast",
         slotProps,
@@ -251,13 +278,16 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
                 )}
                 <InputContainer ownerState={ownerState} {...slotProps?.inputContainer}>
                     {children}
-                    {hasError && (
-                        <Error error {...slotProps?.error}>
-                            {error}
-                        </Error>
-                    )}
-                    {hasWarning && !hasError && <Warning {...slotProps?.warning}>{warning}</Warning>}
-                    {helperText && !hasError && !hasWarning && <HelperText {...slotProps?.helperText}>{helperText}</HelperText>}
+                    <HelperTextWrapper {...slotProps?.helperTextWrapper}>
+                        {hasError && (
+                            <Error error {...slotProps?.error}>
+                                {error}
+                            </Error>
+                        )}
+                        {hasWarning && !hasError && <Warning {...slotProps?.warning}>{warning}</Warning>}
+                        {helperText && !hasError && !hasWarning && <HelperText {...slotProps?.helperText}>{helperText}</HelperText>}
+                        {secondaryHelperText && <SecondaryHelperText {...slotProps?.secondaryHelperText}>{secondaryHelperText}</SecondaryHelperText>}
+                    </HelperTextWrapper>
                 </InputContainer>
             </>
         </Root>
