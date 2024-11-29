@@ -8,7 +8,6 @@ import {
     GridColDef,
     GridColumnsButton,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
@@ -230,11 +229,11 @@ export function ProductsGrid() {
             filterOperators: [ManufacturerFilterOperator],
         },
         {
-            field: "action",
+            field: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
-            width: 106,
+            width: 116,
             pinned: "right",
             renderCell: (params) => {
                 return (
@@ -295,20 +294,18 @@ export function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductsGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            error={error}
+            components={{
+                Toolbar: ProductsGridToolbar,
+            }}
+        />
     );
 }
 
