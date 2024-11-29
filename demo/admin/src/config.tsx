@@ -28,7 +28,7 @@ export function createConfig() {
 
 export type SitesConfig = Record<string, SiteConfig>;
 
-export type Config = ReturnType<typeof createConfig>;
+type Config = ReturnType<typeof createConfig>;
 
 const ConfigContext = createContext<Config | undefined>(undefined);
 
@@ -36,6 +36,7 @@ export function ConfigProvider({ config, children }: PropsWithChildren<{ config:
     return <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>;
 }
 
+/** @knipignore */
 export function useConfig(): Config {
     const config = useContext(ConfigContext);
 

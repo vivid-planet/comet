@@ -61,9 +61,9 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "demo/admin": {
-            "entry": ["./src/loader.ts"],
-            "project": ["./src/**/*.{ts,tsx}"],
-            "ignore": ["./codegen.ts", "./schema.gql"],
+            "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
+            "project": ["./src/**/*.{ts,tsx}", "!./src/**/generated/**"],
+            "ignore": ["./src/**/codegen.ts", "./schema.gql"],
             "ignoreDependencies": ["@swc/plugin-emotion"]
         }
     },
