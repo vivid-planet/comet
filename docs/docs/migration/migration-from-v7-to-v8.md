@@ -198,29 +198,14 @@ A lots of props have been renamed from MUI, for a detailed look, see the officia
 
 ! As well, be aware if you have a date in the datagrid, you will need to add a `valueGetter`
 
-before
-
-```typescript
+```diff
     <DataGrid
         //other props
         columns=[
         {
             field: "updatedAt",
             type: "dateTime",
-        }]
-    />
-```
-
-after:
-
-```typescript
-    <DataGrid
-        //other props
-        columns=[
-        {
-            field: "updatedAt",
-            type: "dateTime",
-            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
++            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
         }]
     />
 ```

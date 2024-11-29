@@ -11,29 +11,14 @@ Follow the official [migration guide](<(https://mui.com/x/migration/migration-da
 
 As well, be aware if you have a date in the data grid, you will need to add a `valueGetter`
 
-before
-
-```typescript
+```diff
     <DataGrid
         //other props
         columns=[
         {
             field: "updatedAt",
             type: "dateTime",
-        }]
-    />
-```
-
-after:
-
-```typescript
-    <DataGrid
-        //other props
-        columns=[
-        {
-            field: "updatedAt",
-            type: "dateTime",
-            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
++            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
         }]
     />
 ```
