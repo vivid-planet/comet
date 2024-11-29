@@ -54,7 +54,7 @@ The following example demonstrates a Content Page that includes a `HeadlineBlock
 
 ### Loading page data from the API
 
-As said before, we are working with page content that are attached to an page tree node. The page tree is a hierarchical structure that contains all the pages in the system. Each page has an `id` that can be used to fetch the page data from the API.
+As said before, we are working with page content that are attached to a page tree node. The page tree is a hierarchical structure that contains all the pages in the system. Each page has an `id` that can be used to fetch the page data from the API.
 
 > **Note:** Blocks can be also be attached to other data (e.g. structured data, news, ...), loading and rendering will be similar, but also a bit different according to the use case.
 
@@ -98,6 +98,8 @@ query Page($id: ID!) {
     }
 }
 ```
+
+There is also another way of querying page tree node data, based on the path of the page tree node (`pageTreeNodeByPath`). This can be useful if you have the path of the page tree node and not the id.
 
 The received `content` field is a root block and from type `PageContentBlockData` and is a CometDXP Scalar `PageContentBlockData` what is basically a JSONObject that contains the block data.
 
