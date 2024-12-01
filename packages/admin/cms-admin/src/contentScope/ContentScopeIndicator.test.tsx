@@ -10,11 +10,6 @@ jest.mock("react-intl", () => ({
     },
 }));
 
-// jest.mock("@mui/material", () => ({
-//     ...jest.requireActual("@mui/material"),
-//     useTheme: () => ({ palette: { primary: { dark: "dark" }, grey: { A100: "A100" } } }),
-// }));
-
 jest.mock("@comet/admin-icons", () => ({
     Domain: () => null,
 }));
