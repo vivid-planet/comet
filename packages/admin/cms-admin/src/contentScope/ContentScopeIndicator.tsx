@@ -23,10 +23,10 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
 
     const findLabelForScopePart = (scopePart: keyof ContentScopeInterface) => {
         const label = values.find((value) => {
-            return value[scopePart] && value[scopePart].value === scope[scopePart];
+            return value[scopePart] && value[scopePart]?.value === scope[scopePart];
         })?.[scopePart].label;
 
-        return label ?? capitalizeString(scope[scopePart]);
+        return label ?? (scope[scopePart] ? capitalizeString(scope[scopePart]) : undefined);
     };
 
     let content: ReactNode;
@@ -34,16 +34,8 @@ export const ContentScopeIndicator = ({ global = false, scope: passedScope, chil
         content = <FormattedMessage {...messages.globalContentScope} />;
     } else {
         const scopeParts = Object.keys(scope);
-        content = scopeParts.map((scopePart, index, array) => {
-            const isLastPart = index === array.length - 1;
-
-            const ret = [findLabelForScopePart(scopePart)];
-            if (!isLastPart) {
-                ret.push(" / ");
-            }
-
-            return ret;
-        });
+        const scopeLabels = scopeParts.map((scopePart) => findLabelForScopePart(scopePart)).filter((label) => typeof label === "string") as string[];
+        content = scopeLabels.join(" / ");
     }
 
     return (
