@@ -24,7 +24,6 @@ export type DialogProps = ThemedComponentBaseProps<{
 }> & {
     children?: ReactNode;
     title?: ReactNode;
-    onClose?: () => void;
     iconMapping?: {
         closeIcon?: ReactNode;
     };
@@ -51,7 +50,7 @@ export function Dialog(inProps: DialogProps) {
     return (
         <Root open={open} {...slotProps?.root} {...restProps}>
             {onClose && (
-                <CloseButton {...slotProps?.closeButton} onClick={onClose}>
+                <CloseButton {...slotProps?.closeButton} onClick={(event) => onClose(event, "escapeKeyDown")}>
                     {closeIcon}
                 </CloseButton>
             )}
@@ -89,9 +88,8 @@ const CloseButton = createComponentSlot(MuiIconButton)<DialogClassKey>({
 })(
     ({ theme }) => css`
         position: absolute;
-        padding: 0;
-        right: 20px;
-        top: 20px;
+        right: 12px;
+        top: 14px;
         color: ${theme.palette.secondary.contrastText};
     `,
 );
