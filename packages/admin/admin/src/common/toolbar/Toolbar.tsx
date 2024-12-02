@@ -1,10 +1,9 @@
 import { ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
@@ -24,21 +23,17 @@ export interface ToolbarProps
     hideTopBar?: boolean;
 }
 
-type OwnerState = {
-    headerHeight: number;
-};
-
-const Root = createComponentSlot(Paper)<ToolbarClassKey, OwnerState>({
+const Root = createComponentSlot(Paper)<ToolbarClassKey>({
     componentName: "Toolbar",
     slotName: "root",
 })(
-    ({ ownerState }) => css`
+    css`
         position: sticky;
         z-index: 10;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        top: ${ownerState.headerHeight}px;
+        top: 0;
         padding: 0;
     `,
 );
@@ -109,14 +104,9 @@ export const Toolbar = (inProps: ToolbarProps) => {
         scopeIndicator,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
-    const { headerHeight } = useContext(MasterLayoutContext);
-
-    const ownerState: OwnerState = {
-        headerHeight,
-    };
 
     return (
-        <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
+        <Root elevation={elevation} {...slotProps?.root} {...restProps}>
             {!hideTopBar && (
                 <TopBar {...slotProps?.topBar}>
                     {Boolean(scopeIndicator) && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
