@@ -212,7 +212,12 @@ const SecondaryHelperText = createComponentSlot(FormHelperText)<FieldContainerCl
     slotName: "secondaryHelperText",
 })(
     ({ theme }) => css`
-        color: ${theme.palette.grey[200]};
+        color: ${theme.palette.grey[300]};
+        margin-left: auto;
+
+        &.Mui-disabled {
+            color: ${theme.palette.grey[300]};
+        }
     `,
 );
 
