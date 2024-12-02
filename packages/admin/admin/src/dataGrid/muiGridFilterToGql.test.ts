@@ -1,4 +1,4 @@
-import { GridLinkOperator } from "@mui/x-data-grid";
+import { GridLogicOperator } from "@mui/x-data-grid";
 import { GridFilterModel } from "@mui/x-data-grid/models/gridFilterModel";
 
 import { GridColDef } from "./GridColDef";
@@ -9,49 +9,49 @@ const columns: GridColDef<{ tag: string }>[] = [{ field: "tag" }];
 const mockedFilterModelAndOperator: GridFilterModel = {
     items: [
         {
-            columnField: "tag",
-            operatorValue: "contains",
+            field: "tag",
+            operator: "contains",
             id: 1,
             value: "de",
         },
         {
-            columnField: "tag",
-            operatorValue: "contains",
+            field: "tag",
+            operator: "contains",
             id: 2,
             value: "en",
         },
     ],
-    linkOperator: GridLinkOperator.And,
+    logicOperator: GridLogicOperator.And,
 };
 
 const mockedFilterModelOrOperator: GridFilterModel = {
     items: [
         {
-            columnField: "tag",
-            operatorValue: "contains",
+            field: "tag",
+            operator: "contains",
             id: 1,
             value: "de",
         },
         {
-            columnField: "tag",
-            operatorValue: "contains",
+            field: "tag",
+            operator: "contains",
             id: 2,
             value: "en",
         },
     ],
-    linkOperator: GridLinkOperator.Or,
+    logicOperator: GridLogicOperator.Or,
 };
 const mockedFilterModelWithoutOperator: GridFilterModel = {
     items: [
         {
-            columnField: "tag",
-            operatorValue: "contains",
+            field: "tag",
+            operator: "contains",
             id: 1,
             value: "de",
         },
         {
-            columnField: "tag",
-            operatorValue: "contains",
+            field: "tag",
+            operator: "contains",
             id: 2,
             value: "en",
         },

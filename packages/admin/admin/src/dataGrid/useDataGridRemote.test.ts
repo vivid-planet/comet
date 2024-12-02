@@ -1,4 +1,3 @@
-import { GridSortDirection } from "@mui/x-data-grid";
 import { GridFilterModel } from "@mui/x-data-grid/models/gridFilterModel";
 import { renderHook } from "@testing-library/react-hooks";
 import queryString from "query-string";
@@ -11,13 +10,15 @@ jest.mock("react-router", () => ({
     useLocation,
 }));
 
+import { GridSortDirection } from "@mui/x-data-grid";
+
 import { useDataGridRemote } from "./useDataGridRemote";
 
 const mockedReplace = jest.fn();
 const mockedSortField = "description";
 const mockedSort = "asc";
 const mockedFilterModel: GridFilterModel = {
-    items: [{ columnField: "price", id: 1, operatorValue: ">", value: "30" }],
+    items: [{ field: "price", id: 1, operator: ">", value: "30" }],
     quickFilterValues: ["a"],
 };
 const mockedPage = 17;
@@ -62,7 +63,7 @@ describe("useDataGridRemote", () => {
 
         const { result } = renderHook(() => useDataGridRemote());
 
-        expect(result.current.page).toBe(mockedPage);
+        expect(result.current.paginationModel?.page).toBe(mockedPage);
     });
 
     it("reads pageSize param from URL and returns correct value", () => {
@@ -72,7 +73,7 @@ describe("useDataGridRemote", () => {
 
         const { result } = renderHook(() => useDataGridRemote());
 
-        expect(result.current.pageSize).toBe(mockedPageSize);
+        expect(result.current.paginationModel?.pageSize).toBe(mockedPageSize);
     });
 
     it("writes sort param to URL", () => {
@@ -94,7 +95,7 @@ describe("useDataGridRemote", () => {
     it("writes page param to URL", () => {
         const { result } = renderHook(() => useDataGridRemote());
 
-        result.current.onPageChange?.(mockedPage, {});
+        result.current.onPaginationModelChange?.({ page: mockedPage, pageSize: 25 }, {});
 
         expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ page: mockedPage }) });
     });
@@ -102,7 +103,7 @@ describe("useDataGridRemote", () => {
     it("writes pageSize param to URL", () => {
         const { result } = renderHook(() => useDataGridRemote());
 
-        result.current.onPageSizeChange?.(mockedPageSize, {});
+        result.current.onPaginationModelChange?.({ page: 0, pageSize: mockedPageSize }, {});
 
         expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ pageSize: mockedPageSize }) });
     });
@@ -122,8 +123,8 @@ describe("useDataGridRemote", () => {
 
         expect(result.current.sortModel).toEqual([{ field: mockedSortField, sort: mockedSort }]);
         expect(result.current.filterModel).toEqual(mockedFilterModel);
-        expect(result.current.page).toBe(mockedPage);
-        expect(result.current.pageSize).toBe(mockedPageSize);
+        expect(result.current.paginationModel?.page).toBe(mockedPage);
+        expect(result.current.paginationModel?.pageSize).toBe(mockedPageSize);
     });
 
     it("adds queryParamsPrefix when writing to URL if queryParamsPrefix is set", () => {
@@ -137,10 +138,8 @@ describe("useDataGridRemote", () => {
         result.current.onFilterModelChange?.(mockedFilterModel, {});
         expect(mockedReplace.mock.calls[1]?.[0]?.search).toContain(`${prefix}filter`);
 
-        result.current.onPageChange?.(mockedPage, {});
+        result.current.onPaginationModelChange?.({ page: mockedPage, pageSize: mockedPage }, {});
         expect(mockedReplace.mock.calls[2]?.[0]?.search).toContain(`${prefix}page`);
-
-        result.current.onPageSizeChange?.(mockedPageSize, {});
         expect(mockedReplace.mock.calls[3]?.[0]?.search).toContain(`${prefix}pageSize`);
 
         expect(mockedReplace).toHaveBeenCalledTimes(4);
@@ -151,7 +150,7 @@ describe("useDataGridRemote", () => {
 
         const { result } = renderHook(() => useDataGridRemote({ pageSize: mockedInitialPageSize }));
 
-        expect(result.current.pageSize).toBe(mockedInitialPageSize);
+        expect(result.current.paginationModel?.pageSize).toBe(mockedInitialPageSize);
     });
 
     it("doesn't use initial default pageSize if a pageSize is set in the URL", () => {
@@ -163,7 +162,7 @@ describe("useDataGridRemote", () => {
 
         const { result } = renderHook(() => useDataGridRemote({ pageSize: mockedInitialPageSize }));
 
-        expect(result.current.pageSize).toBe(mockedUrlPageSize);
+        expect(result.current.paginationModel?.pageSize).toBe(mockedUrlPageSize);
     });
 
     it("uses initial sort if no sort is set in the URL", () => {

@@ -1,4 +1,4 @@
-import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
+import { Canvas, Meta, Source } from "@storybook/addon-docs";
 import dedent from "ts-dedent";
 
 import * as FinalFormStories from "./FinalForm.stories";
@@ -15,9 +15,7 @@ There are two required properties:
 -   `mode` can be `add` (for creating a new resource) or `edit` (for editing an existing resource)
 -   `onSubmit()` handles the submission of form values to the API
 
-<Canvas>
-    <Story of={FinalFormStories.BasicFinalForm} />
-</Canvas>
+<Canvas of={FinalFormStories.BasicFinalForm} />
 
 ## Differences between Comet Admin `FinalForm` and React Final Form's `Form`
 
@@ -77,9 +75,7 @@ Comet Admin `FinalForm`:
 
 This allows us to access the Final-Form FormApi outside the form.
 
-<Canvas>
-    <Story of={FinalFormStories.FinalFormApiRef} />
-</Canvas>
+<Canvas of={FinalFormStories.FinalFormApiRef} />
 
 ## FinalForm in a Table
 
@@ -220,6 +216,4 @@ Also, `apolloClient.mutate()` helps you avoid a difficult variable naming proces
 
 **Note:** You have to enter "John" and "Doe" for this example to work.
 
-<Canvas>
-    <Story of={FinalFormStories.SubmitMutationBestPractices} />
-</Canvas>
+<Canvas of={FinalFormStories.SubmitMutationBestPractices} />

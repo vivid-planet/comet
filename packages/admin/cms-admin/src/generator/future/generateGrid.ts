@@ -162,7 +162,8 @@ export function generateGrid(
     const fieldList = generateGqlFieldList({
         columns: config.columns.filter((column) => {
             return (
-                column.type !== "actions" && column.name !== "id" // exclude id because it's always required
+                // exclude id because it's always required
+                column.type !== "actions" && column.name !== "id"
             );
         }),
     });
@@ -481,6 +482,20 @@ export function generateGrid(
 
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
+    const dataGridRemoteParameters =
+        config.initialSort || config.queryParamsPrefix
+            ? `{${
+                  config.initialSort
+                      ? ` initialSort: [${config.initialSort
+                            .map((item) => {
+                                return `{field: "${item.field}", sort: "${item.sort}"}`;
+                            })
+                            .join(",\n")} ], `
+                      : ""
+              }
+              ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
+              }`
+            : "";
 
     const code = `import { gql, useApolloClient, useQuery } from "@apollo/client";
     import {
@@ -617,15 +632,7 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(${
-            config.initialSort
-                ? `{ initialSort: [${config.initialSort
-                      .map((item) => {
-                          return `{field: "${item.field}", sort: "${item.sort}"}`;
-                      })
-                      .join(",\n")} ] }`
-                : ""
-        }), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid") };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 
@@ -827,8 +834,8 @@ export function generateGrid(
                         : []),
                     ...(hasSearch ? ["search: gqlSearch"] : []),
                     ...[
-                        `offset: dataGridProps.page * dataGridProps.pageSize`,
-                        `limit: dataGridProps.pageSize`,
+                        `offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize`,
+                        `limit: dataGridProps.paginationModel.pageSize`,
                         `sort: muiGridSortToGql(dataGridProps.sortModel)`,
                     ],
                 ].join(", ")}
@@ -843,7 +850,7 @@ export function generateGrid(
         return (
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}

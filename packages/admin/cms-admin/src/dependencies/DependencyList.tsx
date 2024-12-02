@@ -53,8 +53,8 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
         variables: {
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             ...variables,
         },
     });
@@ -134,6 +134,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     let items: DependencyItem[] = [];
     let totalCount = 0;
 
+    if (error) {
+        throw error;
+    }
+
     if (data?.item.dependencies) {
         items = data.item.dependencies.nodes.map((node) => ({
             ...node,
@@ -191,10 +195,9 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     },
                 }}
                 rowHeight={60}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 disableColumnMenu
                 loading={loading}
-                error={error}
                 autoHeight={true}
                 columns={columns}
                 rows={items}

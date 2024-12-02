@@ -30,7 +30,7 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-type User {
+type UserPermissionsUser {
   id: String!
   name: String!
   email: String!
@@ -49,7 +49,7 @@ type CurrentUser {
   email: String!
   permissions: [CurrentUserPermission!]!
   impersonated: Boolean
-  authenticatedUser: User
+  authenticatedUser: UserPermissionsUser
   permissionsForScope(scope: JSONObject!): [String!]!
 }
 
@@ -199,67 +199,9 @@ type FileUpload {
   imageUrl(resizeWidth: Int!): String
 }
 
-type PaginatedUserList {
-  nodes: [User!]!
+type UserPermissionPaginatedUserList {
+  nodes: [UserPermissionsUser!]!
   totalCount: Int!
-}
-
-type NewsComment {
-  id: ID!
-  comment: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type NewsContentScope {
-  domain: String!
-  language: String!
-}
-
-type News {
-  id: ID!
-  scope: NewsContentScope!
-  slug: String!
-  title: String!
-  status: NewsStatus!
-  date: DateTime!
-  category: NewsCategory!
-  image: DamImageBlockData!
-  content: NewsContentBlockData!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  comments: [NewsComment!]!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
-}
-
-enum NewsStatus {
-  Active
-  Deleted
-}
-
-enum NewsCategory {
-  Events
-  Company
-  Awards
-}
-
-"""DamImage root block data"""
-scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-"""NewsContent root block data"""
-scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-input DependencyFilter {
-  targetGraphqlObjectType: String
-  targetId: String
-  rootColumnName: String
-}
-
-input DependentFilter {
-  rootGraphqlObjectType: String
-  rootId: String
-  rootColumnName: String
 }
 
 type Link implements DocumentInterface {
@@ -293,6 +235,12 @@ scalar PageContentBlockData @specifiedBy(url: "http://www.ecma-international.org
 
 """Seo root block data"""
 scalar SeoBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input DependencyFilter {
+  targetGraphqlObjectType: String
+  targetId: String
+  rootColumnName: String
+}
 
 type PageTreeNodeScope {
   domain: String!
@@ -339,6 +287,12 @@ enum UserGroup {
 }
 
 union PageContentUnion = Page | Link | PredefinedPage
+
+input DependentFilter {
+  rootGraphqlObjectType: String
+  rootId: String
+  rootColumnName: String
+}
 
 type DamScope {
   domain: String!
@@ -426,6 +380,52 @@ type MainMenu {
   items: [MainMenuItem!]!
 }
 
+type NewsComment {
+  id: ID!
+  comment: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type NewsContentScope {
+  domain: String!
+  language: String!
+}
+
+type News {
+  id: ID!
+  scope: NewsContentScope!
+  slug: String!
+  title: String!
+  status: NewsStatus!
+  date: DateTime!
+  category: NewsCategory!
+  image: DamImageBlockData!
+  content: NewsContentBlockData!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  comments: [NewsComment!]!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  dependents(offset: Int! = 0, limit: Int! = 25, filter: DependentFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+}
+
+enum NewsStatus {
+  Active
+  Deleted
+}
+
+enum NewsCategory {
+  Events
+  Company
+  Awards
+}
+
+"""DamImage root block data"""
+scalar DamImageBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""NewsContent root block data"""
+scalar NewsContentBlockData @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
 type PaginatedNews {
   nodes: [News!]!
   totalCount: Int!
@@ -469,11 +469,6 @@ type Manufacturer {
   updatedAt: DateTime!
 }
 
-type ManufacturerCountry {
-  id: String!
-  used: Float!
-}
-
 type ProductCategory {
   id: ID!
   title: String!
@@ -513,15 +508,6 @@ type ProductTag {
   updatedAt: DateTime!
   productsWithStatus: [ProductToTag!]!
   products: [Product!]!
-}
-
-type ProductVariant {
-  id: ID!
-  name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  product: Product!
-  image: DamImageBlockData!
 }
 
 type ProductDiscounts {
@@ -587,6 +573,21 @@ enum ProductType {
 A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar Date
+
+type ProductVariant {
+  id: ID!
+  name: String!
+  position: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  image: DamImageBlockData!
+}
+
+type ManufacturerCountry {
+  id: String!
+  used: Float!
+}
 
 type PaginatedManufacturers {
   nodes: [Manufacturer!]!
@@ -681,11 +682,6 @@ type PaginatedDamFolders {
   totalCount: Int!
 }
 
-input NewsContentScopeInput {
-  domain: String!
-  language: String!
-}
-
 input PageTreeNodeScopeInput {
   domain: String!
   language: String!
@@ -696,6 +692,11 @@ input DamScopeInput {
 }
 
 input FooterContentScopeInput {
+  domain: String!
+  language: String!
+}
+
+input NewsContentScopeInput {
   domain: String!
   language: String!
 }
@@ -752,8 +753,8 @@ input RedirectScopeInput {
 
 type Query {
   currentUser: CurrentUser!
-  userPermissionsUserById(id: String!): User!
-  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserFilter, sort: [UserSort!]): PaginatedUserList!
+  userPermissionsUserById(id: String!): UserPermissionsUser!
+  userPermissionsUsers(offset: Int! = 0, limit: Int! = 25, search: String, filter: UserPermissionsUserFilter, sort: [UserPermissionsUserSort!]): UserPermissionPaginatedUserList!
   userPermissionsPermissionList(userId: String!): [UserPermission!]!
   userPermissionsPermission(id: ID!, userId: String): UserPermission!
   userPermissionsAvailablePermissions: [String!]!
@@ -816,12 +817,12 @@ type Query {
   manufacturerCountries(offset: Int! = 0, limit: Int! = 25, search: String, filter: ManufacturerCountryFilter): PaginatedManufacturerCountries!
 }
 
-input UserFilter {
+input UserPermissionsUserFilter {
   name: StringFilter
   email: StringFilter
   status: StringFilter
-  and: [UserFilter!]
-  or: [UserFilter!]
+  and: [UserPermissionsUserFilter!]
+  or: [UserPermissionsUserFilter!]
 }
 
 input StringFilter {
@@ -832,12 +833,12 @@ input StringFilter {
   notEqual: String
 }
 
-input UserSort {
-  field: UserSortField!
+input UserPermissionsUserSort {
+  field: UserPermissionsUserSortField!
   direction: SortDirection! = ASC
 }
 
-enum UserSortField {
+enum UserPermissionsUserSortField {
   name
   email
   status
@@ -1129,6 +1130,7 @@ input ProductVariantSort {
 
 enum ProductVariantSortField {
   name
+  position
   product
   createdAt
   updatedAt
@@ -1509,11 +1511,13 @@ input ProductTagUpdateInput {
 input ProductVariantInput {
   name: String!
   image: DamImageBlockInput!
+  position: Int
 }
 
 input ProductVariantUpdateInput {
   name: String
   image: DamImageBlockInput
+  position: Int
 }
 
 input ManufacturerInput {

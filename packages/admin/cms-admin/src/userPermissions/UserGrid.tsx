@@ -141,7 +141,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
-            query UserGrid($offset: Int, $limit: Int, $filter: UserFilter, $sort: [UserSort!], $search: String) {
+            query UserGrid($offset: Int, $limit: Int, $filter: UserPermissionsUserFilter, $sort: [UserPermissionsUserSort!], $search: String) {
                 users: userPermissionsUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
                     nodes {
                         ...UserForGrid
@@ -151,7 +151,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                 availablePermissions: userPermissionsAvailablePermissions
                 availableContentScopes: userPermissionsAvailableContentScopes
             }
-            fragment UserForGrid on User {
+            fragment UserForGrid on UserPermissionsUser {
                 id
                 name
                 email
@@ -162,8 +162,8 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
         {
             variables: {
                 ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-                offset: dataGridProps.page * dataGridProps.pageSize,
-                limit: dataGridProps.pageSize,
+                offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+                limit: dataGridProps.paginationModel.pageSize ?? 0,
                 sort: muiGridSortToGql(dataGridProps.sortModel),
             },
         },

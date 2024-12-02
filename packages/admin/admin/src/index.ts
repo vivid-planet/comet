@@ -32,13 +32,13 @@ export {
     ToolbarAutomaticTitleItemProps,
 } from "./common/toolbar/automatictitleitem/ToolbarAutomaticTitleItem";
 export { ToolbarBackButton, ToolbarBackButtonClassKey, ToolbarBackButtonProps } from "./common/toolbar/backbutton/ToolbarBackButton";
-export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps } from "./common/toolbar/breadcrumb/ToolbarBreadcrumbs";
 export { DataGridToolbar, DataGridToolbarClassKey, DataGridToolbarProps } from "./common/toolbar/DataGridToolbar";
 export { ToolbarFillSpace, ToolbarFillSpaceClassKey, ToolbarFillSpaceProps } from "./common/toolbar/fillspace/ToolbarFillSpace";
 export { ToolbarItem, ToolbarItemClassKey, ToolbarItemProps } from "./common/toolbar/item/ToolbarItem";
 export { StackToolbar } from "./common/toolbar/StackToolbar";
 export { ToolbarTitleItem, ToolbarTitleItemClassKey, ToolbarTitleItemProps } from "./common/toolbar/titleitem/ToolbarTitleItem";
 export { Toolbar, ToolbarClassKey, ToolbarProps } from "./common/toolbar/Toolbar";
+export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps } from "./common/toolbar/ToolbarBreadcrumbs";
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "./dataGrid/CrudContextMenu";

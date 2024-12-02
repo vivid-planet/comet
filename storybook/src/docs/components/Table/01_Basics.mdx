@@ -1,4 +1,4 @@
-import { Canvas, Meta, Source, Story } from "@storybook/addon-docs";
+import { Canvas, Meta, Source } from "@storybook/addon-docs";
 import dedent from "ts-dedent";
 
 import * as BasicsStories from "./01_Basics.stories";
@@ -94,9 +94,7 @@ Keep reading to learn more.
 
 ## Table
 
-<Canvas>
-    <Story of={BasicsStories.BasicTable} />
-</Canvas>
+<Canvas of={BasicsStories.BasicTable} />
 
 `Table` has three required parameters: `data`, `totalCount` and `columns`.
 
@@ -117,24 +115,18 @@ More information can be found in the [column section](#table-column).
 The only required property of a column is its `name`.
 Per default, the `name` is matched to a property of `data`, which is then rendered:
 
-<Canvas>
-    <Story of={BasicsStories.TableColumnNameProp} />
-</Canvas>
+<Canvas of={BasicsStories.TableColumnNameProp} />
 
 Matching also works for nested properties if the `name` is separated by dots:
 
-<Canvas>
-    <Story of={BasicsStories.TableColumnNestedNameProp} />
-</Canvas>
+<Canvas of={BasicsStories.TableColumnNestedNameProp} />
 
 ### render
 
 Passing a function to the `render` prop overrides the default rendering behavior.
 The render function can be used for altering the styling of a column or for rendering columns that don't have a corresponding prop in `data`:
 
-<Canvas>
-    <Story of={BasicsStories.TableColumnRenderProp} />
-</Canvas>
+<Canvas of={BasicsStories.TableColumnRenderProp} />
 
 ### header
 
@@ -143,17 +135,13 @@ It can be a string or a JSX element.
 
 If no header is set, the heading of a column is empty.
 
-<Canvas>
-    <Story of={BasicsStories.TableColumnHeaderProp} />
-</Canvas>
+<Canvas of={BasicsStories.TableColumnHeaderProp} />
 
 ### visible
 
 `visible` can be used to hide a column.
 
-<Canvas>
-    <Story of={BasicsStories.TableColumnVisibleProp} />
-</Canvas>
+<Canvas of={BasicsStories.TableColumnVisibleProp} />
 
 ### cellProps & headerProps
 

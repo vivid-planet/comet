@@ -14,12 +14,16 @@ export const LatestContentUpdates = () => {
         },
     });
 
-    const rows = data?.paginatedPageTreeNodes.nodes.map((node) => ({
-        ...node,
-        editUrl: `${contentScope.match.url}/pages/pagetree/${categoryToUrlParam(node.category)}/${node.id}/edit`,
-    }));
+    if (error) {
+        throw error;
+    }
+    const rows =
+        data?.paginatedPageTreeNodes.nodes.map((node) => ({
+            ...node,
+            editUrl: `${contentScope.match.url}/pages/pagetree/${categoryToUrlParam(node.category)}/${node.id}/edit`,
+        })) ?? [];
 
-    return <LatestContentUpdatesDashboardWidget rows={rows} loading={loading} error={error} />;
+    return <LatestContentUpdatesDashboardWidget rows={rows} loading={loading} />;
 };
 
 const LATEST_CONTENT_UPDATES_QUERY = gql`

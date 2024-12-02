@@ -101,7 +101,12 @@ type Props = {
 export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "product-variants",
+        }),
+        ...usePersistentColumnState("ProductVariantsGrid"),
+    };
 
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
         { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
@@ -165,8 +170,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             product,
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -177,7 +182,7 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

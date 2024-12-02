@@ -414,8 +414,8 @@ export async function writeCrudGrid(
                 ${hasScope ? `scope,` : ""}
                 ${hasFilter ? `filter: gqlFilter,` : ""}
                 ${hasSearch ? `search: gqlSearch,` : ""}
-                offset: dataGridProps.page * dataGridProps.pageSize,
-                limit: dataGridProps.pageSize,
+                offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+                limit: dataGridProps.paginationModel.pageSize,
                 sort: muiGridSortToGql(dataGridProps.sortModel),
             },
         });
@@ -427,7 +427,7 @@ export async function writeCrudGrid(
             <MainContent fullHeight>
                 <DataGridPro
                     {...dataGridProps}
-                    disableSelectionOnClick
+                    disableRowSelectionOnClick
                     rows={rows}
                     rowCount={rowCount}
                     columns={columns}

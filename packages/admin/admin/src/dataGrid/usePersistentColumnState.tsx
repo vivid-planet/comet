@@ -1,20 +1,23 @@
 import { DataGridProps, GridColumnVisibilityModel, useGridApiRef } from "@mui/x-data-grid";
+import { type DataGridProProps, type GridPinnedColumns } from "@mui/x-data-grid-pro";
 import { MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useStoredState } from "../hooks/useStoredState";
 import { GridColDef } from "./GridColDef";
-
-export type GridPinnedColumns = {
-    left?: string[];
-    right?: string[];
-};
 
 const useGridColumns = (apiRef: ReturnType<typeof useGridApiRef>) => {
     const [columns, setColumns] = useState<GridColDef[] | undefined>();
 
     useEffect(() => {
         // This will be `undefined` if the free version of DataGrid V5 is used.
-        setColumns(apiRef.current?.getAllColumns?.());
+
+        setColumns(
+            // TODO: find a better solution than the `as GridColDef[] | undefined` cast.
+            // The problem is, that due to the more complicated GridColDef type, introduced in Mui-X v6 and the override
+            // GridColDef type from @comet/admin, the types returned from apiRef.current?.getAllColumns?.() are not
+            // compatible with the @comet/admin GridColDef.
+            apiRef.current?.getAllColumns?.() as GridColDef[] | undefined,
+        );
     }, [apiRef]);
 
     return columns;
@@ -48,7 +51,19 @@ const useVisibilityModelFromColumnMediaQueries = (columns: GridColDef[] | undefi
     return visibilityModel;
 };
 
-type GridProps = Omit<DataGridProps, "rows" | "columns"> & {
+type GridProps = {
+    columnVisibilityModel: DataGridProps["columnVisibilityModel"];
+    onColumnVisibilityModelChange: DataGridProps["onColumnVisibilityModelChange"];
+
+    pinnedColumns: DataGridProProps["pinnedColumns"];
+    onPinnedColumnsChange: DataGridProProps["onPinnedColumnsChange"];
+
+    onColumnWidthChange: DataGridProProps["onColumnWidthChange"];
+
+    onColumnOrderChange: DataGridProps["onColumnOrderChange"];
+
+    initialState: DataGridProps["initialState"];
+
     apiRef: MutableRefObject<any>;
 };
 
@@ -136,9 +151,6 @@ export function usePersistentColumnState(stateKey: string): GridProps {
         columnVisibilityModel: { ...mediaQueryColumnVisibilityModel, ...storedColumnVisibilityModel },
         onColumnVisibilityModelChange: handleColumnVisibilityModelChange,
 
-        // TODO find a better solution (problem: pinnedColumns is a Pro Feature)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         pinnedColumns,
         onPinnedColumnsChange: handlePinnedColumnsChange,
 
