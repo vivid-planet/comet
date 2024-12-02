@@ -29,6 +29,7 @@ export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/
 export { Loading, LoadingProps } from "./common/Loading";
 export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./common/MainContent";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
+export { ToolbarActionButton } from "./common/toolbar/actions/ToolbarActionsButton";
 export {
     ToolbarAutomaticTitleItem,
     ToolbarAutomaticTitleItemClassKey,
