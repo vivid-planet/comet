@@ -21,7 +21,6 @@ import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } f
 declare module "@mui/x-data-grid" {
     interface ToolbarPropsOverrides {
         toolbarAction: React.ReactNode;
-        foo: string;
     }
 }
 
