@@ -333,9 +333,9 @@ importers:
       '@nestjs/graphql':
         specifier: ^12.2.1
         version: 12.2.1(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(@nestjs/core@10.4.9)(class-transformer@0.5.1)(class-validator@0.13.2)(graphql@16.9.0)(reflect-metadata@0.1.13)(ts-morph@16.0.0)
-      '@nestjs/passport':
-        specifier: ^10.0.3
-        version: 10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(passport@0.4.1)
+      '@nestjs/jwt':
+        specifier: ^10.2.0
+        version: 10.2.0(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))
       '@nestjs/platform-express':
         specifier: ^10.4.8
         version: 10.4.9(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(@nestjs/core@10.4.9)
@@ -390,9 +390,6 @@ importers:
       nestjs-console:
         specifier: ^9.0.0
         version: 9.0.0(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(@nestjs/core@10.4.9)
-      passport:
-        specifier: ^0.4.0
-        version: 0.4.1
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
@@ -445,9 +442,6 @@ importers:
       '@types/node':
         specifier: ^22.0.0
         version: 22.9.0
-      '@types/passport':
-        specifier: ^1.0.0
-        version: 1.0.11
       '@types/response-time':
         specifier: ^2.3.8
         version: 2.3.8
@@ -2056,15 +2050,9 @@ importers:
       '@hapi/accept':
         specifier: ^5.0.2
         version: 5.0.2
-      '@nestjs/jwt':
-        specifier: ^10.2.0
-        version: 10.2.0(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))
       '@nestjs/mapped-types':
         specifier: ^2.0.6
         version: 2.0.6(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)
-      '@nestjs/passport':
-        specifier: ^10.0.3
-        version: 10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(passport@0.6.0)
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.0
@@ -2143,18 +2131,6 @@ importers:
       node-fetch:
         specifier: ^2.0.0
         version: 2.6.8
-      passport:
-        specifier: ^0.6.0
-        version: 0.6.0
-      passport-custom:
-        specifier: ^1.1.1
-        version: 1.1.1
-      passport-http:
-        specifier: ^0.3.0
-        version: 0.3.0
-      passport-jwt:
-        specifier: ^4.0.0
-        version: 4.0.1
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -2216,6 +2192,9 @@ importers:
       '@nestjs/graphql':
         specifier: ^12.2.1
         version: 12.2.1(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(@nestjs/core@10.4.9)(class-transformer@0.5.1)(class-validator@0.13.2)(graphql@16.9.0)(reflect-metadata@0.1.13)(ts-morph@16.0.0)
+      '@nestjs/jwt':
+        specifier: ^10.2.0
+        version: 10.2.0(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))
       '@nestjs/platform-express':
         specifier: ^10.4.8
         version: 10.4.9(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(@nestjs/core@10.4.9)
@@ -2255,12 +2234,6 @@ importers:
       '@types/node-fetch':
         specifier: ^2.6.2
         version: 2.6.2
-      '@types/passport-http':
-        specifier: ^0.3.9
-        version: 0.3.9
-      '@types/passport-jwt':
-        specifier: ^3.0.7
-        version: 3.0.8
       '@types/pluralize':
         specifier: ^0.0.29
         version: 0.0.29
@@ -3533,54 +3506,63 @@ packages:
   '@babel/plugin-proposal-async-generator-functions@7.20.7':
     resolution: {integrity: sha512-xMbiLsn/8RK7Wq7VeVytytS2L6qE69bXPB10YCmMdDZbKF4okCqY74pI/jJQ/8U0b/F6NrT2+14b8/P9/3AMGA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-async-generator-functions instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-class-properties@7.18.6':
     resolution: {integrity: sha512-cumfXOF0+nzZrrN8Rf0t7M+tF6sZc7vhQwYQck9q1/5w2OExlD+b4v4RpMJFaV1Z7WcDRgO6FqvxqxGlwo+RHQ==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-class-properties instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-class-static-block@7.20.7':
     resolution: {integrity: sha512-AveGOoi9DAjUYYuUAG//Ig69GlazLnoyzMw68VCDux+c1tsnnH/OkYcpz/5xzMkEFC6UxjR5Gw1c+iY2wOGVeQ==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-class-static-block instead.
     peerDependencies:
       '@babel/core': ^7.12.0
 
   '@babel/plugin-proposal-dynamic-import@7.18.6':
     resolution: {integrity: sha512-1auuwmK+Rz13SJj36R+jqFPMJWyKEDd7lLSdOj4oJK0UTgGueSAtkrCvz9ewmgyU/P941Rv2fQwZJN8s6QruXw==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-dynamic-import instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-export-namespace-from@7.18.9':
     resolution: {integrity: sha512-k1NtHyOMvlDDFeb9G5PhUXuGj8m/wiwojgQVEhJ/fsVsMCpLyOP4h0uGEjYJKrRI+EVPlb5Jk+Gt9P97lOGwtA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-export-namespace-from instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-json-strings@7.18.6':
     resolution: {integrity: sha512-lr1peyn9kOdbYc0xr0OdHTZ5FMqS6Di+H0Fz2I/JwMzGmzJETNeOFq2pBySw6X/KFL5EWDjlJuMsUGRFb8fQgQ==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-json-strings instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-logical-assignment-operators@7.20.7':
     resolution: {integrity: sha512-y7C7cZgpMIjWlKE5T7eJwp+tnRYM89HmRvWM5EQuB5BoHEONjmQ8lSNmBUwOyy/GFRsohJED51YBF79hE1djug==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-logical-assignment-operators instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-nullish-coalescing-operator@7.18.6':
     resolution: {integrity: sha512-wQxQzxYeJqHcfppzBDnm1yAY0jSRkUXR2z8RePZYrKwMKgMlE8+Z6LUno+bd6LvbGh8Gltvy74+9pIYkr+XkKA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-nullish-coalescing-operator instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-numeric-separator@7.18.6':
     resolution: {integrity: sha512-ozlZFogPqoLm8WBr5Z8UckIoE4YQ5KESVcNudyXOR8uqIkliTEgJ3RoketfG6pmzLdeZF0H/wjE9/cCEitBl7Q==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-numeric-separator instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
@@ -3593,36 +3575,42 @@ packages:
   '@babel/plugin-proposal-object-rest-spread@7.20.7':
     resolution: {integrity: sha512-d2S98yCiLxDVmBmE8UjGcfPvNEUbA1U5q5WxaWFUGRzJSVAZqm5W6MbPct0jxnegUZ0niLeNX+IOzEs7wYg9Dg==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-object-rest-spread instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-optional-catch-binding@7.18.6':
     resolution: {integrity: sha512-Q40HEhs9DJQyaZfUjjn6vE8Cv4GmMHCYuMGIWUnlxH6400VGxOuwWsPt4FxXxJkC/5eOzgn0z21M9gMT4MOhbw==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-optional-catch-binding instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-optional-chaining@7.20.7':
     resolution: {integrity: sha512-T+A7b1kfjtRM51ssoOfS1+wbyCVqorfyZhT99TvxxLMirPShD8CzKMRepMlCBGM5RpHMbn8s+5MMHnPstJH6mQ==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-optional-chaining instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-private-methods@7.18.6':
     resolution: {integrity: sha512-nutsvktDItsNn4rpGItSNV2sz1XwS+nfU0Rg8aCx3W3NOKVzdMjJRu0O5OkgDp3ZGICSTbgRpxZoWsxoKRvbeA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-methods instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-private-property-in-object@7.20.5':
     resolution: {integrity: sha512-Vq7b9dUA12ByzB4EjQTPo25sFhY+08pQDBSZRtUAkj7lb7jahaHR5igera16QZ+3my1nYR4dKsNdYj5IjPHilQ==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-property-in-object instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-unicode-property-regex@7.18.6':
     resolution: {integrity: sha512-2BShG/d5yoZyXZfVePH91urL5wTG6ASZU9M4o03lKK8u8UW1y08OMttBSOADTcJrnPMpvDXRG3G8fyLh4ovs8w==}
     engines: {node: '>=4'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-unicode-property-regex instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
@@ -4923,10 +4911,12 @@ packages:
   '@gitbeaker/node@25.6.0':
     resolution: {integrity: sha512-zv7BVmphyOUtIkwU8/iH8z6F8AC2Hy56f/DpwhgB602qhKDRFwf/d7wze7VD5j65i0kIzgnSrxgdtosW7V9wsw==}
     engines: {node: '>=10.19.0'}
+    deprecated: Please use its successor @gitbeaker/rest
 
   '@gitbeaker/node@34.7.0':
     resolution: {integrity: sha512-CwMQrwyebESt8yv9RCFZO+G1OotPtKBVPNlz61CWCHmbEvp5QVYiXlSXyFDo10pOuAvO9fpKiMgro3uArmmeMQ==}
     engines: {node: '>=10.19.0'}
+    deprecated: Please use its successor @gitbeaker/rest
 
   '@gitbeaker/requester-utils@25.6.0':
     resolution: {integrity: sha512-jD8cHbAZPR6+cB3HiukQxcqIKF5VkHtqg2m+Ns6ROE1pb0oRn10D/a9J1lZOXC9Jz2tQOBMWfHlplbmFFdB6Og==}
@@ -5292,6 +5282,7 @@ packages:
   '@humanwhocodes/config-array@0.11.8':
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -5308,6 +5299,7 @@ packages:
 
   '@humanwhocodes/object-schema@1.2.1':
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+    deprecated: Use @eslint/object-schema instead
 
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
@@ -5896,12 +5888,6 @@ packages:
         optional: true
       class-validator:
         optional: true
-
-  '@nestjs/passport@10.0.3':
-    resolution: {integrity: sha512-znJ9Y4S8ZDVY+j4doWAJ8EuuVO7SkQN3yOBmzxbGaXbvcSwFDAdGJ+OMCg52NdzIO4tQoN4pYKx8W6M0ArfFRQ==}
-    peerDependencies:
-      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
-      passport: ^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0
 
   '@nestjs/platform-express@10.4.9':
     resolution: {integrity: sha512-1nsIihF78W+u3pv8pVA75Zjs25w+yP0M/0jjMxL1BoCKEWCI4aL43kClP/C0csh6MvQjv67H1/AMAzs0rYbm9w==}
@@ -7728,18 +7714,6 @@ packages:
   '@types/parse5@5.0.3':
     resolution: {integrity: sha512-kUNnecmtkunAoQ3CnjmMkzNU/gtxG8guhi+Fk2U/kOpIKjIMKnXGp4IJCgQJrXSgMsWYimYG4TGjz/UzbGEBTw==}
 
-  '@types/passport-http@0.3.9':
-    resolution: {integrity: sha512-uQ4vyRdvM0jdWuKpLmi6Q6ri9Nwt8YnHmF7kE6snbthxPrsMWcjRCVc5WcPaQ356ODSZTDgiRYURMPIspCkn3Q==}
-
-  '@types/passport-jwt@3.0.8':
-    resolution: {integrity: sha512-VKJZDJUAHFhPHHYvxdqFcc5vlDht8Q2pL1/ePvKAgqRThDaCc84lSYOTQmnx3+JIkDlN+2KfhFhXIzlcVT+Pcw==}
-
-  '@types/passport-strategy@0.2.35':
-    resolution: {integrity: sha512-o5D19Jy2XPFoX2rKApykY15et3Apgax00RRLf0RUotPDUsYrQa7x4howLYr9El2mlUApHmCMv5CZ1IXqKFQ2+g==}
-
-  '@types/passport@1.0.11':
-    resolution: {integrity: sha512-pz1cx9ptZvozyGKKKIPLcVDVHwae4hrH5d6g5J+DkMRRjR3cVETb4jMabhXAUbg3Ov7T22nFHEgaK2jj+5CBpw==}
-
   '@types/pg-pool@2.0.6':
     resolution: {integrity: sha512-TaAUE5rq2VQYxab5Ts7WZhKNmuN78Q6PiFonTDdpbx8a1H0M1vhy3rhiMjl+e2iHmogyMw7jZF4FrE6eJUy5HQ==}
 
@@ -8095,6 +8069,7 @@ packages:
   '@xmldom/xmldom@0.7.10':
     resolution: {integrity: sha512-hb9QhOg5MGmpVkFcoZ9XJMe1em5gd0e2eqqjK87O1dwULedXsnY/Zg/Ju6lcohA+t6jVkmKpe7I1etqhvdRdrQ==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version is no longer supported, please update to at least 0.8.*
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -10450,11 +10425,13 @@ packages:
   eslint@8.32.0:
     resolution: {integrity: sha512-nETVXpnthqKPFyuY2FNjz/bEd6nbosRgKbkgS/y1C7LJop96gYHWpiguLecMHQ2XCPxn77DS0P+68WzG6vkZSQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   eslint@8.36.0:
     resolution: {integrity: sha512-Y956lmS7vDqomxlaaQAHVmeb4tNMp2FWIvU/RnU5BD3IKMD/MJPr76xdyr68P8tV1iNMvN2mRK0yy3c+UjL+bw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   eslint@8.57.1:
@@ -10952,6 +10929,7 @@ packages:
   fstream@1.0.12:
     resolution: {integrity: sha512-WvJ193OHa0GHPEL+AycEJgxvBEwyfRkN1vhjca23OaPVMCaLCXTd5qAu82AjTcgP1UJmytkOKb63Ypde7raDIg==}
     engines: {node: '>=0.6'}
+    deprecated: This package is no longer supported.
 
   function-bind@1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==}
@@ -11080,9 +11058,11 @@ packages:
 
   glob@7.1.6:
     resolution: {integrity: sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
@@ -12371,10 +12351,6 @@ packages:
   jsonwebtoken@8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
     engines: {node: '>=4', npm: '>=1.4.28'}
-
-  jsonwebtoken@9.0.0:
-    resolution: {integrity: sha512-tuGfYXxkQGDPnLJ7SibiQgVgeDgfbPq2k2ICcbgqW8WxWLBAxKQM/ZCu/IT8SOSwmaYl4dpTFCW5xZv7YbbWUw==}
-    engines: {node: '>=12', npm: '>=6'}
 
   jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
@@ -13727,29 +13703,6 @@ packages:
   pascal-case@3.1.2:
     resolution: {integrity: sha512-uWlGT3YSnK9x3BQJaOdcZwrnV6hPpd8jFH1/ucpiLRPh/2zCVJKS19E4GvYHvaCcACn3foXZ0cLB9Wrx1KGe5g==}
 
-  passport-custom@1.1.1:
-    resolution: {integrity: sha512-/2m7jUGxmCYvoqenLB9UrmkCgPt64h8ZtV+UtuQklZ/Tn1NpKBeOorCYkB/8lMRoiZ5hUrCoMmDtxCS/d38mlg==}
-    engines: {node: '>= 0.10.0'}
-
-  passport-http@0.3.0:
-    resolution: {integrity: sha512-OwK9DkqGVlJfO8oD0Bz1VDIo+ijD3c1ZbGGozIZw+joIP0U60pXY7goB+8wiDWtNqHpkTaQiJ9Ux1jE3Ykmpuw==}
-    engines: {node: '>= 0.4.0'}
-
-  passport-jwt@4.0.1:
-    resolution: {integrity: sha512-UCKMDYhNuGOBE9/9Ycuoyh7vP6jpeTp/+sfMJl7nLff/t6dps+iaeE0hhNkKN8/HZHcJ7lCdOyDxHdDoxoSvdQ==}
-
-  passport-strategy@1.0.0:
-    resolution: {integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==}
-    engines: {node: '>= 0.4.0'}
-
-  passport@0.4.1:
-    resolution: {integrity: sha512-IxXgZZs8d7uFSt3eqNjM9NQ3g3uQCW5avD8mRNoXV99Yig50vjuaez6dQK2qC0kVWPRTujxY0dWgGfT09adjYg==}
-    engines: {node: '>= 0.4.0'}
-
-  passport@0.6.0:
-    resolution: {integrity: sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==}
-    engines: {node: '>= 0.4.0'}
-
   path-browserify@1.0.1:
     resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
 
@@ -13826,9 +13779,6 @@ packages:
 
   pathe@0.2.0:
     resolution: {integrity: sha512-sTitTPYnn23esFR3RlqYBWn4c45WGeLcsKzQiUpXJAyfcWkolvlYpV8FLo7JishK946oQwMFUCHXQ9AjGPKExw==}
-
-  pause@0.0.1:
-    resolution: {integrity: sha512-KG8UEiEVkR3wGEb4m5yZkVCzigAD+cVEJck2CzYZO37ZGJfctvVptVO192MwrtPhzONn6go8ylnOdMhKqi4nfg==}
 
   peek-readable@4.1.0:
     resolution: {integrity: sha512-ZI3LnwUv5nOGbQzD9c2iDG6toheuXSZP5esSHBjopsXH4dg19soufvpUGA3uohi5anFtGb2lhAVdHzH6R/Evvg==}
@@ -21920,7 +21870,7 @@ snapshots:
       '@graphql-tools/utils': 9.1.4(graphql@15.8.0)
       '@types/js-yaml': 4.0.5
       '@types/json-stable-stringify': 1.0.34
-      '@types/jsonwebtoken': 9.0.1
+      '@types/jsonwebtoken': 9.0.5
       chalk: 4.1.2
       debug: 4.3.7
       dotenv: 16.4.5
@@ -21931,7 +21881,7 @@ snapshots:
       isomorphic-fetch: 3.0.0
       js-yaml: 4.1.0
       json-stable-stringify: 1.0.2
-      jsonwebtoken: 9.0.0
+      jsonwebtoken: 9.0.2
       lodash: 4.17.21
       scuid: 1.1.0
       tslib: 2.8.1
@@ -22976,16 +22926,6 @@ snapshots:
     optionalDependencies:
       class-transformer: 0.5.1
       class-validator: 0.13.2
-
-  '@nestjs/passport@10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(passport@0.4.1)':
-    dependencies:
-      '@nestjs/common': 10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0)
-      passport: 0.4.1
-
-  '@nestjs/passport@10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(passport@0.6.0)':
-    dependencies:
-      '@nestjs/common': 10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0)
-      passport: 0.6.0
 
   '@nestjs/platform-express@10.4.9(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.8.0))(@nestjs/core@10.4.9)':
     dependencies:
@@ -25327,26 +25267,6 @@ snapshots:
   '@types/parse-json@4.0.0': {}
 
   '@types/parse5@5.0.3': {}
-
-  '@types/passport-http@0.3.9':
-    dependencies:
-      '@types/express': 4.17.16
-      '@types/passport': 1.0.11
-
-  '@types/passport-jwt@3.0.8':
-    dependencies:
-      '@types/express': 4.17.16
-      '@types/jsonwebtoken': 8.5.9
-      '@types/passport-strategy': 0.2.35
-
-  '@types/passport-strategy@0.2.35':
-    dependencies:
-      '@types/express': 4.17.16
-      '@types/passport': 1.0.11
-
-  '@types/passport@1.0.11':
-    dependencies:
-      '@types/express': 4.17.16
 
   '@types/pg-pool@2.0.6':
     dependencies:
@@ -30991,7 +30911,7 @@ snapshots:
       jest-runner: 29.5.0
       jest-util: 29.5.0
       jest-validate: 29.5.0
-      micromatch: 4.0.8
+      micromatch: 4.0.5
       parse-json: 5.2.0
       pretty-format: 29.5.0
       slash: 3.0.0
@@ -31431,13 +31351,6 @@ snapshots:
       lodash.once: 4.1.1
       ms: 2.1.3
       semver: 5.7.1
-
-  jsonwebtoken@9.0.0:
-    dependencies:
-      jws: 3.2.2
-      lodash: 4.17.21
-      ms: 2.1.3
-      semver: 7.6.3
 
   jsonwebtoken@9.0.2:
     dependencies:
@@ -33136,32 +33049,6 @@ snapshots:
       no-case: 3.0.4
       tslib: 2.4.1
 
-  passport-custom@1.1.1:
-    dependencies:
-      passport-strategy: 1.0.0
-
-  passport-http@0.3.0:
-    dependencies:
-      passport-strategy: 1.0.0
-
-  passport-jwt@4.0.1:
-    dependencies:
-      jsonwebtoken: 9.0.0
-      passport-strategy: 1.0.0
-
-  passport-strategy@1.0.0: {}
-
-  passport@0.4.1:
-    dependencies:
-      passport-strategy: 1.0.0
-      pause: 0.0.1
-
-  passport@0.6.0:
-    dependencies:
-      passport-strategy: 1.0.0
-      pause: 0.0.1
-      utils-merge: 1.0.1
-
   path-browserify@1.0.1: {}
 
   path-case@3.0.4:
@@ -33220,8 +33107,6 @@ snapshots:
   path-type@4.0.0: {}
 
   pathe@0.2.0: {}
-
-  pause@0.0.1: {}
 
   peek-readable@4.1.0: {}
 
