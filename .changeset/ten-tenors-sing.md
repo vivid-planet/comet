@@ -2,4 +2,4 @@
 "@comet/cms-admin": patch
 ---
 
-Update @Transform to avoid initializing new Date(null) for license input by treating null as undefined.
+Fix DAM license duration input when no values are provided
