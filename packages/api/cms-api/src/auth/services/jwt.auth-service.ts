@@ -12,7 +12,8 @@ export interface JwtAuthServiceOptions {
     jwksOptions?: JwksRsa.Options;
     verifyOptions?: JwtVerifyOptions;
     tokenHeaderName?: string;
-    convertJwtToUser?: (jwt: JwtPayload) => Promise<User> | User;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    convertJwtToUser?: (jwt: any) => Promise<User> | User;
 }
 
 export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }: JwtAuthServiceOptions): Type<AuthServiceInterface> {
@@ -24,7 +25,8 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
             if (jwksOptions) this.jwksClient = new JwksClient(jwksOptions);
         }
 
-        async authenticateUser(request: Request) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async authenticateUser<T extends JwtPayload>(request: Request) {
             const token = this.extractTokenFromRequest(request);
             if (!token) return;
 
@@ -32,21 +34,28 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
                 if (!verifyOptions) verifyOptions = {};
                 verifyOptions.secret = await this.loadSecretFromJwks(token);
             }
-            let jwt: JwtPayload;
             if (!verifyOptions?.secret) {
                 throw new Error("secret or public key must be provided");
             }
+            let jwt: T;
             try {
-                jwt = await this.jwtService.verifyAsync(token, verifyOptions);
+                jwt = await this.jwtService.verifyAsync<T>(token, verifyOptions);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (e: any) {
-                if (e.name === "JsonWebTokenError") {
+                if (e.name === "JsonWebTokenError" || e.name == "TokenExpiredError") {
                     throw new UnauthorizedException(e.message);
                 }
                 throw e;
             }
 
-            if (typeof jwt.sub !== "string") throw new UnauthorizedException("No sub found in JWT. Please implement `convertJwtToUser`");
+            if (options.convertJwtToUser) {
+                return options.convertJwtToUser(jwt);
+            }
+
+            if (typeof jwt.sub !== "string" || !jwt.sub) {
+                throw new UnauthorizedException("No sub found in JWT. Please implement `convertJwtToUser`");
+            }
+
             return jwt.sub;
         }
 
