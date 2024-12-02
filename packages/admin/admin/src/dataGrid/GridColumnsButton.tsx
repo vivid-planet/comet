@@ -14,11 +14,11 @@ export function GridColumnsButton(props: Props) {
             slotProps={{
                 ...props.slotProps,
                 button: {
-                    ...props.slotProps?.button,
                     variant: "outlined",
                     startIcon: <Columns4 />,
                     children: <FormattedMessage {...messages.columns} />,
                     color: "info",
+                    ...props.slotProps?.button,
                 },
             }}
         />
