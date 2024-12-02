@@ -58,13 +58,13 @@ export class LicenseInput {
     author?: string;
 
     @Field(() => Date, { nullable: true })
-    @Transform(({ value }) => (value === null || value === undefined ? null : new Date(value)))
+    @Transform(({ value }) => (value ? new Date(value) : null))
     @IsOptional()
     @IsDate()
     durationFrom?: Date;
 
     @Field(() => Date, { nullable: true })
-    @Transform(({ value }) => (value === null || value === undefined ? null : new Date(value)))
+    @Transform(({ value }) => (value ? new Date(value) : null))
     @IsOptional()
     @IsDate()
     durationTo?: Date;
