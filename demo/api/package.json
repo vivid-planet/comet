@@ -47,7 +47,7 @@
         "@opentelemetry/sdk-node": "^0.53.0",
         "@sentry/node": "^7.118.0",
         "class-transformer": "^0.5.0",
-        "class-validator": "0.13.2",
+        "class-validator": "0.14.0",
         "compression": "^1.0.0",
         "cookie-parser": "^1.0.0",
         "express": "^4.17.1",
