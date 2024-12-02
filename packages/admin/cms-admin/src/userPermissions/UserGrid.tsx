@@ -21,6 +21,7 @@ import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } f
 declare module "@mui/x-data-grid" {
     interface ToolbarPropsOverrides {
         toolbarAction: React.ReactNode;
+        foo: string;
     }
 }
 
@@ -161,7 +162,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
-            query UserGrid($offset: Int, $limit: Int, $filter: UserPermissionsUserFilter, $sort: [UserPermissionsUserSort!], $search: String) {
+            query UserGrid($offset: Int!, $limit: Int!, $filter: UserPermissionsUserFilter, $sort: [UserPermissionsUserSort!], $search: String) {
                 users: userPermissionsUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
                     nodes {
                         ...UserForGrid
