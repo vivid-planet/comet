@@ -1,6 +1,14 @@
-import { CometAuthGuard, createAuthGuardProviders, createAuthResolver, createBasicAuthService, createStaticUserAuthService } from "@comet/cms-api";
+import {
+    CometAuthGuard,
+    createAuthGuardProviders,
+    createAuthResolver,
+    createBasicAuthService,
+    createJwtAuthService,
+    createStaticUserAuthService,
+} from "@comet/cms-api";
 import { DynamicModule, Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
+import { JwtModule } from "@nestjs/jwt";
 import { Config } from "@src/config/config";
 
 import { AccessControlService } from "./access-control.service";
@@ -20,6 +28,7 @@ export class AuthModule {
                         username: SYSTEM_USER_NAME,
                         password: config.auth.systemUserPassword,
                     }),
+                    createJwtAuthService({ verifyOptions: { secret: "secret" } }), // for testing purposes, send header "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTE2MjM5MDIyfQ.fG9j2rVOgunoya_njgn9w1t8muFlrpE9ffJ9i8sJYsQ"
                     createStaticUserAuthService({ staticUser: staticUsers[0] }),
                 ),
                 createAuthResolver(),
@@ -31,6 +40,7 @@ export class AuthModule {
                 AccessControlService,
             ],
             exports: [UserService, AccessControlService],
+            imports: [JwtModule],
         };
     }
 }
