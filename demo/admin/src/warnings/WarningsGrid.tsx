@@ -57,7 +57,11 @@ function WarningsGridToolbar() {
     );
 }
 
-export function WarningsGrid(): React.ReactElement {
+interface Props {
+    warningMessages: Record<string, React.ReactNode>;
+}
+
+export function WarningsGrid({ warningMessages }: Props): React.ReactElement {
     const intl = useIntl();
     const dataGridProps = {
         ...useDataGridRemote({ initialFilter: { items: [{ columnField: "state", operatorValue: "is", value: "open" }] } }),
@@ -110,6 +114,7 @@ export function WarningsGrid(): React.ReactElement {
         {
             field: "message",
             headerName: intl.formatMessage({ id: "warning.message", defaultMessage: "Message" }),
+            renderCell: (params) => (params.value in warningMessages ? warningMessages[params.value as keyof typeof warningMessages] : params.value),
             flex: 1,
         },
         {

@@ -4,11 +4,15 @@ import { useIntl } from "react-intl";
 
 import { WarningsGrid } from "./WarningsGrid";
 
-export function WarningsPage(): React.ReactElement {
+interface Props {
+    warningMessages: Record<string, React.ReactNode>;
+}
+
+export function WarningsPage({ warningMessages }: Props): React.ReactElement {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "warnings.warnings", defaultMessage: "Warnings" })}>
-            <WarningsGrid />
+            <WarningsGrid warningMessages={warningMessages} />
         </Stack>
     );
 }
