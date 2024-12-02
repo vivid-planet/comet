@@ -580,7 +580,7 @@ const FolderDataGrid = ({
                     autoHeight={true}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
                     columnVisibilityModel={{
-                        contextMenu: hideContextMenu,
+                        contextMenu: !hideContextMenu,
                     }}
                 />
             </sc.FolderOuterHoverHighlight>
