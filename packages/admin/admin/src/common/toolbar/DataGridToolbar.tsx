@@ -47,7 +47,7 @@ export const DataGridToolbar = (inProps: DataGridToolbarProps) => {
         density,
     };
 
-    return <Root ownerState={ownerState} hideTopBar {...slotProps?.root} {...restProps} />;
+    return <Root ownerState={ownerState} hideTopBar {...slotProps?.root} {...restProps} headerHeight={0} />;
 };
 
 declare module "@mui/material/styles" {

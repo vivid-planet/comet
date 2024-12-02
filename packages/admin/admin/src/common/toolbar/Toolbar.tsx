@@ -1,12 +1,13 @@
 import { ComponentsOverrides, Paper, Toolbar as MuiToolbar } from "@mui/material";
 import { css, Theme, useThemeProps } from "@mui/material/styles";
-import { ReactNode } from "react";
+import { ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
+import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
@@ -21,19 +22,27 @@ export interface ToolbarProps
     children?: ReactNode;
     scopeIndicator?: ReactNode;
     hideTopBar?: boolean;
+    /**
+     * The height of the header above the toolbar. Default behaviour is to use the height of the headerHeight from the
+     * MasterLayoutContext, but can be overriden here
+     */
+    headerHeight?: number;
 }
+type OwnerState = {
+    headerHeight: number;
+};
 
-const Root = createComponentSlot(Paper)<ToolbarClassKey>({
+const Root = createComponentSlot(Paper)<ToolbarClassKey, OwnerState>({
     componentName: "Toolbar",
     slotName: "root",
 })(
-    css`
+    ({ ownerState }) => css`
         position: sticky;
         z-index: 10;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        top: 0;
+        top: ${ownerState.headerHeight}px;
         padding: 0;
     `,
 );
@@ -104,9 +113,13 @@ export const Toolbar = (inProps: ToolbarProps) => {
         scopeIndicator,
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminToolbar" });
+    const { headerHeight } = useContext(MasterLayoutContext);
 
+    const ownerState: OwnerState = {
+        headerHeight: inProps.headerHeight != null ? inProps.headerHeight : headerHeight,
+    };
     return (
-        <Root elevation={elevation} {...slotProps?.root} {...restProps}>
+        <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!hideTopBar && (
                 <TopBar {...slotProps?.topBar}>
                     {Boolean(scopeIndicator) && <ScopeIndicator {...slotProps?.scopeIndicator}>{scopeIndicator}</ScopeIndicator>}
