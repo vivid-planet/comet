@@ -1,4 +1,5 @@
 import { FieldContainer } from "@comet/admin";
+import { Info } from "@comet/admin-icons";
 import { InputBase } from "@mui/material";
 import * as React from "react";
 
@@ -33,6 +34,16 @@ export const Basic = {
                     <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
                 </FieldContainer>
                 <FieldContainer label="Helper" helperText="This is a helper">
+                    <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+                </FieldContainer>
+                <br />
+                <FieldContainer label="Secondary Helper Text" secondaryHelperText="0/100">
+                    <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+                </FieldContainer>
+                <FieldContainer label="Multiple Helper Texts" helperText="Helper Text" secondaryHelperText="0/100">
+                    <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+                </FieldContainer>
+                <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon">
                     <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
                 </FieldContainer>
             </form>
