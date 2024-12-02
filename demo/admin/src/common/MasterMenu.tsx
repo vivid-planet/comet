@@ -47,6 +47,10 @@ export const pageTreeDocumentTypes = {
 
 const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
+const warningMessages = {
+    "warning.missingHtmlTitle": <FormattedMessage id="warning.missingHtmlTitle" defaultMessage="Missing HTML Title" />,
+};
+
 export const masterMenuData: MasterMenuData = [
     {
         type: "route",
@@ -181,7 +185,7 @@ export const masterMenuData: MasterMenuData = [
                 primary: <FormattedMessage id="menu.warnings" defaultMessage="Warnings" />,
                 route: {
                     path: "/system/warnings",
-                    component: WarningsPage,
+                    render: () => <WarningsPage warningMessages={warningMessages} />,
                 },
                 requiredPermission: "pageTree",
             },
