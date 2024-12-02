@@ -8,7 +8,7 @@ import { AuthServiceInterface } from "../util/auth-service.interface";
 
 type JwtPayload = { [key: string]: unknown };
 
-interface JwtAuthServiceOptions {
+export interface JwtAuthServiceOptions {
     jwksOptions?: JwksRsa.Options;
     verifyOptions?: JwtVerifyOptions;
     tokenHeaderName?: string;
@@ -33,6 +33,9 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
                 verifyOptions.secret = await this.loadSecretFromJwks(token);
             }
             let jwt: JwtPayload;
+            if (!verifyOptions?.secret) {
+                throw new Error("secret or public key must be provided");
+            }
             try {
                 jwt = await this.jwtService.verifyAsync(token, verifyOptions);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,8 +45,6 @@ export function createJwtAuthService({ jwksOptions, verifyOptions, ...options }:
                 }
                 throw e;
             }
-
-            if (options.convertJwtToUser) return options.convertJwtToUser(jwt);
 
             if (typeof jwt.sub !== "string") throw new UnauthorizedException("No sub found in JWT. Please implement `convertJwtToUser`");
             return jwt.sub;
