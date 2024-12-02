@@ -257,4 +257,3 @@ export {
     UserPermissionsUserServiceInterface,
     Users,
 } from "./user-permissions/user-permissions.types";
-export { JwtModule } from "@nestjs/jwt";
