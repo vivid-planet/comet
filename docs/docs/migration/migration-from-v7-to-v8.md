@@ -107,6 +107,27 @@ The NestJS peer dependency has been bumped to v10.
 
     :::
 
+#### class-validator
+
+The class-validator peer dependency has been bumped to v0.14.0:
+
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "class-validator": "0.13.2",
++       "class-validator": "^0.14.0",
+    }
+}
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/update-class-validator.ts
+```
+
+:::
+
 ## Admin
 
 ### Stay on same page after changing scope
