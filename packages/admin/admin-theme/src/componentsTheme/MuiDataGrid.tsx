@@ -1,5 +1,15 @@
 import { ArrowDown, ArrowUp, Check, Clear, Close, MoreVertical, Search } from "@comet/admin-icons";
-import { inputAdornmentClasses, inputClasses, inputLabelClasses, svgIconClasses, SvgIconProps, TextField, TextFieldProps } from "@mui/material";
+import {
+    buttonBaseClasses,
+    inputAdornmentClasses,
+    inputBaseClasses,
+    inputClasses,
+    inputLabelClasses,
+    svgIconClasses,
+    SvgIconProps,
+    TextField,
+    TextFieldProps,
+} from "@mui/material";
 import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 
@@ -130,6 +140,30 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         },
         paper: {
             boxShadow: shadows[1],
+        },
+        // @ts-expect-error This key exists but is missing in the types.
+        toolbarQuickFilter: {
+            paddingBottom: 0,
+
+            [`& .${svgIconClasses.root}`]: {
+                fontSize: 16,
+            },
+            [`& .${buttonBaseClasses.root}`]: {
+                alignSelf: "stretch",
+                color: palette.grey[200],
+                paddingLeft: 10,
+                paddingRight: 10,
+                fontSize: 12,
+                marginRight: spacing(-2),
+                borderRadius: 0,
+
+                [`& .${svgIconClasses.root}`]: {
+                    fontSize: "inherit",
+                },
+            },
+            [`& .${inputBaseClasses.input}`]: {
+                marginLeft: 0,
+            },
         },
     }),
 });
