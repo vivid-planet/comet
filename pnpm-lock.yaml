@@ -1596,7 +1596,7 @@ importers:
         specifier: ^6.0.0-beta.10
         version: 6.0.0-beta.10(@emotion/react@11.9.3(@babel/core@7.20.12)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.20.12)(@emotion/react@11.9.3(@babel/core@7.20.12)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.1.2(@emotion/react@11.9.3(@babel/core@7.20.12)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.20.12)(@emotion/react@11.9.3(@babel/core@7.20.12)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       clipboard-copy:
-        specifier: ^4.0.0
+        specifier: ^4.0.1
         version: 4.0.1
       clsx:
         specifier: ^1.1.1
