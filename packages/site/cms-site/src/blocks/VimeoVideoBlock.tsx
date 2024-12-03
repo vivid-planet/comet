@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { useIsElementVisible } from "./helpers/useIsElementVisible";
+import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -59,7 +59,7 @@ export const VimeoVideoBlock = withPreview(
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const inViewRef = useRef(null);
-        const inView = useIsElementVisible(inViewRef);
+        const inView = useIsElementInViewport(inViewRef);
 
         useEffect(() => {
             inView && autoplay ? playVimeoVideo() : pauseVimeoVideo();

@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useState } from "react";
 
-export const useIsElementVisible = (ref: RefObject<HTMLDivElement>) => {
+export const useIsElementInViewport = (ref: RefObject<HTMLDivElement>) => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
