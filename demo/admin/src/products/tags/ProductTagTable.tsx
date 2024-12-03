@@ -58,7 +58,7 @@ const columns: GridColDef<GQLProductsTagsListFragment>[] = [
         width: 150,
     },
     {
-        field: "action",
+        field: "actions",
         headerName: "",
         sortable: false,
         filterable: false,

@@ -5,7 +5,6 @@ import {
     filterByFragment,
     GridColDef,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -119,7 +118,7 @@ export function ManufacturersGrid() {
             valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.zip,
         },
         {
-            field: "action",
+            field: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
@@ -175,19 +174,17 @@ export function ManufacturersGrid() {
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
 
     return (
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ManufacturersGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            components={{
+                Toolbar: ManufacturersGridToolbar,
+            }}
+        />
     );
 }
 
