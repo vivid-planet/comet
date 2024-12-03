@@ -18,7 +18,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
@@ -71,10 +71,8 @@ const createProductMutation = gql`
     }
 `;
 
-declare module "@mui/x-data-grid-pro" {
-    interface ToolbarPropsOverrides {
-        toolbarAction: React.ReactNode;
-    }
+interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
+    toolbarAction: React.ReactNode;
 }
 function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
     return (
@@ -388,10 +386,10 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             columns={columns}
             loading={loading}
             slots={{
-                toolbar: ProductsGridToolbar,
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
             slotProps={{
-                toolbar: { toolbarAction },
+                toolbar: { toolbarAction } as ProductsGridToolbarToolbarProps,
             }}
         />
     );

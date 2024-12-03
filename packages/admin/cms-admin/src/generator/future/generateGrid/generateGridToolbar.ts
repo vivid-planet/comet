@@ -24,7 +24,7 @@ export const generateGridToolbar = ({
 }: Options) => {
     const showMoreActionsMenu = excelExport;
 
-    return `${renderModuleAugmentation(!!forwardToolbarAction, !!excelExport)}
+    return `${renderToolbarProps(componentName, !!forwardToolbarAction, !!excelExport)}
 function ${componentName}(${getGridToolbarProps(!!forwardToolbarAction, !!excelExport)}) {
         return (
             <DataGridToolbar>
@@ -113,14 +113,11 @@ const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItem
     </ToolbarActions>`;
 };
 
-const renderModuleAugmentation = (forwardToolbarAction: boolean | undefined, exportApi: boolean) => {
+const renderToolbarProps = (componentName: string, forwardToolbarAction: boolean | undefined, exportApi: boolean) => {
     if (forwardToolbarAction || exportApi) {
-        return `declare module "@mui/x-data-grid-pro" {
-    interface ToolbarPropsOverrides {
-        
-        ${forwardToolbarAction && "toolbarAction: React.ReactNode;"}
-        ${exportApi ? "exportApi: ExportApi;" : ""}
-    }
+        return `interface ${componentName}ToolbarProps extends GridToolbarProps {
+         ${forwardToolbarAction && "toolbarAction: React.ReactNode;"}
+         ${exportApi ? "exportApi: ExportApi;" : ""}
 }`;
     }
     return "";

@@ -26,7 +26,14 @@ import {
 import { Excel, Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, useTheme } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import {
+    DataGridPro,
+    GridColumnHeaderTitle,
+    GridRenderCellParams,
+    GridSlotsComponent,
+    GridToolbarProps,
+    GridToolbarQuickFilter,
+} from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -84,11 +91,9 @@ const createProductMutation = gql`
     }
 `;
 
-declare module "@mui/x-data-grid-pro" {
-    interface ToolbarPropsOverrides {
-        toolbarAction: React.ReactNode;
-        exportApi: ExportApi;
-    }
+interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
+    toolbarAction: React.ReactNode;
+    exportApi: ExportApi;
 }
 function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: React.ReactNode; exportApi: ExportApi }) {
     return (
@@ -388,10 +393,10 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             columns={columns}
             loading={loading}
             slots={{
-                toolbar: ProductsGridToolbar,
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
             slotProps={{
-                toolbar: { toolbarAction, exportApi },
+                toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
         />
     );

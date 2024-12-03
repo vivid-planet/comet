@@ -20,7 +20,7 @@ import {
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -188,7 +188,7 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             columns={columns}
             loading={loading}
             slots={{
-                toolbar: ProductVariantsGridToolbar,
+                toolbar: ProductVariantsGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );

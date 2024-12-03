@@ -20,7 +20,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColumnHeaderTitle, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -297,7 +297,7 @@ export function ManufacturersGrid(): React.ReactElement {
             columns={columns}
             loading={loading}
             slots={{
-                toolbar: ManufacturersGridToolbar,
+                toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );

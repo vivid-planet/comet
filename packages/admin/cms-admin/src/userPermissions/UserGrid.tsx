@@ -14,17 +14,16 @@ import {
 import { Chip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
+import { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
-declare module "@mui/x-data-grid" {
-    interface ToolbarPropsOverrides {
-        toolbarAction: React.ReactNode;
-    }
+interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
+    toolbarAction: React.ReactNode;
 }
-
-function UserPermissionsUserGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGridToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -199,12 +198,12 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             rowCount={data?.users.totalCount ?? 0}
             loading={loading}
             slots={{
-                toolbar: UserPermissionsUserGridToolbar,
+                toolbar: UserPermissionsUserGridToolbar as GridSlotsComponent["toolbar"],
             }}
             slotProps={{
                 toolbar: {
-                    toolbarAction,
-                },
+                    toolbarAction: null,
+                } as UserPermissionsUserGridToolbarProps,
             }}
         />
     );

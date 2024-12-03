@@ -524,7 +524,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -858,9 +858,9 @@ export function generateGrid(
                 ${
                     renderToolbar
                         ? `slots={{
-                                toolbar: ${gridToolbarComponentName},
+                                toolbar: ${gridToolbarComponentName} as GridSlotsComponent["toolbar"],
                             }}
-                            ${getDataGridComponentsProps(forwardToolbarAction, config.excelExport)}`
+                            ${getDataGridSlotProps(gridToolbarComponentName, forwardToolbarAction, config.excelExport)}`
                         : ""
                 }
             />
@@ -891,7 +891,7 @@ const getDefaultActionsColumnWidth = (showCrudContextMenu: boolean, showEdit: bo
     return numberOfActions * widthOfSingleAction + spacingAroundActions;
 };
 
-const getDataGridComponentsProps = (forwardToolbarAction: boolean | undefined, excelExport: boolean | undefined) => {
+const getDataGridSlotProps = (componentName: string, forwardToolbarAction: boolean | undefined, excelExport: boolean | undefined) => {
     if (!forwardToolbarAction && !excelExport) {
         return "";
     }
@@ -899,10 +899,10 @@ const getDataGridComponentsProps = (forwardToolbarAction: boolean | undefined, e
     const values = `{
         ${forwardToolbarAction ? `toolbarAction,` : ""}
         ${excelExport ? `exportApi,` : ""}
-    }`.replace(/\n/g, "");
+    } as ${componentName}ToolbarProps`.replace(/\n/g, "");
 
     return `slotProps={{
-        toolbar: ${values}
+        toolbar: ${values}  
     }}`;
 };
 
