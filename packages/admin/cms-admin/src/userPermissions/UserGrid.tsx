@@ -14,10 +14,29 @@ import {
 import { Chip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
+import { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { GQLUserForGridFragment, GQLUserGridQuery, GQLUserGridQueryVariables } from "./UserGrid.generated";
 
+interface UserPermissionsUserGridToolbarProps extends GridToolbarProps {
+    toolbarAction: React.ReactNode;
+}
+function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGridToolbarProps) {
+    return (
+        <DataGridToolbar>
+            <ToolbarItem>
+                <GridToolbarQuickFilter />
+            </ToolbarItem>
+            <ToolbarItem>
+                <GridFilterButton />
+            </ToolbarItem>
+            <ToolbarFillSpace />
+            {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
+        </DataGridToolbar>
+    );
+}
 type Props = {
     toolbarAction?: React.ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -141,7 +160,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
 
     const { data, loading, error } = useQuery<GQLUserGridQuery, GQLUserGridQueryVariables>(
         gql`
-            query UserGrid($offset: Int, $limit: Int, $filter: UserPermissionsUserFilter, $sort: [UserPermissionsUserSort!], $search: String) {
+            query UserGrid($offset: Int!, $limit: Int!, $filter: UserPermissionsUserFilter, $sort: [UserPermissionsUserSort!], $search: String) {
                 users: userPermissionsUsers(offset: $offset, limit: $limit, filter: $filter, sort: $sort, search: $search) {
                     nodes {
                         ...UserForGrid
@@ -178,22 +197,13 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             columns={columns}
             rowCount={data?.users.totalCount ?? 0}
             loading={loading}
-            components={{
-                Toolbar: () => (
-                    <DataGridToolbar>
-                        <ToolbarItem>
-                            <GridToolbarQuickFilter />
-                        </ToolbarItem>
-                        <ToolbarItem>
-                            <GridFilterButton />
-                        </ToolbarItem>
-                        <ToolbarFillSpace />
-                        {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
-                    </DataGridToolbar>
-                ),
+            slots={{
+                toolbar: UserPermissionsUserGridToolbar as GridSlotsComponent["toolbar"],
             }}
-            componentsProps={{
-                toolbar: { toolbarAction },
+            slotProps={{
+                toolbar: {
+                    toolbarAction: null,
+                } as UserPermissionsUserGridToolbarProps,
             }}
         />
     );

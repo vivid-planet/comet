@@ -29,8 +29,8 @@ export const _DataGridToolbar = {
                 autoHeight
                 columns={columns}
                 rows={data}
-                components={{
-                    Toolbar: () => (
+                slots={{
+                    toolbar: () => (
                         <DataGridToolbar>
                             <ToolbarItem>
                                 <GridToolbarQuickFilter />

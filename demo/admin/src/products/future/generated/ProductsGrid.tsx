@@ -26,7 +26,14 @@ import {
 import { Excel, Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { CircularProgress, useTheme } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import {
+    DataGridPro,
+    GridColumnHeaderTitle,
+    GridRenderCellParams,
+    GridSlotsComponent,
+    GridToolbarProps,
+    GridToolbarQuickFilter,
+} from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
@@ -84,7 +91,11 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: React.ReactNode; exportApi: ExportApi }) {
+interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
+    toolbarAction: React.ReactNode;
+    exportApi: ExportApi;
+}
+function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -225,7 +236,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             field: "inStock",
             headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
             type: "singleSelect",
-            valueFormatter: ({ value }) => value?.toString(),
+            valueFormatter: (value, row) => row.inStock?.toString(),
             valueOptions: [
                 {
                     value: "true",
@@ -257,7 +268,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
-            valueFormatter: ({ value }) => value?.toString(),
+            valueFormatter: (value, row) => row.type?.toString(),
             valueOptions: [
                 {
                     value: "Cap",
@@ -282,17 +293,19 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
+            valueGetter: (params, row) => row.availableSince && new Date(row.availableSince),
+            valueFormatter: (value, row) => (row.availableSince ? intl.formatDate(row.availableSince) : ""),
             width: 140,
         },
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: ({ value }) =>
-                value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
+            valueGetter: (params, row) => row.createdAt && new Date(row.createdAt),
+            valueFormatter: (value, row) =>
+                row.createdAt
+                    ? intl.formatDate(row.createdAt, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" })
+                    : "",
             width: 170,
         },
         {
@@ -379,11 +392,11 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-            componentsProps={{
-                toolbar: { toolbarAction, exportApi },
+            slotProps={{
+                toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
         />
     );

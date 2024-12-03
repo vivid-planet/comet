@@ -20,7 +20,7 @@ import {
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -114,8 +114,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
             type: "date",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
+            valueGetter: (params, row) => row.createdAt && new Date(row.createdAt),
+            valueFormatter: (value, row) => (row.createdAt ? intl.formatDate(row.createdAt) : ""),
             flex: 1,
             minWidth: 150,
         },
@@ -187,8 +187,8 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductVariantsGridToolbar,
+            slots={{
+                toolbar: ProductVariantsGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );

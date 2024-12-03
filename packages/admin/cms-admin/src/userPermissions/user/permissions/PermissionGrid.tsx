@@ -162,8 +162,8 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                 loading={loading}
                 getRowHeight={() => "auto"}
                 sx={{ "&.MuiDataGrid-root .MuiDataGrid-cell": { py: "8px" } }}
-                components={{
-                    Toolbar: () => (
+                slots={{
+                    toolbar: () => (
                         <GridToolbar>
                             <ToolbarTitleItem>
                                 <FormattedMessage id="comet.userPermissions.permissions" defaultMessage="Permissions" />

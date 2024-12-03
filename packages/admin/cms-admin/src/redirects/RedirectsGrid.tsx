@@ -183,7 +183,7 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
                 columns={columns}
                 loading={loading}
                 disableRowSelectionOnClick
-                components={{ Toolbar: RedirectsGridToolbar }}
+                slots={{ toolbar: RedirectsGridToolbar }}
             />
         </MainContent>
     );

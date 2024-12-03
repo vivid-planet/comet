@@ -89,6 +89,7 @@ export const UseDataGridRemote = {
                 field: "launch_date_local",
                 headerName: "Launch Date",
                 type: "dateTime",
+                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
             },
         ];
 
@@ -146,6 +147,7 @@ export const UseDataGridRemoteInitialSort = {
                 field: "launch_date_local",
                 headerName: "Launch Date",
                 type: "dateTime",
+                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
             },
         ];
 
@@ -204,6 +206,7 @@ export const UseDataGridRemoteInitialFilter = {
                 field: "launch_date_local",
                 headerName: "Launch Date",
                 type: "dateTime",
+                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
                 flex: 1,
             },
         ];
@@ -319,8 +322,8 @@ export const _GridFilterButton = {
                 <DataGrid
                     rows={exampleRows}
                     columns={exampleColumns}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
@@ -420,6 +423,7 @@ export const UseDataGridExcelExport = {
                 field: "launch_date_local",
                 headerName: "Launch Date",
                 type: "dateTime",
+                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
             },
         ];
 
@@ -506,8 +510,8 @@ export const UseDataGridExcelExport = {
                     columns={columns}
                     rowCount={rowCount}
                     loading={loading}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>

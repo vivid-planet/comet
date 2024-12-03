@@ -243,8 +243,8 @@ export function ProductsGrid(): React.ReactElement {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: ProductsGridToolbar,
+                slots={{
+                    toolbar: ProductsGridToolbar,
                 }}
             />
         </MainContent>

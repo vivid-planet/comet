@@ -238,8 +238,8 @@ export function NewsGrid(): React.ReactElement {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: NewsGridToolbar,
+                slots={{
+                    toolbar: NewsGridToolbar,
                 }}
             />
         </MainContent>

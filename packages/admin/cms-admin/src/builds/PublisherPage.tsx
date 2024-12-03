@@ -67,10 +67,10 @@ export function PublisherPage() {
                         {
                             field: "runtime",
                             headerName: intl.formatMessage({ id: "comet.pages.publisher.runtime", defaultMessage: "Runtime" }),
-                            valueGetter: (params) => {
+                            valueGetter: (params, row) => {
                                 return {
-                                    startTime: params.row.startTime,
-                                    completionTime: params.row.completionTime,
+                                    startTime: row.startTime,
+                                    completionTime: row.completionTime,
                                 };
                             },
                             renderCell: (params) => {

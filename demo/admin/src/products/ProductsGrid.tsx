@@ -194,7 +194,7 @@ export function ProductsGrid() {
             headerName: "Available Since",
             width: 130,
             type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
+            valueGetter: (params, row) => row.availableSince && new Date(row.availableSince),
         },
         {
             field: "status",
@@ -202,7 +202,7 @@ export function ProductsGrid() {
             flex: 1,
             minWidth: 130,
             type: "boolean",
-            valueGetter: (params) => params.row.status == "Published",
+            valueGetter: (params, row) => row.status == "Published",
             renderCell: (params) => {
                 return (
                     <CrudVisibility
@@ -298,8 +298,8 @@ export function ProductsGrid() {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: ProductsGridToolbar,
+                slots={{
+                    toolbar: ProductsGridToolbar,
                 }}
             />
         </MainContent>
