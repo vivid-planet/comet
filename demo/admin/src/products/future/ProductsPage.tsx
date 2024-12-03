@@ -58,8 +58,8 @@ export function ProductsPage() {
                                 </Button>
                             }
                             rowAction={(params) => (
-                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                    <Edit color="primary" />
+                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                                    <Edit />
                                 </IconButton>
                             )}
                             actionsColumnWidth={116}

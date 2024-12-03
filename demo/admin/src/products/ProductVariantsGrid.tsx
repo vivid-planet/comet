@@ -91,8 +91,8 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit />
                         </IconButton>
                         {/*
                         <CrudContextMenu
