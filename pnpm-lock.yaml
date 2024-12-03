@@ -1986,6 +1986,9 @@ importers:
       final-form-set-field-touched:
         specifier: ^1.0.0
         version: 1.0.1(final-form@4.20.9)
+      glob:
+        specifier: ^10.3.10
+        version: 10.4.5
       graphql-tag:
         specifier: ^2.0.0
         version: 2.12.6(graphql@15.8.0)
@@ -2194,9 +2197,6 @@ importers:
       final-form:
         specifier: ^4.20.9
         version: 4.20.9
-      glob:
-        specifier: ^10.3.10
-        version: 10.4.5
       graphql:
         specifier: ^15.0.0
         version: 15.8.0
@@ -23156,7 +23156,6 @@ packages:
       minipass: 7.1.2
       package-json-from-dist: 1.0.0
       path-scurry: 1.11.1
-    dev: true
 
   /glob@7.1.6:
     resolution: {integrity: sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==}
@@ -24908,7 +24907,6 @@ packages:
       '@isaacs/cliui': 8.0.2
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
-    dev: true
 
   /jake@10.8.7:
     resolution: {integrity: sha512-ZDi3aP+fG/LchyBzUM804VjddnwfSfsdeYkwt8NcbKRvo4rFkjhs456iLFn3k2ZUWvNe4i48WACDbza8fhq2+w==}
@@ -28082,7 +28080,6 @@ packages:
 
   /package-json-from-dist@1.0.0:
     resolution: {integrity: sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==}
-    dev: true
 
   /package-json@6.5.0:
     resolution: {integrity: sha512-k3bdm2n25tkyxcjSKzB5x8kfVxlMdgsbPr0GkZcwHsLpba6cBjqCt1KlcChKEvxHIcTB1FVMuwoijZ26xex5MQ==}
