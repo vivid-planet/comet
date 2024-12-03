@@ -16,7 +16,7 @@ registerEnumType(PredefinedPageType, {
     implements: () => [DocumentInterface],
 })
 @ScopedEntity(PageTreeNodeDocumentEntityScopeService)
-export class PredefinedPage extends BaseEntity<PredefinedPage, "id"> implements DocumentInterface {
+export class PredefinedPage extends BaseEntity implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ columnType: "uuid" })

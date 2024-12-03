@@ -11,7 +11,7 @@ import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 @ScopedEntity<TestEntityWithScopedEntity>((entity) => {
     return { language: entity.langauge };
 })
-export class TestEntityWithScopedEntity extends BaseEntity<TestEntityWithScopedEntity, "id"> {
+export class TestEntityWithScopedEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -26,6 +26,7 @@ describe("GenerateCrud with ScopedEntity", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithScopedEntity],
             }),
         );
@@ -56,7 +57,7 @@ export class TestEntityScope {
 }
 
 @Entity()
-export class TestEntityWithScope extends BaseEntity<TestEntityWithScope, "id"> {
+export class TestEntityWithScope extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -70,6 +71,7 @@ describe("GenerateCrud with Scope", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithScope],
             }),
         );

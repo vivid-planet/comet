@@ -7,7 +7,7 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntitiyProduct extends BaseEntity<TestEntitiyProduct, "id"> {
+class TestEntitiyProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -19,7 +19,7 @@ class TestEntitiyProduct extends BaseEntity<TestEntitiyProduct, "id"> {
 }
 
 @Entity()
-class TestEntityCategory extends BaseEntity<TestEntityCategory, "id"> {
+class TestEntityCategory extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -38,6 +38,7 @@ describe("GenerateCrudRelationsMultiUse", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityCategory, TestEntitiyProduct],
             }),
         );

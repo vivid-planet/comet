@@ -1,6 +1,6 @@
 import { MikroORM, Utils } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, QueryBuilder, raw } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { createHmac } from "crypto";
 import exifr from "exifr";
@@ -403,7 +403,7 @@ export class FilesService {
         const subQb = withFilesSelect(
             this.filesRepository
                 .createQueryBuilder("file")
-                .select(["file.id", `ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`])
+                .select(["file.id", raw(`ROW_NUMBER() OVER( ORDER BY file."${args.sortColumnName}" ${args.sortDirection} ) AS row_number`)])
                 .leftJoinAndSelect("file.folder", "folder"),
             {
                 archived: !args.includeArchived ? false : undefined,
@@ -416,7 +416,7 @@ export class FilesService {
             },
         );
 
-        const result: { rows: Array<{ row_number: string }> } = await this.filesRepository.createQueryBuilder().raw(
+        const result: { rows: Array<{ row_number: string }> } = await this.filesRepository.getKnex().raw(
             `select "file_with_row_number".row_number
                 from "${FILE_TABLE_NAME}" as "file"
                 join (${subQb.getFormattedQuery()}) as "file_with_row_number" ON file_with_row_number.id = file.id

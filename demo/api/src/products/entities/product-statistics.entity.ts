@@ -6,7 +6,7 @@ import { Product } from "./product.entity";
 
 @ObjectType()
 @Entity()
-export class ProductStatistics extends BaseEntity<ProductStatistics, "id"> {
+export class ProductStatistics extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

@@ -7,7 +7,7 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class ProductVariant extends BaseEntity<ProductVariant, "id"> {
+class ProductVariant extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -19,7 +19,7 @@ class ProductVariant extends BaseEntity<ProductVariant, "id"> {
 }
 
 @Entity()
-class ProductData extends BaseEntity<ProductData, "id"> {
+class ProductData extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -31,7 +31,7 @@ class ProductData extends BaseEntity<ProductData, "id"> {
 }
 
 @Entity()
-class Product extends BaseEntity<Product, "id"> {
+class Product extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -48,6 +48,7 @@ describe("generate-crud relations two levels", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [Product, ProductData, ProductVariant],
             }),
         );

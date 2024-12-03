@@ -17,7 +17,7 @@ export enum TestEntity1Status {
 registerEnumType(TestEntity1Status, { name: "TestEntity1Status" });
 
 @Entity()
-class TestEntity1 extends BaseEntity<TestEntity1, "id"> {
+class TestEntity1 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -37,6 +37,7 @@ describe("GenerateCrud Status with active", () => {
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity1],
             }),
         );
@@ -110,7 +111,7 @@ export enum TestEntity2Status {
 registerEnumType(TestEntity2Status, { name: "TestEntity2Status" });
 
 @Entity()
-class TestEntity2 extends BaseEntity<TestEntity2, "id"> {
+class TestEntity2 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -130,6 +131,7 @@ describe("GenerateCrud Status with published/unpublished", () => {
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity2],
             }),
         );
@@ -174,7 +176,7 @@ export enum TestEntity3Status {
 registerEnumType(TestEntity3Status, { name: "TestEntity3Status" });
 
 @Entity()
-class TestEntity3 extends BaseEntity<TestEntity3, "id"> {
+class TestEntity3 extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -194,6 +196,7 @@ describe("GenerateCrud Status with published/unpublished", () => {
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity3],
             }),
         );

@@ -9,7 +9,7 @@ import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
 @CrudGenerator({ targetDirectory: __dirname })
-class TestEntityProductVariant extends BaseEntity<TestEntityProductVariant, "id"> {
+class TestEntityProductVariant extends BaseEntity {
     @PrimaryKey({ columnType: "text", type: "string" })
     id: string;
 
@@ -23,7 +23,7 @@ class TestEntityProductVariant extends BaseEntity<TestEntityProductVariant, "id"
 
 @Entity()
 @CrudGenerator({ targetDirectory: __dirname })
-class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
+class TestEntityProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -41,6 +41,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityProductVariant],
                 }),
             );
@@ -66,6 +67,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityProductVariant],
                 }),
             );
@@ -92,6 +94,7 @@ describe("GenerateCrud dedicatedResolverArg", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityProductVariant],
                 }),
             );

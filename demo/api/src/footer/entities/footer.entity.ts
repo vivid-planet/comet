@@ -10,14 +10,14 @@ import { FooterContentScope } from "./footer-content-scope.entity";
 @ObjectType()
 @RootBlockEntity()
 @CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["pageTree"] })
-export class Footer extends BaseEntity<Footer, "id"> {
+export class Footer extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ columnType: "uuid" })
     @Field(() => ID)
     id: string = uuid();
     @RootBlock(FooterContentBlock)
-    @Property({ customType: new RootBlockType(FooterContentBlock) })
+    @Property({ type: new RootBlockType(FooterContentBlock) })
     @Field(() => RootBlockDataScalar(FooterContentBlock))
     content: BlockDataInterface;
 

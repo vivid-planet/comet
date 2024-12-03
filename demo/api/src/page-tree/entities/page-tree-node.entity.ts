@@ -1,5 +1,5 @@
 import { PageTreeNodeBase } from "@comet/cms-api";
-import { Embedded, Entity, Enum, Index, ManyToOne } from "@mikro-orm/core";
+import { Embedded, Entity, Enum } from "@mikro-orm/core";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { UserGroup } from "@src/user-groups/user-group";
 
@@ -14,10 +14,14 @@ export class PageTreeNode extends PageTreeNodeBase {
     @Field(() => PageTreeNodeScope)
     scope: PageTreeNodeScope;
 
+    // TODO: Throws error: MetadataError: Duplicate fieldNames are not allowed: PageTreeNode.parentId (fieldName: 'parentId'), PageTreeNode.parent (fieldName: 'parentId')
+    // Can we remove this?
+    /*     
     // must be overwritten too because PageTreeNode is different from BasePageTreeNode
     @ManyToOne(() => PageTreeNode, { nullable: true, joinColumn: "parentId" })
     @Index()
     parent?: PageTreeNode;
+    */
 
     @Enum({ items: () => PageTreeNodeCategory })
     @Field(() => PageTreeNodeCategory)

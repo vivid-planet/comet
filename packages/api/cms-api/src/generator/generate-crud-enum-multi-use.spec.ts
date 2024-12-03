@@ -16,7 +16,7 @@ registerEnumType(TestEnum, {
 });
 
 @Entity()
-class TestEntity extends BaseEntity<TestEntity, "id"> {
+class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -37,6 +37,7 @@ describe("GenerateCrudEnumMultiUse", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity],
             }),
         );

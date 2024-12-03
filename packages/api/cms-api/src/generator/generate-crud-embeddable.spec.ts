@@ -18,7 +18,7 @@ export class TestEmbedded {
 }
 
 @Entity()
-export class TestEntityWithEmbedded extends BaseEntity<TestEntityWithEmbedded, "id"> {
+export class TestEntityWithEmbedded extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -38,7 +38,7 @@ export class TestWithoutEmbedded {
 }
 
 @Entity()
-export class TestEntityWithoutEmbedded extends BaseEntity<TestEntityWithoutEmbedded, "id"> {
+export class TestEntityWithoutEmbedded extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -59,6 +59,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithEmbedded, TestEmbedded],
                 }),
             );
@@ -156,6 +157,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithoutEmbedded, TestWithoutEmbedded],
                 }),
             );

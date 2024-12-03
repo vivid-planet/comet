@@ -8,13 +8,19 @@ import { News } from "./news.entity";
 @Entity()
 @ObjectType()
 @ScopedEntity(async (newsComment: NewsComment) => {
-    const scope = (await newsComment.news.init()).scope;
+    const news = await newsComment.news.init();
+
+    if (!news) {
+        throw new Error("News not found");
+    }
+
+    const scope = news.scope;
     return {
         domain: scope.domain as "main" | "secondary",
         language: scope.language,
     };
 })
-export class NewsComment extends BaseEntity<NewsComment, "id"> {
+export class NewsComment extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

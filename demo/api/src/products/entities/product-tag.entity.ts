@@ -9,7 +9,7 @@ import { ProductToTag } from "./product-to-tag.entity";
 @ObjectType()
 @Entity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["products"] })
-export class ProductTag extends BaseEntity<ProductTag, "id"> {
+export class ProductTag extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

@@ -10,7 +10,7 @@ import { Product } from "./product.entity";
 @Entity()
 @RootBlockEntity()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: "products", position: { groupByFields: ["product"] } })
-export class ProductVariant extends BaseEntity<ProductVariant, "id"> {
+export class ProductVariant extends BaseEntity {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
@@ -21,7 +21,7 @@ export class ProductVariant extends BaseEntity<ProductVariant, "id"> {
     @Field()
     name: string;
 
-    @Property({ customType: new RootBlockType(DamImageBlock) })
+    @Property({ type: new RootBlockType(DamImageBlock) })
     @RootBlock(DamImageBlock)
     image: BlockDataInterface;
 

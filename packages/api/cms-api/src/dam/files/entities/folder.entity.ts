@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { DamScopeInterface } from "../../types";
 import { FileInterface } from "./file.entity";
 
-export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
+export interface FolderInterface extends BaseEntity {
     [OptionalProps]?:
         | "createdAt"
         | "updatedAt"
@@ -34,7 +34,7 @@ export interface FolderInterface extends BaseEntity<FolderInterface, "id"> {
 export function createFolderEntity({ Scope }: { Scope?: Type<DamScopeInterface> } = {}): Type<FolderInterface> {
     @Entity({ abstract: true })
     @ObjectType({ isAbstract: true })
-    class FolderBase extends BaseEntity<FolderBase, "id"> implements FolderInterface {
+    class FolderBase extends BaseEntity implements FolderInterface {
         [OptionalProps]?:
             | "createdAt"
             | "updatedAt"

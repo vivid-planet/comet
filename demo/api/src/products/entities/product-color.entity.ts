@@ -9,7 +9,7 @@ import { Product } from "./product.entity";
     implements: () => [DocumentInterface],
 })
 @Entity()
-export class ProductColor extends BaseEntity<ProductColor, "id"> implements DocumentInterface {
+export class ProductColor extends BaseEntity implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

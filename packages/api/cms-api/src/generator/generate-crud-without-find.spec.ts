@@ -13,7 +13,7 @@ export class TestEntityScope {
 }
 
 @Entity()
-export class TestEntity extends BaseEntity<TestEntity, "id"> {
+export class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -27,6 +27,7 @@ describe("GenerateCrud without find condition", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity, TestEntityScope],
             }),
         );

@@ -7,15 +7,15 @@ import { ProductTag } from "./product-tag.entity";
 
 @Entity()
 @ObjectType()
-export class ProductToTag extends BaseEntity<ProductToTag, "id"> {
+export class ProductToTag extends BaseEntity {
     @Field()
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
-    @ManyToOne(() => Product, { onDelete: "cascade", ref: true })
+    @ManyToOne(() => Product, { deleteRule: "cascade", ref: true })
     product: Ref<Product>;
 
-    @ManyToOne(() => ProductTag, { onDelete: "cascade", ref: true })
+    @ManyToOne(() => ProductTag, { deleteRule: "cascade", ref: true })
     tag: Ref<ProductTag>;
 
     @Field()

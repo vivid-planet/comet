@@ -246,7 +246,7 @@ export class ProductResolver {
         }
 
         if (statisticsInput) {
-            const statistic = product.statistics ? await product.statistics.load() : new ProductStatistics();
+            const statistic = product.statistics ? await product.statistics.loadOrFail() : new ProductStatistics();
 
             this.productStatisticsRepository.assign(statistic, {
                 ...statisticsInput,
@@ -284,17 +284,17 @@ export class ProductResolver {
 
     @ResolveField(() => ProductCategory, { nullable: true })
     async category(@Parent() product: Product): Promise<ProductCategory | undefined> {
-        return product.category?.load();
+        return product.category?.loadOrFail();
     }
 
     @ResolveField(() => Manufacturer, { nullable: true })
     async manufacturer(@Parent() product: Product): Promise<Manufacturer | undefined> {
-        return product.manufacturer?.load();
+        return product.manufacturer?.loadOrFail();
     }
 
     @ResolveField(() => FileUpload, { nullable: true })
     async priceList(@Parent() product: Product): Promise<FileUpload | undefined> {
-        return product.priceList?.load();
+        return product.priceList?.loadOrFail();
     }
 
     @ResolveField(() => [ProductColor])
@@ -324,7 +324,7 @@ export class ProductResolver {
 
     @ResolveField(() => ProductStatistics, { nullable: true })
     async statistics(@Parent() product: Product): Promise<ProductStatistics | undefined> {
-        return product.statistics?.load();
+        return product.statistics?.loadOrFail();
     }
 
     @ResolveField(() => RootBlockDataScalar(DamImageBlock))

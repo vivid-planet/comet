@@ -79,7 +79,7 @@ export class AddressAsEmbeddable extends AlternativeAddressAsEmbeddable {
 @Entity()
 @ObjectType()
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Manufacturer extends BaseEntity<Manufacturer, "id"> {
+export class Manufacturer extends BaseEntity {
     [OptionalProps]?: "updatedAt";
 
     @PrimaryKey({ type: "uuid" })
