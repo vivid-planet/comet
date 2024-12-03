@@ -40,6 +40,7 @@ describe("GenerateCrud", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithString],
                 }),
             );
@@ -72,6 +73,7 @@ describe("GenerateCrud", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithString],
                 }),
             );
@@ -107,6 +109,7 @@ describe("GenerateCrud", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithNumber],
                 }),
             );
@@ -142,6 +145,7 @@ describe("GenerateCrud", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithTextRuntimeType],
                 }),
             );

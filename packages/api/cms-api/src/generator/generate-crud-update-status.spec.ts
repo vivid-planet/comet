@@ -37,6 +37,7 @@ describe("GenerateCrud Status with active", () => {
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity1],
             }),
         );
@@ -130,6 +131,7 @@ describe("GenerateCrud Status with published/unpublished", () => {
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity2],
             }),
         );
@@ -194,6 +196,7 @@ describe("GenerateCrud Status with published/unpublished", () => {
         orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity3],
             }),
         );

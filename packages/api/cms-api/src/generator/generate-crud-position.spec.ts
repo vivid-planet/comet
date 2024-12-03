@@ -61,6 +61,7 @@ describe("GenerateCrudPosition", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithPositionField],
             }),
         );
@@ -99,6 +100,7 @@ describe("GenerateCrudPosition", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithPositionField],
             }),
         );
@@ -134,6 +136,7 @@ describe("GenerateCrudPosition", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithPositionFieldAndScope, TestEntityWithPositionGroup],
             }),
         );
@@ -163,6 +166,7 @@ describe("GenerateCrudPosition", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithPositionGroup],
             }),
         );

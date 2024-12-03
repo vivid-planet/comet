@@ -51,6 +51,7 @@ describe("GenerateCrudInputJson", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithJsonLiteralArray],
                 }),
             );
@@ -91,6 +92,7 @@ describe("GenerateCrudInputJson", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithJsonObject],
                 }),
             );
@@ -130,6 +132,7 @@ describe("GenerateCrudInputJson", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithRecord],
                 }),
             );

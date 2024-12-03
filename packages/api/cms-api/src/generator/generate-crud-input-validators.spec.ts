@@ -98,6 +98,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithEmail],
                 }),
             );
@@ -134,6 +135,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 const orm = await MikroORM.init(
                     defineConfig({
                         dbName: "test-db",
+                        connect: false,
                         entities: [TestEntityWithCaseSensitiveConstraintName],
                     }),
                 );
@@ -170,6 +172,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 const orm = await MikroORM.init(
                     defineConfig({
                         dbName: "test-db",
+                        connect: false,
                         entities: [TestEntityWithShortenedDecoratorName],
                     }),
                 );
@@ -206,6 +209,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 const orm = await MikroORM.init(
                     defineConfig({
                         dbName: "test-db",
+                        connect: false,
                         entities: [TestEntityWithShortenedDecoratorName],
                     }),
                 );
@@ -243,6 +247,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
                 const orm = await MikroORM.init(
                     defineConfig({
                         dbName: "test-db",
+                        connect: false,
                         entities: [TestEntityWithRelativeImportDecorator],
                     }),
                 );
@@ -280,6 +285,7 @@ describe("GenerateDefinedValidatorDecorators", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithValidatorDefinedInFile],
                 }),
             );

@@ -94,6 +94,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithString],
                 }),
             );
@@ -129,6 +130,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithDate],
                 }),
             );
@@ -164,6 +166,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithBoolean],
                 }),
             );
@@ -200,6 +203,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithEnum],
                 }),
             );
@@ -236,6 +240,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithUuid],
                 }),
             );
@@ -272,6 +277,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithTextRuntimeType],
                 }),
             );
@@ -308,6 +314,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithNullablePropWithInitializer],
                 }),
             );
@@ -354,6 +361,7 @@ describe("GenerateCrudInput", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithNullablePropWithoutInitializer],
                 }),
             );

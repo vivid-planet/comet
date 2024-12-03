@@ -26,6 +26,7 @@ describe("GenerateCrud with ScopedEntity", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithScopedEntity],
             }),
         );
@@ -70,6 +71,7 @@ describe("GenerateCrud with Scope", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntityWithScope],
             }),
         );

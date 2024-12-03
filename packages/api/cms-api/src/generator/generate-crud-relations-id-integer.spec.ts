@@ -43,6 +43,7 @@ describe("GenerateCrudRelationsIdNumber", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
                 }),
             );
@@ -75,6 +76,7 @@ describe("GenerateCrudRelationsIdNumber", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
                 }),
             );

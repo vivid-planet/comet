@@ -59,6 +59,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithEmbedded, TestEmbedded],
                 }),
             );
@@ -156,6 +157,7 @@ describe("GenerateCrudInputEmbedded", () => {
             orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityWithoutEmbedded, TestWithoutEmbedded],
                 }),
             );

@@ -48,6 +48,7 @@ describe("generate-crud relations two levels", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [Product, ProductData, ProductVariant],
             }),
         );
