@@ -4,7 +4,7 @@ export const useIsElementInViewport = (ref: RefObject<HTMLDivElement>) => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        const options = { root: null, rootMargin: "0px", threshold: 1.0 };
+        const options = { root: null, rootMargin: "0px", threshold: 0.5 };
         const observer = new IntersectionObserver((entries) => {
             setIsVisible(entries[0].isIntersecting);
         }, options);
