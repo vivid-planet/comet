@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix: Remove padding right from form fields without an endAdornment
+Remove right padding from form fields without an end adornment
