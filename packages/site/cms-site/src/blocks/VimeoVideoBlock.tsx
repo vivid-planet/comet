@@ -5,7 +5,6 @@ import styled, { css } from "styled-components";
 import { VimeoVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { pauseVimeoVideo, playVimeoVideo } from "./helpers/controlVideos";
 import { useIsElementVisible } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
@@ -25,6 +24,20 @@ function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
         return idRegExMatch[1];
     }
 }
+
+const pauseVimeoVideo = () => {
+    const iframe = document.getElementsByTagName("iframe")[0];
+    if (iframe?.contentWindow) {
+        iframe.contentWindow.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
+    }
+};
+
+const playVimeoVideo = () => {
+    const iframe = document.getElementsByTagName("iframe")[0];
+    if (iframe?.contentWindow) {
+        iframe.contentWindow.postMessage(JSON.stringify({ method: "play" }), "https://player.vimeo.com");
+    }
+};
 
 interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     aspectRatio?: string;

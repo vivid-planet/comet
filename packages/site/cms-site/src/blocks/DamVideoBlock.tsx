@@ -1,15 +1,26 @@
 "use client";
 
-import { ReactElement, ReactNode, useRef, useState } from "react";
+import { ReactElement, ReactNode, RefObject, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { DamVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { pauseDamVideo, playDamVideo } from "./helpers/controlVideos";
 import { useIsElementVisible } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
+
+const playDamVideo = (videoRef: RefObject<HTMLVideoElement>) => {
+    if (videoRef.current) {
+        videoRef.current.play();
+    }
+};
+
+const pauseDamVideo = (videoRef: RefObject<HTMLVideoElement>) => {
+    if (videoRef.current) {
+        videoRef.current.pause();
+    }
+};
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;

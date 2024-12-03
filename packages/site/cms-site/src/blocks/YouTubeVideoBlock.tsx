@@ -6,7 +6,6 @@ import styled, { css } from "styled-components";
 import { YouTubeVideoBlockData } from "../blocks.generated";
 import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
-import { pauseYoutubeVideo, playYoutubeVideo } from "./helpers/controlVideos";
 import { useIsElementVisible } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
@@ -21,6 +20,20 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
     const youtubeId = value.length === EXPECTED_YT_ID_LENGTH ? value : match && match[8].length == EXPECTED_YT_ID_LENGTH ? match[8] : null;
 
     return youtubeId ?? undefined;
+};
+
+const pauseYoutubeVideo = () => {
+    const iframe = document.getElementsByTagName("iframe")[0];
+    if (iframe?.contentWindow) {
+        iframe.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "*");
+    }
+};
+
+const playYoutubeVideo = () => {
+    const iframe = document.getElementsByTagName("iframe")[0];
+    if (iframe?.contentWindow) {
+        iframe.contentWindow.postMessage(`{"event":"command","func":"playVideo","args":""}`, "*");
+    }
 };
 
 interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
