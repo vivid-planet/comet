@@ -1,5 +1,5 @@
 ---
-"@comet/admin-theme": patch
+"@comet/admin-theme": major
 ---
 
 Adapt `Radio` and `Checkbox` styling to Comet DXP design
