@@ -2,7 +2,8 @@
 "@comet/blocks-admin": minor
 ---
 
-Add `label` prop to `ColumnsLayoutPreview`.
+Add `label` prop to `ColumnsLayoutPreview`
+
 Use it to customize the label of the column displayed in the `FinalFormLayoutSelect`. For e.g. to add an icon or add custom text.
 
 Example:
