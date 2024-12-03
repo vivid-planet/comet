@@ -33,7 +33,7 @@ export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /
                     </DialogTitleContent>
                 </DialogTitle>
                 <DialogContent>
-                    {logo}
+                    <LogoContainer>{logo}</LogoContainer>
                     <VersionContainer>
                         <Typography fontWeight={500}>{`v${version}`}</Typography>
                         {buildInformation?.number && buildInformation.commitHash && (
@@ -89,6 +89,7 @@ const DialogTitleSpace = styled("div")`
 const DialogContent = styled(MuiDialogContent)`
     display: flex;
     align-items: center;
+    text-align: center;
     justify-content: center;
     flex-direction: column;
 `;
@@ -99,4 +100,13 @@ const VersionContainer = styled("div")`
     flex-direction: column;
     margin-top: 40px;
     margin-bottom: 40px;
+`;
+
+const LogoContainer = styled("div")`
+    align-items: center;
+
+    svg {
+        max-width: 100%;
+        height: auto;
+    }
 `;
