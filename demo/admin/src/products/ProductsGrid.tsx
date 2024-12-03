@@ -2,6 +2,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
     GridCellContent,
@@ -190,11 +191,10 @@ export function ProductsGrid() {
             minWidth: 80,
         },
         {
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: "Available Since",
             width: 130,
-            type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
         },
         {
             field: "status",

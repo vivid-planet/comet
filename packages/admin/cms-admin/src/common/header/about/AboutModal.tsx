@@ -3,7 +3,7 @@ import { Dialog, DialogContent as MuiDialogContent, DialogTitle, IconButton, Lin
 import Backdrop from "@mui/material/Backdrop";
 import { styled } from "@mui/material/styles";
 import { ReactElement } from "react";
-import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
+import { FormattedDate, FormattedMessage } from "react-intl";
 
 import { version } from "../../..";
 import { useBuildInformation } from "./build-information/useBuildInformation";
@@ -50,7 +50,7 @@ export function AboutModal({ open, onClose, logo = <CometDigitalExperienceLogo /
                         )}
                         {buildInformation?.date && (
                             <Typography>
-                                <FormattedDate value={buildInformation.date} /> <FormattedTime value={buildInformation.date} />
+                                <FormattedDate value={buildInformation.date} dateStyle="medium" timeStyle="short" />
                             </Typography>
                         )}
                     </VersionContainer>

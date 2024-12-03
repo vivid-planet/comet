@@ -4,6 +4,8 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudMoreActionsMenu,
+    dataGridDateColumn,
+    dataGridDateTimeColumn,
     DataGridToolbar,
     ExportApi,
     filterByFragment,
@@ -283,20 +285,15 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             maxWidth: 150,
         },
         {
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
-            type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             width: 140,
         },
         {
+            ...dataGridDateTimeColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
-            type: "dateTime",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: ({ value }) =>
-                value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
             width: 170,
         },
         {
