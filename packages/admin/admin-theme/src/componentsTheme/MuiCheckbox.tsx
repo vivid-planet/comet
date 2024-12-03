@@ -40,7 +40,7 @@ export const getMuiCheckbox: GetMuiComponentTheme<"MuiCheckbox"> = (component, {
                     fill: "#fff",
                 },
                 "& .background": {
-                    fill: palette.grey[100],
+                    fill: palette.grey[200],
                 },
             },
         },

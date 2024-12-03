@@ -2,7 +2,4 @@
 "@comet/admin-theme": major
 ---
 
-Adapt `Radio` and `Checkbox` styling to Comet DXP design
-
-Fix colors of disabled states.
-Remove `secondary` color styling.
+Remove `secondary` color styling from `Checkbox` and `Radio`
