@@ -17,25 +17,10 @@ const parseYoutubeIdentifier = (value: string): string | undefined => {
     const regExp =
         /(https?:\/\/)?(((m|www)\.)?(youtube(-nocookie)?|youtube.googleapis)\.com.*(v\/|v=|vi=|vi\/|e\/|embed\/|user\/.*\/u\/\d+\/)|youtu\.be\/)([_0-9a-zA-Z-]+)/;
     const match = value.match(regExp);
-    const youtubeId = value.length === EXPECTED_YT_ID_LENGTH ? value : match && match[8].length == EXPECTED_YT_ID_LENGTH ? match[8] : null;
+    const youtubeId = value.length === EXPECTED_YT_ID_LENGTH ? value : match && match[8].length === EXPECTED_YT_ID_LENGTH ? match[8] : null;
 
     return youtubeId ?? undefined;
 };
-
-const pauseYoutubeVideo = () => {
-    const iframe = document.getElementsByTagName("iframe")[0];
-    if (iframe?.contentWindow) {
-        iframe.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "*");
-    }
-};
-
-const playYoutubeVideo = () => {
-    const iframe = document.getElementsByTagName("iframe")[0];
-    if (iframe?.contentWindow) {
-        iframe.contentWindow.postMessage(`{"event":"command","func":"playVideo","args":""}`, "*");
-    }
-};
-
 interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
@@ -55,8 +40,21 @@ export const YouTubeVideoBlock = withPreview(
     }: YouTubeVideoBlockProps) => {
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
+        const iframeRef = useRef<HTMLIFrameElement | null>(null);
         const inViewRef = useRef(null);
         const inView = useIsElementInViewport(inViewRef);
+
+        const pauseYoutubeVideo = () => {
+            if (iframeRef.current?.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "*");
+            }
+        };
+
+        const playYoutubeVideo = () => {
+            if (iframeRef.current?.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"playVideo","args":""}`, "*");
+            }
+        };
 
         useEffect(() => {
             inView && autoplay ? playYoutubeVideo() : pauseYoutubeVideo();
@@ -108,7 +106,7 @@ export const YouTubeVideoBlock = withPreview(
                     )
                 ) : (
                     <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <YouTubeContainer src={youtubeUrl.toString()} />
+                        <YouTubeContainer ref={iframeRef} src={youtubeUrl.toString()} />
                     </VideoContainer>
                 )}
             </>

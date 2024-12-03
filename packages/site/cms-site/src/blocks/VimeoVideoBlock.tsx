@@ -25,20 +25,6 @@ function parseVimeoIdentifier(vimeoIdentifier: string): string | undefined {
     }
 }
 
-const pauseVimeoVideo = () => {
-    const iframe = document.getElementsByTagName("iframe")[0];
-    if (iframe?.contentWindow) {
-        iframe.contentWindow.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
-    }
-};
-
-const playVimeoVideo = () => {
-    const iframe = document.getElementsByTagName("iframe")[0];
-    if (iframe?.contentWindow) {
-        iframe.contentWindow.postMessage(JSON.stringify({ method: "play" }), "https://player.vimeo.com");
-    }
-};
-
 interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     aspectRatio?: string;
     previewImageSizes?: string;
@@ -59,7 +45,20 @@ export const VimeoVideoBlock = withPreview(
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const inViewRef = useRef(null);
+        const iframeRef = useRef<HTMLIFrameElement | null>(null);
         const inView = useIsElementInViewport(inViewRef);
+
+        const pauseVimeoVideo = () => {
+            if (iframeRef.current?.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(JSON.stringify({ method: "pause" }), "https://player.vimeo.com");
+            }
+        };
+
+        const playVimeoVideo = () => {
+            if (iframeRef.current?.contentWindow) {
+                iframeRef.current.contentWindow.postMessage(JSON.stringify({ method: "play" }), "https://player.vimeo.com");
+            }
+        };
 
         useEffect(() => {
             inView && autoplay ? playVimeoVideo() : pauseVimeoVideo();
@@ -107,7 +106,7 @@ export const VimeoVideoBlock = withPreview(
                     )
                 ) : (
                     <VideoContainer ref={inViewRef} $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <VimeoContainer src={vimeoUrl.toString()} allow="autoplay" allowFullScreen style={{ border: 0 }} />
+                        <VimeoContainer ref={iframeRef} src={vimeoUrl.toString()} allow="autoplay" allowFullScreen style={{ border: 0 }} />
                     </VideoContainer>
                 )}
             </>
