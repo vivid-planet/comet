@@ -116,7 +116,7 @@ export const Toolbar = (inProps: ToolbarProps) => {
     const { headerHeight } = useContext(MasterLayoutContext);
 
     const ownerState: OwnerState = {
-        headerHeight: inProps.headerHeight != null ? inProps.headerHeight : headerHeight,
+        headerHeight: inProps.headerHeight ?? headerHeight,
     };
     return (
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
