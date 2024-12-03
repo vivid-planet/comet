@@ -74,7 +74,7 @@ const createProductMutation = gql`
 interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
     toolbarAction: React.ReactNode;
 }
-function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>

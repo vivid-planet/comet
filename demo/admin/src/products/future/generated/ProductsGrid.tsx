@@ -95,7 +95,7 @@ interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
     toolbarAction: React.ReactNode;
     exportApi: ExportApi;
 }
-function ProductsGridToolbar({ toolbarAction, exportApi }: { toolbarAction?: React.ReactNode; exportApi: ExportApi }) {
+function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
