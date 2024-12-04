@@ -67,7 +67,7 @@ export class LicenseInput {
     @Transform(({ value }) => (value ? new Date(value) : undefined))
     @IsOptional()
     @IsDate()
-    durationTo?: Date | null;
+    durationTo?: Date;
 }
 
 export class CreateFileInput {
