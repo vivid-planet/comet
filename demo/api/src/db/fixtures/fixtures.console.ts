@@ -1,7 +1,7 @@
 import { BlobStorageBackendService, DependenciesService, PageTreeNodeInterface, PageTreeNodeVisibility, PageTreeService } from "@comet/cms-api";
-import { MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
@@ -20,6 +20,7 @@ import slugify from "slugify";
 import { FileUploadsFixtureService } from "./generators/file-uploads-fixture.service";
 import { generateLinks } from "./generators/links.generator";
 import { ManyImagesTestPageFixtureService } from "./generators/many-images-test-page-fixture.service";
+import { RedirectsFixtureService } from "./generators/redirects-fixture.service";
 
 export interface PageTreeNodesFixtures {
     home?: PageTreeNodeInterface;
@@ -49,14 +50,16 @@ export class FixturesConsole {
         @InjectRepository(Link) private readonly linksRepository: EntityRepository<Link>,
         private readonly manyImagesTestPageFixtureService: ManyImagesTestPageFixtureService,
         private readonly fileUploadsFixtureService: FileUploadsFixtureService,
+        private readonly redirectsFixtureService: RedirectsFixtureService,
         private readonly dependenciesService: DependenciesService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     @Command({
         command: "fixtures",
         description: "Create fixtures with faker.js",
     })
-    @UseRequestContext()
+    @CreateRequestContext()
     async execute(): Promise<void> {
         const pageTreeNodes: PageTreeNodesFixtures = {};
         // ensure repeatable runs
@@ -110,6 +113,7 @@ export class FixturesConsole {
 
         node = await this.pageTreeService.createNode(
             {
+                id: "aaa585d3-eca1-47c9-8852-9370817b49ac",
                 name: "Sub",
                 slug: "sub",
                 parentId: node.id,
@@ -198,7 +202,7 @@ export class FixturesConsole {
         for (const attachedDocumentId of attachedDocumentIds) {
             const pageInput = getDefaultPageInput();
 
-            await this.pagesRepository.persistAndFlush(
+            await this.entityManager.persistAndFlush(
                 this.pagesRepository.create({
                     id: attachedDocumentId,
                     createdAt: new Date(),
@@ -252,7 +256,7 @@ export class FixturesConsole {
 
                     const pageId = faker.datatype.uuid();
 
-                    await this.pagesRepository.persistAndFlush(
+                    await this.entityManager.persistAndFlush(
                         this.pagesRepository.create({
                             id: pageId,
                             content: pageInput.content.transformToBlockData(),
@@ -277,6 +281,8 @@ export class FixturesConsole {
         }
 
         await this.fileUploadsFixtureService.generateFileUploads();
+
+        await this.redirectsFixtureService.generateRedirects();
 
         await this.dependenciesService.createViews();
 

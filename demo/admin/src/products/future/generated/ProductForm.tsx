@@ -9,10 +9,10 @@ import {
     FinalForm,
     FinalFormCheckbox,
     FinalFormInput,
+    FinalFormRangeInput,
     FinalFormSubmitEvent,
     FinalFormSwitch,
     Loading,
-    MainContent,
     messages,
     OnChangeField,
     RadioGroupField,
@@ -22,11 +22,12 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Lock } from "@comet/admin-icons";
+import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
     FileUploadField,
+    GQLFinalFormFileUploadDownloadableFragment,
     GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -62,7 +63,7 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
+    priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
@@ -185,7 +186,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
             {({ values, form }) => (
                 <>
                     {saveConflict.dialogs}
-                    <MainContent>
+                    <>
                         <FieldSet
                             initiallyExpanded
                             title={<FormattedMessage id="product.mainData.title" defaultMessage="Main Data" />}
@@ -284,6 +285,18 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     return data.productCategories.nodes;
                                 }}
                                 getOptionLabel={(option) => option.title}
+                            />
+
+                            <Field
+                                variant="horizontal"
+                                fullWidth
+                                name="priceRange"
+                                component={FinalFormRangeInput}
+                                label={<FormattedMessage id="product.priceRange" defaultMessage="Price Range" />}
+                                min={25}
+                                max={500}
+                                disableSlider
+                                startAdornment={<InputAdornment position="start">€</InputAdornment>}
                             />
                             <Field
                                 fullWidth
@@ -384,6 +397,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="availableSince"
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
                             />
                             <Field
                                 name="image"
@@ -408,7 +426,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 maxFileSize={4194304}
                             />
                         </FieldSet>
-                    </MainContent>
+                    </>
                 </>
             )}
         </FinalForm>

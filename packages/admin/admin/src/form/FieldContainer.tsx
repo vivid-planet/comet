@@ -132,11 +132,6 @@ const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>
             margin-top: ${theme.spacing(2)};
         `}
 
-        ${ownerState.disabled &&
-        css`
-            color: ${theme.palette.text.disabled};
-        `}
-
         ${ownerState.hasError &&
         css`
             &:not([class*="${formLabelClasses.focused}"]) {

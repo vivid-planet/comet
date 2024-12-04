@@ -1,6 +1,6 @@
 import { MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import JSZip from "jszip";
 import isEqual from "lodash.isequal";
@@ -83,6 +83,7 @@ export class FoldersService {
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly orm: MikroORM,
+        private readonly entityManager: EntityManager,
     ) {}
 
     async findAllByParentId(
@@ -182,7 +183,7 @@ export class FoldersService {
             mpath = (await this.findAncestorsByParentId(parentId)).map((folder) => folder.id);
         }
         const folder = this.foldersRepository.create({ ...data, isInboxFromOtherScope, parent, mpath, scope });
-        await this.foldersRepository.persistAndFlush(folder);
+        await this.entityManager.persistAndFlush(folder);
         return folder;
     }
 
@@ -219,7 +220,7 @@ export class FoldersService {
                 .execute();
         }
 
-        await this.foldersRepository.persistAndFlush(folder);
+        await this.entityManager.persistAndFlush(folder);
         return folder;
     }
 

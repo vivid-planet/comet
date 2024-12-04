@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-site",
-    "version": "7.5.0",
+    "version": "7.9.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -30,12 +30,11 @@
         "rimraf": "^3.0.0",
         "scroll-into-view-if-needed": "^2.0.0",
         "server-only": "^0.0.1",
-        "use-debounce": "^6.0.0",
         "usehooks-ts": "^3.1.0"
     },
     "devDependencies": {
-        "@comet/cli": "workspace:^7.5.0",
-        "@comet/eslint-config": "workspace:^7.5.0",
+        "@comet/cli": "workspace:^7.9.0",
+        "@comet/eslint-config": "workspace:^7.9.0",
         "@gitbeaker/node": "^34.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",

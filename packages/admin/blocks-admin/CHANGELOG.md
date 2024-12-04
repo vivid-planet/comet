@@ -1,5 +1,177 @@
 # @comet/blocks-admin
 
+## 7.9.0
+
+### Minor Changes
+
+-   92f9d078f: Add `hiddenForState` option to `createCompositeBlock`
+
+    This function can be used to hide a block in the `AdminComponent` for a given state.
+
+    **Example**
+
+    ```tsx
+    const TextWithMediaVariantBlock = createCompositeBlock({
+        name: "TextWithMediaVariant",
+        blocks: {
+            variant: {
+                block: createCompositeBlockSelectField<string>({
+                    defaultValue: "text-image",
+                    fieldProps: { label: "Variant", fullWidth: true },
+                    options: [
+                        { value: "text-image", label: "Text Image" },
+                        { value: "text-only", label: "Text Only" },
+                    ],
+                }),
+            },
+            text: {
+                block: RichTextBlock,
+            },
+            media: {
+                block: MediaBlock,
+                // The media block isn't needed for the "text-only" variant
+                hiddenForState: (state) => state.variant === "text-only",
+            },
+        },
+    });
+    ```
+
+-   047b9d17b: Add `label` prop to `ColumnsLayoutPreview`
+
+    Use it to customize the label of the column displayed in the `FinalFormLayoutSelect`.
+    For instance, to add an icon or add custom text:
+
+    ```tsx
+    <ColumnsLayoutPreviewContent width={10} label={<Image />} />
+    ```
+
+-   59b4b6f77: Add `visibleOrderedBlocksForState` option to `createCompositeBlock`
+
+    The option can be used to hide and order child blocks in the `AdminComponent`.
+    It should return an array of visible block keys for a given state.
+    The order of the keys define the order in which the blocks will be rendered.
+    If key is not present in the array, the block will not be rendered.
+
+    **Example**
+
+    ```tsx
+    const LayoutBlock = createCompositeBlock({
+        /* ... */
+        blocks: {
+            layout: {
+                /* A layout select */
+            },
+            headline1: { block: HeadlineBlock },
+            image1: { block: DamImageBlock },
+            headline2: { block: HeadlineBlock },
+            image2: { block: DamImageBlock },
+        },
+        visibleOrderedBlocksForState: (state: LayoutBlockData) => {
+            if (state.layout === "compact") {
+                // headline2 and image2 will be hidden
+                return ["headline1", "image1"];
+            } else {
+                return ["headline1", "image1", "headline2", "image2"];
+            }
+        },
+    });
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [6d6131b16]
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [0919e3ba6]
+-   Updated dependencies [55d40ef08]
+    -   @comet/admin@7.9.0
+    -   @comet/admin-icons@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   059636aba: Pass the `graphQLApiUrl` for `useBlockPreviewFetch` through the `IFrameBridge`
+
+    It's not necessary to set it in the site anymore. To migrate, remove the argument from `useBlockPreviewFetch()`:
+
+    ```diff
+    const PreviewPage = () => {
+        const iFrameBridge = useIFrameBridge();
+
+    -   const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
+    +   const { fetch, graphQLFetch } = useBlockPreviewFetch();
+
+        const [blockData, setBlockData] = useState<PageContentBlockData>();
+        useEffect(() => {
+            async function load() {
+    +           if (!graphQLFetch) {
+    +               return;
+    +           }
+                if (!iFrameBridge.block) {
+                    setBlockData(undefined);
+                    return;
+                }
+                const newData = await recursivelyLoadBlockData({
+                    blockType: "PageContent",
+                    blockData: iFrameBridge.block,
+                    graphQLFetch,
+                    fetch,
+                    pageTreeNodeId: undefined, //we don't have a pageTreeNodeId in preview
+                });
+                setBlockData(newData);
+            }
+            load();
+        }, [iFrameBridge.block, fetch, graphQLFetch]);
+
+        return <div>{blockData && <PageContentBlock data={blockData} />}</div>;
+    };
+    ```
+
+### Patch Changes
+
+-   4338a6c07: Make the space select required in the form when using `createSpaceBlock()`
+-   Updated dependencies [139616be6]
+-   Updated dependencies [d8fca0522]
+-   Updated dependencies [a168e5514]
+-   Updated dependencies [e16ad1a02]
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+-   Updated dependencies [139616be6]
+-   Updated dependencies [eefb0546f]
+-   Updated dependencies [795ec73d9]
+-   Updated dependencies [8617c3bcd]
+-   Updated dependencies [d8298d59a]
+-   Updated dependencies [daacf1ea6]
+-   Updated dependencies [9cc75c141]
+    -   @comet/admin@7.8.0
+    -   @comet/admin-icons@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   8ffc90eb1: Set the select field in `OneOfBlock` to `required` based on the `allowEmpty` prop
+-   a9d2e2e25: Fix linking from block preview to block admin for composite + list/blocks/columns block combinations
+
+    Previously, the generated route was wrong if a composite contained multiple nested list, blocks or columns blocks.
+
+    -   @comet/admin@7.7.0
+    -   @comet/admin-icons@7.7.0
+
+## 7.6.0
+
+### Patch Changes
+
+-   Updated dependencies [bc19fb18c]
+-   Updated dependencies [37d71a89a]
+-   Updated dependencies [cf2ee898f]
+-   Updated dependencies [03afcd073]
+-   Updated dependencies [00d7ddae1]
+-   Updated dependencies [fe8909404]
+    -   @comet/admin@7.6.0
+    -   @comet/admin-icons@7.6.0
+
 ## 7.5.0
 
 ### Patch Changes

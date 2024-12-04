@@ -8,7 +8,7 @@ We use [NestJS Console](https://github.com/Pop-Code/nestjs-console) to create co
 ## Defining Commands
 
 ```ts title="Demo console command"
-import { MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { Injectable, Logger } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
@@ -25,7 +25,7 @@ export class DemoConsole {
         command: "demo-command",
         description: "Demo-Command for cronjob-deployment",
     })
-    @UseRequestContext()
+    @CreateRequestContext()
     async demoCommand(): Promise<void> {
         this.logger.log("Execute demo-command.");
     }

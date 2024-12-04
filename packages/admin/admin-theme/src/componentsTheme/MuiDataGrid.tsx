@@ -88,6 +88,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 color: palette.grey[900],
             },
         },
+        footerContainer: {
+            borderTop: `1px solid ${palette.grey[100]}`,
+        },
         iconSeparator: {
             backgroundColor: palette.grey[100],
             width: "2px",
