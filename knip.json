@@ -64,6 +64,19 @@
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
             "project": ["./src/**/*.{ts,tsx}", "!./src/**/generated/**"],
             "ignoreDependencies": ["@swc/plugin-emotion"]
+        },
+        "demo/api": {
+            "entry": [
+                "./src/main.ts",
+                "./src/console.ts",
+                "./src/content-scope/content-scope.interface.ts",
+                "./src/repl.ts",
+                "./src/db/ormconfig.cli.ts",
+                "./src/db/fixtures/**/*.ts",
+                "./src/db/migrations/**/*.ts"
+            ],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"]
         }
     },
     "rules": {
