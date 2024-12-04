@@ -29,44 +29,44 @@ type IconObject = Pick<IconProps, "color" | "fontSize"> & {
 type Icon = IconName | IconObject | ImportReference;
 export type Adornment = string | { icon: Icon };
 
-type SingleFileFormFieldConfig = { type: "fileUpload"; multiple?: false; maxFiles?: 1; download?: boolean } & Pick<
+type SingleFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple?: false; maxFiles?: 1; download?: boolean } & Pick<
     Partial<FinalFormFileUploadProps<false>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?: number; download?: boolean } & Pick<
+type MultiFileFormFieldConfig<T> = { type: "fileUpload"; name: keyof T; multiple: true; maxFiles?: number; download?: boolean } & Pick<
     Partial<FinalFormFileUploadProps<true>>,
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
 export type FormFieldConfig<T> = (
-    | { type: "text"; multiline?: boolean }
-    | { type: "number" }
+    | { type: "text"; name: keyof T; multiline?: boolean }
+    | { type: "number"; name: keyof T }
     | {
           type: "numberRange";
+          name: keyof T;
           minValue: number;
           maxValue: number;
           disableSlider?: boolean;
       }
-    | { type: "boolean" }
-    | { type: "date" }
-    // TODO | { type: "dateTime"; }
-    | {
-          type: "staticSelect";
-          values?: Array<{ value: string; label: string } | string>;
-          inputType?: "select" | "radio";
-      }
+    | { type: "boolean"; name: keyof T }
+    | { type: "date"; name: keyof T }
+    // TODO | { type: "dateTime" }
+    | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
     | {
           type: "asyncSelect";
+          name: string; // not "keyof T" because it can fetch anything to filter another asyncSelect
+          gqlFieldName?: keyof T;
+          initQueryIdPath?: string; // if gqlField-object does not have an id-field, or it's required to use any other field, e.g. asyncSelect is used for filtering; dot-separated
+          initQueryLabelPath?: string; // if label is not on first level of gqlField-object; dot-separated
           rootQuery: string;
-          labelField?: string;
+          labelField?: string; // should be the field used as option-label of the rootQuery
           filterField?: { name: string; gqlName?: string };
       }
-    | { type: "block"; block: ImportReference }
-    | SingleFileFormFieldConfig
-    | MultiFileFormFieldConfig
+    | { type: "block"; name: keyof T; block: ImportReference }
+    | SingleFileFormFieldConfig<T>
+    | MultiFileFormFieldConfig<T>
 ) & {
-    name: keyof T;
     label?: string;
     required?: boolean;
     virtual?: boolean;
