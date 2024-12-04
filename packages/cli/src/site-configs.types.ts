@@ -12,8 +12,10 @@ export type BaseSiteConfig = {
 export type ExtractPrivateSiteConfig<S extends BaseSiteConfig> = S["public"] &
     Omit<S, "public"> & {
         url: string;
+        preliminaryUrl?: string;
     };
 export type ExtractPublicSiteConfig<S extends BaseSiteConfig> = S["public"] &
     Pick<S, "name" | "domains" | "preloginEnabled"> & {
         url: string;
+        preliminaryUrl?: string;
     };

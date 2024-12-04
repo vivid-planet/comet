@@ -70,7 +70,7 @@ class App extends Component {
                                 const siteConfig = configs.find((config) => config.scope.domain === scope.domain);
                                 if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
                                 return {
-                                    url: siteConfig.url,
+                                    url: siteConfig.preliminaryUrl || siteConfig.url,
                                     preloginEnabled: siteConfig.preloginEnabled || false,
                                     blockPreviewBaseUrl:
                                         siteConfig.scope.domain === "secondary"
