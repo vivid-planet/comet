@@ -98,31 +98,34 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
         },
         panelContent: {
+            padding: spacing(1, 0),
             [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
                 display: "flex",
             },
             ["@media (max-width: 900px)"]: {
                 maxHeight: "none",
+                padding: 0,
             },
         },
         filterForm: {
             margin: spacing(5, 4, 0, 4),
             padding: spacing(2, 1),
-            gap: "4px",
+            gap: "5px",
             borderBottom: `1px solid ${palette.grey[50]}`,
             ["@media (max-width: 900px)"]: {
                 flexDirection: "row",
-                marginTop: spacing(6),
                 flexWrap: "wrap",
+                margin: spacing(4, 4, 0, 4),
                 gap: 0,
                 padding: 0,
+                paddingBottom: spacing(5),
+                "&:last-child": {
+                    marginBottom: 0,
+                    paddingBottom: 0,
+                },
             },
             "&:last-child": {
                 border: "none",
-                marginBottom: spacing(2),
-            },
-            "&:first-of-type": {
-                marginTop: spacing(7),
             },
             [`.${formControlClasses.root}`]: {
                 marginRight: 0,
@@ -171,7 +174,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             borderTop: `1px solid ${palette.grey[100]}`,
             padding: "7px 0",
             [`.${buttonClasses.root}`]: {
-                color: palette.text.primary,
+                color: palette.primary.main,
             },
             ["@media (max-width: 900px)"]: {
                 justifyContent: "center",
