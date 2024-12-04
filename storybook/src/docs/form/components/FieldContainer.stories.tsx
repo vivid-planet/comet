@@ -37,10 +37,10 @@ export const Basic = {
                     <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
                 </FieldContainer>
                 <br />
-                <FieldContainer label="Secondary Helper Text" secondaryHelperText="0/100">
+                <FieldContainer label="Secondary Helper Text" secondaryHelperText={`${value.length}/100`}>
                     <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
                 </FieldContainer>
-                <FieldContainer label="Multiple Helper Texts" helperText="Helper Text" secondaryHelperText="0/100">
+                <FieldContainer label="Multiple Helper Texts" helperText="Helper Text" secondaryHelperText={`${value.length}/100`}>
                     <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
                 </FieldContainer>
                 <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon">
