@@ -7,7 +7,7 @@ import {
 import { GridBaseColDef as MuiGridBaseColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
 import { type GridPinnedColumns } from "@mui/x-data-grid-pro";
 
-export type ValueOption =
+type ValueOption =
     | string
     | number
     | {
