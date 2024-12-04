@@ -1876,9 +1876,6 @@ importers:
       '@hapi/accept':
         specifier: ^5.0.2
         version: 5.0.2
-      '@nestjs/jwt':
-        specifier: ^10.2.0
-        version: 10.2.0(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))
       '@nestjs/mapped-types':
         specifier: ^2.0.6
         version: 2.0.6(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)
@@ -1888,9 +1885,6 @@ importers:
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.0
-      '@smithy/node-http-handler':
-        specifier: 3.1.4
-        version: 3.1.4
       '@types/get-image-colors':
         specifier: ^4.0.0
         version: 4.0.2
@@ -5430,11 +5424,6 @@ packages:
       ts-morph:
         optional: true
 
-  '@nestjs/jwt@10.2.0':
-    resolution: {integrity: sha512-x8cG90SURkEiLOehNaN2aRlotxT0KZESUliOPKKnjWiyJOcWurkF3w345WOX0P4MgFzUjGoZ1Sy0aZnxeihT0g==}
-    peerDependencies:
-      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
-
   '@nestjs/mapped-types@2.0.5':
     resolution: {integrity: sha512-bSJv4pd6EY99NX9CjBIyn4TVDoSit82DUZlL4I3bqNfy5Gt+gXTa86i3I/i0iIV9P4hntcGM5GyO+FhZAhxtyg==}
     peerDependencies:
@@ -7098,8 +7087,8 @@ packages:
   '@types/jsonwebtoken@8.5.9':
     resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
 
-  '@types/jsonwebtoken@9.0.5':
-    resolution: {integrity: sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==}
+  '@types/jsonwebtoken@9.0.7':
+    resolution: {integrity: sha512-ugo316mmTYBl2g81zDFnZ7cfxlut3o+/EQdaP7J8QN2kY6lJ22hmQYCK5EHcJHbrW+dkCGSCPgbG8JtYj6qSrg==}
 
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
@@ -19715,7 +19704,7 @@ snapshots:
       '@graphql-tools/utils': 9.1.4(graphql@15.8.0)
       '@types/js-yaml': 4.0.5
       '@types/json-stable-stringify': 1.0.34
-      '@types/jsonwebtoken': 9.0.5
+      '@types/jsonwebtoken': 9.0.7
       chalk: 4.1.2
       debug: 4.3.7(supports-color@9.3.1)
       dotenv: 16.4.5
@@ -20655,12 +20644,6 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-
-  '@nestjs/jwt@10.2.0(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))':
-    dependencies:
-      '@nestjs/common': 10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@types/jsonwebtoken': 9.0.5
-      jsonwebtoken: 9.0.2
 
   '@nestjs/mapped-types@2.0.5(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)':
     dependencies:
@@ -22792,7 +22775,7 @@ snapshots:
     dependencies:
       '@types/node': 22.9.0
 
-  '@types/jsonwebtoken@9.0.5':
+  '@types/jsonwebtoken@9.0.7':
     dependencies:
       '@types/node': 22.9.0
 
@@ -28380,7 +28363,7 @@ snapshots:
   jwks-rsa@3.0.1:
     dependencies:
       '@types/express': 4.17.16
-      '@types/jsonwebtoken': 9.0.5
+      '@types/jsonwebtoken': 9.0.7
       debug: 4.3.7(supports-color@9.3.1)
       jose: 4.15.9
       limiter: 1.1.5
