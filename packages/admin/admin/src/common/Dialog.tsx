@@ -22,7 +22,6 @@ export type DialogProps = ThemedComponentBaseProps<{
     root: typeof MuiDialog;
     dialogTitle: typeof MuiDialogTitle;
 }> & {
-    children?: ReactNode;
     title?: ReactNode;
     iconMapping?: {
         closeIcon?: ReactNode;
