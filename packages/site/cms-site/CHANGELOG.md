@@ -1,5 +1,7 @@
 # @comet/cms-site
 
+## 7.9.0
+
 ## 7.8.0
 
 ### Minor Changes

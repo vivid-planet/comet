@@ -1,5 +1,60 @@
 # @comet/admin
 
+## 7.9.0
+
+### Minor Changes
+
+-   6d6131b16: Add the `dataGridDateColumn` and `dataGridDateTimeColumn` helpers for using the "date" and "dateTime" types in Data Grid
+
+    ```diff
+    -import { GridColDef } from "@comet/admin";
+    +import { GridColDef, dataGridDateColumn, dataGridDateTimeColumn } from "@comet/admin";
+
+     // ...
+
+     const columns: GridColDef[] = [
+         {
+    -       type: "date",
+    -       valueGetter: ({ value }) => value && new Date(value),
+    -       renderCell: ({ value }) => value && <FormattedDate value={value} dateStyle="medium" />,
+    +       ...dataGridDateColumn,
+            field: "createdAt",
+            headerName: "Created At",
+         },
+         {
+    -      type: "dateTime",
+    -      valueGetter: ({ value }) => value && new Date(value),
+    -      renderCell: ({ value }) => value && <FormattedDate value={value} dateStyle="medium" timeStyle="short" />,
+    +      ...dataGridDateTimeColumn,
+           field: "updatedAt",
+           headerName: "Updated At",
+         },
+     ];
+    ```
+
+-   7cea765fe: Add UI for Impersonation Feature
+
+    -   Add indicator to display when impersonation mode is active in `UserHeaderItem`
+    -   Add button to allow users to switch on impersonation in the `UserGrid`
+    -   Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
+    -   Add `ImpersonateUser` icon
+
+### Patch Changes
+
+-   48cac4dac: Fix styling issues of inputs like `FinalFormInput`, `FinalFormNumberInput`, `FinalFormSelect`, `TextAreaField`
+
+    -   Change background-color, border-color and color of the label for different states (`default`, `disabled` and `focused`).
+    -   For required inputs, fix spacing between the label and asterisk.
+    -   Fix font-weight and margin of `helperText`.
+
+-   0919e3ba6: Remove right padding from form fields without an end adornment
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [55d40ef08]
+-   Updated dependencies [9aa6947b7]
+    -   @comet/admin-icons@7.9.0
+    -   @comet/admin-theme@7.9.0
+
 ## 7.8.0
 
 ### Minor Changes

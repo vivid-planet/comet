@@ -1,5 +1,38 @@
 # @comet/cms-admin
 
+## 7.9.0
+
+### Minor Changes
+
+-   7cea765fe: Add UI for Impersonation Feature
+
+    -   Add indicator to display when impersonation mode is active in `UserHeaderItem`
+    -   Add button to allow users to switch on impersonation in the `UserGrid`
+    -   Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
+    -   Add `ImpersonateUser` icon
+
+### Patch Changes
+
+-   6d6131b16: Use consistent date and time formatting across the Admin UI
+-   27510c22f: Prevent `ContentScopeIndicator` from crashing when a scope part is `undefined`
+-   8ed5795a1: Don't add non-existing scope parts to the `DamScope` as `undefined`
+-   7ce4b0f0a: Fix DAM license duration input when no values are provided
+-   Updated dependencies [6d6131b16]
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [92f9d078f]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [047b9d17b]
+-   Updated dependencies [0919e3ba6]
+-   Updated dependencies [55d40ef08]
+-   Updated dependencies [9aa6947b7]
+-   Updated dependencies [59b4b6f77]
+    -   @comet/admin@7.9.0
+    -   @comet/admin-icons@7.9.0
+    -   @comet/blocks-admin@7.9.0
+    -   @comet/admin-theme@7.9.0
+    -   @comet/admin-date-time@7.9.0
+    -   @comet/admin-rte@7.9.0
+
 ## 7.8.0
 
 ### Minor Changes

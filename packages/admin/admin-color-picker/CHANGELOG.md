@@ -1,5 +1,18 @@
 # @comet/admin-color-picker
 
+## 7.9.0
+
+### Patch Changes
+
+-   1d73f3f45: Add missing spacing to the clear-color button of `ColorPicker`
+-   Updated dependencies [6d6131b16]
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [0919e3ba6]
+-   Updated dependencies [55d40ef08]
+    -   @comet/admin@7.9.0
+    -   @comet/admin-icons@7.9.0
+
 ## 7.8.0
 
 ### Patch Changes
