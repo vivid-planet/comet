@@ -9,7 +9,7 @@ declare module "@comet/cms-site" {
     }
 }
 
-export const blockLoaders: Record<string, BlockLoader> = {
+const blockLoaders: Record<string, BlockLoader> = {
     NewsDetail: newsDetailLoader,
     NewsList: newsListLoader,
 };
