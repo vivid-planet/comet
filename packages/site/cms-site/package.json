@@ -35,6 +35,7 @@
     "devDependencies": {
         "@comet/cli": "workspace:^7.9.0",
         "@comet/eslint-config": "workspace:^7.9.0",
+        "@comet/eslint-plugin": "workspace:^7.9.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",
         "@types/react": "^18.2.66",

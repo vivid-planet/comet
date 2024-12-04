@@ -63,6 +63,7 @@
     },
     "devDependencies": {
         "@comet/eslint-config": "workspace:*",
+        "@comet/eslint-plugin": "workspace:*",
         "@nestjs/cli": "^10.4.7",
         "@nestjs/schematics": "^10.2.3",
         "@types/compression": "^1.0.0",
