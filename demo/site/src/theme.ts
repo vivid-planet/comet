@@ -18,7 +18,7 @@ export type ThemeBreakpoints = {
     b1920: Breakpoint;
 };
 
-export interface Theme {
+interface Theme {
     colors: {
         primary: string;
         textPrimary: string;
