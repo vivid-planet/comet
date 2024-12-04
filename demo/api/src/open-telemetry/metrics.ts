@@ -9,7 +9,7 @@ import {
     UpDownCounter,
 } from "@opentelemetry/api";
 
-export enum MetricType {
+enum MetricType {
     "Counter" = "Counter",
     "UpDownCounter" = "UpDownCounter",
     "Histogram" = "Histogram",
@@ -17,10 +17,10 @@ export enum MetricType {
     "ObservableCounter" = "ObservableCounter",
     "ObservableUpDownCounter" = "ObservableUpDownCounter",
 }
-export type GenericMetric = Counter | UpDownCounter | Histogram | ObservableGauge | ObservableCounter | ObservableUpDownCounter;
-export const OTEL_METER_NAME = "nestjs-otel";
+type GenericMetric = Counter | UpDownCounter | Histogram | ObservableGauge | ObservableCounter | ObservableUpDownCounter;
+const OTEL_METER_NAME = "nestjs-otel";
 
-export const meterData: Map<string, GenericMetric> = new Map();
+const meterData: Map<string, GenericMetric> = new Map();
 
 function getOrCreate(name: string, options: MetricOptions = {}, type: MetricType): GenericMetric | undefined {
     let metric = meterData.get(name);
@@ -38,20 +38,4 @@ export function getOrCreateHistogram(name: string, options: MetricOptions = {}):
 
 export function getOrCreateCounter(name: string, options: MetricOptions = {}): Counter {
     return getOrCreate(name, options, MetricType.Counter) as Counter;
-}
-
-export function getOrCreateUpDownCounter(name: string, options: MetricOptions = {}): UpDownCounter {
-    return getOrCreate(name, options, MetricType.UpDownCounter) as UpDownCounter;
-}
-
-export function getOrCreateObservableGauge(name: string, options: MetricOptions = {}): ObservableGauge {
-    return getOrCreate(name, options, MetricType.ObservableGauge) as ObservableGauge;
-}
-
-export function getOrCreateObservableCounter(name: string, options: MetricOptions = {}): ObservableCounter {
-    return getOrCreate(name, options, MetricType.ObservableCounter) as ObservableCounter;
-}
-
-export function getOrCreateObservableUpDownCounter(name: string, options: MetricOptions = {}): ObservableUpDownCounter {
-    return getOrCreate(name, options, MetricType.ObservableUpDownCounter) as ObservableUpDownCounter;
 }
