@@ -121,13 +121,14 @@ const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "device
             width: ${deviceConfig.outerFrame.width}px;
             height: ${deviceConfig.outerFrame.height}px;
             padding: ${deviceConfig.outerFrame.padding};
+            overflow: hidden;
         `}
 `;
 
 const IFrame = styled("iframe", { shouldForwardProp: (prop) => prop !== "deviceConfig" })<IFrameProps>`
     display: block;
     border-style: unset;
-    border-width: 1px;
+    border-width: 0px;
     width: 100%;
     height: 100%;
     background-color: ${({ theme }) => theme.palette.common.white};
