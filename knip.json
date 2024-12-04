@@ -94,9 +94,12 @@
             "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"]
+        },
+        "storybook": {
+            "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts"],
+            "project": ["./src/**/*.{ts,tsx}"]
         }
     },
-
     "rules": {
         "enumMembers": "off"
     }
