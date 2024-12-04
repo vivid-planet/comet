@@ -4,10 +4,10 @@ import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
-import { useObservedWidth } from "../utils/useObservedWidth";
 
 export type FieldContainerProps = ThemedComponentBaseProps<{
     root: typeof FormControl;
+    innerContainer: "div";
     label: typeof FormLabel;
     inputContainer: "div";
     error: typeof FormHelperText;
@@ -15,6 +15,7 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     helperText: typeof FormHelperText;
 }> & {
     variant?: "vertical" | "horizontal";
+    forceVerticalContainerSize?: number;
     fullWidth?: boolean;
     label?: ReactNode;
     required?: boolean;
@@ -28,6 +29,7 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
 
 export type FieldContainerClassKey =
     | "root"
+    | "innerContainer"
     | "vertical"
     | "horizontal"
     | "fullWidth"
@@ -47,7 +49,8 @@ export type FieldContainerClassKey =
 type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
     hasError: boolean;
     hasWarning: boolean;
-    forceVertical: boolean;
+    hasLabel: boolean;
+    forceVerticalContainerSize: number;
 };
 
 const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState>({
@@ -55,8 +58,8 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
     slotName: "root",
     classesResolver(ownerState) {
         return [
-            (ownerState.variant === "vertical" || ownerState.forceVertical) && "vertical",
-            ownerState.variant === "horizontal" && !ownerState.forceVertical && "horizontal",
+            ownerState.variant === "vertical" && "vertical",
+            ownerState.variant === "horizontal" && "horizontal",
             ownerState.fullWidth && "fullWidth",
             ownerState.hasError && "hasError",
             ownerState.hasWarning && "hasWarning",
@@ -71,6 +74,12 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
     ({ theme, ownerState }) => css`
         max-width: 100%;
 
+        ${ownerState.fullWidth &&
+        css`
+            container-type: inline-size;
+            container-name: comet-admin-field-container-root;
+        `}
+
         ${ownerState.fieldMargin !== "never" &&
         css`
             margin-bottom: ${theme.spacing(4)};
@@ -78,15 +87,6 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
             css`
                 margin-right: ${theme.spacing(4)};
             `}
-        `}
-
-        ${ownerState.variant === "horizontal" &&
-        !ownerState.forceVertical &&
-        css`
-            display: flex;
-            flex-direction: row;
-            max-width: 944px;
-            gap: ${theme.spacing(4)};
         `}
 
         ${ownerState.fieldMargin === "onlyIfNotLast" &&
@@ -98,6 +98,23 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
                 css`
                     margin-right: 0;
                 `}
+            }
+        `}
+    `,
+);
+
+const InnerContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerState>({
+    componentName: "FormFieldContainer",
+    slotName: "innerContainer",
+})(
+    ({ theme, ownerState }) => css`
+        ${ownerState.variant === "horizontal" &&
+        css`
+            @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                display: flex;
+                flex-direction: row;
+                max-width: 944px;
+                gap: ${theme.spacing(4)};
             }
         `}
 
@@ -122,14 +139,27 @@ const Label = createComponentSlot(FormLabel)<FieldContainerClassKey, OwnerState>
     slotName: "label",
 })(
     ({ theme, ownerState }) => css`
-        ${ownerState.variant === "horizontal" &&
-        !ownerState.forceVertical &&
+        ${!ownerState.hasLabel &&
         css`
-            width: calc(100% / 3);
-            flex-shrink: 0;
-            flex-grow: 0;
-            margin-bottom: 0;
-            margin-top: ${theme.spacing(2)};
+            display: none;
+
+            ${ownerState.variant === "horizontal" &&
+            css`
+                @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                    display: block;
+                }
+            `}
+        `}
+
+        ${ownerState.variant === "horizontal" &&
+        css`
+            @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                width: calc(100% / 3);
+                flex-shrink: 0;
+                flex-grow: 0;
+                margin-bottom: 0;
+                margin-top: ${theme.spacing(2)};
+            }
         `}
 
         ${ownerState.hasError &&
@@ -152,21 +182,23 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
     componentName: "FormFieldContainer",
     slotName: "inputContainer",
 })(
-    ({ ownerState }) => css`
+    ({ theme, ownerState }) => css`
         ${ownerState.variant === "horizontal" &&
         ownerState.fullWidth &&
-        !ownerState.forceVertical &&
         css`
-            flex-grow: 1;
+            @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                flex-grow: 1;
+            }
         `}
 
         ${ownerState.variant === "horizontal" &&
-        !ownerState.forceVertical &&
         css`
-            min-height: 40px;
+            @container comet-admin-field-container-root (min-width: ${ownerState.forceVerticalContainerSize}px) {
+                min-height: 40px;
 
-            > .CometAdminFormFieldContainer-root {
-                margin-bottom: 0;
+                > .CometAdminFormFieldContainer-root {
+                    margin-bottom: 0;
+                }
             }
         `}
 
@@ -202,6 +234,7 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
 export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) => {
     const {
         variant = "vertical",
+        forceVerticalContainerSize = 600,
         fullWidth: passedFullWidth,
         label,
         error,
@@ -221,8 +254,6 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
     const hasWarning = !hasError && !!warning;
 
     const ref = useRef<HTMLDivElement>(null);
-    const rootWidth = useObservedWidth(ref);
-    const forceVertical = rootWidth <= 600;
 
     useEffect(() => {
         if (scrollTo) {
@@ -238,17 +269,16 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
         variant,
         hasError,
         hasWarning,
-        forceVertical,
+        hasLabel: Boolean(label),
+        forceVerticalContainerSize,
     };
 
     return (
         <Root ownerState={ownerState} fullWidth={fullWidth} disabled={disabled} required={required} ref={ref} {...slotProps?.root} {...restProps}>
-            <>
-                {(label || (variant === "horizontal" && !forceVertical)) && (
-                    <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
-                        {label}
-                    </Label>
-                )}
+            <InnerContainer ownerState={ownerState} {...slotProps?.innerContainer}>
+                <Label ownerState={ownerState} disabled={disabled} {...slotProps?.label}>
+                    {label}
+                </Label>
                 <InputContainer ownerState={ownerState} {...slotProps?.inputContainer}>
                     {children}
                     {hasError && (
@@ -259,7 +289,7 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
                     {hasWarning && !hasError && <Warning {...slotProps?.warning}>{warning}</Warning>}
                     {helperText && !hasError && !hasWarning && <HelperText {...slotProps?.helperText}>{helperText}</HelperText>}
                 </InputContainer>
-            </>
+            </InnerContainer>
         </Root>
     );
 };
