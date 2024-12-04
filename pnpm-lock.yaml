@@ -303,9 +303,6 @@ importers:
       '@nestjs/graphql':
         specifier: ^12.2.1
         version: 12.2.1(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.4.9)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.9.0)(reflect-metadata@0.1.13)(ts-morph@16.0.0)
-      '@nestjs/passport':
-        specifier: ^10.0.3
-        version: 10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(passport@0.4.1)
       '@nestjs/platform-express':
         specifier: ^10.4.8
         version: 10.4.9(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.4.9)
@@ -315,9 +312,6 @@ importers:
       '@opentelemetry/auto-instrumentations-node':
         specifier: ^0.50.0
         version: 0.50.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/core':
-        specifier: ^1.26.0
-        version: 1.28.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/exporter-prometheus':
         specifier: ^0.53.0
         version: 0.53.0(@opentelemetry/api@1.9.0)
@@ -360,9 +354,6 @@ importers:
       nestjs-console:
         specifier: ^9.0.0
         version: 9.0.0(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.4.9)
-      passport:
-        specifier: ^0.4.0
-        version: 0.4.1
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
@@ -381,9 +372,6 @@ importers:
       uuid:
         specifier: ^9.0.0
         version: 9.0.1
-      webpack:
-        specifier: ^5.64.2
-        version: 5.96.1(@swc/core@1.4.8(@swc/helpers@0.5.5))
     devDependencies:
       '@comet/eslint-config':
         specifier: workspace:*
@@ -394,18 +382,12 @@ importers:
       '@nestjs/schematics':
         specifier: ^10.2.3
         version: 10.2.3(chokidar@3.6.0)(typescript@4.9.4)
-      '@nestjs/testing':
-        specifier: ^10.4.8
-        version: 10.4.9(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.4.9)(@nestjs/platform-express@10.4.9)
       '@types/compression':
         specifier: ^1.0.0
         version: 1.7.2
       '@types/cookie-parser':
         specifier: ^1.0.0
         version: 1.4.3
-      '@types/draft-js':
-        specifier: ^0.11.10
-        version: 0.11.10
       '@types/express':
         specifier: ^4.0.0
         version: 4.17.16
@@ -415,15 +397,9 @@ importers:
       '@types/node':
         specifier: ^22.0.0
         version: 22.9.0
-      '@types/passport':
-        specifier: ^1.0.0
-        version: 1.0.11
       '@types/response-time':
         specifier: ^2.3.8
         version: 2.3.8
-      '@types/rimraf':
-        specifier: ^3.0.0
-        version: 3.0.2
       '@types/uuid':
         specifier: ^8.0.0
         version: 8.3.4
@@ -439,9 +415,6 @@ importers:
       prettier:
         specifier: ^2.0.0
         version: 2.8.3
-      ts-loader:
-        specifier: ^8.0.0
-        version: 8.4.0(typescript@4.9.4)(webpack@5.96.1(@swc/core@1.4.8(@swc/helpers@0.5.5)))
       ts-node:
         specifier: ^10.0.0
         version: 10.9.1(@swc/core@1.4.8(@swc/helpers@0.5.5))(@types/node@22.9.0)(typescript@4.9.4)
@@ -13032,10 +13005,6 @@ packages:
     resolution: {integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==}
     engines: {node: '>= 0.4.0'}
 
-  passport@0.4.1:
-    resolution: {integrity: sha512-IxXgZZs8d7uFSt3eqNjM9NQ3g3uQCW5avD8mRNoXV99Yig50vjuaez6dQK2qC0kVWPRTujxY0dWgGfT09adjYg==}
-    engines: {node: '>= 0.4.0'}
-
   passport@0.6.0:
     resolution: {integrity: sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==}
     engines: {node: '>= 0.4.0'}
@@ -15198,13 +15167,6 @@ packages:
     engines: {node: '>=8.6'}
     peerDependencies:
       typescript: '*'
-
-  ts-loader@8.4.0:
-    resolution: {integrity: sha512-6nFY3IZ2//mrPc+ImY3hNWx1vCHyEhl6V+wLmL4CZcm6g1CqX7UKrkc6y0i4FwcfOhxyMPCfaEvh20f4r9GNpw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      typescript: '*'
-      webpack: '*'
 
   ts-log@2.2.5:
     resolution: {integrity: sha512-PGcnJoTBnVGy6yYNFxWVNkdcAuAMstvutN9MgDJIV6L0oG8fB+ZNNy1T+wJzah8RPGor1mZuPQkVfXNDpy9eHA==}
@@ -20842,11 +20804,6 @@ snapshots:
     optionalDependencies:
       class-transformer: 0.5.1
       class-validator: 0.14.1
-
-  '@nestjs/passport@10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(passport@0.4.1)':
-    dependencies:
-      '@nestjs/common': 10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      passport: 0.4.1
 
   '@nestjs/passport@10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(passport@0.6.0)':
     dependencies:
@@ -30194,11 +30151,6 @@ snapshots:
 
   passport-strategy@1.0.0: {}
 
-  passport@0.4.1:
-    dependencies:
-      passport-strategy: 1.0.0
-      pause: 0.0.1
-
   passport@0.6.0:
     dependencies:
       passport-strategy: 1.0.0
@@ -32588,16 +32540,6 @@ snapshots:
       micromatch: 4.0.8
       semver: 6.3.1
       typescript: 4.9.4
-
-  ts-loader@8.4.0(typescript@4.9.4)(webpack@5.96.1(@swc/core@1.4.8(@swc/helpers@0.5.5))):
-    dependencies:
-      chalk: 4.1.2
-      enhanced-resolve: 4.5.0
-      loader-utils: 2.0.4
-      micromatch: 4.0.8
-      semver: 7.6.3
-      typescript: 4.9.4
-      webpack: 5.96.1(@swc/core@1.4.8(@swc/helpers@0.5.5))
 
   ts-log@2.2.5: {}
 
