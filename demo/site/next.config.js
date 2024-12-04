@@ -11,28 +11,6 @@ const cometConfig = require("./src/comet-config.json");
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-    async rewrites() {
-        return [
-            {
-                source: "/dam/:path*",
-                destination: process.env.API_URL + "/dam/:path*",
-            },
-        ];
-    },
-    async redirects() {
-        const adminUrl = process.env.ADMIN_URL;
-
-        if (!adminUrl) {
-            throw Error("ADMIN_URL is not defined");
-        }
-        return [
-            {
-                source: "/admin",
-                destination: adminUrl,
-                permanent: false,
-            },
-        ];
-    },
     images: {
         deviceSizes: cometConfig.dam.allowedImageSizes,
     },

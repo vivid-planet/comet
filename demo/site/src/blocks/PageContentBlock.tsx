@@ -2,6 +2,7 @@
 import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { CookieSafeYouTubeVideoBlock } from "@src/blocks/CookieSafeYouTubeVideoBlock";
+import { LayoutBlock } from "@src/blocks/LayoutBlock";
 import { ImageLinkBlock } from "@src/documents/pages/blocks/ImageLinkBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
@@ -38,6 +39,7 @@ const supportedBlocks: SupportedBlocks = {
     newsDetail: (props) => <NewsDetailBlock data={props} />,
     imageLink: (props) => <ImageLinkBlock data={props} />,
     newsList: (props) => <NewsListBlock data={props} />,
+    layout: (props) => <LayoutBlock data={props} />,
     table: (props) => <TableBlock data={props} />,
 };
 
