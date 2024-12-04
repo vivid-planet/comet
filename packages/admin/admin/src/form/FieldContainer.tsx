@@ -1,5 +1,14 @@
-import { FormControl, FormHelperText, formHelperTextClasses, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
-import { ComponentsOverrides, css } from "@mui/material/styles";
+import {
+    FormControl,
+    FormHelperText,
+    formHelperTextClasses,
+    FormLabel,
+    formLabelClasses,
+    inputBaseClasses,
+    svgIconClasses,
+    useThemeProps,
+} from "@mui/material";
+import { ComponentsOverrides, css, Theme } from "@mui/material/styles";
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -184,14 +193,22 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
     `,
 );
 
+const getCommonHelperTextStyles = (theme: Theme) => css`
+    &.${formHelperTextClasses.root} {
+        gap: ${theme.spacing(1)};
+    }
+
+    > .${svgIconClasses.root} {
+        width: 12px;
+    }
+`;
+
 const Error = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "error",
 })(
     ({ theme }) => css`
-        &.${formHelperTextClasses.root} {
-            gap: ${theme.spacing(1)};
-        }
+        ${getCommonHelperTextStyles(theme)}
     `,
 );
 
@@ -200,11 +217,8 @@ const Warning = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     slotName: "warning",
 })(
     ({ theme }) => css`
+        ${getCommonHelperTextStyles(theme)}
         color: ${theme.palette.warning.main};
-
-        &.${formHelperTextClasses.root} {
-            gap: ${theme.spacing(1)};
-        }
     `,
 );
 
@@ -213,11 +227,8 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     slotName: "helperText",
 })(
     ({ theme }) => css`
+        ${getCommonHelperTextStyles(theme)}
         color: ${theme.palette.grey[300]};
-
-        &.${formHelperTextClasses.root} {
-            gap: ${theme.spacing(1)};
-        }
     `,
 );
 
@@ -244,10 +255,6 @@ const HelperTextsWrapper = createComponentSlot("div")<FieldContainerClassKey>({
         align-items: center;
         justify-content: space-between;
         gap: ${theme.spacing(3)};
-
-        svg {
-            width: 12px;
-        }
     `,
 );
 
