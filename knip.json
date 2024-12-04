@@ -8,6 +8,12 @@
         "packages/eslint-config": {
             "ignore": ["*"]
         },
+        "codemods": {
+            "ignore": ["*"]
+        },
+        "docs": {
+            "ignore": ["*"]
+        },
         "packages/admin/admin-babel-preset": {
             "ignore": ["*"]
         },
@@ -80,6 +86,11 @@
             "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"]
         },
         "demo/site": {
+            "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["@babel/core"]
+        },
+        "demo/site-pages": {
             "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"]

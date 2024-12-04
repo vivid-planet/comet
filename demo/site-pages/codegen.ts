@@ -1,8 +1,10 @@
+import { resolve } from "node:path";
+
 import { CodegenConfig } from "@graphql-codegen/cli";
 import { readFileSync } from "fs";
 import { buildSchema } from "graphql";
 
-const schema = buildSchema(readFileSync("./schema.gql").toString());
+const schema = buildSchema(readFileSync(resolve(__dirname, "./schema.gql")).toString());
 
 const rootBlocks = Object.keys(schema.getTypeMap()).filter((type) => type.endsWith("BlockData"));
 
