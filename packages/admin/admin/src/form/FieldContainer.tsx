@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
+import { FormControl, FormHelperText, formHelperTextClasses, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
 import { ComponentsOverrides, css } from "@mui/material/styles";
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
@@ -187,7 +187,13 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
 const Error = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "error",
-})();
+})(
+    ({ theme }) => css`
+        &.${formHelperTextClasses.root} {
+            gap: ${theme.spacing(1)};
+        }
+    `,
+);
 
 const Warning = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
@@ -195,6 +201,10 @@ const Warning = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
 })(
     ({ theme }) => css`
         color: ${theme.palette.warning.main};
+
+        &.${formHelperTextClasses.root} {
+            gap: ${theme.spacing(1)};
+        }
     `,
 );
 
@@ -204,6 +214,10 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
 })(
     ({ theme }) => css`
         color: ${theme.palette.grey[300]};
+
+        &.${formHelperTextClasses.root} {
+            gap: ${theme.spacing(1)};
+        }
     `,
 );
 
