@@ -2,13 +2,13 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudVisibility,
+    dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
     GridCellContent,
     GridColDef,
     GridColumnsButton,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     renderStaticSelectCell,
@@ -26,6 +26,7 @@ import { DataGridPro, GridFilterInputSingleSelect, GridFilterInputValue, GridToo
 import gql from "graphql-tag";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
+import { ManufacturerFilterOperator } from "./ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -190,11 +191,15 @@ export function ProductsGrid() {
             minWidth: 80,
         },
         {
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: "Available Since",
             width: 130,
+<<<<<<< HEAD
             type: "date",
             valueGetter: (params, row) => row.availableSince && new Date(row.availableSince),
+=======
+>>>>>>> main
         },
         {
             field: "status",
@@ -222,18 +227,25 @@ export function ProductsGrid() {
             },
         },
         {
-            field: "action",
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: ({ value }) => value?.name,
+            filterOperators: [ManufacturerFilterOperator],
+        },
+        {
+            field: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
-            width: 106,
+            width: 116,
             pinned: "right",
             renderCell: (params) => {
                 return (
                     <>
                         <ProductsGridPreviewAction {...params} />
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit />
                         </IconButton>
                         <CrudContextMenu
                             onPaste={async ({ input }) => {
@@ -290,6 +302,7 @@ export function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
+<<<<<<< HEAD
         <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
@@ -303,6 +316,20 @@ export function ProductsGrid() {
                 }}
             />
         </MainContent>
+=======
+        <DataGridPro
+            {...dataGridProps}
+            disableSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            error={error}
+            components={{
+                Toolbar: ProductsGridToolbar,
+            }}
+        />
+>>>>>>> main
     );
 }
 
@@ -332,6 +359,9 @@ const productsFragment = gql`
         }
         variants {
             id
+        }
+        manufacturer {
+            name
         }
         articleNumbers
         discounts {

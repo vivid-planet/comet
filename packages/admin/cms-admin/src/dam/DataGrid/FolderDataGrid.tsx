@@ -16,7 +16,7 @@ import { Slide, SlideProps, Snackbar } from "@mui/material";
 import { DataGrid, GridRowClassNameParams, GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
+import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
 import { GQLDamItemType } from "../../graphql.generated";
@@ -476,7 +476,7 @@ const FolderDataGrid = ({
                                               <>
                                                   <FormattedMessage id="comet.dam.file.license.validUntil" defaultMessage="Valid until:" />{" "}
                                                   {row.license.durationTo ? (
-                                                      <FormattedDate value={row.license.durationTo} day="2-digit" month="2-digit" year="numeric" />
+                                                      <FormattedDate value={row.license.durationTo} dateStyle="medium" />
                                                   ) : (
                                                       <FormattedMessage id="comet.dam.file.license.unlimited" defaultMessage="Unlimited" />
                                                   )}
@@ -502,13 +502,7 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            renderCell: ({ row }) => (
-                <div>
-                    <FormattedDate value={row.createdAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.createdAt} />
-                </div>
-            ),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -522,13 +516,7 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            renderCell: ({ row }) => (
-                <div>
-                    <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.updatedAt} />
-                </div>
-            ),
+            valueFormatter: ({ value }) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,

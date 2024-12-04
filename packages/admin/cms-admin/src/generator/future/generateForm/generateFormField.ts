@@ -343,7 +343,7 @@ export function generateFormField({
         } else {
             formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
         }
-        formFragmentField = `${name} { ...FinalFormFileUpload }`;
+        formFragmentField = `${name} { ...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"} }`;
     } else if (config.type == "staticSelect") {
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,

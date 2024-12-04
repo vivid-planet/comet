@@ -4,6 +4,8 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudMoreActionsMenu,
+    dataGridDateColumn,
+    dataGridDateTimeColumn,
     DataGridToolbar,
     ExportApi,
     filterByFragment,
@@ -39,6 +41,7 @@ import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
+import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -62,6 +65,9 @@ const productsFragment = gql`
         description
         availableSince
         createdAt
+        manufacturer {
+            name
+        }
     }
 `;
 
@@ -234,7 +240,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
         },
         {
             field: "inStock",
-            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
             type: "singleSelect",
             valueFormatter: (value, row) => row.inStock?.toString(),
             valueOptions: [
@@ -290,23 +296,40 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             maxWidth: 150,
         },
         {
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
+<<<<<<< HEAD
             type: "date",
             valueGetter: (params, row) => row.availableSince && new Date(row.availableSince),
             valueFormatter: (value, row) => (row.availableSince ? intl.formatDate(row.availableSince) : ""),
+=======
+>>>>>>> main
             width: 140,
         },
         {
+            ...dataGridDateTimeColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
+<<<<<<< HEAD
             type: "dateTime",
             valueGetter: (params, row) => row.createdAt && new Date(row.createdAt),
             valueFormatter: (value, row) =>
                 row.createdAt
                     ? intl.formatDate(row.createdAt, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" })
                     : "",
+=======
+>>>>>>> main
             width: 170,
+        },
+        {
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: ({ row }) => row.manufacturer?.name,
+            filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "actions",

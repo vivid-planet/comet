@@ -43,37 +43,6 @@ export const Radio = () => {
                                     </CardContent>
                                 </Card>
                             </Grid>
-                            <Grid item xs={6}>
-                                <Card variant="outlined">
-                                    <CardContent>
-                                        <FieldContainer label="Radios with secondary color">
-                                            <Field name="foo3" type="radio" value="bar1" fullWidth>
-                                                {(props) => (
-                                                    <FormControlLabel label="Unchecked" control={<FinalFormRadio {...props} color="secondary" />} />
-                                                )}
-                                            </Field>
-                                            <Field name="foo3" type="radio" value="bar2" fullWidth>
-                                                {(props) => (
-                                                    <FormControlLabel label="Checked" control={<FinalFormRadio {...props} color="secondary" />} />
-                                                )}
-                                            </Field>
-                                            <Field name="foo4" type="radio" value="bar1" fullWidth disabled>
-                                                {(props) => (
-                                                    <FormControlLabel label="Disabled" control={<FinalFormRadio {...props} color="secondary" />} />
-                                                )}
-                                            </Field>
-                                            <Field name="foo4" type="radio" value="bar2" fullWidth disabled>
-                                                {(props) => (
-                                                    <FormControlLabel
-                                                        label="Disabled & Checked"
-                                                        control={<FinalFormRadio {...props} color="secondary" />}
-                                                    />
-                                                )}
-                                            </Field>
-                                        </FieldContainer>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
                         </Grid>
                     </form>
                 )}

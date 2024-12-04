@@ -105,7 +105,7 @@ function DefaultUserMessage({ error, additionalInformation }: DefaultUserMessage
             <Typography variant="h6">
                 <FormattedMessage
                     id="comet.errorDialog.defaultUserMessage"
-                    defaultMessage="The following {errorCount, plural, one {error} other {errors} } {errorCount, plural, one {has} other {have} } occured:"
+                    defaultMessage="The following {errorCount, plural, one {error} other {errors} } {errorCount, plural, one {has} other {have} } occurred:"
                     values={{ errorCount: error.length }}
                 />
             </Typography>

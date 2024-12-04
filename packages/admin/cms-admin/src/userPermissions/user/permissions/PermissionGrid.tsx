@@ -121,8 +121,9 @@ export const PermissionGrid = ({ userId }: { userId: string }) => {
                     onClick={() => {
                         setPermissionId(row.id);
                     }}
+                    color="primary"
                 >
-                    <Edit color="primary" />
+                    <Edit />
                 </IconButton>
             ),
         },

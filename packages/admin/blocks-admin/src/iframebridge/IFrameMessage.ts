@@ -78,6 +78,7 @@ export enum AdminMessageType {
     SelectComponent = "SelectComponent",
     HoverComponent = "HoverComponent",
     ContentScope = "ContentScope",
+    GraphQLApiUrl = "GraphQLApiUrl",
 }
 
 /**
@@ -127,6 +128,16 @@ export interface IAdminContentScopeMessage {
     cometType: AdminMessageType.ContentScope;
     data: {
         contentScope: unknown;
+<<<<<<< HEAD
+=======
+    };
+}
+
+export interface IAdminGraphQLApiUrlMessage {
+    cometType: AdminMessageType.GraphQLApiUrl;
+    data: {
+        graphQLApiUrl: string;
+>>>>>>> main
     };
 }
 
@@ -135,4 +146,5 @@ export type AdminMessage =
     | IAdminSelectComponentMessage
     | IAdminHoverComponentMessage
     | IAdminContentScopeMessage
-    | IAdminShowOnlyVisibleMessage;
+    | IAdminShowOnlyVisibleMessage
+    | IAdminGraphQLApiUrlMessage;
