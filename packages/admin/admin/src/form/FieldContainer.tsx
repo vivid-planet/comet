@@ -299,23 +299,25 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
                     <HelperTextsWrapper {...slotProps?.helperTextsWrapper}>
                         {hasError && (
                             <Error error {...slotProps?.error}>
-                                {helperTextIcon && helperTextIcon}
+                                {Boolean(helperTextIcon) && helperTextIcon}
                                 <HelperTextContent>{error}</HelperTextContent>
                             </Error>
                         )}
                         {hasWarning && !hasError && (
                             <Warning {...slotProps?.warning}>
-                                {helperTextIcon && helperTextIcon}
+                                {Boolean(helperTextIcon) && helperTextIcon}
                                 <HelperTextContent>{warning}</HelperTextContent>
                             </Warning>
                         )}
-                        {helperText && !hasError && !hasWarning && (
+                        {Boolean(helperText) && !hasError && !hasWarning && (
                             <HelperText {...slotProps?.helperText}>
-                                {helperTextIcon && helperTextIcon}
+                                {Boolean(helperTextIcon) && helperTextIcon}
                                 <HelperTextContent>{helperText}</HelperTextContent>
                             </HelperText>
                         )}
-                        {secondaryHelperText && <SecondaryHelperText {...slotProps?.secondaryHelperText}>{secondaryHelperText}</SecondaryHelperText>}
+                        {Boolean(secondaryHelperText) && (
+                            <SecondaryHelperText {...slotProps?.secondaryHelperText}>{secondaryHelperText}</SecondaryHelperText>
+                        )}
                     </HelperTextsWrapper>
                 </InputContainer>
             </>
