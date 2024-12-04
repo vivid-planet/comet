@@ -6,7 +6,7 @@ import {
     Dialog as MuiDialog,
     DialogProps as MuiDialogProps,
     DialogTitle as MuiDialogTitle,
-    IconButton as MuiIconButton,
+    IconButton,
     Theme,
     useThemeProps,
 } from "@mui/material";
@@ -18,7 +18,7 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 export type DialogClassKey = "root" | "closeButton" | "dialogTitle";
 
 export type DialogProps = ThemedComponentBaseProps<{
-    closeButton: typeof MuiIconButton;
+    closeButton: typeof IconButton;
     root: typeof MuiDialog;
     dialogTitle: typeof MuiDialogTitle;
 }> & {
@@ -30,7 +30,7 @@ export type DialogProps = ThemedComponentBaseProps<{
 } & MuiDialogProps;
 
 type OwnerState = {
-    hasClose: boolean;
+    hasCloseButton: boolean;
 };
 
 export function Dialog(inProps: DialogProps) {
@@ -44,9 +44,11 @@ export function Dialog(inProps: DialogProps) {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminDialog" });
     const { closeIcon = <Close color="inherit" /> } = iconMapping;
+
     const ownerState: OwnerState = {
-        hasClose: Boolean(onClose),
+        hasCloseButton: Boolean(onClose),
     };
+
     return (
         <Root open={open} {...slotProps?.root} {...restProps}>
             {onClose && (
@@ -72,17 +74,18 @@ const DialogTitle = createComponentSlot(MuiDialogTitle)<DialogClassKey, OwnerSta
     slotName: "dialogTitle",
 })(
     ({ ownerState }) => css`
-        ${ownerState.hasClose &&
-        css`
-            padding-right: 40px;
-        `}
         min-height: 20px;
         display: flex;
         align-items: center;
+
+        ${ownerState.hasCloseButton &&
+        css`
+            padding-right: 40px;
+        `}
     `,
 );
 
-const CloseButton = createComponentSlot(MuiIconButton)<DialogClassKey>({
+const CloseButton = createComponentSlot(IconButton)<DialogClassKey>({
     componentName: "Dialog",
     slotName: "closeButton",
 })(
