@@ -105,7 +105,12 @@ function ManufacturersGridToolbar() {
 export function ManufacturersGrid(): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ManufacturersGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "manufacturers",
+        }),
+        ...usePersistentColumnState("ManufacturersGrid"),
+    };
 
     const columns: GridColDef<GQLManufacturersGridFutureFragment>[] = [
         {
