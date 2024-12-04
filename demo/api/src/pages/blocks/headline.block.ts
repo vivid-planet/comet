@@ -12,7 +12,7 @@ import {
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
 
-export enum HeadlineLevel {
+enum HeadlineLevel {
     HeaderOne = "header-one",
     HeaderTwo = "header-two",
     HeaderThree = "header-three",
