@@ -37,18 +37,7 @@ export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
             headerName: intl.formatMessage({ id: "dashboard.latestContentUpdates.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
             flex: 1,
-<<<<<<< HEAD
-            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt),
-            renderCell: ({ row }) => (
-                <>
-                    <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.updatedAt} />
-                </>
-            ),
-=======
             valueFormatter: ({ value }) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
->>>>>>> main
         },
         {
             ...disableFieldOptions,

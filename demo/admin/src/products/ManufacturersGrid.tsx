@@ -174,33 +174,17 @@ export function ManufacturersGrid() {
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
 
     return (
-<<<<<<< HEAD
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableRowSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                slots={{
-                    toolbar: ManufacturersGridToolbar,
-                }}
-            />
-        </MainContent>
-=======
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ManufacturersGridToolbar,
+            slots={{
+                toolbar: ManufacturersGridToolbar,
             }}
         />
->>>>>>> main
     );
 }
 

@@ -13,7 +13,7 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -64,7 +64,11 @@ const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
     );
 };
 
-function Toolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: React.ReactNode;
+}
+
+function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarFillSpace />
@@ -92,10 +96,10 @@ export const EditDialogInRouterTabs = {
                                 { field: "name", headerName: "Name", flex: 1 },
                             ]}
                             rows={products}
-                            components={{
-                                Toolbar: Toolbar,
+                            slots={{
+                                toolbar: Toolbar,
                             }}
-                            componentsProps={{
+                            slotProps={{
                                 toolbar: {
                                     toolbarAction: (
                                         <Button
@@ -107,7 +111,7 @@ export const EditDialogInRouterTabs = {
                                             <FormattedMessage {...messages.add} />
                                         </Button>
                                     ),
-                                },
+                                } as ToolbarProps,
                             }}
                         />
                     </MainContent>

@@ -23,7 +23,7 @@ import {
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -126,7 +126,11 @@ const AddStocksDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
     );
 };
 
-function Toolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+interface ToolbarProps extends GridToolbarProps {
+    toolbarAction?: React.ReactNode;
+}
+
+function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -200,10 +204,10 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
                                     },
                                 ]}
                                 rows={rows}
-                                components={{
-                                    Toolbar: Toolbar,
+                                slots={{
+                                    toolbar: Toolbar,
                                 }}
-                                componentsProps={{
+                                slotProps={{
                                     toolbar: {
                                         toolbarAction: (
                                             <Button
@@ -215,7 +219,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
                                                 <FormattedMessage {...messages.add} />
                                             </Button>
                                         ),
-                                    },
+                                    } as ToolbarProps,
                                 }}
                             />
                         </MainContent>
@@ -284,10 +288,10 @@ export const EditDialogInRouterTabsWithinStack = {
                                         },
                                     ]}
                                     rows={products}
-                                    components={{
-                                        Toolbar: Toolbar,
+                                    slots={{
+                                        toolbar: Toolbar,
                                     }}
-                                    componentsProps={{
+                                    slotProps={{
                                         toolbar: {
                                             toolbarAction: (
                                                 <Button
@@ -299,7 +303,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                                     <FormattedMessage {...messages.add} />
                                                 </Button>
                                             ),
-                                        },
+                                        } as ToolbarProps,
                                     }}
                                 />
                             </MainContent>

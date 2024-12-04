@@ -1,14 +1,9 @@
-NestJS
-Embeddables
-<<<<<<< HEAD
-codemod
-codemods
-typesafe
-=======
 Aktuelles
 Betrieb
 blockname
+codemod
 codemods
+Embeddables
 GraphQLJSONObject
 imgproxy
 Logische
@@ -22,4 +17,3 @@ rgba
 subcomponent
 subpage
 typesafe
->>>>>>> main

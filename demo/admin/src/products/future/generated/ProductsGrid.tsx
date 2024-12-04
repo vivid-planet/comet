@@ -299,34 +299,19 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             ...dataGridDateColumn,
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
-<<<<<<< HEAD
-            type: "date",
-            valueGetter: (params, row) => row.availableSince && new Date(row.availableSince),
-            valueFormatter: (value, row) => (row.availableSince ? intl.formatDate(row.availableSince) : ""),
-=======
->>>>>>> main
             width: 140,
         },
         {
             ...dataGridDateTimeColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
-<<<<<<< HEAD
-            type: "dateTime",
-            valueGetter: (params, row) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: (value, row) =>
-                row.createdAt
-                    ? intl.formatDate(row.createdAt, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" })
-                    : "",
-=======
->>>>>>> main
             width: 170,
         },
         {
             field: "manufacturer",
             headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
             sortable: false,
-            valueGetter: ({ row }) => row.manufacturer?.name,
+            valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: ManufacturerFilterOperators,
             flex: 1,
             minWidth: 150,

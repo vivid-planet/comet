@@ -321,10 +321,6 @@ export function generateGrid(
 
         let gridColumnType: string | undefined = undefined;
         let renderCell: string | undefined = undefined;
-<<<<<<< HEAD
-        let valueGetter: string | undefined = name.includes(".") ? `(params, row ) => row.${name.replace(/\./g, "?.")}` : undefined;
-=======
->>>>>>> main
         let valueFormatter: string | undefined = undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
@@ -345,19 +341,9 @@ export function generateGrid(
         }
 
         if (type == "dateTime") {
-<<<<<<< HEAD
-            valueGetter = `(params, row) => row.${name} && new Date(row.${name})`;
-            valueFormatter = `(value, row) => row.${name} ? intl.formatDate(row.${name}, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : ""`;
-            gridType = "dateTime";
-        } else if (type == "date") {
-            valueGetter = `(params, row ) => row.${name} && new Date(row.${name})`;
-            valueFormatter = `(value, row) => row.${name} ? intl.formatDate(row.${name}) : ""`;
-            gridType = "date";
-=======
             gridColumnType = "...dataGridDateTimeColumn,";
         } else if (type == "date") {
             gridColumnType = "...dataGridDateColumn,";
->>>>>>> main
         } else if (type == "number") {
             gridType = "number";
         } else if (type == "boolean") {
@@ -460,7 +446,7 @@ export function generateGrid(
             gridType,
             columnType: gridColumnType,
             renderCell,
-            valueGetter: name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined,
+            valueGetter: name.includes(".") ? `(params, row) => row.${name.replace(/\./g, "?.")}` : undefined,
             filterOperators: filterOperators,
             valueFormatter,
             width: column.width,

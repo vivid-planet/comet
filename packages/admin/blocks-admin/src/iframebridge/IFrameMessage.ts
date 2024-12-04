@@ -128,16 +128,16 @@ export interface IAdminContentScopeMessage {
     cometType: AdminMessageType.ContentScope;
     data: {
         contentScope: unknown;
-<<<<<<< HEAD
-=======
     };
 }
 
+/**
+ * The `IAdminGraphQLApiUrlMessage` is sent from the admin to the site.
+ */
 export interface IAdminGraphQLApiUrlMessage {
     cometType: AdminMessageType.GraphQLApiUrl;
     data: {
         graphQLApiUrl: string;
->>>>>>> main
     };
 }
 

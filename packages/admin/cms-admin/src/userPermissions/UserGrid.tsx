@@ -16,12 +16,9 @@ import { Edit, ImpersonateUser } from "@comet/admin-icons";
 import { Chip, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid";
-<<<<<<< HEAD
 import type { GridToolbarProps } from "@mui/x-data-grid/components/toolbar/GridToolbar";
 import { GridSlotsComponent } from "@mui/x-data-grid/models/gridSlotsComponent";
-=======
 import { useContext } from "react";
->>>>>>> main
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { commonImpersonationMessages } from "../common/impersonation/commonImpersonationMessages";

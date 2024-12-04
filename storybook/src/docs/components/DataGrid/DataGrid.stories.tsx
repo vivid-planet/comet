@@ -21,7 +21,7 @@ import {
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
 import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid, GridSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { useState } from "react";
@@ -502,7 +502,7 @@ export const UseDataGridExcelExport = {
 
 export const _CrudMoreActionsMenu = {
     render: () => {
-        const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
         const dataGridProps = useDataGridRemote();
 
         function DemoToolBar() {
@@ -549,13 +549,13 @@ export const _CrudMoreActionsMenu = {
                     rows={exampleRows}
                     columns={exampleColumns}
                     checkboxSelection
-                    disableSelectionOnClick
-                    onSelectionModelChange={(newSelectionModel) => {
+                    disableRowSelectionOnClick
+                    onRowSelectionModelChange={(newSelectionModel) => {
                         setSelectionModel(newSelectionModel);
                     }}
-                    selectionModel={selectionModel}
-                    components={{
-                        Toolbar: DemoToolBar,
+                    rowSelectionModel={selectionModel}
+                    slots={{
+                        toolbar: DemoToolBar,
                     }}
                 />
             </Box>

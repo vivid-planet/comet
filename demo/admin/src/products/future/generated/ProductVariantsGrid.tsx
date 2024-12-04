@@ -115,12 +115,6 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
             ...dataGridDateColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
-<<<<<<< HEAD
-            type: "date",
-            valueGetter: (params, row) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: (value, row) => (row.createdAt ? intl.formatDate(row.createdAt) : ""),
-=======
->>>>>>> main
             flex: 1,
             minWidth: 150,
         },

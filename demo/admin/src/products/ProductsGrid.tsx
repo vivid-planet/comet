@@ -195,11 +195,6 @@ export function ProductsGrid() {
             field: "availableSince",
             headerName: "Available Since",
             width: 130,
-<<<<<<< HEAD
-            type: "date",
-            valueGetter: (params, row) => row.availableSince && new Date(row.availableSince),
-=======
->>>>>>> main
         },
         {
             field: "status",
@@ -230,7 +225,7 @@ export function ProductsGrid() {
             field: "manufacturer",
             headerName: intl.formatMessage({ id: "products.manufacturer", defaultMessage: "Manufacturer" }),
             sortable: false,
-            valueGetter: ({ value }) => value?.name,
+            valueGetter: (params, row) => row.manufacturer?.name,
             filterOperators: [ManufacturerFilterOperator],
         },
         {
@@ -302,34 +297,17 @@ export function ProductsGrid() {
     const rowCount = useBufferedRowCount(data?.products.totalCount);
 
     return (
-<<<<<<< HEAD
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableRowSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                slots={{
-                    toolbar: ProductsGridToolbar,
-                }}
-            />
-        </MainContent>
-=======
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            error={error}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar,
             }}
         />
->>>>>>> main
     );
 }
 
