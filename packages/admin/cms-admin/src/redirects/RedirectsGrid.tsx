@@ -136,8 +136,8 @@ export function RedirectsGrid({ linkBlock, scope }: Props): JSX.Element {
             headerName: "",
             renderCell: (params) => (
                 <IconWrapper>
-                    <IconButton component={StackLink} pageName="edit" payload={params.id.toString()}>
-                        <Edit color="primary" />
+                    <IconButton color="primary" component={StackLink} pageName="edit" payload={params.id.toString()}>
+                        <Edit />
                     </IconButton>
                     <TableDeleteButton
                         icon={<DeleteIcon />}

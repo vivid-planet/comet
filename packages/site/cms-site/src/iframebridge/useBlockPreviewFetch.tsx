@@ -1,18 +1,29 @@
 import { useEffect, useRef } from "react";
 
 import { createFetchInMemoryCache } from "../graphQLFetch/fetchInMemoryCache";
-import { convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch } from "../graphQLFetch/graphQLFetch";
+import { convertPreviewDataToHeaders, createFetchWithDefaults, createGraphQLFetch, GraphQLFetch } from "../graphQLFetch/graphQLFetch";
 import { useIFrameBridge } from "./useIFrameBridge";
 
 const cachingFetch = createFetchInMemoryCache(fetch);
 
-export function useBlockPreviewFetch(graphqlApiUrl: string) {
-    const iFrameBridge = useIFrameBridge();
+type Fetch = typeof fetch;
 
-    const graphQLFetchRef = useRef(createBlockPreviewFetch(graphqlApiUrl, !iFrameBridge.showOnlyVisible));
+/**
+ * @deprecated Use useBlockPreviewFetch() without argument instead
+ * @param apiUrl the API URL
+ */
+export function useBlockPreviewFetch(apiUrl: string): { fetch: Fetch; graphQLFetch: GraphQLFetch };
+export function useBlockPreviewFetch(apiUrl?: string | undefined): { fetch: Fetch; graphQLFetch?: GraphQLFetch };
+export function useBlockPreviewFetch(apiUrl?: string | undefined) {
+    const { showOnlyVisible, graphQLApiUrl } = useIFrameBridge();
+
+    const graphQLFetchRef = useRef(apiUrl ? createBlockPreviewFetch(apiUrl, !showOnlyVisible) : undefined);
     useEffect(() => {
-        graphQLFetchRef.current = createBlockPreviewFetch(graphqlApiUrl, !iFrameBridge.showOnlyVisible);
-    }, [iFrameBridge.showOnlyVisible, graphqlApiUrl]);
+        if (graphQLApiUrl) {
+            graphQLFetchRef.current = createBlockPreviewFetch(graphQLApiUrl, !showOnlyVisible);
+        }
+    }, [showOnlyVisible, graphQLApiUrl]);
+
     return {
         graphQLFetch: graphQLFetchRef.current,
         fetch: cachingFetch,
@@ -20,5 +31,8 @@ export function useBlockPreviewFetch(graphqlApiUrl: string) {
 }
 
 function createBlockPreviewFetch(graphqlApiUrl: string, includeInvisible: boolean) {
-    return createGraphQLFetch(createFetchWithDefaults(cachingFetch, { headers: convertPreviewDataToHeaders({ includeInvisible }) }), graphqlApiUrl);
+    return createGraphQLFetch(
+        createFetchWithDefaults(cachingFetch, { headers: convertPreviewDataToHeaders({ includeInvisible }), credentials: "include" }),
+        graphqlApiUrl,
+    );
 }
