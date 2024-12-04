@@ -16,7 +16,6 @@ describe("createLinkBlock", () => {
             LinkBlock.blockInputFactory({
                 attachedBlocks: [],
                 activeType: "internal",
-                // @ts-expect-error fixme
                 title: "Test",
             })
                 .transformToBlockData()
