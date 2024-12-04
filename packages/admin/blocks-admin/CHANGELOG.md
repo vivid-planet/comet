@@ -1,5 +1,92 @@
 # @comet/blocks-admin
 
+## 7.9.0
+
+### Minor Changes
+
+-   92f9d078f: Add `hiddenForState` option to `createCompositeBlock`
+
+    This function can be used to hide a block in the `AdminComponent` for a given state.
+
+    **Example**
+
+    ```tsx
+    const TextWithMediaVariantBlock = createCompositeBlock({
+        name: "TextWithMediaVariant",
+        blocks: {
+            variant: {
+                block: createCompositeBlockSelectField<string>({
+                    defaultValue: "text-image",
+                    fieldProps: { label: "Variant", fullWidth: true },
+                    options: [
+                        { value: "text-image", label: "Text Image" },
+                        { value: "text-only", label: "Text Only" },
+                    ],
+                }),
+            },
+            text: {
+                block: RichTextBlock,
+            },
+            media: {
+                block: MediaBlock,
+                // The media block isn't needed for the "text-only" variant
+                hiddenForState: (state) => state.variant === "text-only",
+            },
+        },
+    });
+    ```
+
+-   047b9d17b: Add `label` prop to `ColumnsLayoutPreview`
+
+    Use it to customize the label of the column displayed in the `FinalFormLayoutSelect`.
+    For instance, to add an icon or add custom text:
+
+    ```tsx
+    <ColumnsLayoutPreviewContent width={10} label={<Image />} />
+    ```
+
+-   59b4b6f77: Add `visibleOrderedBlocksForState` option to `createCompositeBlock`
+
+    The option can be used to hide and order child blocks in the `AdminComponent`.
+    It should return an array of visible block keys for a given state.
+    The order of the keys define the order in which the blocks will be rendered.
+    If key is not present in the array, the block will not be rendered.
+
+    **Example**
+
+    ```tsx
+    const LayoutBlock = createCompositeBlock({
+        /* ... */
+        blocks: {
+            layout: {
+                /* A layout select */
+            },
+            headline1: { block: HeadlineBlock },
+            image1: { block: DamImageBlock },
+            headline2: { block: HeadlineBlock },
+            image2: { block: DamImageBlock },
+        },
+        visibleOrderedBlocksForState: (state: LayoutBlockData) => {
+            if (state.layout === "compact") {
+                // headline2 and image2 will be hidden
+                return ["headline1", "image1"];
+            } else {
+                return ["headline1", "image1", "headline2", "image2"];
+            }
+        },
+    });
+    ```
+
+### Patch Changes
+
+-   Updated dependencies [6d6131b16]
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [0919e3ba6]
+-   Updated dependencies [55d40ef08]
+    -   @comet/admin@7.9.0
+    -   @comet/admin-icons@7.9.0
+
 ## 7.8.0
 
 ### Minor Changes
