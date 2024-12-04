@@ -81,7 +81,8 @@
         },
         "demo/site": {
             "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["@babel/core"]
         }
     },
 
