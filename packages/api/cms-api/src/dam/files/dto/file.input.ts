@@ -61,13 +61,13 @@ export class LicenseInput {
     @Transform(({ value }) => (value ? new Date(value) : null))
     @IsOptional()
     @IsDate()
-    durationFrom?: Date;
+    durationFrom?: Date | null;
 
     @Field(() => Date, { nullable: true })
     @Transform(({ value }) => (value ? new Date(value) : null))
     @IsOptional()
     @IsDate()
-    durationTo?: Date;
+    durationTo?: Date | null;
 }
 
 export class CreateFileInput {
