@@ -1,6 +1,11 @@
 {
     "$schema": "https://unpkg.com/knip@5/schema.json",
     "workspaces": {
+        ".": {
+            "entry": ["dev-pm.config.js", "waitForPackages.js", "site-configs.ts"],
+            "project": ["*.{js,ts,tsx}"],
+            "ignoreDependencies": ["wait-on", "dotenv-cli", "cspell"]
+        },
         "packages/cli": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
@@ -59,7 +64,7 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/cms-api": {
-            "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts"],
+            "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts", "./jest-setup-file.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/cms-site": {
@@ -80,7 +85,8 @@
                 "./src/db/ormconfig.cli.ts",
                 "./src/db/fixtures/**/*.ts",
                 "./src/db/migrations/**/*.ts",
-                "./src/auth/user.interface.ts"
+                "./src/auth/user.interface.ts",
+                "./src/generator/generate.ts"
             ],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"]
@@ -100,7 +106,7 @@
             "project": ["./src/**/*.{ts,tsx}"]
         }
     },
-    "entry": ["dev-pm.config.js"],
+
     "rules": {
         "enumMembers": "off"
     }

@@ -42,6 +42,7 @@
         "@babel/core": "^7.0.0",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
+        "@comet/eslint-plugin": "workspace:*",
         "@graphql-codegen/add": "^3.0.0",
         "@graphql-codegen/cli": "^2.0.0",
         "@graphql-codegen/named-operations-object": "^2.0.0",

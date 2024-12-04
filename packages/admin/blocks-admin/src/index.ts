@@ -20,6 +20,7 @@ export { createCompositeBlock } from "./blocks/factories/createCompositeBlock";
 export type { ListBlockFragment, ListBlockState } from "./blocks/factories/createListBlock";
 export { createListBlock } from "./blocks/factories/createListBlock";
 export type { CreateOneOfBlockOptions, OneOfBlockFragment, OneOfBlockState } from "./blocks/factories/createOneOfBlock";
+export { OneOfBlockPreviewState } from "./blocks/factories/createOneOfBlock";
 export { createOneOfBlock } from "./blocks/factories/createOneOfBlock";
 export type { OptionalBlockDecoratorFragment, OptionalBlockState } from "./blocks/factories/createOptionalBlock";
 export { createOptionalBlock } from "./blocks/factories/createOptionalBlock";
