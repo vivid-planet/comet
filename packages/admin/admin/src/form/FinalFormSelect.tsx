@@ -46,7 +46,6 @@ export const FinalFormSelect = <T,>({
     children,
     required,
     startAdornment,
-    endAdornment,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
@@ -54,7 +53,7 @@ export const FinalFormSelect = <T,>({
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
     const multiple = restInput.multiple ?? rest.multiple;
 
-    const clearInputAdornment = !required ? (
+    const endAdornment = !required ? (
         <ClearInputAdornment
             position="end"
             hasClearableContent={getHasClearableContent(value, multiple)}
@@ -74,7 +73,7 @@ export const FinalFormSelect = <T,>({
 
     if (children) {
         return (
-            <Select {...selectProps} endAdornment={endAdornment} startAdornment={startAdornment} value={value}>
+            <Select {...selectProps} startAdornment={startAdornment} value={value}>
                 {children}
             </Select>
         );
@@ -85,13 +84,12 @@ export const FinalFormSelect = <T,>({
             {...selectProps}
             endAdornment={
                 <>
-                    {endAdornment}
                     {loading && (
                         <InputAdornment position="end">
                             <CircularProgress size={16} color="inherit" />
                         </InputAdornment>
                     )}
-                    {clearInputAdornment}
+                    {endAdornment}
                 </>
             }
             startAdornment={startAdornment}
