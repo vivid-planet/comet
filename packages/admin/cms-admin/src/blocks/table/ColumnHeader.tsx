@@ -1,10 +1,11 @@
-import { RowActionsItem, RowActionsMenu } from "@comet/admin";
+import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi } from "@comet/admin";
 import { Add, Copy, Delete, DensityStandard, DragIndicator, Duplicate, Paste, PinLeft, PinRight, Remove } from "@comet/admin-icons";
 import { DispatchSetStateAction } from "@comet/blocks-admin";
-import { ButtonBase, Divider, styled } from "@mui/material";
+import { ButtonBase, Divider, Snackbar, styled } from "@mui/material";
 import { GridColumnHeaderParams } from "@mui/x-data-grid";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import { TableBlockData } from "../../blocks.generated";
 import { ColumnSize } from "./TableBlockGrid";
@@ -26,6 +27,8 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
 };
 
 export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex, field: columnId }: Props) => {
+    const snackbarApi = useSnackbarApi();
+
     const insertColumn = (newColumnIndex: number) => {
         const newColumn = getNewColumn();
         updateState((state) => {
@@ -70,6 +73,41 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
     const setColumnSize = (size: ColumnSize) => {
         updateState((state) => {
             return { ...state, columns: state.columns.map((column) => (column.id === columnId ? { ...column, size } : column)) };
+        });
+    };
+
+    const duplicateColumn = () => {
+        updateState((state) => {
+            const currentColumnIndex = state.columns.findIndex(({ id }) => id === columnId);
+            const columnToDuplicate = state.columns[currentColumnIndex];
+
+            if (!columnToDuplicate) {
+                snackbarApi.showSnackbar(
+                    <Snackbar autoHideDuration={5000}>
+                        <Alert severity="error">
+                            <FormattedMessage id="comet.tableBlock.failedToDuplicateColumn" defaultMessage="Failed to duplicate column" />
+                        </Alert>
+                    </Snackbar>,
+                );
+                return state;
+            }
+
+            const duplicatedColumn = { ...columnToDuplicate, id: uuid() };
+
+            return {
+                ...state,
+                columns: [...state.columns.slice(0, currentColumnIndex + 1), duplicatedColumn, ...state.columns.slice(currentColumnIndex + 1)],
+                rows: state.rows.map((row) => {
+                    const cellValueOfDuplicatedColumn = row.cellValues.find(({ columnId: cellValueColumnId }) => cellValueColumnId === columnId);
+                    const newCellValues = [...row.cellValues];
+                    newCellValues.push({ columnId: duplicatedColumn.id, value: cellValueOfDuplicatedColumn?.value ?? "" });
+
+                    return {
+                        ...row,
+                        cellValues: newCellValues,
+                    };
+                }),
+            };
         });
     };
 
@@ -137,13 +175,7 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                     >
                         <FormattedMessage id="comet.tableBlock.pasteColumn" defaultMessage="Paste" />
                     </RowActionsItem>
-                    <RowActionsItem
-                        icon={<Duplicate />}
-                        disabled
-                        onClick={() => {
-                            // TODO: Implement this
-                        }}
-                    >
+                    <RowActionsItem icon={<Duplicate />} onClick={duplicateColumn}>
                         <FormattedMessage id="comet.tableBlock.duplicateColumn" defaultMessage="Duplicate" />
                     </RowActionsItem>
                     <Divider />
