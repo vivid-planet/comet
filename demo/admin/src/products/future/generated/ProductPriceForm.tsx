@@ -8,6 +8,7 @@ import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { PartialDeep } from "type-fest";
 
 import { productFormFragment, productQuery, updateProductMutation } from "./ProductPriceForm.gql";
 import {
@@ -22,6 +23,8 @@ type FormValues = Omit<GQLProductPriceFormDetailsFragment, "price"> & {
     price?: string;
 };
 
+type InitialFormValues = PartialDeep<FormValues>;
+
 interface FormProps {
     id: string;
 }
@@ -33,8 +36,8 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, { variables: { id } });
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
-        () =>
+    const initialValues = React.useMemo<InitialFormValues>(
+        (): InitialFormValues =>
             data?.product
                 ? {
                       ...filterByFragment<GQLProductPriceFormDetailsFragment>(productFormFragment, data.product),
@@ -77,7 +80,7 @@ export function ProductPriceForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormValues>
+        <FinalForm<FormValues, InitialFormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode="edit"

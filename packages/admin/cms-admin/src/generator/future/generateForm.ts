@@ -90,8 +90,6 @@ export function generateForm(
         }
     }
 
-    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
-
     const rootBlockFields = formFields
         .filter((field) => field.type == "block")
         .map((field) => {
@@ -136,10 +134,13 @@ export function generateForm(
         gqlDocuments[name] = generatedFields.gqlDocuments[name];
     }
     imports.push(...generatedFields.imports);
+    props.push(...generatedFields.props);
     hooksCode += generatedFields.hooksCode;
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
+
+    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
         fragment ${formFragmentName} on ${gqlType} {
@@ -287,6 +288,7 @@ export function generateForm(
     import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
+    import { PartialDeep } from "type-fest";
     import isEqual from "lodash.isequal";
     import React from "react";
     import { FormattedMessage } from "react-intl";
@@ -319,6 +321,8 @@ export function generateForm(
             : ""
     };
 
+    type InitialFormValues = PartialDeep<FormValues>;
+
     ${formPropsTypeCode}
 
     export function ${exportName}(${formPropsParamsCode}): React.ReactElement {
@@ -340,7 +344,7 @@ export function generateForm(
 
         ${
             editMode
-                ? `const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceGqlType}
+                ? `const initialValues = React.useMemo<InitialFormValues>((): InitialFormValues => data?.${instanceGqlType}
         ? {
             ...filterByFragment<${filterByFragmentType}>(${instanceGqlType}FormFragment, data.${instanceGqlType}),
             ${formValuesConfig
@@ -354,7 +358,12 @@ export function generateForm(
                 .map((config) => config.defaultInitializationCode)
                 .join(",\n")}
         }
-    , [data]);`
+    , [${[
+        "data",
+        ...formValuesConfig
+            .filter((formValueConfig) => !!formValueConfig.initializationVarDependency)
+            .map((formValueConfig) => formValueConfig.initializationVarDependency),
+    ].join(", ")}]);`
                 : `const initialValues = {
                 ${formValuesConfig
                     .filter((config) => !!config.defaultInitializationCode)
@@ -455,7 +464,7 @@ export function generateForm(
         }
 
         return (
-            <FinalForm<FormValues>
+            <FinalForm<FormValues, InitialFormValues>
                 apiRef={formApiRef}
                 onSubmit={handleSubmit}
                 mode=${mode == "all" ? `{mode}` : editMode ? `"edit"` : `"add"`}

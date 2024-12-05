@@ -22,6 +22,7 @@ import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { PartialDeep } from "type-fest";
 
 import { validateTitle } from "../validateTitle";
 import { GQLProductCategoriesSelectQuery, GQLProductCategoriesSelectQueryVariables } from "./CreateCapProductForm.generated";
@@ -39,6 +40,8 @@ const rootBlocks = {
 type FormValues = GQLCreateCapProductFormDetailsFragment & {
     image: BlockState<typeof rootBlocks.image>;
 };
+
+type InitialFormValues = PartialDeep<FormValues>;
 
 interface FormProps {
     type: GQLProductType;
@@ -77,7 +80,7 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
     };
 
     return (
-        <FinalForm<FormValues>
+        <FinalForm<FormValues, InitialFormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode="add"

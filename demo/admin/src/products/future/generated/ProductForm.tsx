@@ -39,6 +39,7 @@ import isEqual from "lodash.isequal";
 import React from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
+import { PartialDeep } from "type-fest";
 
 import { validateTitle } from "../validateTitle";
 import {
@@ -77,11 +78,15 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
     image: BlockState<typeof rootBlocks.image>;
 };
 
+type InitialFormValues = PartialDeep<FormValues>;
+
 interface FormProps {
+    width?: number;
+    title?: string;
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ width, title, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -92,8 +97,8 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
-        () =>
+    const initialValues = React.useMemo<InitialFormValues>(
+        (): InitialFormValues =>
             data?.product
                 ? {
                       ...filterByFragment<ProductFormDetailsFragment>(productFormFragment, data.product),
@@ -110,10 +115,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
+                      title: title,
+                      dimensions: { width: width ? String(width) : undefined },
                       inStock: false,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data],
+        [data, title, width],
     );
 
     const saveConflict = useFormSaveConflict({
@@ -175,7 +182,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
     }
 
     return (
-        <FinalForm<FormValues>
+        <FinalForm<FormValues, InitialFormValues>
             apiRef={formApiRef}
             onSubmit={handleSubmit}
             mode={mode}

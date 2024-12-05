@@ -1,11 +1,26 @@
 import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
+import { Prop } from "../generateForm";
 import { Adornment, FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
 import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
+
+function convertGqlScalarToTypescript(scalarName: string) {
+    if (scalarName === "String" || scalarName === "ID" || scalarName === "DateTime") {
+        return "string";
+    } else if (scalarName === "Boolean") {
+        return "boolean";
+    } else if (scalarName === "Int" || scalarName === "Float") {
+        return "number";
+    } else if (scalarName === "JSONObject") {
+        return "unknown";
+    } else {
+        return "unknown";
+    }
+}
 
 type AdornmentData = {
     adornmentString: string;
@@ -120,9 +135,39 @@ export function generateFormField({
     const readOnlyPropsWithLock = `${readOnlyProps} ${endAdornmentWithLockIconProp}`;
 
     const imports: Imports = [];
+    const props: Prop[] = [];
+
+    const initialValuePropConfig = config.initialValueProp
+        ? (() => {
+              if (introspectionFieldType.kind === "OBJECT" || introspectionFieldType.kind === "ENUM") {
+                  imports.push({
+                      name: `GQL${introspectionFieldType.name}`,
+                      importPath: `@src/graphql.generated`,
+                  });
+              }
+              props.push({
+                  optional: true,
+                  type:
+                      introspectionFieldType.kind === "OBJECT" || introspectionFieldType.kind === "ENUM"
+                          ? `GQL${introspectionFieldType.name}`
+                          : introspectionFieldType.kind === "SCALAR"
+                          ? convertGqlScalarToTypescript(introspectionFieldType.name)
+                          : "unknown",
+                  name: name,
+              });
+              return {
+                  defaultInitializationCode: `${name}: ${name}`, // TODO consider optionFields field nesting for defaultInitializationCode
+                  initializationVarDependency: `${name}`,
+              };
+          })()
+        : undefined;
+
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
+        defaultInitializationCode: initialValuePropConfig ? initialValuePropConfig.defaultInitializationCode : undefined,
+        initializationVarDependency: initialValuePropConfig ? initialValuePropConfig.initializationVarDependency : undefined,
     };
+
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
     const gqlDocuments: Record<string, string> = {};
@@ -226,6 +271,7 @@ export function generateFormField({
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,
+                defaultInitializationCode: initialValuePropConfig ? `${name}: ${name} ? String(${name}) : undefined` : undefined,
                 ...{
                     omitFromFragmentType: name,
                     typeCode: `${name}${!required ? `?` : ``}: string;`,
@@ -279,7 +325,7 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    defaultInitializationCode: `${name}: false`,
+                    defaultInitializationCode: initialValuePropConfig ? `${name}: ${name} !== undefined ? ${name} : false` : `${name}: false`,
                 },
             },
         ];
@@ -317,13 +363,21 @@ export function generateFormField({
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;
+        if (initialValuePropConfig && introspectionFieldType.kind === "SCALAR") {
+            imports.push({
+                name: introspectionFieldType.name,
+                importPath: "@src/blocks.generated",
+            });
+        }
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,
                 ...{
                     typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
                     initializationCode: `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
-                    defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+                    defaultInitializationCode: initialValuePropConfig
+                        ? `${name}: ${name} ?? rootBlocks.${name}.defaultValues()`
+                        : `${name}: rootBlocks.${name}.defaultValues()`,
                 },
             },
         ];
@@ -554,6 +608,7 @@ export function generateFormField({
     }
     return {
         code,
+        props,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],
