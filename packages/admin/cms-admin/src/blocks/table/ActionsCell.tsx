@@ -7,7 +7,7 @@ import { v4 as uuid } from "uuid";
 import { z } from "zod";
 
 import { TableBlockData } from "../../blocks.generated";
-import { getNewRow } from "./utils";
+import { getNewColumn, getNewRow } from "./utils";
 
 const clipboardRowSchema = z.object({
     highlighted: z.boolean(),
@@ -136,11 +136,25 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
         }
 
         updateState((state) => {
-            const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
+            const numberOfColumnsToAdd = validatedClipboardData.data.cellValues.length - state.columns.length;
+
+            const updatedColumns = [...state.columns];
+            let updatedRows = [...state.rows];
+
+            Array.from({ length: numberOfColumnsToAdd }).forEach(() => {
+                const newColumn = getNewColumn();
+                updatedColumns.push(newColumn);
+                updatedRows = updatedRows.map((row) => ({
+                    ...row,
+                    cellValues: [...row.cellValues, { columnId: newColumn.id, value: "" }],
+                }));
+            });
+
+            const currentRowIndex = updatedRows.findIndex(({ id }) => id === row.id);
             const newRowToPaste: TableBlockData["rows"][number] = {
                 id: uuid(),
                 highlighted: validatedClipboardData.data.highlighted,
-                cellValues: state.columns.map(({ id: columnId }, index) => {
+                cellValues: updatedColumns.map(({ id: columnId }, index) => {
                     return {
                         columnId,
                         value: validatedClipboardData.data.cellValues[index] ?? "",
@@ -148,7 +162,11 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
                 }),
             };
 
-            return { ...state, rows: [...state.rows.slice(0, currentRowIndex + 1), newRowToPaste, ...state.rows.slice(currentRowIndex + 1)] };
+            return {
+                ...state,
+                columns: updatedColumns,
+                rows: [...updatedRows.slice(0, currentRowIndex + 1), newRowToPaste, ...updatedRows.slice(currentRowIndex + 1)],
+            };
         });
     };
 
