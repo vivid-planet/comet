@@ -2,6 +2,7 @@ import {
     Block,
     BlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     transformToSave,
     transformToSaveIndex,
     TraversableTransformResponse,
@@ -17,6 +18,8 @@ export class RootBlockType extends Type<BlockDataInterface | null, TraversableTr
     constructor(block: Block) {
         super();
         this.block = block;
+
+        registerBlock(block);
     }
 
     convertToDatabaseValue(value: BlockDataInterface | null): TraversableTransformResponse | null {
