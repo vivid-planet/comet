@@ -11,9 +11,10 @@ import { getNewRow } from "./utils";
 type Props = {
     row: Record<string, unknown> & { id: string };
     updateState: DispatchSetStateAction<TableBlockData>;
+    state: TableBlockData;
 };
 
-export const ActionsCell = ({ row, updateState }: Props) => {
+export const ActionsCell = ({ row, updateState, state }: Props) => {
     const snackbarApi = useSnackbarApi();
 
     const insertRow = (where: "above" | "below") => {
@@ -53,22 +54,21 @@ export const ActionsCell = ({ row, updateState }: Props) => {
     };
 
     const duplicateRow = () => {
+        const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
+        const rowToDuplicate = state.rows[currentRowIndex];
+
+        if (!rowToDuplicate) {
+            snackbarApi.showSnackbar(
+                <Snackbar autoHideDuration={5000}>
+                    <Alert severity="error">
+                        <FormattedMessage id="comet.tableBlock.failedToDuplicateRow" defaultMessage="Failed to duplicate row" />
+                    </Alert>
+                </Snackbar>,
+            );
+            return;
+        }
+
         updateState((state) => {
-            const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
-            const rowToDuplicate = state.rows[currentRowIndex];
-
-            if (!rowToDuplicate) {
-                snackbarApi.showSnackbar(
-                    <Snackbar autoHideDuration={5000}>
-                        <Alert severity="error">
-                            <FormattedMessage id="comet.tableBlock.failedToDuplicateRow" defaultMessage="Failed to duplicate row" />
-                        </Alert>
-                    </Snackbar>,
-                );
-
-                return state;
-            }
-
             const duplicatedRow = { ...rowToDuplicate, id: uuid() };
             return { ...state, rows: [...state.rows.slice(0, currentRowIndex + 1), duplicatedRow, ...state.rows.slice(currentRowIndex + 1)] };
         });
