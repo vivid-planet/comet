@@ -4,9 +4,17 @@ import { DispatchSetStateAction } from "@comet/blocks-admin";
 import { Divider, Snackbar } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
+import { z } from "zod";
 
 import { TableBlockData } from "../../blocks.generated";
 import { getNewRow } from "./utils";
+
+const clipboardRowSchema = z.object({
+    highlighted: z.boolean(),
+    cellValues: z.array(z.string()),
+});
+
+type ClipboardRow = z.infer<typeof clipboardRowSchema>;
 
 type Props = {
     row: Record<string, unknown> & { id: string };
@@ -74,6 +82,76 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
         });
     };
 
+    const copyRowToClipboard = () => {
+        const rowToCopy = state.rows.find(({ id }) => id === row.id);
+        if (!rowToCopy) {
+            snackbarApi.showSnackbar(
+                <Snackbar autoHideDuration={5000}>
+                    <Alert severity="error">
+                        <FormattedMessage id="comet.tableBlock.failedToCopyRow" defaultMessage="Failed to copy row" />
+                    </Alert>
+                </Snackbar>,
+            );
+            return;
+        }
+
+        const copyData: ClipboardRow = {
+            highlighted: rowToCopy.highlighted,
+            cellValues: state.columns.map(({ id: columnId }) => {
+                const cellValue = rowToCopy.cellValues.find(({ columnId: cellColumnId }) => cellColumnId === columnId);
+                return cellValue ? cellValue.value : "";
+            }),
+        };
+
+        navigator.clipboard.writeText(JSON.stringify(copyData));
+    };
+
+    const showFailedToParseDataSnackbar = () => {
+        snackbarApi.showSnackbar(
+            <Snackbar autoHideDuration={5000}>
+                <Alert severity="error">
+                    <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
+                </Alert>
+            </Snackbar>,
+        );
+    };
+
+    const pasteRowFromClipboard = async () => {
+        const clipboardData = await navigator.clipboard.readText();
+
+        let jsonClipboardData;
+
+        try {
+            jsonClipboardData = JSON.parse(clipboardData);
+        } catch {
+            showFailedToParseDataSnackbar();
+            return;
+        }
+
+        const validatedClipboardData = clipboardRowSchema.safeParse(jsonClipboardData);
+
+        if (!validatedClipboardData.success) {
+            showFailedToParseDataSnackbar();
+            return;
+        }
+
+        updateState((state) => {
+            const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
+            const newRowToPaste: TableBlockData["rows"][number] = {
+                id: uuid(),
+                highlighted: validatedClipboardData.data.highlighted,
+                cellValues: state.columns.map(({ id: columnId }, index) => {
+                    return {
+                        columnId,
+                        value: validatedClipboardData.data.cellValues[index] ?? "",
+                    };
+                }),
+            };
+
+            return { ...state, rows: [...state.rows.slice(0, currentRowIndex + 1), newRowToPaste, ...state.rows.slice(currentRowIndex + 1)] };
+        });
+    };
+
     return (
         <RowActionsMenu>
             <RowActionsMenu>
@@ -107,22 +185,10 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
                     <FormattedMessage id="comet.tableBlock.addRowBelow" defaultMessage="Add row below" />
                 </RowActionsItem>
                 <Divider />
-                <RowActionsItem
-                    icon={<Copy />}
-                    disabled
-                    onClick={() => {
-                        // TODO: Implement this
-                    }}
-                >
+                <RowActionsItem icon={<Copy />} onClick={copyRowToClipboard}>
                     <FormattedMessage id="comet.tableBlock.copyRow" defaultMessage="Copy" />
                 </RowActionsItem>
-                <RowActionsItem
-                    icon={<Paste />}
-                    disabled
-                    onClick={() => {
-                        // TODO: Implement this
-                    }}
-                >
+                <RowActionsItem icon={<Paste />} onClick={pasteRowFromClipboard}>
                     <FormattedMessage id="comet.tableBlock.pasteRow" defaultMessage="Paste" />
                 </RowActionsItem>
                 <RowActionsItem icon={<Duplicate />} onClick={duplicateRow}>

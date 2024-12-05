@@ -79,7 +79,8 @@
         "slugify": "^1.0.0",
         "split.js": "^1.6.4",
         "use-debounce": "^6.0.0",
-        "uuid": "^9.0.0"
+        "uuid": "^9.0.0",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@apollo/client": "^3.7.0",
