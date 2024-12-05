@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { CustomMiddleware } from "./chain";
 
-export function withBlockPreviewMiddleware(middleware: CustomMiddleware) {
+export function withNoDomainRewriteMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
-        if (request.nextUrl.pathname.startsWith("/block-preview/")) {
+        const pathname = request.nextUrl.pathname;
+        if (pathname.startsWith("/block-preview/") || pathname === "/robots.txt" || pathname.startsWith("/api/")) {
             // don't apply any other middlewares
             return NextResponse.next();
         }
