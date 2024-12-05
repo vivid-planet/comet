@@ -432,8 +432,8 @@ export async function writeCrudGrid(
                     rowCount={rowCount}
                     columns={columns}
                     loading={loading}
-                    components={{
-                        Toolbar: ${classNamePlural}GridToolbar,
+                    slots={{
+                        toolbar: ${classNamePlural}GridToolbar,
                     }}
                 />
             </MainContent>

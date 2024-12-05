@@ -91,7 +91,7 @@ export function CronJobsGrid() {
                         headerName: intl.formatMessage({ id: "comet.pages.cronJobs.name", defaultMessage: "Name" }),
                         flex: 2,
                         ...disableFieldOptions,
-                        valueGetter: ({ row }) => {
+                        valueGetter: (params, row) => {
                             return {
                                 name: row.name,
                                 label: row.label,
@@ -149,7 +149,7 @@ export function CronJobsGrid() {
                     },
                 ]}
                 disableColumnSelector
-                components={{ Toolbar: CronJobsToolbar }}
+                slots={{ toolbar: CronJobsToolbar }}
             />
             <Dialog open={dialogOpen} onClose={closeDialog}>
                 <DialogTitle>

@@ -111,7 +111,7 @@ export function JobsGrid(props: JobsGridProps) {
                         headerName: intl.formatMessage({ id: "comet.pages.jobs.runtime", defaultMessage: "Runtime" }),
                         flex: 1,
                         ...disableFieldOptions,
-                        valueGetter: ({ row }) => {
+                        valueGetter: (params, row) => {
                             return {
                                 startTime: row.startTime,
                                 completionTime: row.completionTime,
@@ -138,7 +138,7 @@ export function JobsGrid(props: JobsGridProps) {
                     },
                 ]}
                 disableColumnSelector
-                components={{ Toolbar: () => <JobsToolbar cronJobName={cronJob} /> }}
+                slots={{ toolbar: () => <JobsToolbar cronJobName={cronJob} /> }}
             />
         </MainContent>
     );

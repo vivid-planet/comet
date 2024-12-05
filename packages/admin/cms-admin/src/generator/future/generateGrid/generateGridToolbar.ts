@@ -24,7 +24,8 @@ export const generateGridToolbar = ({
 }: Options) => {
     const showMoreActionsMenu = excelExport;
 
-    return `function ${componentName}(${getGridToolbarProps(!!forwardToolbarAction, !!excelExport)}) {
+    return `${renderToolbarProps(componentName, !!forwardToolbarAction, !!excelExport)}
+function ${componentName}(${getGridToolbarProps(componentName, !!forwardToolbarAction, !!excelExport)}) {
         return (
             <DataGridToolbar>
                 ${hasSearch ? searchItem : ""}
@@ -44,7 +45,7 @@ export const generateGridToolbar = ({
     }`.replace(/^\s+\n/gm, "");
 };
 
-const getGridToolbarProps = (toolbarAction: boolean, exportApi: boolean) => {
+const getGridToolbarProps = (componentName: string, toolbarAction: boolean, exportApi: boolean) => {
     const props: Array<{
         destructured: string;
         typeDefinition: string;
@@ -70,9 +71,7 @@ const getGridToolbarProps = (toolbarAction: boolean, exportApi: boolean) => {
 
     return `{
         ${props.map((prop) => `${prop.destructured}`).join(",")}
-    }: {
-        ${props.map((prop) => prop.typeDefinition).join(";")}
-    }`;
+    }: ${componentName}ToolbarProps`;
 };
 
 const searchItem = `<ToolbarItem>
@@ -110,4 +109,14 @@ const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItem
             ${addItemText}
         </Button>
     </ToolbarActions>`;
+};
+
+const renderToolbarProps = (componentName: string, forwardToolbarAction: boolean | undefined, exportApi: boolean) => {
+    if (forwardToolbarAction || exportApi) {
+        return `interface ${componentName}ToolbarProps extends GridToolbarProps {
+         ${forwardToolbarAction && "toolbarAction: React.ReactNode;"}
+         ${exportApi ? "exportApi: ExportApi;" : ""}
+}`;
+    }
+    return "";
 };

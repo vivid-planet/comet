@@ -1,10 +1,12 @@
 import {
-    MainContent,
+    FieldSet,
+    FullHeightContent,
     RouterTab,
     RouterTabs,
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackMainContent,
     StackPage,
     StackSwitch,
     StackToolbar,
@@ -41,32 +43,40 @@ const ProductsPage = () => {
             <StackSwitch initialPage="grid">
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                    <ProductsGrid />
+                    <StackMainContent fullHeight>
+                        <ProductsGrid />
+                    </StackMainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
                             <FormToolbar />
-                            <MainContent>
+                            <StackMainContent>
                                 <RouterTabs>
                                     <RouterTab
                                         forceRender={true}
                                         path=""
                                         label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                     >
-                                        <ProductForm id={selectedProductId} />
+                                        <FieldSet>
+                                            <ProductForm id={selectedProductId} />
+                                        </FieldSet>
                                     </RouterTab>
                                     <RouterTab
                                         forceRender={true}
                                         path="/price"
                                         label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
                                     >
-                                        <ProductPriceForm id={selectedProductId} />
+                                        <FieldSet>
+                                            <ProductPriceForm id={selectedProductId} />
+                                        </FieldSet>
                                     </RouterTab>
                                     <RouterTab path="/variants" label={intl.formatMessage({ id: "products.variants", defaultMessage: "Variants" })}>
                                         <StackSwitch initialPage="table">
                                             <StackPage name="table">
-                                                <ProductVariantsGrid productId={selectedProductId} />
+                                                <FullHeightContent>
+                                                    <ProductVariantsGrid productId={selectedProductId} />
+                                                </FullHeightContent>
                                             </StackPage>
                                             <StackPage
                                                 name="edit"
@@ -85,7 +95,11 @@ const ProductsPage = () => {
                                                                 <SaveBoundarySaveButton />
                                                             </ToolbarActions>
                                                         </StackToolbar>
-                                                        <ProductVariantForm productId={selectedProductId} id={selectedProductVariantId} />
+                                                        <StackMainContent>
+                                                            <FieldSet>
+                                                                <ProductVariantForm productId={selectedProductId} id={selectedProductVariantId} />
+                                                            </FieldSet>
+                                                        </StackMainContent>
                                                     </SaveBoundary>
                                                 )}
                                             </StackPage>
@@ -105,13 +119,17 @@ const ProductsPage = () => {
                                                             <SaveBoundarySaveButton />
                                                         </ToolbarActions>
                                                     </StackToolbar>
-                                                    <ProductVariantForm productId={selectedProductId} />
+                                                    <StackMainContent>
+                                                        <FieldSet>
+                                                            <ProductVariantForm productId={selectedProductId} />
+                                                        </FieldSet>
+                                                    </StackMainContent>
                                                 </SaveBoundary>
                                             </StackPage>
                                         </StackSwitch>
                                     </RouterTab>
                                 </RouterTabs>
-                            </MainContent>
+                            </StackMainContent>
                         </SaveBoundary>
                     )}
                 </StackPage>

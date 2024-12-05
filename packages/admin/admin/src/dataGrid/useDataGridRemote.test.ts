@@ -11,6 +11,7 @@ jest.mock("react-router", () => ({
 }));
 
 import { GridSortDirection } from "@mui/x-data-grid";
+import { GridApiCommunity } from "@mui/x-data-grid/models/api/gridApiCommunity";
 
 import { useDataGridRemote } from "./useDataGridRemote";
 
@@ -23,6 +24,8 @@ const mockedFilterModel: GridFilterModel = {
 };
 const mockedPage = 17;
 const mockedPageSize = 42;
+
+const mockedApi: GridApiCommunity = {} as GridApiCommunity;
 
 describe("useDataGridRemote", () => {
     beforeEach(() => {
@@ -79,7 +82,9 @@ describe("useDataGridRemote", () => {
     it("writes sort param to URL", () => {
         const { result } = renderHook(() => useDataGridRemote());
 
-        result.current.onSortModelChange?.([{ field: mockedSortField, sort: mockedSort }], {});
+        result.current.onSortModelChange?.([{ field: mockedSortField, sort: mockedSort }], {
+            api: mockedApi,
+        });
 
         expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ sort: `${mockedSortField}:${mockedSort}` }) });
     });
@@ -87,7 +92,9 @@ describe("useDataGridRemote", () => {
     it("writes filter param to URL", () => {
         const { result } = renderHook(() => useDataGridRemote());
 
-        result.current.onFilterModelChange?.(mockedFilterModel, {});
+        result.current.onFilterModelChange?.(mockedFilterModel, {
+            api: mockedApi,
+        });
 
         expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ filter: JSON.stringify(mockedFilterModel) }) });
     });
@@ -95,17 +102,22 @@ describe("useDataGridRemote", () => {
     it("writes page param to URL", () => {
         const { result } = renderHook(() => useDataGridRemote());
 
-        result.current.onPaginationModelChange?.({ page: mockedPage, pageSize: 25 }, {});
+        result.current.onPaginationModelChange?.(
+            { page: mockedPage, pageSize: 25 },
+            {
+                api: mockedApi,
+            },
+        );
 
-        expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ page: mockedPage }) });
+        expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ page: mockedPage, pageSize: 25 }) });
     });
 
     it("writes pageSize param to URL", () => {
         const { result } = renderHook(() => useDataGridRemote());
 
-        result.current.onPaginationModelChange?.({ page: 0, pageSize: mockedPageSize }, {});
+        result.current.onPaginationModelChange?.({ page: 0, pageSize: mockedPageSize }, { api: mockedApi });
 
-        expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ pageSize: mockedPageSize }) });
+        expect(mockedReplace).toHaveBeenCalledWith({ search: queryString.stringify({ pageSize: mockedPageSize, page: 0 }) });
     });
 
     it("uses queryParamsPrefix when reading params from URL", () => {
@@ -132,17 +144,17 @@ describe("useDataGridRemote", () => {
 
         const { result } = renderHook(() => useDataGridRemote({ queryParamsPrefix: prefix }));
 
-        result.current.onSortModelChange?.([{ field: mockedSortField, sort: mockedSort }], {});
+        result.current.onSortModelChange?.([{ field: mockedSortField, sort: mockedSort }], { api: mockedApi });
         expect(mockedReplace.mock.calls[0]?.[0]?.search).toContain(`${prefix}sort`);
 
-        result.current.onFilterModelChange?.(mockedFilterModel, {});
+        result.current.onFilterModelChange?.(mockedFilterModel, { api: mockedApi });
         expect(mockedReplace.mock.calls[1]?.[0]?.search).toContain(`${prefix}filter`);
 
-        result.current.onPaginationModelChange?.({ page: mockedPage, pageSize: mockedPage }, {});
+        result.current.onPaginationModelChange?.({ page: mockedPage, pageSize: mockedPage }, { api: mockedApi });
         expect(mockedReplace.mock.calls[2]?.[0]?.search).toContain(`${prefix}page`);
-        expect(mockedReplace.mock.calls[3]?.[0]?.search).toContain(`${prefix}pageSize`);
+        expect(mockedReplace.mock.calls[2]?.[0]?.search).toContain(`${prefix}pageSize`);
 
-        expect(mockedReplace).toHaveBeenCalledTimes(4);
+        expect(mockedReplace).toHaveBeenCalledTimes(3);
     });
 
     it("uses initial default pageSize if no pageSize is set in the URL", () => {

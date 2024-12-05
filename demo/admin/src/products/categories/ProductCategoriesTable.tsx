@@ -57,15 +57,15 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
         width: 150,
     },
     {
-        field: "action",
+        field: "actions",
         headerName: "",
         sortable: false,
         filterable: false,
         renderCell: (params) => {
             return (
                 <>
-                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                        <Edit color="primary" />
+                    <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <Edit />
                     </IconButton>
                     <CrudContextMenu
                         onPaste={async ({ input, client }) => {
@@ -121,8 +121,8 @@ function ProductCategoriesTable() {
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductCategoriesTableToolbar,
+            slots={{
+                toolbar: ProductCategoriesTableToolbar,
             }}
         />
     );

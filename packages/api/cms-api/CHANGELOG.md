@@ -1,5 +1,58 @@
 # @comet/cms-api
 
+## 7.9.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   44a54554c: Allow replacing a file with a new one on the file detail page in the DAM
+-   45fbc54c1: Rename `User` to `UserPermissionsUser` in GraphQL schema
+
+    This prevents naming collisions if a web wants to use a `User` type.
+
+    Additionally prefix remaining user permissions-specific actions with `UserPermissions`.
+
+-   c6d3ac36b: Add support for file replacement on upload in the DAM
+
+    When uploading a file to the DAM with the same filename as an existing file, it's now possible to replace the existing file.
+    This is useful when you want to update a file without changing its URL.
+
+### Patch Changes
+
+-   bfa5dbac8: Fix schema generation if `FileUpload` object type isn't used
+
+    Previously, the file uploads module always added the `downloadUrl` and `imageUrl` fields to the `FileUpload` object type, even if the type wasn't used in the application.
+    This lead to errors when generating the GraphQL schema.
+
+    Now, the fields are only added if the `download` option of the module is used.
+
+    Note: As a consequence, the `finalFormFileUploadFragment` doesn't include the fields anymore.
+    To enable downloading file uploads in forms, use the newly added `finalFormFileUploadDownloadableFragment`:
+
+    ```diff
+    export const productFormFragment = gql`
+        fragment ProductFormFragment on Product {
+            priceList {
+    -           ...FinalFormFileUpload
+    +           ...FinalFormFileUploadDownloadable
+            }
+        }
+
+    -   ${finalFormFileUploadFragment}
+    +   ${finalFormFileUploadDownloadableFragment}
+    `;
+    ```
+
+-   02a5bdc68: API Generator: Fix generated types for position code
+-   f20ec6ce5: Make class-validator a peer dependency
+-   Updated dependencies [f20ec6ce5]
+    -   @comet/blocks-api@7.8.0
+
 ## 7.7.0
 
 ### Patch Changes
