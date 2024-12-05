@@ -1,4 +1,4 @@
-import { Alert, RowActionsItem, RowActionsMenu, useSnackbarApi } from "@comet/admin";
+import { Alert, readClipboardText, RowActionsItem, RowActionsMenu, useSnackbarApi, writeClipboardText } from "@comet/admin";
 import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from "@comet/admin-icons";
 import { DispatchSetStateAction } from "@comet/blocks-admin";
 import { Divider, Snackbar } from "@mui/material";
@@ -103,7 +103,7 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
             }),
         };
 
-        navigator.clipboard.writeText(JSON.stringify(copyData));
+        writeClipboardText(JSON.stringify(copyData));
     };
 
     const showFailedToParseDataSnackbar = () => {
@@ -117,7 +117,12 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
     };
 
     const pasteRowFromClipboard = async () => {
-        const clipboardData = await navigator.clipboard.readText();
+        const clipboardData = await readClipboardText();
+
+        if (!clipboardData) {
+            showFailedToParseDataSnackbar();
+            return;
+        }
 
         let jsonClipboardData;
 
