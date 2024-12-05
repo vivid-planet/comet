@@ -338,7 +338,7 @@ importers:
         version: 12.2.1(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.4.9)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.9.0)(reflect-metadata@0.1.13)(ts-morph@16.0.0)
       '@nestjs/passport':
         specifier: ^10.0.3
-        version: 10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(passport@0.4.1)
+        version: 10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(passport@0.6.0)
       '@nestjs/platform-express':
         specifier: ^10.4.8
         version: 10.4.9(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.4.9)
@@ -394,8 +394,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.4.9)
       passport:
-        specifier: ^0.4.0
-        version: 0.4.1
+        specifier: ^0.6.0
+        version: 0.6.0
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
@@ -13134,10 +13134,6 @@ packages:
     resolution: {integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==}
     engines: {node: '>= 0.4.0'}
 
-  passport@0.4.1:
-    resolution: {integrity: sha512-IxXgZZs8d7uFSt3eqNjM9NQ3g3uQCW5avD8mRNoXV99Yig50vjuaez6dQK2qC0kVWPRTujxY0dWgGfT09adjYg==}
-    engines: {node: '>= 0.4.0'}
-
   passport@0.6.0:
     resolution: {integrity: sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==}
     engines: {node: '>= 0.4.0'}
@@ -20952,11 +20948,6 @@ snapshots:
     optionalDependencies:
       class-transformer: 0.5.1
       class-validator: 0.14.1
-
-  '@nestjs/passport@10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(passport@0.4.1)':
-    dependencies:
-      '@nestjs/common': 10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      passport: 0.4.1
 
   '@nestjs/passport@10.0.3(@nestjs/common@10.4.9(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(passport@0.6.0)':
     dependencies:
@@ -30270,11 +30261,6 @@ snapshots:
       passport-strategy: 1.0.0
 
   passport-strategy@1.0.0: {}
-
-  passport@0.4.1:
-    dependencies:
-      passport-strategy: 1.0.0
-      pause: 0.0.1
 
   passport@0.6.0:
     dependencies:
