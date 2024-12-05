@@ -8,7 +8,7 @@ import { TableBlockData } from "../../blocks.generated";
 import { getNewRow } from "./utils";
 
 type Props = {
-    row: TableBlockData["rows"][number];
+    row: Record<string, unknown> & { id: string };
     updateState: DispatchSetStateAction<TableBlockData>;
 };
 
