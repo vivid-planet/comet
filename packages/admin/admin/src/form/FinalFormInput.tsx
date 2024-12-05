@@ -28,28 +28,30 @@ export function FinalFormInput({ meta, input, innerRef, endAdornment, clearable,
                 {...input}
                 {...props}
                 endAdornment={
-                    <>
-                        {clearable && (
-                            <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
-                        )}
-                        {isTranslatable && (
-                            <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
-                                <IconButton
-                                    onClick={async () => {
-                                        if (showApplyTranslationDialog) {
-                                            setPendingTranslation(await translate(input.value));
-                                            setOpen(true);
-                                        } else {
-                                            input.onChange(await translate(input.value));
-                                        }
-                                    }}
-                                >
-                                    <Translate />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                        {endAdornment}
-                    </>
+                    (endAdornment || clearable || isTranslatable) && (
+                        <>
+                            {clearable && (
+                                <ClearInputAdornment position="end" hasClearableContent={Boolean(input.value)} onClick={() => input.onChange("")} />
+                            )}
+                            {isTranslatable && (
+                                <Tooltip title={<FormattedMessage id="comet.translate" defaultMessage="Translate" />}>
+                                    <IconButton
+                                        onClick={async () => {
+                                            if (showApplyTranslationDialog) {
+                                                setPendingTranslation(await translate(input.value));
+                                                setOpen(true);
+                                            } else {
+                                                input.onChange(await translate(input.value));
+                                            }
+                                        }}
+                                    >
+                                        <Translate />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+                            {endAdornment}
+                        </>
+                    )
                 }
             />
             {open && pendingTranslation && (

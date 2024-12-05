@@ -1,5 +1,5 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Inject, NotFoundException, Type } from "@nestjs/common";
 import { Args, Context, ID, Mutation, ObjectType, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { IncomingMessage } from "http";
@@ -62,6 +62,7 @@ export function createFilesResolver({
             @InjectRepository("DamFile") private readonly filesRepository: EntityRepository<FileInterface>,
             @InjectRepository("DamFolder") private readonly foldersRepository: EntityRepository<FolderInterface>,
             @Inject(DAM_FILE_VALIDATION_SERVICE) private readonly fileValidationService: FileValidationService,
+            private readonly entityManager: EntityManager,
         ) {}
 
         @Query(() => PaginatedDamFiles)
@@ -156,7 +157,7 @@ export function createFilesResolver({
             const entity = await this.filesRepository.findOneOrFail(id);
             entity.archived = true;
 
-            await this.filesRepository.persistAndFlush(entity);
+            await this.entityManager.persistAndFlush(entity);
             return entity;
         }
 
@@ -170,7 +171,7 @@ export function createFilesResolver({
                 entity.archived = true;
             }
 
-            await this.filesRepository.flush();
+            await this.entityManager.flush();
             return entities;
         }
 
@@ -181,7 +182,7 @@ export function createFilesResolver({
             const entity = await this.filesRepository.findOneOrFail(id);
             entity.archived = false;
 
-            await this.filesRepository.persistAndFlush(entity);
+            await this.entityManager.persistAndFlush(entity);
             return entity;
         }
 
@@ -195,7 +196,7 @@ export function createFilesResolver({
                 entity.archived = false;
             }
 
-            await this.filesRepository.flush();
+            await this.entityManager.flush();
             return entities;
         }
 

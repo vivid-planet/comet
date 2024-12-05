@@ -21,11 +21,12 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Lock } from "@comet/admin-icons";
+import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
     FileUploadField,
+    GQLFinalFormFileUploadDownloadableFragment,
     GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -61,7 +62,7 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
+    priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
@@ -388,6 +389,11 @@ export function ProductForm({ manufacturerCountry, id }: FormProps): React.React
                                 name="availableSince"
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
                             />
                             <Field
                                 name="image"

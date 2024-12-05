@@ -3,6 +3,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
     GridColDef,
@@ -101,16 +102,19 @@ type Props = {
 export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "product-variants",
+        }),
+        ...usePersistentColumnState("ProductVariantsGrid"),
+    };
 
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
         { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
+            ...dataGridDateColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
-            type: "date",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             flex: 1,
             minWidth: 150,
         },

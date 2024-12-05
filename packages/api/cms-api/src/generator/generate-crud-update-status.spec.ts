@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, Enum, PrimaryKey, Property } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { Field, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -34,11 +34,12 @@ describe("GenerateCrud Status with active", () => {
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity1],
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntity1],
+            }),
+        );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity1"));
         lintedOut = await lintGeneratedFiles(out);
     });
@@ -126,11 +127,12 @@ describe("GenerateCrud Status with published/unpublished", () => {
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity2],
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntity2],
+            }),
+        );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity2"));
         lintedOut = await lintGeneratedFiles(out);
     });
@@ -189,11 +191,12 @@ describe("GenerateCrud Status with published/unpublished", () => {
     let orm: MikroORM;
     beforeAll(async () => {
         LazyMetadataStorage.load();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity3],
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntity3],
+            }),
+        );
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity3"));
         lintedOut = await lintGeneratedFiles(out);
     });

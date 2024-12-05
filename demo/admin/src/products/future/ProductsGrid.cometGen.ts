@@ -11,6 +11,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
     toolbarActionProp: true,
     rowActionProp: true,
     excelExport: true,
+    queryParamsPrefix: "products",
     initialSort: [
         { field: "inStock", sort: "desc" },
         { field: "price", sort: "asc" },
@@ -93,6 +94,13 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { type: "date", name: "availableSince", width: 140 },
         // TODO: Allow setting options for `intl.formatDate` through `valueFormatter` (type "dateTime")
         { type: "dateTime", name: "createdAt", width: 170 },
+        {
+            type: "text",
+            name: "manufacturer.name",
+            headerName: "Manufacturer",
+            fieldName: "manufacturer",
+            filterOperators: { name: "ManufacturerFilterOperators", import: "./ManufacturerFilter" },
+        },
         {
             type: "actions",
             component: { name: "ProductsGridPreviewAction", import: "../../ProductsGridPreviewAction" },
