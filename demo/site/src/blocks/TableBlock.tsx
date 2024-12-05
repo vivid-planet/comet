@@ -10,14 +10,16 @@ export const TableBlock = ({ data }: PropsWithData<TableBlockData>) => {
                 <tbody>
                     {data.rows.map(({ cellValues, ...rowData }) => (
                         <tr key={rowData.id}>
-                            {cellValues.map((cellValue) => (
-                                <td key={cellValue.columnId}>
-                                    <p style={{ margin: 0, fontSize: 12, whiteSpace: "pre-wrap" }}>{cellValue.value}</p>
+                            {data.columns.map((column) => (
+                                <td key={column.id}>
+                                    <p style={{ margin: 0, fontSize: 12, whiteSpace: "pre-wrap" }}>
+                                        {cellValues.find(({ columnId }) => columnId === column.id)?.value}
+                                    </p>
                                     <pre style={{ fontSize: 9, lineHeight: 1, backgroundColor: "lightgrey", padding: 10 }}>
                                         {JSON.stringify(
                                             {
                                                 row: rowData,
-                                                col: data.columns.find((c) => c.id === cellValue.columnId),
+                                                col: data.columns.find((c) => c.id === column.id),
                                             },
                                             null,
                                             2,
