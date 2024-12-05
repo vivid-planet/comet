@@ -29,13 +29,13 @@ export const FieldContainer = () => {
                         <TextField name="textFieldWithLabelTwo" label="TextField label" variant="horizontal" />
                         <TextField name="testWithoutLabel" variant="horizontal" placeholder="TextField without label" />
                     </FieldSet>
-                    <FieldSet title="VERTICAL (auto-width)">
-                        {/* FieldSet is not made to include non-full-width fields. Adding this `div` removes the flex-behaviour of FieldSet, allowing this example. */}
-                        <div>
-                            <TextField name="textFieldWithLabelOne" label="TextField label" variant="vertical" />
-                            <TextField name="textFieldWithLabelTwo" label="TextField label" variant="vertical" />
-                            <TextField name="testWithoutLabel" variant="vertical" placeholder="TextField without label" />
-                        </div>
+                    <FieldSet
+                        title="VERTICAL (auto-width)"
+                        slotProps={{ children: { sx: { display: "block" } } }} // TODO: Use `FieldSet` here once it supports non-full-width fields (https://vivid-planet.atlassian.net/browse/COM-1430)
+                    >
+                        <TextField name="textFieldWithLabelOne" label="TextField label" variant="vertical" />
+                        <TextField name="textFieldWithLabelTwo" label="TextField label" variant="vertical" />
+                        <TextField name="testWithoutLabel" variant="vertical" placeholder="TextField without label" />
                     </FieldSet>
                 </form>
             )}
