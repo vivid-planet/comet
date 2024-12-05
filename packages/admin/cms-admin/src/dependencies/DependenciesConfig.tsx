@@ -2,7 +2,7 @@ import { createContext, PropsWithChildren, useContext } from "react";
 
 import { DependencyInterface } from "./types";
 
-export interface EntityDependencyMap {
+interface EntityDependencyMap {
     [graphqlObjectType: string]: DependencyInterface;
 }
 

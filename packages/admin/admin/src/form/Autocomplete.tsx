@@ -66,5 +66,3 @@ export const FinalFormAutocomplete = <
         />
     );
 };
-
-export default FinalFormAutocomplete;

@@ -6,7 +6,7 @@ import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps
 
 export type AppHeaderFillSpaceClassKey = "root";
 
-export type AppHeaderFillSpaceProps = ThemedComponentBaseProps<{
+type AppHeaderFillSpaceProps = ThemedComponentBaseProps<{
     root: "div";
 }>;
 

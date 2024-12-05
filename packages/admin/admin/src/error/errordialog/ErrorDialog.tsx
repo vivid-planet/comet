@@ -34,10 +34,6 @@ export interface ErrorDialogOptions {
     };
 }
 
-export type ErrorMethods = {
-    setError: (options: ErrorDialogOptions) => void;
-};
-
 export interface ErrorDialogProps {
     show?: boolean;
     onCloseClicked?: () => void;

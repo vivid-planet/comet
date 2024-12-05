@@ -34,6 +34,7 @@
         "@babel/core": "^7.20.12",
         "@comet/admin-babel-preset": "workspace:^7.9.0",
         "@comet/eslint-config": "workspace:^7.9.0",
+        "@comet/eslint-plugin": "workspace:^7.9.0",
         "@mui/material": "^6.0.0",
         "@mui/system": "^6.0.0",
         "@mui/x-data-grid": "^7.22.3",

@@ -1,7 +1,7 @@
 import { AutocompleteProps } from "@mui/material";
 
 import { AsyncOptionsProps } from "../../hooks/useAsyncOptionsProps";
-import FinalFormAutocomplete from "../Autocomplete";
+import { FinalFormAutocomplete } from "../Autocomplete";
 import { Field, FieldProps } from "../Field";
 
 export type AutocompleteFieldProps<

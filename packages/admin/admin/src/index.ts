@@ -28,6 +28,8 @@ export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/
 export { Loading, LoadingProps } from "./common/Loading";
 export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./common/MainContent";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
+export { ToolbarActionButtonClassKey } from "./common/toolbar/actions/ToolbarActionsButton";
+export { ToolbarActionButton } from "./common/toolbar/actions/ToolbarActionsButton";
 export {
     ToolbarAutomaticTitleItem,
     ToolbarAutomaticTitleItemClassKey,
@@ -48,7 +50,7 @@ export { CrudMoreActionsMenu, CrudMoreActionsMenuProps } from "./dataGrid/CrudMo
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
-export { GridColDef } from "./dataGrid/GridColDef";
+export { GridActionsColDef, GridBaseColDef, GridColDef, GridSingleSelectColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
 export { dataGridDateColumn, dataGridDateTimeColumn } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";

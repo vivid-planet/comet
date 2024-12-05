@@ -34,7 +34,19 @@ export {
     GraphQLFetch,
 } from "./graphQLFetch/graphQLFetch";
 export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
-export { IFrameMessageType } from "./iframebridge/IFrameMessage";
+export {
+    AdminMessageType,
+    IAdminContentScopeMessage,
+    IAdminHoverComponentMessage,
+    IAdminShowOnlyVisibleMessage,
+    IFrameHoverComponentMessage,
+    IFrameLocationMessage,
+    IFrameMessage,
+    IFrameMessageType,
+    IFrameOpenLinkMessage,
+    IFrameSelectComponentMessage,
+    IReadyIFrameMessage,
+} from "./iframebridge/IFrameMessage";
 export { Preview } from "./iframebridge/Preview";
 export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { useIFrameBridge } from "./iframebridge/useIFrameBridge";

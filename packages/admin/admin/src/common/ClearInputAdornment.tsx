@@ -29,7 +29,7 @@ export interface ClearInputAdornmentProps
 
 type OwnerState = Pick<ClearInputAdornmentProps, "position">;
 
-export type ClearInputAdornmentClassKey = InputAdornmentClassKey | "buttonBase";
+type ClearInputAdornmentClassKey = InputAdornmentClassKey | "buttonBase";
 
 export const ClearInputAdornment = (inProps: ClearInputAdornmentProps) => {
     const {

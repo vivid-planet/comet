@@ -27,9 +27,9 @@ import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
-export type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
+type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;
 
-export function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
+function createPreviewUrl({ damFile }: SvgImageBlockState, apiUrl: string): string {
     if (!damFile) return "";
     return new URL(
         `${apiUrl}/dam/files/preview/$fileId/$fileName`

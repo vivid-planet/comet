@@ -11,7 +11,7 @@ import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 import { IRow, ITableProps, ITableRowProps, Table, TableColumns, TableHeadColumns } from "./Table";
 import { TableBodyRow } from "./TableBodyRow";
 
-export type TableDndOrderClassKey = "root" | "dragCell" | "dragIconContainer";
+type TableDndOrderClassKey = "root" | "dragCell" | "dragIconContainer";
 
 interface IDndOrderRowProps<TRow extends IRow>
     extends ThemedComponentBaseProps<{

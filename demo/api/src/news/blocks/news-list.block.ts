@@ -1,7 +1,7 @@
 import { BlockData, BlockField, BlockInput, blockInputToData, createBlock } from "@comet/cms-api";
 import { IsUUID } from "class-validator";
 
-export class NewsListBlockData extends BlockData {
+class NewsListBlockData extends BlockData {
     @BlockField({ type: "string", array: true })
     ids: string[];
 }
