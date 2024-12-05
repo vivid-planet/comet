@@ -40,22 +40,22 @@
         "@types/react-dom": "^17.0.0",
         "@types/react-select": "^3.1.2",
         "eslint": "^8.0.0",
-        "final-form": "^4.16.1",
+        "final-form": "^4.20.10",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.0.0",
         "react": "^17.0",
         "react-dom": "^17.0",
-        "react-final-form": "^6.3.1",
+        "react-final-form": "^6.5.9",
         "react-select": "^3.0.4",
         "rimraf": "^3.0.2",
         "typescript": "^4.0.0"
     },
     "peerDependencies": {
         "@mui/material": "^6.0.0",
-        "final-form": "^4.16.1",
+        "final-form": "^4.20.10",
         "react": "^17.0",
         "react-dom": "^17.0",
-        "react-final-form": "^6.3.1",
+        "react-final-form": "^6.5.9",
         "react-select": "^3.0.4"
     },
     "publishConfig": {
