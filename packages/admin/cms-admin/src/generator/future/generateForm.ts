@@ -90,8 +90,6 @@ export function generateForm(
         }
     }
 
-    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
-
     const rootBlockFields = formFields
         .filter((field) => field.type == "block")
         .map((field) => {
@@ -136,10 +134,13 @@ export function generateForm(
         gqlDocuments[name] = generatedFields.gqlDocuments[name];
     }
     imports.push(...generatedFields.imports);
+    props.push(...generatedFields.props);
     hooksCode += generatedFields.hooksCode;
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
+
+    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
         fragment ${formFragmentName} on ${gqlType} {

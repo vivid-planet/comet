@@ -14,7 +14,6 @@ import {
     FinalFormSwitch,
     Loading,
     messages,
-    OnChangeField,
     RadioGroupField,
     TextAreaField,
     TextField,
@@ -78,10 +77,11 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
 };
 
 interface FormProps {
+    manufacturerCountry: string;
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ manufacturerCountry, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -368,20 +368,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                                 }
                                             }
                                         `,
-                                        variables: { filter: { addressAsEmbeddable_country: { equal: values.type } } },
+                                        variables: { filter: { addressAsEmbeddable_country: { equal: manufacturerCountry } } },
                                     });
                                     return data.manufacturers.nodes;
                                 }}
                                 getOptionLabel={(option) => option.name}
-                                disabled={!values?.type}
                             />
-                            <OnChangeField name="type">
-                                {(value, previousValue) => {
-                                    if (value.id !== previousValue.id) {
-                                        form.change("manufacturer", undefined);
-                                    }
-                                }}
-                            </OnChangeField>
                             <Field name="inStock" label="" type="checkbox" variant="horizontal" fullWidth>
                                 {(props) => (
                                     <FormControlLabel

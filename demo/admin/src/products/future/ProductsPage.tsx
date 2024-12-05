@@ -78,7 +78,7 @@ export function ProductsPage() {
                                             path=""
                                             label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                         >
-                                            <ProductForm id={selectedProductId} />
+                                            <ProductForm id={selectedProductId} manufacturerCountry="DE" />
                                         </RouterTab>
                                         <RouterTab
                                             forceRender={true}
@@ -113,7 +113,7 @@ export function ProductsPage() {
                     <SaveBoundary>
                         <FormToolbar />
                         <MainContent>
-                            <ProductForm />
+                            <ProductForm manufacturerCountry="DE" />
                         </MainContent>
                     </SaveBoundary>
                 </StackPage>
