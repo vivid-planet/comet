@@ -52,12 +52,5 @@ export const getMuiRadio: GetMuiComponentTheme<"MuiRadio"> = (component, { palet
                 },
             },
         },
-        colorSecondary: {
-            [`&.${radioClasses.checked} .${svgIconClasses.root}`]: {
-                "& .background": {
-                    fill: palette.secondary.main,
-                },
-            },
-        },
     }),
 });
