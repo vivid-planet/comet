@@ -4,4 +4,4 @@
 
 Change siteConfig.url to main domain
 
-Previously we used preliminary domain (if existed) which lead to wrong behaviour in the site.
+Previously we used preliminary domain (if existed) which lead to wrong behavior in the site.
