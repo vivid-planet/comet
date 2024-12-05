@@ -33,7 +33,6 @@
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
         "@fontsource-variable/roboto-flex": "^5.0.14",
-        "@mui/lab": "^6.0.0-beta.10",
         "@mui/material": "^6.0.0",
         "@mui/system": "^6.0.0",
         "@mui/x-data-grid": "^7.22.3",
@@ -54,7 +53,6 @@
         "react-intl": "^6.0.0",
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0",
-        "react-select": "^3.0.0",
         "use-debounce": "^6.0.0",
         "uuid": "^9.0.0"
     },

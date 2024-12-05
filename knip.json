@@ -11,13 +11,19 @@
             "project": ["./src/**/*.{ts,tsx}"]
         },
         "packages/eslint-config": {
-            "ignore": ["*"]
+            "ignore": ["*"],
+            "entry": [],
+            "project": []
         },
         "codemods": {
-            "ignore": ["*"]
+            "ignore": ["*"],
+            "entry": [],
+            "project": []
         },
         "docs": {
-            "ignore": ["*"]
+            "ignore": ["*"],
+            "entry": [],
+            "project": []
         },
         "packages/admin/admin-babel-preset": {
             "ignore": ["*"]
@@ -102,11 +108,10 @@
             "ignoreDependencies": ["@babel/core"]
         },
         "storybook": {
-            "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
+            "entry": ["./src/**/*.stories.tsx", ".storybook/vendor.d.ts", ".storybook/mocks/browser.ts"],
+            "project": ["./src/**/*.{ts,tsx}", "./.storybook/**/*.{ts,tsx}"]
         }
     },
-
     "rules": {
         "enumMembers": "off"
     }
