@@ -15,7 +15,7 @@
 
 ## Open TODOs/questions
 
--   [] Add changeset
+-   [ ] Add changeset
 
 ## Further information
 
