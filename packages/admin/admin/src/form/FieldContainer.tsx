@@ -182,7 +182,7 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
     componentName: "FormFieldContainer",
     slotName: "inputContainer",
 })(
-    ({ theme, ownerState }) => css`
+    ({ ownerState }) => css`
         ${ownerState.variant === "horizontal" &&
         ownerState.fullWidth &&
         css`
