@@ -97,7 +97,7 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                     {isSigningOut ? (
                         <Loading />
                     ) : (
-                        <Button
+                        <MUIButton
                             fullWidth
                             variant="contained"
                             color="primary"
@@ -108,10 +108,9 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                                     location.href = result.data.currentUserSignOut;
                                 }
                             }}
-                            sx={{ justifyContent: "center" }}
                         >
                             <FormattedMessage id="comet.logout" defaultMessage="Logout" />
-                        </Button>
+                        </MUIButton>
                     )}
                     <MenuFooter>
                         <Typography variant="caption">{`Version: v${version}`}</Typography>
