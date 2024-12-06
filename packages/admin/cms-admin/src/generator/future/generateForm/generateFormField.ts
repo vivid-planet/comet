@@ -273,6 +273,7 @@ export function generateFormField({
                                   `defaultMessage="${config.helperText}" />}`
                                 : ""
                         }
+                        ${validateCode}
                     />`;
         formValuesConfig = [
             {

@@ -382,7 +382,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     }
                                 }}
                             </OnChangeField>
-                            <CheckboxField label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />} name="inStock" fullWidth />
+                            <CheckboxField
+                                label={<FormattedMessage id="product.inStock" defaultMessage="In Stock" />}
+                                name="inStock"
+                                variant="horizontal"
+                                fullWidth
+                            />
 
                             <Field
                                 variant="horizontal"
