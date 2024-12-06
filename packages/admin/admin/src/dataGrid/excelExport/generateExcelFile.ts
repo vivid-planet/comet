@@ -1,8 +1,5 @@
 import { GridValidRowModel } from "@mui/x-data-grid";
-// TODO: Normal import: import * as Excel from "exceljs"; is currently not working
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import * as Excel from "exceljs/dist/exceljs.js";
+import * as Excel from "exceljs";
 
 import { GridColDef } from "../GridColDef";
 import { applyDefaultStyling } from "./applyDefaultStyling";
