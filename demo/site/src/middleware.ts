@@ -3,7 +3,7 @@ import { chain } from "./middleware/chain";
 import { withCspHeadersMiddleware } from "./middleware/cspHeaders";
 import { withDamRewriteMiddleware } from "./middleware/damRewrite";
 import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
-import { withNoDomainRewriteMiddleware } from "./middleware/noDomainRewrite";
+import { withFastForwardMiddleware } from "./middleware/fastForward";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
 import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
 import { withSitePreviewMiddleware } from "./middleware/sitePreview";
@@ -14,7 +14,7 @@ export default chain([
     withAdminRedirectMiddleware,
     withDamRewriteMiddleware,
     withCspHeadersMiddleware, // order matters: after redirects (that don't need csp headers), before everything else that needs csp headers
-    withNoDomainRewriteMiddleware,
+    withFastForwardMiddleware,
     withPredefinedPagesMiddleware,
     withDomainRewriteMiddleware, // must be last (rewrites all urls)
 ]);
