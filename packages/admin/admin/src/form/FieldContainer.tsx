@@ -75,6 +75,7 @@ const Root = createComponentSlot(FormControl)<FieldContainerClassKey, OwnerState
         max-width: 100%;
 
         ${ownerState.fullWidth &&
+        ownerState.variant === "horizontal" &&
         css`
             container-type: inline-size;
             container-name: comet-admin-field-container-root;
