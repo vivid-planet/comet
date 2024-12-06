@@ -1,4 +1,4 @@
-// TODO: Normal import: import * as Excel from "exceljs"; is currently not working due to https://github.com/exceljs/exceljs/pull/1038 as soon pull request is merged into exceljs change import and update package version
+// TODO: Normal import: import * as Excel from "exceljs"; is currently not working
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as Excel from "exceljs/dist/exceljs.js";
