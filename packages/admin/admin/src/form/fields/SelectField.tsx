@@ -27,7 +27,6 @@ export interface SelectFieldProps<Value extends string | number> extends SelectF
 
 export function SelectField<Value extends string | number>({ componentsProps = {}, children, options, ...restProps }: SelectFieldProps<Value>) {
     const { finalFormSelect: finalFormSelectProps } = componentsProps;
-
     return (
         <Field {...restProps}>
             {(props) => (

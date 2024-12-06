@@ -45,7 +45,6 @@ export const FinalFormSelect = <T,>({
     },
     children,
     required,
-    startAdornment,
     ...rest
 }: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
@@ -73,7 +72,7 @@ export const FinalFormSelect = <T,>({
 
     if (children) {
         return (
-            <Select {...selectProps} startAdornment={startAdornment} value={value}>
+            <Select {...selectProps} value={value}>
                 {children}
             </Select>
         );
@@ -92,7 +91,6 @@ export const FinalFormSelect = <T,>({
                     {endAdornment}
                 </>
             }
-            startAdornment={startAdornment}
             onChange={(event) => {
                 const value = event.target.value;
                 onChange(
