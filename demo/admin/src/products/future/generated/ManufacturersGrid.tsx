@@ -162,6 +162,7 @@ export function ManufacturersGrid(): React.ReactElement {
                     </Tooltip>
                 </>
             ),
+            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.street", defaultMessage: "Alt-Street" }),
             filterable: false,
             sortable: false,
             valueGetter: (params, row) => row.address?.alternativeAddress?.street,
@@ -192,6 +193,7 @@ export function ManufacturersGrid(): React.ReactElement {
                     </Tooltip>
                 </>
             ),
+            headerName: intl.formatMessage({ id: "manufacturer.address.alternativeAddress.streetNumber", defaultMessage: "Alt-Street number" }),
             type: "number",
             filterable: false,
             sortable: false,
