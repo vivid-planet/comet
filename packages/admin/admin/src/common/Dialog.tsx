@@ -2,7 +2,6 @@ import { Close } from "@comet/admin-icons";
 import {
     ComponentsOverrides,
     css,
-    // eslint-disable-next-line no-restricted-imports
     Dialog as MuiDialog,
     DialogProps as MuiDialogProps,
     DialogTitle as MuiDialogTitle,
