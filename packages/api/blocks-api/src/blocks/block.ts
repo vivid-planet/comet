@@ -280,13 +280,14 @@ export function createBlock<BlockType extends BlockDataInterface, BlockInputType
     };
 
     const finalBlock = overwrite(block);
-    registerBlock(finalBlock);
 
     return finalBlock;
 }
 
 export function registerBlock(block: Block): void {
-    blocks.push(block);
+    if (!blocks.find((existingBlock) => existingBlock.name === block.name)) {
+        blocks.push(block);
+    }
 }
 
 export function getRegisteredBlocks(): Block[] {

@@ -14,6 +14,7 @@ import {
     inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "../block";
@@ -29,6 +30,8 @@ export function createOptionalBlock<DecoratedBlock extends Block>(
     block: DecoratedBlock,
     nameOrOptions: BlockFactoryNameOrOptions = `Optional${block.name}`,
 ): Block<BlockDataInterface, OptionalBlockInputInterface<ExtractBlockInput<DecoratedBlock>>> {
+    registerBlock(block);
+
     class BlockOptional extends BlockData {
         @BlockField({ type: "block", block, nullable: true })
         @Transform(({ value }) => (value ? (isBlockDataInterface(value) ? value : block.blockDataFactory(value)) : undefined), { toClassOnly: true })

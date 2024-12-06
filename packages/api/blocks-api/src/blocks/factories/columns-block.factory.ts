@@ -13,6 +13,7 @@ import {
     ExtractBlockInput,
     isBlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "../block";
@@ -47,6 +48,8 @@ export class ColumnsBlockFactory {
         if (layouts.length === 0) {
             throw new Error(`Number of layouts must be greater than 0!`);
         }
+
+        registerBlock(contentBlock);
 
         const layoutNames = layouts.map((layout) => layout.name);
 

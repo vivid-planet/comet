@@ -16,6 +16,7 @@ import {
     inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "../block";
@@ -165,6 +166,8 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
         if (!supportedBlocks[block]) {
             throw new Error(`Supported block '${block}' is undefined. This is most likely due to a circular import`);
         }
+
+        registerBlock(supportedBlocks[block]);
     }
 
     class BlocksBlockData extends BlockData {

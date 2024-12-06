@@ -18,6 +18,7 @@ import {
     isBlockDataInterface,
     isBlockInputInterface,
     MigrateOptions,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "../block";
@@ -272,6 +273,14 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
     }: CreateOneOfBlockOptions<BlockMap>,
     nameOrOptions: BlockFactoryNameOrOptions,
 ): OneOfBlock<BlockMap> {
+    for (const block in supportedBlocks) {
+        if (!supportedBlocks[block]) {
+            throw new Error(`Supported block '${block}' is undefined. This is most likely due to a circular import`);
+        }
+
+        registerBlock(supportedBlocks[block]);
+    }
+
     class Meta extends AnnotationBlockMeta {
         get fields(): BlockMetaField[] {
             const attachedBlocksField: BlockMetaField = {

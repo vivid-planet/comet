@@ -75,6 +75,8 @@ export function createRichTextBlock<LinkBlock extends Block>(
         throw new Error("Provided 'link' is undefined. This is most likely due to a circular import");
     }
 
+    registerBlock(LinkBlock);
+
     const blockName = typeof nameOrOptions === "string" ? nameOrOptions : nameOrOptions.name;
     const migrate = typeof nameOrOptions !== "string" && nameOrOptions.migrate ? nameOrOptions.migrate : { migrations: [], version: 0 };
 
@@ -190,8 +192,6 @@ export function createRichTextBlock<LinkBlock extends Block>(
         blockMeta: new AnnotationBlockMeta(RichTextBlockData),
         blockInputMeta: new AnnotationBlockMeta(RichTextBlockInput),
     };
-
-    registerBlock(RichTextBlock);
 
     return RichTextBlock;
 }

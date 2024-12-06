@@ -14,6 +14,7 @@ import {
     inputToData,
     isBlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformResponse,
 } from "../block";
@@ -115,6 +116,8 @@ export function createListBlock<B extends Block>(
     if (!block) {
         throw new Error("Provided 'block' is undefined. This is most likely due to a circular import");
     }
+
+    registerBlock(block);
 
     class ListBlockData extends BlockData {
         @Type(() => ListBlockItemData)
