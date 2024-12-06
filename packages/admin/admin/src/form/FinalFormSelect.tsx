@@ -46,7 +46,7 @@ export const FinalFormSelect = <T,>({
     children,
     required,
     ...rest
-}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input" | "endAdornment">) => {
+}: FinalFormSelectProps<T> & Partial<AsyncOptionsProps<T>> & Omit<SelectProps, "input">) => {
     // Depending on the usage, `multiple` is either a root prop or in the `input` prop.
     // 1. <Field component={FinalFormSelect} multiple /> -> multiple is in restInput
     // 2. <Field>{(props) => <FinalFormSelect {...props} multiple />}</Field> -> multiple is in rest
@@ -63,7 +63,6 @@ export const FinalFormSelect = <T,>({
     const selectProps = {
         ...rest,
         multiple,
-        endAdornment,
         name,
         onChange,
         onFocus,
