@@ -56,5 +56,5 @@ export const messages = defineMessages({
     downloadAsExcel: { id: "comet.generic.downloadAsExcel", defaultMessage: "Download as Excel" },
     impersonate: { id: "comet.generic.impersonate", defaultMessage: "Impersonate" },
     startImpersonation: { id: "comet.generic.startImpersonation", defaultMessage: "Start Impersonation" },
-    stopImpersonation: { id: "comet.generic.stopImpersonation", defaultMessage: "Stop Impersonation" },
+    stopImpersonation: { id: "comet.generic.stopImpersonation", defaultMessage: "Regain original identity" },
 });
