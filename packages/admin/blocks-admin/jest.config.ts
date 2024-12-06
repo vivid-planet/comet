@@ -144,7 +144,9 @@ export default {
     testEnvironment: "jest-environment-jsdom",
 
     // Options that will be passed to the testEnvironment
-    // testEnvironmentOptions: {},
+    testEnvironmentOptions: {
+        customExportConditions: ["browser", "node", "node-addons"],
+    },
 
     // Adds a location field to test results
     // testLocationInResults: false,
