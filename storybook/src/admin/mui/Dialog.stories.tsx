@@ -1,6 +1,6 @@
-import { CancelButton, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
+import { CancelButton, Dialog, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, FormControlLabel, MenuItem } from "@mui/material";
+import { Button, DialogActions, DialogContent, DialogContentText, DialogProps, FormControlLabel, MenuItem } from "@mui/material";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -29,23 +29,42 @@ export default {
     title: "@comet/admin/mui",
     args: {
         selectedDialogSize: "sm",
+        selectedDialogTitle: "Dialog Title Example",
+        selectedDialogOnClose: null,
     },
     argTypes: {
         selectedDialogSize: {
             name: "Dialog Size",
             control: "select",
-            options: Object.keys(dialogSizeOptions),
-            mapping: dialogSizeOptions,
+            options: dialogSizeOptions,
+        },
+        selectedDialogTitle: {
+            name: "Dialog Title",
+            control: "select",
+            options: {
+                "Dialog Title Example": "Dialog Title Example",
+                None: "",
+            },
+        },
+        selectedDialogOnClose: {
+            name: "Dialog onClose",
+            control: "select",
+            options: {
+                "No callback": null,
+                "Provided callback": "callback",
+            },
         },
     },
 };
 
 type Args = {
     selectedDialogSize: DialogSize;
+    selectedDialogTitle: string;
+    selectedDialogOnClose: string;
 };
 
 export const _Dialog = {
-    render: ({ selectedDialogSize }: Args) => {
+    render: ({ selectedDialogSize, selectedDialogTitle, selectedDialogOnClose }: Args) => {
         return (
             <div>
                 <Form
@@ -57,6 +76,8 @@ export const _Dialog = {
                         <form onSubmit={handleSubmit}>
                             <Dialog
                                 scroll="body"
+                                title={selectedDialogTitle}
+                                onClose={selectedDialogOnClose === "callback" ? () => console.log("Dialog closed") : undefined}
                                 open={true}
                                 fullWidth={selectedDialogSize === "fullWidth"}
                                 maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize}
@@ -71,22 +92,18 @@ export const _Dialog = {
     },
 };
 
-function ConfirmationDialogContent(): React.ReactElement {
+function ConfirmationDialogContent() {
     return (
-        <>
-            <DialogTitle>This is a small confirmation dialog.</DialogTitle>
-            <DialogActions>
-                <CancelButton />
-                <OkayButton />
-            </DialogActions>
-        </>
+        <DialogActions>
+            <CancelButton />
+            <OkayButton />
+        </DialogActions>
     );
 }
 
-function DefaultDialogContent(): React.ReactElement {
+function DefaultDialogContent() {
     return (
         <>
-            <DialogTitle>Form in Dialog</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     Lorem ipsum nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Vivamus
