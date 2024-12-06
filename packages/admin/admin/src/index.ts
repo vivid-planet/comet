@@ -22,6 +22,7 @@ export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } from "./common/FullHeightContent";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
