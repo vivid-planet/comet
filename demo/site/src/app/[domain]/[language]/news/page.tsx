@@ -1,3 +1,5 @@
+export const dynamic = "error";
+
 import { gql, previewParams } from "@comet/cms-site";
 import { GQLNewsContentScopeInput } from "@src/graphql.generated";
 import { NewsList } from "@src/news/NewsList";
