@@ -1,5 +1,127 @@
 # @comet/admin
 
+## 7.9.0
+
+### Minor Changes
+
+-   6d6131b16: Add the `dataGridDateColumn` and `dataGridDateTimeColumn` helpers for using the "date" and "dateTime" types in Data Grid
+
+    ```diff
+    -import { GridColDef } from "@comet/admin";
+    +import { GridColDef, dataGridDateColumn, dataGridDateTimeColumn } from "@comet/admin";
+
+     // ...
+
+     const columns: GridColDef[] = [
+         {
+    -       type: "date",
+    -       valueGetter: ({ value }) => value && new Date(value),
+    -       renderCell: ({ value }) => value && <FormattedDate value={value} dateStyle="medium" />,
+    +       ...dataGridDateColumn,
+            field: "createdAt",
+            headerName: "Created At",
+         },
+         {
+    -      type: "dateTime",
+    -      valueGetter: ({ value }) => value && new Date(value),
+    -      renderCell: ({ value }) => value && <FormattedDate value={value} dateStyle="medium" timeStyle="short" />,
+    +      ...dataGridDateTimeColumn,
+           field: "updatedAt",
+           headerName: "Updated At",
+         },
+     ];
+    ```
+
+-   7cea765fe: Add UI for Impersonation Feature
+
+    -   Add indicator to display when impersonation mode is active in `UserHeaderItem`
+    -   Add button to allow users to switch on impersonation in the `UserGrid`
+    -   Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
+    -   Add `ImpersonateUser` icon
+
+### Patch Changes
+
+-   48cac4dac: Fix styling issues of inputs like `FinalFormInput`, `FinalFormNumberInput`, `FinalFormSelect`, `TextAreaField`
+
+    -   Change background-color, border-color and color of the label for different states (`default`, `disabled` and `focused`).
+    -   For required inputs, fix spacing between the label and asterisk.
+    -   Fix font-weight and margin of `helperText`.
+
+-   0919e3ba6: Remove right padding from form fields without an end adornment
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [48cac4dac]
+-   Updated dependencies [55d40ef08]
+-   Updated dependencies [9aa6947b7]
+    -   @comet/admin-icons@7.9.0
+    -   @comet/admin-theme@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   139616be6: Add `FullHeightContent` component
+
+    Used to help components take advantage of all the available content height, e.g., when using a `DataGrid` inside `Tabs` already contained in a `MainContent` component.
+
+    Usage example for `FullHeightContent`:
+
+    ```tsx
+    <MainContent>
+        <RouterTabs>
+            <RouterTab label="DataGrid Example" path="">
+                <FullHeightContent>
+                    <DataGrid />
+                </FullHeightContent>
+            </RouterTab>
+            <RouterTab label="Another tab" path="/another-tab">
+                Content of another tab
+            </RouterTab>
+        </RouterTabs>
+    </MainContent>
+    ```
+
+    Example where `MainContent` with `fullHeight` should be used, instead of `FullHeightContent`:
+
+    ```tsx
+    <MainContent fullHeight>
+        <DataGrid />
+    </MainContent>
+    ```
+
+-   d8fca0522: Add second `InitialFormValues` generic to `FinalForm`
+
+    This allows differentiating between a form's values and initial values.
+
+-   d8298d59a: Add the `StackMainContent` component
+
+    This version of `MainContent` only adds content spacing and height when it's the last visible `StackSwitch`.
+    Using `StackMainContent` instead of `MainContent` prevents unintended or duplicate spacings in cases where multiple `MainContent` components are used inside nested `StackSwitch` components.
+
+### Patch Changes
+
+-   a168e5514: Open collapsible menu item on refresh if its child or sub-child is selected
+-   e16ad1a02: Fix a bug that prevented dynamically rendered tabs in `Tabs`
+-   139616be6: Fix the `fullHeight` behavior of `MainContent`
+
+    When used inside certain elements, e.g. with `position: relative`, the height would be calculated incorrectly.
+
+-   eefb0546f: Render empty values correctly when using `renderStaticSelectCell` as a `DataGrid` column's `renderCell` function
+-   795ec73d9: Fix the spacing between the text and chip in `CrudMoreActionsMenu`
+-   8617c3bcd: Fix URL prefix in `SubRouteIndexRoute`
+-   daacf1ea6: Fix a bug in `ToolbarBreadcrumbs` where it was possible to open the mobile breadcrumbs menu when there were no items to be shown in the menu
+-   9cc75c141: Prevent the width of the mobile breadcrumbs menu of `ToolbarBreadcrumbs` from being far too small
+-   Updated dependencies [e78315c9c]
+-   Updated dependencies [c6d3ac36b]
+    -   @comet/admin-icons@7.8.0
+    -   @comet/admin-theme@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   @comet/admin-icons@7.7.0
+-   @comet/admin-theme@7.7.0
+
 ## 7.6.0
 
 ### Minor Changes

@@ -1,5 +1,6 @@
 import { createMock } from "@golevelup/ts-jest";
 import { BaseEntity, Entity, MikroORM, PrimaryKey } from "@mikro-orm/core";
+import { defineConfig } from "@mikro-orm/postgresql";
 import { ExecutionContext } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 
@@ -66,13 +67,14 @@ describe("UserPermissionsGuard", () => {
 
     beforeEach(async () => {
         reflector = new Reflector();
-        orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity],
-            connect: false,
-            allowGlobalContext: true,
-        });
+        orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntity],
+                connect: false,
+                allowGlobalContext: true,
+            }),
+        );
         moduleRef = createMock<ModuleRef>();
         contentScopeService = new ContentScopeService(reflector, orm, moduleRef);
         accessControlService = new AccessControlService();

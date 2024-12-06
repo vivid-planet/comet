@@ -1,5 +1,5 @@
-import { Field, FinalFormSelect, RadioGroupField } from "@comet/admin";
-import { Box, Divider, MenuItem, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
+import { Field, RadioGroupField, SelectField } from "@comet/admin";
+import { Box, Divider, ToggleButton as MuiToggleButton, ToggleButtonGroup as MuiToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
 import { ReactNode, useCallback } from "react";
@@ -366,17 +366,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "select" && (
                                     <>
                                         <Box padding={isInPaper ? 3 : 0}>
-                                            <Field name="blockType" fullWidth>
-                                                {(props) => (
-                                                    <FinalFormSelect {...props} fullWidth>
-                                                        {options.map((option) => (
-                                                            <MenuItem value={option.value} key={option.value}>
-                                                                {option.label}
-                                                            </MenuItem>
-                                                        ))}
-                                                    </FinalFormSelect>
-                                                )}
-                                            </Field>
+                                            <SelectField name="blockType" options={options} fullWidth required={!allowEmpty} />
                                         </Box>
                                         {isInPaper && activeBlock.block && <Divider />}
                                     </>

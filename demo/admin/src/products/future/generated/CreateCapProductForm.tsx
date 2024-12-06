@@ -13,8 +13,10 @@ import {
     useStackSwitchApi,
 } from "@comet/admin";
 import { FinalFormDatePicker } from "@comet/admin-date-time";
+import { CalendarToday as CalendarTodayIcon } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
+import { InputAdornment } from "@mui/material";
 import { GQLProductType } from "@src/graphql.generated";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
@@ -144,6 +146,11 @@ export function CreateCapProductForm({ type }: FormProps): React.ReactElement {
                         name="availableSince"
                         component={FinalFormDatePicker}
                         label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <CalendarTodayIcon />
+                            </InputAdornment>
+                        }
                     />
                     <Field
                         name="image"
