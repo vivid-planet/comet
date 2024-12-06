@@ -5,16 +5,16 @@ import { ButtonBase, Divider, Snackbar, styled } from "@mui/material";
 import { GridColumnHeaderParams } from "@mui/x-data-grid";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuid } from "uuid";
 
 import { TableBlockData } from "../../blocks.generated";
 import { ColumnSize } from "./TableBlockGrid";
-import { getNewColumn } from "./utils";
+import { deleteColumnFromState, duplicateColumnInState, insertColumnIntoState, setColumnSizeInState, toggleColumnHighlightInState } from "./utils";
 
 type Props = GridColumnHeaderParams & {
     columnSize: ColumnSize;
     highlighted: boolean;
     updateState: DispatchSetStateAction<TableBlockData>;
+    state: TableBlockData;
     columnIndex: number;
 };
 
@@ -26,89 +26,24 @@ const columnSizes: Record<ColumnSize, ReactNode> = {
     extraLarge: <FormattedMessage id="comet.tableBlock.columnSize.extraLarge" defaultMessage="Extra large" />,
 };
 
-export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex, field: columnId }: Props) => {
+export const ColumnHeader = ({ columnSize, highlighted, updateState, state, columnIndex, field: columnId }: Props) => {
     const snackbarApi = useSnackbarApi();
 
-    const insertColumn = (newColumnIndex: number) => {
-        const newColumn = getNewColumn();
-        updateState((state) => {
-            return {
-                ...state,
-                columns: [...state.columns.slice(0, newColumnIndex), newColumn, ...state.columns.slice(newColumnIndex)],
-                rows: state.rows.map((row) => ({
-                    ...row,
-                    cellValues: [...row.cellValues, { columnId: newColumn.id, value: "" }],
-                })),
-            };
-        });
-    };
-
-    const deleteColumn = () => {
-        updateState((state) => {
-            return {
-                ...state,
-                columns: state.columns.filter((column) => column.id !== columnId),
-                rows: state.rows.map((row) => ({
-                    ...row,
-                    cellValues: row.cellValues.filter((cellValue) => cellValue.columnId !== columnId),
-                })),
-            };
-        });
-    };
-
-    const toggleColumnHighlight = () => {
-        updateState((state) => {
-            return {
-                ...state,
-                columns: state.columns.map((column) => {
-                    if (column.id === columnId) {
-                        return { ...column, highlighted: !highlighted };
-                    }
-                    return column;
-                }),
-            };
-        });
-    };
-
-    const setColumnSize = (size: ColumnSize) => {
-        updateState((state) => {
-            return { ...state, columns: state.columns.map((column) => (column.id === columnId ? { ...column, size } : column)) };
-        });
-    };
-
     const duplicateColumn = () => {
-        updateState((state) => {
-            const currentColumnIndex = state.columns.findIndex(({ id }) => id === columnId);
-            const columnToDuplicate = state.columns[currentColumnIndex];
+        const duplicationResult = duplicateColumnInState(state, columnId);
 
-            if (!columnToDuplicate) {
-                snackbarApi.showSnackbar(
-                    <Snackbar autoHideDuration={5000}>
-                        <Alert severity="error">
-                            <FormattedMessage id="comet.tableBlock.failedToDuplicateColumn" defaultMessage="Failed to duplicate column" />
-                        </Alert>
-                    </Snackbar>,
-                );
-                return state;
-            }
+        if (!duplicationResult.success) {
+            snackbarApi.showSnackbar(
+                <Snackbar autoHideDuration={5000}>
+                    <Alert severity="error">
+                        <FormattedMessage id="comet.tableBlock.failedToDuplicateColumn" defaultMessage="Failed to duplicate column" />
+                    </Alert>
+                </Snackbar>,
+            );
+            return;
+        }
 
-            const duplicatedColumn = { ...columnToDuplicate, id: uuid() };
-
-            return {
-                ...state,
-                columns: [...state.columns.slice(0, currentColumnIndex + 1), duplicatedColumn, ...state.columns.slice(currentColumnIndex + 1)],
-                rows: state.rows.map((row) => {
-                    const cellValueOfDuplicatedColumn = row.cellValues.find(({ columnId: cellValueColumnId }) => cellValueColumnId === columnId);
-                    const newCellValues = [...row.cellValues];
-                    newCellValues.push({ columnId: duplicatedColumn.id, value: cellValueOfDuplicatedColumn?.value ?? "" });
-
-                    return {
-                        ...row,
-                        cellValues: newCellValues,
-                    };
-                }),
-            };
-        });
+        updateState(duplicationResult.state);
     };
 
     return (
@@ -123,7 +58,7 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                             <RowActionsItem
                                 key={size}
                                 onClick={() => {
-                                    setColumnSize(size as ColumnSize);
+                                    updateState(setColumnSizeInState(state, columnId, size as ColumnSize));
                                 }}
                                 componentsProps={{ menuItem: { selected: columnSize === size } }}
                             >
@@ -134,7 +69,7 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                     <RowActionsItem
                         icon={highlighted ? <Remove /> : <Add />}
                         onClick={() => {
-                            toggleColumnHighlight();
+                            updateState(toggleColumnHighlightInState(state, columnId));
                         }}
                     >
                         {highlighted ? "Remove highlighting" : "Highlight column"}
@@ -143,7 +78,7 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                     <RowActionsItem
                         icon={<PinLeft />}
                         onClick={() => {
-                            insertColumn(columnIndex);
+                            updateState(insertColumnIntoState(state, columnIndex));
                         }}
                     >
                         <FormattedMessage id="comet.tableBlock.insertColumnLeft" defaultMessage="Insert column left" />
@@ -151,7 +86,7 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                     <RowActionsItem
                         icon={<PinRight />}
                         onClick={() => {
-                            insertColumn(columnIndex + 1);
+                            updateState(insertColumnIntoState(state, columnIndex + 1));
                         }}
                     >
                         <FormattedMessage id="comet.tableBlock.insertColumnRight" defaultMessage="Insert column right" />
@@ -182,7 +117,7 @@ export const ColumnHeader = ({ columnSize, highlighted, updateState, columnIndex
                     <RowActionsItem
                         icon={<Delete />}
                         onClick={() => {
-                            deleteColumn();
+                            updateState(deleteColumnFromState(state, columnId));
                         }}
                     >
                         <FormattedMessage id="comet.tableBlock.deleteColumn" defaultMessage="Delete" />

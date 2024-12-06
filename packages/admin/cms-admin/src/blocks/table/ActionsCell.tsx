@@ -3,18 +3,17 @@ import { Add, ArrowDown, ArrowUp, Copy, Delete, Duplicate, Paste, Remove } from 
 import { DispatchSetStateAction } from "@comet/blocks-admin";
 import { Divider, Snackbar } from "@mui/material";
 import { FormattedMessage } from "react-intl";
-import { v4 as uuid } from "uuid";
-import { z } from "zod";
 
 import { TableBlockData } from "../../blocks.generated";
-import { getNewColumn, getNewRow } from "./utils";
-
-const clipboardRowSchema = z.object({
-    highlighted: z.boolean(),
-    cellValues: z.array(z.string()),
-});
-
-type ClipboardRow = z.infer<typeof clipboardRowSchema>;
+import {
+    ClipboardRow,
+    clipboardRowSchema,
+    deleteRowFromState,
+    duplicateRowInState,
+    insertNewRowIntoState,
+    insertRowFromClipboardIntoState,
+    toggleHighlightOfRowInState,
+} from "./utils";
 
 type Props = {
     row: Record<string, unknown> & { id: string };
@@ -25,47 +24,10 @@ type Props = {
 export const ActionsCell = ({ row, updateState, state }: Props) => {
     const snackbarApi = useSnackbarApi();
 
-    const insertRow = (where: "above" | "below") => {
-        updateState((state) => {
-            const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
-            const newRowIndex = where === "above" ? currentRowIndex : currentRowIndex + 1;
-
-            return {
-                ...state,
-                rows: [
-                    ...state.rows.slice(0, newRowIndex),
-                    getNewRow(state.columns.map((column) => ({ columnId: column.id, value: "" }))),
-                    ...state.rows.slice(newRowIndex),
-                ],
-            };
-        });
-    };
-
-    const deleteRow = () => {
-        updateState((state) => {
-            return { ...state, rows: state.rows.filter(({ id }) => id !== row.id) };
-        });
-    };
-
-    const toggleRowHighlight = () => {
-        updateState((state) => {
-            return {
-                ...state,
-                rows: state.rows.map((rowInState) => {
-                    if (rowInState.id === row.id) {
-                        return { ...rowInState, highlighted: !rowInState.highlighted };
-                    }
-                    return rowInState;
-                }),
-            };
-        });
-    };
-
     const duplicateRow = () => {
-        const currentRowIndex = state.rows.findIndex(({ id }) => id === row.id);
-        const rowToDuplicate = state.rows[currentRowIndex];
+        const duplicationResult = duplicateRowInState(state, row.id);
 
-        if (!rowToDuplicate) {
+        if (!duplicationResult.success) {
             snackbarApi.showSnackbar(
                 <Snackbar autoHideDuration={5000}>
                     <Alert severity="error">
@@ -76,10 +38,7 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
             return;
         }
 
-        updateState((state) => {
-            const duplicatedRow = { ...rowToDuplicate, id: uuid() };
-            return { ...state, rows: [...state.rows.slice(0, currentRowIndex + 1), duplicatedRow, ...state.rows.slice(currentRowIndex + 1)] };
-        });
+        updateState(duplicationResult.state);
     };
 
     const copyRowToClipboard = () => {
@@ -106,21 +65,10 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
         writeClipboardText(JSON.stringify(copyData));
     };
 
-    const showFailedToParseDataSnackbar = () => {
-        snackbarApi.showSnackbar(
-            <Snackbar autoHideDuration={5000}>
-                <Alert severity="error">
-                    <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
-                </Alert>
-            </Snackbar>,
-        );
-    };
-
-    const pasteRowFromClipboard = async () => {
+    const getRowFromClipboard = async (): Promise<ClipboardRow | undefined> => {
         const clipboardData = await readClipboardText();
 
         if (!clipboardData) {
-            showFailedToParseDataSnackbar();
             return;
         }
 
@@ -129,50 +77,33 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
         try {
             jsonClipboardData = JSON.parse(clipboardData);
         } catch {
-            showFailedToParseDataSnackbar();
             return;
         }
 
         const validatedClipboardData = clipboardRowSchema.safeParse(jsonClipboardData);
 
         if (!validatedClipboardData.success) {
-            showFailedToParseDataSnackbar();
             return;
         }
 
-        updateState((state) => {
-            const numberOfColumnsToAdd = validatedClipboardData.data.cellValues.length - state.columns.length;
+        return validatedClipboardData.data;
+    };
 
-            const updatedColumns = [...state.columns];
-            let updatedRows = [...state.rows];
+    const pasteRowFromClipboard = async () => {
+        const validatedClipboardData = await getRowFromClipboard();
 
-            Array.from({ length: numberOfColumnsToAdd }).forEach(() => {
-                const newColumn = getNewColumn();
-                updatedColumns.push(newColumn);
-                updatedRows = updatedRows.map((row) => ({
-                    ...row,
-                    cellValues: [...row.cellValues, { columnId: newColumn.id, value: "" }],
-                }));
-            });
+        if (!validatedClipboardData) {
+            snackbarApi.showSnackbar(
+                <Snackbar autoHideDuration={5000}>
+                    <Alert severity="error">
+                        <FormattedMessage id="comet.tableBlock.couldNotPasteClipboardData" defaultMessage="Could not paste the clipboard data" />
+                    </Alert>
+                </Snackbar>,
+            );
+            return;
+        }
 
-            const currentRowIndex = updatedRows.findIndex(({ id }) => id === row.id);
-            const newRowToPaste: TableBlockData["rows"][number] = {
-                id: uuid(),
-                highlighted: validatedClipboardData.data.highlighted,
-                cellValues: updatedColumns.map(({ id: columnId }, index) => {
-                    return {
-                        columnId,
-                        value: validatedClipboardData.data.cellValues[index] ?? "",
-                    };
-                }),
-            };
-
-            return {
-                ...state,
-                columns: updatedColumns,
-                rows: [...updatedRows.slice(0, currentRowIndex + 1), newRowToPaste, ...updatedRows.slice(currentRowIndex + 1)],
-            };
-        });
+        updateState(insertRowFromClipboardIntoState(state, row.id, validatedClipboardData));
     };
 
     return (
@@ -181,7 +112,7 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
                 <RowActionsItem
                     icon={row.highlighted ? <Remove /> : <Add />}
                     onClick={() => {
-                        toggleRowHighlight();
+                        updateState(toggleHighlightOfRowInState(state, row.id));
                     }}
                 >
                     {row.highlighted ? (
@@ -194,7 +125,7 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
                 <RowActionsItem
                     icon={<ArrowUp />}
                     onClick={() => {
-                        insertRow("above");
+                        updateState(insertNewRowIntoState(state, "above", row.id));
                     }}
                 >
                     <FormattedMessage id="comet.tableBlock.addRowAbove" defaultMessage="Add row above" />
@@ -202,7 +133,7 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
                 <RowActionsItem
                     icon={<ArrowDown />}
                     onClick={() => {
-                        insertRow("below");
+                        updateState(insertNewRowIntoState(state, "below", row.id));
                     }}
                 >
                     <FormattedMessage id="comet.tableBlock.addRowBelow" defaultMessage="Add row below" />
@@ -221,7 +152,7 @@ export const ActionsCell = ({ row, updateState, state }: Props) => {
                 <RowActionsItem
                     icon={<Delete />}
                     onClick={() => {
-                        deleteRow();
+                        updateState(deleteRowFromState(state, row.id));
                     }}
                 >
                     <FormattedMessage id="comet.tableBlock.deleteRow" defaultMessage="Delete" />

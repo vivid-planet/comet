@@ -119,7 +119,7 @@ export const TableBlockGrid = ({ state, updateState }: Props) => {
             flex: flexForColumnSize[size],
             minWidth: widthForColumnSize[size],
             renderHeader: (params: GridColumnHeaderParams) => (
-                <ColumnHeader {...params} columnSize={size} highlighted={highlighted} updateState={updateState} columnIndex={index} />
+                <ColumnHeader {...params} columnSize={size} highlighted={highlighted} updateState={updateState} state={state} columnIndex={index} />
             ),
             renderCell: ({ value, row }: GridRenderCellParams) => <CellValue value={value} highlighted={row.highlighted || highlighted} />,
             renderEditCell: (params: GridRenderEditCellParams) => <EditCell {...params} />,
