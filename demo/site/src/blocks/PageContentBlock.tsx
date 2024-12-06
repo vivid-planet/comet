@@ -17,6 +17,7 @@ import { LinkListBlock } from "./LinkListBlock";
 import { MediaBlock } from "./MediaBlock";
 import RichTextBlock from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
+import { TableBlock } from "./TableBlock";
 import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./TwoListsBlock";
 
@@ -39,6 +40,7 @@ const supportedBlocks: SupportedBlocks = {
     imageLink: (props) => <ImageLinkBlock data={props} />,
     newsList: (props) => <NewsListBlock data={props} />,
     layout: (props) => <LayoutBlock data={props} />,
+    table: (props) => <TableBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

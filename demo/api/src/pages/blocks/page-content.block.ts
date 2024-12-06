@@ -1,5 +1,5 @@
 import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock } from "@comet/blocks-api";
-import { AnchorBlock, DamImageBlock } from "@comet/cms-api";
+import { AnchorBlock, DamImageBlock, TableBlock } from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
@@ -35,6 +35,7 @@ const supportedBlocks = {
     imageLink: ImageLinkBlock,
     newsList: NewsListBlock,
     layout: LayoutBlock,
+    table: TableBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
