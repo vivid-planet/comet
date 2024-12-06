@@ -150,10 +150,6 @@ export function createEditPageNode({
                     // The unchanged slug is expected to be available
                     return "Available";
                 }
-                if (parentNodeData?.pageTreeNode?.path != undefined && newSlug === "home") {
-                    // The slug "home" is reserved for the home page
-                    return "Reserved";
-                }
 
                 const { data } = await apollo.query<GQLIsPathAvailableQuery, GQLIsPathAvailableQueryVariables>({
                     query: isPathAvailableQuery,
@@ -167,7 +163,7 @@ export function createEditPageNode({
 
                 return data.availability;
             },
-            [apollo, scope, parentId, slug, parentNodeData?.pageTreeNode?.path],
+            [apollo, scope, parentId, slug],
         );
 
         const validateSlug = async (value: string) => {
