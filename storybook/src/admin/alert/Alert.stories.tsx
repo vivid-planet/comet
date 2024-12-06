@@ -21,7 +21,7 @@ export const Alerts = () => {
                             severity="info"
                             title="Title"
                             action={
-                                <Button variant="text" startIcon={<ArrowRight />}>
+                                <Button variant="outlined" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
@@ -35,7 +35,7 @@ export const Alerts = () => {
                             severity="warning"
                             title="Title"
                             action={
-                                <Button variant="text" startIcon={<ArrowRight />}>
+                                <Button variant="outlined" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
@@ -51,7 +51,7 @@ export const Alerts = () => {
                             severity="error"
                             title="Title"
                             action={
-                                <Button variant="text" startIcon={<ArrowRight />}>
+                                <Button variant="outlined" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
@@ -106,7 +106,7 @@ export const Alerts = () => {
                         <Alert
                             severity="success"
                             action={
-                                <Button variant="text" startIcon={<ArrowRight />}>
+                                <Button variant="outlined" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
@@ -133,7 +133,7 @@ export const Alerts = () => {
                         <Alert
                             severity="warning"
                             action={
-                                <Button variant="text" startIcon={<ArrowRight />}>
+                                <Button variant="outlined" startIcon={<ArrowRight />}>
                                     Action Text
                                 </Button>
                             }
