@@ -1,5 +1,41 @@
 # @comet/admin
 
+## 7.10.0
+
+### Minor Changes
+
+-   8f924d591: Add new custom `Dialog`
+
+    The component extends the MUI `Dialog` component to enable common use cases:
+
+    -   The `title` prop can be used to set the dialog title
+    -   A close button is shown when the `onClose` is used
+
+    **Example**
+
+    ```tsx
+    <Dialog
+        title="Dialog Title"
+        onClose={() => {
+            // Handle dialog closing here
+        }}
+    />
+    ```
+
+-   6eba5abea: Add a `forceVerticalContainerSize` prop to `FieldContainer`
+
+    Use it to define below which container size the `vertical` styling is applied when using the `horizontal` variant.
+
+### Patch Changes
+
+-   6eba5abea: Prevent unintended layout shift after the initial render of `FieldContainer` when using the `horizontal` variant
+-   Updated dependencies [7e94c55f6]
+-   Updated dependencies [22f3d402e]
+-   Updated dependencies [b51bf6d85]
+-   Updated dependencies [71876ea69]
+    -   @comet/admin-theme@7.10.0
+    -   @comet/admin-icons@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes

@@ -1,5 +1,24 @@
 # @comet/admin-theme
 
+## 7.10.0
+
+### Minor Changes
+
+-   7e94c55f6: Rework `GridFilterPanel` to match the updated Comet CI
+-   22f3d402e: Adapt `Chip` styling to align with Comet DXP design
+
+    -   Fix hover styling
+    -   Add new styling for `<Chip variant="filled" color="info">`
+
+### Patch Changes
+
+-   b51bf6d85: Adapt `Radio` and `Checkbox` styling to Comet DXP design
+
+    Fix colors of disabled states.
+
+-   71876ea69: Adapt size of arrow in `Select` and `Autocomplete` fields according to Comet DXP design
+    -   @comet/admin-icons@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes
