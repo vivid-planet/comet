@@ -195,6 +195,7 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
 
 const getCommonHelperTextStyles = (theme: Theme) => css`
     &.${formHelperTextClasses.root} {
+        display: flex;
         gap: ${theme.spacing(1)};
     }
 
