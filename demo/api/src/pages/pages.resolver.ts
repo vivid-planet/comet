@@ -68,6 +68,7 @@ export class PagesResolver {
                 id: pageId,
                 content: input.content.transformToBlockData(),
                 seo: input.seo.transformToBlockData(),
+                stage: input.stage.transformToBlockData(),
             });
 
             this.entityManager.persist(page);

@@ -82,6 +82,7 @@ export class ManyImagesTestPageFixtureService {
                 seo: pageInput.seo.transformToBlockData(),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                stage: pageInput.stage.transformToBlockData(),
             }),
         );
     }

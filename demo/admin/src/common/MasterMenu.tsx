@@ -16,6 +16,7 @@ import { ContentScope } from "@src/common/ContentScopeProvider";
 import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import Dashboard from "@src/dashboard/Dashboard";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
+import { EditFooterPage } from "@src/footer/EditFooterPage";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
@@ -140,6 +141,15 @@ export const masterMenuData: MasterMenuData = [
                     path: "/project-snips/main-menu",
                     component: MainMenu,
                 },
+            },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.project-snips.footer" defaultMessage="Footer" />,
+                route: {
+                    path: "/project-snips/footer",
+                    component: EditFooterPage,
+                },
+                requiredPermission: "pageTree",
             },
         ],
         requiredPermission: "pageTree",

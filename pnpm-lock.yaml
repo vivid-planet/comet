@@ -713,7 +713,7 @@ importers:
         specifier: ^5.8.0
         version: 5.8.0(@babel/core@7.22.11)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
       redraft:
-        specifier: ^0.10.0
+        specifier: ^0.10.2
         version: 0.10.2
       styled-components:
         specifier: ^6.1.8
