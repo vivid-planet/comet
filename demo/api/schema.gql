@@ -353,7 +353,7 @@ enum PredefinedPageType {
 
 type FooterScope {
   domain: String!
-  project: String!
+  language: String!
 }
 
 type Footer implements DocumentInterface {
@@ -696,7 +696,7 @@ input DamScopeInput {
 
 input FooterScopeInput {
   domain: String!
-  project: String!
+  language: String!
 }
 
 input NewsContentScopeInput {

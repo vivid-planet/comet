@@ -6,7 +6,6 @@ import fragmentTypes from "@src/fragmentTypes.json";
 export const createApolloClient = (apiUrl: string) => {
     const httpLink = new HttpLink({
         uri: `${apiUrl}/graphql`,
-        credentials: "include",
     });
 
     const link = ApolloLink.from([createErrorDialogApolloLink(), includeInvisibleContentContext, httpLink]);

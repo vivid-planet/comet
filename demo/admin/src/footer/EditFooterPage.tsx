@@ -30,7 +30,7 @@ import {
     namedOperations,
 } from "./EditFooterPage.generated";
 
-export const EditFooterPage = () => {
+export function EditFooterPage(): JSX.Element | null {
     const { scope } = useContentScope();
     const siteConfig = useSiteConfig({ scope });
     const [footerState, setFooterState] = useState<BlockState<typeof FooterContentBlock>>(FooterContentBlock.defaultValues());
@@ -103,9 +103,7 @@ export const EditFooterPage = () => {
             return; // dialogs open for the user to handle the conflict
         }
 
-        const input = {
-            content: FooterContentBlock.state2Output(footerState),
-        };
+        const input = { content: FooterContentBlock.state2Output(footerState) };
         return update({
             variables: { input, scope },
         });
@@ -158,7 +156,7 @@ export const EditFooterPage = () => {
             {saveConflict.dialogs}
         </Stack>
     );
-};
+}
 
 const footerQuery = gql`
     query Footer($scope: FooterScopeInput!) {
@@ -167,6 +165,7 @@ const footerQuery = gql`
             content
             scope {
                 domain
+                language
             }
             updatedAt
         }
