@@ -1,14 +1,13 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
 
-import { GQLLicenseInput } from "../../graphql.generated";
+import { GQLUpdateDamFileInput } from "../../graphql.generated";
 
 interface UploadFileData {
-    file: File;
+    file: File & Pick<GQLUpdateDamFileInput, "license" | "title" | "altText">;
     scope: Record<string, unknown>;
     folderId?: string;
     importSourceId?: string;
     importSourceType?: string;
-    license?: GQLLicenseInput;
 }
 
 interface UploadFileParams {
@@ -40,8 +39,14 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
         formData.append("importSourceId", data.importSourceId);
         formData.append("importSourceType", data.importSourceType);
     }
-    if (data.license) {
-        formData.append("license", JSON.stringify(data.license));
+    if (data.file.license) {
+        formData.append("license", JSON.stringify(data.file.license));
+    }
+    if (data.file.title) {
+        formData.append("title", data.file.title);
+    }
+    if (data.file.altText) {
+        formData.append("altText", data.file.altText);
     }
     if (data.folderId !== undefined) {
         formData.append("folderId", data.folderId);
@@ -59,11 +64,10 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
 }
 
 interface ReplaceFileByIdData {
-    file: File;
+    file: File & Pick<GQLUpdateDamFileInput, "license" | "title" | "altText">;
     fileId: string;
     importSourceId?: string;
     importSourceType?: string;
-    license?: GQLLicenseInput;
 }
 
 export function replaceById<ResponseData>({
@@ -79,8 +83,14 @@ export function replaceById<ResponseData>({
         formData.append("importSourceId", data.importSourceId);
         formData.append("importSourceType", data.importSourceType);
     }
-    if (data.license) {
-        formData.append("license", JSON.stringify(data.license));
+    if (data.file.license) {
+        formData.append("license", JSON.stringify(data.file.license));
+    }
+    if (data.file.title) {
+        formData.append("title", data.file.title);
+    }
+    if (data.file.altText) {
+        formData.append("altText", data.file.altText);
     }
 
     return apiClient.post<ResponseData>("/dam/files/replace-by-id", formData, {

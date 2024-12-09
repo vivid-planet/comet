@@ -109,7 +109,6 @@ const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "device
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    overflow-y: auto;
     will-change: transform;
 
     ${({ deviceConfig }) =>
@@ -127,7 +126,7 @@ const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "device
 const IFrame = styled("iframe", { shouldForwardProp: (prop) => prop !== "deviceConfig" })<IFrameProps>`
     display: block;
     border-style: unset;
-    border-width: 1px;
+    border-width: 0px;
     width: 100%;
     height: 100%;
     background-color: ${({ theme }) => theme.palette.common.white};

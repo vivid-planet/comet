@@ -31,12 +31,14 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
-interface FileWithPathAndLicenseInfo extends File {
+interface FileWithCustomMetaData extends File {
     path?: string;
     license?: GQLLicenseInput;
+    title?: string;
+    altText?: string;
 }
 
-export interface FileWithFolderPath extends FileWithPathAndLicenseInfo {
+export interface FileWithFolderPath extends FileWithCustomMetaData {
     folderPath?: string;
 }
 
@@ -45,7 +47,7 @@ interface UploadDamFileOptions {
 }
 
 interface Files {
-    acceptedFiles: FileWithPathAndLicenseInfo[];
+    acceptedFiles: FileWithCustomMetaData[];
     fileRejections: FileRejection[];
 }
 
@@ -54,7 +56,6 @@ type ImportSource = { importSourceType: never; importSourceId: never } | { impor
 interface UploadFilesOptions {
     folderId?: string;
     importSource?: ImportSource;
-    license?: GQLLicenseInput;
 }
 
 export interface FileUploadApi {
@@ -82,7 +83,7 @@ interface RejectedFile {
     file: File;
 }
 
-const addFolderPathToFiles = async (acceptedFiles: FileWithPathAndLicenseInfo[]): Promise<FileWithFolderPath[]> => {
+const addFolderPathToFiles = async (acceptedFiles: FileWithCustomMetaData[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
@@ -107,6 +108,8 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithPathAndLicenseInfo[])
         const newFile: FileWithFolderPath = new File([buffer], file.name, { lastModified: file.lastModified, type: file.type });
         newFile.path = file.path;
         newFile.license = file.license;
+        newFile.title = file.title;
+        newFile.altText = file.altText;
 
         const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
         newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
@@ -354,7 +357,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
 
     const uploadFiles = async (
         { acceptedFiles, fileRejections }: Files,
-        { folderId, importSource, license }: UploadFilesOptions,
+        { folderId, importSource }: UploadFilesOptions,
     ): Promise<{ hasError: boolean; rejectedFiles: RejectedFile[]; uploadedItems: NewlyUploadedItem[] }> => {
         setProgressDialogOpen(true);
         setValidationErrors(undefined);
@@ -403,7 +406,6 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         scope,
                         importSourceId: importSource?.importSourceId,
                         importSourceType: importSource?.importSourceType,
-                        license,
                     };
 
                     const onUploadProgress = (progressEvent: ProgressEvent) => {

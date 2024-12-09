@@ -108,5 +108,8 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
         return generatedFiles;
     }
 
-    return [...(await generateCrudInput(generatorOptions, metadata)), ...(await generateCrudResolver())];
+    return [
+        ...(await generateCrudInput(generatorOptions, metadata, { nested: false, excludeFields: [], generateUpdateInput: false })),
+        ...(await generateCrudResolver()),
+    ];
 }
