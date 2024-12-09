@@ -109,7 +109,6 @@ const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "device
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    overflow-y: auto;
     will-change: transform;
 
     ${({ deviceConfig }) =>
