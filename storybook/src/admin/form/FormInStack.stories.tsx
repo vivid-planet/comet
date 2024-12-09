@@ -13,7 +13,7 @@ import {
 } from "@comet/admin";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import { SubmissionErrors } from "final-form";
-import * as React from "react";
+import { useContext } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -43,7 +43,7 @@ const resolveSubmitErrors = (error: SubmissionErrors) => {
 };
 
 function Page1() {
-    const switchApi = React.useContext(StackSwitchApiContext);
+    const switchApi = useContext(StackSwitchApiContext);
 
     return (
         <>

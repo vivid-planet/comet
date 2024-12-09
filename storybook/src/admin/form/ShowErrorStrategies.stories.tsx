@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormContext, FinalFormInput } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
-import * as React from "react";
 
 interface FormValues {
     foo: string;

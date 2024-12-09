@@ -2,7 +2,6 @@ import { GridCellContent, GridColDef } from "@comet/admin";
 import { StateFilled } from "@comet/admin-icons";
 import { faker } from "@faker-js/faker";
 import { DataGrid } from "@mui/x-data-grid";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/GridCellContent",

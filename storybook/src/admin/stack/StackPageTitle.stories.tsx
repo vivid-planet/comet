@@ -1,11 +1,11 @@
 import { Stack, StackBreadcrumbs, StackPage, StackPageTitle, useStackSwitch } from "@comet/admin";
-import * as React from "react";
+import { useState } from "react";
 import { Redirect, Route, Switch } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Page2() {
-    const [counter, setCounter] = React.useState(0);
+    const [counter, setCounter] = useState(0);
     const [StackSwitch, api] = useStackSwitch();
     return (
         <div>
@@ -38,7 +38,7 @@ function Page2() {
 }
 
 function Story() {
-    const [counter, setCounter] = React.useState(0);
+    const [counter, setCounter] = useState(0);
     const [StackSwitch, api] = useStackSwitch();
     return (
         <div>

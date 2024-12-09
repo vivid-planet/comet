@@ -15,7 +15,7 @@ import {
     useEditDialogApi,
 } from "@comet/admin";
 import { Button, MenuItem, Typography } from "@mui/material";
-import * as React from "react";
+import { useRef, useState, VoidFunctionComponent } from "react";
 import { useLocation } from "react-router";
 import { v4 as uuid } from "uuid";
 
@@ -54,7 +54,7 @@ export const Hook = {
 
 export const Component = {
     render: () => {
-        const editDialogApi = React.useRef<IEditDialogApi>(null);
+        const editDialogApi = useRef<IEditDialogApi>(null);
 
         return (
             <>
@@ -84,7 +84,7 @@ export const Component = {
 
 export const UseEditDialogApi = {
     render: () => {
-        const ChildComponentWithOpenButton: React.VoidFunctionComponent = () => {
+        const ChildComponentWithOpenButton: VoidFunctionComponent = () => {
             const editDialogApi = useEditDialogApi();
 
             return (
@@ -168,7 +168,7 @@ export const WithTable = {
             name: string;
         }
 
-        const [users, setUsers] = React.useState<User[]>([
+        const [users, setUsers] = useState<User[]>([
             { id: "8a31ea9d-d00a-4e37-807b-a69624964ba0", name: "Isabella" },
             { id: "a5baf49a-d53c-4b3f-abd4-80d2b418589d", name: "Theo" },
             { id: "29734826-06b4-491b-ada7-cf1000d95790", name: "Maria" },
@@ -204,7 +204,7 @@ export const WithTable = {
             selectionApi: ISelectionApi;
         }
 
-        const UserForm: React.VoidFunctionComponent<UserFormProps> = ({ selectionApi, id, mode = "add" }) => {
+        const UserForm: VoidFunctionComponent<UserFormProps> = ({ selectionApi, id, mode = "add" }) => {
             const selection = { id, mode };
             const user = selection.mode === "edit" ? users.find((user) => user.id === id) : undefined;
 
@@ -357,7 +357,7 @@ export const SelectionWithComponent = {
         ];
 
         const location = useLocation();
-        const editDialogApi = React.useRef<IEditDialogApi>(null);
+        const editDialogApi = useRef<IEditDialogApi>(null);
 
         return (
             <>

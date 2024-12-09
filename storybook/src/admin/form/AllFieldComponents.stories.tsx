@@ -19,7 +19,7 @@ import {
 import { ColorField } from "@comet/admin-color-picker";
 import { DateField, DateRangeField, DateTimeField, TimeField, TimeRangeField } from "@comet/admin-date-time";
 import { Box, Button, Link, MenuItem } from "@mui/material";
-import * as React from "react";
+import { useMemo } from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -50,7 +50,7 @@ export const AllFieldComponents = {
             { value: "vanilla", label: "Vanilla" },
         ];
 
-        const initalValues = React.useMemo(() => ({ multiSelect: [] }), []);
+        const initalValues = useMemo(() => ({ multiSelect: [] }), []);
 
         return (
             <Form

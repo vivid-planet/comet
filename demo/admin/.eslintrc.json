@@ -2,7 +2,6 @@
     "extends": "@comet/eslint-config/react",
     "ignorePatterns": ["schema.json", "src/fragmentTypes.json", "dist/**", "src/**/*.generated.ts"],
     "rules": {
-        "@calm/react-intl/missing-formatted-message": "off",
-        "react/react-in-jsx-scope": "off"
+        "@calm/react-intl/missing-formatted-message": "off"
     }
 }

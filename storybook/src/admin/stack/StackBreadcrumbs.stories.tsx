@@ -1,5 +1,4 @@
 import { BreadcrumbItem, Stack, StackBreadcrumbs, useStackApi } from "@comet/admin";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

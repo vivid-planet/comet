@@ -1,6 +1,6 @@
 import { Alert, readClipboardText, writeClipboardText } from "@comet/admin";
 import { Button, Grid } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 
 export default {
     title: "@comet/admin/clipboard",
@@ -8,7 +8,7 @@ export default {
 
 export const ClipboardFallbackSizeLimit = function () {
     const writtenClipboardContent = "a".repeat(1024 * 1024 * 10); // 10MB
-    const [readClipboardContent, setReadClipboardContent] = React.useState<string | undefined>();
+    const [readClipboardContent, setReadClipboardContent] = useState<string | undefined>();
 
     return (
         <Grid container spacing={2}>

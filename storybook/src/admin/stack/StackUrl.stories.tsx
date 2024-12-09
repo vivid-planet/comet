@@ -1,6 +1,5 @@
 import { Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch } from "@comet/admin";
 import { Link } from "@mui/material";
-import * as React from "react";
 import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";

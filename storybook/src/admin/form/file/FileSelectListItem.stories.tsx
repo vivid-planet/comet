@@ -1,7 +1,6 @@
 import { FileSelectItem, FileSelectListItem } from "@comet/admin";
 import { Card, CardContent, Stack } from "@mui/material";
 import { Meta } from "@storybook/react";
-import React from "react";
 
 const fileSize = 1.8 * 1024 * 1024; // 1.8 MB
 

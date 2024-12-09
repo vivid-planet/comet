@@ -1,7 +1,6 @@
 import { FormSection } from "@comet/admin";
 import { ReactSelect } from "@comet/admin-react-select";
 import { Card, CardContent } from "@mui/material";
-import * as React from "react";
 
 const options = [
     { value: "chocolate", label: "Chocolate" },

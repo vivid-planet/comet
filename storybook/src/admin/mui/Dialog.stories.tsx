@@ -1,7 +1,6 @@
 import { CancelButton, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle, FormControlLabel, MenuItem } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth";
@@ -71,7 +70,7 @@ export const _Dialog = {
     },
 };
 
-function ConfirmationDialogContent(): React.ReactElement {
+function ConfirmationDialogContent() {
     return (
         <>
             <DialogTitle>This is a small confirmation dialog.</DialogTitle>
@@ -83,7 +82,7 @@ function ConfirmationDialogContent(): React.ReactElement {
     );
 }
 
-function DefaultDialogContent(): React.ReactElement {
+function DefaultDialogContent() {
     return (
         <>
             <DialogTitle>Form in Dialog</DialogTitle>

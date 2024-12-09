@@ -2,7 +2,7 @@ import { ClearInputAdornment, Field, FieldContainer, FinalFormInput, FinalFormSe
 import { FinalFormDatePicker } from "@comet/admin-date-time";
 import { Cut } from "@comet/admin-icons";
 import { Grid, InputBase, MenuItem } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -11,7 +11,7 @@ export default {
 
 export const Basic = {
     render: () => {
-        const [inputText, setInputText] = React.useState<string>("Lorem ipsum");
+        const [inputText, setInputText] = useState<string>("Lorem ipsum");
 
         return (
             <Grid container spacing={4}>

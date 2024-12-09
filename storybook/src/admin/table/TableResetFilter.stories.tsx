@@ -3,7 +3,6 @@ import { Field, Table, TableFilterFinalForm, TableQuery, useTableQuery, useTable
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Grid } from "@mui/material";
 import * as qs from "qs";
-import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 

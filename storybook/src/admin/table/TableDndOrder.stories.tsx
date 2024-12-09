@@ -1,6 +1,5 @@
 import { Stack, StackLink, StackPage, StackSwitch, TableDndOrder, TableLocalChanges } from "@comet/admin";
 import { Button } from "@mui/material";
-import * as React from "react";
 
 import { dndProviderDecorator } from "../../dnd.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";

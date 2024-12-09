@@ -2,7 +2,6 @@ import { ContentOverflow, GridColDef } from "@comet/admin";
 import { Box, Link, Paper, Typography, TypographyProps } from "@mui/material";
 import {} from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/ContentOverflow",

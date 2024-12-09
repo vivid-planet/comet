@@ -3,13 +3,12 @@
 
 import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
-import * as React from "react";
 import { useIntl } from "react-intl";
 
 import { NewsForm } from "./NewsForm";
 import { NewsGrid } from "./NewsGrid";
 
-export function NewsPage(): React.ReactElement {
+export function NewsPage() {
     const intl = useIntl();
     return (
         <Stack topLevelTitle={intl.formatMessage({ id: "news.news", defaultMessage: "News" })}>

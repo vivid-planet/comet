@@ -21,7 +21,7 @@ import {
 } from "@comet/admin";
 import { Edit } from "@comet/admin-icons";
 import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
-import * as React from "react";
+import { useContext } from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -70,7 +70,7 @@ function ExampleTable(props: { persistedStateId: string }) {
         }),
     });
 
-    const stackApi = React.useContext(StackSwitchApiContext);
+    const stackApi = useContext(StackSwitchApiContext);
 
     return (
         <TableQuery api={api} loading={loading} error={error}>

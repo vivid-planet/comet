@@ -1,6 +1,5 @@
 import { ChevronDown } from "@comet/admin-icons";
 import { Box, Card, CardContent, Chip, Grid, Stack, Typography } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "@comet/admin/mui",

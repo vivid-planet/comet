@@ -1,6 +1,5 @@
 import { Field, FieldContainer, FinalFormRadio } from "@comet/admin";
 import { Card, CardContent, FormControlLabel, Grid } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {

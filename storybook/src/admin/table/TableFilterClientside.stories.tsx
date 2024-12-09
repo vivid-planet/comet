@@ -1,6 +1,5 @@
 import { Field, FinalFormInput, MainContent, Table, TableFilterFinalForm, Toolbar, ToolbarItem, useTableQueryFilter } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 interface IExampleRow {
     id: number;

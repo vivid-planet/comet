@@ -14,7 +14,7 @@ import {
     FinalFormSwitch,
 } from "@comet/admin";
 import { Button, FormControlLabel } from "@mui/material";
-import * as React from "react";
+import { useMemo } from "react";
 
 interface Option {
     value: string;
@@ -76,7 +76,7 @@ export const _FinalFormAutocomplete = {
             { value: "vanilla", label: "Vanilla" },
         ];
 
-        const initialValues = React.useMemo(
+        const initialValues = useMemo(
             // Why useMemo()?
             // FinalForm reinitializes the form every time initalValues changes. A shallow equality check is used.
             // Therefore, without useMemo() FinalForm would reinitialize on every render.
@@ -149,7 +149,7 @@ export const _FinalFormSelect = {
             { value: "vanilla", label: "Vanilla" },
         ];
 
-        const initialValues = React.useMemo(
+        const initialValues = useMemo(
             // Why useMemo()?
             // see "FinalFormAutocomplete" story
             () => ({

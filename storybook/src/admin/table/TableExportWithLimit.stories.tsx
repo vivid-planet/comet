@@ -15,7 +15,6 @@ import {
     useTableQueryPaging,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
