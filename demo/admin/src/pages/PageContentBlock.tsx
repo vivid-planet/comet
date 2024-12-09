@@ -13,6 +13,7 @@ import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
 
 import { ColumnsBlock } from "./blocks/ColumnsBlock";
+import { ContentGroupBlock } from "./blocks/ContentGroupBlock";
 import { FullWidthImageBlock } from "./blocks/FullWidthImageBlock";
 import { ImageLinkBlock } from "./blocks/ImageLinkBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
@@ -38,6 +39,7 @@ export const PageContentBlock = createBlocksBlock({
         imageLink: ImageLinkBlock,
         newsList: NewsListBlock,
         layout: LayoutBlock,
+        contentGroup: ContentGroupBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,

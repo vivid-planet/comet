@@ -1,6 +1,7 @@
 import { createListBlock } from "@comet/blocks-admin";
-import { KeyFactsItemBlock } from "@src/documents/pages/blocks/KeyFactsItemBlock";
 import { FormattedMessage } from "react-intl";
+
+import { KeyFactsItemBlock } from "./KeyFactsItemBlock";
 
 export const KeyFactsBlock = createListBlock({
     name: "KeyFacts",
