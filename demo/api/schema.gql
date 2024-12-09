@@ -347,18 +347,17 @@ enum PredefinedPageType {
   News
 }
 
-type FooterContentScope {
+type FooterScope {
   domain: String!
-  language: String!
+  project: String!
 }
 
-type Footer {
+type Footer implements DocumentInterface {
   id: ID!
-  content: FooterContentBlockData!
-  scope: FooterContentScope!
-  createdAt: DateTime!
   updatedAt: DateTime!
-  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
+  content: FooterContentBlockData!
+  scope: FooterScope!
+  createdAt: DateTime!
 }
 
 """FooterContent root block data"""
@@ -691,9 +690,9 @@ input DamScopeInput {
   domain: String!
 }
 
-input FooterContentScopeInput {
+input FooterScopeInput {
   domain: String!
-  language: String!
+  project: String!
 }
 
 input NewsContentScopeInput {
@@ -794,7 +793,7 @@ type Query {
   mainMenu(scope: PageTreeNodeScopeInput!): MainMenu!
   topMenu(scope: PageTreeNodeScopeInput!): [PageTreeNode!]!
   mainMenuItem(pageTreeNodeId: ID!): MainMenuItem!
-  footer(scope: FooterContentScopeInput!): Footer
+  footer(scope: FooterScopeInput!): Footer
   predefinedPage(id: ID!): PredefinedPage!
   kubernetesCronJobs: [KubernetesCronJob!]!
   kubernetesCronJob(name: String!): KubernetesCronJob!
@@ -1218,7 +1217,7 @@ type Mutation {
   updateNewsComment(id: ID!, input: NewsCommentInput!): NewsComment!
   deleteNewsComment(id: ID!): Boolean!
   updateMainMenuItem(pageTreeNodeId: ID!, input: MainMenuItemInput!, lastUpdatedAt: DateTime): MainMenuItem!
-  saveFooter(scope: FooterContentScopeInput!, input: FooterInput!): Footer!
+  saveFooter(scope: FooterScopeInput!, input: FooterInput!): Footer!
   savePredefinedPage(id: ID!, input: PredefinedPageInput!, attachedPageTreeNodeId: ID!, lastUpdatedAt: DateTime): PredefinedPage!
   triggerKubernetesCronJob(name: String!): KubernetesJob!
   createProduct(input: ProductInput!): Product!

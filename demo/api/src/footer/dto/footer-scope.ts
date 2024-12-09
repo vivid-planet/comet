@@ -4,8 +4,8 @@ import { IsString } from "class-validator";
 
 @Embeddable()
 @ObjectType()
-@InputType("FooterContentScopeInput")
-export class FooterContentScope {
+@InputType("FooterScopeInput")
+export class FooterScope {
     @Property({ columnType: "text" })
     @Field()
     @IsString()
@@ -14,5 +14,5 @@ export class FooterContentScope {
     @Property({ columnType: "text" })
     @Field()
     @IsString()
-    language: string;
+    project: string;
 }
