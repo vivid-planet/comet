@@ -9,8 +9,8 @@ import {
     ExtractBlockInput,
     inputToData,
 } from "@comet/blocks-api";
+import { MediaBlock } from "@src/common/blocks/media.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
-import { MediaBlock } from "@src/pages/blocks/media.block";
 import { IsEnum } from "class-validator";
 
 enum LayoutBlockLayout {
