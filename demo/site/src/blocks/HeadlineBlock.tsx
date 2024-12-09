@@ -4,7 +4,7 @@ import { HeadlineBlockData } from "@src/blocks.generated";
 import { ElementType } from "react";
 import { Renderers } from "redraft";
 
-import RichTextBlock from "./RichTextBlock";
+import { RichTextBlock } from "./RichTextBlock";
 
 const headlineTags: { [key: string]: ElementType } = {
     "header-one": "h1",

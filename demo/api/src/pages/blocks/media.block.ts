@@ -3,7 +3,12 @@ import { DamImageBlock, DamVideoBlock, VimeoVideoBlock, YouTubeVideoBlock } from
 
 export const MediaBlock = createOneOfBlock(
     {
-        supportedBlocks: { image: DamImageBlock, damVideo: DamVideoBlock, youTubeVideo: YouTubeVideoBlock, vimeoVideo: VimeoVideoBlock },
+        supportedBlocks: {
+            image: DamImageBlock,
+            damVideo: DamVideoBlock,
+            youTubeVideo: YouTubeVideoBlock,
+            vimeoVideo: VimeoVideoBlock,
+        },
     },
     "Media",
 );

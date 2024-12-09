@@ -1,6 +1,5 @@
 import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks, YouTubeVideoBlock } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
-import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 
 import { AnchorBlock } from "./AnchorBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
@@ -28,7 +27,6 @@ const supportedBlocks: SupportedBlocks = {
     anchor: (props) => <AnchorBlock data={props} />,
     media: (props) => <MediaBlock data={props} />,
     twoLists: (props) => <TwoListsBlock data={props} />,
-    teaser: (props) => <TeaserBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

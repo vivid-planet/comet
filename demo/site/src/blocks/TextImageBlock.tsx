@@ -4,7 +4,7 @@ import { TextImageBlockData } from "@src/blocks.generated";
 import styled, { css } from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
-import RichTextBlock from "./RichTextBlock";
+import { RichTextBlock } from "./RichTextBlock";
 
 export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {

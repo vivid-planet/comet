@@ -2,7 +2,7 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { LayoutBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/blocks/MediaBlock";
-import RichTextBlock from "@src/blocks/RichTextBlock";
+import { RichTextBlock } from "@src/blocks/RichTextBlock";
 import styled, { css } from "styled-components";
 
 const layoutOptions: Array<{ name: LayoutBlockData["layout"]; blocks: string[] }> = [
