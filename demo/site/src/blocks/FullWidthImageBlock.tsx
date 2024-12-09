@@ -4,7 +4,7 @@ import { FullWidthImageBlockData } from "@src/blocks.generated";
 import styled from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
-import RichTextBlock from "./RichTextBlock";
+import { RichTextBlock } from "./RichTextBlock";
 
 export const FullWidthImageBlock = withPreview(
     ({ data: { image, content } }: PropsWithData<FullWidthImageBlockData>) => {

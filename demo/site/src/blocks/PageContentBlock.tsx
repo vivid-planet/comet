@@ -15,7 +15,7 @@ import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
 import { LinkListBlock } from "./LinkListBlock";
 import { MediaBlock } from "./MediaBlock";
-import RichTextBlock from "./RichTextBlock";
+import { RichTextBlock } from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./TwoListsBlock";

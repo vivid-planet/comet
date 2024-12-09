@@ -2,7 +2,7 @@ import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { NewsContentBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/blocks/DamImageBlock";
 import { HeadlineBlock } from "@src/blocks/HeadlineBlock";
-import RichTextBlock from "@src/blocks/RichTextBlock";
+import { RichTextBlock } from "@src/blocks/RichTextBlock";
 import { TextImageBlock } from "@src/blocks/TextImageBlock";
 
 const supportedBlocks: SupportedBlocks = {
