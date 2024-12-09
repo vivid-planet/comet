@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix `useDataGridExcelExport` with undefined values in data grid
+Fix a bug in `useDataGridExcelExport` that would cause an Excel export to fail when a cell's value was `undefined`
