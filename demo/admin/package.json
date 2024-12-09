@@ -43,7 +43,7 @@
         "change-case": "^5.2.0",
         "dnd-core": "^16.0.0",
         "draft-js": "^0.11.0",
-        "exceljs": "^3.0.0",
+        "exceljs": "^4.4.0",
         "file-saver": "^2.0.0",
         "final-form": "^4.0.0",
         "graphql": "^15.0.0",
