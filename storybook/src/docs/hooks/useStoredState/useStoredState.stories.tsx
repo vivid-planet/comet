@@ -1,6 +1,5 @@
 import { FormSection, useStoredState } from "@comet/admin";
 import { Button, InputBase } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "Docs/Hooks/useStoredState",

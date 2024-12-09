@@ -11,7 +11,6 @@ import {
     VisibleType,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 interface IExampleRow extends IRow {
     id: number;

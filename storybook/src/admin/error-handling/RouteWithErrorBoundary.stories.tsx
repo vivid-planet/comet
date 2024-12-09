@@ -1,11 +1,10 @@
 import { Alert, MasterLayout, Menu, MenuItemRouterLink, RouteWithErrorBoundary } from "@comet/admin";
 import { Card, CardContent, Typography } from "@mui/material";
-import * as React from "react";
 import { Redirect, Route, Switch } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-const ViewWithNoError: React.FunctionComponent = () => {
+const ViewWithNoError = () => {
     return (
         <Card variant="outlined">
             <CardContent>
@@ -21,7 +20,7 @@ const ViewWithNoError: React.FunctionComponent = () => {
     );
 };
 
-const ViewWithError: React.FunctionComponent = () => {
+const ViewWithError = () => {
     throw new Error("Some error occurred");
     return (
         <div>

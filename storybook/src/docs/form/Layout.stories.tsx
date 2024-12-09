@@ -24,7 +24,7 @@ import {
     Typography,
 } from "@mui/material";
 import { styled, StyledEngineProvider } from "@mui/material/styles";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 
 const fooBarOptions = [
@@ -129,7 +129,7 @@ export const FieldsInSidebar = {
 
 export const FieldsInDialog = {
     render: () => {
-        const [showDialog, setShowDialog] = React.useState<boolean>(false);
+        const [showDialog, setShowDialog] = useState<boolean>(false);
 
         return (
             <>

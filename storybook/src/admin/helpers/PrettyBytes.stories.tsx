@@ -1,7 +1,6 @@
 import { PrettyBytes } from "@comet/admin";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 
 const Content = styled("div")`
     display: grid;

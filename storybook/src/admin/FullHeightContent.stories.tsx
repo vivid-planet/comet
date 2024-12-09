@@ -12,7 +12,6 @@ import {
 import { Add } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { Button } from "@mui/material";
-import React from "react";
 
 import { ExampleDataGrid } from "../helpers/ExampleDataGrid";
 import { masterLayoutDecorator, stackRouteDecorator } from "../helpers/storyDecorators";

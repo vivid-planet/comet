@@ -1,6 +1,5 @@
 import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
 import { Button } from "@mui/material";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

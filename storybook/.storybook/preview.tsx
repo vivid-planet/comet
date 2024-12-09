@@ -7,7 +7,6 @@ import { createTheme as createMuiTheme, GlobalStyles } from "@mui/material";
 import type { Preview } from "@storybook/react";
 import { Locale as DateFnsLocale } from "date-fns";
 import { de as deLocale, enUS as enLocale } from "date-fns/locale";
-import * as React from "react";
 import { IntlProvider } from "react-intl";
 
 import { worker } from "./mocks/browser";

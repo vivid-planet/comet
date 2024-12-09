@@ -1,15 +1,15 @@
 import { RouterTab, RouterTabs, Stack, StackPage, StackSwitch } from "@comet/admin";
-import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 const mountCount: Record<string, number> = {};
 
 function RenderCount(props: { name: string }) {
-    React.useEffect(() => {
+    useEffect(() => {
         mountCount[props.name] = (mountCount[props.name] || 0) + 1;
     }, [props.name]);
-    const renderCount = React.useRef(0);
+    const renderCount = useRef(0);
     renderCount.current++;
     return (
         <div>
@@ -19,8 +19,8 @@ function RenderCount(props: { name: string }) {
 }
 
 function PrintMountCount() {
-    const [, rerender] = React.useState(0);
-    React.useEffect(() => {
+    const [, rerender] = useState(0);
+    useEffect(() => {
         const timer = setInterval(() => {
             rerender(new Date().getTime());
         }, 100);

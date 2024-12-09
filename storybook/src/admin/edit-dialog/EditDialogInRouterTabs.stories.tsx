@@ -14,7 +14,7 @@ import {
 import { Add } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
 import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
-import React from "react";
+import { ReactNode, RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -33,10 +33,10 @@ const products = [
 ];
 
 type DialogProps = {
-    dialogApiRef: React.RefObject<IEditDialogApi>;
+    dialogApiRef: RefObject<IEditDialogApi>;
 };
 
-const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -65,7 +65,7 @@ const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
 };
 
 interface ToolbarProps extends GridToolbarProps {
-    toolbarAction?: React.ReactNode;
+    toolbarAction?: ReactNode;
 }
 
 function Toolbar({ toolbarAction }: ToolbarProps) {
@@ -79,7 +79,7 @@ function Toolbar({ toolbarAction }: ToolbarProps) {
 
 export const EditDialogInRouterTabs = {
     render: () => {
-        const editDialogApi = React.useRef<IEditDialogApi>(null);
+        const editDialogApi = useRef<IEditDialogApi>(null);
         return (
             <RouterTabs>
                 <RouterTab path="" label="First Tab">

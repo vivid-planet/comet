@@ -10,7 +10,6 @@ import {
 } from "@comet/admin";
 import { Box, Typography } from "@mui/material";
 import faker from "faker";
-import * as React from "react";
 
 interface IFilterValues {
     query: string;

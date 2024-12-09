@@ -1,6 +1,5 @@
 import { Field } from "@comet/admin";
 import { createFinalFormRte } from "@comet/admin-rte";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 const { RteField } = createFinalFormRte();

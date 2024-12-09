@@ -1,7 +1,6 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
 import { FieldValidator } from "final-form";
-import * as React from "react";
 
 const validateWarning = (value: number | undefined) => {
     if (value === undefined) {

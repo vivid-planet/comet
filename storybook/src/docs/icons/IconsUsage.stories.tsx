@@ -1,6 +1,5 @@
 import { Attachment, Cookie, Error, ThreeDotSaving } from "@comet/admin-icons";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "Docs/Icons/Usage",

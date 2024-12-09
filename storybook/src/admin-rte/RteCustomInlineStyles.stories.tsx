@@ -1,7 +1,7 @@
 import { Favorite } from "@comet/admin-icons";
 import { IRteOptions, IRteRef, makeRteApi, Rte } from "@comet/admin-rte";
 import { Box, Card, CardContent } from "@mui/material";
-import * as React from "react";
+import { useRef } from "react";
 
 import { PrintEditorState, useAutoFocus } from "./helper";
 
@@ -29,7 +29,7 @@ export const CustomInlineStyles = {
         const { editorState, setEditorState } = useRteApi();
 
         // focus the editor to see the cursor immediately
-        const editorRef = React.useRef<IRteRef>();
+        const editorRef = useRef<IRteRef>();
         useAutoFocus(editorRef);
 
         return (

@@ -1,5 +1,5 @@
 import { Savable, SaveBoundary, SaveBoundarySaveButton } from "@comet/admin";
-import * as React from "react";
+import { useCallback, useState } from "react";
 
 async function delay(ms: number): Promise<void> {
     return new Promise((resolve) => {
@@ -11,10 +11,10 @@ async function delay(ms: number): Promise<void> {
 
 function DemoForm() {
     console.log("Render DemoForm");
-    const [saving, setSaving] = React.useState(false);
-    const [input, setInput] = React.useState("");
+    const [saving, setSaving] = useState(false);
+    const [input, setInput] = useState("");
 
-    const doSave = React.useCallback(async () => {
+    const doSave = useCallback(async () => {
         setSaving(true);
         await delay(1000);
         setSaving(false);

@@ -1,6 +1,6 @@
 import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Button, List, ListItem, Snackbar, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import * as React from "react";
+import { MouseEvent, useState } from "react";
 
 import { snackbarDecorator } from "./snackbar.decorator";
 
@@ -92,13 +92,13 @@ export const HideSnackbar = {
 
 export const Undo = {
     render: () => {
-        const [chosenOption, setChosenOption] = React.useState<string | undefined>("one");
+        const [chosenOption, setChosenOption] = useState<string | undefined>("one");
         const snackbarApi = useSnackbarApi();
 
         const handleUndo = (prevOption?: string) => {
             setChosenOption(prevOption);
         };
-        const handleChange = (event: React.MouseEvent<HTMLElement>, newOption: any) => {
+        const handleChange = (event: MouseEvent<HTMLElement>, newOption: any) => {
             const prevOption = chosenOption;
             setChosenOption(newOption);
             snackbarApi.showSnackbar(

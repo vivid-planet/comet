@@ -1,6 +1,5 @@
 import { SnackbarProvider, useSnackbarApi } from "@comet/admin";
 import { Button, List, ListItem, Snackbar } from "@mui/material";
-import * as React from "react";
 
 let counter = 0;
 

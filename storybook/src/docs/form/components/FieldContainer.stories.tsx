@@ -1,6 +1,6 @@
 import { FieldContainer } from "@comet/admin";
 import { InputBase } from "@mui/material";
-import * as React from "react";
+import { ChangeEvent, useState } from "react";
 
 export default {
     title: "Docs/Form/Components/FieldContainer",
@@ -8,9 +8,9 @@ export default {
 
 export const Basic = {
     render: () => {
-        const [value, setValue] = React.useState<string>("");
+        const [value, setValue] = useState<string>("");
 
-        function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        function handleChange(e: ChangeEvent<HTMLInputElement>) {
             setValue(e.target.value);
         }
 

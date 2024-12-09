@@ -1,7 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { AsyncSelectField, FinalForm, OnChangeField } from "@comet/admin";
 import { Box } from "@mui/material";
-import * as React from "react";
 
 import { apolloStoryDecorator } from "../../apollo-story.decorator";
 import { Manufacturer, Product } from "../../mocks/handlers";

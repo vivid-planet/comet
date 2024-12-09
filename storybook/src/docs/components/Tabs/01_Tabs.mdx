@@ -87,8 +87,8 @@ The tab content has to be defined separately.
     language="tsx"
     code={dedent`
         // based on https://v4.mui.com/components/tabs/#SimpleTabs.tsx
-        const [value, setValue] = React.useState(0);
-        const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        const [value, setValue] = useState(0);
+        const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
             setValue(newValue);
         };
         return (

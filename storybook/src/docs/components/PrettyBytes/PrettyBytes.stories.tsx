@@ -1,5 +1,4 @@
 import { PrettyBytes } from "@comet/admin";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/PrettyBytes",
