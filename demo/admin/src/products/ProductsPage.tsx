@@ -136,7 +136,11 @@ const ProductsPage = () => {
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addProduct", defaultMessage: "Add product" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ProductForm />
+                        <StackMainContent>
+                            <FieldSet>
+                                <ProductForm />
+                            </FieldSet>
+                        </StackMainContent>
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>
