@@ -1,6 +1,18 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
 import { Domain, Search } from "@comet/admin-icons";
-import { Box, Divider, InputAdornment, InputBase, List, ListItem, ListItemButton, ListItemText, ListSubheader, Typography } from "@mui/material";
+import {
+    Box,
+    Divider,
+    InputAdornment,
+    InputBase,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    ListSubheader,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import { capitalCase } from "change-case";
 import { Fragment, ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -35,6 +47,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 }: Props<Value>) {
     const intl = useIntl();
     const [searchValue, setSearchValue] = useState<string>("");
+    const theme = useTheme();
 
     const hasMultipleDimensions = Object.keys(value).length > 1;
 
@@ -122,11 +135,11 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 <>
                     {searchable && (
                         <>
-                            <Box sx={{ padding: 1 }}>
+                            <Box sx={{ px: 3, py: 2 }}>
                                 <InputBase
                                     startAdornment={
                                         <InputAdornment position="start">
-                                            <Search />
+                                            <Search htmlColor={theme.palette.grey[900]} />
                                         </InputAdornment>
                                     }
                                     placeholder={intl.formatMessage({
