@@ -11,6 +11,7 @@ export const newsListFragment = gql`
             scope {
                 language
             }
+            category
         }
     }
 `;
