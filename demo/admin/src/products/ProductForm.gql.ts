@@ -37,15 +37,12 @@ export const productFormFragment = gql`
             min
             max
         }
-<<<<<<< HEAD
         lastCheckedAt
-=======
         dimensions {
             width
             height
             depth
         }
->>>>>>> main
     }
     ${finalFormFileUploadFragment}
 `;

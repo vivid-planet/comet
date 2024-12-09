@@ -15,11 +15,7 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-<<<<<<< HEAD
-import { DateTimeField } from "@comet/admin-date-time";
-=======
-import { DateField } from "@comet/admin-date-time";
->>>>>>> main
+import { DateField, DateTimeField } from "@comet/admin-date-time";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
@@ -341,36 +337,6 @@ export function ProductForm({ id, width }: FormProps) {
                                 `,
                             });
 
-<<<<<<< HEAD
-                                return data.productTags.nodes;
-                            }}
-                            getOptionLabel={(option) => option.title}
-                        />
-                        <CheckboxField name="inStock" label={<FormattedMessage id="product.inStock" defaultMessage="In stock" />} fullWidth />
-                        <Field name="image" isEqual={isEqual}>
-                            {createFinalFormBlock(rootBlocks.image)}
-                        </Field>
-                        <FileUploadField
-                            label={<FormattedMessage id="product.priceList" defaultMessage="Price List" />}
-                            name="priceList"
-                            maxFileSize={1024 * 1024 * 4} // 4 MB
-                            fullWidth
-                        />
-                        <FileUploadField
-                            label={<FormattedMessage id="product.datasheets" defaultMessage="Datasheets" />}
-                            name="datasheets"
-                            multiple
-                            maxFileSize={1024 * 1024 * 4} // 4 MB
-                            fullWidth
-                            layout="grid"
-                        />
-                        <DateTimeField
-                            label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
-                            name="lastCheckedAt"
-                            fullWidth
-                        />
-                    </MainContent>
-=======
                             return data.productTags.nodes;
                         }}
                         getOptionLabel={(option) => option.title}
@@ -393,7 +359,11 @@ export function ProductForm({ id, width }: FormProps) {
                         fullWidth
                         layout="grid"
                     />
->>>>>>> main
+                    <DateTimeField
+                        label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
+                        name="lastCheckedAt"
+                        fullWidth
+                    />
                 </>
             )}
         </FinalForm>
