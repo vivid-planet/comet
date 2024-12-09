@@ -291,12 +291,3 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + }
 + <DataGrid /* other props */ >
 ```
-
-### Update exceljs Package
-
-In `package.json` update the version of exceljs to `^4.4.0`.
-
-```diff
-- "exceljs": "^3.0.0",
-+ "exceljs": "^4.4.0",
-```
