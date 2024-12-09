@@ -8,11 +8,12 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
-import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
-import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
-import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
+
+import { ColumnsBlock } from "./ColumnsBlock";
+import { KeyFactsBlock } from "./KeyFactsBlock";
+import { TeaserBlock } from "./TeaserBlock";
 
 const backgroundColorOptions: Array<{ value: ContentGroupBlockData["backgroundColor"]; label: ReactNode }> = [
     { value: "default", label: <FormattedMessage id="contentGroupBlock.backgroundColor.default" defaultMessage="Default" /> },

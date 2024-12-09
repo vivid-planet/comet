@@ -7,11 +7,12 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
-import { BillboardTeaserBlock } from "@src/documents/pages/blocks/BillboardTeaserBlock";
-import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
-import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock";
-import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
-import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
+
+import { BillboardTeaserBlock } from "./BillboardTeaserBlock";
+import { ColumnsBlock } from "./ColumnsBlock";
+import { ContentGroupBlock } from "./ContentGroupBlock";
+import { KeyFactsBlock } from "./KeyFactsBlock";
+import { TeaserBlock } from "./TeaserBlock";
 
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
