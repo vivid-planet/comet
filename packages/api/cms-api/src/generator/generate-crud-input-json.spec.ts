@@ -1,4 +1,5 @@
 import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { defineConfig } from "@mikro-orm/postgresql";
 import { InputType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -47,11 +48,12 @@ describe("GenerateCrudInputJson", () => {
     describe("input class literal array", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithJsonLiteralArray],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithJsonLiteralArray],
+                }),
+            );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonLiteralArray"));
             const lintedOutput = await lintSource(out[0].content);
@@ -86,11 +88,12 @@ describe("GenerateCrudInputJson", () => {
     describe("input class json object", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithJsonObject],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithJsonObject],
+                }),
+            );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithJsonObject"));
             const lintedOutput = await lintSource(out[0].content);
@@ -124,11 +127,12 @@ describe("GenerateCrudInputJson", () => {
     describe("input class record", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithRecord],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithRecord],
+                }),
+            );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRecord"));
             const lintedOutput = await lintSource(out[0].content);

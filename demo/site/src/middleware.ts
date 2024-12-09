@@ -1,36 +1,23 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { withAdminRedirectMiddleware } from "./middleware/adminRedirect";
+import { withBlockPreviewMiddleware } from "./middleware/blockPreview";
+import { chain } from "./middleware/chain";
+import { withCspHeadersMiddleware } from "./middleware/cspHeaders";
+import { withDamRewriteMiddleware } from "./middleware/damRewrite";
+import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
+import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
+import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
+import { withSitePreviewMiddleware } from "./middleware/sitePreview";
 
-import { domain } from "./config";
-import { getPredefinedPageRedirect, getPredefinedPageRewrite } from "./middleware/predefinedPages";
-
-export async function middleware(request: NextRequest) {
-    const { pathname } = new URL(request.url);
-
-    const scope = { domain };
-
-    const predefinedPageRedirect = await getPredefinedPageRedirect(scope, pathname);
-
-    if (predefinedPageRedirect) {
-        return NextResponse.redirect(new URL(predefinedPageRedirect, request.url), 307);
-    }
-
-    const predefinedPageRewrite = await getPredefinedPageRewrite(scope, pathname);
-
-    if (predefinedPageRewrite) {
-        return NextResponse.rewrite(new URL(predefinedPageRewrite, request.url));
-    }
-
-    if (pathname.startsWith("/dam/")) {
-        return NextResponse.rewrite(new URL(`${process.env.API_URL_INTERNAL}${request.nextUrl.pathname}`));
-    }
-
-    if (request.nextUrl.pathname === "/admin" && process.env.ADMIN_URL) {
-        return NextResponse.redirect(new URL(process.env.ADMIN_URL));
-    }
-
-    return NextResponse.next();
-}
+export default chain([
+    withSitePreviewMiddleware,
+    withRedirectToMainHostMiddleware,
+    withAdminRedirectMiddleware,
+    withDamRewriteMiddleware,
+    withCspHeadersMiddleware, // order matters: after redirects (that don't need csp headers), before everything else that needs csp headers
+    withBlockPreviewMiddleware,
+    withPredefinedPagesMiddleware,
+    withDomainRewriteMiddleware, // must be last (rewrites all urls)
+]);
 
 export const config = {
     matcher: [
@@ -41,8 +28,9 @@ export const config = {
          * - _next/image (image optimization files)
          * - favicon.ico, favicon.svg, favicon.png
          * - manifest.json
+         * - robots.txt
          */
-        "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json).*)",
+        "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json|robots.txt).*)",
     ],
     // TODO find a better solution for this (https://nextjs.org/docs/messages/edge-dynamic-code-evaluation)
     unstable_allowDynamic: [
