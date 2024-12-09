@@ -1,5 +1,33 @@
 # @comet/cms-admin
 
+## 7.10.0
+
+### Minor Changes
+
+-   2b9fac2cf: Add support for passing title and alt text to `useDamFileUpload`
+
+    This can be useful when importing files from an external DAM.
+
+### Patch Changes
+
+-   d210ef74a: Remove vertical and horizontal scroll bars from block preview iframe
+-   Updated dependencies [7e94c55f6]
+-   Updated dependencies [22f3d402e]
+-   Updated dependencies [8f924d591]
+-   Updated dependencies [aa02ca13f]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [bf6b03fe0]
+-   Updated dependencies [b51bf6d85]
+-   Updated dependencies [71876ea69]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin-theme@7.10.0
+    -   @comet/admin@7.10.0
+    -   @comet/admin-date-time@7.10.0
+    -   @comet/admin-icons@7.10.0
+    -   @comet/admin-rte@7.10.0
+    -   @comet/blocks-admin@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes
