@@ -298,6 +298,5 @@ In `package.json` update the version of exceljs to `^4.4.0`.
 
 ```diff
 - "exceljs": "^3.0.0",
-
 + "exceljs": "^4.4.0",
 ```
