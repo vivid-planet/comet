@@ -1,5 +1,5 @@
-import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, useThemeProps } from "@mui/material";
-import { ComponentsOverrides, css } from "@mui/material/styles";
+import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, svgIconClasses, useThemeProps } from "@mui/material";
+import { ComponentsOverrides, css, Theme } from "@mui/material/styles";
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
@@ -13,6 +13,9 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     error: typeof FormHelperText;
     warning: typeof FormHelperText;
     helperText: typeof FormHelperText;
+    secondaryHelperText: typeof FormHelperText;
+    helperTextsWrapper: "div";
+    helperTextContent: "span";
 }> & {
     variant?: "vertical" | "horizontal";
     forceVerticalContainerSize?: number;
@@ -25,6 +28,8 @@ export type FieldContainerProps = ThemedComponentBaseProps<{
     scrollTo?: boolean;
     fieldMargin?: "always" | "never" | "onlyIfNotLast";
     helperText?: ReactNode;
+    secondaryHelperText?: ReactNode;
+    helperTextIcon?: ReactNode;
 };
 
 export type FieldContainerClassKey =
@@ -44,7 +49,10 @@ export type FieldContainerClassKey =
     | "error"
     | "hasWarning"
     | "warning"
-    | "helperText";
+    | "helperText"
+    | "secondaryHelperText"
+    | "helperTextsWrapper"
+    | "helperTextContent";
 
 type OwnerState = Pick<FieldContainerProps, "fullWidth" | "disabled" | "required" | "fieldMargin" | "variant"> & {
     hasError: boolean;
@@ -209,16 +217,30 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
     `,
 );
 
+const getCommonHelperTextStyles = (theme: Theme) => css`
+    display: flex;
+    gap: ${theme.spacing(1)};
+
+    > .${svgIconClasses.root} {
+        width: 12px;
+    }
+`;
+
 const Error = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "error",
-})();
+})(
+    ({ theme }) => css`
+        ${getCommonHelperTextStyles(theme)}
+    `,
+);
 
 const Warning = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     componentName: "FormFieldContainer",
     slotName: "warning",
 })(
     ({ theme }) => css`
+        ${getCommonHelperTextStyles(theme)}
         color: ${theme.palette.warning.main};
     `,
 );
@@ -228,9 +250,41 @@ const HelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
     slotName: "helperText",
 })(
     ({ theme }) => css`
+        ${getCommonHelperTextStyles(theme)}
         color: ${theme.palette.grey[300]};
     `,
 );
+
+const SecondaryHelperText = createComponentSlot(FormHelperText)<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "secondaryHelperText",
+})(
+    ({ theme }) => css`
+        color: ${theme.palette.grey[300]};
+        margin-left: auto;
+
+        &.Mui-disabled {
+            color: ${theme.palette.grey[300]};
+        }
+    `,
+);
+
+const HelperTextsWrapper = createComponentSlot("div")<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "helperTextsWrapper",
+})(
+    ({ theme }) => css`
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: ${theme.spacing(3)};
+    `,
+);
+
+const HelperTextContent = createComponentSlot("span")<FieldContainerClassKey>({
+    componentName: "FormFieldContainer",
+    slotName: "helperTextContent",
+})();
 
 export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) => {
     const {
@@ -244,6 +298,8 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
         children,
         warning,
         helperText,
+        secondaryHelperText,
+        helperTextIcon,
         scrollTo = false,
         fieldMargin = "onlyIfNotLast",
         slotProps,
@@ -282,13 +338,29 @@ export const FieldContainer = (inProps: PropsWithChildren<FieldContainerProps>) 
                 </Label>
                 <InputContainer ownerState={ownerState} {...slotProps?.inputContainer}>
                     {children}
-                    {hasError && (
-                        <Error error {...slotProps?.error}>
-                            {error}
-                        </Error>
-                    )}
-                    {hasWarning && !hasError && <Warning {...slotProps?.warning}>{warning}</Warning>}
-                    {helperText && !hasError && !hasWarning && <HelperText {...slotProps?.helperText}>{helperText}</HelperText>}
+                    <HelperTextsWrapper {...slotProps?.helperTextsWrapper}>
+                        {hasError && (
+                            <Error error {...slotProps?.error}>
+                                {Boolean(helperTextIcon) && helperTextIcon}
+                                <HelperTextContent {...slotProps?.helperTextContent}>{error}</HelperTextContent>
+                            </Error>
+                        )}
+                        {hasWarning && !hasError && (
+                            <Warning {...slotProps?.warning}>
+                                {Boolean(helperTextIcon) && helperTextIcon}
+                                <HelperTextContent {...slotProps?.helperTextContent}>{warning}</HelperTextContent>
+                            </Warning>
+                        )}
+                        {Boolean(helperText) && !hasError && !hasWarning && (
+                            <HelperText {...slotProps?.helperText}>
+                                {Boolean(helperTextIcon) && helperTextIcon}
+                                <HelperTextContent {...slotProps?.helperTextContent}>{helperText}</HelperTextContent>
+                            </HelperText>
+                        )}
+                        {Boolean(secondaryHelperText) && (
+                            <SecondaryHelperText {...slotProps?.secondaryHelperText}>{secondaryHelperText}</SecondaryHelperText>
+                        )}
+                    </HelperTextsWrapper>
                 </InputContainer>
             </InnerContainer>
         </Root>
