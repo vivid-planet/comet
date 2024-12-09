@@ -1,5 +1,6 @@
-import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionField, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
+import { GqlArg } from "../generateForm";
 import { FormConfig, FormLayoutConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
@@ -11,6 +12,7 @@ export function generateFormLayout({
     config,
     formFragmentName,
     formConfig,
+    createMutationType,
     gqlType,
     namePrefix,
 }: {
@@ -21,6 +23,7 @@ export function generateFormLayout({
     formFragmentName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
+    createMutationType?: IntrospectionField;
     gqlType: string;
     namePrefix?: string;
 }): GenerateFieldsReturn {
@@ -34,6 +37,7 @@ export function generateFormLayout({
     const formFragmentFields: string[] = [];
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
+    const gqlArgs: GqlArg[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
     const finalFormConfig = { subscription: {}, renderProps: {} };
 
@@ -46,6 +50,7 @@ export function generateFormLayout({
             fields: config.fields,
             formFragmentName,
             formConfig,
+            createMutationType,
             gqlType,
             namePrefix,
         });
@@ -57,6 +62,7 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        gqlArgs.push(...generatedFields.gqlArgs);
         formValuesConfig.push(...generatedFields.formValuesConfig);
 
         finalFormConfig.subscription = { ...finalFormConfig.subscription, ...generatedFields.finalFormConfig?.subscription };
@@ -187,6 +193,7 @@ export function generateFormLayout({
     }
     return {
         code,
+        gqlArgs,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields,
