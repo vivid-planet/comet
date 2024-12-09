@@ -1,6 +1,6 @@
-import { CancelButton, Dialog, Field, FinalFormCheckbox, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
+import { CancelButton, CheckboxField, Dialog, Field, FinalFormInput, FinalFormSelect, OkayButton } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { Button, DialogActions, DialogContent, DialogContentText, DialogProps, FormControlLabel, MenuItem } from "@mui/material";
+import { Button, DialogActions, DialogContent, DialogContentText, DialogProps, MenuItem } from "@mui/material";
 import * as React from "react";
 import { Form } from "react-final-form";
 
@@ -121,9 +121,7 @@ function DefaultDialogContent() {
                         </FinalFormSelect>
                     )}
                 </Field>
-                <Field name="checked" type="checkbox" fullWidth>
-                    {(props) => <FormControlLabel label="Checkbox" control={<FinalFormCheckbox {...props} />} />}
-                </Field>
+                <CheckboxField label="Checkbox" name="checked" fullWidth />
             </DialogContent>
             <DialogActions>
                 <CancelButton />
