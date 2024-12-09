@@ -2,7 +2,7 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { LayoutBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/blocks/MediaBlock";
-import RichTextBlock from "@src/blocks/RichTextBlock";
+import { RichTextBlock } from "@src/blocks/RichTextBlock";
 import styled, { css } from "styled-components";
 
 const layoutOptions: Array<{ name: LayoutBlockData["layout"]; blocks: string[] }> = [
@@ -42,11 +42,11 @@ const LayoutBlock = withPreview(
 
         const blockForKey = (key: string) =>
             key === "media1" ? (
-                <MediaBlock data={media1} />
+                <MediaBlock data={media1} aspectRatio="1x1" />
             ) : key === "text1" ? (
                 <RichTextBlock data={text1} />
             ) : key === "media2" ? (
-                <MediaBlock data={media2} />
+                <MediaBlock data={media2} aspectRatio="1x1" />
             ) : (
                 <RichTextBlock data={text2} />
             );
@@ -72,7 +72,7 @@ const Root = styled.div`
 const Box = styled.div<{ $layout: string }>`
     grid-column: 1 / -1;
 
-    ${({ theme }) => theme.breakpoints.b560.mediaQuery} {
+    ${({ theme }) => theme.breakpoints.xs.mediaQuery} {
         ${({ $layout }) =>
             $layout === "layout1" &&
             css`

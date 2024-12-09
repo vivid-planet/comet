@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
-import RichTextBlock from "./RichTextBlock";
+import { RichTextBlock } from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 
 const supportedBlocks: SupportedBlocks = {

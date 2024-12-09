@@ -19,7 +19,7 @@ export function createConfig(processEnv: NodeJS.ProcessEnv) {
         envVars.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID
     ) {
         contentGeneration = {
-            apiKey: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY,
+            apiKey: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_KEY ?? "",
             apiUrl: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_API_URL,
             deploymentId: envVars.AZURE_OPEN_AI_CONTENT_GENERATION_DEPLOYMENT_ID,
         };

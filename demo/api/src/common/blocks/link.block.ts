@@ -4,11 +4,11 @@ import { NewsLinkBlock } from "@src/news/blocks/news-link.block";
 
 export const LinkBlock = createLinkBlock({
     supportedBlocks: {
-        internal: InternalLinkBlock,
-        external: ExternalLinkBlock,
-        news: NewsLinkBlock,
         damFileDownload: DamFileDownloadLinkBlock,
-        phone: PhoneLinkBlock,
         email: EmailLinkBlock,
+        external: ExternalLinkBlock,
+        internal: InternalLinkBlock,
+        news: NewsLinkBlock,
+        phone: PhoneLinkBlock,
     },
 });

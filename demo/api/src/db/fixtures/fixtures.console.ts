@@ -209,6 +209,7 @@ export class FixturesConsole {
                     updatedAt: new Date(),
                     content: pageInput.content.transformToBlockData(),
                     seo: pageInput.seo.transformToBlockData(),
+                    stage: pageInput.stage.transformToBlockData(),
                 }),
             );
         }
@@ -261,6 +262,7 @@ export class FixturesConsole {
                             id: pageId,
                             content: pageInput.content.transformToBlockData(),
                             seo: pageInput.seo.transformToBlockData(),
+                            stage: pageInput.stage.transformToBlockData(),
                         }),
                     );
                     await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, page.id);
