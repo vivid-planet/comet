@@ -16,7 +16,7 @@ export class FileUpload extends BaseEntity {
     name: string;
 
     @Field(() => Int)
-    @Property({ type: BigIntType })
+    @Property({ type: new BigIntType("number") })
     size: number;
 
     @Field()
