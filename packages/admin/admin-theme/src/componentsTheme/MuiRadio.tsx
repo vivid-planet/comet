@@ -41,7 +41,7 @@ export const getMuiRadio: GetMuiComponentTheme<"MuiRadio"> = (component, { palet
                     fill: "#fff",
                 },
                 "& .background": {
-                    fill: palette.grey[200],
+                    fill: palette.grey[100],
                 },
             },
         },
@@ -49,13 +49,6 @@ export const getMuiRadio: GetMuiComponentTheme<"MuiRadio"> = (component, { palet
             [`&.${radioClasses.checked} .${svgIconClasses.root}`]: {
                 "& .background": {
                     fill: palette.primary.main,
-                },
-            },
-        },
-        colorSecondary: {
-            [`&.${radioClasses.checked} .${svgIconClasses.root}`]: {
-                "& .background": {
-                    fill: palette.secondary.main,
                 },
             },
         },

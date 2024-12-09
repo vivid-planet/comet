@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsHash, IsNumber, IsUUID } from "class-validator";
+import { IsHash, IsInt, IsNumber, IsString, IsUUID } from "class-validator";
 
 export class DownloadParams {
     @IsUUID()
@@ -11,6 +11,20 @@ export class DownloadParams {
 }
 
 export class HashDownloadParams extends DownloadParams {
+    @IsHash("sha1")
+    hash: string;
+}
+
+export class ImageParams extends DownloadParams {
+    @Type(() => Number)
+    @IsInt()
+    resizeWidth: number;
+
+    @IsString()
+    filename: string;
+}
+
+export class HashImageParams extends ImageParams {
     @IsHash("sha1")
     hash: string;
 }

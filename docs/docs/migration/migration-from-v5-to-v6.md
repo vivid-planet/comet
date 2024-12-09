@@ -1,6 +1,6 @@
 ---
 title: Migrating from v5 to v6
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # Migrating from v5 to v6
@@ -252,7 +252,7 @@ Add `db:migrate` and `createBlockIndexViews` to `start:dev` script in package.js
     + const allowedUserDomains = user.allowedContentScopes.map((contentScope) => contentScope.domain);
     ```
 
-3. Optional: Add the Adminstration Panel
+3. Optional: Add the Administration Panel
 
     ```tsx
     <MenuItemRouterLink

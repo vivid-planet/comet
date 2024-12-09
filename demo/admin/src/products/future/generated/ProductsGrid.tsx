@@ -3,28 +3,45 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    CrudMoreActionsMenu,
+    dataGridDateColumn,
+    dataGridDateTimeColumn,
     DataGridToolbar,
+    ExportApi,
     filterByFragment,
     GridCellContent,
     GridColDef,
     GridFilterButton,
+    messages,
     muiGridFilterToGql,
     muiGridSortToGql,
+    renderStaticSelectCell,
     ToolbarActions,
     ToolbarFillSpace,
     ToolbarItem,
+    Tooltip,
     useBufferedRowCount,
+    useDataGridExcelExport,
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
+import { Excel, Info, StateFilled as StateFilledIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
-import { useTheme } from "@mui/material";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { CircularProgress, useTheme } from "@mui/material";
+import {
+    DataGridPro,
+    GridColumnHeaderTitle,
+    GridRenderCellParams,
+    GridSlotsComponent,
+    GridToolbarProps,
+    GridToolbarQuickFilter,
+} from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import { ReactNode } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
+import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -39,12 +56,18 @@ const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
         title
-        description
         price
-        inStock
         type
+        category {
+            title
+        }
+        inStock
+        description
         availableSince
         createdAt
+        manufacturer {
+            name
+        }
     }
 `;
 
@@ -74,7 +97,11 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
+interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
+    toolbarAction: React.ReactNode;
+    exportApi: ExportApi;
+}
+function ProductsGridToolbar({ toolbarAction, exportApi }: ProductsGridToolbarToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -84,6 +111,16 @@ function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
                 <GridFilterButton />
             </ToolbarItem>
             <ToolbarFillSpace />
+            <CrudMoreActionsMenu
+                overallActions={[
+                    {
+                        label: <FormattedMessage {...messages.downloadAsExcel} />,
+                        icon: exportApi.loading ? <CircularProgress size={20} /> : <Excel />,
+                        onClick: () => exportApi.exportGrid(),
+                        disabled: exportApi.loading,
+                    },
+                ]}
+            />
             {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );
@@ -94,12 +131,22 @@ type Props = {
     toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rowAction?: (params: GridRenderCellParams<any, GQLProductsGridFutureFragment, any>) => ReactNode;
+    actionsColumnWidth?: number;
 };
 
-export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
+export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            initialSort: [
+                { field: "inStock", sort: "desc" },
+                { field: "price", sort: "asc" },
+            ],
+            queryParamsPrefix: "products",
+        }),
+        ...usePersistentColumnState("ProductsGrid"),
+    };
 
     const theme = useTheme();
 
@@ -110,12 +157,55 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                return <GridCellContent primaryText={row.title} secondaryText={row.description} />;
+                const typeLabels: Record<string, React.ReactNode> = {
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                };
+                const inStockLabels: Record<string, React.ReactNode> = {
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
+                    false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.title ?? "-"}
+                        secondaryText={
+                            <FormattedMessage
+                                id="product.overview.secondaryText"
+                                defaultMessage="{price} • {type} • {category} • {inStock}"
+                                values={{
+                                    price:
+                                        typeof row.price === "undefined" || row.price === null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.price.empty" defaultMessage="No price" />
+                                        ) : (
+                                            <FormattedNumber
+                                                value={row.price}
+                                                minimumFractionDigits={2}
+                                                maximumFractionDigits={2}
+                                                style="currency"
+                                                currency="EUR"
+                                            />
+                                        ),
+                                    type:
+                                        row.type == null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
+                                        ) : (
+                                            typeLabels[`${row.type}`] ?? row.type
+                                        ),
+                                    category: row.category?.title ?? (
+                                        <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
+                                    ),
+                                    inStock: row.inStock == null ? "-" : inStockLabels[`${row.inStock}`] ?? row.inStock,
+                                }}
+                            />
+                        }
+                    />
+                );
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),
-            sortBy: ["title", "description"],
-            maxWidth: 250,
+            disableExport: true,
+            sortBy: ["title", "price", "type", "category", "inStock"],
             minWidth: 200,
         },
         {
@@ -123,62 +213,108 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
             headerName: intl.formatMessage({ id: "product.title", defaultMessage: "Titel" }),
             flex: 1,
             visible: theme.breakpoints.up("md"),
-            maxWidth: 250,
             minWidth: 200,
+            maxWidth: 250,
         },
         {
             field: "description",
             headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
             flex: 1,
-            visible: theme.breakpoints.up("md"),
             minWidth: 150,
         },
         {
             field: "price",
-            headerName: intl.formatMessage({ id: "product.price", defaultMessage: "Price" }),
+            renderHeader: () => (
+                <>
+                    <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150} />
+                    <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
+                        <Info sx={{ marginLeft: 1 }} />
+                    </Tooltip>
+                </>
+            ),
             type: "number",
             flex: 1,
-            maxWidth: 150,
+            visible: theme.breakpoints.up("md"),
             minWidth: 150,
+            maxWidth: 150,
         },
-        { field: "inStock", headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }), type: "boolean", width: 90 },
+        {
+            field: "inStock",
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
+            type: "singleSelect",
+            valueFormatter: (value, row) => row.inStock?.toString(),
+            valueOptions: [
+                {
+                    value: "true",
+                    label: intl.formatMessage({ id: "product.inStock.true.primary", defaultMessage: "In stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.true.primary" defaultMessage="In stock" />}
+                            icon={<StateFilledIcon color="success" />}
+                        />
+                    ),
+                },
+                {
+                    value: "false",
+                    label: intl.formatMessage({ id: "product.inStock.false.primary", defaultMessage: "Out of stock" }),
+                    cellContent: (
+                        <GridCellContent
+                            primaryText={<FormattedMessage id="product.inStock.false.primary" defaultMessage="Out of stock" />}
+                            icon={<StateFilledIcon color="error" />}
+                        />
+                    ),
+                },
+            ],
+            renderCell: renderStaticSelectCell,
+            flex: 1,
+            visible: theme.breakpoints.up("md"),
+            minWidth: 80,
+        },
         {
             field: "type",
             headerName: intl.formatMessage({ id: "product.type", defaultMessage: "Type" }),
             type: "singleSelect",
+            valueFormatter: (value, row) => row.type?.toString(),
             valueOptions: [
-                { value: "Cap", label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }) },
-                { value: "Shirt", label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }) },
-                { value: "Tie", label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }) },
+                {
+                    value: "Cap",
+                    label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                },
+                {
+                    value: "Shirt",
+                    label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                },
+                {
+                    value: "Tie",
+                    label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                },
             ],
-            renderCell: ({ row, colDef }) => {
-                if (colDef.valueOptions && Array.isArray(colDef.valueOptions)) {
-                    const selectedOption = colDef.valueOptions.find((option) => typeof option === "object" && option.value === row.type);
-
-                    if (selectedOption && typeof selectedOption === "object") {
-                        return selectedOption.label;
-                    }
-                }
-
-                return row.type;
-            },
+            renderCell: renderStaticSelectCell,
             flex: 1,
-            maxWidth: 150,
+            visible: theme.breakpoints.up("md"),
             minWidth: 150,
+            maxWidth: 150,
         },
         {
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
-            type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
             width: 140,
         },
         {
+            ...dataGridDateTimeColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
-            type: "dateTime",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             width: 170,
+        },
+        {
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: (params, row) => row.manufacturer?.name,
+            filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "actions",
@@ -188,7 +324,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
             type: "actions",
             align: "right",
             pinned: "right",
-            width: 116,
+            width: actionsColumnWidth,
+            disableExport: true,
             renderCell: (params) => {
                 return (
                     <>
@@ -229,8 +366,8 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
         variables: {
             filter: filter ? { and: [gqlFilter, filter] } : gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -238,19 +375,36 @@ export function ProductsGrid({ filter, toolbarAction, rowAction }: Props) {
     if (error) throw error;
     const rows = data?.products.nodes ?? [];
 
+    const exportApi = useDataGridExcelExport<
+        GQLProductsGridQuery["products"]["nodes"][0],
+        GQLProductsGridQuery,
+        Omit<GQLProductsGridQueryVariables, "offset" | "limit">
+    >({
+        columns,
+        variables: {
+            ...muiGridFilterToGql(columns, dataGridProps.filterModel),
+        },
+        query: productsQuery,
+        resolveQueryNodes: (data) => data.products.nodes,
+        totalCount: data?.products.totalCount ?? 0,
+        exportOptions: {
+            fileName: "Products",
+        },
+    });
+
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-            componentsProps={{
-                toolbar: { toolbarAction: toolbarAction },
+            slotProps={{
+                toolbar: { toolbarAction, exportApi } as ProductsGridToolbarToolbarProps,
             }}
         />
     );

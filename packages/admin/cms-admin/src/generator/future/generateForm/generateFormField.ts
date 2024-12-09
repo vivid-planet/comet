@@ -1,10 +1,80 @@
-import { IntrospectionEnumType, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { FormConfig, FormFieldConfig } from "../generator";
+import { Adornment, FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
+import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
 import { isFieldOptional } from "../utils/isFieldOptional";
-import { GenerateFieldsReturn } from "./generateFields";
+import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
+
+type AdornmentData = {
+    adornmentString: string;
+    adornmentImport?: { name: string; importPath: string };
+};
+
+const getAdornmentData = ({ adornmentData }: { adornmentData: Adornment }): AdornmentData => {
+    let adornmentString = "";
+    let adornmentImport = { name: "", importPath: "" };
+
+    if (typeof adornmentData === "string") {
+        return { adornmentString: adornmentData };
+    }
+
+    if (typeof adornmentData.icon === "string") {
+        adornmentString = `<${adornmentData.icon}Icon />`;
+        adornmentImport = {
+            name: `${adornmentData.icon} as ${adornmentData.icon}Icon`,
+            importPath: "@comet/admin-icons",
+        };
+    } else if (typeof adornmentData.icon === "object") {
+        if ("import" in adornmentData.icon) {
+            adornmentString = `<${adornmentData.icon.name} />`;
+            adornmentImport = {
+                name: `${adornmentData.icon.name}`,
+                importPath: `${adornmentData.icon.import}`,
+            };
+        } else {
+            const { name, ...iconProps } = adornmentData.icon;
+            adornmentString = `<${name}Icon
+                ${Object.entries(iconProps)
+                    .map(([key, value]) => `${key}="${value}"`)
+                    .join("\n")}
+            />`;
+            adornmentImport = {
+                name: `${adornmentData.icon.name} as ${adornmentData.icon.name}Icon`,
+                importPath: "@comet/admin-icons",
+            };
+        }
+    }
+
+    return { adornmentString, adornmentImport };
+};
+
+function getTypeInfo(arg: IntrospectionInputValue, gqlIntrospection: IntrospectionQuery) {
+    let typeKind = undefined;
+    let typeClass = "unknown";
+    let required = false;
+    let type = arg.type;
+
+    if (type.kind === "NON_NULL") {
+        required = true;
+        type = type.ofType;
+    }
+    if (type.kind === "INPUT_OBJECT") {
+        typeClass = type.name;
+        typeKind = type.kind;
+    } else if (type.kind === "ENUM") {
+        typeClass = type.name;
+        typeKind = type.kind;
+    } else {
+        throw new Error(`Resolving kind ${type.kind} currently not supported.`);
+    }
+    return {
+        required,
+        typeKind,
+        typeClass,
+    };
+}
 
 export function generateFormField({
     gqlIntrospection,
@@ -57,6 +127,7 @@ export function generateFormField({
 
     const gqlDocuments: Record<string, string> = {};
     const hooksCode = "";
+    let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
 
     let validateCode = "";
     if (config.validate) {
@@ -74,6 +145,27 @@ export function generateFormField({
 
     const fieldLabel = `<FormattedMessage id="${formattedMessageRootId}.${name}" defaultMessage="${label}" />`;
 
+    let startAdornment: AdornmentData = { adornmentString: "" };
+    let endAdornment: AdornmentData = { adornmentString: "" };
+
+    if (config.startAdornment) {
+        startAdornment = getAdornmentData({
+            adornmentData: config.startAdornment,
+        });
+        if (startAdornment.adornmentImport) {
+            imports.push(startAdornment.adornmentImport);
+        }
+    }
+
+    if (config.endAdornment) {
+        endAdornment = getAdornmentData({
+            adornmentData: config.endAdornment,
+        });
+        if (endAdornment.adornmentImport) {
+            imports.push(endAdornment.adornmentImport);
+        }
+    }
+
     let code = "";
     let formValueToGqlInputCode = "";
     let formFragmentField = name;
@@ -87,6 +179,8 @@ export function generateFormField({
             fullWidth
             name="${nameWithPrefix}"
             label={${fieldLabel}}
+            ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+            ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` +
@@ -107,6 +201,8 @@ export function generateFormField({
                 component={FinalFormInput}
                 type="number"
                 label={${fieldLabel}}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
@@ -137,6 +233,32 @@ export function generateFormField({
                 },
             },
         ];
+    } else if (config.type === "numberRange") {
+        code = `
+            <Field
+                ${required ? "required" : ""}
+                ${config.readOnly ? readOnlyPropsWithLock : ""}
+                variant="horizontal"
+                fullWidth
+                name="${nameWithPrefix}"
+                component={FinalFormRangeInput}
+                label={${fieldLabel}}
+                min={${config.minValue}}
+                max={${config.maxValue}}
+                ${config.disableSlider ? "disableSlider" : ""}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${
+                    config.helperText
+                        ? `helperText={<FormattedMessage id=` +
+                          `"${formattedMessageRootId}.${name}.helperText" ` +
+                          `defaultMessage="${config.helperText}" />}`
+                        : ""
+                }
+                ${validateCode}
+            />`;
+
+        formFragmentField = `${name} { min max }`;
     } else if (config.type == "boolean") {
         code = `<Field name="${nameWithPrefix}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
             {(props) => (
@@ -171,6 +293,8 @@ export function generateFormField({
                 name="${nameWithPrefix}"
                 component={FinalFormDatePicker}
                 label={${fieldLabel}}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
+                ${config.endAdornment ? `endAdornment={<InputAdornment position="end">${endAdornment.adornmentString}</InputAdornment>}` : ""}
                 ${
                     config.helperText
                         ? `helperText={<FormattedMessage id=` +
@@ -189,7 +313,7 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "block") {
-        code = `<Field name="${nameWithPrefix}" isEqual={isEqual}>
+        code = `<Field name="${nameWithPrefix}" isEqual={isEqual} label={${fieldLabel}} variant="horizontal" fullWidth>
             {createFinalFormBlock(rootBlocks.${String(config.name)})}
         </Field>`;
         formValueToGqlInputCode = !config.virtual ? `${name}: rootBlocks.${name}.state2Output(formValues.${nameWithPrefix}),` : ``;
@@ -219,7 +343,7 @@ export function generateFormField({
         } else {
             formValueToGqlInputCode = `${name}: formValues.${name} ? formValues.${name}.id : null,`;
         }
-        formFragmentField = `${name} { ...FinalFormFileUpload }`;
+        formFragmentField = `${name} { ...${config.download ? "FinalFormFileUploadDownloadable" : "FinalFormFileUpload"} }`;
     } else if (config.type == "staticSelect") {
         const enumType = gqlIntrospection.__schema.types.find(
             (t) => t.kind === "ENUM" && t.name === (introspectionFieldType as IntrospectionNamedTypeRef).name,
@@ -319,9 +443,69 @@ export function generateFormField({
 
         const rootQuery = config.rootQuery; //TODO we should infer a default value from the gql schema
         const queryName = `${rootQuery[0].toUpperCase() + rootQuery.substring(1)}Select`;
+        const rootQueryType = findQueryTypeOrThrow(rootQuery, gqlIntrospection);
 
         formFragmentField = `${name} { id ${labelField} }`;
+
+        const filterConfig = config.filterField
+            ? (() => {
+                  const filterField = findFieldByName(config.filterField.name, formConfig.fields);
+                  if (!filterField) {
+                      throw new Error(
+                          `Field ${String(config.name)}: No field with name "${
+                              config.filterField?.name
+                          }" referenced as filterField found in form-config.`,
+                      );
+                  }
+                  if (!isFormFieldConfig(filterField)) {
+                      throw new Error(
+                          `Field ${String(config.name)}: Field with name "${config.filterField?.name}" referenced as filterField is no FormField.`,
+                      );
+                  }
+
+                  const gqlName = config.filterField.gqlName ?? config.filterField.name;
+
+                  // try to find arg used to filter by checking names of root-props and filter-prop-fields
+                  const rootArgForName = rootQueryType.args.find((arg) => arg.name === gqlName);
+                  let filterType = rootArgForName ? getTypeInfo(rootArgForName, gqlIntrospection) : undefined;
+                  let filterVarName = undefined;
+                  let filterVarValue = undefined;
+
+                  if (filterType) {
+                      // there is a root-prop with same name, so the dev probably wants to filter with this prop
+                      filterVarName = gqlName;
+                      filterVarValue = `values.${filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)}`;
+                  } else {
+                      // no root-prop with same name, check filter-prop-fields
+                      const rootArgFilter = rootQueryType.args.find((arg) => arg.name === "filter");
+                      filterType = rootArgFilter ? getTypeInfo(rootArgFilter, gqlIntrospection) : undefined;
+                      if (filterType) {
+                          filterVarName = "filter";
+                          filterVarValue = `{ ${gqlName}: { equal: values.${
+                              filterField.type === "asyncSelect" ? `${String(filterField.name)}?.id` : String(filterField.name)
+                          } } }`;
+                      } else {
+                          throw new Error(
+                              `Neither filter-prop nor root-prop with name: ${gqlName} for asyncSelect-query not found. Consider setting filterField.gqlVarName explicitly.`,
+                          );
+                      }
+                  }
+
+                  return {
+                      filterField,
+                      filterType,
+                      filterVarName,
+                      filterVarValue,
+                  };
+              })()
+            : undefined;
+        if (filterConfig) {
+            imports.push({ name: "OnChangeField", importPath: "@comet/admin" });
+            finalFormConfig = { subscription: { values: true }, renderProps: { values: true, form: true } };
+        }
+
         formValueToGqlInputCode = !config.virtual ? `${name}: formValues.${name}?.id,` : ``;
+
         imports.push({
             name: `GQL${queryName}Query`,
             importPath: `./${baseOutputFilename}.generated`,
@@ -339,19 +523,32 @@ export function generateFormField({
                 label={${fieldLabel}}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
-                        query: gql\`query ${queryName} {
-                            ${rootQuery} {
+                        query: gql\`query ${queryName}${
+            filterConfig ? `($${filterConfig.filterVarName}: ${filterConfig.filterType.typeClass}${filterConfig.filterType.required ? `!` : ``})` : ``
+        } {
+                            ${rootQuery}${filterConfig ? `(${filterConfig.filterVarName}: $${filterConfig.filterVarName})` : ``} {
                                 nodes {
                                     id
                                     ${labelField}
                                 }
                             }
-                        }\`
+                        }\`${filterConfig ? `, variables: { ${filterConfig.filterVarName}: ${filterConfig.filterVarValue} }` : ``}
                     });
                     return data.${rootQuery}.nodes;
                 }}
                 getOptionLabel={(option) => option.${labelField}}
-            />`;
+                ${filterConfig ? `disabled={!values?.${String(filterConfig.filterField.name)}}` : ``}
+            />${
+                filterConfig
+                    ? `<OnChangeField name="${String(filterConfig.filterField.name)}">
+                            {(value, previousValue) => {
+                                if (value.id !== previousValue.id) {
+                                    form.change("${String(config.name)}", undefined);
+                                }
+                            }}
+                        </OnChangeField>`
+                    : ``
+            }`;
     } else {
         throw new Error(`Unsupported type`);
     }
@@ -363,5 +560,6 @@ export function generateFormField({
         gqlDocuments,
         imports,
         formValuesConfig,
+        finalFormConfig,
     };
 }

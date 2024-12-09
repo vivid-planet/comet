@@ -1,6 +1,4 @@
 import "@fontsource-variable/roboto-flex/full.css";
-import "material-design-icons/iconfont/material-icons.css";
-import "typeface-open-sans";
 import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
@@ -65,8 +63,20 @@ class App extends Component {
                 <ApolloProvider client={apolloClient}>
                     <SitesConfigProvider
                         value={{
-                            configs: config.sitesConfig,
-                            resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+                            configs: [...config.sitesConfig],
+                            resolveSiteConfigForScope: (configs, scope) => {
+                                const siteConfig = configs.find((config) => config.scope.domain === scope.domain);
+                                if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                                return {
+                                    url: siteConfig.url,
+                                    preloginEnabled: siteConfig.preloginEnabled || false,
+                                    blockPreviewBaseUrl:
+                                        siteConfig.scope.domain === "secondary"
+                                            ? `${siteConfig.url}/block-preview`
+                                            : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                                    sitePreviewApiUrl: `${siteConfig.url}/api/site-preview`,
+                                };
+                            },
                         }}
                     >
                         <DamConfigProvider

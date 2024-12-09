@@ -1,4 +1,4 @@
-import { createTextLinkBlock } from "@comet/blocks-api";
+import { createTextLinkBlock } from "@comet/cms-api";
 
 import { LinkBlock } from "./linkBlock/link.block";
 

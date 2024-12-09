@@ -1,10 +1,10 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { RouterMemoryRouter } from "@comet/admin";
-import { StoryContext } from "@storybook/addons";
+import { Decorator } from "@storybook/react";
 import * as React from "react";
 
-export function editDialogDecorator() {
-    return (Story: React.ComponentType, c: StoryContext) => {
+export function editDialogDecorator(): Decorator {
+    return (Story) => {
         return (
             <MockedProvider>
                 <RouterMemoryRouter>

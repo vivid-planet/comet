@@ -3,6 +3,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
     GridColDef,
@@ -17,10 +18,10 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { Add as AddIcon, Edit } from "@comet/admin-icons";
+import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -100,15 +101,19 @@ type Props = {
 export function ProductVariantsGrid({ product }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
-    const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductVariantsGrid") };
+    const dataGridProps = {
+        ...useDataGridRemote({
+            queryParamsPrefix: "product-variants",
+        }),
+        ...usePersistentColumnState("ProductVariantsGrid"),
+    };
 
     const columns: GridColDef<GQLProductVariantsGridFutureFragment>[] = [
         { field: "name", headerName: intl.formatMessage({ id: "productVariant.name", defaultMessage: "Name" }), flex: 1, minWidth: 150 },
         {
+            ...dataGridDateColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "productVariant.createdAt", defaultMessage: "Created at" }),
-            type: "date",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
             flex: 1,
             minWidth: 150,
         },
@@ -124,8 +129,8 @@ export function ProductVariantsGrid({ product }: Props) {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <EditIcon />
                         </IconButton>
                         <CrudContextMenu
                             copyData={() => {
@@ -163,8 +168,8 @@ export function ProductVariantsGrid({ product }: Props) {
             product,
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -175,13 +180,13 @@ export function ProductVariantsGrid({ product }: Props) {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductVariantsGridToolbar,
+            slots={{
+                toolbar: ProductVariantsGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );

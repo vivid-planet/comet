@@ -31,9 +31,14 @@ export const FinalFormSaveSplitButton = ({ localStorageKey = "SaveSplitButton", 
 
     const splitButtonProps: Partial<SplitButtonProps> = {};
     if (hasConflict) {
-        splitButtonProps.selectIcon = <ChevronDown sx={{ color: (theme) => theme.palette.error.contrastText }} />;
+        splitButtonProps.selectIcon = (
+            <ChevronDown
+                sx={(theme) => ({
+                    color: theme.palette.error.contrastText,
+                })}
+            />
+        );
     }
-
     return (
         <SplitButton {...splitButtonProps} disabled={pristine || hasValidationErrors || submitting} localStorageKey={localStorageKey}>
             <SaveButton

@@ -12,7 +12,6 @@ import { AccessControlServiceInterface } from "../../user-permissions/user-permi
 import { GetCurrentUser } from "../decorators/get-current-user.decorator";
 
 interface AuthResolverConfig {
-    currentUser?: Type<CurrentUser>; // TODO Remove in future version as it is not used and here for backwards compatibility
     endSessionEndpoint?: string;
     postLogoutRedirectUri?: string;
 }

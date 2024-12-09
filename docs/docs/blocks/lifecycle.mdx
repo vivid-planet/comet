@@ -1,6 +1,6 @@
 ---
 title: Lifecycle
-sidebar_position: 5
+sidebar_position: 7
 ---
 
 # Deep dive: A block's lifecycle
@@ -108,14 +108,14 @@ flowchart LR;
 The following methods are used to transition between the different block states:
 
 -   The `BlockInput#transformToBlockData` method is used to transition from input to data.
-    You can usually use the `inputToData` helper for this.
+    You can usually use the `blockInputToData` helper for this.
 
     ```ts
     class HeadlineBlockInput extends BlockInput {
         /* ... */
 
         transformToBlockData(): HeadlineBlockData {
-            return inputToData(HeadlineBlockData, this);
+            return blockInputToData(HeadlineBlockData, this);
         }
     }
     ```

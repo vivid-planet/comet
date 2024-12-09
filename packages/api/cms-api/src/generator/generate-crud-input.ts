@@ -48,7 +48,7 @@ export async function generateCrudInput(
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
-    const { dedicatedResolverArgProps } = buildOptions(metadata);
+    const { dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
 
     const props = metadata.props
         .filter((prop) => {
@@ -64,20 +64,42 @@ export async function generateCrudInput(
         .filter((prop) => !options.excludeFields.includes(prop.name));
 
     let fieldsOut = "";
-    const imports: Imports = [];
+    const imports: Imports = [
+        { name: "IsSlug", importPath: "@comet/cms-api" },
+        { name: "RootBlockInputScalar", importPath: "@comet/cms-api" },
+        { name: "IsNullable", importPath: "@comet/cms-api" },
+        { name: "PartialType", importPath: "@comet/cms-api" },
+        { name: "BlockInputInterface", importPath: "@comet/cms-api" },
+        { name: "isBlockInputInterface", importPath: "@comet/cms-api" },
+    ];
     for (const prop of props) {
         let type = prop.type;
         const fieldName = prop.name;
         const definedDecorators = morphTsProperty(prop.name, metadata).getDecorators();
         const decorators = [] as Array<string>;
-        if (!prop.nullable) {
-            decorators.push("@IsNotEmpty()");
-        } else {
-            decorators.push("@IsNullable()");
+        let isOptional = prop.nullable;
+
+        if (prop.name != "position") {
+            if (!prop.nullable) {
+                decorators.push("@IsNotEmpty()");
+            } else {
+                decorators.push("@IsNullable()");
+            }
         }
         if (["id", "createdAt", "updatedAt", "scope"].includes(prop.name)) {
             //skip those (TODO find a non-magic solution?)
             continue;
+        } else if (prop.name == "position") {
+            const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
+            const defaultValue = initializer == "undefined" || initializer == "null" ? "null" : initializer;
+            const fieldOptions = tsCodeRecordToString({ nullable: "true", defaultValue });
+            isOptional = true;
+            decorators.push(`@IsOptional()`);
+            decorators.push(`@Min(1)`);
+            decorators.push("@IsInt()");
+            decorators.push(`@Field(() => Int, ${fieldOptions})`);
+
+            type = "number";
         } else if (prop.enum) {
             const initializer = morphTsProperty(prop.name, metadata).getInitializer()?.getText();
             const defaultValue =
@@ -390,17 +412,15 @@ export async function generateCrudInput(
         }
 
         fieldsOut += `${decorators.join("\n")}
-    ${fieldName}${prop.nullable ? "?" : ""}: ${type};
+    ${fieldName}${isOptional ? "?" : ""}: ${type};
     
     `;
     }
     const className = options.className ?? `${metadata.className}Input`;
     const inputOut = `import { Field, InputType, ID, Int } from "@nestjs/graphql";
 import { Transform, Type } from "class-transformer";
-import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt } from "class-validator";
-import { IsSlug, RootBlockInputScalar, IsNullable, PartialType} from "@comet/cms-api";
+import { IsString, IsNotEmpty, ValidateNested, IsNumber, IsBoolean, IsDate, IsOptional, IsEnum, IsUUID, IsArray, IsInt, Min } from "class-validator";
 import { GraphQLJSONObject } from "graphql-scalars";
-import { BlockInputInterface, isBlockInputInterface } from "@comet/blocks-api";
 import { GraphQLDate } from "graphql-scalars";
 ${generateImportsCode(imports)}
 

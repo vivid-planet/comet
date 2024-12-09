@@ -1,12 +1,11 @@
 import { useQuery } from "@apollo/client";
 import {
+    DataGridToolbar,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    Toolbar,
-    ToolbarAutomaticTitleItem,
     ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
@@ -14,7 +13,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
-import { Box, Button, IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
@@ -33,8 +32,7 @@ import {
 
 function ProductVariantsGridToolbar() {
     return (
-        <Toolbar>
-            <ToolbarAutomaticTitleItem />
+        <DataGridToolbar>
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
@@ -47,7 +45,7 @@ function ProductVariantsGridToolbar() {
                     <FormattedMessage id="products.newVariant" defaultMessage="New Variant" />
                 </Button>
             </ToolbarItem>
-        </Toolbar>
+        </DataGridToolbar>
     );
 }
 
@@ -57,7 +55,7 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
     //const client = useApolloClient();
 
     const columns: GridColDef<GQLProductVariantsListFragment>[] = [
-        { field: "name", headerName: "Name", width: 150 },
+        { field: "name", headerName: "Name", flex: 1 },
         /*
         {
             field: "visible",
@@ -84,15 +82,17 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
         },
         */
         {
-            field: "action",
+            field: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
+            width: 52,
+            pinned: "right",
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit />
                         </IconButton>
                         {/*
                         <CrudContextMenu
@@ -109,29 +109,29 @@ export function ProductVariantsGrid({ productId }: { productId: string }) {
         variables: {
             product: productId,
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.productVariants.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productVariants.totalCount);
 
     return (
-        <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductVariantsGridToolbar,
-                }}
-            />
-        </Box>
+        <DataGridPro
+            {...dataGridProps}
+            disableRowSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            slots={{
+                toolbar: ProductVariantsGridToolbar,
+            }}
+        />
     );
 }
 const productVariantsFragment = gql`

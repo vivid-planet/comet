@@ -128,15 +128,7 @@ export const InputWithPopper = (inProps: InputWithPopperProps) => {
                         },
                     }}
                 />
-                <Popper
-                    open={showPopper}
-                    anchorEl={rootRef.current}
-                    placement="bottom-start"
-                    transition
-                    onResize={undefined} // see https://github.com/mui/material-ui/issues/35287
-                    onResizeCapture={undefined}
-                    {...slotProps?.popper}
-                >
+                <Popper open={showPopper} anchorEl={rootRef.current} placement="bottom-start" transition {...slotProps?.popper}>
                     {({ TransitionProps }) => (
                         <Transition {...TransitionProps} {...slotProps?.transition}>
                             <Paper {...slotProps?.paper}>{typeof children === "function" ? children(closePopper) : children}</Paper>

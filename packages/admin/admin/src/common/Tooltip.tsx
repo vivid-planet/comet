@@ -9,7 +9,7 @@ import {
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import { cloneElement, ComponentProps, useState } from "react";
+import { cloneElement, ComponentProps, ReactElement, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
@@ -211,6 +211,10 @@ export const Tooltip = (inProps: TooltipProps) => {
 
     const commonTooltipProps: ComponentProps<typeof TooltipRoot> = {
         ...props,
+        variant,
+        disableInteractive,
+        arrow,
+        isRtl: ownerState.isRtl,
         ownerState,
         slots: {
             // @ts-expect-error The `ownerState` prop required by `TooltipPopper` does not exist in the type of MUIs `popper` slot in the `Tooltip` component but it is passed to the `TooltipPopper` component correctly.
@@ -220,7 +224,6 @@ export const Tooltip = (inProps: TooltipProps) => {
         slotProps: {
             popper: {
                 ...props.slotProps?.popper,
-                ownerState,
             },
             ...props.slotProps,
         },
@@ -236,7 +239,7 @@ export const Tooltip = (inProps: TooltipProps) => {
                 disableTouchListener
                 {...commonTooltipProps}
             >
-                {cloneElement(children, { onClick: toggleTooltip })}
+                {cloneElement(children as ReactElement<any, any>, { onClick: toggleTooltip })}
             </TooltipRoot>
         </ClickAwayListener>
     ) : (

@@ -1,11 +1,12 @@
 import { MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, QueryBuilder } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import JSZip from "jszip";
 import isEqual from "lodash.isequal";
 
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
+import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometEntityNotFoundException } from "../../common/errors/entity-not-found.exception";
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 import { DamConfig } from "../dam.config";
@@ -15,7 +16,6 @@ import { DamFolderListPositionArgs, FolderArgsInterface } from "./dto/folder.arg
 import { UpdateFolderInput } from "./dto/folder.input";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
-import { createHashedPath } from "./files.utils";
 
 export const withFoldersSelect = (
     qb: QueryBuilder<FolderInterface>,
@@ -83,6 +83,7 @@ export class FoldersService {
         @Inject(forwardRef(() => BlobStorageBackendService)) private readonly blobStorageBackendService: BlobStorageBackendService,
         @Inject(DAM_CONFIG) private readonly config: DamConfig,
         private readonly orm: MikroORM,
+        private readonly entityManager: EntityManager,
     ) {}
 
     async findAllByParentId(
@@ -182,7 +183,7 @@ export class FoldersService {
             mpath = (await this.findAncestorsByParentId(parentId)).map((folder) => folder.id);
         }
         const folder = this.foldersRepository.create({ ...data, isInboxFromOtherScope, parent, mpath, scope });
-        await this.foldersRepository.persistAndFlush(folder);
+        await this.entityManager.persistAndFlush(folder);
         return folder;
     }
 
@@ -219,7 +220,7 @@ export class FoldersService {
                 .execute();
         }
 
-        await this.foldersRepository.persistAndFlush(folder);
+        await this.entityManager.persistAndFlush(folder);
         return folder;
     }
 

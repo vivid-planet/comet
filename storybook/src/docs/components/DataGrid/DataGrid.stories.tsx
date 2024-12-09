@@ -1,11 +1,14 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    CrudMoreActionsMenu,
+    DataGridToolbar,
     FileIcon,
     GridColDef,
     GridFilterButton,
     Loading,
     muiGridFilterToGql,
+    RowActionsItem,
     Toolbar,
     ToolbarActions,
     ToolbarFillSpace,
@@ -15,15 +18,16 @@ import {
     useDataGridRemote,
     usePersistentColumnState,
 } from "@comet/admin";
-import { MoreVertical } from "@comet/admin-icons";
-import { Button, Menu, MenuItem, useTheme } from "@mui/material";
+import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
+import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { storiesOf } from "@storybook/react";
 import * as React from "react";
+import { useState } from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
+import { exampleColumns, exampleRows } from "../../../helpers/ExampleDataGrid";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
 type Launch = {
@@ -49,32 +53,13 @@ interface GQLQuery {
     launchesPastResult: LaunchesPastResultData;
 }
 
-const exampleRows = [
-    { id: 1, lastName: "Snow", firstName: "Jon" },
-    { id: 2, lastName: "Lannister", firstName: "Cersei" },
-    { id: 3, lastName: "Lannister", firstName: "Jaime" },
-    { id: 4, lastName: "Stark", firstName: "Arya" },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys" },
-    { id: 6, lastName: "Melisandre", firstName: null },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara" },
-    { id: 8, lastName: "Frances", firstName: "Rossini" },
-    { id: 9, lastName: "Roxie", firstName: "Harvey" },
-];
-const exampleColumns: GridColDef[] = [
-    {
-        field: "firstName",
-        headerName: "First name",
-    },
-    {
-        field: "lastName",
-        headerName: "Last name",
-    },
-];
+export default {
+    title: "Docs/Components/DataGrid",
+    decorators: [storyRouterDecorator(), apolloStoryDecorator("/graphql")],
+};
 
-storiesOf("stories/components/DataGrid", module)
-    .addDecorator(storyRouterDecorator())
-    .addDecorator(apolloStoryDecorator("/graphql"))
-    .add("useDataGridRemote", () => {
+export const UseDataGridRemote = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
@@ -84,6 +69,7 @@ storiesOf("stories/components/DataGrid", module)
                 field: "launch_date_local",
                 headerName: "Launch Date",
                 type: "dateTime",
+                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
             },
         ];
 
@@ -106,24 +92,32 @@ storiesOf("stories/components/DataGrid", module)
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     sort: dataGridProps.sortModel[0]?.field,
                     order: dataGridProps.sortModel[0]?.sort,
                 },
             },
         );
 
+        if (error) {
+            throw error;
+        }
+
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
-    })
-    .add("useDataGridRemoteInitialSort", () => {
+    },
+    name: "useDataGridRemote",
+};
+
+export const UseDataGridRemoteInitialSort = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
@@ -133,6 +127,7 @@ storiesOf("stories/components/DataGrid", module)
                 field: "launch_date_local",
                 headerName: "Launch Date",
                 type: "dateTime",
+                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
             },
         ];
 
@@ -155,24 +150,32 @@ storiesOf("stories/components/DataGrid", module)
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     sort: dataGridProps.sortModel[0]?.field,
                     order: dataGridProps.sortModel[0]?.sort,
                 },
             },
         );
 
+        if (error) {
+            throw error;
+        }
+
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
-    })
-    .add("useDataGridRemoteInitialFilter", () => {
+    },
+    name: "useDataGridRemoteInitialSort",
+};
+
+export const UseDataGridRemoteInitialFilter = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "mission_name",
@@ -183,12 +186,13 @@ storiesOf("stories/components/DataGrid", module)
                 field: "launch_date_local",
                 headerName: "Launch Date",
                 type: "dateTime",
+                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
                 flex: 1,
             },
         ];
 
         const dataGridProps = useDataGridRemote({
-            initialFilter: { items: [{ columnField: "mission_name", operatorValue: "contains", value: "able" }] },
+            initialFilter: { items: [{ field: "mission_name", operator: "contains", value: "able" }] },
         });
 
         const { data, loading, error } = useQuery(
@@ -208,8 +212,8 @@ storiesOf("stories/components/DataGrid", module)
             `,
             {
                 variables: {
-                    limit: dataGridProps.pageSize,
-                    offset: dataGridProps.page * dataGridProps.pageSize,
+                    limit: dataGridProps.paginationModel.pageSize,
+                    offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
                     filter: muiGridFilterToGql(columns, dataGridProps.filterModel).filter,
                 },
             },
@@ -218,13 +222,20 @@ storiesOf("stories/components/DataGrid", module)
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
+        if (error) {
+            throw error;
+        }
         return (
             <Box sx={{ height: 200, width: "100%" }}>
-                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} error={error} />
+                <DataGrid {...dataGridProps} rows={rows} rowCount={rowCount} columns={columns} loading={loading} />
             </Box>
         );
-    })
-    .add("usePersistentColumnState", () => {
+    },
+    name: "useDataGridRemoteInitialFilter",
+};
+
+export const UsePersistentColumnState = {
+    render: () => {
         const dataGridProps = usePersistentColumnState("PersColStateStory");
 
         return (
@@ -232,8 +243,12 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid {...dataGridProps} rows={exampleRows} columns={exampleColumns} />
             </Box>
         );
-    })
-    .add("responsiveColumns", () => {
+    },
+    name: "usePersistentColumnState",
+};
+
+export const ResponsiveColumns = {
+    render: () => {
         const dataGridProps = usePersistentColumnState("ResponsiveColumnsStory");
         const theme = useTheme();
 
@@ -265,8 +280,12 @@ storiesOf("stories/components/DataGrid", module)
         ];
 
         return <DataGridPro sx={{ height: 200 }} rows={exampleRows} columns={columns} {...dataGridProps} />;
-    })
-    .add("GridFilterButton", () => {
+    },
+    name: "Responsive columns",
+};
+
+export const _GridFilterButton = {
+    render: () => {
         function DemoToolbar() {
             return (
                 <Toolbar>
@@ -283,48 +302,56 @@ storiesOf("stories/components/DataGrid", module)
                 <DataGrid
                     rows={exampleRows}
                     columns={exampleColumns}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
         );
-    })
-    .add("CrudContextMenu", () => {
+    },
+    name: "GridFilterButton",
+};
+
+export const _CrudContextMenu = {
+    render: () => {
         const columns: GridColDef[] = [
             {
                 field: "firstName",
                 headerName: "First name",
+                flex: 1,
             },
             {
                 field: "lastName",
                 headerName: "Last name",
+                flex: 1,
             },
             {
-                field: "action",
+                field: "actions",
                 headerName: "",
                 sortable: false,
                 filterable: false,
+                pinned: "right",
+                width: 52,
                 renderCell: (params) => {
                     return (
                         <CrudContextMenu
                             url={`http://example.com/people/${params.row.id}`}
                             onPaste={async ({ input, client }) => {
                                 /*
-                                    await client.mutate<GQLCreatePeopleMutation, GQLCreatePeopleMutationVariables>({
-                                        mutation: createPeopleMutation,
-                                        variables: { input },
-                                    });
-                                    */
+                                        await client.mutate<GQLCreatePeopleMutation, GQLCreatePeopleMutationVariables>({
+                                            mutation: createPeopleMutation,
+                                            variables: { input },
+                                        });
+                                        */
                                 alert(`insert ${JSON.stringify(input)}`);
                             }}
                             onDelete={async ({ client }) => {
                                 /*
-                                    await client.mutate<GQLDeletePeopleMutation, GQLDeletePeopleMutationVariables>({
-                                        mutation: deletePeopleMutation,
-                                        variables: { id: params.row.id },
-                                    });
-                                    */
+                                        await client.mutate<GQLDeletePeopleMutation, GQLDeletePeopleMutationVariables>({
+                                            mutation: deletePeopleMutation,
+                                            variables: { id: params.row.id },
+                                        });
+                                        */
                                 alert(`delete id ${params.row.id}`);
                             }}
                             refetchQueries={[]}
@@ -336,24 +363,33 @@ storiesOf("stories/components/DataGrid", module)
                                     lastName: params.row.lastName,
                                 };
                             }}
-                        />
+                        >
+                            <RowActionsItem icon={<Favorite />} onClick={() => alert(`Doing a custom action on ${params.row.firstName}`)}>
+                                Custom action
+                            </RowActionsItem>
+                            <Divider />
+                        </CrudContextMenu>
                     );
                 },
             },
         ];
 
         return (
-            <Box sx={{ height: 400, width: "100%" }}>
+            <Box height={400}>
                 <DataGrid rows={exampleRows} columns={columns} />
             </Box>
         );
-    })
-    .add("useDataGridExcelExport", () => {
+    },
+    name: "CrudContextMenu",
+};
+
+export const UseDataGridExcelExport = {
+    render: () => {
         const dataGridProps = useDataGridRemote();
 
         const variables = {
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             sort: dataGridProps.sortModel[0]?.field,
             order: dataGridProps.sortModel[0]?.sort,
         };
@@ -367,6 +403,7 @@ storiesOf("stories/components/DataGrid", module)
                 field: "launch_date_local",
                 headerName: "Launch Date",
                 type: "dateTime",
+                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
             },
         ];
 
@@ -442,6 +479,9 @@ storiesOf("stories/components/DataGrid", module)
         const rows = data?.launchesPastResult.data ?? [];
         const rowCount = useBufferedRowCount(data?.launchesPastResult.result.totalCount);
 
+        if (error) {
+            throw error;
+        }
         return (
             <Box sx={{ height: 400, width: "100%" }}>
                 <DataGrid
@@ -450,11 +490,76 @@ storiesOf("stories/components/DataGrid", module)
                     columns={columns}
                     rowCount={rowCount}
                     loading={loading}
-                    error={error}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
         );
-    });
+    },
+    name: "useDataGridExcelExport",
+};
+
+export const _CrudMoreActionsMenu = {
+    render: () => {
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+        const dataGridProps = useDataGridRemote();
+
+        function DemoToolBar() {
+            return (
+                <DataGridToolbar>
+                    <ToolbarFillSpace />
+                    <ToolbarItem>
+                        <CrudMoreActionsMenu
+                            selectionSize={selectionModel.length}
+                            overallActions={[
+                                {
+                                    label: "Export to excel",
+                                    onClick: () => {},
+                                },
+                            ]}
+                            selectiveActions={[
+                                {
+                                    label: "Move",
+                                    onClick: () => {},
+                                    icon: <Move />,
+                                },
+                                {
+                                    label: "Delete",
+                                    onClick: () => {},
+                                    icon: <Delete />,
+                                    divider: true,
+                                },
+                                {
+                                    label: "Download",
+                                    onClick: () => {},
+                                    icon: <Download />,
+                                },
+                            ]}
+                        />
+                    </ToolbarItem>
+                </DataGridToolbar>
+            );
+        }
+
+        return (
+            <Box height={600}>
+                <DataGrid
+                    {...dataGridProps}
+                    rows={exampleRows}
+                    columns={exampleColumns}
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                    onRowSelectionModelChange={(newSelectionModel) => {
+                        setSelectionModel(newSelectionModel);
+                    }}
+                    rowSelectionModel={selectionModel}
+                    slots={{
+                        toolbar: DemoToolBar,
+                    }}
+                />
+            </Box>
+        );
+    },
+    name: "CrudMoreActionsMenu",
+};

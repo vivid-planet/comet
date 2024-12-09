@@ -8,7 +8,6 @@ const packageFolderMapping = {
     "@comet/admin-theme": "packages/admin/admin-theme",
     "@comet/blocks-admin": "packages/admin/blocks-admin",
     "@comet/cms-admin": "packages/admin/cms-admin",
-    "@comet/blocks-api": "packages/api/blocks-api",
     "@comet/cms-api": "packages/api/cms-api",
     "@comet/cms-site": "packages/site/cms-site",
 };

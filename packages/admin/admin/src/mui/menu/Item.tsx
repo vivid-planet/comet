@@ -1,7 +1,8 @@
 import { ComponentsOverrides, ListItemButton, ListItemButtonProps, ListItemIcon, ListItemText, Theme, useThemeProps } from "@mui/material";
-import { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useContext } from "react";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
+import { MenuContext } from "./Context";
 import { Icon, MenuItemClassKey, OwnerState, Root, Text } from "./Item.styles";
 
 export type MenuItemLevel = 1 | 2 | 3;
@@ -37,6 +38,8 @@ export const MenuItem = (inProps: MenuItemProps) => {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMenuItem" });
 
+    const { drawerVariant } = useContext(MenuContext);
+
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
     const showIcon = !!icon && level === 1;
@@ -49,10 +52,10 @@ export const MenuItem = (inProps: MenuItemProps) => {
         hasSecondaryText: Boolean(secondary),
         hasSecondaryAction: Boolean(secondaryAction),
         hasSubItems: Boolean(hasSubitems),
+        variant: drawerVariant,
     };
 
     return (
-        // @ts-expect-error The type of the `component` is missing when using `styled()`: https://mui.com/material-ui/guides/typescript/#complications-with-the-component-prop
         <Root component="div" ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {showIcon && (
                 <Icon ownerState={ownerState} {...slotProps?.icon}>

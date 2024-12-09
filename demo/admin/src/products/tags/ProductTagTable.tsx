@@ -58,15 +58,15 @@ const columns: GridColDef<GQLProductsTagsListFragment>[] = [
         width: 150,
     },
     {
-        field: "action",
+        field: "actions",
         headerName: "",
         sortable: false,
         filterable: false,
         renderCell: (params) => {
             return (
                 <>
-                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                        <Edit color="primary" />
+                    <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <Edit />
                     </IconButton>
                     <CrudContextMenu
                         onPaste={async ({ input, client }) => {
@@ -99,11 +99,14 @@ function ProductTagsTable() {
     const { data, loading, error } = useQuery<GQLProductTagsListQuery, GQLProductTagsListQueryVariables>(productTagsQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
     });
+    if (error) {
+        throw error;
+    }
     const rows = data?.productTags.nodes ?? [];
     const rowCount = useBufferedRowCount(data?.productTags.totalCount);
 
@@ -111,14 +114,13 @@ function ProductTagsTable() {
         <Box sx={{ height: `calc(100vh - var(--comet-admin-master-layout-content-top-spacing))` }}>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                error={error}
-                components={{
-                    Toolbar: ProductTagsTableToolbar,
+                slots={{
+                    toolbar: ProductTagsTableToolbar,
                 }}
             />
         </Box>

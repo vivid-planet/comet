@@ -1,7 +1,7 @@
 import { TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { Alert, GridColDef, messages, Tooltip, useDataGridRemote } from "@comet/admin";
 import { ArrowRight, OpenNewTab, Reload } from "@comet/admin-icons";
-import { IconButton, LinearProgress, tablePaginationClasses } from "@mui/material";
+import { IconButton, tablePaginationClasses } from "@mui/material";
 import { LabelDisplayedRowsArgs } from "@mui/material/TablePagination/TablePagination";
 import { DataGrid } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -53,8 +53,8 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
 
     const { data, loading, error, refetch } = useQuery<Query, QueryVariables>(query, {
         variables: {
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             ...variables,
         },
     });
@@ -134,6 +134,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     let items: DependencyItem[] = [];
     let totalCount = 0;
 
+    if (error) {
+        throw error;
+    }
+
     if (data?.item.dependencies) {
         items = data.item.dependencies.nodes.map((node) => ({
             ...node,
@@ -169,10 +173,10 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
             </sc.Toolbar>
             <DataGrid
                 {...dataGridProps}
-                components={{
-                    LoadingOverlay: loading && data ? LinearProgress : undefined,
-                }}
-                componentsProps={{
+                slotProps={{
+                    loadingOverlay: {
+                        variant: "linear-progress",
+                    },
                     pagination: {
                         labelDisplayedRows: DisplayedRows,
                         sx: {
@@ -191,10 +195,9 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     },
                 }}
                 rowHeight={60}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 disableColumnMenu
-                loading={loading}
-                error={error}
+                loading={loading && data != null}
                 autoHeight={true}
                 columns={columns}
                 rows={items}

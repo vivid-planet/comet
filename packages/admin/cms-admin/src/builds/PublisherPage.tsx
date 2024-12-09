@@ -34,6 +34,9 @@ export function PublisherPage() {
 
     const { data, loading, error } = useQuery<GQLBuildsQuery, undefined>(buildsQuery);
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.builds ?? [];
 
     return (
@@ -52,7 +55,6 @@ export function PublisherPage() {
                 <DataGrid
                     rows={rows}
                     loading={loading}
-                    error={error}
                     columns={[
                         {
                             field: "name",
@@ -65,10 +67,10 @@ export function PublisherPage() {
                         {
                             field: "runtime",
                             headerName: intl.formatMessage({ id: "comet.pages.publisher.runtime", defaultMessage: "Runtime" }),
-                            valueGetter: (params) => {
+                            valueGetter: (params, row) => {
                                 return {
-                                    startTime: params.row.startTime,
-                                    completionTime: params.row.completionTime,
+                                    startTime: row.startTime,
+                                    completionTime: row.completionTime,
                                 };
                             },
                             renderCell: (params) => {

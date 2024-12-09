@@ -1,14 +1,12 @@
 import { ArrowDown, ArrowUp, Check, Clear, Close, MoreVertical, Search } from "@comet/admin-icons";
 import {
     buttonBaseClasses,
-    getSwitchUtilityClass,
     inputAdornmentClasses,
     inputBaseClasses,
     inputClasses,
     inputLabelClasses,
     svgIconClasses,
     SvgIconProps,
-    switchClasses,
     TextField,
     TextFieldProps,
 } from "@mui/material";
@@ -21,7 +19,7 @@ import { GetMuiComponentTheme } from "./getComponentsTheme";
 export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing }) => ({
     ...component,
     defaultProps: {
-        components: {
+        slots: {
             QuickFilterIcon: Search,
             QuickFilterClearIcon: Clear,
             FilterPanelDeleteIcon: Close,
@@ -31,7 +29,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             ColumnSortedDescendingIcon: ArrowDown,
             BaseTextField: (props: TextFieldProps) => <TextField {...props} InputLabelProps={{ shrink: true }} />,
             ColumnMenuIcon: (props: SvgIconProps) => <MoreVertical {...props} fontSize="medium" />,
-            ...component?.defaultProps?.components,
+            ...component?.defaultProps?.slots,
         },
         localeText: {
             noRowsLabel: GRID_DEFAULT_LOCALE_TEXT.noResultsOverlayLabel,
@@ -42,23 +40,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         root: {
             backgroundColor: "white",
         },
-        columnsPanelRow: {
-            marginBottom: spacing(2),
-
-            [`& .${switchClasses.root}`]: {
-                marginRight: 0,
-            },
-            [`& .${switchClasses.root} .${switchClasses.thumb}`]: {
-                width: 10,
-                height: 10,
-            },
-            [`& .${switchClasses.root} .${switchClasses.switchBase}`]: {
-                padding: 3,
-            },
-            [`& .${switchClasses.root} .${switchClasses.switchBase}.${getSwitchUtilityClass("checked")}`]: {
-                transform: "translateX(20px)",
-            },
-        },
         columnHeader: {
             "&:focus": {
                 outline: "none",
@@ -66,10 +47,6 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             "&:focus-within": {
                 outline: "none",
             },
-        },
-        pinnedColumnHeaders: {
-            backgroundColor: "white",
-            boxShadow: shadows[2],
         },
         pinnedColumns: {
             backgroundColor: "white",
@@ -88,6 +65,9 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 color: palette.grey[900],
             },
         },
+        footerContainer: {
+            borderTop: `1px solid ${palette.grey[100]}`,
+        },
         iconSeparator: {
             backgroundColor: palette.grey[100],
             width: "2px",
@@ -95,7 +75,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             marginRight: "10px",
         },
         panelContent: {
-            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
+            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLogicOperatorInput}`]: {
                 ["@media (max-width: 900px)"]: {
                     display: "none",
                 },
@@ -119,7 +99,7 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 padding: 0,
             },
         },
-        filterFormLinkOperatorInput: {
+        filterFormLogicOperatorInput: {
             ["@media (max-width: 900px)"]: {
                 padding: spacing(2, 4),
                 width: "100%",

@@ -109,6 +109,17 @@ export function generateForm(
     const readOnlyFields = formFields.filter((field) => field.readOnly);
     const fileFields = formFields.filter((field) => field.type == "fileUpload");
 
+    if (fileFields.length > 0) {
+        imports.push({ name: "GQLFinalFormFileUploadFragment", importPath: "@comet/cms-admin" });
+    }
+
+    // Unnecessary field.type == "fileUpload" check to make TypeScript happy
+    const downloadableFileFields = fileFields.filter((field) => field.type == "fileUpload" && field.download);
+
+    if (fileFields.length > 0) {
+        imports.push({ name: "GQLFinalFormFileUploadDownloadableFragment", importPath: "@comet/cms-admin" });
+    }
+
     let hooksCode = "";
     let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];
@@ -134,7 +145,8 @@ export function generateForm(
         fragment ${formFragmentName} on ${gqlType} {
             ${formFragmentFields.join("\n")}
         }
-        ${fileFields.length > 0 ? "${finalFormFileUploadFragment}" : ""}
+        ${fileFields.length > 0 && fileFields.length !== downloadableFileFields.length ? "${finalFormFileUploadFragment}" : ""}
+        ${downloadableFileFields.length > 0 ? "${finalFormFileUploadDownloadableFragment}" : ""}
     `;
 
     if (editMode) {
@@ -214,6 +226,9 @@ export function generateForm(
         });
     }
 
+    const finalFormSubscription = Object.keys(generatedFields.finalFormConfig?.subscription ?? {});
+    const finalFormRenderProps = Object.keys(generatedFields.finalFormConfig?.renderProps ?? {});
+
     let filterByFragmentType = `GQL${formFragmentName}Fragment`;
     let customFilterByFragment = "";
 
@@ -225,13 +240,21 @@ export function generateForm(
             .join(" | ")}> & {
             ${fileFields
                 .map((field) => {
+                    if (field.type !== "fileUpload") {
+                        throw new Error("Field is not a file upload field");
+                    }
+
                     if (
                         ("multiple" in field && field.multiple) ||
                         ("maxFiles" in field && typeof field.maxFiles === "number" && field.maxFiles > 1)
                     ) {
-                        return `${String(field.name)}: GQLFinalFormFileUploadFragment[];`;
+                        return `${String(field.name)}: ${
+                            field.download ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
+                        }[];`;
                     }
-                    return `${String(field.name)}: GQLFinalFormFileUploadFragment | null;`;
+                    return `${String(field.name)}: ${
+                        field.download ? "GQLFinalFormFileUploadDownloadableFragment" : "GQLFinalFormFileUploadFragment"
+                    } | null;`;
                 })
                 .join("\n")}
         }`;
@@ -247,10 +270,10 @@ export function generateForm(
         FinalForm,
         FinalFormCheckbox,
         FinalFormInput,
+        FinalFormRangeInput,
         FinalFormSelect,
         FinalFormSubmitEvent,
         Loading,
-        MainContent,
         RadioGroupField,
         TextAreaField,
         TextField,
@@ -260,7 +283,7 @@ export function generateForm(
     import { ArrowLeft, Lock } from "@comet/admin-icons";
     import { FinalFormDatePicker } from "@comet/admin-date-time";
     import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField, GQLFinalFormFileUploadFragment } from "@comet/cms-admin";
+    import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict, FileUploadField } from "@comet/cms-admin";
     import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
     import { FormControlLabel, IconButton, MenuItem, InputAdornment } from "@mui/material";
     import { FormApi } from "final-form";
@@ -438,14 +461,14 @@ export function generateForm(
                 mode=${mode == "all" ? `{mode}` : editMode ? `"edit"` : `"add"`}
                 initialValues={initialValues}
                 initialValuesEqual={isEqual} //required to compare block data correctly
-                subscription={{}}
+                subscription={{ ${finalFormSubscription.length ? finalFormSubscription.map((field) => `${field}: true`).join(", ") : ``} }}
             >
-                {() => (
+                {(${finalFormRenderProps.length ? `{${finalFormRenderProps.join(", ")}}` : ``}) => (
                     ${editMode ? `<>` : ``}
                         ${editMode ? `{saveConflict.dialogs}` : ``}
-                        <MainContent>
+                        <>
                             ${fieldsCode}
-                        </MainContent>
+                        </>
                     ${editMode ? `</>` : ``}
                 )}
             </FinalForm>

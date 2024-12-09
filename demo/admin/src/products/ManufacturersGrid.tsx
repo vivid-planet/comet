@@ -5,7 +5,6 @@ import {
     filterByFragment,
     GridColDef,
     GridFilterButton,
-    MainContent,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
@@ -17,8 +16,8 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit, Info } from "@comet/admin-icons";
-import { Button, IconButton, Typography } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { Button, IconButton } from "@mui/material";
+import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import {
     GQLCreateManufacturerMutation,
     GQLCreateManufacturerMutationVariables,
@@ -62,19 +61,15 @@ export function ManufacturersGrid() {
             field: "id",
             width: 150,
             renderHeader: () => (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography fontWeight={400} fontSize={14}>
-                        {intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" })}
-                    </Typography>
+                <>
+                    <GridColumnHeaderTitle label={intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" })} columnWidth={150} />
                     <Tooltip
-                        trigger="click"
+                        trigger="hover"
                         title={<FormattedMessage id="comet.manufacturers.id.info" defaultMessage="The id of the manufacturer" />}
                     >
-                        <IconButton>
-                            <Info />
-                        </IconButton>
+                        <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
-                </div>
+                </>
             ),
         },
         {
@@ -84,46 +79,46 @@ export function ManufacturersGrid() {
         {
             field: "address.street",
             headerName: intl.formatMessage({ id: "manufacturers.street", defaultMessage: "Street" }),
-            valueGetter: ({ row }) => `${row.address?.street} ${row.address?.streetNumber}`,
+            valueGetter: (params, row) => `${row.address?.street} ${row.address?.streetNumber}`,
         },
         {
             field: "address.zip",
             headerName: intl.formatMessage({ id: "manufacturers.zip", defaultMessage: "ZIP" }),
-            valueGetter: ({ row }) => row.address?.zip,
+            valueGetter: (params, row) => row.address?.zip,
         },
         {
             field: "address.alternativeAddress.street",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreet", defaultMessage: "alt. Street" }),
-            valueGetter: ({ row }) => `${row.address?.alternativeAddress?.street} ${row.address?.alternativeAddress?.streetNumber}`,
+            valueGetter: (params, row) => `${row.address?.alternativeAddress?.street} ${row.address?.alternativeAddress?.streetNumber}`,
         },
         {
             field: "address.alternativeAddress.zip",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressZip", defaultMessage: "alt. ZIP" }),
-            valueGetter: ({ row }) => row.address?.alternativeAddress?.zip,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.zip,
         },
         {
             field: "addressAsEmbeddable.street",
             headerName: intl.formatMessage({ id: "manufacturers.street2", defaultMessage: "Street2" }),
-            valueGetter: ({ row }) => `${row.addressAsEmbeddable?.street} ${row.addressAsEmbeddable?.streetNumber}`,
+            valueGetter: (params, row) => `${row.addressAsEmbeddable?.street} ${row.addressAsEmbeddable?.streetNumber}`,
         },
         {
             field: "addressAsEmbeddable.zip",
             headerName: intl.formatMessage({ id: "manufacturers.zip2", defaultMessage: "ZIP2" }),
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.zip,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.zip,
         },
         {
             field: "addressAsEmbeddable.alternativeAddress.street",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressStreet2", defaultMessage: "alt. Street2" }),
-            valueGetter: ({ row }) =>
+            valueGetter: (params, row) =>
                 `${row.addressAsEmbeddable?.alternativeAddress?.street} ${row.addressAsEmbeddable?.alternativeAddress?.streetNumber}`,
         },
         {
             field: "addressAsEmbeddable.alternativeAddress.zip",
             headerName: intl.formatMessage({ id: "manufacturers.alternativeAddressZip", defaultMessage: "alt. ZIP2" }),
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.zip,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.zip,
         },
         {
-            field: "action",
+            field: "actions",
             headerName: "",
             sortable: false,
             filterable: false,
@@ -132,8 +127,8 @@ export function ManufacturersGrid() {
             renderCell: (params) => {
                 return (
                     <>
-                        <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                            <Edit color="primary" />
+                        <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                            <Edit />
                         </IconButton>
                         <CrudContextMenu
                             onPaste={async ({ input }) => {
@@ -168,8 +163,8 @@ export function ManufacturersGrid() {
     const { data, loading, error } = useQuery<GQLManufacturersListQuery, GQLManufacturersListQueryVariables>(manufacturersQuery, {
         variables: {
             ...muiGridFilterToGql(columns, dataGridProps.filterModel),
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(sortModel),
         },
     });
@@ -179,19 +174,17 @@ export function ManufacturersGrid() {
     const rowCount = useBufferedRowCount(data?.manufacturers.totalCount);
 
     return (
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                disableSelectionOnClick
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                components={{
-                    Toolbar: ManufacturersGridToolbar,
-                }}
-            />
-        </MainContent>
+        <DataGridPro
+            {...dataGridProps}
+            disableRowSelectionOnClick
+            rows={rows}
+            rowCount={rowCount}
+            columns={columns}
+            loading={loading}
+            slots={{
+                toolbar: ManufacturersGridToolbar,
+            }}
+        />
     );
 }
 

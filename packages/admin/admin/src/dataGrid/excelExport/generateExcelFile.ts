@@ -52,15 +52,16 @@ export function generateExcelFile<Row extends GridValidRowModel>(
                         // @ts-expect-error `valueFormatter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
                         value = column.valueFormatter({ value });
                     }
-                    if (typeof value !== "string") {
-                        throw new Error("Provided value is not a string");
+
+                    if (typeof value !== "string" && typeof value !== "number" && value !== null && !(value instanceof Date)) {
+                        throw new Error(`The type of the provided value "${typeof value}" is not supported for excel export.`);
                     }
 
                     excelRow[column.field + columnIndex] = value;
                 }
             });
 
-            worksheet.addRow({ ...excelRow });
+            worksheet.addRow(excelRow);
         } catch (e) {
             throw new Error(e);
         }

@@ -53,13 +53,17 @@ interface ITabsState {
 type TabsChild = ReactElement<TabProps> | boolean | null | undefined;
 type TabsChildren = TabsChild | Array<TabsChild | Array<TabsChild>>;
 
-export interface TabsProps
-    extends MuiTabsProps,
-        ThemedComponentBaseProps<{
-            root: "div";
-            tabs: typeof MuiTabs;
-            content: "div";
-        }> {
+type BaseProps = ThemedComponentBaseProps<{
+    root: "div";
+    tabs: typeof MuiTabs;
+    content: "div";
+}>;
+
+interface SlotProps {
+    slotProps?: MuiTabsProps["slotProps"] & BaseProps["slotProps"];
+}
+
+export interface TabsProps extends Omit<MuiTabsProps, "slotProps">, Omit<BaseProps, "slotProps">, SlotProps {
     children: TabsChildren;
     tabComponent?: ComponentType<MuiTabProps>;
     defaultIndex?: number;
@@ -125,15 +129,14 @@ export function Tabs(inProps: TabsProps) {
                 })}
             </StyledTabs>
             {Children.map(children, (child: ReactElement<TabProps>, index) => {
-                const ownerState: OwnerState = {
-                    contentHidden: index !== value && child.props.forceRender,
-                };
-
                 if (!isValidElement<TabProps>(child)) {
                     return null;
                 }
 
                 if (index === value || child.props.forceRender) {
+                    const ownerState: OwnerState = {
+                        contentHidden: index !== value && child.props.forceRender,
+                    };
                     return (
                         <Content ownerState={ownerState} {...slotProps?.content}>
                             {child.props.children}

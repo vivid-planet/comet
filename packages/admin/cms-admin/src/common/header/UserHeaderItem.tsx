@@ -1,12 +1,13 @@
 import { gql, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
-import { Account, Info, Logout } from "@comet/admin-icons";
-import { Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Account, Clear, ImpersonateUser, Info, Logout } from "@comet/admin-icons";
+import { Avatar, AvatarGroup, AvatarProps, Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
+import { css, styled } from "@mui/material/styles";
 import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
+import { StopImpersonationButton } from "../../userPermissions/user/ImpersonationButtons";
 import { AboutModal } from "./about/AboutModal";
 import { GQLSignOutMutation } from "./UserHeaderItem.generated";
 
@@ -37,6 +38,10 @@ interface UserHeaderItemProps {
     buttonChildren?: AppHeaderDropdownProps["buttonChildren"];
 }
 
+interface StyledAvatarProps extends AvatarProps {
+    active?: boolean;
+    inactive?: boolean;
+}
 export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     const { aboutModalLogo, buttonChildren, children } = props;
 
@@ -47,8 +52,22 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     const [showAboutModal, setShowAboutModal] = useState(false);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
+    const AccountIcon = user.impersonated ? (
+        <AvatarGroup>
+            <StyledAvatar inactive>
+                <Account />
+            </StyledAvatar>
+            <StyledAvatar active>
+                <ImpersonateUser />
+            </StyledAvatar>
+        </AvatarGroup>
+    ) : (
+        <StyledAvatar>
+            <Account />
+        </StyledAvatar>
+    );
     return (
-        <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? <Account /> : user.name)} startIcon={isMobile ? undefined : <Account />}>
+        <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)} startIcon={isMobile ? undefined : AccountIcon}>
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
@@ -62,6 +81,18 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
                 </Button>
                 {children}
                 <Separator />
+                {user.impersonated && (
+                    <>
+                        <StopImpersonationButton
+                            startIcon={<Clear />}
+                            fullWidth
+                            variant="outlined"
+                            color="primary"
+                            sx={{ justifyContent: "center" }}
+                        />
+                        <Separator />
+                    </>
+                )}
                 {isSigningOut ? (
                     <Loading />
                 ) : (
@@ -92,3 +123,30 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
         </AppHeaderDropdown>
     );
 }
+
+const StyledAvatar = styled(Avatar)<StyledAvatarProps>`
+    width: 32px;
+    height: 32px;
+    background-color: ${({ theme }) => theme.palette.grey[900]};
+
+    && {
+        border: 1px solid ${({ theme }) => theme.palette.grey[400]};
+    }
+
+    ${({ active, theme }) =>
+        active &&
+        css`
+            margin-left: -10px;
+            z-index: 1;
+
+            && {
+                border: 2px solid ${theme.palette.primary.main};
+            }
+        `}
+
+    ${({ inactive }) =>
+        inactive &&
+        css`
+            opacity: 50%;
+        `}
+`;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityMetadata } from "@mikro-orm/core";
+import { EntityMetadata, ReferenceType } from "@mikro-orm/core";
 import * as path from "path";
 import { singular } from "pluralize";
 
@@ -14,7 +14,7 @@ import { GeneratedFile } from "./utils/write-generated-files";
 
 // TODO move into own file
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function buildOptions(metadata: EntityMetadata<any>) {
+export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: CrudGeneratorOptions) {
     const { classNameSingular, classNamePlural, fileNameSingular, fileNamePlural } = buildNameVariants(metadata);
 
     const dedicatedResolverArgProps = metadata.props.filter((prop) => {
@@ -62,6 +62,8 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "filter") &&
             !prop.name.startsWith("scope_") &&
+            prop.name != "position" &&
+            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "filter")) && // the whole embeddable has filter disabled
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "text" ||
@@ -83,6 +85,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "sort") &&
             !prop.name.startsWith("scope_") &&
+            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
             (prop.type === "string" ||
                 prop.type === "text" ||
                 prop.type === "DecimalType" ||
@@ -102,6 +105,15 @@ export function buildOptions(metadata: EntityMetadata<any>) {
     const scopeProp = metadata.props.find((prop) => prop.name == "scope");
     if (scopeProp && !scopeProp.targetMeta) throw new Error("Scope prop has no targetMeta");
 
+    const hasPositionProp = metadata.props.some((prop) => prop.name == "position");
+
+    const positionGroupPropNames: string[] = hasPositionProp
+        ? generatorOptions.position?.groupByFields ?? [
+              ...(scopeProp ? [scopeProp.name] : []), // if there is a scope prop it's effecting position-group, if not groupByFields should be used
+          ]
+        : [];
+    const positionGroupProps = hasPositionProp ? metadata.props.filter((prop) => positionGroupPropNames.includes(prop.name)) : [];
+
     const scopedEntity = Reflect.getMetadata("scopedEntity", metadata.class);
     const skipScopeCheck = !scopeProp && !scopedEntity;
 
@@ -120,6 +132,8 @@ export function buildOptions(metadata: EntityMetadata<any>) {
         crudSortProps,
         hasSortArg,
         hasSlugProp,
+        hasPositionProp,
+        positionGroupProps,
         statusProp,
         statusActiveItems,
         hasStatusFilter,
@@ -134,7 +148,7 @@ export function buildOptions(metadata: EntityMetadata<any>) {
 
 function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { crudFilterProps } = buildOptions(metadata);
+    const { crudFilterProps } = buildOptions(metadata, generatorOptions);
 
     let importsOut = "";
     let enumFiltersOut = "";
@@ -277,7 +291,7 @@ function generateFilterDto({ generatorOptions, metadata }: { generatorOptions: C
 
 function generateSortDto({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { crudSortProps } = buildOptions(metadata);
+    const { crudSortProps } = buildOptions(metadata, generatorOptions);
 
     const sortOut = `import { SortDirection } from "@comet/cms-api";
     import { Field, InputType, registerEnumType } from "@nestjs/graphql";
@@ -336,7 +350,7 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
         statusActiveItems,
         hasStatusFilter,
         dedicatedResolverArgProps,
-    } = buildOptions(metadata);
+    } = buildOptions(metadata, generatorOptions);
     const imports: Imports = [];
     if (scopeProp && scopeProp.targetMeta) {
         imports.push(generateEntityImport(scopeProp.targetMeta, `${generatorOptions.targetDirectory}/dto`));
@@ -446,6 +460,113 @@ function generateArgsDto({ generatorOptions, metadata }: { generatorOptions: Cru
     return argsOut;
 }
 
+function generateService({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }): string {
+    const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
+    const { hasPositionProp, positionGroupProps } = buildOptions(metadata, generatorOptions);
+
+    const positionGroupType = positionGroupProps.length
+        ? `{ ${positionGroupProps
+              .map((prop) => {
+                  const notSupportedReferenceTypes = [ReferenceType.ONE_TO_MANY, ReferenceType.MANY_TO_MANY];
+                  if (notSupportedReferenceTypes.includes(prop.reference)) {
+                      throw new Error(`Not supported reference-type for position-group. ${prop.name}`);
+                  }
+                  return `${prop.name}${prop.nullable ? `?` : ``}: ${
+                      [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference) ? "string" : prop.type
+                  }`;
+              })
+              .join(",")} }`
+        : false;
+
+    const serviceOut = `import { FilterQuery } from "@mikro-orm/core";
+    import { InjectRepository } from "@mikro-orm/nestjs";
+    import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
+    import { Injectable } from "@nestjs/common";
+
+    ${generateImportsCode([generateEntityImport(metadata, generatorOptions.targetDirectory)])}
+    ${generateImportsCode(
+        positionGroupProps.reduce<Imports>((acc, prop) => {
+            if (prop.targetMeta) {
+                acc.push(generateEntityImport(prop.targetMeta, generatorOptions.targetDirectory));
+            }
+            return acc;
+        }, []),
+    )}
+    import { ${classNameSingular}Filter } from "./dto/${fileNameSingular}.filter";
+
+    @Injectable()
+    export class ${classNamePlural}Service {    
+        ${
+            hasPositionProp
+                ? `constructor(
+                    private readonly entityManager: EntityManager,
+                    @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
+                ) {}`
+                : ""
+        }
+
+        ${
+            hasPositionProp
+                ? `
+                async incrementPositions(${
+                    positionGroupProps.length ? `group: ${positionGroupType},` : ``
+                }lowestPosition: number, highestPosition?: number) {
+                    // Increment positions between newPosition (inclusive) and oldPosition (exclusive)
+                    await this.repository.nativeUpdate(
+                    ${
+                        positionGroupProps.length
+                            ? `{
+                            $and: [
+                                { position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },
+                                this.getPositionGroupCondition(group),
+                            ],
+                        },`
+                            : `{ position: { $gte: lowestPosition, ...(highestPosition ? { $lt: highestPosition } : {}) } },`
+                    }
+                        { position: this.entityManager.raw("position + 1") },
+                    );
+                }
+
+                async decrementPositions(${
+                    positionGroupProps.length ? `group: ${positionGroupType},` : ``
+                }lowestPosition: number, highestPosition?: number) {
+                    // Decrement positions between oldPosition (exclusive) and newPosition (inclusive)
+                    await this.repository.nativeUpdate(
+                    ${
+                        positionGroupProps.length
+                            ? `{
+                            $and: [
+                                { position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },
+                                this.getPositionGroupCondition(group),
+                            ],
+                        },`
+                            : `{ position: { $gt: lowestPosition, ...(highestPosition ? { $lte: highestPosition } : {}) } },`
+                    }
+                        { position: this.entityManager.raw("position - 1") },
+                    );
+                }
+
+                async getLastPosition(${positionGroupProps.length ? `group: ${positionGroupType}` : ``}) {
+                    return this.repository.count(${positionGroupProps.length ? `this.getPositionGroupCondition(group)` : `{}`});
+                }
+
+                ${
+                    positionGroupProps.length
+                        ? `getPositionGroupCondition(group: ${positionGroupType}): FilterQuery<${metadata.className}> {
+                    return {
+                        ${positionGroupProps.map((field) => `${field.name}: { $eq: group.${field.name} }`).join(",")}
+                    };
+                }`
+                        : ``
+                }
+                `
+                : ""
+        }
+    }
+    `;
+    return serviceOut;
+}
+
 function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: string): Imports[0] {
     return {
         name: targetMetadata.className,
@@ -456,9 +577,10 @@ function generateEntityImport(targetMetadata: EntityMetadata<any>, relativeTo: s
 function generateInputHandling(
     options: { mode: "create" | "update" | "updateNested"; inputName: string; assignEntityCode: string; excludeFields?: string[] },
     metadata: EntityMetadata<any>,
+    generatorOptions: CrudGeneratorOptions,
 ): { code: string; injectRepositories: EntityMetadata<any>[] } {
     const { instanceNameSingular } = buildNameVariants(metadata);
-    const { blockProps, scopeProp, dedicatedResolverArgProps } = buildOptions(metadata);
+    const { blockProps, scopeProp, hasPositionProp, dedicatedResolverArgProps } = buildOptions(metadata, generatorOptions);
 
     const injectRepositories: EntityMetadata<any>[] = [];
 
@@ -535,7 +657,7 @@ function generateInputHandling(
     }
     ${options.assignEntityCode}
     ...${noAssignProps.length ? `assignInput` : options.inputName},
-        ${options.mode == "create" && scopeProp ? `scope,` : ""}
+        ${options.mode == "create" && scopeProp ? `scope,` : ""}${options.mode == "create" && hasPositionProp ? `position,` : ""}
         ${
             options.mode == "create"
                 ? dedicatedResolverArgProps
@@ -581,6 +703,7 @@ ${inputRelationToManyProps
                         .map((prop) => prop.name),
                 },
                 prop.targetMeta,
+                generatorOptions,
             );
             const isAsync = code.includes("await ");
             return `if (${prop.name}Input) {
@@ -624,6 +747,7 @@ ${inputRelationOneToOneProps
                             .map((prop) => prop.name),
                     },
                     prop.targetMeta,
+                    generatorOptions,
                 )}
                 ${options.mode != "create" || prop.nullable ? `}` : "}"}`,
     )
@@ -661,7 +785,7 @@ ${
 
 function generateNestedEntityResolver({ generatorOptions, metadata }: { generatorOptions: CrudGeneratorOptions; metadata: EntityMetadata<any> }) {
     const { classNameSingular } = buildNameVariants(metadata);
-    const { skipScopeCheck } = buildOptions(metadata);
+    const { skipScopeCheck } = buildOptions(metadata, generatorOptions);
 
     const imports: Imports = [];
 
@@ -816,10 +940,12 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         hasSearchArg,
         hasSortArg,
         hasFilterArg,
+        hasPositionProp,
+        positionGroupProps,
         statusProp,
         hasStatusFilter,
         dedicatedResolverArgProps,
-    } = buildOptions(metadata);
+    } = buildOptions(metadata, generatorOptions);
 
     const relationManyToOneProps = metadata.props.filter((prop) => prop.reference === "m:1");
     const relationOneToManyProps = metadata.props.filter((prop) => prop.reference === "1:m");
@@ -836,12 +962,14 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     const { code: createInputHandlingCode, injectRepositories: createInputHandlingInjectRepositories } = generateInputHandling(
         { mode: "create", inputName: "input", assignEntityCode: `const ${instanceNameSingular} = this.repository.create({` },
         metadata,
+        generatorOptions,
     );
     injectRepositories.push(...createInputHandlingInjectRepositories);
 
     const { code: updateInputHandlingCode, injectRepositories: updateInputHandlingInjectRepositories } = generateInputHandling(
         { mode: "update", inputName: "input", assignEntityCode: `${instanceNameSingular}.assign({` },
         metadata,
+        generatorOptions,
     );
     injectRepositories.push(...updateInputHandlingInjectRepositories);
 
@@ -901,6 +1029,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { GraphQLResolveInfo } from "graphql";
 
+    ${hasPositionProp ? `import { ${classNamePlural}Service } from "./${fileNamePlural}.service";` : ``}
     import { ${classNameSingular}Input, ${classNameSingular}UpdateInput } from "./dto/${fileNameSingular}.input";
     import { Paginated${classNamePlural} } from "./dto/paginated-${fileNamePlural}";
     import { ${argsClassName} } from "./dto/${argsFileName}";
@@ -910,7 +1039,9 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
     @RequiredPermission(${JSON.stringify(generatorOptions.requiredPermission)}${skipScopeCheck ? `, { skipScopeCheck: true }` : ""})
     export class ${classNameSingular}Resolver {
         constructor(
-            private readonly entityManager: EntityManager,
+            private readonly entityManager: EntityManager,${
+                hasPositionProp ? `private readonly ${instanceNamePlural}Service: ${classNamePlural}Service,` : ``
+            }
             @InjectRepository(${metadata.className}) private readonly repository: EntityRepository<${metadata.className}>,
             ${[...new Set<string>(injectRepositories.map((meta) => meta.className))]
                 .map((type) => `@InjectRepository(${type}) private readonly ${classNameToInstanceName(type)}Repository: EntityRepository<${type}>,`)
@@ -1037,6 +1168,47 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                       })
                       .join("")}@Args("input", { type: () => ${classNameSingular}Input }) input: ${classNameSingular}Input
         ): Promise<${metadata.className}> {
+            ${
+                // use local position-var because typescript does not narrow down input.position, keeping "| undefined" typing resulting in typescript error in create-function
+                hasPositionProp
+                    ? `
+            const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps
+                                    .map((prop) =>
+                                        prop.name === "scope"
+                                            ? `scope`
+                                            : dedicatedResolverArgProps.find(
+                                                  (dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name,
+                                              ) !== undefined
+                                            ? prop.name
+                                            : `${prop.name}: input.${prop.name}`,
+                                    )
+                                    .join(",")} }`
+                              : ``
+                      });
+            let position = input.position;
+            if (position !== undefined && position < lastPosition + 1) {
+                await this.${instanceNamePlural}Service.incrementPositions(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps
+                                    .map((prop) =>
+                                        prop.name === "scope"
+                                            ? `scope`
+                                            : dedicatedResolverArgProps.find(
+                                                  (dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name,
+                                              ) !== undefined
+                                            ? prop.name
+                                            : `${prop.name}: input.${prop.name}`,
+                                    )
+                                    .join(",")} }, `
+                              : ``
+                      }position);
+            } else {
+                position = lastPosition + 1;
+            }`
+                    : ""
+            }
 
             ${createInputHandlingCode}
 
@@ -1058,6 +1230,63 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             @Args("input", { type: () => ${classNameSingular}UpdateInput }) input: ${classNameSingular}UpdateInput
         ): Promise<${metadata.className}> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
+
+            ${
+                hasPositionProp
+                    ? `
+            if (input.position !== undefined) {
+                const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} }`
+                              : ``
+                      });
+                if (input.position > lastPosition + 1) {
+                    input.position = lastPosition + 1;
+                }
+                if (${instanceNameSingular}.position < input.position) {
+                    await this.${instanceNamePlural}Service.decrementPositions(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} },`
+                              : ``
+                      }${instanceNameSingular}.position, input.position);
+                } else if (${instanceNameSingular}.position > input.position) {
+                    await this.${instanceNamePlural}Service.incrementPositions(${
+                          positionGroupProps.length
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} },`
+                              : ``
+                      }input.position, ${instanceNameSingular}.position);
+                }
+            }`
+                    : ""
+            }
+
             ${updateInputHandlingCode}
 
             await this.entityManager.flush();
@@ -1075,7 +1304,24 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         @AffectedEntity(${metadata.className})
         async delete${metadata.className}(${generateIdArg("id", metadata)}): Promise<boolean> {
             const ${instanceNameSingular} = await this.repository.findOneOrFail(id);
-            this.entityManager.remove(${instanceNameSingular});
+            this.entityManager.remove(${instanceNameSingular});${
+                      hasPositionProp
+                          ? `await this.${instanceNamePlural}Service.decrementPositions(${
+                                positionGroupProps.length
+                                    ? `{ ${positionGroupProps
+                                          .map(
+                                              (prop) =>
+                                                  `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                      [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                          ? `${prop.nullable ? `?` : ``}.id`
+                                                          : ``
+                                                  }`,
+                                          )
+                                          .join(",")} },`
+                                    : ``
+                            }${instanceNameSingular}.position);`
+                          : ""
+                  }
             await this.entityManager.flush();
             return true;
         }
@@ -1084,7 +1330,6 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
         }
 
         ${relationsFieldResolverCode}
-
     }
     `;
     return resolverOut;
@@ -1103,7 +1348,7 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
     const generatedFiles: GeneratedFile[] = [];
 
     const { fileNameSingular, fileNamePlural, instanceNamePlural } = buildNameVariants(metadata);
-    const { hasFilterArg, hasSortArg, argsFileName } = buildOptions(metadata);
+    const { hasFilterArg, hasSortArg, argsFileName, hasPositionProp } = buildOptions(metadata, generatorOptions);
     if (!generatorOptions.requiredPermission) generatorOptions.requiredPermission = [instanceNamePlural];
 
     async function generateCrudResolver(): Promise<GeneratedFile[]> {
@@ -1131,6 +1376,13 @@ export async function generateCrud(generatorOptionsParam: CrudGeneratorOptions, 
             content: generateArgsDto({ generatorOptions, metadata }),
             type: "args",
         });
+        if (hasPositionProp) {
+            generatedFiles.push({
+                name: `${fileNamePlural}.service.ts`,
+                content: generateService({ generatorOptions, metadata }),
+                type: "service",
+            });
+        }
         generatedFiles.push({
             name: `${fileNameSingular}.resolver.ts`,
             content: generateResolver({ generatorOptions, metadata }),

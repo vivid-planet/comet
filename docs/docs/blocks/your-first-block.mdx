@@ -56,10 +56,10 @@ Note how we use the `RichTextBlock`, a COMET DXP block, to create our Headline b
 
 Once we have defined the block data, we also need to define the block input. The block input is used to create a new instance of a block. To be more precise, the block input is used to create the block data, which is stored in the database. In most cases, the block input is nearly identical to the block data. For our headline block, the block input should be the following:
 
-<!-- TODO: ein vergleich mit einem DTO und/oder GraphQL Input Type kann vielleicht helfen -->
+<!-- TODO Add a comparison to GraphQL object and input type -->
 
 ```ts title="headline.block.ts"
-import { inputToData } from "@comet/blocks-api";
+import { blockInputToData } from "@comet/cms-api";
 
 class HeadlineBlockInput extends BlockInput {
     @IsOptional()
@@ -76,12 +76,12 @@ class HeadlineBlockInput extends BlockInput {
     level: HeadlineLevel;
 
     transformToBlockData(): HeadlineBlockData {
-        return inputToData(HeadlineBlockData, this);
+        return blockInputToData(HeadlineBlockData, this);
     }
 }
 ```
 
-Note the method called `transformToBlockData()`. This method transforms the block input into the savable block data. As this method is nearly identical for all blocks, we provide a `inputToData` method to create the intended outcome.
+Note the method called `transformToBlockData()`. This method transforms the block input into the savable block data. As this method is nearly identical for all blocks, we provide a `blockInputToData` method to create the intended outcome.
 
 ### Create and Register the Block
 
@@ -105,7 +105,7 @@ export const PageContentBlock = createBlocksBlock(
 );
 ```
 
-The `PageContenBlock` is created using the `createBlocksBlock` helper, which is one of multiple blocks helper. You may ignore the specifics of this root block for now.
+The `PageContentBlock` is created using the `createBlocksBlock` helper, which is one of multiple blocks helper. You may ignore the specifics of this root block for now.
 
 ### Part One - Done!
 
@@ -126,8 +126,8 @@ The complete code for our Headline API block (including all necessary imports) c
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+    blockInputToData,
+} from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";\n
 export enum HeadlineLevel {
@@ -158,7 +158,7 @@ export class HeadlineBlockInput extends BlockInput {
     @BlockField({ type: "enum", enum: HeadlineLevel })
     level: HeadlineLevel;\n
     transformToBlockData(): HeadlineBlockData {
-        return inputToData(HeadlineBlockData, this);
+        return blockInputToData(HeadlineBlockData, this);
     }
 }\n
 export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, "Headline");
@@ -226,8 +226,6 @@ export const HeadlineBlock = createCompositeBlock(
 ```
 
 Please note that the names of the keys of the `blocks` object must be the same as the name of fields in the the API block (eyebrow, headline and level).
-
-<!-- wollten wir nicht eher createCompositeSettings präferieren? -->
 
 ### The Admin Component
 
