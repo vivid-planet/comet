@@ -1,47 +1,12 @@
-import { BlockCategory, createCompositeBlock } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
-import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
-import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
-import { ColumnsBlock } from "@src/pages/blocks/ColumnsBlock";
+import { createListBlock } from "@comet/blocks-admin";
 import { FormattedMessage } from "react-intl";
 
-const TeaserBlock = createCompositeBlock(
-    {
-        name: "Teaser",
-        displayName: <FormattedMessage id="blocks.teaser" defaultMessage="Teaser" />,
-        blocks: {
-            // Normal
-            headline: {
-                block: HeadlineBlock,
-                title: <FormattedMessage id="blocks.teaser.headline" defaultMessage="Headline" />,
-            },
-            // Nested
-            image: {
-                block: DamImageBlock,
-                title: <FormattedMessage id="blocks.teaser.image" defaultMessage="Image" />,
-                nested: true,
-            },
-            // Subroutes
-            links: {
-                block: LinkListBlock,
-                title: <FormattedMessage id="blocks.teaser.links" defaultMessage="Links" />,
-            },
-            // Nested inner subroutes
-            buttons: {
-                block: LinkListBlock,
-                title: <FormattedMessage id="blocks.teaser.buttons" defaultMessage="Buttons" />,
-                nested: true,
-            },
-            columns: {
-                block: ColumnsBlock,
-                title: <FormattedMessage id="blocks.teaser.columns" defaultMessage="Columns" />,
-            },
-        },
-    },
-    (block) => {
-        block.category = BlockCategory.Teaser;
-        return block;
-    },
-);
+import { TeaserItemBlock } from "./TeaserItemBlock";
 
-export { TeaserBlock };
+export const TeaserBlock = createListBlock({
+    name: "Teaser",
+    displayName: <FormattedMessage id="teaserBlock.displayName" defaultMessage="Teaser" />,
+    block: TeaserItemBlock,
+    itemName: <FormattedMessage id="teaserItemsBlock.itemName" defaultMessage="item" />,
+    itemsName: <FormattedMessage id="teaserItemsBlock.itemsName" defaultMessage="items" />,
+});
