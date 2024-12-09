@@ -120,7 +120,6 @@ const OuterFrame = styled("div", { shouldForwardProp: (prop) => prop !== "device
             width: ${deviceConfig.outerFrame.width}px;
             height: ${deviceConfig.outerFrame.height}px;
             padding: ${deviceConfig.outerFrame.padding};
-            overflow: hidden;
         `}
 `;
 
