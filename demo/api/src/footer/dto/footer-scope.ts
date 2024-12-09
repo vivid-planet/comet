@@ -14,5 +14,5 @@ export class FooterScope {
     @Property({ columnType: "text" })
     @Field()
     @IsString()
-    project: string;
+    language: string;
 }
