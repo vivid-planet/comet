@@ -1,13 +1,4 @@
-import {
-    FormControl,
-    FormHelperText,
-    formHelperTextClasses,
-    FormLabel,
-    formLabelClasses,
-    inputBaseClasses,
-    svgIconClasses,
-    useThemeProps,
-} from "@mui/material";
+import { FormControl, FormHelperText, FormLabel, formLabelClasses, inputBaseClasses, svgIconClasses, useThemeProps } from "@mui/material";
 import { ComponentsOverrides, css, Theme } from "@mui/material/styles";
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
@@ -194,10 +185,8 @@ const InputContainer = createComponentSlot("div")<FieldContainerClassKey, OwnerS
 );
 
 const getCommonHelperTextStyles = (theme: Theme) => css`
-    &.${formHelperTextClasses.root} {
-        display: flex;
-        gap: ${theme.spacing(1)};
-    }
+    display: flex;
+    gap: ${theme.spacing(1)};
 
     > .${svgIconClasses.root} {
         width: 12px;
