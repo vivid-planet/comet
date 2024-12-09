@@ -1,61 +1,3 @@
-export interface Breakpoint {
-    mediaQuery: string;
-    value: number;
-}
-
-export type ThemeBreakpoints = {
-    b560: Breakpoint;
-    b960: Breakpoint;
-    b1280: Breakpoint;
-    b1600: Breakpoint;
-    b1920: Breakpoint;
-};
-
-export interface Theme {
-    colors: {
-        primary: string;
-        textPrimary: string;
-        lightGray: string;
-        white: string;
-        black: string;
-        lightBackground: string;
-        linkBlue: string;
-        darkBlue: string;
-        darkBlueSec: string;
-        purple: string;
-        n050: string;
-        n100: string;
-        n200: string;
-        n300: string;
-        n400: string;
-        n500: string;
-        n600: string;
-        n700: string;
-        n800: string;
-        n900: string;
-    };
-    fonts: {
-        primary: string;
-    };
-    breakpoints: {
-        xs: Breakpoint;
-        sm: Breakpoint;
-        md: Breakpoint;
-        lg: Breakpoint;
-    };
-    easings: {
-        easeOutCubic: string;
-        easeInOutSine: string;
-        easeInOutQuad: string;
-        easeInCubic: string;
-    };
-}
-
-declare module "styled-components" {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    export interface DefaultTheme extends Theme {}
-}
-
 const createBreakpoint = (value: number) => {
     return {
         mediaQuery: `@media (min-width: ${value}px)`,
@@ -63,7 +5,7 @@ const createBreakpoint = (value: number) => {
     };
 };
 
-const theme = {
+export const theme = {
     palette: {
         primary: {
             light: "#73E8FF",
@@ -135,3 +77,10 @@ const theme = {
 };
 
 export default theme;
+
+type Theme = typeof theme;
+
+declare module "styled-components" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    export interface DefaultTheme extends Theme {}
+}

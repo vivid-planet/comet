@@ -1,6 +1,6 @@
 "use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
-import { DemoSpaceBlockData } from "@src/blocks.generated";
+import { SpaceBlockData } from "@src/blocks.generated";
 
 const SpaceMapping: Record<string, number> = {
     d150: 10,
@@ -15,7 +15,7 @@ const SpaceMapping: Record<string, number> = {
     d600: 300,
 };
 
-const SpaceBlock = ({ data: { spacing } }: PropsWithData<DemoSpaceBlockData>) => {
+const SpaceBlock = ({ data: { spacing } }: PropsWithData<SpaceBlockData>) => {
     return <div style={{ height: `${SpaceMapping[spacing]}px` }} />;
 };
 

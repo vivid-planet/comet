@@ -1,12 +1,12 @@
 "use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
-import { DemoTextLinkBlockData } from "@src/blocks.generated";
+import { TextLinkBlockData } from "@src/blocks.generated";
 import styled from "styled-components";
 
 import { LinkBlock } from "./LinkBlock";
 
 export const TextLinkBlock = withPreview(
-    ({ data: { link, text } }: PropsWithData<DemoTextLinkBlockData>) => {
+    ({ data: { link, text } }: PropsWithData<TextLinkBlockData>) => {
         if (link.block && link.block.type === "damFileDownload" && "file" in link.block.props && link.block.props.file) {
             return (
                 <Link data={link}>
