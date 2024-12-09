@@ -1,6 +1,6 @@
 import { Transform } from "class-transformer";
 
-import { Block, isBlockDataInterface } from "../block";
+import { Block, isBlockDataInterface, registerBlock } from "../block";
 import { BlockField } from "./field";
 
 interface ChildBlockOptions {
@@ -13,6 +13,8 @@ interface ChildBlockOptions {
 }
 export function ChildBlock(block: Block, options?: ChildBlockOptions): PropertyDecorator {
     const nullable = options?.nullable ? true : false;
+
+    registerBlock(block);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (target: any, key: string | symbol) {

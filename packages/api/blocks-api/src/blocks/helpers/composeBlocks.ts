@@ -43,6 +43,14 @@ export function composeBlocks<BlockMap extends BaseBlockMap>(
     { blocks }: Options<BlockMap>,
     name: string,
 ): Block<BlockDataInterface, CompositeBlockInputInterface<BlockMap>> {
+    for (const block in blocks) {
+        if (!blocks[block]) {
+            throw new Error(`Supported block '${block}' is undefined. This is most likely due to a circular import`);
+        }
+
+        registerBlock(blocks[block]);
+    }
+
     @BlockDataMigrationVersion(MIGRATE.version)
     class CompositeBlock extends BlockData implements BlockDataInterface {
         public _blockMap: Record<keyof BlockMap, BlockDataInterface>;
@@ -154,8 +162,6 @@ export function composeBlocks<BlockMap extends BaseBlockMap>(
             }),
         },
     };
-
-    registerBlock(block);
 
     return block;
 }
