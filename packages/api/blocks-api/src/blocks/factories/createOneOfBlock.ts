@@ -26,10 +26,10 @@ import { BlockFactoryNameOrOptions } from "./types";
 
 type BaseBlockMap = Record<string, Block<BlockDataInterface, BlockInputInterface>>;
 
-interface OneOfBlockDataInterface<BlockMap extends BaseBlockMap> extends BlockDataInterface {
+type OneOfBlockDataInterface<BlockMap extends BaseBlockMap, BlockData = BlockDataInterface> = BlockData & {
     attachedBlocks: SupportedBlocksDataInterfaces<BlockMap>[];
     activeType?: keyof BlockMap;
-}
+};
 
 type SupportedBlocksDataInterfaces<BlockMap extends BaseBlockMap> = {
     [Typename in keyof BlockMap]: BlockDataInterface & {
@@ -38,10 +38,10 @@ type SupportedBlocksDataInterfaces<BlockMap extends BaseBlockMap> = {
     };
 }[keyof BlockMap];
 
-interface OneOfBlockInputInterface<BlockMap extends BaseBlockMap> extends SimpleBlockInputInterface {
+type OneOfBlockInputInterface<BlockMap extends BaseBlockMap, BlockInput = SimpleBlockInputInterface> = BlockInput & {
     attachedBlocks: SupportedBlocksInputInterfaces<BlockMap>[];
     activeType?: keyof BlockMap;
-}
+};
 
 type SupportedBlocksInputInterfaces<BlockMap extends BaseBlockMap> = {
     [Typename in keyof BlockMap]: SimpleBlockInputInterface & {
@@ -250,7 +250,11 @@ export function BaseOneOfBlockInput<BlockMap extends BaseBlockMap>({
     return OneOfBlockInput;
 }
 
-export type OneOfBlock<BlockMap extends BaseBlockMap> = Block<OneOfBlockDataInterface<BlockMap>, OneOfBlockInputInterface<BlockMap>>;
+export type OneOfBlock<
+    BlockMap extends BaseBlockMap,
+    BlockData extends BlockDataInterface = BlockDataInterface,
+    BlockInput extends SimpleBlockInputInterface = SimpleBlockInputInterface,
+> = Block<OneOfBlockDataInterface<BlockMap, BlockData>, OneOfBlockInputInterface<BlockMap, BlockInput>>;
 
 export interface CreateOneOfBlockOptions<BlockMap extends BaseBlockMap> {
     supportedBlocks: BlockMap;
@@ -261,7 +265,11 @@ export interface CreateOneOfBlockOptions<BlockMap extends BaseBlockMap> {
     OneOfBlockInput?: Type<OneOfBlockInputInterface<BlockMap>>;
 }
 
-export function createOneOfBlock<BlockMap extends BaseBlockMap>(
+export function createOneOfBlock<
+    BlockMap extends BaseBlockMap,
+    BlockData extends BlockDataInterface = BlockDataInterface,
+    BlockInput extends SimpleBlockInputInterface = SimpleBlockInputInterface,
+>(
     {
         supportedBlocks,
         allowEmpty = true,
@@ -271,7 +279,7 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
         OneOfBlockInput = BaseOneOfBlockInput({ supportedBlocks, allowEmpty, OneOfBlockData, OneOfBlockItemInput }),
     }: CreateOneOfBlockOptions<BlockMap>,
     nameOrOptions: BlockFactoryNameOrOptions,
-): OneOfBlock<BlockMap> {
+): OneOfBlock<BlockMap, BlockData, BlockInput> {
     class Meta extends AnnotationBlockMeta {
         get fields(): BlockMetaField[] {
             const attachedBlocksField: BlockMetaField = {
@@ -319,5 +327,9 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
         migrate = nameOrOptions.migrate;
     }
 
-    return createBlock(OneOfBlockData, OneOfBlockInput, { name, blockMeta: new Meta(OneOfBlockData), migrate });
+    return createBlock(OneOfBlockData, OneOfBlockInput, {
+        name,
+        blockMeta: new Meta(OneOfBlockData),
+        migrate,
+    }) as unknown as OneOfBlock<BlockMap, BlockData, BlockInput>;
 }
