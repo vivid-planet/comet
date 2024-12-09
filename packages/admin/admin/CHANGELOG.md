@@ -1,5 +1,57 @@
 # @comet/admin
 
+## 7.10.0
+
+### Minor Changes
+
+-   8f924d591: Add new custom `Dialog`
+
+    The component extends the MUI `Dialog` component to enable common use cases:
+
+    -   The `title` prop can be used to set the dialog title
+    -   A close button is shown when the `onClose` is used
+
+    **Example**
+
+    ```tsx
+    <Dialog
+        title="Dialog Title"
+        onClose={() => {
+            // Handle dialog closing here
+        }}
+    />
+    ```
+
+-   6eba5abea: Add a `forceVerticalContainerSize` prop to `FieldContainer`
+
+    Use it to define below which container size the `vertical` styling is applied when using the `horizontal` variant.
+
+-   589b0b9ee: Enhance `FieldContainer` with `secondaryHelperText` prop and `helperTextIcon` prop
+
+    -   `helperTextIcon` displays an icon alongside the text for `helperText`, `error` or `warning`.
+    -   `secondaryHelperText` provides an additional helper text positioned beneath the input field, aligned to the bottom-right corner.
+
+    **Example:**
+
+    ```tsx
+    <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon" secondaryHelperText="0/100">
+        <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+    </FieldContainer>
+    ```
+
+### Patch Changes
+
+-   aa02ca13f: Fix a bug in `useDataGridExcelExport` that would cause an Excel export to fail when a cell's value was `undefined`
+-   6eba5abea: Prevent unintended layout shift after the initial render of `FieldContainer` when using the `horizontal` variant
+-   bf6b03fe0: Fix alignment of `Alert` icon with the title
+-   Updated dependencies [7e94c55f6]
+-   Updated dependencies [22f3d402e]
+-   Updated dependencies [b51bf6d85]
+-   Updated dependencies [71876ea69]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin-theme@7.10.0
+    -   @comet/admin-icons@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes
