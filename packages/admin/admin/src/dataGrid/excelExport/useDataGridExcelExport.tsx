@@ -40,6 +40,7 @@ export function useDataGridExcelExport<Row extends GridValidRowModel, GQLQuery, 
                 styling,
             } = exportOptions;
             const workbook = generateExcelFile<Row>(columns, data, { worksheetName, styling });
+
             workbook.xlsx.writeBuffer().then((buffer) => {
                 saveAs(new Blob([buffer]), safeFileNameWithExtension(fileName));
             });
