@@ -2,4 +2,4 @@
 "@comet/admin": patch
 ---
 
-Fix alignment of `Alert` Icon with the Title
+Fix alignment of `Alert` icon with the title
