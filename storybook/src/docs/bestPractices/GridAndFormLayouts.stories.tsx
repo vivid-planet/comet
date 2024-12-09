@@ -194,12 +194,10 @@ export const LargeFormOnAPage = {
     },
 };
 
-// TODO: Shows dirty handler dialog after save
 export const SimpleFormInADialog = {
     render: () => {
         const Form = ({ id, mode }: { id?: string; mode?: "edit" | "add" }) => {
             const { rows, loading } = useData();
-            // const editingExistingItem = Boolean(id);
 
             if (loading) {
                 return <Loading />;
@@ -207,8 +205,8 @@ export const SimpleFormInADialog = {
 
             return (
                 <FinalForm
-                    onSubmit={(values: FormValues) => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={mode ?? "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -244,7 +242,6 @@ export const SimpleFormInADialog = {
     },
 };
 
-// TODO: Shows dirty handler dialog after save
 export const LargeFormInADialog = {
     render: () => {
         const Form = ({ id }: { id?: string }) => {
@@ -257,8 +254,8 @@ export const LargeFormInADialog = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -384,7 +381,6 @@ export const SingleGridAutoHeight = {
     },
 };
 
-// TODO: Shows dirty handler dialog after save
 export const GridWithFormInADialog = {
     render: () => {
         const Form = ({ id }: { id?: string }) => {
@@ -397,8 +393,8 @@ export const GridWithFormInADialog = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -475,8 +471,8 @@ export const GridWithFormOnAPage = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -574,7 +570,6 @@ export const GridWithFormOnAPage = {
     },
 };
 
-// TODO: Shows dirty handler dialog after save
 export const NestedGridsAndFormsWithTabs = {
     render: () => {
         const Form = ({ id }: { id?: string }) => {
@@ -587,8 +582,8 @@ export const NestedGridsAndFormsWithTabs = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
@@ -696,7 +691,6 @@ export const NestedGridsAndFormsWithTabs = {
     },
 };
 
-// TODO: Shows dirty handler dialog after save
 export const NestedFormInGridInTabsInGrid = {
     render: () => {
         const Form = ({ id }: { id?: string }) => {
@@ -709,8 +703,8 @@ export const NestedFormInGridInTabsInGrid = {
 
             return (
                 <FinalForm
-                    onSubmit={() => {
-                        // Submit data
+                    onSubmit={async ({ title, description }) => {
+                        window.alert(`title: ${title}\ndescription: ${description}`);
                     }}
                     mode={editingExistingItem ? "edit" : "add"}
                     initialValues={rows.find((row) => row.id === id)}
