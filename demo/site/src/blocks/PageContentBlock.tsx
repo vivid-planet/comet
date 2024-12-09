@@ -32,7 +32,7 @@ const supportedBlocks: SupportedBlocks = {
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
     columns: (props) => <ColumnsBlock data={props} />,
     anchor: (props) => <AnchorBlock data={props} />,
-    media: (props) => <MediaBlock data={props} />,
+    media: (props) => <MediaBlock data={props} aspectRatio="inherit" />,
     twoLists: (props) => <TwoListsBlock data={props} />,
     teaser: (props) => <TeaserBlock data={props} />,
     newsDetail: (props) => <NewsDetailBlock data={props} />,
