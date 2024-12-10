@@ -6,10 +6,11 @@ import { Chip } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { GQLLink, GQLLinkInput } from "@src/graphql.generated";
-import { EditLink } from "@src/links/EditLink";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
+
+import { EditLink } from "./EditLink";
 
 const rootBlocks = {
     content: LinkBlock,

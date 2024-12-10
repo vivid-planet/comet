@@ -3,7 +3,6 @@ import { File, FileNotMenu } from "@comet/admin-icons";
 import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
 import { Chip } from "@mui/material";
-import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode";
 import { GQLPage, GQLPageInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
@@ -11,6 +10,7 @@ import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
 import { PageContentBlock } from "./blocks/PageContentBlock";
+import { SeoBlock } from "./blocks/SeoBlock";
 import { EditPage } from "./EditPage";
 
 const rootBlocks = {
