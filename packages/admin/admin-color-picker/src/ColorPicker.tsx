@@ -30,7 +30,7 @@ import {
 } from "./ColorPicker.slots";
 
 export interface ColorPickerColorPreviewProps extends Omit<HTMLAttributes<HTMLDivElement>, "color">, PreviewIndicatorColorProps {}
-interface ColorPickerNoColorPreviewProps extends HTMLAttributes<HTMLDivElement>, PreviewIndicatorEmptyOrInvalidProps {}
+export interface ColorPickerNoColorPreviewProps extends HTMLAttributes<HTMLDivElement>, PreviewIndicatorEmptyOrInvalidProps {}
 
 export interface ColorPickerPropsComponents extends InputWithPopperComponents {
     ColorPickerColorPreview?: ComponentType<ColorPickerColorPreviewProps>;
