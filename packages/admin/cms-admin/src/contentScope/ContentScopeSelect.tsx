@@ -1,5 +1,5 @@
 import { AppHeaderDropdown, ClearInputAdornment } from "@comet/admin";
-import { Domain, Search } from "@comet/admin-icons";
+import { Domain, Language, Search } from "@comet/admin-icons";
 import {
     Box,
     Divider,
@@ -42,7 +42,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
     options,
     searchable,
     groupBy,
-    icon = <Domain />,
+    icon = <Language />,
     renderOption,
     renderSelectedOption,
 }: Props<Value>) {
