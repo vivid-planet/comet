@@ -13,7 +13,7 @@ import { useDependenciesConfig } from "./DependenciesConfig";
 import * as sc from "./DependencyList.sc";
 import { DependencyInterface } from "./types";
 
-export type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
+type DependencyItem = Pick<GQLDependency, "name" | "secondaryInformation" | "rootColumnName" | "jsonPath"> & {
     id: string;
     graphqlObjectType: string;
 };

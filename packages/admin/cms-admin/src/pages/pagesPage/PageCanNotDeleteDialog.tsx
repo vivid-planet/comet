@@ -2,7 +2,7 @@ import { messages } from "@comet/admin";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-export interface PageCanNotDeleteDialogProps {
+interface PageCanNotDeleteDialogProps {
     dialogOpen: boolean;
     onClosePressed: () => void;
 }

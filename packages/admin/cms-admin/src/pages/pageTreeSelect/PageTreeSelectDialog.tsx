@@ -23,7 +23,7 @@ import { PageTreePage, usePageTree } from "../pageTree/usePageTree";
 import { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
 import * as sc from "./PageTreeSelectDialog.sc";
 
-export { GQLSelectedPageFragment } from "./PageTreeSelectDialog.generated";
+export { GQLSelectedPageFragment };
 
 export const selectedPageFragment = gql`
     fragment SelectedPage on PageTreeNode {

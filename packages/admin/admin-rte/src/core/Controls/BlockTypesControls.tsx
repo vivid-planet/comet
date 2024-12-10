@@ -66,7 +66,7 @@ const Select = createComponentSlot(MuiSelect)<RteBlockTypeControlsClassKey>({
         `,
 );
 
-export function StyledBlockTypesControls(inProps: Props) {
+function StyledBlockTypesControls(inProps: Props) {
     const { disabled, blockTypes, slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminRteBlockTypeControls" });
     const { dropdownFeatures, activeDropdownBlockType, handleBlockTypeChange } = blockTypes;
 

@@ -3,6 +3,7 @@ import { DocumentNode } from "graphql";
 
 import { pageSearchFragment } from "../pageSearch/usePageSearch";
 import { pageTreePageFragment } from "../pageTree/usePageTree";
+import { selectedPageFragment } from "../pageTreeSelect/PageTreeSelectDialog";
 
 export { GQLPageTreePageFragment } from "../pageTree/usePageTree";
 export { GQLPagesQuery, GQLPagesQueryVariables } from "./createPagesQuery.generated";
@@ -18,9 +19,11 @@ export const createPagesQuery = ({ additionalPageTreeNodeFragment }: CreatePages
                 id
                 ...PageTreePage
                 ...PageSearch
+                ...SelectedPage
                 ${additionalPageTreeNodeFragment ? "...".concat(additionalPageTreeNodeFragment.name) : ""}
             }
         }
+        ${selectedPageFragment}
         ${pageTreePageFragment}
         ${pageSearchFragment}
         ${additionalPageTreeNodeFragment?.fragment ?? ""}

@@ -107,7 +107,7 @@ export const DatePickerNavigation = (inProps: DatePickerNavigationProps) => {
     );
 };
 
-export type DatePickerNavigationClassKey =
+type DatePickerNavigationClassKey =
     | "root"
     | "selectButton"
     | "selectMonthButton"

@@ -24,7 +24,7 @@ interface ConfirmActionState {
     handleAction: () => void;
 }
 
-export interface PagesPageActionToolbarProps {
+interface PagesPageActionToolbarProps {
     selectedState: PageTreeSelectionState;
     onSelectAllPressed: () => void;
 

@@ -3,7 +3,9 @@
 import type { PublicSiteConfig } from "@src/site-configs.d";
 import { createContext, PropsWithChildren, useContext } from "react";
 
-export const SiteConfigContext = createContext<PublicSiteConfig | undefined>(undefined);
+const SiteConfigContext = createContext<PublicSiteConfig | undefined>(undefined);
+
+/** @knipignore */
 export const useSiteConfig = () => {
     const siteConfig = useContext(SiteConfigContext);
     if (!siteConfig) throw new Error("SiteConfig not set in SiteConfigProvider");

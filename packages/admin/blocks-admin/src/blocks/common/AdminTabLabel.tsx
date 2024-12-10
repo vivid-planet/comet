@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 
 import { usePromise } from "../../common/usePromise";
 
-export interface AdminTabLabelProps {
+interface AdminTabLabelProps {
     isValid?: () => Promise<boolean> | boolean;
 }
 

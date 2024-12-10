@@ -16,7 +16,7 @@ export const IsLinkTarget = () => {
 
 @ValidatorConstraint({ name: "IsLinkTarget" })
 @Injectable()
-export class IsLinkTargetConstraint implements ValidatorConstraintInterface {
+class IsLinkTargetConstraint implements ValidatorConstraintInterface {
     validate(value: unknown): boolean {
         if (!isString(value)) {
             return false;

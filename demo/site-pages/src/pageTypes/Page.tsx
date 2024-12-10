@@ -10,7 +10,7 @@ import Head from "next/head";
 import { GQLPageQuery } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
-export const pageQuery = gql`
+const pageQuery = gql`
     query Page($pageTreeNodeId: ID!, $domain: String!, $language: String!) {
         pageContent: pageTreeNode(id: $pageTreeNodeId) {
             document {
