@@ -10,7 +10,7 @@ const createBreakpoint = (value: number): Breakpoint => {
     };
 };
 
-export type ThemeBreakpoints = {
+type ThemeBreakpoints = {
     b560: Breakpoint;
     b960: Breakpoint;
     b1280: Breakpoint;
