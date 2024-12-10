@@ -49,7 +49,7 @@ export interface OneOfBlockPreviewState extends PreviewStateInterface {
 
 type ActiveType<Config extends boolean> = Config extends false ? { activeType: string } : { activeType?: string };
 
-type OneOfBlockOutput<Config extends boolean> = {
+export type OneOfBlockOutput<Config extends boolean> = {
     attachedBlocks: {
         type: string;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
