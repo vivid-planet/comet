@@ -3,11 +3,11 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { DamScope } from "@src/dam/dto/dam-scope";
+import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
+import { PageInput } from "@src/documents/pages/dto/page.input";
+import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
-import { PageContentBlock } from "@src/pages/blocks/page-content.block";
-import { PageInput } from "@src/pages/dto/page.input";
-import { Page } from "@src/pages/entities/page.entity";
 import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 
@@ -82,6 +82,7 @@ export class ManyImagesTestPageFixtureService {
                 seo: pageInput.seo.transformToBlockData(),
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                stage: pageInput.stage.transformToBlockData(),
             }),
         );
     }

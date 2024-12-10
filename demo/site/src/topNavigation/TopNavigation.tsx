@@ -1,5 +1,5 @@
 "use client";
-import { PageLink } from "@src/header/PageLink";
+import { PageLink } from "@src/layout/header/PageLink";
 import styled from "styled-components";
 
 import { GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
