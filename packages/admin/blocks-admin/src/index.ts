@@ -13,6 +13,7 @@ export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
 export { ColumnsLayoutPreview, ColumnsLayoutPreviewContent, ColumnsLayoutPreviewSpacing } from "./blocks/factories/columnsBlock/ColumnsLayoutPreview";
 export { FinalFormLayoutSelect } from "./blocks/factories/columnsBlock/FinalFormLayoutSelect";
 export type { BlocksBlockFragment, BlocksBlockState } from "./blocks/factories/createBlocksBlock";
+export { BlocksBlockOutput } from "./blocks/factories/createBlocksBlock";
 export { createBlocksBlock } from "./blocks/factories/createBlocksBlock";
 export type { ColumnsBlockLayout } from "./blocks/factories/createColumnsBlock";
 export { createColumnsBlock } from "./blocks/factories/createColumnsBlock";
