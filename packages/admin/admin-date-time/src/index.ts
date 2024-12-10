@@ -57,5 +57,6 @@ export {
     FinalFormTimeRangePickerProps,
 } from "./timeRangePicker/FinalFormTimeRangePicker";
 export { TimeRangeField, TimeRangeFieldProps } from "./timeRangePicker/TimeRangeField";
+export { TimeRangePickerClassKey } from "./timeRangePicker/TimeRangePicker";
 export { TimeRange, TimeRangePicker, TimeRangePickerProps } from "./timeRangePicker/TimeRangePicker";
 export { DateFnsLocaleContext, DateFnsLocaleProvider, useDateFnsLocale } from "./utils/DateFnsLocaleProvider";
