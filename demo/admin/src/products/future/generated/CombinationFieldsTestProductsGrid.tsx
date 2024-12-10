@@ -19,7 +19,7 @@ import {
 } from "@comet/admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { ReactNode } from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import {
@@ -90,13 +90,13 @@ function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps)
 }
 
 type Props = {
-    toolbarAction?: React.ReactNode;
+    toolbarAction?: ReactNode;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    rowAction?: (params: GridRenderCellParams<any, GQLCombinationFieldsTestProductsGridFutureFragment, any>) => React.ReactNode;
+    rowAction?: (params: GridRenderCellParams<any, GQLCombinationFieldsTestProductsGridFutureFragment, any>) => ReactNode;
     actionsColumnWidth?: number;
 };
 
-export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props): React.ReactElement {
+export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52 }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("ProductsGrid") };
