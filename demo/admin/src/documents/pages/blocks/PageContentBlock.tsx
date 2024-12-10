@@ -18,7 +18,6 @@ import { ContentGroupBlock } from "./ContentGroupBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { ImageLinkBlock } from "./ImageLinkBlock";
 import { KeyFactsBlock } from "./KeyFactsBlock";
-import { LayoutBlock } from "./LayoutBlock";
 import { TeaserBlock } from "./TeaserBlock";
 
 export const PageContentBlock = createBlocksBlock({
@@ -35,7 +34,6 @@ export const PageContentBlock = createBlocksBlock({
         image: DamImageBlock,
         imageLink: ImageLinkBlock,
         keyFacts: KeyFactsBlock,
-        layout: LayoutBlock,
         linkList: LinkListBlock,
         media: StandaloneMediaBlock,
         mediaGallery: MediaGalleryBlock,

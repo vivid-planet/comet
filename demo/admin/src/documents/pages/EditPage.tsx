@@ -15,14 +15,14 @@ import {
     useSiteConfig,
 } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { SeoBlock } from "@src/common/blocks/SeoBlock";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useRouteMatch } from "react-router";
 
+import { PageContentBlock } from "./blocks/PageContentBlock";
+import { SeoBlock } from "./blocks/SeoBlock";
 import { GQLEditPageQuery, GQLEditPageQueryVariables, GQLUpdatePageMutation, GQLUpdatePageMutationVariables } from "./EditPage.generated";
-import { PageContentBlock } from "./PageContentBlock";
 
 const pageDependenciesQuery = gql`
     query PageDependencies($id: ID!, $offset: Int!, $limit: Int!, $forceRefresh: Boolean = false) {
