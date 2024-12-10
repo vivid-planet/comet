@@ -22,6 +22,7 @@ export type { ListBlockFragment, ListBlockState } from "./blocks/factories/creat
 export { ListBlockOutput } from "./blocks/factories/createListBlock";
 export { createListBlock } from "./blocks/factories/createListBlock";
 export type { CreateOneOfBlockOptions, OneOfBlockFragment, OneOfBlockState } from "./blocks/factories/createOneOfBlock";
+export { OneOfBlockOutput } from "./blocks/factories/createOneOfBlock";
 export { OneOfBlockPreviewState } from "./blocks/factories/createOneOfBlock";
 export { createOneOfBlock } from "./blocks/factories/createOneOfBlock";
 export type { OptionalBlockDecoratorFragment, OptionalBlockState } from "./blocks/factories/createOptionalBlock";
