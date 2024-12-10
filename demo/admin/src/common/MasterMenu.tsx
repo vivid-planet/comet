@@ -29,6 +29,7 @@ import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/product
 import { ManufacturersPage as FutureManufacturersPage } from "@src/products/future/ManufacturersPage";
 import { ProductsPage as FutureProductsPage } from "@src/products/future/ProductsPage";
 import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src/products/future/ProductsWithLowPricePage";
+import { ProductVariantsPage } from "@src/products/future/ProductVariantsPage";
 import { ProductsPage } from "@src/products/generated/ProductsPage";
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
@@ -246,6 +247,14 @@ export const masterMenuData: MasterMenuData = [
                         route: {
                             path: "/combination-fields-test-products-future",
                             component: CombinationFieldsTestProductsPage,
+                        },
+                    },
+                    {
+                        type: "route",
+                        primary: <FormattedMessage id="menu.productVariantsFuture" defaultMessage="Product Variants" />,
+                        route: {
+                            path: "/product-variants",
+                            component: ProductVariantsPage,
                         },
                     },
                 ],
