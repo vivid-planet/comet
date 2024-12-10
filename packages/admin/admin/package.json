@@ -32,7 +32,7 @@
         "@comet/admin-theme": "workspace:^7.10.0",
         "@mui/lab": "^6.0.0-beta.10",
         "@mui/private-theming": "^6.0.0",
-        "clsx": "^1.1.1",
+        "clsx": "^1.2.1",
         "exceljs": "^4.4.0",
         "file-saver": "^2.0.2",
         "final-form-set-field-data": "^1.0.2",
