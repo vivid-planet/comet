@@ -146,11 +146,11 @@ export async function writeCrudGrid(
                     gridType = "boolean" as const;
                 } else if (type.name == "DateTime") {
                     gridType = "dateTime" as const;
-                    valueGetter = `({ value }) => value && new Date(value)`;
+                    valueGetter = `(value) => value && new Date(value)`;
                 } else if (type.name == "Date") {
                     // ISO date
                     gridType = "date" as const;
-                    valueGetter = `({ value }) => value && new Date(value)`;
+                    valueGetter = `(value) => value && new Date(value)`;
                 } else {
                     if (rootBlocks[field.name]) {
                         renderCell = `(params) => {

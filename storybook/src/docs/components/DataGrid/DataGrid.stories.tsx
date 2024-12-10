@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudMoreActionsMenu,
+    dataGridDateTimeColumn,
     DataGridToolbar,
     FileIcon,
     GridColDef,
@@ -68,8 +69,7 @@ export const UseDataGridRemote = {
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
-                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
+                ...dataGridDateTimeColumn,
             },
         ];
 
@@ -126,8 +126,7 @@ export const UseDataGridRemoteInitialSort = {
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
-                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
+                ...dataGridDateTimeColumn,
             },
         ];
 
@@ -185,8 +184,7 @@ export const UseDataGridRemoteInitialFilter = {
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
-                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
+                ...dataGridDateTimeColumn,
                 flex: 1,
             },
         ];
@@ -402,8 +400,7 @@ export const UseDataGridExcelExport = {
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
-                valueGetter: (params, row) => row.launch_date_local && new Date(row.launch_date_local),
+                ...dataGridDateTimeColumn,
             },
         ];
 
