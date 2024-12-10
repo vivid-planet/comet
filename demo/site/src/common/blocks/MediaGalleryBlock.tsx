@@ -1,19 +1,38 @@
 import "swiper/css";
 import "swiper/css/navigation";
 
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { isWithPreviewPropsData, PropsWithData, usePreview, withPreview } from "@comet/cms-site";
 import { MediaGalleryBlockData } from "@src/blocks.generated";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 
 type MediaGalleryBlockProps = PropsWithData<MediaGalleryBlockData>;
 
 export const MediaGalleryBlock = withPreview(
     ({ data }: MediaGalleryBlockProps) => {
+        const [swiper, setSwiper] = useState<SwiperClass>();
+        const { isSelected, isHovered } = usePreview();
+
+        useEffect(() => {
+            if (!swiper) {
+                return;
+            }
+
+            data.items.blocks.forEach((block, index) => {
+                if (isWithPreviewPropsData(block)) {
+                    const url = block.adminMeta?.route;
+                    if (url && (isSelected(url) || isHovered(url))) {
+                        swiper.slideTo(index);
+                    }
+                }
+            });
+        }, [swiper, isSelected, isHovered, data.items.blocks]);
+
         const aspectRatioValues = data.aspectRatio.split("x");
 
         return (
@@ -28,6 +47,7 @@ export const MediaGalleryBlock = withPreview(
                 watchOverflow
                 $aspectRatioHorizontal={aspectRatioValues[0]}
                 $aspectRatioVertical={aspectRatioValues[1]}
+                onSwiper={setSwiper}
             >
                 {data.items.blocks.map((block) => (
                     <SwiperSlide key={block.key}>

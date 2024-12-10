@@ -20,6 +20,8 @@ export const MediaGalleryBlock = createCompositeBlock(
             items: {
                 block: MediaGalleryListBlock,
                 title: <FormattedMessage id="mediaGalleryBlock.mediaGallery.list" defaultMessage="Media Gallery List" />,
+                // FIXME The hover element doesn't work for list blocks in composite block
+                nested: true,
             },
             aspectRatio: {
                 block: createCompositeBlockSelectField<MediaGalleryBlockData["aspectRatio"]>({
