@@ -97,12 +97,18 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                 .map(([, option]) => option.label ?? option.value)
                 .join(" – ");
             const matches = findTextMatches(text, query);
+
             return (
+                <>
+                    <ListItemIcon sx={{ minWidth: "unset !important" }}>
+                        <Domain />
+                    </ListItemIcon>
                 <ListItemText
-                    primaryTypographyProps={{ variant: "body2" }}
+                        primaryTypographyProps={{ variant: "body2", fontWeight: "inherit" }}
                     sx={{ margin: 0 }}
                     primary={<MarkedMatches text={text} matches={matches} />}
                 />
+                </>
             );
         };
     }
@@ -185,7 +191,10 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                             </Typography>
                                         </ListSubheader>
                                     )}
-                                    {group.options.map((option) => (
+                                    {group.options.map((option) => {
+                                        const isSelected = option === selectedOption;
+
+                                        return (
                                         <ListItemButton
                                             key={JSON.stringify(option)}
                                             onClick={() => {
@@ -193,8 +202,12 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                                 onChange(optionToValue<Value>(option));
                                                 setSearchValue("");
                                             }}
-                                            selected={option === selectedOption}
-                                            sx={{ paddingX: (theme) => theme.spacing(6) }}
+                                                selected={isSelected}
+                                                sx={({ spacing }) => ({
+                                                    paddingX: spacing(6),
+                                                    gap: spacing(2),
+                                                    fontWeight: isSelected ? 600 : 250,
+                                                })}
                                         >
                                             {renderOption?.(option, searchValue)}
                                         </ListItemButton>
