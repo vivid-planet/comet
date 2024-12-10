@@ -21,6 +21,7 @@ export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/button
 export { SplitButton, SplitButtonClassKey, SplitButtonProps } from "./common/buttons/split/SplitButton";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
+export { ClearInputAdornmentClassKey } from "./common/ClearInputAdornment";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
 export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
