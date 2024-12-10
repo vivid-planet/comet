@@ -1,13 +1,9 @@
 import { ArrowDown, ArrowUp, Check, Clear, Close, Delete, MoreVertical, Search } from "@comet/admin-icons";
 import {
     buttonBaseClasses,
-<<<<<<< HEAD
-=======
     buttonClasses,
     formControlClasses,
-    getSwitchUtilityClass,
     iconButtonClasses,
->>>>>>> main
     inputAdornmentClasses,
     inputBaseClasses,
     inputClasses,
@@ -26,12 +22,8 @@ import { GetMuiComponentTheme } from "./getComponentsTheme";
 export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing }) => ({
     ...component,
     defaultProps: {
-<<<<<<< HEAD
         slots: {
-=======
-        components: {
             /* @TODO: add FilterPanelAddIcon to display Comet Add Icon once MUI Datagrid is updated to v6 or higher  */
->>>>>>> main
             QuickFilterIcon: Search,
             QuickFilterClearIcon: Clear,
             FilterPanelDeleteIcon: Delete,
@@ -93,20 +85,13 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
             },
         },
         panelContent: {
-<<<<<<< HEAD
-            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLogicOperatorInput}`]: {
-                ["@media (max-width: 900px)"]: {
-                    display: "none",
-                },
-=======
             padding: spacing(1, 0),
-            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLinkOperatorInput}`]: {
+            [`& .${gridClasses.filterForm}:first-child .${gridClasses.filterFormLogicOperatorInput}`]: {
                 display: "flex",
             },
             ["@media (max-width: 900px)"]: {
                 maxHeight: "none",
                 padding: 0,
->>>>>>> main
             },
         },
         filterForm: {

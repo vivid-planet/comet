@@ -26,15 +26,9 @@
         "start:types": "tsc --project ./tsconfig.json --emitDeclarationOnly --watch --preserveWatchOutput"
     },
     "dependencies": {
-<<<<<<< HEAD
-        "@comet/admin": "workspace:^7.9.0",
-        "@comet/admin-icons": "workspace:^7.9.0",
-        "@mui/utils": "^6.0.0",
-=======
         "@comet/admin": "workspace:^7.10.0",
         "@comet/admin-icons": "workspace:^7.10.0",
-        "@mui/utils": "^5.4.1",
->>>>>>> main
+        "@mui/utils": "^6.0.0",
         "clsx": "^1.1.1",
         "date-fns": "^2.28.0",
         "react-date-range": "^1.4.0"
@@ -42,15 +36,9 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-<<<<<<< HEAD
-        "@comet/admin-babel-preset": "workspace:^7.9.0",
-        "@comet/eslint-config": "workspace:^7.9.0",
-        "@mui/material": "^6.0.0",
-=======
         "@comet/admin-babel-preset": "workspace:^7.10.0",
         "@comet/eslint-config": "workspace:^7.10.0",
-        "@mui/material": "^5.0.0",
->>>>>>> main
+        "@mui/material": "^6.0.0",
         "@types/react": "^17.0",
         "@types/react-date-range": "^1.4.3",
         "@types/react-dom": "^17.0.0",

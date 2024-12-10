@@ -23,13 +23,8 @@ import {
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-<<<<<<< HEAD
 import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
-import React from "react";
-=======
-import { DataGrid } from "@mui/x-data-grid";
 import { ReactNode, RefObject, useRef } from "react";
->>>>>>> main
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -131,15 +126,11 @@ const AddStocksDialog = ({ dialogApiRef }: DialogProps) => {
     );
 };
 
-<<<<<<< HEAD
 interface ToolbarProps extends GridToolbarProps {
-    toolbarAction?: React.ReactNode;
+    toolbarAction?: ReactNode;
 }
 
 function Toolbar({ toolbarAction }: ToolbarProps) {
-=======
-function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
->>>>>>> main
     return (
         <DataGridToolbar>
             <ToolbarItem>

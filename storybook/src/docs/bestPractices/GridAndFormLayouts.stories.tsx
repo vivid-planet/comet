@@ -29,13 +29,8 @@ import {
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
-<<<<<<< HEAD
 import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import React, { ReactNode, useEffect, useRef, useState } from "react";
-=======
-import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { ReactNode, useEffect, useRef, useState } from "react";
->>>>>>> main
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
