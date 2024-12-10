@@ -1,6 +1,6 @@
 import { AppHeader, AppHeaderMenuButton, MasterLayout, Menu, MenuItemRouterLink, Stack } from "@comet/admin";
 import { Dashboard } from "@comet/admin-icons";
-import React from "react";
+import { ComponentType } from "react";
 import { Route } from "react-router";
 
 export function masterLayoutDecorator() {
@@ -16,7 +16,7 @@ export function masterLayoutDecorator() {
         </Menu>
     );
 
-    return (Story: React.ComponentType) => {
+    return (Story: ComponentType) => {
         return (
             <MasterLayout menuComponent={MasterMenu} headerComponent={MasterHeader}>
                 <Story />
@@ -26,7 +26,7 @@ export function masterLayoutDecorator() {
 }
 
 export function stackRouteDecorator(topLevelTitle = "Example Page") {
-    return (Story: React.ComponentType) => {
+    return (Story: ComponentType) => {
         return (
             <Route
                 render={() => (

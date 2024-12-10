@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 import { createPagePagingActions, MainContent, Table, TableQuery, useTableQuery, useTableQueryPaging } from "@comet/admin";
-import * as React from "react";
 
 import { LaunchesPastPagePagingResult } from "../../../.storybook/mocks/handlers";
 import { apolloStoryDecorator } from "../../apollo-story.decorator";

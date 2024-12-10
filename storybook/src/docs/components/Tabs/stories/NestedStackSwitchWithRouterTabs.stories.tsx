@@ -1,5 +1,4 @@
 import { RouterTab, RouterTabs, Stack, StackBreadcrumbs, StackPage, StackSwitch } from "@comet/admin";
-import * as React from "react";
 import { useLocation } from "react-router";
 
 import { storyRouterDecorator } from "../../../../story-router.decorator";

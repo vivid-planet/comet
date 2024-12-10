@@ -24,8 +24,7 @@ import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import * as React from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
 import { exampleColumns, exampleRows } from "../../../helpers/ExampleDataGrid";
@@ -404,8 +403,8 @@ export const UseDataGridExcelExport = {
             },
         ];
 
-        const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
-        const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+        const [showMoreMenu, setShowMoreMenu] = useState<boolean>(false);
+        const moreMenuRef = useRef<HTMLButtonElement>(null);
 
         const query = gql`
             query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
