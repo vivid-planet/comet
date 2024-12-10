@@ -9,7 +9,7 @@ import { TimePicker as TimePickerBase } from "../timePicker/TimePicker";
 import { getIsoDateString } from "../utils/datePickerHelpers";
 import { getDateWithNewTime, getTimeStringFromDate } from "../utils/timePickerHelpers";
 
-type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormControl" | "datePicker" | "timePicker";
+export type DateTimePickerClassKey = "root" | "dateFormControl" | "timeFormControl" | "datePicker" | "timePicker";
 
 const Root = createComponentSlot("div")<DateTimePickerClassKey>({
     componentName: "DateTimePicker",

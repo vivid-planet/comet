@@ -24,6 +24,7 @@ export {
     FinalFormDateRangePickerProps,
 } from "./dateRangePicker/FinalFormDateRangePicker";
 export { DateTimeField, DateTimeFieldProps } from "./dateTimePicker/DateTimeField";
+export { DateTimePickerClassKey } from "./dateTimePicker/DateTimePicker";
 export { DateTimePicker, DateTimePickerProps } from "./dateTimePicker/DateTimePicker";
 export {
     /**
