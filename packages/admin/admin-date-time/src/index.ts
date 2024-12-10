@@ -44,6 +44,7 @@ export {
     FinalFormTimePicker,
 } from "./timePicker/FinalFormTimePicker";
 export { TimeField, TimeFieldProps } from "./timePicker/TimeField";
+export { TimePickerClassKey } from "./timePicker/TimePicker";
 export { TimePicker, TimePickerProps } from "./timePicker/TimePicker";
 export {
     /**
