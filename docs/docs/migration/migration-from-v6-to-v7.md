@@ -733,7 +733,7 @@ The content scope controls were changed to display all available combinations in
     ```diff
     - import { ContentScopeControls as ContentScopeControlsLibrary } from "@comet/cms-admin";
 
-    - export const ContentScopeControls: React.FC = () => {
+    - export const ContentScopeControls = () => {
     -     return <ContentScopeControlsLibrary<ContentScope> config={controlsConfig} />;
     - };
     + import { ContentScopeControls } from "@comet/cms-admin";
@@ -764,7 +764,7 @@ Following steps are necessary to correctly use the new Toolbar:
     ```diff
     // NewsGrid.tsx
 
-    function NewsToolbar(): React.ReactElement {
+    function NewsToolbar() {
         // ...
 
         return (

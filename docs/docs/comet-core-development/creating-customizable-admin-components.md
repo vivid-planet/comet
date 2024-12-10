@@ -70,7 +70,7 @@ export interface MyComponentProps
         title: typeof Typography;
     }> {
     variant?: "primary" | "secondary";
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 ```
 
@@ -183,8 +183,8 @@ Generally, this is done by defining an `iconMapping` prop as an object, for whic
 export interface MyComponentProps {
     // ...
     iconMapping?: {
-        fullscreenButton?: React.ReactNode;
-        closeDialog?: React.ReactNode;
+        fullscreenButton?: ReactNode;
+        closeDialog?: ReactNode;
     };
 }
 ```

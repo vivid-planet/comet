@@ -329,8 +329,8 @@ This was removed because it was often unwanted and overridden.
 1. Add following code if you still want the old behavior:
 
     ```tsx
-    const stackApi = React.useContext(StackApiContext);
-    const editDialog = React.useContext(EditDialogApiContext);
+    const stackApi = useContext(StackApiContext);
+    const editDialog = useContext(EditDialogApiContext);
 
     // ...
 

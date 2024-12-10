@@ -5,13 +5,13 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import useIsBrowser from "@docusaurus/useIsBrowser";
 import type { Props } from "@theme/Playground";
 import clsx from "clsx";
-import React from "react";
+import React, { ReactNode, useState } from "react";
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
 
 import { Button } from "./Button";
 import styles from "./styles.module.css";
 
-function Header({ children }: { children: React.ReactNode }) {
+function Header({ children }: { children: ReactNode }) {
     return <div className={clsx(styles.playgroundHeader)}>{children}</div>;
 }
 
@@ -51,7 +51,7 @@ function ThemedLiveEditor({ isOpen = false }) {
 }
 
 function EditorWithHeader() {
-    const [isEditorOpen, setIsEditorOpen] = React.useState(false);
+    const [isEditorOpen, setIsEditorOpen] = useState(false);
 
     return (
         <>

@@ -319,8 +319,7 @@ import { BlockCategory, BlocksFinalForm, createCompositeBlock, createCompositeSe
 import { createRichTextBlock } from "@comet/cms-admin";
 import { MenuItem } from "@material-ui/core";
 import { HeadlineBlockData } from "@src/blocks.generated";
-import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import * as React from "react";\n
+import { LinkBlock } from "@src/common/blocks/LinkBlock";\n
 const RichTextBlock = createRichTextBlock({
     link: LinkBlock,
     rte: {
@@ -444,10 +443,9 @@ The complete code for our Headline site block (including all necessary imports) 
         <CodeBlock language="tsx">
             {`import { PropsWithData, withPreview } from "@comet/cms-site";
 import { HeadlineBlockData } from "@src/blocks.generated";
-import * as React from "react";
 import { Renderers } from "redraft";\n
 import RichTextBlock from "./RichTextBlock";\n
-const headlineTags: { [key: string]: React.ElementType } = {
+const headlineTags: { [key: string]: ElementType } = {
     "header-one": "h1",
     "header-two": "h2",
     "header-three": "h3",
