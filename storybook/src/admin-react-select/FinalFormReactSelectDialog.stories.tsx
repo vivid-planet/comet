@@ -1,7 +1,6 @@
 import { CancelButton, Field, OkayButton } from "@comet/admin";
 import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 const options = [

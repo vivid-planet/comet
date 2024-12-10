@@ -1,5 +1,4 @@
 import { Divider, Grid, Paper, Typography } from "@mui/material";
-import React from "react";
 
 export default {
     title: "@comet/admin/Typography",

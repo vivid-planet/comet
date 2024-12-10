@@ -1,6 +1,5 @@
 import { Field, FieldContainer, FinalFormCheckbox } from "@comet/admin";
 import { Card, CardContent, FormControlLabel, Grid } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -43,40 +42,6 @@ export const Checkbox = () => {
                                             <Field name="disabledChecked" type="checkbox" fullWidth disabled>
                                                 {(props) => (
                                                     <FormControlLabel label="Disabled & Checked" control={<FinalFormCheckbox {...props} />} />
-                                                )}
-                                            </Field>
-                                        </FieldContainer>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Card variant="outlined">
-                                    <CardContent>
-                                        <FieldContainer label="Checkboxes with secondary color">
-                                            <Field name="uncheckedSecondary" type="checkbox" fullWidth>
-                                                {(props) => (
-                                                    <FormControlLabel
-                                                        label="Unchecked"
-                                                        control={<FinalFormCheckbox {...props} color="secondary" />}
-                                                    />
-                                                )}
-                                            </Field>
-                                            <Field name="checkedSecondary" type="checkbox" fullWidth>
-                                                {(props) => (
-                                                    <FormControlLabel label="Checked" control={<FinalFormCheckbox {...props} color="secondary" />} />
-                                                )}
-                                            </Field>
-                                            <Field name="disabledUncheckedSecondary" type="checkbox" fullWidth disabled>
-                                                {(props) => (
-                                                    <FormControlLabel label="Disabled" control={<FinalFormCheckbox {...props} color="secondary" />} />
-                                                )}
-                                            </Field>
-                                            <Field name="disabledCheckedSecondary" type="checkbox" fullWidth disabled>
-                                                {(props) => (
-                                                    <FormControlLabel
-                                                        label="Disabled & Checked"
-                                                        control={<FinalFormCheckbox {...props} color="secondary" />}
-                                                    />
                                                 )}
                                             </Field>
                                         </FieldContainer>

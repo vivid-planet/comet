@@ -1,11 +1,11 @@
 import { Stack, StackBreadcrumbs, StackPage, StackSwitch, StackSwitchApiContext } from "@comet/admin";
-import * as React from "react";
+import { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
 function Page1() {
-    const switchApi = React.useContext(StackSwitchApiContext);
+    const switchApi = useContext(StackSwitchApiContext);
     return (
         <button
             onClick={(e) => {

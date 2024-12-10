@@ -1,6 +1,5 @@
 import { Field, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
 import { Button } from "@mui/material";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 interface Option {

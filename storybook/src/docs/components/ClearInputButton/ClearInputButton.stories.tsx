@@ -1,7 +1,7 @@
 import { ClearInputButton } from "@comet/admin";
 import { Cut } from "@comet/admin-icons";
 import { Box, InputAdornment, InputBase, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 export default {
     title: "Docs/Components/ClearInputButton",
@@ -28,7 +28,7 @@ export const Default = {
 
 export const ClearableInputField = {
     render: () => {
-        const [inputText, setInputText] = React.useState<string>("");
+        const [inputText, setInputText] = useState<string>("");
 
         return (
             <Box display="flex" alignItems="center">

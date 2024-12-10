@@ -1,5 +1,24 @@
 # @comet/admin-theme
 
+## 7.9.0
+
+### Minor Changes
+
+-   9aa6947b7: Add hover styling for MUI's `Switch`
+
+### Patch Changes
+
+-   48cac4dac: Fix styling issues of inputs like `FinalFormInput`, `FinalFormNumberInput`, `FinalFormSelect`, `TextAreaField`
+
+    -   Change background-color, border-color and color of the label for different states (`default`, `disabled` and `focused`).
+    -   For required inputs, fix spacing between the label and asterisk.
+    -   Fix font-weight and margin of `helperText`.
+
+-   55d40ef08: Add icon for indeterminate checkbox
+-   Updated dependencies [7cea765fe]
+-   Updated dependencies [55d40ef08]
+    -   @comet/admin-icons@7.9.0
+
 ## 7.8.0
 
 ### Patch Changes

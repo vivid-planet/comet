@@ -12,7 +12,6 @@ import {
     ToolbarFillSpace,
 } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

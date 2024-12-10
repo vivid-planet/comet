@@ -13,11 +13,11 @@ import {
 import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
 import { ArrowRight, Save } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function StackWrapper({ children }: { children: React.ReactNode }) {
+function StackWrapper({ children }: { children: ReactNode }) {
     return (
         <Stack topLevelTitle="Stack Root">
             <StackSwitch initialPage="root">
