@@ -446,7 +446,7 @@ The complete code for our Headline site block (including all necessary imports) 
 import { HeadlineBlockData } from "@src/blocks.generated";
 import * as React from "react";
 import { Renderers } from "redraft";\n
-import RichTextBlock from "./RichTextBlock";\n
+import { RichTextBlock } from "./RichTextBlock";\n
 const headlineTags: { [key: string]: React.ElementType } = {
     "header-one": "h1",
     "header-two": "h2",
