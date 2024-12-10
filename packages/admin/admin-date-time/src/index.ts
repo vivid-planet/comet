@@ -36,6 +36,7 @@ export {
      */
     FinalFormDateTimePickerProps,
 } from "./dateTimePicker/FinalFormDateTimePicker";
+export { FinalFormTimePickerProps } from "./timePicker/FinalFormTimePicker";
 export {
     /**
      * @deprecated Use `<TimeField />` instead of `<Field component={FinalFormTimePicker} />`
