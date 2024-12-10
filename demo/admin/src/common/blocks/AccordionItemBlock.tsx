@@ -17,7 +17,7 @@ import { FormattedMessage } from "react-intl";
 const AccordionContentBlock = createBlocksBlock({
     name: "AccordionContent",
     supportedBlocks: {
-        richtext: RichTextBlock,
+        richText: RichTextBlock,
         space: SpaceBlock,
         heading: StandaloneHeadingBlock,
         callToActionList: StandaloneCallToActionListBlock,

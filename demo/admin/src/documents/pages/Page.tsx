@@ -10,8 +10,8 @@ import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import gql from "graphql-tag";
 import { FormattedMessage } from "react-intl";
 
+import { PageContentBlock } from "./blocks/PageContentBlock";
 import { EditPage } from "./EditPage";
-import { PageContentBlock } from "./PageContentBlock";
 
 const rootBlocks = {
     content: PageContentBlock,

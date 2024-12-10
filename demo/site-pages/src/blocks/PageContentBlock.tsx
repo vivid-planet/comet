@@ -11,11 +11,10 @@ import { MediaBlock } from "./MediaBlock";
 import RichTextBlock from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 import { TextImageBlock } from "./TextImageBlock";
-import { TwoListsBlock } from "./TwoListsBlock";
 
 const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
-    richtext: (props) => <RichTextBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />,
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     textImage: (props) => <TextImageBlock data={props} />,
@@ -26,7 +25,6 @@ const supportedBlocks: SupportedBlocks = {
     columns: (props) => <ColumnsBlock data={props} />,
     anchor: (props) => <AnchorBlock data={props} />,
     media: (props) => <MediaBlock data={props} />,
-    twoLists: (props) => <TwoListsBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {
