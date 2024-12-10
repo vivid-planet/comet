@@ -1,10 +1,10 @@
 "use client";
 import { OptionalBlock, PropsWithData, withPreview } from "@comet/cms-site";
 import { FullWidthImageBlockData } from "@src/blocks.generated";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import styled from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
-import RichTextBlock from "./RichTextBlock";
 
 export const FullWidthImageBlock = withPreview(
     ({ data: { image, content } }: PropsWithData<FullWidthImageBlockData>) => {

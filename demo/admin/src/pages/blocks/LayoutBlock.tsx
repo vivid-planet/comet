@@ -12,8 +12,8 @@ import {
     FinalFormLayoutSelect,
 } from "@comet/blocks-admin";
 import { LayoutBlockData } from "@src/blocks.generated";
+import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import { MediaBlock } from "@src/pages/blocks/MediaBlock";
 import { FormattedMessage } from "react-intl";
 
 const layoutOptions: (ColumnsBlockLayout & { visibleBlocks: string[] })[] = [

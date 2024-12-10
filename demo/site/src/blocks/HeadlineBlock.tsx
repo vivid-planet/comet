@@ -1,10 +1,9 @@
 "use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { HeadlineBlockData } from "@src/blocks.generated";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { ElementType } from "react";
 import { Renderers } from "redraft";
-
-import RichTextBlock from "./RichTextBlock";
 
 const headlineTags: { [key: string]: ElementType } = {
     "header-one": "h1",
