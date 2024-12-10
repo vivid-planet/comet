@@ -23,7 +23,7 @@ export interface OptionalBlockDecoratorFragment<DecoratedBlock extends BlockInte
     visible: boolean;
 }
 
-interface OptionalBlockOutput<DecoratedBlock extends BlockInterface> {
+export interface OptionalBlockOutput<DecoratedBlock extends BlockInterface> {
     block?: BlockOutputApi<DecoratedBlock>;
     visible: boolean;
 }

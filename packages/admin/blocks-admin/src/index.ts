@@ -25,6 +25,7 @@ export type { CreateOneOfBlockOptions, OneOfBlockFragment, OneOfBlockState } fro
 export { OneOfBlockPreviewState } from "./blocks/factories/createOneOfBlock";
 export { createOneOfBlock } from "./blocks/factories/createOneOfBlock";
 export type { OptionalBlockDecoratorFragment, OptionalBlockState } from "./blocks/factories/createOptionalBlock";
+export { OptionalBlockOutput } from "./blocks/factories/createOptionalBlock";
 export { createOptionalBlock } from "./blocks/factories/createOptionalBlock";
 export { createSpaceBlock } from "./blocks/factories/spaceBlock/createSpaceBlock";
 export { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
