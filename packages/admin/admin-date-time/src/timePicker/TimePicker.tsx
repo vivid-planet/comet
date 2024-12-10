@@ -15,7 +15,7 @@ import { FormatDateOptions, FormattedTime, useIntl } from "react-intl";
 
 import { getClosestDateToDate, getDateFromTimeValue, getDateRangeListByMinuteStep } from "../utils/timePickerHelpers";
 
-type TimePickerClassKey = InputWithPopperClassKey | "startAdornment" | "timeOptionsList" | "timeOptionItem";
+export type TimePickerClassKey = InputWithPopperClassKey | "startAdornment" | "timeOptionsList" | "timeOptionItem";
 
 type SlotProps = ThemedComponentBaseProps<{
     root: typeof InputWithPopper;
