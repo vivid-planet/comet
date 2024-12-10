@@ -37,6 +37,7 @@ export { IFrameBridgeProvider } from "./iframebridge/IFrameBridge";
 export {
     AdminMessageType,
     IAdminContentScopeMessage,
+    IAdminGraphQLApiUrlMessage,
     IAdminHoverComponentMessage,
     IAdminShowOnlyVisibleMessage,
     IFrameHoverComponentMessage,

@@ -1,4 +1,3 @@
-import { SiteConfig } from "@comet/cms-admin";
 import { createContext, PropsWithChildren, useContext } from "react";
 
 import cometConfig from "./comet-config.json";
@@ -25,8 +24,6 @@ export function createConfig() {
         sitesConfig: JSON.parse(environmentVariables.PUBLIC_SITE_CONFIGS) as PublicSiteConfig[],
     };
 }
-
-export type SitesConfig = Record<string, SiteConfig>;
 
 type Config = ReturnType<typeof createConfig>;
 
