@@ -1,6 +1,6 @@
 "use client";
 import { PixelImageBlock, PreviewSkeleton, PropsWithData, SvgImageBlock, withPreview } from "@comet/cms-site";
-import { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
+import { DamImageBlockData } from "@src/blocks.generated";
 import { ImageProps as NextImageProps } from "next/image";
 
 type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & {
@@ -13,10 +13,10 @@ export const DamImageBlock = withPreview(
             return <PreviewSkeleton type="media" hasContent={false} />;
         }
 
-        if (block.type === "pixelImage") {
-            return <PixelImageBlock data={block.props as PixelImageBlockData} aspectRatio={aspectRatio} {...imageProps} />;
+        if (block.type === "pixelImage" && "cropArea" in block.props) {
+            return <PixelImageBlock data={block.props} aspectRatio={aspectRatio} {...imageProps} />;
         } else if (block.type === "svgImage") {
-            return <SvgImageBlock data={block.props as SvgImageBlockData} />;
+            return <SvgImageBlock data={block.props} />;
         } else {
             return (
                 <>
