@@ -23,8 +23,13 @@ import {
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
+<<<<<<< HEAD
 import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
 import React from "react";
+=======
+import { DataGrid } from "@mui/x-data-grid";
+import { ReactNode, RefObject, useRef } from "react";
+>>>>>>> main
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -67,10 +72,10 @@ const stocks = [
 ];
 
 type DialogProps = {
-    dialogApiRef: React.RefObject<IEditDialogApi>;
+    dialogApiRef: RefObject<IEditDialogApi>;
 };
 
-const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -98,7 +103,7 @@ const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
     );
 };
 
-const AddStocksDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddStocksDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -126,11 +131,15 @@ const AddStocksDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
     );
 };
 
+<<<<<<< HEAD
 interface ToolbarProps extends GridToolbarProps {
     toolbarAction?: React.ReactNode;
 }
 
 function Toolbar({ toolbarAction }: ToolbarProps) {
+=======
+function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
+>>>>>>> main
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -151,9 +160,9 @@ type ProductDetailsProps = {
     productId: string;
 };
 
-export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }: ProductDetailsProps) => {
+export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
     const intl = useIntl();
-    const editDialogApi = React.useRef<IEditDialogApi>(null);
+    const editDialogApi = useRef<IEditDialogApi>(null);
 
     const rows: { id: string; productId: string; amount: string }[] = [];
     stocks.forEach((row) => {
@@ -258,7 +267,7 @@ export const ProductDetailsPage: React.FC<ProductDetailsProps> = ({ productId }:
 export const EditDialogInRouterTabsWithinStack = {
     render: () => {
         const intl = useIntl();
-        const editDialogApi = React.useRef<IEditDialogApi>(null);
+        const editDialogApi = useRef<IEditDialogApi>(null);
 
         return (
             <>

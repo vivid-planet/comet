@@ -16,7 +16,6 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

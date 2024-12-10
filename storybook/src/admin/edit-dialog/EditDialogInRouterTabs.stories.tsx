@@ -13,8 +13,13 @@ import {
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
+<<<<<<< HEAD
 import { DataGrid, GridToolbarProps } from "@mui/x-data-grid";
 import React from "react";
+=======
+import { DataGrid } from "@mui/x-data-grid";
+import { ReactNode, RefObject, useRef } from "react";
+>>>>>>> main
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -33,10 +38,10 @@ const products = [
 ];
 
 type DialogProps = {
-    dialogApiRef: React.RefObject<IEditDialogApi>;
+    dialogApiRef: RefObject<IEditDialogApi>;
 };
 
-const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
+const AddProductDialog = ({ dialogApiRef }: DialogProps) => {
     const intl = useIntl();
 
     return (
@@ -64,11 +69,15 @@ const AddProductDialog: React.FC<DialogProps> = ({ dialogApiRef }) => {
     );
 };
 
+<<<<<<< HEAD
 interface ToolbarProps extends GridToolbarProps {
     toolbarAction?: React.ReactNode;
 }
 
 function Toolbar({ toolbarAction }: ToolbarProps) {
+=======
+function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
+>>>>>>> main
     return (
         <DataGridToolbar>
             <ToolbarFillSpace />
@@ -79,7 +88,7 @@ function Toolbar({ toolbarAction }: ToolbarProps) {
 
 export const EditDialogInRouterTabs = {
     render: () => {
-        const editDialogApi = React.useRef<IEditDialogApi>(null);
+        const editDialogApi = useRef<IEditDialogApi>(null);
         return (
             <RouterTabs>
                 <RouterTab path="" label="First Tab">
