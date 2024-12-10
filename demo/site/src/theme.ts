@@ -1,4 +1,4 @@
-export interface Breakpoint {
+interface Breakpoint {
     mediaQuery: string;
     value: number;
 }

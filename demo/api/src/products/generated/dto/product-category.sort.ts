@@ -4,7 +4,7 @@ import { SortDirection } from "@comet/cms-api";
 import { Field, InputType, registerEnumType } from "@nestjs/graphql";
 import { IsEnum } from "class-validator";
 
-export enum ProductCategorySortField {
+enum ProductCategorySortField {
     title = "title",
     slug = "slug",
     position = "position",
