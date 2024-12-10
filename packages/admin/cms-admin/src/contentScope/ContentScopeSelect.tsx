@@ -160,6 +160,9 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                             onClick={() => setSearchValue("")}
                                             hasClearableContent={searchValue !== ""}
                                             position="end"
+                                            slotProps={{
+                                                buttonBase: { sx: { fontSize: "16px" } },
+                                            }}
                                         />
                                     }
                                     autoFocus
