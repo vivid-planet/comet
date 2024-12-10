@@ -39,7 +39,7 @@
         "packages/admin/admin": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["jest-junit"]
+            "ignoreDependencies": ["jest-junit", "@mui/x-data-grid-pro"]
         },
         "packages/admin/admin-theme": {
             "entry": ["./src/index.ts"],
@@ -69,9 +69,10 @@
             "entry": ["./src/index.ts", "./src/generator/generate.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
-        "packages/cms-api": {
-            "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts", "./jest-setup-file.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
+        "packages/api/cms-api": {
+            "entry": ["./src/index.ts", "./src/generator/generate.ts", "./src/generator/generate-crud-single.ts", "./src/**/migrations/*.ts"],
+            "project": ["./src/**/*.{ts,tsx}"],
+            "ignoreDependencies": ["@sentry/node"]
         },
         "packages/cms-site": {
             "entry": ["./src/index.ts"],
@@ -79,7 +80,7 @@
         },
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
-            "project": ["./src/**/*.{ts,tsx}", "!./src/**/generated/**"],
+            "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@swc/plugin-emotion"]
         },
         "demo/api": {

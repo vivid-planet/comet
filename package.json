@@ -26,7 +26,7 @@
         "postinstall": "husky install",
         "intl:extract": "formatjs extract './packages/admin/**/*.ts*' --out-file 'lang/en.json' --ignore './**.d.ts' --ignore './**.d.ts.map' --format simple --throws",
         "lint": "pnpm lint:root && pnpm --recursive run lint",
-        "lint:root": "$npm_execpath prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
+        "lint:root": "pnpm prettier --check './!(demo|docs|packages|storybook)/**/*.{js,json,md,yml,yaml}' && $npm_execpath cspell .changeset/*.md",
         "lint:eslint": "pnpm --recursive run lint:eslint",
         "lint:tsc": "pnpm --recursive run lint:tsc",
         "lint:knip": "knip --exports --files --dependencies --tags=-knipignore",

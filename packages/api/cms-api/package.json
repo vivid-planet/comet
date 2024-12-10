@@ -144,6 +144,11 @@
         "nestjs-console": "^9.0.0",
         "rxjs": "^7.0.0"
     },
+    "peerDependenciesMeta": {
+        "@sentry/node": {
+            "optional": true
+        }
+    },
     "publishConfig": {
         "access": "public",
         "registry": "https://registry.npmjs.org"

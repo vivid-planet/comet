@@ -118,9 +118,6 @@
         },
         "@mui/x-data-grid-pro": {
             "optional": true
-        },
-        "react-dnd": {
-            "optional": true
         }
     },
     "publishConfig": {
