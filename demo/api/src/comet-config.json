@@ -5,8 +5,7 @@
         "uploadsMaxFileSize": 500
     },
     "fileUploads": {
-        "maxFileSize": 15,
-        "quality": 80
+        "maxFileSize": 15
     },
     "imgproxy": {
         "maxSrcResolution": 70,

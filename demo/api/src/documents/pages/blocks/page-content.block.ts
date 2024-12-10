@@ -1,40 +1,40 @@
 import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock } from "@comet/blocks-api";
 import { AnchorBlock, DamImageBlock } from "@comet/cms-api";
+import { HeadingBlock } from "@src/common/blocks/heading.block";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { MediaBlock } from "@src/common/blocks/media.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
 import { NewsDetailBlock } from "@src/news/blocks/news-detail.block";
 import { NewsListBlock } from "@src/news/blocks/news-list.block";
-import { LayoutBlock } from "@src/pages/blocks/layout.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
+import { BillboardTeaserBlock } from "./billboard-teaser.block";
 import { ColumnsBlock } from "./columns.block";
+import { ContentGroupBlock } from "./content-group.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
-import { HeadlineBlock } from "./headline.block";
 import { ImageLinkBlock } from "./image-link.block";
 import { TeaserBlock } from "./teaser.block";
 import { TextImageBlock } from "./TextImageBlock";
-import { TwoListsBlock } from "./two-lists.block";
 
 const supportedBlocks = {
-    space: SpaceBlock,
-    richtext: RichTextBlock,
-    headline: HeadlineBlock,
-    image: DamImageBlock,
-    textImage: TextImageBlock,
-    linkList: LinkListBlock,
-    fullWidthImage: FullWidthImageBlock,
-    columns: ColumnsBlock,
     anchor: AnchorBlock,
-    twoLists: TwoListsBlock,
-    media: MediaBlock,
-    teaser: TeaserBlock,
-    newsDetail: NewsDetailBlock,
+    billboardTeaser: BillboardTeaserBlock,
+    columns: ColumnsBlock,
+    contentGroup: ContentGroupBlock,
+    fullWidthImage: FullWidthImageBlock,
+    heading: HeadingBlock,
+    image: DamImageBlock,
     imageLink: ImageLinkBlock,
+    linkList: LinkListBlock,
+    media: MediaBlock,
+    newsDetail: NewsDetailBlock,
     newsList: NewsListBlock,
-    layout: LayoutBlock,
+    richText: RichTextBlock,
+    space: SpaceBlock,
+    teaser: TeaserBlock,
+    textImage: TextImageBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {

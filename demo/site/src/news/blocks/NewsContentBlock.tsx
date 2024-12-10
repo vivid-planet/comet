@@ -7,7 +7,7 @@ import { TextImageBlock } from "@src/blocks/TextImageBlock";
 
 const supportedBlocks: SupportedBlocks = {
     headline: (props) => <HeadlineBlock data={props} />,
-    richtext: (props) => <RichTextBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     textImage: (props) => <TextImageBlock data={props} />,
 };

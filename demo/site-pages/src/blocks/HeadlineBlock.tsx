@@ -1,5 +1,5 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
-import { HeadlineBlockData } from "@src/blocks.generated";
+import { HeadingBlockData } from "@src/blocks.generated";
 import { ElementType } from "react";
 import { Renderers } from "redraft";
 
@@ -14,7 +14,7 @@ const headlineTags: { [key: string]: ElementType } = {
     "header-six": "h6",
 };
 
-const getHeadlineRenderers = (level: HeadlineBlockData["level"]) => {
+const getHeadlineRenderers = (level: HeadingBlockData["level"]) => {
     const HeadlineTag = headlineTags[level];
 
     const renderers: Renderers = {

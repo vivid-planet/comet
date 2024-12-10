@@ -12,18 +12,17 @@ import { AnchorBlock } from "./AnchorBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
 import { DamImageBlock } from "./DamImageBlock";
 import { FullWidthImageBlock } from "./FullWidthImageBlock";
-import { HeadlineBlock } from "./HeadlineBlock";
+import { HeadingBlock } from "./HeadingBlock";
 import { LinkListBlock } from "./LinkListBlock";
 import { MediaBlock } from "./MediaBlock";
 import { RichTextBlock } from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 import { TextImageBlock } from "./TextImageBlock";
-import { TwoListsBlock } from "./TwoListsBlock";
 
 const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
-    richtext: (props) => <RichTextBlock data={props} />,
-    headline: (props) => <HeadlineBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
+    headline: (props) => <HeadingBlock data={props} />,
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     textImage: (props) => <TextImageBlock data={props} />,
     damVideo: (props) => <DamVideoBlock data={props} />,
@@ -33,7 +32,6 @@ const supportedBlocks: SupportedBlocks = {
     columns: (props) => <ColumnsBlock data={props} />,
     anchor: (props) => <AnchorBlock data={props} />,
     media: (props) => <MediaBlock data={props} aspectRatio="inherit" />,
-    twoLists: (props) => <TwoListsBlock data={props} />,
     teaser: (props) => <TeaserBlock data={props} />,
     newsDetail: (props) => <NewsDetailBlock data={props} />,
     imageLink: (props) => <ImageLinkBlock data={props} />,

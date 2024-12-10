@@ -20,7 +20,7 @@ import { IsBoolean, IsString } from "class-validator";
 const AccordionContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
-            richtext: RichTextBlock,
+            richText: RichTextBlock,
             heading: StandaloneHeadingBlock,
             space: SpaceBlock,
             callToActionList: StandaloneCallToActionListBlock,

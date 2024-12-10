@@ -31,7 +31,7 @@ const ContentBlock = createBlocksBlock(
             anchor: AnchorBlock,
             space: SpaceBlock,
             teaser: TeaserBlock,
-            richtext: RichTextBlock,
+            richText: RichTextBlock,
             heading: StandaloneHeadingBlock,
             columns: ColumnsBlock,
             callToActionList: StandaloneCallToActionListBlock,
