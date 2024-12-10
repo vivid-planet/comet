@@ -5,6 +5,7 @@ export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";
 export { AppHeaderButtonClassKey } from "./appHeader/button/AppHeaderButton.styles";
 export { AppHeaderDropdown, AppHeaderDropdownClassKey, AppHeaderDropdownProps } from "./appHeader/dropdown/AppHeaderDropdown";
+export { AppHeaderFillSpaceProps } from "./appHeader/fillSpace/AppHeaderFillSpace";
 export { AppHeaderFillSpace, AppHeaderFillSpaceClassKey } from "./appHeader/fillSpace/AppHeaderFillSpace";
 export { AppHeaderMenuButton, AppHeaderMenuButtonClassKey, AppHeaderMenuButtonProps } from "./appHeader/menuButton/AppHeaderMenuButton";
 export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutation } from "./buildRestMutation";
