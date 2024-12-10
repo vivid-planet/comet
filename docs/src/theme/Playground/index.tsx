@@ -5,7 +5,7 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import useIsBrowser from "@docusaurus/useIsBrowser";
 import type { Props } from "@theme/Playground";
 import clsx from "clsx";
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from "react-live";
 
 import { Button } from "./Button";

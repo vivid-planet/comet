@@ -1,5 +1,4 @@
 import ExecutionEnvironment from "@docusaurus/ExecutionEnvironment";
-import React from "react";
 
 // Add react-live imports you need here
 let ReactLiveScope = {

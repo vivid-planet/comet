@@ -1,7 +1,6 @@
 import { ContentOverflow, MuiThemeProvider } from "@comet/admin";
 import { createCometTheme } from "@comet/admin-theme";
 import { Typography } from "@mui/material";
-import React from "react";
 
 function Story() {
     const theme = createCometTheme({
