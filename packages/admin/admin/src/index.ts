@@ -297,6 +297,7 @@ export {
     VisibleType,
 } from "./table/Table";
 export { TableBodyRow, TableBodyRowClassKey, TableBodyRowProps } from "./table/TableBodyRow";
+export { TableDndOrderClassKey } from "./table/TableDndOrder";
 export { TableDndOrder } from "./table/TableDndOrder";
 export { TableFilterFinalForm } from "./table/TableFilterFinalForm";
 export { ITableLocalChangesApi, submitChangesWithMutation, TableLocalChanges } from "./table/TableLocalChanges";
