@@ -6,7 +6,14 @@ import { FormatDateOptions, FormattedMessage, useIntl } from "react-intl";
 
 import { TimePicker as TimePickerBase } from "../timePicker/TimePicker";
 
-type TimeRangePickerClassKey = "root" | "startFormControl" | "endFormControl" | "timePicker" | "startTimePicker" | "endTimePicker" | "separator";
+export type TimeRangePickerClassKey =
+    | "root"
+    | "startFormControl"
+    | "endFormControl"
+    | "timePicker"
+    | "startTimePicker"
+    | "endTimePicker"
+    | "separator";
 
 const Root = createComponentSlot("div")<TimeRangePickerClassKey>({
     componentName: "TimeRangePicker",
