@@ -101,7 +101,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
             return (
                 <>
-                    <ListItemIcon sx={{ minWidth: "unset !important" }}>
+                    <ListItemIcon sx={{ minWidth: "none" }}>
                         <Domain />
                     </ListItemIcon>
                     <ListItemText
@@ -136,7 +136,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
                             [theme.breakpoints.down("md")]: {
                                 width: "100%",
-                                maxWidth: "unset",
+                                maxWidth: "none",
                                 bottom: 0,
                             },
                         }),
