@@ -48,6 +48,7 @@ export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "./dataGrid/CrudContextMenu";
+export { CrudMoreActionsMenuClassKey } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudMoreActionsMenu, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
