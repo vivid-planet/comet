@@ -1,11 +1,11 @@
-import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
+import { BlocksBlock, PropsWithData, SupportedBlocks, useIFrameBridge, withPreview, WithPreviewProps } from "@comet/cms-site";
 import { AccordionContentBlockData, AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { SvgUse } from "@src/common/helpers/SvgUse";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import styled, { css } from "styled-components";
 
@@ -25,12 +25,21 @@ const AccordionContentBlock = withPreview(
     { label: "Accordion Content" },
 );
 
-type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData>;
+type AccordionItemBlockProps = PropsWithData<AccordionItemBlockData> & WithPreviewProps;
 
 export const AccordionItemBlock = withPreview(
-    ({ data: { title, content, openByDefault } }: AccordionItemBlockProps) => {
+    ({ data: { title, content, openByDefault, adminMeta } }: AccordionItemBlockProps) => {
         const intl = useIntl();
         const [isExpanded, setIsExpanded] = useState<boolean>(openByDefault);
+        // TODO can't use isSelected here because it doesn't handle child routes
+        // const { isSelected } = usePreview();
+        const iFrameBridge = useIFrameBridge();
+
+        useEffect(() => {
+            if (adminMeta?.route && iFrameBridge.selectedAdminRoute) {
+                setIsExpanded(iFrameBridge.selectedAdminRoute.startsWith(adminMeta.route));
+            }
+        }, [adminMeta?.route, iFrameBridge.selectedAdminRoute]);
 
         const ariaLabelText = isExpanded
             ? intl.formatMessage({ id: "accordionBlock.ariaLabel.expanded", defaultMessage: "Collapse accordion item" })
