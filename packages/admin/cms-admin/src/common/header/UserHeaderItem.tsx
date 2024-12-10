@@ -1,30 +1,32 @@
 import { gql, useMutation } from "@apollo/client";
 import { AppHeaderDropdown, AppHeaderDropdownProps, Loading } from "@comet/admin";
-import { Account, Clear, ImpersonateUser, Info, Logout } from "@comet/admin-icons";
-import { Avatar, AvatarGroup, AvatarProps, Box, Button as MUIButton, useMediaQuery, useTheme } from "@mui/material";
+import { Account, ImpersonateUser, Logout } from "@comet/admin-icons";
+import { Avatar, AvatarGroup, AvatarProps, Box, Button as MUIButton, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { css, styled } from "@mui/material/styles";
 import { PropsWithChildren, ReactElement, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { version } from "../..";
 import { useCurrentUser } from "../../userPermissions/hooks/currentUser";
-import { StopImpersonationButton } from "../../userPermissions/user/ImpersonationButtons";
 import { AboutModal } from "./about/AboutModal";
+import { ImpersonationInlay } from "./impersonation/ImpersonationInlay";
 import { GQLSignOutMutation } from "./UserHeaderItem.generated";
-
-const DropdownContent = styled(Box)`
-    width: 250px;
-`;
 
 const Button = styled(MUIButton)`
     justify-content: flex-start;
+`;
+
+const MenuFooter = styled(Box)`
+    display: flex;
+    padding-top: 10px;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 const Separator = styled(Box)`
     background-color: ${(props) => props.theme.palette.grey["100"]};
     height: 1px;
     width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
 `;
 
 const signOutMutation = gql`
@@ -44,11 +46,10 @@ interface StyledAvatarProps extends AvatarProps {
 }
 export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     const { aboutModalLogo, buttonChildren, children } = props;
-
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
     const user = useCurrentUser();
+
     const [showAboutModal, setShowAboutModal] = useState(false);
     const [signOut, { loading: isSigningOut }] = useMutation<GQLSignOutMutation>(signOutMutation);
 
@@ -68,51 +69,65 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     );
     return (
         <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)} startIcon={isMobile ? undefined : AccountIcon}>
-            <DropdownContent padding={4}>
-                <Button
-                    fullWidth={true}
-                    startIcon={<Info />}
-                    onClick={() => {
-                        setShowAboutModal(true);
-                    }}
-                    color="info"
-                >
-                    <FormattedMessage id="comet.about" defaultMessage="About" />
-                </Button>
-                {children}
+            <Box width={300} padding={0}>
+                <Box padding={4}>
+                    <Typography color="textSecondary" variant="caption" sx={{ paddingBottom: 2, display: "block" }}>
+                        <FormattedMessage id="comet.logged.in" defaultMessage="Logged in as" />
+                    </Typography>
+                    <Typography variant="h4">{user.authenticatedUser ? user.authenticatedUser.name : user.name}</Typography>
+                    <Typography variant="body2">{user.authenticatedUser ? user.authenticatedUser.email : user.email}</Typography>
+                </Box>
+
                 <Separator />
+
                 {user.impersonated && (
                     <>
-                        <StopImpersonationButton
-                            startIcon={<Clear />}
-                            fullWidth
-                            variant="outlined"
-                            color="primary"
-                            sx={{ justifyContent: "center" }}
-                        />
+                        <Separator />
+                        <ImpersonationInlay />
                         <Separator />
                     </>
                 )}
-                {isSigningOut ? (
-                    <Loading />
-                ) : (
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        startIcon={<Logout />}
-                        onClick={async () => {
-                            const result = await signOut();
-                            if (result.data) {
-                                location.href = result.data.currentUserSignOut;
-                            }
-                        }}
-                        sx={{ justifyContent: "center" }}
-                    >
-                        <FormattedMessage id="comet.logout" defaultMessage="Logout" />
-                    </Button>
+                {children && (
+                    <>
+                        <Box padding={4}>{children}</Box>
+                        <Separator />
+                    </>
                 )}
-            </DropdownContent>
+                <Box padding={4}>
+                    {isSigningOut ? (
+                        <Loading />
+                    ) : (
+                        <MUIButton
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            startIcon={<Logout />}
+                            onClick={async () => {
+                                const result = await signOut();
+                                if (result.data) {
+                                    location.href = result.data.currentUserSignOut;
+                                }
+                            }}
+                        >
+                            <FormattedMessage id="comet.logout" defaultMessage="Logout" />
+                        </MUIButton>
+                    )}
+                    <MenuFooter>
+                        <Typography variant="caption">{`Version: v${version}`}</Typography>
+
+                        <Button
+                            variant="text"
+                            onClick={() => {
+                                setShowAboutModal(true);
+                            }}
+                        >
+                            <Typography variant="caption">
+                                <FormattedMessage id="comet.about" defaultMessage="About/Copyright" />
+                            </Typography>
+                        </Button>
+                    </MenuFooter>
+                </Box>
+            </Box>
             <AboutModal
                 open={showAboutModal}
                 onClose={() => {
