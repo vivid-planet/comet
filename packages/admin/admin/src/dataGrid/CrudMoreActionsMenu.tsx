@@ -22,7 +22,7 @@ import { FormattedMessage } from "react-intl";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
+export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
 
 interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
