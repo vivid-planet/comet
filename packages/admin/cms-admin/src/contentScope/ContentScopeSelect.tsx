@@ -8,6 +8,7 @@ import {
     List,
     ListItem,
     ListItemButton,
+    ListItemIcon,
     ListItemText,
     ListSubheader,
     Typography,
@@ -103,11 +104,11 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                     <ListItemIcon sx={{ minWidth: "unset !important" }}>
                         <Domain />
                     </ListItemIcon>
-                <ListItemText
+                    <ListItemText
                         primaryTypographyProps={{ variant: "body2", fontWeight: "inherit" }}
-                    sx={{ margin: 0 }}
-                    primary={<MarkedMatches text={text} matches={matches} />}
-                />
+                        sx={{ margin: 0 }}
+                        primary={<MarkedMatches text={text} matches={matches} />}
+                    />
                 </>
             );
         };
@@ -168,7 +169,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                             <Divider />
                         </>
                     )}
-                    <List>
+                    <List sx={{ paddingTop: 0 }}>
                         {groups.map((group, index) => {
                             const showGroupHeader = hasMultipleDimensions;
                             const showGroupDivider = showGroupHeader && index !== groups.length - 1;
@@ -179,12 +180,12 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                 <Fragment key={group.value}>
                                     {showGroupHeader && (
                                         <ListSubheader
-                                            sx={{
-                                                paddingX: (theme) => theme.spacing(3),
-                                                paddingTop: (theme) => theme.spacing(4),
-                                                paddingBottom: (theme) => theme.spacing(2),
+                                            sx={({ spacing }) => ({
+                                                paddingX: spacing(3),
+                                                paddingTop: spacing(4),
+                                                paddingBottom: spacing(2),
                                                 lineHeight: "inherit",
-                                            }}
+                                            })}
                                         >
                                             <Typography variant="overline" color={(theme) => theme.palette.grey[500]}>
                                                 {matches ? <MarkedMatches text={groupLabel} matches={matches} /> : groupLabel}
@@ -195,24 +196,29 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                         const isSelected = option === selectedOption;
 
                                         return (
-                                        <ListItemButton
-                                            key={JSON.stringify(option)}
-                                            onClick={() => {
-                                                hideDropdown();
-                                                onChange(optionToValue<Value>(option));
-                                                setSearchValue("");
-                                            }}
+                                            <ListItemButton
+                                                key={JSON.stringify(option)}
+                                                onClick={() => {
+                                                    hideDropdown();
+                                                    onChange(optionToValue<Value>(option));
+                                                    setSearchValue("");
+                                                }}
                                                 selected={isSelected}
                                                 sx={({ spacing }) => ({
                                                     paddingX: spacing(6),
                                                     gap: spacing(2),
                                                     fontWeight: isSelected ? 600 : 250,
                                                 })}
-                                        >
-                                            {renderOption?.(option, searchValue)}
-                                        </ListItemButton>
-                                    ))}
-                                    {showGroupDivider && <Divider sx={{ margin: 2, borderColor: "grey.50" }} />}
+                                            >
+                                                {renderOption?.(option, searchValue)}
+                                            </ListItemButton>
+                                        );
+                                    })}
+                                    {showGroupDivider && (
+                                        <Divider
+                                            sx={({ spacing, palette }) => ({ marginX: "8px", marginY: spacing(2), borderColor: palette.grey[50] })}
+                                        />
+                                    )}
                                 </Fragment>
                             );
                         })}
