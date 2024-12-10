@@ -131,9 +131,15 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                     anchorOrigin: { vertical: "bottom", horizontal: "left" },
                     transformOrigin: { vertical: "top", horizontal: "left" },
                     PaperProps: {
-                        sx: {
+                        sx: (theme) => ({
                             minWidth: "350px",
-                        },
+
+                            [theme.breakpoints.down("md")]: {
+                                width: "100%",
+                                maxWidth: "unset",
+                                bottom: 0,
+                            },
+                        }),
                     },
                 },
             }}
