@@ -1,5 +1,37 @@
 # @comet/admin-theme
 
+## 7.10.0
+
+### Minor Changes
+
+-   7e94c55f6: Rework `GridFilterPanel` to match the updated Comet CI
+-   22f3d402e: Adapt `Chip` styling to align with Comet DXP design
+
+    -   Fix hover styling
+    -   Add new styling for `<Chip variant="filled" color="info">`
+
+-   589b0b9ee: Enhance `FieldContainer` with `secondaryHelperText` prop and `helperTextIcon` prop
+
+    -   `helperTextIcon` displays an icon alongside the text for `helperText`, `error` or `warning`.
+    -   `secondaryHelperText` provides an additional helper text positioned beneath the input field, aligned to the bottom-right corner.
+
+    **Example:**
+
+    ```tsx
+    <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon" secondaryHelperText="0/100">
+        <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+    </FieldContainer>
+    ```
+
+### Patch Changes
+
+-   b51bf6d85: Adapt `Radio` and `Checkbox` styling to Comet DXP design
+
+    Fix colors of disabled states.
+
+-   71876ea69: Adapt size of arrow in `Select` and `Autocomplete` fields according to Comet DXP design
+    -   @comet/admin-icons@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes

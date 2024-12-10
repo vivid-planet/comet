@@ -1,5 +1,12 @@
 # @comet/cms-api
 
+## 7.10.0
+
+### Patch Changes
+
+-   7b2adae8b: API Generator: Don't generate an update input for the single generator
+    -   @comet/blocks-api@7.10.0
+
 ## 7.9.0
 
 ### Patch Changes
