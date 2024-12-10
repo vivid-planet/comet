@@ -10,7 +10,6 @@ import {
     useExportDisplayedTableData,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 interface IExampleRow extends IRow {
     id: number;
@@ -22,7 +21,7 @@ interface IExampleRow extends IRow {
     };
 }
 
-const CustomHeader: React.FunctionComponent = () => {
+const CustomHeader = () => {
     return <div>Custom Header</div>;
 };
 
@@ -83,7 +82,7 @@ export const ExportDisplayedTableData = () => {
                         },
                         {
                             name: "customheader",
-                            header: <CustomHeader>Custom Header</CustomHeader>,
+                            header: <CustomHeader />,
                             headerExcel: "Overrided Excel Export Header", // HTML Nodes / React Nodes (from above header) can not be exported to excel -> use headerExcel to set an exportable column header
                             render: (row) => "Custom Row Content", // if render returns a string -> excel export can export this string
                         },
