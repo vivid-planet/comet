@@ -1,8 +1,11 @@
 import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock } from "@comet/blocks-api";
 import { AnchorBlock, DamImageBlock } from "@comet/cms-api";
+import { AccordionBlock } from "@src/common/blocks/accordion.block";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
+import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
+import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
 import { NewsDetailBlock } from "@src/news/blocks/news-detail.block";
 import { NewsListBlock } from "@src/news/blocks/news-list.block";
 import { LayoutBlock } from "@src/pages/blocks/layout.block";
@@ -13,7 +16,6 @@ import { ColumnsBlock } from "./columns.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { HeadlineBlock } from "./headline.block";
 import { ImageLinkBlock } from "./image-link.block";
-import { MediaBlock } from "./media.block";
 import { TeaserBlock } from "./teaser.block";
 import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./two-lists.block";
@@ -29,12 +31,14 @@ const supportedBlocks = {
     columns: ColumnsBlock,
     anchor: AnchorBlock,
     twoLists: TwoListsBlock,
-    media: MediaBlock,
+    media: StandaloneMediaBlock,
     teaser: TeaserBlock,
     newsDetail: NewsDetailBlock,
     imageLink: ImageLinkBlock,
     newsList: NewsListBlock,
     layout: LayoutBlock,
+    accordion: AccordionBlock,
+    mediaGallery: MediaGalleryBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {

@@ -15,8 +15,9 @@ const SpaceMapping: Record<string, number> = {
     d600: 300,
 };
 
-const SpaceBlock = ({ data: { spacing } }: PropsWithData<DemoSpaceBlockData>) => {
-    return <div style={{ height: `${SpaceMapping[spacing]}px` }} />;
-};
-
-export default withPreview(SpaceBlock, { label: "Abstand" });
+export const SpaceBlock = withPreview(
+    ({ data: { spacing } }: PropsWithData<DemoSpaceBlockData>) => {
+        return <div style={{ height: `${SpaceMapping[spacing]}px` }} />;
+    },
+    { label: "Abstand" },
+);

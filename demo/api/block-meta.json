@@ -1,5 +1,178 @@
 [
     {
+        "name": "Accordion",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "AccordionItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "AccordionItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "AccordionContent",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "richtext": "RichText",
+                                "heading": "StandaloneHeading",
+                                "space": "DemoSpace",
+                                "callToActionList": "StandaloneCallToActionList"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "type",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "OneOfBlocks",
+                            "blocks": {
+                                "richtext": "RichText",
+                                "heading": "StandaloneHeading",
+                                "space": "DemoSpace",
+                                "callToActionList": "StandaloneCallToActionList"
+                            },
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "AccordionItem",
+        "fields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "content",
+                "kind": "Block",
+                "block": "AccordionContent",
+                "nullable": false
+            },
+            {
+                "name": "openByDefault",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "content",
+                "kind": "Block",
+                "block": "AccordionContent",
+                "nullable": false
+            },
+            {
+                "name": "openByDefault",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Anchor",
         "fields": [
             {
@@ -13,6 +186,102 @@
                 "name": "name",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "CallToAction",
+        "fields": [
+            {
+                "name": "textLink",
+                "kind": "Block",
+                "block": "DemoTextLink",
+                "nullable": false
+            },
+            {
+                "name": "variant",
+                "kind": "Enum",
+                "enum": [
+                    "Contained",
+                    "Outlined",
+                    "Text"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "textLink",
+                "kind": "Block",
+                "block": "DemoTextLink",
+                "nullable": false
+            },
+            {
+                "name": "variant",
+                "kind": "Enum",
+                "enum": [
+                    "Contained",
+                    "Outlined",
+                    "Text"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "CallToActionList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "CallToAction",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "CallToAction",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
             }
         ]
     },
@@ -707,6 +976,63 @@
         ]
     },
     {
+        "name": "Heading",
+        "fields": [
+            {
+                "name": "eyebrow",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "headline",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "htmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "H1",
+                    "H2",
+                    "H3",
+                    "H4",
+                    "H5",
+                    "H6"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "eyebrow",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "headline",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "htmlTag",
+                "kind": "Enum",
+                "enum": [
+                    "H1",
+                    "H2",
+                    "H3",
+                    "H4",
+                    "H5",
+                    "H6"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Headline",
         "fields": [
             {
@@ -1108,8 +1434,7 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo",
-                                "vimeoVideo": "VimeoVideo"
+                                "youTubeVideo": "YouTubeVideo"
                             },
                             "nullable": false
                         }
@@ -1138,8 +1463,7 @@
                             "blocks": {
                                 "image": "DamImage",
                                 "damVideo": "DamVideo",
-                                "youTubeVideo": "YouTubeVideo",
-                                "vimeoVideo": "VimeoVideo"
+                                "youTubeVideo": "YouTubeVideo"
                             },
                             "nullable": false
                         }
@@ -1153,6 +1477,147 @@
                 "name": "activeType",
                 "kind": "String",
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "MediaGallery",
+        "fields": [
+            {
+                "name": "items",
+                "kind": "Block",
+                "block": "MediaGalleryList",
+                "nullable": false
+            },
+            {
+                "name": "aspectRatio",
+                "kind": "Enum",
+                "enum": [
+                    "16x9",
+                    "4x3",
+                    "3x2",
+                    "3x1",
+                    "2x1",
+                    "1x1",
+                    "1x2",
+                    "1x3",
+                    "2x3",
+                    "3x4",
+                    "9x16"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "items",
+                "kind": "Block",
+                "block": "MediaGalleryList",
+                "nullable": false
+            },
+            {
+                "name": "aspectRatio",
+                "kind": "Enum",
+                "enum": [
+                    "16x9",
+                    "4x3",
+                    "3x2",
+                    "3x1",
+                    "2x1",
+                    "1x1",
+                    "1x2",
+                    "1x3",
+                    "2x3",
+                    "3x4",
+                    "9x16"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "MediaGalleryItem",
+        "fields": [
+            {
+                "name": "media",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "caption",
+                "kind": "String",
+                "nullable": true
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "media",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "caption",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "MediaGalleryList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "MediaGalleryItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "MediaGalleryItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
             }
         ]
     },
@@ -1419,12 +1884,14 @@
                                 "columns": "Columns",
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
-                                "media": "Media",
+                                "media": "StandaloneMedia",
                                 "teaser": "Teaser",
                                 "newsDetail": "NewsDetail",
                                 "imageLink": "ImageLink",
                                 "newsList": "NewsList",
-                                "layout": "Layout"
+                                "layout": "Layout",
+                                "accordion": "Accordion",
+                                "mediaGallery": "MediaGallery"
                             },
                             "nullable": false
                         },
@@ -1478,12 +1945,14 @@
                                 "columns": "Columns",
                                 "anchor": "Anchor",
                                 "twoLists": "TwoLists",
-                                "media": "Media",
+                                "media": "StandaloneMedia",
                                 "teaser": "Teaser",
                                 "newsDetail": "NewsDetail",
                                 "imageLink": "ImageLink",
                                 "newsList": "NewsList",
-                                "layout": "Layout"
+                                "layout": "Layout",
+                                "accordion": "Accordion",
+                                "mediaGallery": "MediaGallery"
                             },
                             "nullable": false
                         },
@@ -2032,6 +2501,137 @@
             {
                 "name": "height",
                 "kind": "Number",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "StandaloneCallToActionList",
+        "fields": [
+            {
+                "name": "callToActionList",
+                "kind": "Block",
+                "block": "CallToActionList",
+                "nullable": false
+            },
+            {
+                "name": "alignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "callToActionList",
+                "kind": "Block",
+                "block": "CallToActionList",
+                "nullable": false
+            },
+            {
+                "name": "alignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center",
+                    "right"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "StandaloneHeading",
+        "fields": [
+            {
+                "name": "heading",
+                "kind": "Block",
+                "block": "Heading",
+                "nullable": false
+            },
+            {
+                "name": "textAlignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "heading",
+                "kind": "Block",
+                "block": "Heading",
+                "nullable": false
+            },
+            {
+                "name": "textAlignment",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "center"
+                ],
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "StandaloneMedia",
+        "fields": [
+            {
+                "name": "media",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "aspectRatio",
+                "kind": "Enum",
+                "enum": [
+                    "16x9",
+                    "4x3",
+                    "3x2",
+                    "3x1",
+                    "2x1",
+                    "1x1",
+                    "1x2",
+                    "1x3",
+                    "2x3",
+                    "3x4",
+                    "9x16"
+                ],
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "media",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "aspectRatio",
+                "kind": "Enum",
+                "enum": [
+                    "16x9",
+                    "4x3",
+                    "3x2",
+                    "3x1",
+                    "2x1",
+                    "1x1",
+                    "1x2",
+                    "1x3",
+                    "2x3",
+                    "3x4",
+                    "9x16"
+                ],
                 "nullable": false
             }
         ]

@@ -3,6 +3,10 @@ import { BlocksBlock, DamVideoBlock, PropsWithData, SupportedBlocks } from "@com
 import { PageContentBlockData } from "@src/blocks.generated";
 import { CookieSafeYouTubeVideoBlock } from "@src/blocks/CookieSafeYouTubeVideoBlock";
 import { LayoutBlock } from "@src/blocks/LayoutBlock";
+import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
+import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { ImageLinkBlock } from "@src/documents/pages/blocks/ImageLinkBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
@@ -15,8 +19,6 @@ import { FullWidthImageBlock } from "./FullWidthImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
 import { LinkListBlock } from "./LinkListBlock";
 import { MediaBlock } from "./MediaBlock";
-import RichTextBlock from "./RichTextBlock";
-import SpaceBlock from "./SpaceBlock";
 import { TextImageBlock } from "./TextImageBlock";
 import { TwoListsBlock } from "./TwoListsBlock";
 
@@ -39,6 +41,8 @@ const supportedBlocks: SupportedBlocks = {
     imageLink: (props) => <ImageLinkBlock data={props} />,
     newsList: (props) => <NewsListBlock data={props} />,
     layout: (props) => <LayoutBlock data={props} />,
+    accordion: (props) => <AccordionBlock data={props} />,
+    mediaGallery: (props) => <MediaGalleryBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {
