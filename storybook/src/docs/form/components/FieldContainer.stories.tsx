@@ -1,6 +1,7 @@
 import { FieldContainer } from "@comet/admin";
+import { Info } from "@comet/admin-icons";
 import { InputBase } from "@mui/material";
-import * as React from "react";
+import { ChangeEvent, useState } from "react";
 
 export default {
     title: "Docs/Form/Components/FieldContainer",
@@ -8,9 +9,9 @@ export default {
 
 export const Basic = {
     render: () => {
-        const [value, setValue] = React.useState<string>("");
+        const [value, setValue] = useState<string>("");
 
-        function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        function handleChange(e: ChangeEvent<HTMLInputElement>) {
             setValue(e.target.value);
         }
 
@@ -33,6 +34,16 @@ export const Basic = {
                     <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
                 </FieldContainer>
                 <FieldContainer label="Helper" helperText="This is a helper">
+                    <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+                </FieldContainer>
+                <br />
+                <FieldContainer label="Secondary Helper Text" secondaryHelperText={`${value.length}/100`}>
+                    <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+                </FieldContainer>
+                <FieldContainer label="Multiple Helper Texts" helperText="Helper Text" secondaryHelperText={`${value.length}/100`}>
+                    <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+                </FieldContainer>
+                <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon">
                     <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
                 </FieldContainer>
             </form>

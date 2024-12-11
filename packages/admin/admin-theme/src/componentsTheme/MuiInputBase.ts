@@ -7,12 +7,17 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiInputBase">(component?.styleOverrides, {
         root: {
-            border: `1px solid ${palette.grey[100]}`,
+            border: `1px solid ${palette.grey[200]}`,
             borderRadius: 2,
             backgroundColor: "#fff",
 
             [`&.${inputBaseClasses.focused}`]: {
                 borderColor: palette.primary.main,
+            },
+
+            [`&.${inputBaseClasses.disabled}`]: {
+                borderColor: palette.grey[100],
+                backgroundColor: palette.grey[50],
             },
         },
         adornedStart: {

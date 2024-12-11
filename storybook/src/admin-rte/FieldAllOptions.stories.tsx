@@ -1,7 +1,7 @@
 import { Field, FormSection } from "@comet/admin";
 import { createFinalFormRte } from "@comet/admin-rte";
 import { Button, Card, CardContent, Grid } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 
 import { ContentFormat, defaultContent, makeApiOptions, rteOptions } from "./RteAllOptions.stories";
@@ -17,7 +17,7 @@ export default {
 
 export const FieldAllOptions = {
     render: () => {
-        const [submittedValue, setSubmittedValue] = React.useState<{ rteContent: any }>({ rteContent: defaultContent });
+        const [submittedValue, setSubmittedValue] = useState<{ rteContent: any }>({ rteContent: defaultContent });
 
         return (
             <Grid container spacing={4} style={{ maxWidth: 800 }}>

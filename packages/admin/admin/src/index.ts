@@ -22,6 +22,7 @@ export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
 export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } from "./common/FullHeightContent";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
@@ -50,6 +51,7 @@ export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDat
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
+export { dataGridDateColumn, dataGridDateTimeColumn } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";

@@ -2,7 +2,6 @@ import { FieldSet, Tooltip } from "@comet/admin";
 import { Info } from "@comet/admin-icons";
 import { Chip, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
 
 const textContent =
     "FieldSet content. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";

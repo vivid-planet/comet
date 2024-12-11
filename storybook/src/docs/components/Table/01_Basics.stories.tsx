@@ -1,6 +1,6 @@
 import { Table } from "@comet/admin";
 import { Button } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 interface Person {
     id: number;
@@ -149,7 +149,7 @@ export const TableColumnVisibleProp = () => {
         { id: 2, firstname: "Lewis", lastname: "Chan" },
     ];
 
-    const [idVisible, setIdVisible] = React.useState(false);
+    const [idVisible, setIdVisible] = useState(false);
 
     return (
         <>

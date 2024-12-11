@@ -2,6 +2,7 @@ import {
     SaveBoundary,
     SaveBoundarySaveButton,
     Stack,
+    StackMainContent,
     StackPage,
     StackSwitch,
     StackToolbar,
@@ -33,20 +34,26 @@ export function ManufacturersPage() {
             <StackSwitch>
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                    <ManufacturersGrid />
+                    <StackMainContent fullHeight>
+                        <ManufacturersGrid />
+                    </StackMainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editManufacturers", defaultMessage: "Edit Manufacturers" })}>
                     {(selectedId) => (
                         <SaveBoundary>
                             <FormToolbar />
-                            <ManufacturerForm id={selectedId} />
+                            <StackMainContent>
+                                <ManufacturerForm id={selectedId} />
+                            </StackMainContent>
                         </SaveBoundary>
                     )}
                 </StackPage>
                 <StackPage name="add" title={intl.formatMessage({ id: "products.addManufacturers", defaultMessage: "Add Manufacturers" })}>
                     <SaveBoundary>
                         <FormToolbar />
-                        <ManufacturerForm />
+                        <StackMainContent>
+                            <ManufacturerForm />
+                        </StackMainContent>
                     </SaveBoundary>
                 </StackPage>
             </StackSwitch>

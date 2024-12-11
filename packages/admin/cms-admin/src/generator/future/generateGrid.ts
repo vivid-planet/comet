@@ -25,8 +25,8 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
-function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
-    return `{${Object.entries(object)
+function tsCodeRecordToString(object: TsCodeRecordToStringObject, spreadAbove?: string) {
+    return `{${spreadAbove ? `${spreadAbove}` : ""}${Object.entries(object)
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
         .join("\n")}}`;
@@ -318,20 +318,31 @@ export function generateGrid(
         const type = column.type;
         const name = String(column.name);
 
+        let gridColumnType: string | undefined = undefined;
         let renderCell: string | undefined = undefined;
-        let valueGetter: string | undefined = name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined;
         let valueFormatter: string | undefined = undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
+        let filterOperators: string | undefined;
+        if (column.filterOperators) {
+            let importPath = column.filterOperators.import;
+            if (importPath.startsWith("./")) {
+                //go one level up as generated files are in generated subfolder
+                importPath = `.${importPath}`;
+            }
+            imports.push({
+                name: column.filterOperators.name,
+                importPath,
+            });
+
+            filterOperators = column.filterOperators.name;
+        }
+
         if (type == "dateTime") {
-            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
-            valueFormatter = `({ value }) => value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : ""`;
-            gridType = "dateTime";
+            gridColumnType = "...dataGridDateTimeColumn,";
         } else if (type == "date") {
-            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
-            valueFormatter = `({ value }) => value ? intl.formatDate(value) : ""`;
-            gridType = "date";
+            gridColumnType = "...dataGridDateColumn,";
         } else if (type == "number") {
             gridType = "number";
         } else if (type == "boolean") {
@@ -407,6 +418,7 @@ export function generateGrid(
                 headerName: column.headerName,
                 type,
                 gridType: "singleSelect" as const,
+                columnType: gridColumnType,
                 valueOptions,
                 renderCell,
                 valueFormatter,
@@ -427,11 +439,14 @@ export function generateGrid(
 
         return {
             name,
+            fieldName: column.fieldName,
             headerName: column.headerName,
             type,
             gridType,
+            columnType: gridColumnType,
             renderCell,
-            valueGetter,
+            valueGetter: name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined,
+            filterOperators: filterOperators,
             valueFormatter,
             width: column.width,
             minWidth: column.minWidth,
@@ -507,6 +522,8 @@ export function generateGrid(
         GridFilterButton,
         GridCellContent,
         GridColDef,
+        dataGridDateTimeColumn,
+        dataGridDateColumn,
         renderStaticSelectCell,
         messages,
         muiGridFilterToGql,
@@ -661,7 +678,7 @@ export function generateGrid(
                     }
 
                     const columnDefinition: TsCodeRecordToStringObject = {
-                        field: `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
+                        field: column.fieldName ? `"${column.fieldName}"` : `"${column.name.replace(/\./g, "_")}"`, // field-name is used for api-filter, and api nests with underscore
                         renderHeader: column.headerInfoTooltip
                             ? `() => (
                                     <>
@@ -688,12 +705,13 @@ export function generateGrid(
                               }" })`
                             : undefined,
                         type: column.gridType ? `"${column.gridType}"` : undefined,
-                        filterable: !filterFields.includes(column.name) ? `false` : undefined,
+                        filterable: !column.filterOperators && !filterFields.includes(column.name) ? `false` : undefined,
                         sortable: !sortFields.includes(column.name) ? `false` : undefined,
                         valueGetter: column.valueGetter,
                         valueFormatter: column.valueFormatter,
                         valueOptions: column.valueOptions,
                         renderCell: column.renderCell,
+                        filterOperators: column.filterOperators,
                         width: column.width,
                         flex: column.flex,
                         pinned: column.pinned && `"${column.pinned}"`,
@@ -711,7 +729,7 @@ export function generateGrid(
                         columnDefinition.maxWidth = maxWidth;
                     }
 
-                    return tsCodeRecordToString(columnDefinition);
+                    return tsCodeRecordToString(columnDefinition, column.columnType);
                 })
                 .join(",\n")},
                 ${

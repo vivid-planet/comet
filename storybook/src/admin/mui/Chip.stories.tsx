@@ -1,6 +1,5 @@
 import { ChevronDown } from "@comet/admin-icons";
 import { Box, Card, CardContent, Chip, Grid, Stack, Typography } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "@comet/admin/mui",
@@ -226,6 +225,30 @@ export const _Chip = {
                                     />
                                 </Grid>
                             </Grid>
+                            <Grid container spacing={2} mb={5}>
+                                <Grid item>
+                                    <Chip variant="filled" color="info" label="Normal" />
+                                </Grid>
+                                <Grid item>
+                                    <Chip variant="filled" color="info" clickable label="Clickable" />
+                                </Grid>
+                                <Grid item>
+                                    <Chip variant="filled" color="info" icon={<ChevronDown />} clickable label="With Icon" />
+                                </Grid>
+                                <Grid item>
+                                    <Chip variant="filled" color="info" label="Disabled" disabled />
+                                </Grid>
+                                <Grid item>
+                                    <Chip
+                                        variant="filled"
+                                        color="info"
+                                        label="Deletable"
+                                        onDelete={() => {
+                                            console.log("Delete");
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
                         </Box>
                         <Typography variant="h4" gutterBottom>
                             Small size Chips
@@ -367,6 +390,31 @@ export const _Chip = {
                                     <Chip
                                         size="small"
                                         color="warning"
+                                        label="Deletable"
+                                        onDelete={() => {
+                                            console.log("Delete");
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={2} mb={5}>
+                                <Grid item>
+                                    <Chip size="small" variant="filled" color="info" label="Normal" />
+                                </Grid>
+                                <Grid item>
+                                    <Chip size="small" variant="filled" color="info" clickable label="Clickable" />
+                                </Grid>
+                                <Grid item>
+                                    <Chip size="small" variant="filled" color="info" icon={<ChevronDown />} clickable label="With Icon" />
+                                </Grid>
+                                <Grid item>
+                                    <Chip size="small" variant="filled" color="info" label="Disabled" disabled />
+                                </Grid>
+                                <Grid item>
+                                    <Chip
+                                        size="small"
+                                        variant="filled"
+                                        color="info"
                                         label="Deletable"
                                         onDelete={() => {
                                             console.log("Delete");
