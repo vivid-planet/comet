@@ -34,7 +34,7 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
         //search: true, //not implemented
         //filter: true, //not implemented
         //sort: true, //not implemented
-        input: false, //default is true
+        input: true, //default is true
     })
     @OneToMany(() => Product, (products) => products.category)
     products = new Collection<Product>(this);
