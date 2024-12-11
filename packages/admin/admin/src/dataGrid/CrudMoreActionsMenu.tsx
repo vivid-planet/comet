@@ -120,7 +120,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
     return (
         <>
             <MoreActionsButton variant="text" color="inherit" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
-                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More actions" />
+                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
                 {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
             </MoreActionsButton>
             <Menu
@@ -137,6 +137,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                 {!!overallActions?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />}
+                        typographyProps={selectiveActions?.length ? undefined : { sx: { display: "none" } }}
                         {...groupProps}
                     >
                         {overallActions.map((item, index) => {
@@ -170,6 +171,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                 {!!selectiveActions?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />}
+                        typographyProps={overallActions?.length ? undefined : { sx: { display: "none" } }}
                         {...groupProps}
                     >
                         {selectiveActions.map((item, index) => {
