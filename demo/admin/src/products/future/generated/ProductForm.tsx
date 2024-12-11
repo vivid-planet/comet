@@ -78,10 +78,11 @@ type FormValues = Omit<ProductFormDetailsFragment, "dimensions"> & {
 };
 
 interface FormProps {
+    hideFields?: { availableSince?: boolean };
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ hideFields, id }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -106,14 +107,14 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 depth: String(data.product.dimensions.depth),
                             }
                           : undefined,
-                      availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
+                      availableSince: hideFields?.availableSince && data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
                   }
                 : {
                       inStock: false,
                       image: rootBlocks.image.defaultValues(),
                   },
-        [data],
+        [data, hideFields],
     );
 
     const saveConflict = useFormSaveConflict({
@@ -390,19 +391,20 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                     />
                                 )}
                             </Field>
-
-                            <Field
-                                variant="horizontal"
-                                fullWidth
-                                name="availableSince"
-                                component={FinalFormDatePicker}
-                                label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
-                                startAdornment={
-                                    <InputAdornment position="start">
-                                        <CalendarTodayIcon />
-                                    </InputAdornment>
-                                }
-                            />
+                            {!hideFields?.availableSince && (
+                                <Field
+                                    variant="horizontal"
+                                    fullWidth
+                                    name="availableSince"
+                                    component={FinalFormDatePicker}
+                                    label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <CalendarTodayIcon />
+                                        </InputAdornment>
+                                    }
+                                />
+                            )}
                             <Field
                                 name="image"
                                 isEqual={isEqual}
