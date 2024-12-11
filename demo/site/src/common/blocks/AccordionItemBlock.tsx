@@ -1,11 +1,11 @@
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { AccordionContentBlockData, AccordionItemBlockData } from "@src/blocks.generated";
-import { SvgUse } from "@src/components/common/SvgUse";
-import { Typography } from "@src/components/common/Typography";
 import { useState } from "react";
 import { useIntl } from "react-intl";
 import styled, { css } from "styled-components";
 
+import { Typography } from "../components/Typography";
+import { SvgUse } from "../helpers/SvgUse";
 import { RichTextBlock } from "./RichTextBlock";
 import { SpaceBlock } from "./SpaceBlock";
 import { StandaloneCallToActionListBlock } from "./StandaloneCallToActionListBlock";

@@ -1,11 +1,11 @@
 "use client";
 import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
 import { HeadingBlockData } from "@src/blocks.generated";
-import { Typography } from "@src/components/common/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import { Renderers } from "redraft";
 import styled from "styled-components";
 
+import { Typography } from "../components/Typography";
 import { createTextBlockRenderFn, defaultRichTextInlineStyleMap, RichTextBlock } from "./RichTextBlock";
 
 const eyebrowRenderers: Renderers = {

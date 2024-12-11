@@ -3,8 +3,8 @@ import { TeaserItemBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { MediaBlock } from "@src/common/blocks/MediaBlock";
 import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import { SvgUse } from "@src/components/common/SvgUse";
-import { Typography } from "@src/components/common/Typography";
+import { Typography } from "@src/common/components/Typography";
+import { SvgUse } from "@src/common/helpers/SvgUse";
 import { Renderers } from "redraft";
 import styled from "styled-components";
 

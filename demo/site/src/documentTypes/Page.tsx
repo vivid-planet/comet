@@ -1,13 +1,13 @@
 import { generateImageUrl, gql, previewParams } from "@comet/cms-site";
 import { PageContentBlock } from "@src/common/blocks/PageContentBlock";
-import Breadcrumbs from "@src/components/Breadcrumbs";
-import { breadcrumbsFragment } from "@src/components/Breadcrumbs.fragment";
+import Breadcrumbs from "@src/common/components/Breadcrumbs";
+import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header } from "@src/layout/header/Header";
 import { headerFragment } from "@src/layout/header/Header.fragment";
+import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
+import { topMenuPageTreeNodeFragment } from "@src/layout/topNavigation/TopNavigation.fragment";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
-import { TopNavigation } from "@src/topNavigation/TopNavigation";
-import { topMenuPageTreeNodeFragment } from "@src/topNavigation/TopNavigation.fragment";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";

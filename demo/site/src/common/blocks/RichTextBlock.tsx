@@ -1,12 +1,12 @@
 "use client";
 import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
 import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
-import { isValidLink } from "@src/components/common/HiddenIfInvalidLink";
-import { Typography, TypographyProps } from "@src/components/common/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import redraft, { Renderers, TextBlockRenderFn } from "redraft";
 import styled, { css } from "styled-components";
 
+import { Typography, TypographyProps } from "../components/Typography";
+import { isValidLink } from "../helpers/HiddenIfInvalidLink";
 import { LinkBlock } from "./LinkBlock";
 
 export const createTextBlockRenderFn =
