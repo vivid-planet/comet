@@ -34,10 +34,6 @@ export const ImportFromUnsplash = () => {
             { acceptedFiles: [unsplashImage.file], fileRejections: [] },
             {
                 folderId,
-                importSource: {
-                    importSourceId: unsplashImage.url,
-                    importSourceType: "unsplash",
-                },
             },
         );
         handleCloseDialog();

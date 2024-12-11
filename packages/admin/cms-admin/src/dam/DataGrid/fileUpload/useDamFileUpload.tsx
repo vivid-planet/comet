@@ -36,6 +36,7 @@ interface FileWithCustomMetaData extends File {
     license?: GQLLicenseInput;
     title?: string;
     altText?: string;
+    importSource?: ImportSource;
 }
 
 export interface FileWithFolderPath extends FileWithCustomMetaData {
@@ -55,6 +56,7 @@ type ImportSource = { importSourceType: never; importSourceId: never } | { impor
 
 interface UploadFilesOptions {
     folderId?: string;
+    // deprecated: add it directly to file props instead
     importSource?: ImportSource;
 }
 
@@ -110,6 +112,7 @@ const addFolderPathToFiles = async (acceptedFiles: FileWithCustomMetaData[]): Pr
         newFile.license = file.license;
         newFile.title = file.title;
         newFile.altText = file.altText;
+        newFile.importSource = file.importSource;
 
         const folderPath = harmonizedPath?.split("/").slice(0, -1).join("/");
         newFile.folderPath = folderPath && folderPath?.length > 0 ? folderPath : undefined;
@@ -404,6 +407,7 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         file,
                         folderId: targetFolderId,
                         scope,
+                        // deprecated: add importSource directly to file props instead
                         importSourceId: importSource?.importSourceId,
                         importSourceType: importSource?.importSourceType,
                     };
