@@ -1,6 +1,6 @@
 import { Close } from "@comet/admin-icons";
 // eslint-disable-next-line no-restricted-imports
-import { Alert as MuiAlert, alertClasses, AlertTitle, buttonClasses, IconButton, Typography } from "@mui/material";
+import { Alert as MuiAlert, alertClasses, AlertTitle, IconButton, Typography } from "@mui/material";
 import { css, useThemeProps } from "@mui/material/styles";
 import { forwardRef, ReactNode } from "react";
 
@@ -87,10 +87,6 @@ const Root = createComponentSlot(MuiAlert)<AlertClassKey, OwnerState>({
             position: relative;
             align-items: flex-start;
             padding: ${theme.spacing(4, 6, 4, 4)};
-
-            & .${buttonClasses.text} {
-                margin-left: -15px;
-            }
 
             & .${alertClasses.message} {
                 flex-direction: column;
