@@ -3,6 +3,7 @@ import "swiper/css/navigation";
 
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { MediaGalleryBlockData } from "@src/blocks.generated";
+import { Typography } from "@src/components/common/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled from "styled-components";
 import { Navigation } from "swiper/modules";

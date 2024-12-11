@@ -1,7 +1,7 @@
 "use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { CallToActionBlockData } from "@src/blocks.generated";
-import { Button } from "@src/components/Button";
+import { Button, ButtonVariant } from "@src/components/Button";
 import { HiddenIfInvalidLink } from "@src/components/common/HiddenIfInvalidLink";
 
 import { LinkBlock } from "./LinkBlock";
