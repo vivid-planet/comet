@@ -22,7 +22,7 @@ import { FormattedMessage } from "react-intl";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip" | "menuItem";
+export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip";
 
 export interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
@@ -94,16 +94,6 @@ const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKe
     `,
 );
 
-const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
-    componentName: "CrudMoreActions",
-    slotName: "menuItem",
-})(
-    css`
-        padding: 8px 15px 8px 30px !important;
-        column-gap: 10px;
-    `,
-);
-
 export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveActions, selectionSize }: CrudMoreActionsMenuProps) {
     const {
         menu: menuProps,
@@ -147,7 +137,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
                             return (
                                 <div key={index}>
-                                    <MoreActionsMenuItem
+                                    <MenuItem
                                         key={index}
                                         disabled={!!selectionSize}
                                         {...rest}
@@ -158,7 +148,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                     >
                                         {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
-                                    </MoreActionsMenuItem>
+                                    </MenuItem>
                                     {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
                                 </div>
                             );
@@ -180,7 +170,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
                             return (
                                 <div key={index}>
-                                    <MoreActionsMenuItem
+                                    <MenuItem
                                         key={index}
                                         disabled={!selectionSize}
                                         {...rest}
@@ -194,7 +184,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                         {!!selectionSize && (
                                             <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />
                                         )}
-                                    </MoreActionsMenuItem>
+                                    </MenuItem>
                                     {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
                                 </div>
                             );
