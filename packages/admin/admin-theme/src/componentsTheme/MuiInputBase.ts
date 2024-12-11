@@ -42,6 +42,7 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
         },
         inputMultiline: {
             padding: `calc(${spacing(2)} - 1px)`,
+            resize: "vertical",
         },
         inputAdornedStart: {
             paddingLeft: spacing(2),
