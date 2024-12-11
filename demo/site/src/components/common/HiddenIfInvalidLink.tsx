@@ -13,14 +13,14 @@ export function HiddenIfInvalidLink({ link, children }: PropsWithChildren<{ link
     const { previewType } = usePreview();
 
     if (previewType === "BlockPreview") {
-        return children;
+        return <>{children}</>;
     }
 
     if (!isValidLink(link)) {
         return null;
     }
 
-    return children;
+    return <>{children}</>;
 }
 
 export const isValidLink = (link: LinkBlockData) => {
