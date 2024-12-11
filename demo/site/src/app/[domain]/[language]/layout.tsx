@@ -1,5 +1,6 @@
 import { IntlProvider } from "@src/util/IntlProvider";
 import { loadMessages } from "@src/util/loadMessages";
+import { setNotFoundContext } from "@src/util/NotFoundContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { PropsWithChildren } from "react";
 
@@ -8,6 +9,7 @@ export default async function Page({ children, params: { domain, language } }: P
     if (!siteConfig.scope.languages.includes(language)) {
         language = "en";
     }
+    setNotFoundContext({ domain, language });
 
     const messages = await loadMessages(language);
     return (
