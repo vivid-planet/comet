@@ -120,7 +120,27 @@ export function BuildEntry() {
     const running = data?.builds[0]?.status === "active" || data?.builds[0]?.status === "pending";
 
     return (
-        <AppHeaderDropdown startIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />} dropdownArrow={null}>
+        <AppHeaderDropdown
+            startIcon={running ? <SsgRunning color="primary" /> : <SsgStandby />}
+            dropdownArrow={null}
+            slotProps={{
+                button: {
+                    slotProps: {
+                        content: {
+                            sx: (theme) => ({
+                                paddingX: "17px",
+                                minWidth: "auto",
+
+                                [theme.breakpoints.up("md")]: {
+                                    paddingX: theme.spacing(4),
+                                    minWidth: "var(--header-height)",
+                                },
+                            }),
+                        },
+                    },
+                },
+            }}
+        >
             <Content>
                 <List>
                     <ListItem dense={false}>

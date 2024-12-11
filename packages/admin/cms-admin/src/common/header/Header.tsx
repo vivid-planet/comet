@@ -14,7 +14,7 @@ function Header({ children, logo }: PropsWithChildren<Props>) {
         <AppHeader>
             <AppHeaderMenuButton />
             {!isMobile && (logo || <CometLogo color="white" />)}
-            <AppHeaderFillSpace />
+            {!isMobile && <AppHeaderFillSpace />}
             {children}
         </AppHeader>
     );
