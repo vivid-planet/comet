@@ -1,5 +1,3 @@
-export const dynamic = "error";
-
 import { gql, previewParams } from "@comet/cms-site";
 import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } from "@src/blocks.generated";
 import { documentTypes } from "@src/documentTypes";
