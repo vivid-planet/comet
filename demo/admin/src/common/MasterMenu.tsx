@@ -13,7 +13,7 @@ import {
     UserPermissionsPage,
 } from "@comet/cms-admin";
 import { ContentScope } from "@src/common/ContentScopeProvider";
-import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
+import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import Dashboard from "@src/dashboard/Dashboard";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
@@ -124,7 +124,7 @@ export const masterMenuData: MasterMenuData = [
         icon: <Assets />,
         route: {
             path: "/assets",
-            render: () => <DamPage additionalToolbarItems={<ImportFromUnsplash />} />,
+            render: () => <DamPage additionalToolbarItems={<ImportFromPicsum />} />,
         },
         requiredPermission: "dam",
     },

@@ -23,7 +23,6 @@ import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { ConfigProvider, createConfig } from "@src/config";
-import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
 import { theme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
@@ -35,6 +34,7 @@ import { Route, Switch } from "react-router-dom";
 
 import MasterHeader from "./common/MasterHeader";
 import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
@@ -84,10 +84,10 @@ class App extends Component {
                         <DamConfigProvider
                             value={{
                                 scopeParts: ["domain"],
-                                additionalToolbarItems: <ImportFromUnsplash />,
+                                additionalToolbarItems: <ImportFromPicsum />,
                                 importSources: {
-                                    unsplash: {
-                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                                    picsum: {
+                                        label: <FormattedMessage id="dam.importSource.Picsum.label" defaultMessage="Lorem Picsum" />,
                                     },
                                 },
                                 contentGeneration: {
