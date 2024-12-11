@@ -1,16 +1,16 @@
 "use client";
 
-import { BlockPreviewProvider, IFrameBridgeProvider, useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
+import { BlockPreviewProvider, IFrameBridgeProvider, useIFrameBridge } from "@comet/cms-site";
 import { FooterContentBlockData } from "@src/blocks.generated";
 import { FooterContentBlock } from "@src/layout/footer/blocks/FooterContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
-import { graphQLApiUrl } from "@src/util/graphQLClient";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { useEffect, useState } from "react";
 
 const PreviewPage = () => {
     const iFrameBridge = useIFrameBridge();
 
-    const { fetch, graphQLFetch } = useBlockPreviewFetch(graphQLApiUrl);
+    const graphQLFetch = createGraphQLFetch();
 
     const [blockData, setBlockData] = useState<FooterContentBlockData>();
     useEffect(() => {
@@ -28,7 +28,7 @@ const PreviewPage = () => {
             setBlockData(newData);
         }
         load();
-    }, [iFrameBridge.block, fetch, graphQLFetch]);
+    }, [iFrameBridge.block, graphQLFetch]);
 
     return <div>{blockData && <FooterContentBlock data={blockData} />}</div>;
 };
