@@ -157,7 +157,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                             handleClose();
                                         }}
                                     >
-                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                     </MoreActionsMenuItem>
                                     {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
@@ -190,7 +190,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                             handleClose();
                                         }}
                                     >
-                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                         {!!selectionSize && (
                                             <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />
