@@ -1,7 +1,7 @@
 import { Field, FieldContainer } from "@comet/admin";
 import { DateRange, DateRangePicker, FinalFormDateRangePicker } from "@comet/admin-date-time";
 import { Grid } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -9,9 +9,9 @@ export default {
 };
 
 export const Basic = () => {
-    const [dateOne, setDateOne] = React.useState<DateRange | undefined>();
-    const [dateTwo, setDateTwo] = React.useState<DateRange | undefined>({ start: "2024-03-10", end: "2024-03-16" });
-    const [dateThree, setDateThree] = React.useState<DateRange | undefined>({ start: "2024-03-10", end: "2024-03-16" });
+    const [dateOne, setDateOne] = useState<DateRange | undefined>();
+    const [dateTwo, setDateTwo] = useState<DateRange | undefined>({ start: "2024-03-10", end: "2024-03-16" });
+    const [dateThree, setDateThree] = useState<DateRange | undefined>({ start: "2024-03-10", end: "2024-03-16" });
 
     return (
         <Grid container spacing={4}>

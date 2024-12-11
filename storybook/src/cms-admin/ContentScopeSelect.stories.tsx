@@ -3,7 +3,7 @@ import { Domain, Language } from "@comet/admin-icons";
 import { ContentScopeSelect, findTextMatches, MarkedMatches } from "@comet/cms-admin";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import { Meta } from "@storybook/react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default {
     title: "@comet/cms-admin/Content Scope Select",

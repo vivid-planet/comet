@@ -119,7 +119,7 @@ export function NewsGrid() {
             field: "date",
             headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
@@ -157,14 +157,14 @@ export function NewsGrid() {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "news.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
             field: "updatedAt",
             headerName: intl.formatMessage({ id: "news.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {

@@ -8,9 +8,7 @@
         "@typescript-eslint/no-non-null-assertion": "off",
         "no-console": "off",
         "@comet/no-other-module-relative-import": "off",
-        "no-restricted-imports": "off",
-        "@typescript-eslint/no-unused-vars": "off",
-        "unused-imports/no-unused-imports": "off"
+        "react/react-in-jsx-scope": "off"
     },
     "overrides": [
         {
