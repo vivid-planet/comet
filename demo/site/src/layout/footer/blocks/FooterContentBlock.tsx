@@ -1,8 +1,8 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { FooterContentBlockData } from "@src/blocks.generated";
-import { DamImageBlock } from "@src/blocks/DamImageBlock";
-import { LinkBlock } from "@src/blocks/LinkBlock";
-import { RichTextBlock } from "@src/blocks/RichTextBlock";
+import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
+import { LinkBlock } from "@src/common/blocks/LinkBlock";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/components/common/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 import styled from "styled-components";

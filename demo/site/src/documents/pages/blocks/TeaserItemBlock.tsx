@@ -1,8 +1,8 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { TeaserItemBlockData } from "@src/blocks.generated";
-import { LinkBlock } from "@src/blocks/LinkBlock";
-import { MediaBlock } from "@src/blocks/MediaBlock";
-import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/blocks/RichTextBlock";
+import { LinkBlock } from "@src/common/blocks/LinkBlock";
+import { MediaBlock } from "@src/common/blocks/MediaBlock";
+import { defaultRichTextInlineStyleMap, RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SvgUse } from "@src/components/common/SvgUse";
 import { Typography } from "@src/components/common/Typography";
 import { Renderers } from "redraft";

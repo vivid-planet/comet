@@ -1,5 +1,5 @@
 "use client";
-import { LinkBlock } from "@src/blocks/LinkBlock";
+import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
