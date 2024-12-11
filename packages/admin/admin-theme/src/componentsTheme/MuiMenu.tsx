@@ -1,7 +1,7 @@
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiMenu: GetMuiComponentTheme<"MuiMenu"> = (component) => ({
+export const getMuiMenu: GetMuiComponentTheme<"MuiMenu"> = (component, theme) => ({
     ...component,
     defaultProps: {
         ...component?.defaultProps,
@@ -12,6 +12,11 @@ export const getMuiMenu: GetMuiComponentTheme<"MuiMenu"> = (component) => ({
             "& .MuiMenuItem-root": {
                 padding: "8px 15px 8px 30px !important",
                 columnGap: "10px",
+            },
+
+            "& .MuiDivider-root": {
+                margin: "8px 10px",
+                borderColor: theme.palette.grey[50],
             },
         },
     }),

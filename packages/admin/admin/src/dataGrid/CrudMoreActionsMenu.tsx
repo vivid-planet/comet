@@ -22,12 +22,11 @@ import { FormattedMessage } from "react-intl";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
 
-export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button" | "chip";
+export type CrudMoreActionsMenuClassKey = "root" | "group" | "button" | "chip";
 
 export interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
     icon?: ReactNode;
-    divider?: boolean;
 }
 
 export interface CrudMoreActionsMenuProps
@@ -36,7 +35,7 @@ export interface CrudMoreActionsMenuProps
         menuItem: typeof MenuItem;
         button: typeof Button;
         group: typeof CrudMoreActionsGroup;
-        divider: typeof CrudMoreActionsDivider;
+        divider: typeof Divider;
         chip: typeof Chip;
     }> {
     selectionSize?: number;
@@ -61,16 +60,6 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
         </>
     );
 }
-
-const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuClassKey>({
-    componentName: "CrudMoreActions",
-    slotName: "divider",
-})(
-    ({ theme }) => css`
-        margin: 8px 10px;
-        border-color: ${theme.palette.grey[50]};
-    `,
-);
 
 const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
@@ -99,7 +88,6 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
         menu: menuProps,
         button: buttonProps,
         group: groupProps,
-        divider: dividerProps,
         chip: chipProps,
     } = slotProps ?? { menu: {}, button: {}, group: {}, divider: {}, chip: {} };
 
@@ -149,14 +137,14 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                         {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                     </MenuItem>
-                                    {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
+                                    {!!divider && <Divider />}
                                 </div>
                             );
                         })}
                     </CrudMoreActionsGroup>
                 )}
 
-                {!!overallActions?.length && !!selectiveActions?.length && <CrudMoreActionsDivider {...dividerProps} />}
+                {!!overallActions?.length && !!selectiveActions?.length && <Divider />}
 
                 {!!selectiveActions?.length && (
                     <CrudMoreActionsGroup
@@ -185,7 +173,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                             <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />
                                         )}
                                     </MenuItem>
-                                    {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
+                                    {!!divider && <Divider />}
                                 </div>
                             );
                         })}
