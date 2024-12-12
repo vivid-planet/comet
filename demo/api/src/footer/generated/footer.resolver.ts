@@ -11,7 +11,7 @@ import { FooterInput } from "./dto/footer.input";
 import { FootersService } from "./footers.service";
 
 @Resolver(() => Footer)
-@RequiredPermission(["footers"])
+@RequiredPermission(["pageTree"])
 export class FooterResolver {
     constructor(
         private readonly entityManager: EntityManager,
