@@ -1,16 +1,12 @@
-import { withAdminRedirectMiddleware } from "./middleware/adminRedirect";
 import { chain } from "./middleware/chain";
 import { withCspHeadersMiddleware } from "./middleware/cspHeaders";
 import { withDamRewriteMiddleware } from "./middleware/damRewrite";
 import { withDomainRewriteMiddleware } from "./middleware/domainRewrite";
 import { withPredefinedPagesMiddleware } from "./middleware/predefinedPages";
-import { withRedirectToMainHostMiddleware } from "./middleware/redirectToMainHost";
-import { withSitePreviewMiddleware } from "./middleware/sitePreview";
+import { withRedirectMiddleware } from "./middleware/redirect";
 
 export default chain([
-    withSitePreviewMiddleware,
-    withRedirectToMainHostMiddleware,
-    withAdminRedirectMiddleware,
+    withRedirectMiddleware,
     withDamRewriteMiddleware,
     withCspHeadersMiddleware, // order matters: after redirects (that don't need csp headers), before everything else that needs csp headers
     withPredefinedPagesMiddleware,
