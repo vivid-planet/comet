@@ -44,7 +44,11 @@ export async function generateCrudInput(
     generatorOptions: { targetDirectory: string },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: EntityMetadata<any>,
-    options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[] } = { nested: false, excludeFields: [] },
+    options: { nested: boolean; fileName?: string; className?: string; excludeFields: string[]; generateUpdateInput?: boolean } = {
+        nested: false,
+        excludeFields: [],
+        generateUpdateInput: true,
+    },
 ): Promise<GeneratedFile[]> {
     const generatedFiles: GeneratedFile[] = [];
 
@@ -425,7 +429,7 @@ export class ${className} {
 }
 
 ${
-    !options.nested
+    options.generateUpdateInput && !options.nested
         ? `
 @InputType()
 export class ${className.replace(/Input$/, "")}UpdateInput extends PartialType(${className}) {}

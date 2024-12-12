@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput, FormSection } from "@comet/admin";
 import { Card, CardContent, Grid } from "@mui/material";
-import * as React from "react";
 
 function VerticalFields() {
     return (
