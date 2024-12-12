@@ -111,5 +111,5 @@ export const EditDialogWithFormInStack = {
         );
     },
 
-    name: "Edit Dialog with Form in Stack",
+    name: "EditDialog with Form in Stack",
 };

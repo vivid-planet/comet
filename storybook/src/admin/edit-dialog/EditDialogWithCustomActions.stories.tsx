@@ -5,7 +5,7 @@ import * as React from "react";
 import { editDialogDecorator } from "../../docs/components/EditDialog/editDialog.decorator";
 
 export default {
-    title: "Docs/Components/Edit Dialog with custom actions",
+    title: "@comet/admin/edit-dialog",
     decorators: [editDialogDecorator()],
 };
 
@@ -15,7 +15,7 @@ export const EditDialogWithCustomActions = {
 
         return (
             <>
-                <h2>Click on the button to see the dialog with multiple actions</h2>
+                <h2>Click on the button to see the dialog. It should show a third action.</h2>
                 <Toolbar>
                     <ToolbarFillSpace />
                     <ToolbarItem>
