@@ -60,3 +60,10 @@ Perform the following changes:
     -   useContentScopeConfig({ redirectPathAfterChange: "/structured-content/products" });
     }
     ```
+
+### Import `Tooltip` from `@comet/admin` package
+
+```diff
+- import { Tooltip } from "@mui/material";
++ import { Tooltip } from "@comet/admin";
+```
