@@ -1,5 +1,6 @@
-import { Link } from "./Link";
-import { generateMetadata as generateMetadataPage, Page } from "./Page";
+import { generateMetadata as generateMetadataPage, Page } from "@src/documents/pages/Page";
+
+import { Link } from "./links/Link";
 
 // TODO fix type for async component
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

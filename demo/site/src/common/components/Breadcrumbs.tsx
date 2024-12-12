@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { Fragment } from "react";
 
-import { GridRoot } from "../helpers/GridRoot";
 import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
 import * as sc from "./Breadcrumbs.sc";
+import { GridRoot } from "./Breadcrumbs.sc";
 
 const Breadcrumbs = ({ name, path, parentNodes }: GQLBreadcrumbsFragment) => {
     return (

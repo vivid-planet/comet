@@ -24,3 +24,8 @@ export const Divider = styled.span`
     margin: 0 10px 5px 10px;
     background-color: ${({ theme }) => theme.colors.n200};
 `;
+
+export const GridRoot = styled.div`
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+`;
