@@ -45,7 +45,7 @@ export async function getRandomUnsplashImage(): Promise<UnsplashImage> {
         const acceptedFile = new ExtendedFile([image.blob], fileName, { type: mimeType });
         acceptedFile.importSource = {
             importSourceId: image.origin,
-            importSourceType: "External source",
+            importSourceType: "unsplash",
         };
 
         return {
