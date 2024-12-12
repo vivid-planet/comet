@@ -87,7 +87,7 @@ class App extends Component {
                                 additionalToolbarItems: <ImportFromPicsum />,
                                 importSources: {
                                     picsum: {
-                                        label: <FormattedMessage id="dam.importSource.Picsum.label" defaultMessage="Lorem Picsum" />,
+                                        label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
                                     },
                                 },
                                 contentGeneration: {
