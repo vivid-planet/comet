@@ -1,10 +1,10 @@
 "use client";
 import { PropsWithData, withPreview } from "@comet/cms-site";
 import { TextImageBlockData } from "@src/blocks.generated";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import styled, { css } from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
-import RichTextBlock from "./RichTextBlock";
 
 export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {

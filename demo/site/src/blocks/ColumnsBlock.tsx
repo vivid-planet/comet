@@ -2,12 +2,12 @@
 import { BlocksBlock, PropsWithData, SupportedBlocks, withPreview } from "@comet/cms-site";
 import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated";
 import { LinkListBlock } from "@src/blocks/LinkListBlock";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
+import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import styled from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
 import { HeadlineBlock } from "./HeadlineBlock";
-import RichTextBlock from "./RichTextBlock";
-import SpaceBlock from "./SpaceBlock";
 
 const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
