@@ -7,8 +7,13 @@ interface UploadFileData {
         Pick<GQLUpdateDamFileInput, "license" | "title" | "altText"> & { importSource?: { importSourceType: string; importSourceId: string } };
     scope: Record<string, unknown>;
     folderId?: string;
-    // deprecated: set it directly on file props
+    /**
+     * @deprecated Set it directly on file props.
+     */
     importSourceId?: string;
+    /**
+     * @deprecated Set it directly on file props.
+     */
     importSourceType?: string;
 }
 
@@ -38,7 +43,6 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
     formData.append("file", data.file);
     formData.append("scope", JSON.stringify(data.scope));
 
-    // deprecated: will use the data.file.importSource if set
     if (replace === false && data.importSourceId && data.importSourceType && !data.file.importSource) {
         formData.append("importSourceId", data.importSourceId);
         formData.append("importSourceType", data.importSourceType);

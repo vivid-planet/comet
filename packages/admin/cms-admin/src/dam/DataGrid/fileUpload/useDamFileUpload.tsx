@@ -56,7 +56,9 @@ type ImportSource = { importSourceType: never; importSourceId: never } | { impor
 
 interface UploadFilesOptions {
     folderId?: string;
-    // deprecated: add it directly to file props instead
+    /**
+     * @deprecated Add it directly to file props instead.
+     */
     importSource?: ImportSource;
 }
 
@@ -407,7 +409,6 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                         file,
                         folderId: targetFolderId,
                         scope,
-                        // deprecated: add importSource directly to file props instead
                         importSourceId: importSource?.importSourceId,
                         importSourceType: importSource?.importSourceType,
                     };
