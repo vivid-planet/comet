@@ -31,7 +31,7 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
-interface FileWithCustomMetaData extends File {
+export interface FileWithCustomMetaData extends File {
     path?: string;
     license?: GQLLicenseInput;
     title?: string;

@@ -1,14 +1,8 @@
+import { FileWithCustomMetaData } from "@comet/cms-admin";
+
 export interface UnsplashImage {
-    file: File;
+    file: FileWithCustomMetaData;
     url: string;
-}
-
-class ExtendedFile extends File {
-    importSource?: { importSourceType: string; importSourceId: string };
-
-    constructor(blob: BlobPart[], fileName: string, options: FilePropertyBag) {
-        super(blob, fileName, options);
-    }
 }
 
 async function fetchUnsplashImage(url: string) {
@@ -42,7 +36,7 @@ export async function getRandomUnsplashImage(): Promise<UnsplashImage> {
         }
 
         const fileName = extractFileNameFromUrl(image.origin);
-        const acceptedFile = new ExtendedFile([image.blob], fileName, { type: mimeType });
+        const acceptedFile: FileWithCustomMetaData = new File([image.blob], fileName, { type: mimeType });
         acceptedFile.importSource = {
             importSourceId: image.origin,
             importSourceType: "unsplash",
