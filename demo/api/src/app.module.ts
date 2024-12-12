@@ -17,7 +17,7 @@ import {
     SentryModule,
     UserPermissionsModule,
 } from "@comet/cms-api";
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { ApolloDriver, ApolloDriverConfig, ValidationError } from "@nestjs/apollo";
 import { DynamicModule, Module } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 import { Enhancer, GraphQLModule } from "@nestjs/graphql";
@@ -27,7 +27,6 @@ import { ContentGenerationService } from "@src/content-generation/content-genera
 import { DbModule } from "@src/db/db.module";
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
-import { ValidationError } from "apollo-server-express";
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
@@ -71,7 +70,7 @@ export class AppModule {
                         formatError: (error) => {
                             // Disable GraphQL field suggestions in production
                             if (process.env.NODE_ENV !== "development") {
-                                if (error instanceof ValidationError) {
+                                if (error.extensions?.code === "GRAPHQL_VALIDATION_FAILED") {
                                     return new ValidationError("Invalid request.");
                                 }
                             }
@@ -93,12 +92,12 @@ export class AppModule {
                 authModule,
                 UserPermissionsModule.forRootAsync({
                     useFactory: (userService: UserService, accessControlService: AccessControlService) => ({
-                        availableContentScopes: [
-                            { domain: "main", language: "de" },
-                            { domain: "main", language: "en" },
-                            { domain: "secondary", language: "en" },
-                            { domain: "secondary", language: "de" },
-                        ],
+                        availableContentScopes: config.siteConfigs.flatMap((siteConfig) =>
+                            siteConfig.scope.languages.map((language) => ({
+                                domain: siteConfig.scope.domain,
+                                language,
+                            })),
+                        ),
                         userService,
                         accessControlService,
                         systemUsers: [SYSTEM_USER_NAME],

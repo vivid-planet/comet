@@ -20,7 +20,7 @@ import {
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridColumnHeaderTitle, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -127,7 +127,7 @@ export function ManufacturersGrid(): React.ReactElement {
             headerName: intl.formatMessage({ id: "manufacturer.address.street", defaultMessage: "Street" }),
             filterable: false,
             sortable: false,
-            valueGetter: ({ row }) => row.address?.street,
+            valueGetter: (params, row) => row.address?.street,
             flex: 1,
             minWidth: 150,
         },
@@ -137,7 +137,7 @@ export function ManufacturersGrid(): React.ReactElement {
             type: "number",
             filterable: false,
             sortable: false,
-            valueGetter: ({ row }) => row.address?.streetNumber,
+            valueGetter: (params, row) => row.address?.streetNumber,
             flex: 1,
             minWidth: 150,
         },
@@ -164,7 +164,7 @@ export function ManufacturersGrid(): React.ReactElement {
             ),
             filterable: false,
             sortable: false,
-            valueGetter: ({ row }) => row.address?.alternativeAddress?.street,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.street,
             flex: 1,
             minWidth: 150,
         },
@@ -195,14 +195,14 @@ export function ManufacturersGrid(): React.ReactElement {
             type: "number",
             filterable: false,
             sortable: false,
-            valueGetter: ({ row }) => row.address?.alternativeAddress?.streetNumber,
+            valueGetter: (params, row) => row.address?.alternativeAddress?.streetNumber,
             flex: 1,
             minWidth: 150,
         },
         {
             field: "addressAsEmbeddable_street",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.street", defaultMessage: "Street 2" }),
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.street,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.street,
             flex: 1,
             minWidth: 150,
         },
@@ -210,14 +210,14 @@ export function ManufacturersGrid(): React.ReactElement {
             field: "addressAsEmbeddable_streetNumber",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.streetNumber", defaultMessage: "Street number 2" }),
             type: "number",
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.streetNumber,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.streetNumber,
             flex: 1,
             minWidth: 150,
         },
         {
             field: "addressAsEmbeddable_alternativeAddress_street",
             headerName: intl.formatMessage({ id: "manufacturer.addressAsEmbeddable.alternativeAddress.street", defaultMessage: "Alt-Street 2" }),
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.street,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.street,
             flex: 1,
             minWidth: 150,
         },
@@ -228,7 +228,7 @@ export function ManufacturersGrid(): React.ReactElement {
                 defaultMessage: "Alt-Street number 2",
             }),
             type: "number",
-            valueGetter: ({ row }) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
+            valueGetter: (params, row) => row.addressAsEmbeddable?.alternativeAddress?.streetNumber,
             flex: 1,
             minWidth: 150,
         },
@@ -279,8 +279,8 @@ export function ManufacturersGrid(): React.ReactElement {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -291,13 +291,13 @@ export function ManufacturersGrid(): React.ReactElement {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ManufacturersGridToolbar,
+            slots={{
+                toolbar: ManufacturersGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
     );

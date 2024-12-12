@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { GridColDef, useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
+import { useBufferedRowCount, useDataGridRemote, usePersistentColumnState } from "@comet/admin";
 import { BlockInterface, createBlockSkeleton } from "@comet/blocks-admin";
 import { Box } from "@mui/material";
 import { DataGridPro } from "@mui/x-data-grid-pro";
@@ -7,7 +7,7 @@ import { NewsListBlockData, NewsListBlockInput } from "@src/blocks.generated";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { GQLNewsListBlockNewsFragment, GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.generated";
+import { GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.generated";
 
 type State = {
     ids: string[];
@@ -20,12 +20,11 @@ export const NewsListBlock: BlockInterface<NewsListBlockData, State, NewsListBlo
     defaultValues: () => ({ ids: [] }),
     AdminComponent: ({ state, updateState }) => {
         const { scope } = useContentScope();
-        const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsListBlock") };
+        const dataGridProps = {
+            ...useDataGridRemote(),
+            ...usePersistentColumnState("NewsListBlock"),
+        };
         const intl = useIntl();
-
-        const columns: GridColDef<GQLNewsListBlockNewsFragment>[] = [
-            { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), width: 150 },
-        ];
 
         const { data, loading, error } = useQuery<GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables>(
             gql`
@@ -58,13 +57,19 @@ export const NewsListBlock: BlockInterface<NewsListBlockData, State, NewsListBlo
                     {...dataGridProps}
                     rows={rows}
                     rowCount={rowCount}
-                    columns={columns}
+                    columns={[
+                        {
+                            field: "title",
+                            headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }),
+                            width: 150,
+                        },
+                    ]}
                     loading={loading}
                     checkboxSelection
-                    disableSelectionOnClick
+                    disableRowSelectionOnClick
                     keepNonExistentRowsSelected
-                    selectionModel={state.ids}
-                    onSelectionModelChange={(newSelection) => {
+                    rowSelectionModel={state.ids}
+                    onRowSelectionModelChange={(newSelection) => {
                         updateState({ ids: newSelection as string[] });
                     }}
                 />

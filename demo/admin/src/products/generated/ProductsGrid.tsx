@@ -137,28 +137,28 @@ export function ProductsGrid(): React.ReactElement {
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
             type: "date",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
             field: "lastCheckedAt",
             headerName: intl.formatMessage({ id: "product.lastCheckedAt", defaultMessage: "Last Checked At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
             field: "updatedAt",
             headerName: intl.formatMessage({ id: "product.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
@@ -225,8 +225,8 @@ export function ProductsGrid(): React.ReactElement {
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -238,13 +238,13 @@ export function ProductsGrid(): React.ReactElement {
         <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: ProductsGridToolbar,
+                slots={{
+                    toolbar: ProductsGridToolbar,
                 }}
             />
         </MainContent>

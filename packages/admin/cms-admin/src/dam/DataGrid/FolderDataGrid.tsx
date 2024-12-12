@@ -3,6 +3,7 @@ import {
     BreadcrumbItem,
     EditDialog,
     GridCellContent,
+    GridColDef,
     IFilterApi,
     ISelectionApi,
     PrettyBytes,
@@ -12,10 +13,10 @@ import {
     useStoredState,
 } from "@comet/admin";
 import { Slide, SlideProps, Snackbar } from "@mui/material";
-import { DataGrid, GridColumns, GridRowClassNameParams, GridSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, GridRowClassNameParams, GridRowSelectionModel, useGridApiRef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
-import { FormattedDate, FormattedMessage, FormattedTime, useIntl } from "react-intl";
+import { FormattedDate, FormattedMessage, useIntl } from "react-intl";
 import { useDebouncedCallback } from "use-debounce";
 
 import { GQLDamItemType } from "../../graphql.generated";
@@ -78,7 +79,7 @@ const FolderDataGrid = ({
     filterApi,
     breadcrumbs,
     selectionApi,
-    hideContextMenu,
+    hideContextMenu = false,
     hideArchiveFilter,
     hideMultiselect,
     renderDamLabel,
@@ -114,6 +115,8 @@ const FolderDataGrid = ({
         skip: currentFolderId === undefined,
     });
 
+    const apiRef = useGridApiRef();
+
     const {
         data: dataGridData,
         loading,
@@ -128,8 +131,8 @@ const FolderDataGrid = ({
             },
             sortColumnName: filterApi.current.sort?.columnName,
             sortDirection: filterApi.current.sort?.direction,
-            limit: dataGridProps.pageSize,
-            offset: dataGridProps.page * dataGridProps.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
             scope,
         },
     });
@@ -215,12 +218,12 @@ const FolderDataGrid = ({
             });
 
             const position = result.data.damItemListPosition;
-            const targetPage = Math.floor(position / dataGridProps.pageSize);
+            const targetPage = Math.floor(position / dataGridProps.paginationModel.pageSize);
 
             if (redirectToSubfolder && id !== redirectedToId && parentId && parentId !== currentFolderId) {
                 switchApi.activatePage("folder", parentId);
             } else {
-                dataGridProps.onPageChange?.(targetPage, {});
+                apiRef.current.setPaginationModel({ page: targetPage, pageSize: dataGridProps.paginationModel.pageSize });
             }
 
             setRedirectedToId(id);
@@ -304,7 +307,7 @@ const FolderDataGrid = ({
         setDamItemToMove(undefined);
     };
 
-    const handleSelectionModelChange = (newSelectionModel: GridSelectionModel) => {
+    const handleSelectionModelChange = (newSelectionModel: GridRowSelectionModel) => {
         const newMap: DamItemSelectionMap = new Map();
 
         newSelectionModel.forEach((selectedId) => {
@@ -345,7 +348,7 @@ const FolderDataGrid = ({
         return "";
     };
 
-    const dataGridColumns: GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment> = [
+    const dataGridColumns: GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[] = [
         {
             field: "name",
             headerName: intl.formatMessage({
@@ -473,7 +476,7 @@ const FolderDataGrid = ({
                                               <>
                                                   <FormattedMessage id="comet.dam.file.license.validUntil" defaultMessage="Valid until:" />{" "}
                                                   {row.license.durationTo ? (
-                                                      <FormattedDate value={row.license.durationTo} day="2-digit" month="2-digit" year="numeric" />
+                                                      <FormattedDate value={row.license.durationTo} dateStyle="medium" />
                                                   ) : (
                                                       <FormattedMessage id="comet.dam.file.license.unlimited" defaultMessage="Unlimited" />
                                                   )}
@@ -488,7 +491,7 @@ const FolderDataGrid = ({
                       hideSortIcons: true,
                       disableColumnMenu: true,
                   },
-              ] as GridColumns<GQLDamFileTableFragment | GQLDamFolderTableFragment>)
+              ] satisfies GridColDef<GQLDamFileTableFragment | GQLDamFolderTableFragment>[])
             : []),
         {
             field: "createdAt",
@@ -499,13 +502,7 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            renderCell: ({ row }) => (
-                <div>
-                    <FormattedDate value={row.createdAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.createdAt} />
-                </div>
-            ),
+            valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -519,13 +516,7 @@ const FolderDataGrid = ({
             headerAlign: "left",
             align: "left",
             minWidth: 180,
-            renderCell: ({ row }) => (
-                <div>
-                    <FormattedDate value={row.updatedAt} day="2-digit" month="2-digit" year="numeric" />
-                    {", "}
-                    <FormattedTime value={row.updatedAt} />
-                </div>
-            ),
+            valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
@@ -545,10 +536,12 @@ const FolderDataGrid = ({
             sortable: false,
             hideSortIcons: true,
             disableColumnMenu: true,
-            hide: hideContextMenu,
         },
     ];
 
+    if (error) {
+        throw error;
+    }
     return (
         <sc.FolderWrapper>
             <FolderHead
@@ -559,21 +552,24 @@ const FolderDataGrid = ({
             />
             <sc.FolderOuterHoverHighlight isHovered={hoveredId === "root"} {...getFileRootProps()}>
                 <DataGrid
+                    apiRef={apiRef}
                     {...dataGridProps}
                     rowHeight={58}
                     rows={dataGridData?.damItemsList.nodes ?? []}
-                    rowCount={dataGridData?.damItemsList.totalCount ?? 0}
+                    rowCount={dataGridData?.damItemsList.totalCount ?? undefined}
                     loading={loading}
-                    error={error}
-                    rowsPerPageOptions={[10, 20, 50]}
+                    pageSizeOptions={[10, 20, 50]}
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-                    disableSelectionOnClick
-                    selectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
-                    onSelectionModelChange={handleSelectionModelChange}
+                    disableRowSelectionOnClick
+                    rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
+                    onRowSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}
                     initialState={{ columns: { columnVisibilityModel: { importSourceType: importSources !== undefined } } }}
+                    columnVisibilityModel={{
+                        contextMenu: !hideContextMenu,
+                    }}
                 />
             </sc.FolderOuterHoverHighlight>
             <DamSelectionFooter open={damSelectionActionsApi.selectionMap.size > 0} />

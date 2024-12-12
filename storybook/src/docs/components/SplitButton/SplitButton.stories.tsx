@@ -1,7 +1,7 @@
 import { SplitButton } from "@comet/admin";
 import { Home } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 export default {
     title: "Docs/Components/SplitButton",
@@ -32,7 +32,7 @@ export const Uncontrolled = {
 
 export const Controlled = {
     render: () => {
-        const [selectedIndex, setSelectedIndex] = React.useState(1);
+        const [selectedIndex, setSelectedIndex] = useState(1);
         return (
             <SplitButton
                 variant="contained"

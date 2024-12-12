@@ -71,6 +71,9 @@ export function CronJobsGrid() {
 
     const { data, loading, error } = useQuery<GQLKubernetesCronJobsQuery, GQLKubernetesCronJobsQueryVariables>(cronJobsQuery);
 
+    if (error) {
+        throw error;
+    }
     const rows = data?.kubernetesCronJobs ?? [];
 
     const closeDialog = () => {
@@ -81,7 +84,6 @@ export function CronJobsGrid() {
             <DataGrid
                 rows={rows}
                 loading={loading}
-                error={error}
                 hideFooterPagination
                 columns={[
                     {
@@ -89,7 +91,7 @@ export function CronJobsGrid() {
                         headerName: intl.formatMessage({ id: "comet.pages.cronJobs.name", defaultMessage: "Name" }),
                         flex: 2,
                         ...disableFieldOptions,
-                        valueGetter: ({ row }) => {
+                        valueGetter: (params, row) => {
                             return {
                                 name: row.name,
                                 label: row.label,
@@ -147,7 +149,7 @@ export function CronJobsGrid() {
                     },
                 ]}
                 disableColumnSelector
-                components={{ Toolbar: CronJobsToolbar }}
+                slots={{ toolbar: CronJobsToolbar }}
             />
             <Dialog open={dialogOpen} onClose={closeDialog}>
                 <DialogTitle>

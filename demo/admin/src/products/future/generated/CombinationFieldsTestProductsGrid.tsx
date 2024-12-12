@@ -18,7 +18,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { DataGridPro, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
@@ -71,7 +71,10 @@ const createProductMutation = gql`
     }
 `;
 
-function ProductsGridToolbar({ toolbarAction }: { toolbarAction?: React.ReactNode }) {
+interface ProductsGridToolbarToolbarProps extends GridToolbarProps {
+    toolbarAction: React.ReactNode;
+}
+function ProductsGridToolbar({ toolbarAction }: ProductsGridToolbarToolbarProps) {
     return (
         <DataGridToolbar>
             <ToolbarItem>
@@ -365,8 +368,8 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
         variables: {
             filter: gqlFilter,
             search: gqlSearch,
-            offset: dataGridProps.page * dataGridProps.pageSize,
-            limit: dataGridProps.pageSize,
+            offset: dataGridProps.paginationModel.page * dataGridProps.paginationModel.pageSize,
+            limit: dataGridProps.paginationModel.pageSize,
             sort: muiGridSortToGql(dataGridProps.sortModel),
         },
     });
@@ -377,16 +380,16 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
     return (
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: ProductsGridToolbar,
+            slots={{
+                toolbar: ProductsGridToolbar as GridSlotsComponent["toolbar"],
             }}
-            componentsProps={{
-                toolbar: { toolbarAction },
+            slotProps={{
+                toolbar: { toolbarAction } as ProductsGridToolbarToolbarProps,
             }}
         />
     );

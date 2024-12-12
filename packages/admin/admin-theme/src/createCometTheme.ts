@@ -51,6 +51,11 @@ export const createCometTheme = (
         shape: {
             borderRadius: 2,
         },
+        mixins: {
+            MuiDataGrid: {
+                containerBackground: "rgb(255, 255, 255)",
+            },
+        },
         shadows,
         zIndex,
         components: getComponentsTheme(passedComponentsOptions, { palette, typography, spacing, zIndex, shadows, breakpoints }),
