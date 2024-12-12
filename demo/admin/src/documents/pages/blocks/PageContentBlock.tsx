@@ -11,6 +11,9 @@ import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
+import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
+import { UserGroupChip } from "@src/userGroups/UserGroupChip";
+import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
 
 import { BillboardTeaserBlock } from "./BillboardTeaserBlock";
 import { ColumnsBlock } from "./ColumnsBlock";
@@ -43,5 +46,14 @@ export const PageContentBlock = createBlocksBlock({
         space: SpaceBlock,
         teaser: TeaserBlock,
         textImage: TextImageBlock,
+    },
+    additionalItemFields: {
+        ...userGroupAdditionalItemFields,
+    },
+    AdditionalItemContextMenuItems: ({ item, onChange, onMenuClose }) => {
+        return <UserGroupContextMenuItem item={item} onChange={onChange} onMenuClose={onMenuClose} />;
+    },
+    AdditionalItemContent: ({ item }) => {
+        return <UserGroupChip item={item} />;
     },
 });

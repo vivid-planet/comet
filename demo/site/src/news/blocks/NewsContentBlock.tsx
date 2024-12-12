@@ -6,7 +6,7 @@ import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 
 const supportedBlocks: SupportedBlocks = {
-    headline: (props) => <HeadingBlock data={props} />,
+    heading: (props) => <HeadingBlock data={props} />,
     richText: (props) => <RichTextBlock data={props} />,
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     textImage: (props) => <TextImageBlock data={props} />,
