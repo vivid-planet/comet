@@ -432,7 +432,7 @@ export function generateGrid(
                 disableExport: column.disableExport,
             };
         } else if (type == "combination") {
-            renderCell = getCombinationColumnRenderCell(column, `${instanceGqlType}.${name}`);
+            renderCell = getCombinationColumnRenderCell(column, instanceGqlType, name);
         }
 
         //TODO suppoort n:1 relation with singleSelect

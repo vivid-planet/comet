@@ -322,18 +322,18 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const productNestedGroupsSecondaryText__TODO__GroupValues: string[] = [
+                const secondaryTextNestedItem3GroupValues: string[] = [
                     typeof row.price === "undefined" || row.price === null
                         ? ""
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
                     row.category?.title ?? "",
                 ];
-                const productNestedGroupsSecondaryTextGroupValues: string[] = [
+                const secondaryTextGroupValues: string[] = [
                     typeof row.price === "undefined" || row.price === null
                         ? ""
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
                     row.category?.title ?? "",
-                    productNestedGroupsSecondaryText__TODO__GroupValues.filter(Boolean).join(" • "),
+                    secondaryTextNestedItem3GroupValues.filter(Boolean).join(" • "),
                 ];
                 return (
                     <GridCellContent
@@ -344,7 +344,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                                 values={{ title: row.title ?? "", type: row.type ?? "" }}
                             />
                         }
-                        secondaryText={productNestedGroupsSecondaryTextGroupValues.filter(Boolean).join(" • ")}
+                        secondaryText={secondaryTextGroupValues.filter(Boolean).join(" • ")}
                     />
                 );
             },
@@ -357,17 +357,17 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const productTwoGroupsPrimaryTextGroupValues: string[] = [
+                const primaryTextGroupValues: string[] = [
                     row.category?.title ?? "",
                     typeof row.price === "undefined" || row.price === null
                         ? ""
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
                 ];
-                const productTwoGroupsSecondaryTextGroupValues: string[] = [row.category?.title ?? "", row.description ?? ""];
+                const secondaryTextGroupValues: string[] = [row.category?.title ?? "", row.description ?? ""];
                 return (
                     <GridCellContent
-                        primaryText={productTwoGroupsPrimaryTextGroupValues.filter(Boolean).join(" • ")}
-                        secondaryText={productTwoGroupsSecondaryTextGroupValues.filter(Boolean).join(" • ")}
+                        primaryText={primaryTextGroupValues.filter(Boolean).join(" • ")}
+                        secondaryText={secondaryTextGroupValues.filter(Boolean).join(" • ")}
                     />
                 );
             },
@@ -380,7 +380,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const productGroupInFormattedMessageSecondaryTextNestedValuesGroupValues: string[] = [
+                const secondaryTextNestedValuesGroupValues: string[] = [
                     typeof row.price === "undefined" || row.price === null
                         ? ""
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
@@ -413,7 +413,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                                             />
                                         ),
                                     category: row.category?.title ?? "",
-                                    nestedValues: productGroupInFormattedMessageSecondaryTextNestedValuesGroupValues.filter(Boolean).join(" • "),
+                                    nestedValues: secondaryTextNestedValuesGroupValues.filter(Boolean).join(" • "),
                                 }}
                             />
                         }

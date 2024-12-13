@@ -155,7 +155,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                     true: intl.formatMessage({ id: "product.overview.secondaryText.inStock.true", defaultMessage: `In stock` }),
                     false: intl.formatMessage({ id: "product.overview.secondaryText.inStock.false", defaultMessage: `Out of stock` }),
                 };
-                const productOverviewSecondaryTextGroupValues: string[] = [
+                const secondaryTextGroupValues: string[] = [
                     typeof row.price === "undefined" || row.price === null
                         ? intl.formatMessage({ id: "product.overview.secondaryText.price.empty", defaultMessage: `Price unknown` })
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
@@ -163,12 +163,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                     row.category?.title ?? "",
                     row.inStock == null ? "" : inStockLabels[`${row.inStock}`] ?? row.inStock,
                 ];
-                return (
-                    <GridCellContent
-                        primaryText={row.title ?? ""}
-                        secondaryText={productOverviewSecondaryTextGroupValues.filter(Boolean).join(" • ")}
-                    />
-                );
+                return <GridCellContent primaryText={row.title ?? ""} secondaryText={secondaryTextGroupValues.filter(Boolean).join(" • ")} />;
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),

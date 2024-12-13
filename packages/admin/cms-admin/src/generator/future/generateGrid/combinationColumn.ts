@@ -77,13 +77,25 @@ type CellContent = {
     variableDefinitions?: string[];
 };
 
-const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: string, requireStrings: boolean): CellContent => {
+type NestingContext = {
+    instanceGqlType: string;
+    fieldName: string;
+    nestingKeys: string[];
+};
+
+const getMessageIdFromNestingContext = (nestingContext: NestingContext) =>
+    [nestingContext.instanceGqlType, nestingContext.fieldName, ...nestingContext.nestingKeys].join(".");
+
+const getVariableNameFromNestingContext = (nestingContext: NestingContext) =>
+    nestingContext.nestingKeys.map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1))).join("");
+
+const getTextForCellContent = (textConfig: Field<string>, requireStrings: boolean, nestingContext: NestingContext): CellContent => {
     const formattedMessage = requireStrings ? getFormattedMessageString : getFormattedMessageNode;
     const formattedNumber = requireStrings ? getFormattedNumberString : getFormattedNumberNode;
 
     if (typeof textConfig !== "string" && textConfig.type === "static") {
         return {
-            textContent: formattedMessage(messageIdPrefix, textConfig.text),
+            textContent: formattedMessage(getMessageIdFromNestingContext(nestingContext), textConfig.text),
         };
     }
 
@@ -92,11 +104,10 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
 
         const values = Object.entries(textConfig.valueFields)
             .map(([key, value]) => {
-                const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(
-                    value,
-                    `${messageIdPrefix}.${key}`,
-                    requireStrings,
-                );
+                const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(value, requireStrings, {
+                    ...nestingContext,
+                    nestingKeys: [...nestingContext.nestingKeys, key],
+                });
 
                 if (cellVariableDefinitions?.length) {
                     variableDefinitions.push(...cellVariableDefinitions);
@@ -107,7 +118,7 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
             .join(", ");
 
         return {
-            textContent: formattedMessage(messageIdPrefix, textConfig.message, `{${values}}`),
+            textContent: formattedMessage(getMessageIdFromNestingContext(nestingContext), textConfig.message, `{${values}}`),
             variableDefinitions,
         };
     }
@@ -115,27 +126,25 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
     if (typeof textConfig !== "string" && textConfig.type === "group") {
         const variableDefinitions: string[] = [];
 
-        const items = textConfig.fields.map((field) => {
-            const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(
-                field,
-                `${messageIdPrefix}.${typeof field !== "string" && "field" in field ? field.field : "__TODO__"}`, // TODO: Which value can we use here??
-                true,
-            );
+        const items = textConfig.fields.map((field, index) => {
+            const { textContent, variableDefinitions: cellVariableDefinitions } = getTextForCellContent(field, true, {
+                ...nestingContext,
+                nestingKeys: [
+                    ...nestingContext.nestingKeys,
+                    typeof field !== "string" && "field" in field ? field.field : `nestedItem${(index + 1).toString()}`,
+                ],
+            });
             if (cellVariableDefinitions?.length) {
                 variableDefinitions.push(...cellVariableDefinitions);
             }
             return textContent;
         });
 
-        // TODO: Find a way to do this without using for formatted message id prefix
-        const uniqueVariableNamePrefix = messageIdPrefix
-            .split(".")
-            .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
-            .join("");
-
-        const groupValuesVariableName = `${uniqueVariableNamePrefix}GroupValues`;
-
-        variableDefinitions.push(`const ${groupValuesVariableName}: string[] = [${items.join(", ")}];`); // TODO: Variable name should contain "primary" or "secondary"
+        const groupValuesVariableName = getVariableNameFromNestingContext({
+            ...nestingContext,
+            nestingKeys: [...nestingContext.nestingKeys, "groupValues"],
+        });
+        variableDefinitions.push(`const ${groupValuesVariableName}: string[] = [${items.join(", ")}];`);
 
         return {
             textContent: `${groupValuesVariableName}.filter(Boolean).join(" • ")`,
@@ -145,7 +154,13 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
 
     const emptyText =
         typeof textConfig !== "string" && "emptyValue" in textConfig
-            ? formattedMessage(`${messageIdPrefix}.empty`, textConfig.emptyValue ?? "")
+            ? formattedMessage(
+                  getMessageIdFromNestingContext({
+                      ...nestingContext,
+                      nestingKeys: [...nestingContext.nestingKeys, "empty"],
+                  }),
+                  textConfig.emptyValue ?? "",
+              )
             : "''";
 
     const fieldName = typeof textConfig === "string" ? textConfig : textConfig.field;
@@ -192,7 +207,13 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
             .map((valueOption) => {
                 const value = typeof valueOption === "string" ? valueOption : valueOption.value;
                 const label = typeof valueOption === "string" ? valueOption : valueOption.label;
-                return `${value}: ${formattedMessage(`${messageIdPrefix}.${value}`, label)}`;
+                return `${value}: ${formattedMessage(
+                    getMessageIdFromNestingContext({
+                        ...nestingContext,
+                        nestingKeys: [...nestingContext.nestingKeys, value.toString()],
+                    }),
+                    label,
+                )}`;
             })
             .join(", ");
 
@@ -211,18 +232,26 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
     };
 };
 
-export const getCombinationColumnRenderCell = (column: GridCombinationColumnConfig<string>, messageIdPrefix: string) => {
+export const getCombinationColumnRenderCell = (column: GridCombinationColumnConfig<string>, instanceGqlType: string, fieldName: string) => {
     const gridCellContentProps: Record<string, string> = {};
     const allVariableDefinitions: string[] = [];
 
     if (column.primaryText) {
-        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.primaryText, `${messageIdPrefix}.primaryText`, false);
+        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.primaryText, false, {
+            instanceGqlType,
+            fieldName,
+            nestingKeys: ["primaryText"],
+        });
         gridCellContentProps.primaryText = textContent;
         allVariableDefinitions.push(...variableDefinitions);
     }
 
     if (column.secondaryText) {
-        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.secondaryText, `${messageIdPrefix}.secondaryText`, false);
+        const { textContent, variableDefinitions = [] } = getTextForCellContent(column.secondaryText, false, {
+            instanceGqlType,
+            fieldName,
+            nestingKeys: ["secondaryText"],
+        });
         gridCellContentProps.secondaryText = textContent;
         allVariableDefinitions.push(...variableDefinitions);
     }
