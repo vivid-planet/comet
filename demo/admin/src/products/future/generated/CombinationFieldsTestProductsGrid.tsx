@@ -42,6 +42,7 @@ const productsFragment = gql`
         type
         inStock
         price
+        description
     }
 `;
 
@@ -306,6 +307,116 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                                             }}
                                         />
                                     ),
+                                }}
+                            />
+                        }
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "combinedAndNestedValuesWithGroupInsideGroup",
+            headerName: intl.formatMessage({
+                id: "product.combinedAndNestedValuesWithGroupInsideGroup",
+                defaultMessage: "Custom formatting with nested values (group inside group)",
+            }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                const groupValues: string[] = [
+                    typeof row.price === "undefined" || row.price === null
+                        ? ""
+                        : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
+                    row.category?.title ?? "",
+                ];
+                const groupValues: string[] = [
+                    typeof row.price === "undefined" || row.price === null
+                        ? ""
+                        : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
+                    row.category?.title ?? "",
+                    groupValues.filter(Boolean).join(" • "),
+                ];
+                return (
+                    <GridCellContent
+                        primaryText={
+                            <FormattedMessage
+                                id="product.combinedAndNestedValuesWithGroupInsideGroup.primaryText"
+                                defaultMessage={`This product is named "{title}" and is a "{type}"`}
+                                values={{ title: row.title ?? "", type: row.type ?? "" }}
+                            />
+                        }
+                        secondaryText={groupValues.filter(Boolean).join(" • ")}
+                    />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "twoGroups",
+            headerName: intl.formatMessage({ id: "product.twoGroups", defaultMessage: "Two groups" }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                const groupValues: string[] = [
+                    row.category?.title ?? "",
+                    typeof row.price === "undefined" || row.price === null
+                        ? ""
+                        : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
+                ];
+                const groupValues: string[] = [row.category?.title ?? "", row.description ?? ""];
+                return (
+                    <GridCellContent primaryText={groupValues.filter(Boolean).join(" • ")} secondaryText={groupValues.filter(Boolean).join(" • ")} />
+                );
+            },
+            flex: 1,
+            minWidth: 150,
+        },
+        {
+            field: "combinedAndNestedValuesWithGroupInsideFormattedMessage",
+            headerName: intl.formatMessage({
+                id: "product.combinedAndNestedValuesWithGroupInsideFormattedMessage",
+                defaultMessage: "Custom formatting with nested values (group inside formatted message)",
+            }),
+            filterable: false,
+            sortable: false,
+            renderCell: ({ row }) => {
+                const groupValues: string[] = [
+                    typeof row.price === "undefined" || row.price === null
+                        ? ""
+                        : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
+                    row.category?.title ?? "",
+                ];
+                return (
+                    <GridCellContent
+                        primaryText={
+                            <FormattedMessage
+                                id="product.combinedAndNestedValuesWithGroupInsideFormattedMessage.primaryText"
+                                defaultMessage={`This product is named "{title}" and is a "{type}"`}
+                                values={{ title: row.title ?? "", type: row.type ?? "" }}
+                            />
+                        }
+                        secondaryText={
+                            <FormattedMessage
+                                id="product.combinedAndNestedValuesWithGroupInsideFormattedMessage.secondaryText"
+                                defaultMessage="Price: {price} • Category: {category} • Same values again: ({nestedValues})"
+                                values={{
+                                    price:
+                                        typeof row.price === "undefined" || row.price === null ? (
+                                            ""
+                                        ) : (
+                                            <FormattedNumber
+                                                value={row.price}
+                                                minimumFractionDigits={2}
+                                                maximumFractionDigits={2}
+                                                style="currency"
+                                                currency="EUR"
+                                            />
+                                        ),
+                                    category: row.category?.title ?? "",
+                                    nestedValues: groupValues.filter(Boolean).join(" • "),
                                 }}
                             />
                         }
