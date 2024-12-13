@@ -1,6 +1,6 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 interface FormValues {
     foo: string;
@@ -28,7 +28,7 @@ export const ScrollToErrorField = () => {
         bar: "",
     };
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     return (
         <>
             <Button variant="contained" color="primary" onClick={() => setOpen((s) => !s)}>

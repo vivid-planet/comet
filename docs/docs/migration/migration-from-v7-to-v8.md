@@ -107,6 +107,27 @@ The NestJS peer dependency has been bumped to v10.
 
     :::
 
+#### class-validator
+
+The class-validator peer dependency has been bumped to v0.14.0:
+
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "class-validator": "0.13.2",
++       "class-validator": "^0.14.0",
+    }
+}
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/update-class-validator.ts
+```
+
+:::
+
 ## Admin
 
 ### Stay on same page after changing scope
@@ -153,16 +174,16 @@ Perform the following changes:
 
 ### Update MUI - X Packages
 
-In `package.json` update the version of the MUI X packages to `^6.20.4`.
+In `package.json` update the version of the MUI X packages to `^7.22.3`.
 
 ```diff
 - "@mui/x-data-grid": "^5.x.x",
 - "@mui/x-data-grid-pro": "^5.x.x",
 - "@mui/x-data-grid-premium": "^5.x.x",
 
-+ "@mui/x-data-grid": "^6.20.4",
-+ "@mui/x-data-grid-pro": "^6.20.4",
-+ "@mui/x-data-grid-premium": "^6.20.4",
++ "@mui/x-data-grid": "^7.22.3",
++ "@mui/x-data-grid-pro": "^7.22.3",
++ "@mui/x-data-grid-premium": "^7.22.3",
 ```
 
 :::note Codemod
@@ -173,7 +194,38 @@ npx @comet/upgrade v8/mui-x-upgrade.ts
 
 :::
 
-A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide](https://mui.com/x/migration/migration-data-grid-v5). There is also a codemod from MUI which handles most of the changes:
+A lots of props have been renamed from MUI, for a detailed look, see the official [migration guide v5 -> v6](https://mui.com/x/migration/migration-data-grid-v5) and [migration guide v6 -> v7](https://mui.com/x/migration/migration-data-grid-v6/). There is also a codemod from MUI which handles most of the changes:
+
+! As well, be aware if you have a date in the data grid, you will need to add a `valueGetter`
+
+```diff
+    <DataGrid
+        //other props
+        columns=[
+        {
+            field: "updatedAt",
+            type: "dateTime",
++            valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+        }]
+    />
+```
+
+Also, be aware if you have a `valueGetter` or `valueFormatter` in the data grid, you will need to change the arguments passing to the functions. Previously, arguments were passed as an object. Now, they are passed directly as individual parameters
+
+```diff
+    <DataGrid
+        //other props
+        columns=[
+        {
+            field: "updatedAt",
+            type: "dateTime",
+-           valueGetter: ({params, row}) => row.updatedAt && new Date(row.updatedAt)
++           valueGetter: (params, row) => row.updatedAt && new Date(row.updatedAt)
+-           valueFormatter: ({value}) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
++           valueFormatter: (value) => (value ? intl.formatDate(value, { dateStyle: "medium", timeStyle: "short" }) : ""),
+        }]
+    />
+```
 
 ```sh
 npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path>

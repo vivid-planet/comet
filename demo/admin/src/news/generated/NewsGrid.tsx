@@ -120,7 +120,7 @@ export function NewsGrid(): React.ReactElement {
             field: "date",
             headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
@@ -158,14 +158,14 @@ export function NewsGrid(): React.ReactElement {
             field: "createdAt",
             headerName: intl.formatMessage({ id: "news.createdAt", defaultMessage: "Created At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
             field: "updatedAt",
             headerName: intl.formatMessage({ id: "news.updatedAt", defaultMessage: "Updated At" }),
             type: "dateTime",
-            valueGetter: ({ value }) => value && new Date(value),
+            valueGetter: (value) => value && new Date(value),
             width: 150,
         },
         {
@@ -238,8 +238,8 @@ export function NewsGrid(): React.ReactElement {
                 rowCount={rowCount}
                 columns={columns}
                 loading={loading}
-                components={{
-                    Toolbar: NewsGridToolbar,
+                slots={{
+                    toolbar: NewsGridToolbar,
                 }}
             />
         </MainContent>

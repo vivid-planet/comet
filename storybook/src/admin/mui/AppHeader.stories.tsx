@@ -12,7 +12,6 @@ import {
 } from "@comet/admin";
 import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
 import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@mui/material";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

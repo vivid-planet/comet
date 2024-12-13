@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudMoreActionsMenu,
+    dataGridDateTimeColumn,
     DataGridToolbar,
     FileIcon,
     GridColDef,
@@ -21,11 +22,12 @@ import {
 import { Delete, Download, Favorite, MoreVertical, Move } from "@comet/admin-icons";
 import { Button, Divider, Menu, MenuItem, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { useRef, useState } from "react";
 
 import { apolloStoryDecorator } from "../../../apollo-story.decorator";
+import { exampleColumns, exampleRows } from "../../../helpers/ExampleDataGrid";
 import { storyRouterDecorator } from "../../../story-router.decorator";
 
 type Launch = {
@@ -51,28 +53,6 @@ interface GQLQuery {
     launchesPastResult: LaunchesPastResultData;
 }
 
-const exampleRows = [
-    { id: 1, lastName: "Snow", firstName: "Jon" },
-    { id: 2, lastName: "Lannister", firstName: "Cersei" },
-    { id: 3, lastName: "Lannister", firstName: "Jaime" },
-    { id: 4, lastName: "Stark", firstName: "Arya" },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys" },
-    { id: 6, lastName: "Melisandre", firstName: null },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara" },
-    { id: 8, lastName: "Frances", firstName: "Rossini" },
-    { id: 9, lastName: "Roxie", firstName: "Harvey" },
-];
-const exampleColumns: GridColDef[] = [
-    {
-        field: "firstName",
-        headerName: "First name",
-    },
-    {
-        field: "lastName",
-        headerName: "Last name",
-    },
-];
-
 export default {
     title: "Docs/Components/DataGrid",
     decorators: [storyRouterDecorator(), apolloStoryDecorator("/graphql")],
@@ -88,7 +68,7 @@ export const UseDataGridRemote = {
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
+                ...dataGridDateTimeColumn,
             },
         ];
 
@@ -145,7 +125,7 @@ export const UseDataGridRemoteInitialSort = {
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
+                ...dataGridDateTimeColumn,
             },
         ];
 
@@ -203,7 +183,7 @@ export const UseDataGridRemoteInitialFilter = {
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
+                ...dataGridDateTimeColumn,
                 flex: 1,
             },
         ];
@@ -319,8 +299,8 @@ export const _GridFilterButton = {
                 <DataGrid
                     rows={exampleRows}
                     columns={exampleColumns}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
@@ -419,12 +399,12 @@ export const UseDataGridExcelExport = {
             {
                 field: "launch_date_local",
                 headerName: "Launch Date",
-                type: "dateTime",
+                ...dataGridDateTimeColumn,
             },
         ];
 
-        const [showMoreMenu, setShowMoreMenu] = React.useState<boolean>(false);
-        const moreMenuRef = React.useRef<HTMLButtonElement>(null);
+        const [showMoreMenu, setShowMoreMenu] = useState<boolean>(false);
+        const moreMenuRef = useRef<HTMLButtonElement>(null);
 
         const query = gql`
             query LaunchesPast($limit: Int, $offset: Int, $sort: String, $order: String) {
@@ -506,8 +486,8 @@ export const UseDataGridExcelExport = {
                     columns={columns}
                     rowCount={rowCount}
                     loading={loading}
-                    components={{
-                        Toolbar: DemoToolbar,
+                    slots={{
+                        toolbar: DemoToolbar,
                     }}
                 />
             </Box>
@@ -518,48 +498,16 @@ export const UseDataGridExcelExport = {
 
 export const _CrudMoreActionsMenu = {
     render: () => {
-        return (
-            <Box sx={{ height: 300, width: "100%" }}>
-                <h2>Without selection:</h2>
-                <DataGridToolbar>
-                    <ToolbarFillSpace />
-                    <ToolbarItem>
-                        <CrudMoreActionsMenu
-                            selectionSize={0}
-                            overallActions={[
-                                {
-                                    label: "Export to excel",
-                                    onClick: () => {},
-                                },
-                            ]}
-                            selectiveActions={[
-                                {
-                                    label: "Move",
-                                    onClick: () => {},
-                                    icon: <Move />,
-                                },
-                                {
-                                    label: "Delete",
-                                    onClick: () => {},
-                                    icon: <Delete />,
-                                    divider: true,
-                                },
-                                {
-                                    label: "Download",
-                                    onClick: () => {},
-                                    icon: <Download />,
-                                },
-                            ]}
-                        />
-                    </ToolbarItem>
-                </DataGridToolbar>
+        const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>([]);
+        const dataGridProps = useDataGridRemote();
 
-                <h2>With selection:</h2>
+        function DemoToolBar() {
+            return (
                 <DataGridToolbar>
                     <ToolbarFillSpace />
                     <ToolbarItem>
                         <CrudMoreActionsMenu
-                            selectionSize={2}
+                            selectionSize={selectionModel.length}
                             overallActions={[
                                 {
                                     label: "Export to excel",
@@ -587,6 +535,25 @@ export const _CrudMoreActionsMenu = {
                         />
                     </ToolbarItem>
                 </DataGridToolbar>
+            );
+        }
+
+        return (
+            <Box height={600}>
+                <DataGrid
+                    {...dataGridProps}
+                    rows={exampleRows}
+                    columns={exampleColumns}
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                    onRowSelectionModelChange={(newSelectionModel) => {
+                        setSelectionModel(newSelectionModel);
+                    }}
+                    rowSelectionModel={selectionModel}
+                    slots={{
+                        toolbar: DemoToolBar,
+                    }}
+                />
             </Box>
         );
     },

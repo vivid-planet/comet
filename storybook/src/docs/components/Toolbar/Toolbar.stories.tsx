@@ -23,7 +23,7 @@ import {
 } from "@comet/admin";
 import { ChevronLeft, CometColor, Search } from "@comet/admin-icons";
 import { Autocomplete, Button, Grid, IconButton, InputAdornment, InputBase, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -550,7 +550,7 @@ export const SearchAutocomplete = () => {
 };
 
 export const Save = () => {
-    const [saving, setSaving] = React.useState(false);
+    const [saving, setSaving] = useState(false);
     return (
         <Toolbar>
             <ToolbarTitleItem>Save Button</ToolbarTitleItem>
@@ -635,7 +635,7 @@ export const _FinalFormSaveButton = () => {
 };
 
 export const SaveSplitButton = () => {
-    const [saving, setSaving] = React.useState(false);
+    const [saving, setSaving] = useState(false);
     return (
         <Toolbar>
             <ToolbarTitleItem>Save Split Button</ToolbarTitleItem>

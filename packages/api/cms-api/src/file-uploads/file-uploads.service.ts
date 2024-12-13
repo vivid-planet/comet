@@ -74,10 +74,6 @@ export class FileUploadsService {
     }
 
     createImageUrl(file: FileUpload, resizeWidth: number): string | undefined {
-        if (!this.config.download) {
-            throw new Error("File Uploads: Missing download configuration");
-        }
-
         if (!ALL_TYPES.includes(file.mimetype)) {
             return undefined;
         }

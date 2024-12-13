@@ -17,7 +17,6 @@ import {
     Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
 
 const ButtonsRow = styled("div")`
     display: flex;

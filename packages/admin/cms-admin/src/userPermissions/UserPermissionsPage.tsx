@@ -18,8 +18,8 @@ export const UserPermissionsPage = () => {
                     <MainContent fullHeight>
                         <UserPermissionsUserGrid
                             rowAction={(params) => (
-                                <IconButton component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
-                                    <Edit color="primary" />
+                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id} subUrl="permissions">
+                                    <Edit />
                                 </IconButton>
                             )}
                         />

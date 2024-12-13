@@ -22,9 +22,12 @@ export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
+export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } from "./common/FullHeightContent";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
+export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./common/MainContent";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export {
     ToolbarAutomaticTitleItem,
@@ -48,6 +51,7 @@ export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDat
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
+export { dataGridDateColumn, dataGridDateTimeColumn } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
@@ -192,7 +196,6 @@ export { useStoredState } from "./hooks/useStoredState";
 export { InputWithPopper, InputWithPopperComponents, InputWithPopperProps } from "./inputWithPopper/InputWithPopper";
 export { InputWithPopperClassKey } from "./inputWithPopper/InputWithPopper.slots";
 export { messages } from "./messages";
-export { MainContent, MainContentClassKey, MainContentProps } from "./mui/MainContent";
 export { MasterLayout, MasterLayoutClassKey, MasterLayoutProps } from "./mui/MasterLayout";
 export { MasterLayoutContext } from "./mui/MasterLayoutContext";
 export { MenuCollapsibleItem, MenuCollapsibleItemProps } from "./mui/menu/CollapsibleItem";
