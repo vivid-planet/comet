@@ -498,7 +498,7 @@ export function generateGrid(
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
     const dataGridRemoteParameters =
-        config.initialSort || config.queryParamsPrefix
+        config.initialSort || config.queryParamsPrefix || config.initialFilter
             ? `{${
                   config.initialSort
                       ? ` initialSort: [${config.initialSort
@@ -506,6 +506,18 @@ export function generateGrid(
                                 return `{field: "${item.field}", sort: "${item.sort}"}`;
                             })
                             .join(",\n")} ], `
+                      : ""
+              }
+              ${
+                  config.initialFilter
+                      ? `initialFilter:{ ${
+                            config.initialFilter.linkOperator ? `linkOperator: "${config.initialFilter.linkOperator}" as GridLinkOperator,` : ""
+                        }
+                      items: [${config.initialFilter.items
+                          .map((item) => {
+                              return `{columnField: "${item.columnField}", operatorValue: "${item.operatorValue}", value: "${item.value}" }`;
+                          })
+                          .join(",\n")} ],},`
                       : ""
               }
               ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
@@ -541,7 +553,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
