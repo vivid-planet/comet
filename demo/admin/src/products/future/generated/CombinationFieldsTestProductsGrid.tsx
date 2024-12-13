@@ -317,37 +317,34 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             minWidth: 150,
         },
         {
-            field: "combinedAndNestedValuesWithGroupInsideGroup",
-            headerName: intl.formatMessage({
-                id: "product.combinedAndNestedValuesWithGroupInsideGroup",
-                defaultMessage: "Custom formatting with nested values (group inside group)",
-            }),
+            field: "nestedGroups",
+            headerName: intl.formatMessage({ id: "product.nestedGroups", defaultMessage: "Nested groups" }),
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const groupValues: string[] = [
+                const productNestedGroupsSecondaryText__TODO__GroupValues: string[] = [
                     typeof row.price === "undefined" || row.price === null
                         ? ""
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
                     row.category?.title ?? "",
                 ];
-                const groupValues: string[] = [
+                const productNestedGroupsSecondaryTextGroupValues: string[] = [
                     typeof row.price === "undefined" || row.price === null
                         ? ""
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
                     row.category?.title ?? "",
-                    groupValues.filter(Boolean).join(" • "),
+                    productNestedGroupsSecondaryText__TODO__GroupValues.filter(Boolean).join(" • "),
                 ];
                 return (
                     <GridCellContent
                         primaryText={
                             <FormattedMessage
-                                id="product.combinedAndNestedValuesWithGroupInsideGroup.primaryText"
+                                id="product.nestedGroups.primaryText"
                                 defaultMessage={`This product is named "{title}" and is a "{type}"`}
                                 values={{ title: row.title ?? "", type: row.type ?? "" }}
                             />
                         }
-                        secondaryText={groupValues.filter(Boolean).join(" • ")}
+                        secondaryText={productNestedGroupsSecondaryTextGroupValues.filter(Boolean).join(" • ")}
                     />
                 );
             },
@@ -360,30 +357,30 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const groupValues: string[] = [
+                const productTwoGroupsPrimaryTextGroupValues: string[] = [
                     row.category?.title ?? "",
                     typeof row.price === "undefined" || row.price === null
                         ? ""
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
                 ];
-                const groupValues: string[] = [row.category?.title ?? "", row.description ?? ""];
+                const productTwoGroupsSecondaryTextGroupValues: string[] = [row.category?.title ?? "", row.description ?? ""];
                 return (
-                    <GridCellContent primaryText={groupValues.filter(Boolean).join(" • ")} secondaryText={groupValues.filter(Boolean).join(" • ")} />
+                    <GridCellContent
+                        primaryText={productTwoGroupsPrimaryTextGroupValues.filter(Boolean).join(" • ")}
+                        secondaryText={productTwoGroupsSecondaryTextGroupValues.filter(Boolean).join(" • ")}
+                    />
                 );
             },
             flex: 1,
             minWidth: 150,
         },
         {
-            field: "combinedAndNestedValuesWithGroupInsideFormattedMessage",
-            headerName: intl.formatMessage({
-                id: "product.combinedAndNestedValuesWithGroupInsideFormattedMessage",
-                defaultMessage: "Custom formatting with nested values (group inside formatted message)",
-            }),
+            field: "groupInFormattedMessage",
+            headerName: intl.formatMessage({ id: "product.groupInFormattedMessage", defaultMessage: "Group in formatted message" }),
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                const groupValues: string[] = [
+                const productGroupInFormattedMessageSecondaryTextNestedValuesGroupValues: string[] = [
                     typeof row.price === "undefined" || row.price === null
                         ? ""
                         : intl.formatNumber(row.price, { minimumFractionDigits: 2, maximumFractionDigits: 2, style: "currency", currency: "EUR" }),
@@ -393,14 +390,14 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                     <GridCellContent
                         primaryText={
                             <FormattedMessage
-                                id="product.combinedAndNestedValuesWithGroupInsideFormattedMessage.primaryText"
+                                id="product.groupInFormattedMessage.primaryText"
                                 defaultMessage={`This product is named "{title}" and is a "{type}"`}
                                 values={{ title: row.title ?? "", type: row.type ?? "" }}
                             />
                         }
                         secondaryText={
                             <FormattedMessage
-                                id="product.combinedAndNestedValuesWithGroupInsideFormattedMessage.secondaryText"
+                                id="product.groupInFormattedMessage.secondaryText"
                                 defaultMessage="Price: {price} • Category: {category} • Same values again: ({nestedValues})"
                                 values={{
                                     price:
@@ -416,7 +413,7 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
                                             />
                                         ),
                                     category: row.category?.title ?? "",
-                                    nestedValues: groupValues.filter(Boolean).join(" • "),
+                                    nestedValues: productGroupInFormattedMessageSecondaryTextNestedValuesGroupValues.filter(Boolean).join(" • "),
                                 }}
                             />
                         }

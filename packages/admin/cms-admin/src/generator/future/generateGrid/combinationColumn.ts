@@ -127,10 +127,18 @@ const getTextForCellContent = (textConfig: Field<string>, messageIdPrefix: strin
             return textContent;
         });
 
-        variableDefinitions.push(`const groupValues: string[] = [${items.join(", ")}];`); // TODO: Variable name should contain "primary" or "secondary"
+        // TODO: Find a way to do this without using for formatted message id prefix
+        const uniqueVariableNamePrefix = messageIdPrefix
+            .split(".")
+            .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+            .join("");
+
+        const groupValuesVariableName = `${uniqueVariableNamePrefix}GroupValues`;
+
+        variableDefinitions.push(`const ${groupValuesVariableName}: string[] = [${items.join(", ")}];`); // TODO: Variable name should contain "primary" or "secondary"
 
         return {
-            textContent: `groupValues.filter(Boolean).join(" • ")`,
+            textContent: `${groupValuesVariableName}.filter(Boolean).join(" • ")`,
             variableDefinitions,
         };
     }

@@ -135,8 +135,8 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
         },
         {
             type: "combination",
-            name: "combinedAndNestedValuesWithGroupInsideGroup",
-            headerName: "Custom formatting with nested values (group inside group)",
+            name: "nestedGroups",
+            headerName: "Nested groups",
             primaryText: {
                 type: "formattedMessage",
                 message: 'This product is named "{title}" and is a "{type}"',
@@ -208,8 +208,8 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
         },
         {
             type: "combination",
-            name: "combinedAndNestedValuesWithGroupInsideFormattedMessage",
-            headerName: "Custom formatting with nested values (group inside formatted message)",
+            name: "groupInFormattedMessage",
+            headerName: "Group in formatted message",
             primaryText: {
                 type: "formattedMessage",
                 message: 'This product is named "{title}" and is a "{type}"',
