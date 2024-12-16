@@ -8,11 +8,11 @@ interface UploadFileData {
     scope: Record<string, unknown>;
     folderId?: string;
     /**
-     * @deprecated Set it directly on file props.
+     * @deprecated Set `file.importSource.importSourceId` instead
      */
     importSourceId?: string;
     /**
-     * @deprecated Set it directly on file props.
+     * @deprecated Set `file.importSource.importSourceType` instead
      */
     importSourceType?: string;
 }

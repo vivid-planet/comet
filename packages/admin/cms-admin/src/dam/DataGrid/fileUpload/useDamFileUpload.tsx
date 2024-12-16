@@ -57,7 +57,7 @@ type ImportSource = { importSourceType: never; importSourceId: never } | { impor
 interface UploadFilesOptions {
     folderId?: string;
     /**
-     * @deprecated Add it directly to file props instead.
+     * @deprecated Set `importSource` directly on the file
      */
     importSource?: ImportSource;
 }
