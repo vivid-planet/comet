@@ -125,15 +125,14 @@ export function Tabs(inProps: TabsProps) {
                 })}
             </StyledTabs>
             {Children.map(children, (child: ReactElement<TabProps>, index) => {
-                const ownerState: OwnerState = {
-                    contentHidden: index !== value && child.props.forceRender,
-                };
-
                 if (!isValidElement<TabProps>(child)) {
                     return null;
                 }
 
                 if (index === value || child.props.forceRender) {
+                    const ownerState: OwnerState = {
+                        contentHidden: index !== value && child.props.forceRender,
+                    };
                     return (
                         <Content ownerState={ownerState} {...slotProps?.content}>
                             {child.props.children}

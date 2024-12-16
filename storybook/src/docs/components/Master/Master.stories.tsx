@@ -13,7 +13,7 @@ import {
 } from "@comet/admin";
 import { Dashboard, Wrench } from "@comet/admin-icons";
 import { AppBar, Box, Card, CardContent, Drawer, Toolbar as MuiToolbar, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 export default {
     title: "Docs/Components/Master",
@@ -39,7 +39,7 @@ export const Master = {
         }
 
         function MasterHeader() {
-            const [showDrawer, setShowDrawer] = React.useState<boolean>(false);
+            const [showDrawer, setShowDrawer] = useState<boolean>(false);
             return (
                 <>
                     <AppHeader>

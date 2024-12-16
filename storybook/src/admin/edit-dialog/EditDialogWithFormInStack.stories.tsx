@@ -1,6 +1,6 @@
 import { Field, FinalForm, FinalFormInput, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, useEditDialog } from "@comet/admin";
 import { Button } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -8,7 +8,7 @@ interface RootPageProps {
     counter: number;
 }
 
-const RootPage = ({ counter }: RootPageProps): React.ReactElement => {
+const RootPage = ({ counter }: RootPageProps) => {
     const [EditDialog, selection, editDialogApi, selectionApi] = useEditDialog();
 
     return (
@@ -80,7 +80,7 @@ interface InnerNestedStackProps {
 }
 
 const InnerNestedStack = ({ counter }: InnerNestedStackProps) => {
-    const [nestedCounter, setNestedCounter] = React.useState<number>();
+    const [nestedCounter, setNestedCounter] = useState<number>();
 
     return (
         <StackSwitch initialPage="root">

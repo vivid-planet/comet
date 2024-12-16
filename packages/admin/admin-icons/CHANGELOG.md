@@ -1,5 +1,29 @@
 # @comet/admin-icons
 
+## 7.10.0
+
+## 7.9.0
+
+### Minor Changes
+
+-   7cea765fe: Add UI for Impersonation Feature
+
+    -   Add indicator to display when impersonation mode is active in `UserHeaderItem`
+    -   Add button to allow users to switch on impersonation in the `UserGrid`
+    -   Integrate `CrudMoreActionsMenu` in `UserPageToolbar` with an impersonation entry for easy access to this feature.
+    -   Add `ImpersonateUser` icon
+
+### Patch Changes
+
+-   55d40ef08: Add icon for indeterminate checkbox
+
+## 7.8.0
+
+### Minor Changes
+
+-   e78315c9c: Add `ContactPage` icon
+-   c6d3ac36b: Add new icons `Backward` and `Forward`
+
 ## 7.7.0
 
 ## 7.6.0

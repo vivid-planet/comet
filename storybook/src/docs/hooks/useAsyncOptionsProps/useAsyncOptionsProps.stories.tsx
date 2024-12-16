@@ -1,5 +1,5 @@
 import { Field, FinalFormAutocomplete, FinalFormSelect, useAsyncOptionsProps } from "@comet/admin";
-import * as React from "react";
+import { useMemo } from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -11,7 +11,7 @@ export const Select = () => {
         value: string;
         label: string;
     }
-    const initialValues = React.useMemo(() => {
+    const initialValues = useMemo(() => {
         return { selectAsync: { value: "strawberry", label: "Strawberry" } };
     }, []);
 
