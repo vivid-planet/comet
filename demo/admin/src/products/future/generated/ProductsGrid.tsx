@@ -268,14 +268,17 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 {
                     value: "Cap",
                     label: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
+                    cellContent: intl.formatMessage({ id: "product.type.cap", defaultMessage: "great Cap" }),
                 },
                 {
                     value: "Shirt",
                     label: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
+                    cellContent: intl.formatMessage({ id: "product.type.shirt", defaultMessage: "Shirt" }),
                 },
                 {
                     value: "Tie",
                     label: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
+                    cellContent: intl.formatMessage({ id: "product.type.tie", defaultMessage: "Tie" }),
                 },
             ],
             renderCell: renderStaticSelectCell,

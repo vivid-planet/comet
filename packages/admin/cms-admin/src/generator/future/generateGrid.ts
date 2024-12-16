@@ -36,6 +36,7 @@ export type Prop = {
     type: string;
     optional: boolean;
     name: string;
+    destructionAlias?: string;
     defaultValue?: string | number;
 };
 
@@ -68,7 +69,12 @@ function generateGridPropsCode(props: Prop[]): { gridPropsTypeCode: string; grid
                 )
                 .join("\n")}
         };`,
-        gridPropsParamsCode: `{${uniqueProps.map((prop) => `${prop.name} ${prop.defaultValue ? `= ${prop.defaultValue}` : ""}`).join(", ")}}: Props`,
+        gridPropsParamsCode: `{${uniqueProps
+            .map(
+                (prop) =>
+                    `${prop.name}${prop.destructionAlias ? `: ${prop.destructionAlias}` : ``} ${prop.defaultValue ? `= ${prop.defaultValue}` : ""}`,
+            )
+            .join(", ")}}: Props`,
     };
 }
 
@@ -91,8 +97,10 @@ type LabelData = {
 
 const getValueOptionsLabelData = (messageId: string, label: string | StaticSelectLabelCellContent): LabelData => {
     if (typeof label === "string") {
+        const labelText = `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`;
         return {
-            textLabel: `intl.formatMessage({ id: "${messageId}", defaultMessage: "${label}" })`,
+            textLabel: labelText,
+            gridCellContent: labelText,
         };
     }
 
@@ -325,7 +333,7 @@ export function generateGrid(
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
 
         let filterOperators: string | undefined;
-        if (column.filterOperators) {
+        if (column.type !== "combination" && column.filterOperators) {
             let importPath = column.filterOperators.import;
             if (importPath.startsWith("./")) {
                 //go one level up as generated files are in generated subfolder
@@ -439,7 +447,7 @@ export function generateGrid(
 
         return {
             name,
-            fieldName: column.fieldName,
+            fieldName: column.type !== "combination" ? column.fieldName : undefined,
             headerName: column.headerName,
             type,
             gridType,
@@ -492,6 +500,20 @@ export function generateGrid(
             type: `number`,
             optional: true,
             defaultValue: defaultActionsColumnWidth,
+        });
+    }
+
+    if (config.selectionProps) {
+        imports.push({ name: "DataGridProProps", importPath: "@mui/x-data-grid-pro" });
+        props.push({
+            name: "selectionModel",
+            type: `DataGridProProps["selectionModel"]`,
+            optional: true,
+        });
+        props.push({
+            name: "onSelectionModelChange",
+            type: `DataGridProProps["onSelectionModelChange"]`,
+            optional: true,
         });
     }
 
@@ -568,7 +590,7 @@ export function generateGrid(
         }
     \`;
 
-    const ${instanceGqlTypePlural}Query = gql\`
+    ${config.exportQuery ? `export ` : ``}const ${instanceGqlTypePlural}Query = gql\`
         query ${gqlTypePlural}Grid(${[
         ...gqlArgs.filter((gqlArg) => gqlArg.queryOrMutationName === gridQueryType.name).map((gqlArg) => `$${gqlArg.name}: ${gqlArg.type}!`),
         ...[`$offset: Int!`, `$limit: Int!`],
@@ -649,7 +671,14 @@ export function generateGrid(
     export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
-        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid") };
+        const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}),
+         ...usePersistentColumnState("${gqlTypePlural}Grid")${
+        config.selectionProps === "multiSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: true, keepNonExistentRowsSelected: true`
+            : config.selectionProps === "singleSelect"
+            ? `, selectionModel, onSelectionModelChange, checkboxSelection: false, keepNonExistentRowsSelected: false, disableSelectionOnClick: true`
+            : ``
+    } };
         ${hasScope ? `const { scope } = useContentScope();` : ""}
         ${gridNeedsTheme ? `const theme = useTheme();` : ""}
 

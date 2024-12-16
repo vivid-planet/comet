@@ -59,7 +59,7 @@ const ProductsPage = () => {
                                         label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
                                     >
                                         <FieldSet>
-                                            <ProductForm id={selectedProductId} />
+                                            <ProductForm id={selectedProductId} manufacturerCountry="DE" />
                                         </FieldSet>
                                     </RouterTab>
                                     <RouterTab
@@ -138,7 +138,7 @@ const ProductsPage = () => {
                         <FormToolbar />
                         <StackMainContent>
                             <FieldSet>
-                                <ProductForm />
+                                <ProductForm manufacturerCountry="DE" />
                             </FieldSet>
                         </StackMainContent>
                     </SaveBoundary>

@@ -1,5 +1,6 @@
-import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
+import { IntrospectionField, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
+import { GqlArg, Prop } from "../generateForm";
 import { FormConfig, FormLayoutConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { Imports } from "../utils/generateImportsCode";
@@ -12,6 +13,7 @@ export function generateFormLayout({
     formFragmentName,
     formConfig,
     gqlType,
+    createMutationType,
     namePrefix,
 }: {
     gqlIntrospection: IntrospectionQuery;
@@ -22,6 +24,7 @@ export function generateFormLayout({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formConfig: FormConfig<any>;
     gqlType: string;
+    createMutationType?: IntrospectionField;
     namePrefix?: string;
 }): GenerateFieldsReturn {
     const rootGqlType = formConfig.gqlType;
@@ -34,6 +37,8 @@ export function generateFormLayout({
     const formFragmentFields: string[] = [];
     const gqlDocuments: Record<string, string> = {};
     const imports: Imports = [];
+    const props: Prop[] = [];
+    const gqlArgs: GqlArg[] = [];
     const formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [];
     const finalFormConfig = { subscription: {}, renderProps: {} };
 
@@ -47,6 +52,7 @@ export function generateFormLayout({
             formFragmentName,
             formConfig,
             gqlType,
+            createMutationType,
             namePrefix,
         });
 
@@ -57,6 +63,8 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        props.push(...generatedFields.props);
+        gqlArgs.push(...generatedFields.gqlArgs);
         formValuesConfig.push(...generatedFields.formValuesConfig);
 
         finalFormConfig.subscription = { ...finalFormConfig.subscription, ...generatedFields.finalFormConfig?.subscription };
@@ -111,6 +119,7 @@ export function generateFormLayout({
             fields: config.fields,
             formFragmentName,
             formConfig,
+            createMutationType,
             gqlType: introspectionField.type.name,
             namePrefix: name,
         });
@@ -120,6 +129,12 @@ export function generateFormLayout({
             gqlDocuments[name] = generatedFields.gqlDocuments[name];
         }
         imports.push(...generatedFields.imports);
+        // TODO problem: const output wird so generiert: certificateConfig: certificateConfigEnabled && formValues.certificateConfig ? {} : null, sollte so generiert werden: certificateConfig: certificateConfigEnabled && formValues.certificateConfig ? { ...formValues.certificateConfig } : null,
+        // TODO problem: FormValues-Type macht zwar Omit<certificateConfig> fügt aber nix alternatives hinzu
+        // TODO problem: initValues wird für fetched-values nicht mit boolean-fallback befüllt
+        // TODO problem: initValues hat für eigentliche initial-values bei optional-string werten nichts gesetzt.
+        // TODO handle gqlArgs
+        // TODO handle props?
 
         const wrappingFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
             omitFromFragmentType: name,
@@ -187,6 +202,8 @@ export function generateFormLayout({
     }
     return {
         code,
+        props,
+        gqlArgs,
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields,

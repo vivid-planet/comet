@@ -58,6 +58,7 @@ import {
 
 interface FormProps {
     id?: string;
+    manufacturerCountry: string;
     width?: number;
 }
 
@@ -81,7 +82,7 @@ type InitialFormValues = Omit<Partial<FormValues>, "dimensions"> & {
     dimensions?: { width?: number; height?: number; depth?: number } | null;
 };
 
-export function ProductForm({ id, width }: FormProps) {
+export function ProductForm({ id, width }: FormProps): React.ReactElement {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -186,7 +187,6 @@ export function ProductForm({ id, width }: FormProps) {
                     {saveConflict.dialogs}
                     <TextField required fullWidth name="title" label={<FormattedMessage id="product.title" defaultMessage="Title" />} />
                     <TextField required fullWidth name="slug" label={<FormattedMessage id="product.slug" defaultMessage="Slug" />} />
-
                     <Field
                         name="priceRange"
                         label={<FormattedMessage id="product.priceRange" defaultMessage="Price range" />}

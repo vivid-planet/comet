@@ -1,20 +1,16 @@
 import { IntrospectionField, IntrospectionInputValue, IntrospectionQuery } from "graphql";
 
-import { Prop } from "../generateForm";
-import { FormFieldConfig } from "../generator";
+import { GqlArg, Prop } from "../generateForm";
 import { Imports } from "../utils/generateImportsCode";
 
-type GqlArg = { type: string; name: string; isInputArgSubfield: boolean };
-
 export function getForwardedGqlArgs({
-    fields,
     gqlOperation,
     gqlIntrospection,
+    skipGqlArgs,
 }: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fields: FormFieldConfig<any>[];
     gqlOperation: IntrospectionField;
     gqlIntrospection: IntrospectionQuery;
+    skipGqlArgs: GqlArg[];
 }): {
     imports: Imports;
     props: Prop[];
@@ -24,10 +20,14 @@ export function getForwardedGqlArgs({
     const props: Prop[] = [];
     const gqlArgs: GqlArg[] = [];
 
-    const skipGqlInputArgFields = fields.map((field) => String(field.name));
-
     getArgsIncludingInputArgSubfields(gqlOperation, gqlIntrospection).forEach((arg) => {
-        if (arg.isInputArgSubfield && skipGqlInputArgFields.includes(arg.name)) return;
+        if (
+            skipGqlArgs.find(
+                (skipGqlArg) => skipGqlArg.name == arg.name && skipGqlArg.type == arg.type && skipGqlArg.isInputArgSubfield == arg.isInputArgSubfield,
+            )
+        ) {
+            return;
+        }
 
         if (arg.type === "ID" || arg.type === "String" || arg.type === "DateTime") {
             props.push({ name: arg.name, optional: false, type: "string" });
