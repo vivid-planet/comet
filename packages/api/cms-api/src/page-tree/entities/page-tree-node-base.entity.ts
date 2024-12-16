@@ -8,7 +8,7 @@ import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } f
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))
 export abstract class PageTreeNodeBase extends BaseEntity {
-    static tableName = PAGE_TREE_ENTITY;
+    static readonly tableName = PAGE_TREE_ENTITY;
     [OptionalProps]?: "createdAt" | "updatedAt" | "hideInMenu";
 
     @PrimaryKey({ columnType: "uuid" })
