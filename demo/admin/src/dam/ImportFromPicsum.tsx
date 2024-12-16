@@ -5,22 +5,22 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { getRandomUnsplashImage, UnsplashImage } from "./getRandomUnsplashImage";
-import UnsplashIcon from "./UnsplashIcon";
+import { getRandomPicsumImage, PicsumImage } from "./getRandomPicsumImage";
+import PicsumIcon from "./PicsumIcon";
 
-export const ImportFromUnsplash = () => {
+export const ImportFromPicsum = () => {
     const { allAcceptedMimeTypes } = useDamAcceptedMimeTypes();
     const { folderId } = useCurrentDamFolder();
     const [isOpen, setIsOpen] = useState(false);
-    const [unsplashImage, setUnsplashImage] = useState<UnsplashImage>();
+    const [picsumImage, setPicsumImage] = useState<PicsumImage>();
 
     const { uploadFiles } = useDamFileUpload({
         acceptedMimetypes: allAcceptedMimeTypes,
     });
 
     const handleOpenDialog = async () => {
-        const image = await getRandomUnsplashImage();
-        setUnsplashImage(image);
+        const image = await getRandomPicsumImage();
+        setPicsumImage(image);
         setIsOpen(true);
     };
 
@@ -29,9 +29,9 @@ export const ImportFromUnsplash = () => {
     };
 
     const handleSave = async () => {
-        if (unsplashImage === undefined) return;
+        if (picsumImage === undefined) return;
         await uploadFiles(
-            { acceptedFiles: [unsplashImage.file], fileRejections: [] },
+            { acceptedFiles: [picsumImage.file], fileRejections: [] },
             {
                 folderId,
             },
@@ -40,25 +40,25 @@ export const ImportFromUnsplash = () => {
     };
 
     const handleShuffle = async () => {
-        const image = await getRandomUnsplashImage();
-        setUnsplashImage(image);
+        const image = await getRandomPicsumImage();
+        setPicsumImage(image);
     };
 
     return (
         <>
-            <Button variant="text" color="inherit" startIcon={<UnsplashIcon />} onClick={handleOpenDialog}>
-                <FormattedMessage id="pages.dam.importFromUnsplash" defaultMessage="Import from Unsplash" />
+            <Button variant="text" color="inherit" startIcon={<PicsumIcon />} onClick={handleOpenDialog}>
+                <FormattedMessage id="pages.dam.importFromPicsum" defaultMessage="Import from Picsum" />
             </Button>
             <Dialog open={isOpen} onClose={handleCloseDialog}>
                 <div>
-                    <DialogTitle>Import from Unsplash</DialogTitle>
+                    <DialogTitle>Import from Picsum</DialogTitle>
                     <DialogContent>
-                        <ImagePreview src={unsplashImage?.url} alt="image" />
+                        <ImagePreview src={picsumImage?.url} alt="image" />
                     </DialogContent>
                     <DialogActions>
                         <CancelButton onClick={handleCloseDialog} />
                         <Button onClick={handleShuffle}>
-                            <FormattedMessage id="pages.dam.importFromUnsplash.dialog.shuffle" defaultMessage="Shuffle" />
+                            <FormattedMessage id="pages.dam.importFromPicsum.dialog.shuffle" defaultMessage="Shuffle" />
                         </Button>
                         <SaveButton onClick={handleSave}>
                             <FormattedMessage {...messages.save} />

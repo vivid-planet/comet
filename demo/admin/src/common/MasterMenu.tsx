@@ -13,13 +13,13 @@ import {
     UserPermissionsPage,
 } from "@comet/cms-admin";
 import { ContentScope } from "@src/common/ContentScopeProvider";
-import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
+import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import Dashboard from "@src/dashboard/Dashboard";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { Link } from "@src/links/Link";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
-import { NewsPage } from "@src/news/generated/NewsPage";
+import { NewsPage } from "@src/news/NewsPage";
 import MainMenu from "@src/pages/mainMenu/MainMenu";
 import { Page } from "@src/pages/Page";
 import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
@@ -124,7 +124,7 @@ export const masterMenuData: MasterMenuData = [
         icon: <Assets />,
         route: {
             path: "/assets",
-            render: () => <DamPage additionalToolbarItems={<ImportFromUnsplash />} />,
+            render: () => <DamPage additionalToolbarItems={<ImportFromPicsum />} />,
         },
         requiredPermission: "dam",
     },
