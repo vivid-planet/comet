@@ -46,18 +46,29 @@ export interface CrudMoreActionsMenuProps
 interface CrudMoreActionsGroupProps {
     groupTitle: ReactNode;
     menuListProps?: MenuListProps;
+    shouldShowTitle: boolean;
     typographyProps?: ComponentProps<typeof Typography>;
 }
 
-function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
-    return (
-        <>
-            <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
-                {groupTitle}
-            </Typography>
-            <MenuList {...menuListProps}>{children}</MenuList>
-        </>
-    );
+function CrudMoreActionsGroup({
+    groupTitle,
+    children,
+    menuListProps,
+    typographyProps,
+    shouldShowTitle,
+}: PropsWithChildren<CrudMoreActionsGroupProps>) {
+    if (shouldShowTitle) {
+        return (
+            <>
+                <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
+                    {groupTitle}
+                </Typography>
+                <MenuList {...menuListProps}>{children}</MenuList>
+            </>
+        );
+    } else {
+        return <MenuList {...menuListProps}>{children}</MenuList>;
+    }
 }
 
 const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuClassKey>({
@@ -137,7 +148,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                 {!!overallActions?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />}
-                        typographyProps={selectiveActions?.length ? undefined : { sx: { display: "none" } }}
+                        shouldShowTitle={!!selectiveActions?.length}
                         {...groupProps}
                     >
                         {overallActions.map((item, index) => {
@@ -171,7 +182,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                 {!!selectiveActions?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />}
-                        typographyProps={overallActions?.length ? undefined : { sx: { display: "none" } }}
+                        shouldShowTitle={!!overallActions?.length}
                         {...groupProps}
                     >
                         {selectiveActions.map((item, index) => {

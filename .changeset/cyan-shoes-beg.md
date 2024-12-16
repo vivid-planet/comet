@@ -2,6 +2,4 @@
 "@comet/admin": minor
 ---
 
-Update `CrudMoreActionsMenu` Design
-
--   remove `groupTitle` if only one action group is present
+Hide group title in `CrudMoreActionsMenu` when only one group is present
