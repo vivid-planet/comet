@@ -17,7 +17,7 @@ import { DashboardPage } from "@src/dashboard/DashboardPage";
 import { Link } from "@src/documents/links/Link";
 import { Page } from "@src/documents/pages/Page";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
-import { NewsPage } from "@src/news/generated/NewsPage";
+import { NewsPage } from "@src/news/NewsPage";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";

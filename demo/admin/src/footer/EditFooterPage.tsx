@@ -77,6 +77,7 @@ export function EditFooterPage(): JSX.Element | null {
     useEffect(() => {
         if (data) {
             if (data.footer) {
+                // @ts-expect-error Typing of Footer is wrong due to TextLinkBlock having userGroup property. TODO: add userGroup property to Footer.
                 const content = FooterContentBlock.input2State(data.footer.content);
                 setFooterState(content);
                 setReferenceContent(FooterContentBlock.state2Output(content));
