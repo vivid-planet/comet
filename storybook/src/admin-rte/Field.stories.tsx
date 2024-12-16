@@ -1,7 +1,7 @@
 import { Field, FinalFormInput, FormSection } from "@comet/admin";
 import { createFinalFormRte } from "@comet/admin-rte";
 import { Button, Card, CardContent, Grid } from "@mui/material";
-import * as React from "react";
+import { useReducer, useState } from "react";
 import { Form } from "react-final-form";
 
 const { RteField, RteReadOnly } = createFinalFormRte();
@@ -11,8 +11,8 @@ export default {
 };
 
 export const _Field = () => {
-    const [submittedValue, setSubmittedValue] = React.useState<{ rteContent: any }>({ rteContent: undefined });
-    const [disabled, toggleDisabled] = React.useReducer((s) => !s, false);
+    const [submittedValue, setSubmittedValue] = useState<{ rteContent: any }>({ rteContent: undefined });
+    const [disabled, toggleDisabled] = useReducer((s) => !s, false);
 
     return (
         <Grid container spacing={4} style={{ maxWidth: 800 }}>

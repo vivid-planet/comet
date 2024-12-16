@@ -25,8 +25,8 @@ import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 type TsCodeRecordToStringObject = Record<string, string | number | undefined>;
 
-function tsCodeRecordToString(object: TsCodeRecordToStringObject) {
-    return `{${Object.entries(object)
+function tsCodeRecordToString(object: TsCodeRecordToStringObject, spreadAbove?: string) {
+    return `{${spreadAbove ? `${spreadAbove}` : ""}${Object.entries(object)
         .filter(([key, value]) => value !== undefined)
         .map(([key, value]) => `${key}: ${value},`)
         .join("\n")}}`;
@@ -326,8 +326,8 @@ export function generateGrid(
         const type = column.type;
         const name = String(column.name);
 
+        let gridColumnType: string | undefined = undefined;
         let renderCell: string | undefined = undefined;
-        let valueGetter: string | undefined = name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined;
         let valueFormatter: string | undefined = undefined;
 
         let gridType: "number" | "boolean" | "dateTime" | "date" | undefined;
@@ -348,13 +348,9 @@ export function generateGrid(
         }
 
         if (type == "dateTime") {
-            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
-            valueFormatter = `({ value }) => value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : ""`;
-            gridType = "dateTime";
+            gridColumnType = "...dataGridDateTimeColumn,";
         } else if (type == "date") {
-            valueGetter = `({ row }) => row.${name} && new Date(row.${name})`;
-            valueFormatter = `({ value }) => value ? intl.formatDate(value) : ""`;
-            gridType = "date";
+            gridColumnType = "...dataGridDateColumn,";
         } else if (type == "number") {
             gridType = "number";
         } else if (type == "boolean") {
@@ -430,6 +426,7 @@ export function generateGrid(
                 headerName: column.headerName,
                 type,
                 gridType: "singleSelect" as const,
+                columnType: gridColumnType,
                 valueOptions,
                 renderCell,
                 valueFormatter,
@@ -454,8 +451,9 @@ export function generateGrid(
             headerName: column.headerName,
             type,
             gridType,
+            columnType: gridColumnType,
             renderCell,
-            valueGetter,
+            valueGetter: name.includes(".") ? `({ row }) => row.${name.replace(/\./g, "?.")}` : undefined,
             filterOperators: filterOperators,
             valueFormatter,
             width: column.width,
@@ -546,6 +544,8 @@ export function generateGrid(
         GridFilterButton,
         GridCellContent,
         GridColDef,
+        dataGridDateTimeColumn,
+        dataGridDateColumn,
         renderStaticSelectCell,
         messages,
         muiGridFilterToGql,
@@ -758,7 +758,7 @@ export function generateGrid(
                         columnDefinition.maxWidth = maxWidth;
                     }
 
-                    return tsCodeRecordToString(columnDefinition);
+                    return tsCodeRecordToString(columnDefinition, column.columnType);
                 })
                 .join(",\n")},
                 ${

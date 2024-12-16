@@ -1,7 +1,6 @@
 import { Field, FinalForm, FinalFormInput, FinalFormSaveCancelButtonsLegacy } from "@comet/admin";
 import { Box, Card, CardContent } from "@mui/material";
 import { SubmissionErrors } from "final-form";
-import * as React from "react";
 
 const onSubmit = ({ foo, bar }: { foo: string; bar: string }) => {
     const errors = [];

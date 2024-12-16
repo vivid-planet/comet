@@ -1,13 +1,14 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Children, ReactElement } from "react";
-
-interface ContainerProps {
-    children: ReactElement<ItemProps>[];
-}
+import { Children, ReactElement, ReactNode } from "react";
 
 interface ItemProps {
     width: number;
+    label?: ReactNode;
+}
+
+interface ContainerProps {
+    children: ReactElement<ItemProps>[];
 }
 
 export function ColumnsLayoutPreview({ children }: ContainerProps) {
@@ -34,6 +35,6 @@ const RootContent = styled(ColumnsLayoutPreviewSpacing)`
     align-items: center;
 `;
 
-export function ColumnsLayoutPreviewContent({ width }: ItemProps): ReactElement<ItemProps> {
-    return <RootContent width={width}>{width > 3 ? <Typography variant="subtitle1">{width}</Typography> : null}</RootContent>;
+export function ColumnsLayoutPreviewContent({ width, label }: ItemProps) {
+    return <RootContent width={width}>{label ? label : width > 3 ? <Typography variant="subtitle1">{width}</Typography> : null}</RootContent>;
 }

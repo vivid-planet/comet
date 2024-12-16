@@ -32,6 +32,7 @@ export const productFormFragment = gql`
             min
             max
         }
+        lastCheckedAt
         dimensions {
             width
             height

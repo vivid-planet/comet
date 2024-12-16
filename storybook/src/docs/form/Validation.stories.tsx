@@ -1,6 +1,5 @@
 import { Field, FinalForm, FinalFormInput } from "@comet/admin";
 import { FORM_ERROR } from "final-form";
-import * as React from "react";
 
 export default {
     title: "Docs/Form/Validation",

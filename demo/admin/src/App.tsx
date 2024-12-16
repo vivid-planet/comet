@@ -23,7 +23,6 @@ import { createApolloClient } from "@src/common/apollo/createApolloClient";
 import ContentScopeProvider, { ContentScope } from "@src/common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "@src/common/EditPageNode";
 import { ConfigProvider, createConfig } from "@src/config";
-import { ImportFromUnsplash } from "@src/dam/ImportFromUnsplash";
 import { pageTreeCategories } from "@src/pageTree/pageTreeCategories";
 import { theme } from "@src/theme";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
@@ -35,6 +34,7 @@ import { Route, Switch } from "react-router-dom";
 
 import MasterHeader from "./common/MasterHeader";
 import MasterMenu, { masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { getMessages } from "./lang";
 import { Link } from "./links/Link";
 import { NewsDependency } from "./news/dependencies/NewsDependency";
@@ -65,17 +65,29 @@ class App extends Component {
                 <ApolloProvider client={apolloClient}>
                     <SitesConfigProvider
                         value={{
-                            configs: config.sitesConfig,
-                            resolveSiteConfigForScope: (configs, scope: ContentScope) => configs[scope.domain],
+                            configs: [...config.sitesConfig],
+                            resolveSiteConfigForScope: (configs, scope) => {
+                                const siteConfig = configs.find((config) => config.scope.domain === scope.domain);
+                                if (!siteConfig) throw new Error(`siteConfig not found for domain ${scope.domain}`);
+                                return {
+                                    url: siteConfig.url,
+                                    preloginEnabled: siteConfig.preloginEnabled || false,
+                                    blockPreviewBaseUrl:
+                                        siteConfig.scope.domain === "secondary"
+                                            ? `${siteConfig.url}/block-preview`
+                                            : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                                    sitePreviewApiUrl: `${siteConfig.url}/api/site-preview`,
+                                };
+                            },
                         }}
                     >
                         <DamConfigProvider
                             value={{
                                 scopeParts: ["domain"],
-                                additionalToolbarItems: <ImportFromUnsplash />,
+                                additionalToolbarItems: <ImportFromPicsum />,
                                 importSources: {
-                                    unsplash: {
-                                        label: <FormattedMessage id="dam.importSource.unsplash.label" defaultMessage="Unsplash" />,
+                                    picsum: {
+                                        label: <FormattedMessage id="dam.importSource.picsum.label" defaultMessage="Lorem Picsum" />,
                                     },
                                 },
                                 contentGeneration: {
