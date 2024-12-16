@@ -71,23 +71,6 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
             buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)}
             startIcon={isMobile ? undefined : AccountIcon}
             dropdownArrow={isMobile ? null : undefined}
-            slotProps={{
-                button: {
-                    slotProps: {
-                        content: {
-                            sx: (theme) => ({
-                                paddingX: theme.spacing(2),
-                                minWidth: "auto",
-
-                                [theme.breakpoints.up("md")]: {
-                                    paddingX: theme.spacing(4),
-                                    minWidth: "var(--header-height)",
-                                },
-                            }),
-                        },
-                    },
-                },
-            }}
         >
             <DropdownContent padding={4}>
                 <Button

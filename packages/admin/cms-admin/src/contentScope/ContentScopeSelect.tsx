@@ -153,11 +153,9 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                             sx: (theme) => ({
                                 width: "100%",
                                 justifyContent: "start",
-                                paddingX: theme.spacing(2),
 
                                 [theme.breakpoints.up("md")]: {
                                     justifyContent: "center",
-                                    paddingX: theme.spacing(4),
                                 },
                             }),
                         },

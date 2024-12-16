@@ -24,8 +24,15 @@ export const Content = createComponentSlot("div")<AppHeaderButtonClassKey>({
         height: 100%;
         min-width: var(--header-height);
         box-sizing: border-box;
-        padding-left: ${theme.spacing(4)};
-        padding-right: ${theme.spacing(4)};
+        padding-left: ${theme.spacing(2)};
+        padding-right: ${theme.spacing(2)};
+        min-width: auto;
+
+        ${theme.breakpoints.up("md")} {
+            padding-left: ${theme.spacing(4)};
+            padding-right: ${theme.spacing(4)};
+            min-width: var(--header-height);
+        }
     `,
 );
 

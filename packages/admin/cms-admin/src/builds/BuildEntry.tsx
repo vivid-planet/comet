@@ -129,11 +129,9 @@ export function BuildEntry() {
                         content: {
                             sx: (theme) => ({
                                 paddingX: "17px",
-                                minWidth: "auto",
 
                                 [theme.breakpoints.up("md")]: {
                                     paddingX: theme.spacing(4),
-                                    minWidth: "var(--header-height)",
                                 },
                             }),
                         },
