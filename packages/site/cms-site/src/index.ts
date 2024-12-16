@@ -1,5 +1,5 @@
 export { BlockLoader, BlockLoaderDependencies, recursivelyLoadBlockData } from "./blockLoader/blockLoader";
-export { convertToFileSize, DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
+export { DamFileDownloadLinkBlock } from "./blocks/DamFileDownloadLinkBlock";
 export { DamVideoBlock } from "./blocks/DamVideoBlock";
 export { EmailLinkBlock } from "./blocks/EmailLinkBlock";
 export { ExternalLinkBlock } from "./blocks/ExternalLinkBlock";

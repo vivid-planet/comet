@@ -1,6 +1,5 @@
 "use client";
 
-import { filesize } from "filesize";
 import { cloneElement, ReactElement } from "react";
 
 import { DamFileDownloadLinkBlockData } from "../blocks.generated";
@@ -39,5 +38,3 @@ export const DamFileDownloadLinkBlock = withPreview(
     },
     { label: "DamFileDownloadLink" },
 );
-
-export const convertToFileSize = (fileSize: number | string) => filesize(fileSize);

@@ -652,6 +652,9 @@ importers:
       express:
         specifier: ^4.0.0
         version: 4.18.2
+      filesize:
+        specifier: ^10.1.6
+        version: 10.1.6
       fs-extra:
         specifier: ^9.0.0
         version: 9.1.0
@@ -2678,9 +2681,6 @@ importers:
 
   packages/site/cms-site:
     dependencies:
-      filesize:
-        specifier: ^10.1.6
-        version: 10.1.6
       jose:
         specifier: ^5.2.4
         version: 5.6.3
