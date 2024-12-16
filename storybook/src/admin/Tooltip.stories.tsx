@@ -20,7 +20,7 @@ export const IconWithTooltip = {
 };
 
 export const AllTooltipTriggers = {
-    render: () => {
+    render: function Render() {
         const [clicks, setClicks] = useState(0);
 
         const NonClickable = forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
