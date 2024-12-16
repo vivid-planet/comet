@@ -17,6 +17,7 @@ describe("GenerateCrudInput", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity],
             }),
         );
