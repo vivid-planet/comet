@@ -1,8 +1,8 @@
-import { BaseEntity, Entity, Enum, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, Enum, Index, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
-import { PageTreeNodeCategory, PageTreeNodeVisibility } from "../types";
+import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
 
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))
@@ -14,15 +14,13 @@ export abstract class PageTreeNodeBase extends BaseEntity {
     @Field(() => ID)
     id: string = uuid();
 
-    @Property({ columnType: "uuid", nullable: true })
+    @Property({ columnType: "uuid", nullable: true, persist: false })
     @Field(() => String, { nullable: true })
     parentId: string | null;
 
-    // not possible in lib
-
-    // @ManyToOne(() => PageTreeNode)
-    // @Index()
-    // parent?: PageTreeNode;
+    @ManyToOne(() => "PageTreeNode", { nullable: true, joinColumn: "parentId" })
+    @Index()
+    parent?: PageTreeNodeInterface;
 
     @Property()
     @Field(() => Int)
