@@ -12,8 +12,6 @@ Use buttons with the `outlined` variant instead to adhere to the Comet design gu
     // ...
     action={
 -       <Button variant="text" startIcon={<ArrowRight />}>
--           Action Text
--       </Button>
 +       <Button variant="outlined" startIcon={<ArrowRight />}>
 +           Action Text
 +       </Button>
