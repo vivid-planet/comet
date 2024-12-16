@@ -2,12 +2,13 @@ import { BaseEntity, Entity, Enum, Index, ManyToOne, OptionalProps, PrimaryKey, 
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 
+import { PAGE_TREE_ENTITY } from "../page-tree.constants";
 import { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility } from "../types";
 
 @Entity({ abstract: true })
 @ObjectType("PageTreeNodeBase", { isAbstract: true }) // ObjectType must be defined in base class! (The name "PageTreeNodeBase" is not used (we have no concrete type of PageTreeNodeBase))
 export abstract class PageTreeNodeBase extends BaseEntity {
-    static tableName = "PageTreeNode";
+    static tableName = PAGE_TREE_ENTITY;
     [OptionalProps]?: "createdAt" | "updatedAt" | "hideInMenu";
 
     @PrimaryKey({ columnType: "uuid" })
@@ -18,7 +19,7 @@ export abstract class PageTreeNodeBase extends BaseEntity {
     @Field(() => String, { nullable: true })
     parentId: string | null;
 
-    @ManyToOne(() => "PageTreeNode", { nullable: true, joinColumn: "parentId" })
+    @ManyToOne(() => PAGE_TREE_ENTITY, { nullable: true, joinColumn: "parentId" })
     @Index()
     parent?: PageTreeNodeInterface;
 
