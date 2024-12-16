@@ -47,10 +47,12 @@ export function generateExcelFile<Row extends GridValidRowModel>(
                     if (column.valueGetter) {
                         // @ts-expect-error `valueGetter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
                         value = column.valueGetter({ value, row }) ?? "";
+                        console.log("valueGetter", value);
                     }
                     if (column.valueFormatter) {
                         // @ts-expect-error `valueFormatter` requires more data but we don't have all that data available so we only pass in what we have and hope nothing breaks
                         value = column.valueFormatter({ value }) ?? "";
+                        console.log("valueFormatter", value);
                     }
 
                     if (typeof value !== "string" && typeof value !== "number" && value !== null && !(value instanceof Date)) {
