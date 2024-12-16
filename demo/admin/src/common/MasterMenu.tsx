@@ -6,6 +6,7 @@ import {
     CronJobsPage,
     DamPage,
     DocumentInterface,
+    DocumentType,
     MasterMenu,
     MasterMenuData,
     PagesPage,
@@ -16,8 +17,11 @@ import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
 import { DashboardPage } from "@src/dashboard/DashboardPage";
 import { Link } from "@src/documents/links/Link";
 import { Page } from "@src/documents/pages/Page";
+import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
+import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import { NewsPage } from "@src/news/NewsPage";
+import { categoryToUrlParam, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
@@ -27,9 +31,12 @@ import { ProductsWithLowPricePage as FutureProductsWithLowPricePage } from "@src
 import { ManufacturersPage as ManufacturersHandmadePage } from "@src/products/ManufacturersPage";
 import ProductsHandmadePage from "@src/products/ProductsPage";
 import ProductTagsPage from "@src/products/tags/ProductTagsPage";
+import { ContentScope } from "@src/site-configs";
 import { FormattedMessage } from "react-intl";
+import { Redirect, RouteComponentProps } from "react-router";
 
 import { ComponentDemo } from "./ComponentDemo";
+import { EditPageNode } from "./EditPageNode";
 
 export const pageTreeCategories: AllCategories = [
     {
@@ -56,20 +63,47 @@ export const masterMenuData: MasterMenuData = [
         },
     },
     {
-        type: "route",
+        type: "collapsible",
         primary: <FormattedMessage id="menu.pageTree" defaultMessage="Page tree" />,
         icon: <PageTree />,
+        items: pageTreeCategories.map((category) => ({
+            type: "route",
+            primary: category.label,
+            to: `/pages/pagetree/${categoryToUrlParam(category.category as GQLPageTreeNodeCategory)}`,
+        })),
         route: {
-            path: "/pages/pagetree/main-navigation",
-            render: () => (
-                <PagesPage
-                    path="/pages/pagetree/main-navigation"
-                    allCategories={pageTreeCategories}
-                    documentTypes={pageTreeDocumentTypes}
-                    category="MainNavigation"
-                    renderContentScopeIndicator={(scope) => <ContentScopeIndicator scope={scope} />}
-                />
-            ),
+            path: "/pages/pagetree/:category",
+            render: ({ match }: RouteComponentProps<{ category: string }>) => {
+                const category = urlParamToCategory(match.params.category);
+
+                if (category === undefined) {
+                    return <Redirect to={`${match.url}/dashboard`} />;
+                }
+
+                return (
+                    <PagesPage
+                        path={`/pages/pagetree/${match.params.category}`}
+                        allCategories={pageTreeCategories}
+                        documentTypes={(category): Record<DocumentType, DocumentInterface> => {
+                            if (category === "TopMenu") {
+                                return {
+                                    Page,
+                                    PredefinedPage,
+                                };
+                            }
+
+                            return {
+                                Page,
+                                PredefinedPage,
+                                Link,
+                            };
+                        }}
+                        editPageNode={EditPageNode}
+                        category={category}
+                        renderContentScopeIndicator={(scope: ContentScope) => <ContentScopeIndicator scope={scope} />}
+                    />
+                );
+            },
         },
         requiredPermission: "pageTree",
     },

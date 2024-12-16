@@ -1,3 +1,4 @@
+import "@fontsource-variable/roboto-flex/full.css";
 import "@src/polyfills";
 
 import { ApolloProvider } from "@apollo/client";
