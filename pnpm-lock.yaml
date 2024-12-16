@@ -258,6 +258,9 @@ importers:
       express:
         specifier: ^4.18.2
         version: 4.21.1
+      helmet:
+        specifier: ^7.0.0
+        version: 7.2.0
 
   demo/api:
     dependencies:
@@ -1448,12 +1451,6 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:^7.10.0
         version: link:../admin-icons
-      clipboard-copy:
-        specifier: ^4.0.0
-        version: 4.0.1
-      clsx:
-        specifier: ^1.1.1
-        version: 1.2.1
       lodash.isequal:
         specifier: ^4.0.0
         version: 4.5.0
@@ -8353,9 +8350,6 @@ packages:
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
 
-  clipboard-copy@4.0.1:
-    resolution: {integrity: sha512-wOlqdqziE/NNTUJsfSgXmBMIrYmfd5V0HCGsR8uAKHcg+h9NENWINcfRjtWGU77wDHC8B8ijV4hMTGYbrKovng==}
-
   cliui@5.0.0:
     resolution: {integrity: sha512-PYeGSEmmHM6zvoef2w8TPzlrnNpXIjTipYK780YswmIP9vjxmd6Y2a3CB2Ks6/AU8NHjZugXvo8w3oWM2qnwXA==}
 
@@ -10602,6 +10596,10 @@ packages:
   helmet@4.6.0:
     resolution: {integrity: sha512-HVqALKZlR95ROkrnesdhbbZJFi/rIVSoNq6f3jA/9u6MIbTsPh3xZwihjeI5+DO/2sOV6HMHooXcEOuwskHpTg==}
     engines: {node: '>=10.0.0'}
+
+  helmet@7.2.0:
+    resolution: {integrity: sha512-ZRiwvN089JfMXokizgqEPXsl2Guk094yExfoDXR0cBYWxtBbaSww/w+vT4WEJsBW2iTUi1GgZ6swmoug3Oy4Xw==}
+    engines: {node: '>=16.0.0'}
 
   history@4.10.1:
     resolution: {integrity: sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==}
@@ -24362,8 +24360,6 @@ snapshots:
 
   client-only@0.0.1: {}
 
-  clipboard-copy@4.0.1: {}
-
   cliui@5.0.0:
     dependencies:
       string-width: 3.1.0
@@ -27123,6 +27119,8 @@ snapshots:
   headers-utils@3.0.2: {}
 
   helmet@4.6.0: {}
+
+  helmet@7.2.0: {}
 
   history@4.10.1:
     dependencies:
