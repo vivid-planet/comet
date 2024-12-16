@@ -130,9 +130,10 @@ export function createEditPageNode({
         });
 
         let parentPath: string | null = null;
+        const hasParentNode = parentNodeData?.pageTreeNode?.path != undefined;
 
         if (parentNodeData?.pageTreeNode) {
-            parentPath = parentNodeData.pageTreeNode.slug === "home" && parentNodeData.pageTreeNode.path ? "/home" : parentNodeData.pageTreeNode.path;
+            parentPath = parentNodeData.pageTreeNode.slug === "home" && hasParentNode ? "/home" : parentNodeData.pageTreeNode.path;
         }
 
         const options = Object.keys(documentTypes).map((type) => ({
