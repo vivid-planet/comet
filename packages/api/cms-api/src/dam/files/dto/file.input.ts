@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from "@nestjs/graphql";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import {
     IsDate,
     IsEnum,
@@ -56,11 +56,13 @@ export class LicenseInput {
     author?: string;
 
     @Field(() => Date, { nullable: true })
+    @Transform(({ value }) => (value ? new Date(value) : undefined))
     @IsOptional()
     @IsDate()
     durationFrom?: Date;
 
     @Field(() => Date, { nullable: true })
+    @Transform(({ value }) => (value ? new Date(value) : undefined))
     @IsOptional()
     @IsDate()
     durationTo?: Date;

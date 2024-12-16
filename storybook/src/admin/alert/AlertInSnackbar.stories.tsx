@@ -1,6 +1,6 @@
 import { Alert } from "@comet/admin";
 import { Button, Snackbar } from "@mui/material";
-import React from "react";
+import { useState } from "react";
 
 export default {
     title: "@comet/admin/alert/Alert",
@@ -8,7 +8,7 @@ export default {
 
 export const AlertInSnackbar = {
     render: () => {
-        const [showSnackbar, setShowSnackbar] = React.useState(false);
+        const [showSnackbar, setShowSnackbar] = useState(false);
         return (
             <>
                 <Button

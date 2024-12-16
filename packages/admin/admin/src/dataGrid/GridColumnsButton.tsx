@@ -9,8 +9,18 @@ type Props = ComponentProps<typeof GridToolbarColumnsButton>;
 
 export function GridColumnsButton(props: Props) {
     return (
-        <GridToolbarColumnsButton startIcon={<Columns4 />} variant="outlined" color="info" {...props}>
-            <FormattedMessage {...messages.columns} />
-        </GridToolbarColumnsButton>
+        <GridToolbarColumnsButton
+            {...props}
+            slotProps={{
+                ...props.slotProps,
+                button: {
+                    variant: "outlined",
+                    startIcon: <Columns4 />,
+                    children: <FormattedMessage {...messages.columns} />,
+                    color: "info",
+                    ...props.slotProps?.button,
+                },
+            }}
+        />
     );
 }

@@ -1,6 +1,5 @@
 import { CopyToClipboardButton } from "@comet/admin";
 import { Card, CardContent, Grid, Typography, useTheme } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "Docs/Components/CopyToClipboardButton",

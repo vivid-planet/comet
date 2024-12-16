@@ -2,7 +2,6 @@ import { DataGridToolbar, GridFilterButton, StackLink, ToolbarActions, ToolbarFi
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Button } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -29,8 +28,8 @@ export const _DataGridToolbar = {
                 autoHeight
                 columns={columns}
                 rows={data}
-                components={{
-                    Toolbar: () => (
+                slots={{
+                    toolbar: () => (
                         <DataGridToolbar>
                             <ToolbarItem>
                                 <GridToolbarQuickFilter />

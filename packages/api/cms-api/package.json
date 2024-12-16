@@ -1,6 +1,6 @@
 {
     "name": "@comet/cms-api",
-    "version": "7.7.0",
+    "version": "7.10.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -84,7 +84,7 @@
     },
     "devDependencies": {
         "@aws-sdk/types": "3.609.0",
-        "@comet/eslint-config": "workspace:^7.7.0",
+        "@comet/eslint-config": "workspace:^7.10.0",
         "@golevelup/ts-jest": "^0.4.0",
         "@kubernetes/client-node": "^0.18.1",
         "@mikro-orm/cli": "^6.4.0",

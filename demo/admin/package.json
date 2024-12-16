@@ -19,7 +19,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project .",
         "lint:generated-files-not-modified": "$npm_execpath admin-generator && git diff --exit-code HEAD --",
-        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
+        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.site-configs -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",
@@ -38,12 +38,12 @@
         "@mui/lab": "^6.0.0-beta.10",
         "@mui/material": "^6.0.0",
         "@mui/system": "^6.0.0",
-        "@mui/x-data-grid": "^6.20.4",
-        "@mui/x-data-grid-pro": "^6.0.0",
+        "@mui/x-data-grid": "^7.22.3",
+        "@mui/x-data-grid-pro": "^7.22.3",
         "change-case": "^5.2.0",
         "dnd-core": "^16.0.0",
         "draft-js": "^0.11.0",
-        "exceljs": "^3.0.0",
+        "exceljs": "^4.4.0",
         "file-saver": "^2.0.0",
         "final-form": "^4.0.0",
         "graphql": "^15.0.0",
@@ -61,6 +61,7 @@
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0",
         "react-select": "^3.0.0",
+        "use-debounce": "^6.0.0",
         "uuid": "^9.0.0"
     },
     "devDependencies": {

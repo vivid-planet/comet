@@ -4,10 +4,10 @@ import { ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 import { ToolbarBreadcrumbs } from "./ToolbarBreadcrumbs";
 
 export type ToolbarClassKey = "root" | "topBar" | "bottomBar" | "mainContentContainer" | "breadcrumbs" | "scopeIndicator";
+import { MasterLayoutContext } from "../../mui/MasterLayoutContext";
 
 export interface ToolbarProps
     extends ThemedComponentBaseProps<{
@@ -22,8 +22,12 @@ export interface ToolbarProps
     children?: ReactNode;
     scopeIndicator?: ReactNode;
     hideTopBar?: boolean;
+    /**
+     * The height of the header above the toolbar. Default behaviour is to use the height of the headerHeight from the
+     * MasterLayoutContext, but can be overriden here
+     */
+    headerHeight?: number;
 }
-
 type OwnerState = {
     headerHeight: number;
 };
@@ -112,9 +116,8 @@ export const Toolbar = (inProps: ToolbarProps) => {
     const { headerHeight } = useContext(MasterLayoutContext);
 
     const ownerState: OwnerState = {
-        headerHeight,
+        headerHeight: inProps.headerHeight ?? headerHeight,
     };
-
     return (
         <Root elevation={elevation} ownerState={ownerState} {...slotProps?.root} {...restProps}>
             {!hideTopBar && (

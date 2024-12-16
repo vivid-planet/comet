@@ -1,5 +1,6 @@
 import { BaseEntity } from "@mikro-orm/core";
 import {
+    BadRequestException,
     Body,
     Controller,
     ForbiddenException,
@@ -19,6 +20,7 @@ import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { Response } from "express";
 import { OutgoingHttpHeaders } from "http";
+import { basename, extname } from "path";
 import { Readable } from "stream";
 
 import { DisableCometGuards } from "../../auth/decorators/disable-comet-guards.decorator";
@@ -26,6 +28,7 @@ import { GetCurrentUser } from "../../auth/decorators/get-current-user.decorator
 import { BlobStorageBackendService } from "../../blob-storage/backends/blob-storage-backend.service";
 import { createHashedPath } from "../../blob-storage/utils/create-hashed-path.util";
 import { CometValidationException } from "../../common/errors/validation.exception";
+import { ContentScopeService } from "../../user-permissions/content-scope.service";
 import { RequiredPermission } from "../../user-permissions/decorators/required-permission.decorator";
 import { CurrentUser } from "../../user-permissions/dto/current-user";
 import { ACCESS_CONTROL_SERVICE } from "../../user-permissions/user-permissions.constants";
@@ -35,12 +38,13 @@ import { DAM_CONFIG } from "../dam.constants";
 import { DamScopeInterface } from "../types";
 import { DamUploadFileInterceptor } from "./dam-upload-file.interceptor";
 import { EmptyDamScope } from "./dto/empty-dam-scope";
-import { createUploadFileBody, UploadFileBodyInterface } from "./dto/file.body";
+import { createUploadFileBody, ReplaceFileByIdBody, UploadFileBodyInterface } from "./dto/file.body";
 import { FileParams, HashFileParams } from "./dto/file.params";
 import { FileUploadInput } from "./dto/file-upload.input";
 import { FileInterface } from "./entities/file.entity";
 import { FilesService } from "./files.service";
-import { calculatePartialRanges } from "./files.utils";
+import { calculatePartialRanges, slugifyFilename } from "./files.utils";
+import { FoldersService } from "./folders.service";
 
 const fileUrl = `:fileId/:filename`;
 
@@ -63,6 +67,8 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             private readonly filesService: FilesService,
             private readonly blobStorageBackendService: BlobStorageBackendService,
             @Inject(ACCESS_CONTROL_SERVICE) private accessControlService: AccessControlServiceInterface,
+            private readonly contentScopeService: ContentScopeService,
+            private readonly foldersService: FoldersService,
         ) {}
 
         @Post("upload")
@@ -86,7 +92,16 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
                 throw new ForbiddenException();
             }
 
-            const uploadedFile = await this.filesService.upload(file, { ...transformedBody, scope });
+            const folderId = transformedBody.folderId;
+            if (folderId) {
+                const folder = await this.foldersService.findOneById(folderId);
+                if (!folder) throw new BadRequestException(`Folder ${folderId} not found`);
+                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                    throw new BadRequestException("Folder scope doesn't match passed scope");
+                }
+            }
+
+            const uploadedFile = await this.filesService.upload(file, { ...transformedBody, folderId, scope });
             const fileUrl = await this.filesService.createFileUrl(uploadedFile, {
                 previewDamUrls: Boolean(previewDamUrls),
                 relativeDamUrls: Boolean(relativeDamUrls),
@@ -95,9 +110,95 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return { ...uploadedFile, fileUrl };
         }
 
-        @Get(`/preview/${fileUrl}`)
+        @Post("replace-by-filename-and-folder")
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        async replaceByFilenameAndFolder(
+            @UploadedFile() file: FileUploadInput,
+            @Body() body: UploadFileBodyInterface,
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
+        ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
+            const transformedBody = plainToInstance(UploadFileBody, body);
+            const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
+
+            if (errors.length > 0) {
+                throw new CometValidationException("Validation failed", errors);
+            }
+            const scope = nonEmptyScopeOrNothing(transformedBody.scope);
+
+            if (scope && !this.accessControlService.isAllowed(user, "dam", scope)) {
+                throw new ForbiddenException();
+            }
+
+            const folderId = transformedBody.folderId;
+            if (folderId) {
+                const folder = await this.foldersService.findOneById(folderId);
+                if (!folder) throw new BadRequestException(`Folder ${folderId} not found`);
+                if (!this.contentScopeService.scopesAreEqual(folder.scope, scope)) {
+                    throw new BadRequestException("Folder scope doesn't match passed scope");
+                }
+            }
+
+            const extension = extname(file.originalname);
+            const filename = basename(file.originalname, extension);
+            const slugifiedFilename = slugifyFilename(filename, extension);
+
+            const fileToReplace = await this.filesService.findOneByFilenameAndFolder({ filename: slugifiedFilename, folderId });
+            if (!fileToReplace) {
+                throw new NotFoundException(`File not found`);
+            }
+            if (!this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
+                throw new ForbiddenException();
+            }
+
+            const replacedFile = await this.filesService.replace(fileToReplace, file, transformedBody);
+
+            const fileUrl = await this.filesService.createFileUrl(replacedFile, {
+                previewDamUrls: Boolean(previewDamUrls),
+                relativeDamUrls: Boolean(relativeDamUrls),
+            });
+
+            return { ...replacedFile, fileUrl };
+        }
+
+        @Post("replace-by-id")
+        @UseInterceptors(DamUploadFileInterceptor(FilesService.UPLOAD_FIELD))
+        async replaceById(
+            @UploadedFile() file: FileUploadInput,
+            @Body() body: ReplaceFileByIdBody,
+            @GetCurrentUser() user: CurrentUser,
+            @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
+            @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
+        ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
+            const { fileId, ...transformedBody } = plainToInstance(ReplaceFileByIdBody, body);
+            const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
+
+            if (errors.length > 0) {
+                throw new CometValidationException("Validation failed", errors);
+            }
+
+            const fileToReplace = await this.filesService.findOneById(fileId);
+            if (!fileToReplace) {
+                throw new NotFoundException(`File ${fileId} not found`);
+            }
+            if (!this.accessControlService.isAllowed(user, "dam", fileToReplace.scope)) {
+                throw new ForbiddenException();
+            }
+
+            const replacedFile = await this.filesService.replace(fileToReplace, file, transformedBody);
+
+            const fileUrl = await this.filesService.createFileUrl(replacedFile, {
+                previewDamUrls: Boolean(previewDamUrls),
+                relativeDamUrls: Boolean(relativeDamUrls),
+            });
+
+            return { ...replacedFile, fileUrl };
+        }
+
+        @Get(`/preview/:contentHash?/${fileUrl}`)
         async previewFileUrl(
-            @Param() { fileId }: FileParams,
+            @Param() { fileId, contentHash }: FileParams,
             @Res() res: Response,
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
@@ -106,6 +207,10 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
             if (file === null) {
                 throw new NotFoundException();
+            }
+
+            if (contentHash && file.contentHash !== contentHash) {
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
@@ -115,9 +220,9 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=31536000, private" } }); // Local caches only (1 year)
         }
 
-        @Get(`/download/preview/${fileUrl}`)
+        @Get(`/download/preview/:contentHash?/${fileUrl}`)
         async previewDownloadFile(
-            @Param() { fileId }: FileParams,
+            @Param() { fileId, contentHash }: FileParams,
             @Res() res: Response,
             @GetCurrentUser() user: CurrentUser,
             @Headers("range") range?: string,
@@ -126,6 +231,10 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
 
             if (file === null) {
                 throw new NotFoundException();
+            }
+
+            if (contentHash && file.contentHash !== contentHash) {
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             if (file.scope !== undefined && !this.accessControlService.isAllowed(user, "dam", file.scope)) {
@@ -137,16 +246,24 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @DisableCometGuards()
-        @Get(`/download/:hash/${fileUrl}`)
-        async downloadFile(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+        @Get(`/download/:hash/:contentHash?/${fileUrl}`)
+        async downloadFile(
+            @Param() { hash, contentHash, ...params }: HashFileParams,
+            @Res() res: Response,
+            @Headers("range") range?: string,
+        ): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid hash");
             }
 
             const file = await this.filesService.findOneById(params.fileId);
 
             if (file === null) {
                 throw new NotFoundException();
+            }
+
+            if (contentHash && file.contentHash !== contentHash) {
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             res.setHeader("Content-Disposition", "attachment");
@@ -154,16 +271,24 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
         }
 
         @DisableCometGuards()
-        @Get(`/:hash/${fileUrl}`)
-        async hashedFileUrl(@Param() { hash, ...params }: HashFileParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
+        @Get(`/:hash/:contentHash?/${fileUrl}`)
+        async hashedFileUrl(
+            @Param() { hash, contentHash, ...params }: HashFileParams,
+            @Res() res: Response,
+            @Headers("range") range?: string,
+        ): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid hash");
             }
 
             const file = await this.filesService.findOneById(params.fileId);
 
             if (file === null) {
                 throw new NotFoundException();
+            }
+
+            if (contentHash && file.contentHash !== contentHash) {
+                throw new BadRequestException("Content Hash mismatch!");
             }
 
             return this.streamFile(file, res, { range, overrideHeaders: { "cache-control": "max-age=86400, public" } }); // Public cache (1 day)
