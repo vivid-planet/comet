@@ -19,7 +19,6 @@ export const Default = {
                     >
                         This will succeed
                     </FeedbackButton>
-
                     <FeedbackButton
                         startIcon={<Add />}
                         onClick={() => {
@@ -28,16 +27,25 @@ export const Default = {
                     >
                         This will fail
                     </FeedbackButton>
-
                     <FeedbackButton
                         startIcon={<Add />}
                         onClick={() => {
-                            return new Promise((resolve, reject) => setTimeout(Math.random() > 0.5 ? resolve : reject, 500));
+                            return new Promise((resolve) => setTimeout(resolve, 500));
                         }}
-                        tooltipErrorMessage="This time it failed"
-                        tooltipSuccessMessage="This time it worked"
+                        tooltipErrorMessage="This failed but at least it has a custom message"
+                        tooltipSuccessMessage="This worked and has a custom message"
                     >
-                        This is random (and has custom tooltip messages)
+                        Custom message (succeeds)
+                    </FeedbackButton>
+                    <FeedbackButton
+                        startIcon={<Add />}
+                        onClick={() => {
+                            return new Promise((_, reject) => setTimeout(reject, 500));
+                        }}
+                        tooltipErrorMessage="This failed but at least it has a custom message"
+                        tooltipSuccessMessage="This worked and has a custom message"
+                    >
+                        Custom message (fails)
                     </FeedbackButton>
                 </Stack>
             </CardContent>
