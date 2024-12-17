@@ -15,6 +15,7 @@ import { ColumnsBlock } from "./columns.block";
 import { ContentGroupBlock } from "./content-group.block";
 import { FullWidthImageBlock } from "./full-width-image.block";
 import { ImageLinkBlock } from "./image-link.block";
+import { LayoutBlock } from "./layout.block";
 import { TeaserBlock } from "./teaser.block";
 import { TextImageBlock } from "./TextImageBlock";
 
@@ -27,6 +28,7 @@ const supportedBlocks = {
     heading: HeadingBlock,
     image: DamImageBlock,
     imageLink: ImageLinkBlock,
+    layout: LayoutBlock,
     linkList: LinkListBlock,
     media: MediaBlock,
     newsDetail: NewsDetailBlock,

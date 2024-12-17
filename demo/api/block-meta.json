@@ -1336,6 +1336,89 @@
         ]
     },
     {
+        "name": "Layout",
+        "fields": [
+            {
+                "name": "layout",
+                "kind": "Enum",
+                "enum": [
+                    "layout1",
+                    "layout2",
+                    "layout3",
+                    "layout4",
+                    "layout5",
+                    "layout6",
+                    "layout7"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "media1",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text1",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "media2",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text2",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "layout",
+                "kind": "Enum",
+                "enum": [
+                    "layout1",
+                    "layout2",
+                    "layout3",
+                    "layout4",
+                    "layout5",
+                    "layout6",
+                    "layout7"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "media1",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text1",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "media2",
+                "kind": "Block",
+                "block": "Media",
+                "nullable": false
+            },
+            {
+                "name": "text2",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Link",
         "fields": [
             {
@@ -1962,6 +2045,7 @@
                                 "heading": "Heading",
                                 "image": "DamImage",
                                 "imageLink": "ImageLink",
+                                "layout": "Layout",
                                 "linkList": "LinkList",
                                 "media": "Media",
                                 "newsDetail": "NewsDetail",
@@ -2021,6 +2105,7 @@
                                 "heading": "Heading",
                                 "image": "DamImage",
                                 "imageLink": "ImageLink",
+                                "layout": "Layout",
                                 "linkList": "LinkList",
                                 "media": "Media",
                                 "newsDetail": "NewsDetail",
