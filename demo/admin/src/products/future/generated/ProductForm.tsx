@@ -426,7 +426,6 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 multiple
                                 maxFileSize={4194304}
                             />
-
                             <DateTimeField
                                 variant="horizontal"
                                 fullWidth

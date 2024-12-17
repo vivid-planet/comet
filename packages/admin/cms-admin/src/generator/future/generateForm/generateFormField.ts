@@ -313,8 +313,7 @@ export function generateFormField({
             },
         ];
     } else if (config.type == "dateTime") {
-        code = `
-            <DateTimeField
+        code = `<DateTimeField
                 ${required ? "required" : ""}
                 ${config.readOnly ? readOnlyPropsWithLock : ""}
                 variant="horizontal"
