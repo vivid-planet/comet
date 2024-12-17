@@ -1,5 +1,5 @@
-import { MainContent, Stack } from "@comet/admin";
-import { DashboardHeader, useUserPermissionCheck } from "@comet/cms-admin";
+import { MainContent, Stack, Toolbar } from "@comet/admin";
+import { ContentScopeIndicator, DashboardHeader, LatestBuildsDashboardWidget, useUserPermissionCheck } from "@comet/cms-admin";
 import { Grid } from "@mui/material";
 import { useIntl } from "react-intl";
 
@@ -19,9 +19,11 @@ export function DashboardPage() {
                     "2x": backgroundImage2x,
                 }}
             />
+            <Toolbar scopeIndicator={<ContentScopeIndicator global />} />
             <MainContent>
                 <Grid container direction="row" spacing={4}>
                     {isAllowed("pageTree") && <LatestContentUpdates />}
+                    {import.meta.env.MODE !== "development" && <LatestBuildsDashboardWidget />}
                 </Grid>
             </MainContent>
         </Stack>

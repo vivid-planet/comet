@@ -20,6 +20,8 @@ import { Page } from "@src/documents/pages/Page";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
+import MainMenu from "@src/mainMenu/MainMenu";
+import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
 import { categoryToUrlParam, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
@@ -50,7 +52,7 @@ export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> 
     Page,
     Link,
 };
-const RedirectsPage = createRedirectsPage({ scopeParts: ["domain"] });
+const RedirectsPage = createRedirectsPage({ customTargets: { news: NewsLinkBlock }, scopeParts: ["domain"] });
 
 export const masterMenuData: MasterMenuData = [
     {
@@ -140,6 +142,15 @@ export const masterMenuData: MasterMenuData = [
         items: [
             {
                 type: "route",
+                primary: <FormattedMessage id="menu.project-snips.mainMenu" defaultMessage="Main menu" />,
+                route: {
+                    path: "/project-snips/main-menu",
+                    component: MainMenu,
+                },
+                requiredPermission: "pageTree",
+            },
+            {
+                type: "route",
                 primary: <FormattedMessage id="menu.project-snips.footer" defaultMessage="Footer" />,
                 route: {
                     path: "/project-snips/footer",
@@ -149,16 +160,6 @@ export const masterMenuData: MasterMenuData = [
             },
         ],
         requiredPermission: "pageTree",
-    },
-    {
-        type: "route",
-        primary: <FormattedMessage id="menu.userPermissions" defaultMessage="User Permissions" />,
-        icon: <Snips />,
-        route: {
-            path: "/user-permissions",
-            component: UserPermissionsPage,
-        },
-        requiredPermission: "userPermissions",
     },
     {
         type: "collapsible",

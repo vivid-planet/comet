@@ -63,8 +63,11 @@ export function App() {
                                 return {
                                     url: siteConfig.url,
                                     preloginEnabled: siteConfig.preloginEnabled || false,
-                                    blockPreviewBaseUrl: `${config.previewUrl}/block-preview/${scope.domain}/${scope.language}`,
-                                    sitePreviewApiUrl: `${config.previewUrl}/api/site-preview`,
+                                    blockPreviewBaseUrl:
+                                        siteConfig.scope.domain === "secondary"
+                                            ? `${siteConfig.url}/block-preview`
+                                            : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
+                                    sitePreviewApiUrl: `${siteConfig.url}/api/site-preview`,
                                 };
                             },
                         }}

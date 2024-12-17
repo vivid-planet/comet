@@ -21,7 +21,6 @@ export function createConfig() {
         ...cometConfig,
         apiUrl: environmentVariables.API_URL,
         adminUrl: environmentVariables.ADMIN_URL,
-        previewUrl: environmentVariables.PREVIEW_URL,
         sitesConfig: JSON.parse(environmentVariables.PUBLIC_SITE_CONFIGS) as PublicSiteConfig[],
         buildDate: environmentVariables.BUILD_DATE,
         buildNumber: environmentVariables.BUILD_NUMBER,
