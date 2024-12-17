@@ -1,7 +1,7 @@
 import { AppHeader, AppHeaderButton, AppHeaderDropdown, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo } from "@comet/admin";
 import { Account, Language, Logout, Preview, Snips, SwitchUser, Wrench } from "@comet/admin-icons";
 import { Avatar, Box, Button, Divider, MenuItem, MenuList, Typography } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 
 export default {
     title: "Docs/Components/AppHeader",
@@ -177,7 +177,7 @@ export const CustomButton = {
 
 export const Dropdown = {
     render: () => {
-        const [open, setOpen] = React.useState<boolean>(false);
+        const [open, setOpen] = useState<boolean>(false);
 
         return (
             <>

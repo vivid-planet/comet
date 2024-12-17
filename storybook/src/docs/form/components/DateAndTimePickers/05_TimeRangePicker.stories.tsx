@@ -1,7 +1,7 @@
 import { Field, FieldContainer } from "@comet/admin";
 import { FinalFormTimeRangePicker, TimeRange, TimeRangePicker } from "@comet/admin-date-time";
 import { Grid } from "@mui/material";
-import * as React from "react";
+import { useState } from "react";
 import { Form } from "react-final-form";
 
 export default {
@@ -9,8 +9,8 @@ export default {
 };
 
 export const Basic = () => {
-    const [timeRangeOne, setTimeRangeOne] = React.useState<TimeRange | undefined>();
-    const [timeRangeTwo, setTimeRangeTwo] = React.useState<TimeRange | undefined>({ start: "14:00", end: "16:00" });
+    const [timeRangeOne, setTimeRangeOne] = useState<TimeRange | undefined>();
+    const [timeRangeTwo, setTimeRangeTwo] = useState<TimeRange | undefined>({ start: "14:00", end: "16:00" });
 
     return (
         <Grid container spacing={8}>

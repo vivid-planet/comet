@@ -1,9 +1,9 @@
-export interface UnsplashImage {
+export interface PicsumImage {
     file: File;
     url: string;
 }
 
-async function fetchUnsplashImage(url: string) {
+async function fetchPicsumImage(url: string) {
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -18,19 +18,20 @@ async function fetchUnsplashImage(url: string) {
 
 function extractFileNameFromUrl(url: string): string {
     const fileNameWithQuery = url.split("?")[0];
-    const fileName = fileNameWithQuery.split("/").pop();
+    const fileNameStart = fileNameWithQuery.split("/").indexOf("id");
+    const fileName = `${fileNameWithQuery.split("/")[fileNameStart]}-${fileNameWithQuery.split("/")[fileNameStart + 1]}`;
     return fileName ? `${fileName}.jpeg` : "unnamed.jpeg";
 }
 
-export async function getRandomUnsplashImage(): Promise<UnsplashImage> {
-    const imageUrl = "https://source.unsplash.com/all/";
+export async function getRandomPicsumImage(): Promise<PicsumImage> {
+    const imageUrl = "https://picsum.photos/1920/1080";
 
     try {
-        const image = await fetchUnsplashImage(imageUrl);
+        const image = await fetchPicsumImage(imageUrl);
         const mimeType = image.blob.type;
 
         if (mimeType !== "image/jpeg") {
-            return getRandomUnsplashImage();
+            return getRandomPicsumImage();
         }
 
         const fileName = extractFileNameFromUrl(image.origin);

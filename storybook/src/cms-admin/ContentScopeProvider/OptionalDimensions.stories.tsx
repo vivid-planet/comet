@@ -1,7 +1,6 @@
 import { AppHeader, AppHeaderFillSpace, AppHeaderMenuButton, CometLogo, MainContent } from "@comet/admin";
 import { ContentScopeControls, ContentScopeIndicator, ContentScopeProvider, ContentScopeValues, useContentScope } from "@comet/cms-admin";
 import { Typography } from "@mui/material";
-import React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
