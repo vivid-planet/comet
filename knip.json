@@ -81,7 +81,7 @@
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
-            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql"]
+            "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port"]
         },
         "demo/api": {
             "entry": [
