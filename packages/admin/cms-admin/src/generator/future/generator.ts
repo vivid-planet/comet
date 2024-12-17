@@ -3,7 +3,7 @@ import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { IconProps } from "@mui/material";
-import { GridFilterModel, GridSortDirection } from "@mui/x-data-grid";
+import { GridFilterItem, GridSortDirection } from "@mui/x-data-grid";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -139,6 +139,11 @@ export type GridColumnConfig<T> = (
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
 
+type InitialFilterConfig = {
+    items: GridFilterItem[];
+    linkOperator?: "and" | "or";
+};
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
@@ -153,7 +158,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     copyPaste?: boolean;
     readOnly?: boolean;
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
-    initialFilter?: Omit<GridFilterModel, "linkOperator"> & { linkOperator?: "and" | "or" };
+    initialFilter?: InitialFilterConfig;
     filterProp?: boolean;
     toolbar?: boolean;
     toolbarActionProp?: boolean;
