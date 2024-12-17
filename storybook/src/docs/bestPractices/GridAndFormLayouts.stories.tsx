@@ -452,7 +452,7 @@ export const GridWithFormInADialog = {
                     <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} components={{ Toolbar: GridToolbar }} />
                 </StackMainContent>
                 <EditDialog title={mode === "add" ? "Add new item" : `${rows.find((row) => row.id === selectedId)?.title}`}>
-                    <Form id={mode === "add" ? undefined : selectedId} />
+                    <Form id={selectedId} />
                 </EditDialog>
             </>
         );
