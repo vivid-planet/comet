@@ -86,7 +86,7 @@ export default async function Page({ params }: Props) {
                     case "internal": {
                         const internalLink = target.block.props as InternalLinkBlockData;
                         if (internalLink.targetPage) {
-                            destination = `${(internalLink.targetPage.scope as GQLPageTreeNodeScope).language}/${internalLink.targetPage.path}`;
+                            destination = `/${(internalLink.targetPage.scope as GQLPageTreeNodeScope).language}/${internalLink.targetPage.path}`;
                         }
                         break;
                     }
