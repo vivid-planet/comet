@@ -511,7 +511,9 @@ export function generateGrid(
               ${
                   config.initialFilter
                       ? `initialFilter:{ ${
-                            config.initialFilter.linkOperator ? `linkOperator: "${config.initialFilter.linkOperator}" as GridLinkOperator,` : ""
+                            config.initialFilter.linkOperator
+                                ? `linkOperator: GridLinkOperator.${config.initialFilter.linkOperator === "or" ? "Or" : "And"},`
+                                : ""
                         }
                       items: [${config.initialFilter.items
                           .map((item) => {
