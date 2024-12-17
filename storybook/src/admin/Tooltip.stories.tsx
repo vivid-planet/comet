@@ -1,7 +1,7 @@
 import { Tooltip } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Box, Button, Card, CardContent, Stack, Typography } from "@mui/material";
-import { forwardRef, useState } from "react";
+import { ReactNode, useState } from "react";
 
 export default {
     title: "@comet/admin/Tooltip",
@@ -23,10 +23,9 @@ export const AllTooltipTriggers = {
     render: function Render() {
         const [clicks, setClicks] = useState(0);
 
-        const NonClickable = forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
+        const NonClickable = ({ children }: { children: ReactNode }) => {
             return (
                 <Typography
-                    ref={ref}
                     sx={{ background: "lightgray", p: 2, borderRadius: 5, ":focus": { outline: "5px solid lime" } }}
                     variant="body1"
                     tabIndex={0}
@@ -34,7 +33,7 @@ export const AllTooltipTriggers = {
                     {children}
                 </Typography>
             );
-        });
+        };
 
         return (
             <Stack spacing={4}>
