@@ -99,7 +99,7 @@
             "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"]
         },
         "demo/site": {
-            "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts"],
+            "entry": ["./src/app/**", "./cache-handler.ts", "./tracing.ts", "./server.ts", "./opentelemetry-metrics.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@babel/core"]
         },
