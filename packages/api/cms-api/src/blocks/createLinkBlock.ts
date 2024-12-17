@@ -38,10 +38,7 @@ function createLinkBlock<BlockMap extends Record<string, Block<BlockDataInterfac
         title?: string;
     }
 
-    return createOneOfBlock<BlockMap, LinkBlockData, LinkBlockInput>(
-        { supportedBlocks, allowEmpty, OneOfBlockData: LinkBlockData, OneOfBlockInput: LinkBlockInput },
-        nameOrOptions,
-    );
+    return createOneOfBlock({ supportedBlocks, allowEmpty, OneOfBlockData: LinkBlockData, OneOfBlockInput: LinkBlockInput }, nameOrOptions);
 }
 
 export { createLinkBlock };
