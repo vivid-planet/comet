@@ -10,7 +10,7 @@ export {
      */
     FinalFormDatePickerProps,
 } from "./datePicker/FinalFormDatePicker";
-export { DatePickerNavigationProps } from "./DatePickerNavigation";
+export { DatePickerNavigationClassKey, DatePickerNavigationProps } from "./DatePickerNavigation";
 export { DateRangeField, DateRangeFieldProps } from "./dateRangePicker/DateRangeField";
 export { DateRange, DateRangePicker, DateRangePickerProps } from "./dateRangePicker/DateRangePicker";
 export {
