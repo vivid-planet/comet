@@ -2,6 +2,4 @@
 "@comet/cms-admin": minor
 ---
 
-Add inlay to display Impersonation info inside the UserHeader
-
--   update UserHeader UI to updated Design
+Update design of the user menu in the header and add information about the impersonated user
