@@ -356,12 +356,13 @@ type FooterScope {
   language: String!
 }
 
-type Footer implements DocumentInterface {
+type Footer {
   id: ID!
-  updatedAt: DateTime!
   content: FooterContentBlockData!
   scope: FooterScope!
   createdAt: DateTime!
+  updatedAt: DateTime!
+  dependencies(offset: Int! = 0, limit: Int! = 25, filter: DependencyFilter, forceRefresh: Boolean! = false): PaginatedDependencies!
 }
 
 """FooterContent root block data"""

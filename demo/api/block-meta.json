@@ -218,7 +218,10 @@
             {
                 "name": "alignment",
                 "kind": "Enum",
-                "enum": ["left", "center"],
+                "enum": [
+                    "left",
+                    "center"
+                ],
                 "nullable": false
             },
             {
@@ -255,7 +258,10 @@
             {
                 "name": "alignment",
                 "kind": "Enum",
-                "enum": ["left", "center"],
+                "enum": [
+                    "left",
+                    "center"
+                ],
                 "nullable": false
             },
             {
@@ -343,7 +349,11 @@
             {
                 "name": "variant",
                 "kind": "Enum",
-                "enum": ["Contained", "Outlined", "Text"],
+                "enum": [
+                    "Contained",
+                    "Outlined",
+                    "Text"
+                ],
                 "nullable": false
             }
         ],
@@ -357,7 +367,11 @@
             {
                 "name": "variant",
                 "kind": "Enum",
-                "enum": ["Contained", "Outlined", "Text"],
+                "enum": [
+                    "Contained",
+                    "Outlined",
+                    "Text"
+                ],
                 "nullable": false
             }
         ]
@@ -583,7 +597,11 @@
             {
                 "name": "backgroundColor",
                 "kind": "Enum",
-                "enum": ["default", "lightGray", "darkGray"],
+                "enum": [
+                    "default",
+                    "lightGray",
+                    "darkGray"
+                ],
                 "nullable": false
             }
         ],
@@ -597,7 +615,11 @@
             {
                 "name": "backgroundColor",
                 "kind": "Enum",
-                "enum": ["default", "lightGray", "darkGray"],
+                "enum": [
+                    "default",
+                    "lightGray",
+                    "darkGray"
+                ],
                 "nullable": false
             }
         ]
@@ -733,7 +755,10 @@
             {
                 "name": "openFileType",
                 "kind": "Enum",
-                "enum": ["NewTab", "Download"],
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
                 "nullable": false
             }
         ],
@@ -746,7 +771,10 @@
             {
                 "name": "openFileType",
                 "kind": "Enum",
-                "enum": ["NewTab", "Download"],
+                "enum": [
+                    "NewTab",
+                    "Download"
+                ],
                 "nullable": false
             }
         ]
@@ -1073,7 +1101,14 @@
             {
                 "name": "htmlTag",
                 "kind": "Enum",
-                "enum": ["H1", "H2", "H3", "H4", "H5", "H6"],
+                "enum": [
+                    "H1",
+                    "H2",
+                    "H3",
+                    "H4",
+                    "H5",
+                    "H6"
+                ],
                 "nullable": false
             }
         ],
@@ -1093,7 +1128,14 @@
             {
                 "name": "htmlTag",
                 "kind": "Enum",
-                "enum": ["H1", "H2", "H3", "H4", "H5", "H6"],
+                "enum": [
+                    "H1",
+                    "H2",
+                    "H3",
+                    "H4",
+                    "H5",
+                    "H6"
+                ],
                 "nullable": false
             }
         ]
@@ -1294,73 +1336,6 @@
         ]
     },
     {
-        "name": "Layout",
-        "fields": [
-            {
-                "name": "layout",
-                "kind": "Enum",
-                "enum": ["layout1", "layout2", "layout3", "layout4", "layout5", "layout6", "layout7"],
-                "nullable": false
-            },
-            {
-                "name": "media1",
-                "kind": "Block",
-                "block": "Media",
-                "nullable": false
-            },
-            {
-                "name": "text1",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": false
-            },
-            {
-                "name": "media2",
-                "kind": "Block",
-                "block": "Media",
-                "nullable": false
-            },
-            {
-                "name": "text2",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "layout",
-                "kind": "Enum",
-                "enum": ["layout1", "layout2", "layout3", "layout4", "layout5", "layout6", "layout7"],
-                "nullable": false
-            },
-            {
-                "name": "media1",
-                "kind": "Block",
-                "block": "Media",
-                "nullable": false
-            },
-            {
-                "name": "text1",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": false
-            },
-            {
-                "name": "media2",
-                "kind": "Block",
-                "block": "Media",
-                "nullable": false
-            },
-            {
-                "name": "text2",
-                "kind": "Block",
-                "block": "RichText",
-                "nullable": false
-            }
-        ]
-    },
-    {
         "name": "Link",
         "fields": [
             {
@@ -1464,6 +1439,16 @@
                             "kind": "Block",
                             "block": "TextLink",
                             "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
+                            "nullable": false
                         }
                     ]
                 },
@@ -1490,6 +1475,16 @@
                             "name": "props",
                             "kind": "Block",
                             "block": "TextLink",
+                            "nullable": false
+                        },
+                        {
+                            "name": "userGroup",
+                            "kind": "Enum",
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
                             "nullable": false
                         }
                     ]
@@ -1577,7 +1572,19 @@
             {
                 "name": "aspectRatio",
                 "kind": "Enum",
-                "enum": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
+                "enum": [
+                    "16x9",
+                    "4x3",
+                    "3x2",
+                    "3x1",
+                    "2x1",
+                    "1x1",
+                    "1x2",
+                    "1x3",
+                    "2x3",
+                    "3x4",
+                    "9x16"
+                ],
                 "nullable": false
             }
         ],
@@ -1591,7 +1598,19 @@
             {
                 "name": "aspectRatio",
                 "kind": "Enum",
-                "enum": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
+                "enum": [
+                    "16x9",
+                    "4x3",
+                    "3x2",
+                    "3x1",
+                    "2x1",
+                    "1x1",
+                    "1x2",
+                    "1x3",
+                    "2x3",
+                    "3x4",
+                    "9x16"
+                ],
                 "nullable": false
             }
         ]
@@ -1957,7 +1976,11 @@
                         {
                             "name": "userGroup",
                             "kind": "Enum",
-                            "enum": ["All", "Admin", "User"],
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
                             "nullable": false
                         }
                     ]
@@ -2012,7 +2035,11 @@
                         {
                             "name": "userGroup",
                             "kind": "Enum",
-                            "enum": ["All", "Admin", "User"],
+                            "enum": [
+                                "All",
+                                "Admin",
+                                "User"
+                            ],
                             "nullable": false
                         }
                     ]
@@ -2114,7 +2141,14 @@
                                                 {
                                                     "name": "focalPoint",
                                                     "kind": "Enum",
-                                                    "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
+                                                    "enum": [
+                                                        "SMART",
+                                                        "CENTER",
+                                                        "NORTHWEST",
+                                                        "NORTHEAST",
+                                                        "SOUTHWEST",
+                                                        "SOUTHEAST"
+                                                    ],
                                                     "nullable": false
                                                 },
                                                 {
@@ -2167,7 +2201,14 @@
                         {
                             "name": "focalPoint",
                             "kind": "Enum",
-                            "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
+                            "enum": [
+                                "SMART",
+                                "CENTER",
+                                "NORTHWEST",
+                                "NORTHEAST",
+                                "SOUTHWEST",
+                                "SOUTHEAST"
+                            ],
                             "nullable": false
                         },
                         {
@@ -2214,7 +2255,14 @@
                         {
                             "name": "focalPoint",
                             "kind": "Enum",
-                            "enum": ["SMART", "CENTER", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST"],
+                            "enum": [
+                                "SMART",
+                                "CENTER",
+                                "NORTHWEST",
+                                "NORTHEAST",
+                                "SOUTHWEST",
+                                "SOUTHEAST"
+                            ],
                             "nullable": false
                         },
                         {
@@ -2367,13 +2415,33 @@
             {
                 "name": "priority",
                 "kind": "Enum",
-                "enum": ["0_0", "0_1", "0_2", "0_3", "0_4", "0_5", "0_6", "0_7", "0_8", "0_9", "1_0"],
+                "enum": [
+                    "0_0",
+                    "0_1",
+                    "0_2",
+                    "0_3",
+                    "0_4",
+                    "0_5",
+                    "0_6",
+                    "0_7",
+                    "0_8",
+                    "0_9",
+                    "1_0"
+                ],
                 "nullable": false
             },
             {
                 "name": "changeFrequency",
                 "kind": "Enum",
-                "enum": ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"],
+                "enum": [
+                    "always",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "monthly",
+                    "yearly",
+                    "never"
+                ],
                 "nullable": false
             },
             {
@@ -2441,13 +2509,33 @@
             {
                 "name": "priority",
                 "kind": "Enum",
-                "enum": ["0_0", "0_1", "0_2", "0_3", "0_4", "0_5", "0_6", "0_7", "0_8", "0_9", "1_0"],
+                "enum": [
+                    "0_0",
+                    "0_1",
+                    "0_2",
+                    "0_3",
+                    "0_4",
+                    "0_5",
+                    "0_6",
+                    "0_7",
+                    "0_8",
+                    "0_9",
+                    "1_0"
+                ],
                 "nullable": false
             },
             {
                 "name": "changeFrequency",
                 "kind": "Enum",
-                "enum": ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"],
+                "enum": [
+                    "always",
+                    "hourly",
+                    "daily",
+                    "weekly",
+                    "monthly",
+                    "yearly",
+                    "never"
+                ],
                 "nullable": false
             },
             {
@@ -2499,7 +2587,18 @@
             {
                 "name": "spacing",
                 "kind": "Enum",
-                "enum": ["D100", "D200", "D300", "D400", "S100", "S200", "S300", "S400", "S500", "S600"],
+                "enum": [
+                    "D100",
+                    "D200",
+                    "D300",
+                    "D400",
+                    "S100",
+                    "S200",
+                    "S300",
+                    "S400",
+                    "S500",
+                    "S600"
+                ],
                 "nullable": false
             }
         ],
@@ -2507,7 +2606,18 @@
             {
                 "name": "spacing",
                 "kind": "Enum",
-                "enum": ["D100", "D200", "D300", "D400", "S100", "S200", "S300", "S400", "S500", "S600"],
+                "enum": [
+                    "D100",
+                    "D200",
+                    "D300",
+                    "D400",
+                    "S100",
+                    "S200",
+                    "S300",
+                    "S400",
+                    "S500",
+                    "S600"
+                ],
                 "nullable": false
             }
         ]
@@ -2581,7 +2691,11 @@
             {
                 "name": "alignment",
                 "kind": "Enum",
-                "enum": ["left", "center", "right"],
+                "enum": [
+                    "left",
+                    "center",
+                    "right"
+                ],
                 "nullable": false
             }
         ],
@@ -2595,7 +2709,11 @@
             {
                 "name": "alignment",
                 "kind": "Enum",
-                "enum": ["left", "center", "right"],
+                "enum": [
+                    "left",
+                    "center",
+                    "right"
+                ],
                 "nullable": false
             }
         ]
@@ -2612,7 +2730,10 @@
             {
                 "name": "textAlignment",
                 "kind": "Enum",
-                "enum": ["left", "center"],
+                "enum": [
+                    "left",
+                    "center"
+                ],
                 "nullable": false
             }
         ],
@@ -2626,7 +2747,10 @@
             {
                 "name": "textAlignment",
                 "kind": "Enum",
-                "enum": ["left", "center"],
+                "enum": [
+                    "left",
+                    "center"
+                ],
                 "nullable": false
             }
         ]
@@ -2643,7 +2767,19 @@
             {
                 "name": "aspectRatio",
                 "kind": "Enum",
-                "enum": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
+                "enum": [
+                    "16x9",
+                    "4x3",
+                    "3x2",
+                    "3x1",
+                    "2x1",
+                    "1x1",
+                    "1x2",
+                    "1x3",
+                    "2x3",
+                    "3x4",
+                    "9x16"
+                ],
                 "nullable": false
             }
         ],
@@ -2657,7 +2793,19 @@
             {
                 "name": "aspectRatio",
                 "kind": "Enum",
-                "enum": ["16x9", "4x3", "3x2", "3x1", "2x1", "1x1", "1x2", "1x3", "2x3", "3x4", "9x16"],
+                "enum": [
+                    "16x9",
+                    "4x3",
+                    "3x2",
+                    "3x1",
+                    "2x1",
+                    "1x1",
+                    "1x2",
+                    "1x3",
+                    "2x3",
+                    "3x4",
+                    "9x16"
+                ],
                 "nullable": false
             }
         ]
@@ -2861,7 +3009,10 @@
             {
                 "name": "imagePosition",
                 "kind": "Enum",
-                "enum": ["left", "right"],
+                "enum": [
+                    "left",
+                    "right"
+                ],
                 "nullable": false
             },
             {
@@ -2886,7 +3037,10 @@
             {
                 "name": "imagePosition",
                 "kind": "Enum",
-                "enum": ["left", "right"],
+                "enum": [
+                    "left",
+                    "right"
+                ],
                 "nullable": false
             },
             {
