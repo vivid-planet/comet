@@ -13,15 +13,13 @@
         "test": "jest",
         "test:watch": "jest --watch"
     },
-    "dependencies": {
+    "devDependencies": {
         "@typescript-eslint/parser": "^5.0.0",
         "eslint-config-prettier": "^8.6.0",
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-simple-import-sort": "^9.0.0",
         "eslint-plugin-unused-imports": "^2.0.0",
-        "@typescript-eslint/eslint-plugin": "^5.48.2"
-    },
-    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.48.2",
         "@types/eslint": "^8.37.0",
         "@types/jest": "^27.0.2",
         "eslint": "^8.36.0",
