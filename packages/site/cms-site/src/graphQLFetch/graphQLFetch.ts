@@ -83,7 +83,7 @@ export function createGraphQLFetch(fetch: Fetch, url: string): GraphQLFetch {
             const fetchUrl = new URL(url);
             fetchUrl.searchParams.append("query", query);
             fetchUrl.searchParams.append("variables", JSON.stringify(variables));
-            response = await fetch(fetchUrl, init);
+            response = await fetch(fetchUrl, { ...init, headers: { "content-type": "application/json", ...init.headers } });
         } else {
             response = await fetch(url, {
                 method: "POST",
