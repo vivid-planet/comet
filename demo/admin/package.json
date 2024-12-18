@@ -68,7 +68,7 @@
         "@graphql-codegen/near-operation-file-preset": "^2.5.0",
         "@graphql-codegen/typescript": "^2.0.0",
         "@graphql-codegen/typescript-operations": "^2.0.0",
-        "@swc/plugin-emotion": "^2.5.120",
+        "@swc/plugin-emotion": "^2.5.124",
         "@types/lodash.isequal": "^4.0.0",
         "@types/node": "^22.0.0",
         "@types/react": "^17.0.0",
