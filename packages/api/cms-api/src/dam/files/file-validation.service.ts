@@ -17,6 +17,11 @@ export class FileValidationService {
     }
 
     validateFileMetadata(file: Pick<FileUploadInput, "fieldname" | "originalname" | "encoding" | "mimetype">): undefined | string {
+        //maximum filename length
+        if (file.originalname.length > 255) {
+            return "Filename is too long";
+        }
+
         //mime type in an accepted mime type
         if (!this.config.acceptedMimeTypes.includes(file.mimetype)) {
             return "Unsupported mime type";
