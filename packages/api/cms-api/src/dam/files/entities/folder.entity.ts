@@ -1,4 +1,16 @@
-import { ArrayType, BaseEntity, Cascade, Embedded, Entity, Index, ManyToOne, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+    ArrayType,
+    BaseEntity,
+    Cascade,
+    Embedded,
+    Entity,
+    Index,
+    ManyToOne,
+    OneToMany,
+    OptionalProps,
+    PrimaryKey,
+    Property,
+} from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";

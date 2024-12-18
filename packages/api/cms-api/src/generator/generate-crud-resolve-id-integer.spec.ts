@@ -1,5 +1,4 @@
-import { BaseEntity, Entity, PrimaryKey } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 
 import { generateCrud } from "./generate-crud";

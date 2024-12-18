@@ -1,5 +1,5 @@
 import { BlockDataInterface, RootBlock, RootBlockDataScalar, RootBlockEntity, RootBlockType } from "@comet/cms-api";
-import { BaseEntity, Entity, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";

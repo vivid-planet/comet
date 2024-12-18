@@ -1,7 +1,6 @@
 import * as csv from "@fast-csv/parse";
-import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/core";
-import type { FilterQuery } from "@mikro-orm/core/typings";
 import { InjectRepository } from "@mikro-orm/nestjs";
+import { CreateRequestContext, EntityManager, EntityRepository, FilterQuery, MikroORM } from "@mikro-orm/postgresql";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import * as console from "console";
 import * as fs from "fs";

@@ -9,7 +9,7 @@ import {
     RootBlockEntity,
     RootBlockType,
 } from "@comet/cms-api";
-import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Collection, Embeddable, Embedded, Entity, Enum, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { IsString } from "class-validator";
 import { v4 as uuid } from "uuid";

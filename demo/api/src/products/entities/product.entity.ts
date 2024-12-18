@@ -13,7 +13,7 @@ import {
     Property,
     Ref,
     types,
-} from "@mikro-orm/core";
+} from "@mikro-orm/postgresql";
 import { Field, ID, InputType, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Manufacturer } from "@src/products/entities/manufacturer.entity";
 import { IsNumber } from "class-validator";

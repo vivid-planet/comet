@@ -1,5 +1,16 @@
-import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property, Ref } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import {
+    BaseEntity,
+    Collection,
+    defineConfig,
+    Entity,
+    ManyToOne,
+    MikroORM,
+    OneToMany,
+    OneToOne,
+    PrimaryKey,
+    Property,
+    Ref,
+} from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 

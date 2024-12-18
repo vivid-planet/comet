@@ -1,6 +1,5 @@
-import { AnyEntity, Connection, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository, Knex } from "@mikro-orm/postgresql";
+import { AnyEntity, Connection, EntityManager, EntityRepository, Knex, QueryOrder } from "@mikro-orm/postgresql";
 import { Injectable, Logger, Type } from "@nestjs/common";
 import { INJECTABLE_WATERMARK } from "@nestjs/common/constants";
 import { ModuleRef } from "@nestjs/core";

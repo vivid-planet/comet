@@ -1,4 +1,4 @@
-import { BaseEntity, Embedded, Entity, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Embedded, Entity, OneToOne, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";

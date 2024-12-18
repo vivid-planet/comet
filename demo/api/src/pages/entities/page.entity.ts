@@ -10,7 +10,7 @@ import {
     RootBlockType,
     ScopedEntity,
 } from "@comet/cms-api";
-import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 

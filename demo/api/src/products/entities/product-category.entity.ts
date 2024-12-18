@@ -1,5 +1,5 @@
 import { CrudField, CrudGenerator } from "@comet/cms-api";
-import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Collection, Entity, OneToMany, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Min } from "class-validator";
 import { v4 as uuid } from "uuid";

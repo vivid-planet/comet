@@ -1,4 +1,4 @@
-import { EntityMetadata, EntityRepository, FilterQuery, ObjectQuery } from "@mikro-orm/core";
+import { EntityMetadata, EntityRepository, FilterQuery, ObjectQuery } from "@mikro-orm/postgresql";
 
 import { getCrudSearchFieldsFromMetadata } from "../../generator/utils/search-fields-from-metadata";
 import { BooleanFilter } from "./boolean.filter";

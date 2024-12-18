@@ -1,6 +1,5 @@
 import { createMigrationsList, createOrmConfig } from "@comet/cms-api";
-import { EntityCaseNamingStrategy } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { defineConfig, EntityCaseNamingStrategy } from "@mikro-orm/postgresql";
 import path from "path";
 
 export const ormConfig = createOrmConfig(

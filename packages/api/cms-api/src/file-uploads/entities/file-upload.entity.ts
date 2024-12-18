@@ -1,4 +1,4 @@
-import { BaseEntity, BigIntType, Entity, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, BigIntType, Entity, Index, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { v4 as uuid } from "uuid";
 

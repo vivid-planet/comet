@@ -1,6 +1,5 @@
 import { createMock } from "@golevelup/ts-jest";
-import { BaseEntity, Entity, MikroORM, PrimaryKey } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { ExecutionContext } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 

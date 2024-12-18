@@ -1,5 +1,5 @@
 import { CrudGenerator, IsNullable, IsUndefinable } from "@comet/cms-api";
-import { BaseEntity, Embeddable, Embedded, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Embeddable, Embedded, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { IsNumber, IsObject, IsString } from "class-validator";
 import { v4 as uuid } from "uuid";

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityMetadata, ReferenceKind } from "@mikro-orm/core";
+import { EntityMetadata, ReferenceKind } from "@mikro-orm/postgresql";
 import * as path from "path";
 import { singular } from "pluralize";
 
@@ -478,7 +478,7 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
               .join(",")} }`
         : false;
 
-    const serviceOut = `import { FilterQuery } from "@mikro-orm/core";
+    const serviceOut = `import { FilterQuery } from "@mikro-orm/postgresql";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager, raw } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
@@ -1025,7 +1025,7 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
 
     const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/core";
+    import { FindOptions, ObjectQuery, Reference } from "@mikro-orm/postgresql";
     import { Args, ID, Info, Mutation, Query, Resolver, ResolveField, Parent } from "@nestjs/graphql";
     import { GraphQLResolveInfo } from "graphql";
 

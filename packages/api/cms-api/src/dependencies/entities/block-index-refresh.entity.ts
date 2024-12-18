@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { v4 as uuid } from "uuid";
 
 @Entity()

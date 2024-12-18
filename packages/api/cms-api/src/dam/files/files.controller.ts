@@ -1,4 +1,4 @@
-import { BaseEntity } from "@mikro-orm/core";
+import { BaseEntity } from "@mikro-orm/postgresql";
 import {
     BadRequestException,
     Body,

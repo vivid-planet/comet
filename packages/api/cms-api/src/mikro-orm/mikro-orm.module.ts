@@ -1,5 +1,5 @@
-import { EntityCaseNamingStrategy, MigrationObject } from "@mikro-orm/core";
 import { MikroOrmModule as MikroOrmNestjsModule, MikroOrmModuleOptions as MikroOrmNestjsOptions } from "@mikro-orm/nestjs";
+import { EntityCaseNamingStrategy, MigrationObject, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { DynamicModule, Module } from "@nestjs/common";
 import fs from "fs";
 import path from "path";
@@ -62,7 +62,7 @@ export function createMigrationsList(migrationsDir: string): MigrationObject[] {
         });
 }
 
-export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptions): MikroOrmNestjsOptions {
+export function createOrmConfig({ migrations, ...defaults }: MikroOrmNestjsOptions<PostgreSqlDriver>): MikroOrmNestjsOptions<PostgreSqlDriver> {
     return {
         ...defaults,
         namingStrategy: EntityCaseNamingStrategy,

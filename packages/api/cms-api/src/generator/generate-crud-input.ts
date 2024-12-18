@@ -1,4 +1,4 @@
-import { EntityMetadata } from "@mikro-orm/core";
+import { EntityMetadata } from "@mikro-orm/postgresql";
 import { getMetadataStorage } from "class-validator";
 
 import { hasFieldFeature } from "./crud-generator.decorator";

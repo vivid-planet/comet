@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { v4 as uuid } from "uuid";
 
 import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";
