@@ -6,12 +6,12 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Config } from "@src/config/config";
 import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
-import { Link } from "@src/links/entities/link.entity";
+import { Link } from "@src/documents/links/entities/link.entity";
+import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
+import { PageInput } from "@src/documents/pages/dto/page.input";
+import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 import { PageTreeNodeCategory } from "@src/page-tree/page-tree-node-category";
-import { PageContentBlock } from "@src/pages/blocks/page-content.block";
-import { PageInput } from "@src/pages/dto/page.input";
-import { Page } from "@src/pages/entities/page.entity";
 import { UserGroup } from "@src/user-groups/user-group";
 import faker from "faker";
 import { Command, Console } from "nestjs-console";
@@ -209,6 +209,7 @@ export class FixturesConsole {
                     updatedAt: new Date(),
                     content: pageInput.content.transformToBlockData(),
                     seo: pageInput.seo.transformToBlockData(),
+                    stage: pageInput.stage.transformToBlockData(),
                 }),
             );
         }
@@ -261,6 +262,7 @@ export class FixturesConsole {
                             id: pageId,
                             content: pageInput.content.transformToBlockData(),
                             seo: pageInput.seo.transformToBlockData(),
+                            stage: pageInput.stage.transformToBlockData(),
                         }),
                     );
                     await this.pageTreeService.attachDocument({ id: pageId, type: "Page" }, page.id);
