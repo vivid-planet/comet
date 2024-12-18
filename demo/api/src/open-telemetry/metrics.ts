@@ -39,3 +39,22 @@ export function getOrCreateHistogram(name: string, options: MetricOptions = {}):
 export function getOrCreateCounter(name: string, options: MetricOptions = {}): Counter {
     return getOrCreate(name, options, MetricType.Counter) as Counter;
 }
+
+// TODO: metric functions below are here for demonstration purpose. More metrics will be added in the future which will probably need this functions.
+/*
+export function getOrCreateUpDownCounter(name: string, options: MetricOptions = {}): UpDownCounter {
+    return getOrCreate(name, options, MetricType.UpDownCounter) as UpDownCounter;
+}
+
+export function getOrCreateObservableGauge(name: string, options: MetricOptions = {}): ObservableGauge {
+    return getOrCreate(name, options, MetricType.ObservableGauge) as ObservableGauge;
+}
+
+export function getOrCreateObservableCounter(name: string, options: MetricOptions = {}): ObservableCounter {
+    return getOrCreate(name, options, MetricType.ObservableCounter) as ObservableCounter;
+}
+
+export function getOrCreateObservableUpDownCounter(name: string, options: MetricOptions = {}): ObservableUpDownCounter {
+    return getOrCreate(name, options, MetricType.ObservableUpDownCounter) as ObservableUpDownCounter;
+}
+*/
