@@ -63,6 +63,7 @@ export const FinalFormSelect = <T,>({
     const selectProps = {
         ...rest,
         multiple,
+        endAdornment,
         name,
         onChange,
         onFocus,
