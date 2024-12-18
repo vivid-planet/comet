@@ -63,6 +63,7 @@ export {
     BaseBlocksBlockItemData,
     BaseBlocksBlockItemInput,
     BlocksBlockFixturesGeneratorMap,
+    BlocksBlockInputInterface,
     createBlocksBlock,
 } from "./blocks/factories/createBlocksBlock";
 export { createImageLinkBlock } from "./blocks/factories/createImageLinkBlock";

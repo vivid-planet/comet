@@ -10,8 +10,7 @@ export interface CommonRowActionItemProps {
     onClick?: MouseEventHandler<HTMLElement>;
 }
 
-export type RowActionsItemPropsComponentsProps<T extends ElementType = "li"> = RowActionsIconItemComponentsProps &
-    RowActionsListItemComponentsProps<T>;
+type RowActionsItemPropsComponentsProps<T extends ElementType = "li"> = RowActionsIconItemComponentsProps & RowActionsListItemComponentsProps<T>;
 
 export interface RowActionsItemProps<T extends ElementType = "li">
     extends Omit<RowActionsIconItemProps, "componentsProps">,

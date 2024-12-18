@@ -85,7 +85,7 @@ export interface SaveButtonProps extends ButtonProps {
     conflictIcon?: ReactNode;
 }
 
-export type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
+type SaveButtonDisplayState = "idle" | "saving" | "success" | "error" | "conflict";
 
 export function SaveButton(inProps: SaveButtonProps) {
     const {

@@ -27,8 +27,7 @@
     },
     "dependencies": {
         "@comet/admin": "workspace:^7.10.0",
-        "@comet/admin-icons": "workspace:^7.10.0",
-        "classnames": "^2.2.6"
+        "@comet/admin-icons": "workspace:^7.10.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",

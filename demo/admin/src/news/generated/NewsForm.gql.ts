@@ -26,14 +26,6 @@ export const newsFormQuery = gql`
     ${newsFormFragment}
 `;
 
-export const newsFormCheckForChangesQuery = gql`
-    query NewsFormCheckForChanges($id: ID!) {
-        news(id: $id) {
-            updatedAt
-        }
-    }
-`;
-
 export const createNewsMutation = gql`
     mutation CreateNews($scope: NewsContentScopeInput!, $input: NewsInput!) {
         createNews(scope: $scope, input: $input) {

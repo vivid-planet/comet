@@ -1,4 +1,4 @@
-export interface Breakpoint {
+interface Breakpoint {
     mediaQuery: string;
     value: number;
 }
@@ -10,7 +10,7 @@ const createBreakpoint = (value: number): Breakpoint => {
     };
 };
 
-export type ThemeBreakpoints = {
+type ThemeBreakpoints = {
     b560: Breakpoint;
     b960: Breakpoint;
     b1280: Breakpoint;
@@ -18,7 +18,7 @@ export type ThemeBreakpoints = {
     b1920: Breakpoint;
 };
 
-export interface Theme {
+interface Theme {
     colors: {
         primary: string;
         textPrimary: string;

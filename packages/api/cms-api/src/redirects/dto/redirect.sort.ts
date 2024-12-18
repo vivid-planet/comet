@@ -3,7 +3,7 @@ import { IsEnum } from "class-validator";
 
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 
-export enum RedirectSortField {
+enum RedirectSortField {
     source = "source",
     createdAt = "createdAt",
     updatedAt = "updatedAt",
