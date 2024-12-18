@@ -476,6 +476,7 @@ export function createEditPageNode({
                                         )}
                                     </Field>
                                 )}
+                                <input type="submit" hidden />
 
                                 {additionalFormFields}
                             </>
