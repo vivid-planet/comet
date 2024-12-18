@@ -27,7 +27,7 @@
         "@opentelemetry/exporter-prometheus": "^0.53.0",
         "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
         "@opentelemetry/sdk-node": "^0.53.0",
-        "cache-manager": "^5.5.3",
+        "cache-manager": "^5.7.6",
         "graphql": "^15.0.0",
         "ioredis": "^5.4.1",
         "lru-cache": "^11.0.1",
