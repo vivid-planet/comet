@@ -25,7 +25,7 @@ describe("validateNotModified", () => {
         }).toThrowError("Conflict: Document has been modified.");
     });
 
-    it("should throw error because document got modified", async () => {
+    it("should should succeed - invalid lastUpdatedAt", async () => {
         expect(() => {
             validateNotModified(
                 {
