@@ -294,6 +294,8 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 
 ## Remove react barrel imports
 
+Because the new JSX transform will automatically import the necessary `react/jsx-runtime` functions, React will no longer need to be in scope when you use JSX.
+
 ### Steps to run codemod and fix ESLint issues
 
 It's recommended to do this separately in `admin/` and `site/` directories.
