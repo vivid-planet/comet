@@ -39,7 +39,7 @@ type MultiFileFormFieldConfig = { type: "fileUpload"; multiple: true; maxFiles?:
     "maxFileSize" | "readOnly" | "layout" | "accept"
 >;
 
-export type InputBaseFieldConfig = {
+type InputBaseFieldConfig = {
     startAdornment?: Adornment;
     endAdornment?: Adornment;
 };
