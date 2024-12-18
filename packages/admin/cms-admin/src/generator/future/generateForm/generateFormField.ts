@@ -1,6 +1,6 @@
 import { IntrospectionEnumType, IntrospectionInputValue, IntrospectionNamedTypeRef, IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-import { Adornment, FormConfig, FormFieldConfig, isFormFieldConfig } from "../generator";
+import { Adornment, FormConfig, FormFieldConfig, GQLDocumentConfigMap, isFormFieldConfig } from "../generator";
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
@@ -125,7 +125,7 @@ export function generateFormField({
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
-    const gqlDocuments: Record<string, string> = {};
+    const gqlDocuments: GQLDocumentConfigMap = {};
     const hooksCode = "";
     let finalFormConfig: GenerateFieldsReturn["finalFormConfig"];
 

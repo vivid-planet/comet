@@ -54,7 +54,7 @@ export const RouterTab = (props: TabProps) => null;
 type RouterTabsChild = ReactElement<TabProps> | boolean | null | undefined;
 type RouterTabsChildren = RouterTabsChild | Array<RouterTabsChild | Array<RouterTabsChild>>;
 
-export interface Props
+interface Props
     extends ThemedComponentBaseProps<{
         root: "div";
         tabs: typeof Tabs;

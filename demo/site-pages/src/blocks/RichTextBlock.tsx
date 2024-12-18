@@ -8,7 +8,7 @@ import { LinkBlock } from "./LinkBlock";
 
 const GreenCustomHeader = ({ children }: PropsWithChildren) => <h3 style={{ color: "green" }}>{children}</h3>;
 
-export const DefaultStyleLink = styled.a`
+const DefaultStyleLink = styled.a`
     color: ${({ theme }) => theme.colors.primary};
 `;
 

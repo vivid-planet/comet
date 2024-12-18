@@ -6,7 +6,7 @@ import { createElement } from "react";
 import { IControlProps } from "../../types";
 import { Root, RteToolbarClassKey, Slot } from "./Toolbar.styles";
 
-export interface RteToolbarProps
+interface RteToolbarProps
     extends IControlProps,
         ThemedComponentBaseProps<{
             root: "div";

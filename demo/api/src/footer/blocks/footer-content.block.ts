@@ -7,15 +7,10 @@ import {
     ChildBlock,
     ChildBlockInput,
     createBlock,
-    createListBlock,
     ExtractBlockInput,
 } from "@comet/cms-api";
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { IsOptional, IsString } from "class-validator";
-
-import { FooterLinkSectionBlock } from "./footer-link-section.block";
-
-export const FooterTopLinksBlock = createListBlock({ block: FooterLinkSectionBlock }, "FooterTopLinks");
 
 class FooterBlockData extends BlockData {
     @ChildBlock(LinkListBlock)

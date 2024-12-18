@@ -5,6 +5,7 @@ export { AppHeader, AppHeaderClassKey } from "./appHeader/AppHeader";
 export { AppHeaderButton, AppHeaderButtonProps } from "./appHeader/button/AppHeaderButton";
 export { AppHeaderButtonClassKey } from "./appHeader/button/AppHeaderButton.styles";
 export { AppHeaderDropdown, AppHeaderDropdownClassKey, AppHeaderDropdownProps } from "./appHeader/dropdown/AppHeaderDropdown";
+export { AppHeaderFillSpaceProps } from "./appHeader/fillSpace/AppHeaderFillSpace";
 export { AppHeaderFillSpace, AppHeaderFillSpaceClassKey } from "./appHeader/fillSpace/AppHeaderFillSpace";
 export { AppHeaderMenuButton, AppHeaderMenuButtonClassKey, AppHeaderMenuButtonProps } from "./appHeader/menuButton/AppHeaderMenuButton";
 export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutation } from "./buildRestMutation";
@@ -20,6 +21,7 @@ export { SaveButton, SaveButtonClassKey, SaveButtonProps } from "./common/button
 export { SplitButton, SplitButtonClassKey, SplitButtonProps } from "./common/buttons/split/SplitButton";
 export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/split/SplitButtonContext";
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
+export { ClearInputAdornmentClassKey } from "./common/ClearInputAdornment";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
 export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
@@ -29,6 +31,8 @@ export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/
 export { Loading, LoadingProps } from "./common/Loading";
 export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./common/MainContent";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
+export { ToolbarActionButtonClassKey } from "./common/toolbar/actions/ToolbarActionsButton";
+export { ToolbarActionButton } from "./common/toolbar/actions/ToolbarActionsButton";
 export {
     ToolbarAutomaticTitleItem,
     ToolbarAutomaticTitleItemClassKey,
@@ -45,11 +49,12 @@ export { ToolbarBreadcrumbs, ToolbarBreadcrumbsClassKey, ToolbarBreadcrumbsProps
 export { Tooltip, TooltipClassKey, TooltipProps } from "./common/Tooltip";
 export { ContentOverflow, ContentOverflowClassKey, ContentOverflowProps } from "./ContentOverflow";
 export { CrudContextMenu, CrudContextMenuClassKey, CrudContextMenuProps } from "./dataGrid/CrudContextMenu";
+export { CrudMoreActionsMenuClassKey } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudMoreActionsMenu, CrudMoreActionsMenuProps } from "./dataGrid/CrudMoreActionsMenu";
 export { CrudVisibility, CrudVisibilityProps } from "./dataGrid/CrudVisibility";
 export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDataGridExcelExport";
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
-export { GridColDef } from "./dataGrid/GridColDef";
+export { GridActionsColDef, GridBaseColDef, GridColDef, GridSingleSelectColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
 export { dataGridDateColumn, dataGridDateTimeColumn } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
@@ -293,6 +298,7 @@ export {
     VisibleType,
 } from "./table/Table";
 export { TableBodyRow, TableBodyRowClassKey, TableBodyRowProps } from "./table/TableBodyRow";
+export { TableDndOrderClassKey } from "./table/TableDndOrder";
 export { TableDndOrder } from "./table/TableDndOrder";
 export { TableFilterFinalForm } from "./table/TableFilterFinalForm";
 export { ITableLocalChangesApi, submitChangesWithMutation, TableLocalChanges } from "./table/TableLocalChanges";

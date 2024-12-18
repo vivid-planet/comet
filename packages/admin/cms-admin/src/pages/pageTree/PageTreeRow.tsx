@@ -39,7 +39,7 @@ interface PageTreeRowProps {
     selectedPages: PageTreePage[];
 }
 
-export interface PageTreeTableRowElement extends HTMLTableRowElement {
+interface PageTreeTableRowElement extends HTMLTableRowElement {
     previousElementSibling: HTMLTableRowElement | null;
     nextElementSibling: HTMLTableRowElement | null;
 }

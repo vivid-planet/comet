@@ -23,6 +23,7 @@ export function useContentScope(): UseContentScopeApi<ContentScope> {
 
 // @TODO (maybe): make factory in library to statically create Provider
 
+/** @knipignore */
 export function useContentScopeConfig(p: ContentScopeConfigProps): void {
     return useContentScopeConfigLibrary(p);
 }

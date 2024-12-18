@@ -22,7 +22,7 @@ import {
 import { BlockField } from "../decorators/field";
 import { BlockFactoryNameOrOptions } from "./types";
 
-export interface BlocksBlockItemDataInterface extends BlockData {
+interface BlocksBlockItemDataInterface extends BlockData {
     key: string;
     visible: boolean;
     type: string;
@@ -73,7 +73,7 @@ export function BaseBlocksBlockItemData<BlockMap extends BaseBlockMap>(supported
     return BlocksBlockItemData;
 }
 
-export interface BlocksBlockItemInputInterface extends BlockInput {
+interface BlocksBlockItemInputInterface extends BlockInput {
     key: string;
     visible: boolean;
     type: string;

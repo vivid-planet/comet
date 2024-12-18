@@ -8,7 +8,7 @@ import { SelectPreviewComponent } from "../../../iframebridge/SelectPreviewCompo
 import { createBlockSkeleton } from "../../helpers/createBlockSkeleton";
 import { BlockCategory, BlockInterface } from "../../types";
 
-export interface SpaceBlockFactoryOptions<T> {
+interface SpaceBlockFactoryOptions<T> {
     name?: string;
     defaultValue: T;
     options: { value: T; label: ReactNode }[];

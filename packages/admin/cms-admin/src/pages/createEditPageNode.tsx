@@ -31,7 +31,7 @@ import {
 
 type SerializedInitialValues = string;
 
-export interface EditPageNodeFinalFormValues {
+interface EditPageNodeFinalFormValues {
     [key: string]: unknown;
 }
 

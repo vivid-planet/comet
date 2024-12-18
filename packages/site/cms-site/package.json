@@ -35,7 +35,6 @@
     "devDependencies": {
         "@comet/cli": "workspace:^7.10.0",
         "@comet/eslint-config": "workspace:^7.10.0",
-        "@gitbeaker/node": "^34.0.0",
         "@types/draft-js": "^0.11.10",
         "@types/jest": "^29.5.0",
         "@types/react": "^18.2.66",
@@ -50,7 +49,6 @@
         "prettier": "^2.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-is": "^18.2.0",
         "styled-components": "^6.0.0",
         "ts-jest": "^29.0.5",
         "typescript": "^4.0.0"
