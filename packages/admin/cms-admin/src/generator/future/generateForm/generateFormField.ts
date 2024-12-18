@@ -396,7 +396,7 @@ export function generateFormField({
                       `defaultMessage="${config.helperText}" />}`
                     : ""
             }
-            ${validateCode}
+            ${validateCode}>
             {(props) =>
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
