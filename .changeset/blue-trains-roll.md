@@ -1,5 +1,5 @@
 ---
-"@comet/cms-api": minor
+"@comet/cms-api": patch
 ---
 
-Fix `notEqual` in EnumFilters
+Fix `notEqual` operation for enum filter
