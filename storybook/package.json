@@ -20,7 +20,6 @@
         "@comet/admin-color-picker": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
-        "@comet/admin-react-select": "workspace:*",
         "@comet/admin-rte": "workspace:*",
         "@comet/admin-theme": "workspace:*",
         "@comet/cms-admin": "workspace:*",
