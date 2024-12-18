@@ -3,6 +3,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    dataGridDateColumn,
     DataGridToolbar,
     filterByFragment,
     GridColDef,
@@ -102,15 +103,7 @@ export function NewsGrid(): React.ReactElement {
 
     const columns: GridColDef<GQLNewsGridFragment>[] = [
         { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), flex: 1, minWidth: 150 },
-        {
-            field: "date",
-            headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
-            type: "date",
-            valueGetter: ({ row }) => row.date && new Date(row.date),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
-            flex: 1,
-            minWidth: 150,
-        },
+        { ...dataGridDateColumn, field: "date", headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }), flex: 1, minWidth: 150 },
         {
             field: "category",
             headerName: intl.formatMessage({ id: "news.category", defaultMessage: "Category" }),
