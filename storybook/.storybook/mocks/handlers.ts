@@ -21,7 +21,7 @@ type LaunchesPastFilter = {
     or: LaunchesPastFilter[];
 };
 
-export type Launch = {
+type Launch = {
     id: string;
     mission_name: string;
     launch_date_local: Date;

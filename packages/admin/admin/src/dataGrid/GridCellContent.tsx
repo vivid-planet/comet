@@ -60,6 +60,7 @@ const Root = createComponentSlot("div")<GridCellContentClassKey, OwnerState>({
         gap: ${theme.spacing(2)};
         overflow: hidden;
         line-height: 0;
+        height: 100%;
     `,
 );
 

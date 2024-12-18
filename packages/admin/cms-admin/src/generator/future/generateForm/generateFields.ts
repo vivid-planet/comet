@@ -1,6 +1,6 @@
 import { IntrospectionQuery } from "graphql";
 
-import { FormConfig, GeneratorReturn, isFormFieldConfig, isFormLayoutConfig } from "../generator";
+import { FormConfig, GeneratorReturn, GQLDocumentConfigMap, isFormFieldConfig, isFormLayoutConfig } from "../generator";
 import { Imports } from "../utils/generateImportsCode";
 import { generateFormField } from "./generateFormField";
 import { generateFormLayout } from "./generateFormLayout";
@@ -50,7 +50,7 @@ export function generateFields({
     gqlType: string;
     namePrefix?: string;
 }): GenerateFieldsReturn {
-    const gqlDocuments: Record<string, string> = {};
+    const gqlDocuments: GQLDocumentConfigMap = {};
     let hooksCode = "";
     let formValueToGqlInputCode = "";
     const formFragmentFields: string[] = [];

@@ -7,7 +7,7 @@ import { BlockField } from "../../../../decorators/field";
 import { SearchText } from "../../../get-search-text";
 import { CBlock } from "./CBlock";
 
-export class BBlockData extends BlockData {
+class BBlockData extends BlockData {
     @BlockField()
     titleB: string;
 
@@ -19,7 +19,7 @@ export class BBlockData extends BlockData {
     }
 }
 
-export class BBlockInput extends BlockInput {
+class BBlockInput extends BlockInput {
     @IsString()
     @IsNotEmpty()
     @BlockField()

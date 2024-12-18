@@ -39,7 +39,7 @@ export interface IFrameSelectComponentMessage {
 /**
  * @deprecated Use SitePreviewIFrameOpenLinkMessage instead
  */
-export interface IFrameOpenLinkMessage {
+interface IFrameOpenLinkMessage {
     cometType: IFrameMessageType.OpenLink;
     data: {
         link: ExternalLinkBlockData;
@@ -57,7 +57,7 @@ export interface IFrameLocationMessage {
 /**
  * The `IFrameHoverComponentMessage` is sent from the site to the admin, when a component is hovered in the iFrame and should be highlighted in the admin interface.
  */
-export interface IFrameHoverComponentMessage {
+interface IFrameHoverComponentMessage {
     cometType: IFrameMessageType.HoverComponent;
     data: {
         route: string | null;
