@@ -67,7 +67,11 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
         </StyledAvatar>
     );
     return (
-        <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)} startIcon={isMobile ? undefined : AccountIcon}>
+        <AppHeaderDropdown
+            buttonChildren={buttonChildren ?? (isMobile ? AccountIcon : user.name)}
+            startIcon={isMobile ? undefined : AccountIcon}
+            dropdownArrow={isMobile ? null : undefined}
+        >
             <DropdownContent padding={4}>
                 <Button
                     fullWidth={true}
