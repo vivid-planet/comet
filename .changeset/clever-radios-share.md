@@ -3,4 +3,4 @@
 "@comet/cms-api": patch
 ---
 
-Prevent the creation of a second page
+Prevent the creation of a second home page
