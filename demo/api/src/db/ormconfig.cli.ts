@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import { Options } from "@mikro-orm/postgresql";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
 
