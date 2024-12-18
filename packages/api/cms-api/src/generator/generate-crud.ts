@@ -298,7 +298,7 @@ function generateSortDto({ generatorOptions, metadata }: { generatorOptions: Cru
     import { Type } from "class-transformer";
     import { IsEnum } from "class-validator";
 
-    enum ${classNameSingular}SortField {
+    export enum ${classNameSingular}SortField {
         ${crudSortProps
             .map((prop) => {
                 return `${prop.name} = "${prop.name}",`;
