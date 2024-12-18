@@ -1,5 +1,11 @@
 # @comet/blocks-api
 
+## 5.9.6
+
+### Patch Changes
+
+-   31029dc8b: Fix input validation for missing child blocks
+
 ## 5.9.5
 
 ## 5.9.4
