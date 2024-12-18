@@ -2,4 +2,4 @@
 "@comet/cms-api": patch
 ---
 
-Add BlocksBlockInputInterface to public api
+Add `BlocksBlockInputInterface` to the public API
