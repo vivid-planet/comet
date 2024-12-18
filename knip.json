@@ -53,10 +53,6 @@
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
         },
-        "packages/admin/admin-react-select": {
-            "entry": ["./src/index.ts"],
-            "project": ["./src/**/*.{ts,tsx}"]
-        },
         "packages/admin/admin-rte": {
             "entry": ["./src/index.ts"],
             "project": ["./src/**/*.{ts,tsx}"]
