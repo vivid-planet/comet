@@ -195,7 +195,6 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
                     },
                 }}
                 rowHeight={60}
-                disableRowSelectionOnClick
                 disableColumnMenu
                 loading={loading && data != null}
                 autoHeight={true}

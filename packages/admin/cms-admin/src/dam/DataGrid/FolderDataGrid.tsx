@@ -562,7 +562,6 @@ const FolderDataGrid = ({
                     getRowClassName={getRowClassName}
                     columns={dataGridColumns}
                     checkboxSelection={!hideMultiselect}
-                    disableRowSelectionOnClick
                     rowSelectionModel={Array.from(damSelectionActionsApi.selectionMap.keys())}
                     onRowSelectionModelChange={handleSelectionModelChange}
                     autoHeight={true}

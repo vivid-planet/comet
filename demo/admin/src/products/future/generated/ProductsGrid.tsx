@@ -395,7 +395,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
     return (
         <DataGridPro
             {...dataGridProps}
-            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

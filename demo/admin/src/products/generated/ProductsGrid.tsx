@@ -238,7 +238,6 @@ export function ProductsGrid(): React.ReactElement {
         <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
-                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}
