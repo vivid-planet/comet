@@ -144,10 +144,10 @@ importers:
         specifier: ^6.0.0
         version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-router:
-        specifier: ^5.0.0
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       react-router-dom:
-        specifier: ^5.0.0
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       use-debounce:
         specifier: ^6.0.0
@@ -733,10 +733,10 @@ importers:
         specifier: ^2.4.1
         version: 2.4.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-router:
-        specifier: ^5.0.0
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       react-router-dom:
-        specifier: ^5.0.0
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       react-select:
         specifier: ^3.2.0
@@ -960,10 +960,10 @@ importers:
         specifier: ^6.0.0
         version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-router:
-        specifier: ^5.1.2
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       react-router-dom:
-        specifier: ^5.1.2
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       rimraf:
         specifier: ^3.0.2
@@ -1549,10 +1549,10 @@ importers:
         specifier: ^6.0.0
         version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-router:
-        specifier: ^5.0.0
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       react-router-dom:
-        specifier: ^5.0.0
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       ts-jest:
         specifier: ^29.0.5
@@ -1832,10 +1832,10 @@ importers:
         specifier: ^6.0.0
         version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
       react-router:
-        specifier: ^5.0.0
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       react-router-dom:
-        specifier: ^5.0.0
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       ts-jest:
         specifier: ^29.0.5
@@ -2554,10 +2554,10 @@ importers:
         specifier: ^16.0.0
         version: 16.0.1
       react-router:
-        specifier: ^5.0.1
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       react-router-dom:
-        specifier: ^5.0.1
+        specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
       remark-gfm:
         specifier: ^4.0.0
