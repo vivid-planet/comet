@@ -291,3 +291,25 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + }
 + <DataGrid /* other props */ >
 ```
+
+## Remove react barrel imports
+
+### Steps to run codemod and fix ESLint issues
+
+It's recommended to do this separately in `admin/` and `site/` directories.
+
+1. Replace `import * as React from "react";` with `import React from "react";` in your codebase. (This step is optional but improves the results of the codemod.)
+
+2. Run the codemod to update React imports: (option `--force` is required to because of changes of step one above)
+
+    ```sh
+    npx react-codemod update-react-imports --force
+    ```
+
+3. Run ESLint with the `--fix` option to automatically fix issues:
+    ```sh
+    npm run lint:eslint --fix
+    ```
+
+These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
+The codemod does not handle all cases, so manual adjustments may be necessary.
