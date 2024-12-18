@@ -1,8 +1,6 @@
 ---
-"@comet/cms-admin": minor
-"@comet/cms-api": minor
+"@comet/cms-admin": patch
+"@comet/cms-api": patch
 ---
 
-Prevent Creation of second Home Page
-
--   Add a check in Admin and API to mark `/.../home` paths as reserved
+Prevent the creation of a second page
