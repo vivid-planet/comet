@@ -43,11 +43,11 @@ function uploadOrReplaceByFilenameAndFolder<ResponseData>({
     formData.append("file", data.file);
     formData.append("scope", JSON.stringify(data.scope));
 
-    if (replace === false && data.importSourceId && data.importSourceType && !data.file.importSource) {
+    if (data.importSourceId && data.importSourceType && !data.file.importSource) {
         formData.append("importSourceId", data.importSourceId);
         formData.append("importSourceType", data.importSourceType);
     }
-    if (replace === false && data.file.importSource) {
+    if (data.file.importSource) {
         formData.append("importSourceId", data.file.importSource.importSourceId);
         formData.append("importSourceType", data.file.importSource.importSourceType);
     }
