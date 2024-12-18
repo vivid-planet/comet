@@ -298,7 +298,7 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 - "@comet/admin-react-select": "^7.x.x",
 ```
 
-It is recommended to use the `AutocompleteField` or the `SelectField` Component from `@comet/admin`.
+It is recommended to use the `AutocompleteField` or the `SelectField` components from `@comet/admin` instead:
 
 ```diff
 - import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
