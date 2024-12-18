@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts && comet-admin-generator future-generate && pnpm gql:types",
+        "admin-generator": "rimraf 'src/*/generated' && comet-admin-generator generate crud-generator-config.ts && comet-admin-generator future-generate",
         "build": "run-s intl:compile && run-p gql:types generate-block-types && NODE_ENV=production vite build",
         "preview": "npm run build && vite preview",
         "generate-block-types": "comet generate-block-types --inputs",
