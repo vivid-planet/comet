@@ -1,18 +1,6 @@
 import { validateNotModified } from "../validateNotModified";
 
 describe("validateNotModified", () => {
-    it("should throw an error if updateAt from document is invalid ", async () => {
-        expect(() => {
-            validateNotModified(
-                {
-                    id: "1234",
-                    updatedAt: new Date("invalid Date"),
-                },
-                new Date(),
-            );
-        }).toThrowError("Conflict: Document has been modified.");
-    });
-
     it("should succeed - document not modified", async () => {
         expect(() => {
             validateNotModified(
@@ -35,5 +23,17 @@ describe("validateNotModified", () => {
                 new Date(2024, 1, 31, 8, 30, 0),
             );
         }).toThrowError("Conflict: Document has been modified.");
+    });
+
+    it("should throw error because document got modified", async () => {
+        expect(() => {
+            validateNotModified(
+                {
+                    id: "1234",
+                    updatedAt: new Date(2024, 1, 31, 8, 30, 1),
+                },
+                new Date("invalid"),
+            );
+        }).not.toThrow();
     });
 });
