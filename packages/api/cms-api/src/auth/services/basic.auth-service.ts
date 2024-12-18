@@ -9,8 +9,8 @@ interface BasicAuthServiceConfig {
 }
 
 export function createBasicAuthService({ username: requiredUsername, password: requiredPassword }: BasicAuthServiceConfig) {
-    if (requiredUsername === "") throw new Error(`username for BasicAuthService must no be empty`);
-    if (requiredPassword === "") throw new Error(`password for BasicAuthService (username "${requiredUsername}") must no be empty`);
+    if (requiredUsername === "") throw new Error(`username for BasicAuthService must not be empty`);
+    if (requiredPassword === "") throw new Error(`password for BasicAuthService (username "${requiredUsername}") must not be empty`);
 
     @Injectable()
     class BasicAuthService implements AuthServiceInterface {
