@@ -2,4 +2,4 @@
 "@comet/admin-color-picker": patch
 ---
 
-Add ColorPickerNoColorPreviewProps to public api
+Add `ColorPickerNoColorPreviewProps` to the public API
