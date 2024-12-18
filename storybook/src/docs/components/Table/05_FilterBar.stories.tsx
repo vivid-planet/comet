@@ -1,4 +1,5 @@
 import {
+    AutocompleteField,
     Field,
     FilterBar,
     FilterBarMoreFilters,
@@ -18,7 +19,6 @@ import {
     usePersistedStateId,
     useTableQueryFilter,
 } from "@comet/admin";
-import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
 import { Link, Typography } from "@mui/material";
 import faker from "faker";
 
@@ -33,7 +33,7 @@ const ColorFilterField = ({ colors }: ColorFilterFieldProps) => {
             return { value: color, label: color };
         });
 
-    return <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
+    return <AutocompleteField name="color" options={options} fullWidth />;
 };
 
 interface FilterValues {
