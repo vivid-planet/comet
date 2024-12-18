@@ -140,6 +140,49 @@ The MikroORM peer dependency has been bumped to v6.
 
 2.  Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
 
+    :::note Codemods available
+
+    We provide upgrade scripts for basic migrations.
+    Please note that these scripts might not cover all necessary migrations.
+
+    Remove generic from `BaseEntity`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-base-entity-generic.ts
+    ```
+
+    Rename `customType` to `type`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-custom-type.ts
+    ```
+
+    Rename `onDelete` to `deleteRule`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-delete-rule.ts
+    ```
+
+    Add dotenv call to `ormconfig.cli.ts`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-dotenv.ts
+    ```
+
+    Change all imports from `@mikro-orm/core` to `@mikro-orm/postgresql`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-imports.ts
+    ```
+
+    Wrap config in `defineConfig`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-ormconfig.ts
+    ```
+
+    :::
+
 #### class-validator
 
 The class-validator peer dependency has been bumped to v0.14.0:
