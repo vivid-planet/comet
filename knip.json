@@ -81,6 +81,7 @@
         "demo/admin": {
             "entry": ["./src/loader.ts", "./src/**/*.cometGen.ts"],
             "project": ["./src/**/*.{ts,tsx}"],
+            "ignore": ["./src/**/generated/**"],
             "ignoreDependencies": ["@swc/plugin-emotion", "eslint-plugin-graphql", "kill-port"]
         },
         "demo/api": {
@@ -95,6 +96,7 @@
                 "./src/auth/user.interface.ts",
                 "./src/generator/generate.ts"
             ],
+            "ignore": ["./src/**/generated/**"],
             "project": ["./src/**/*.{ts,tsx}"],
             "ignoreDependencies": ["@mikro-orm/cli", "jest-junit"]
         },
