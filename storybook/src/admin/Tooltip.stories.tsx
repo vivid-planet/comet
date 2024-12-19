@@ -1,6 +1,6 @@
 import { Tooltip } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
-import { Box, Button, Card, CardContent, Stack, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Card, CardContent, IconButton, Link, Stack, Typography } from "@mui/material";
 import { ReactNode, useState } from "react";
 
 export default {
@@ -23,6 +23,11 @@ export const AllTooltipTriggers = {
     render: () => {
         const [clicks, setClicks] = useState(0);
 
+        const [clicksOnButton, setClicksOnButton] = useState(0);
+        const [clicksOnIconButton, setClicksOnIconButton] = useState(0);
+        const [clicksOnButtonBase, setClicksOnButtonBase] = useState(0);
+        const [clicksOnLink, setClicksOnLink] = useState(0);
+
         const NonClickable = ({ children }: { children: ReactNode }) => {
             return (
                 <Typography
@@ -40,13 +45,57 @@ export const AllTooltipTriggers = {
                 <Card>
                     <CardContent>
                         <Typography variant="h4" gutterBottom>
+                            Hover Tooltips around different types of elements
+                        </Typography>
+                        <Stack direction={{ md: "row" }} gap={4} alignItems={{ xs: "stretch", md: "center" }}>
+                            <Tooltip title="This is a Button">
+                                <Button variant="contained" onClick={() => setClicksOnButton(clicksOnButton + 1)}>
+                                    {clicksOnButton} clicks
+                                </Button>
+                            </Tooltip>
+                            <Tooltip title="This is an IconButton">
+                                <IconButton color="primary" size="large" onClick={() => setClicksOnIconButton(clicksOnIconButton + 1)}>
+                                    <Typography variant="h5" sx={{ width: 16, height: 16 }}>
+                                        {clicksOnIconButton}
+                                    </Typography>
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="This is an ButtonBase">
+                                <ButtonBase onClick={() => setClicksOnButtonBase(clicksOnButtonBase + 1)}>
+                                    <Typography variant="h5" sx={{ p: 2 }}>
+                                        {clicksOnButtonBase} clicks
+                                    </Typography>
+                                </ButtonBase>
+                            </Tooltip>
+                            <Tooltip title="This is an non-clickable element">
+                                <div>
+                                    <NonClickable>Just a div</NonClickable>
+                                </div>
+                            </Tooltip>
+                            <Tooltip title="This is a link">
+                                <Link
+                                    href="/"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setClicksOnLink(clicksOnLink + 1);
+                                    }}
+                                >
+                                    {clicksOnLink} clicks
+                                </Link>
+                            </Tooltip>
+                        </Stack>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardContent>
+                        <Typography variant="h4" gutterBottom>
                             Tooltips around buttons
                             <Box sx={{ fontSize: 12 }} component="pre">
                                 Click count: {clicks}
                             </Box>
                         </Typography>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                            <Tooltip title="This is a tooltip" trigger="hover">
+                        <Stack direction={{ md: "row" }} gap={4} alignItems={{ xs: "stretch", md: "center" }}>
+                            <Tooltip title="This is a tooltip">
                                 <Button variant="contained" startIcon={<Add />} onClick={() => setClicks(clicks + 1)}>
                                     Trigger: Hover
                                 </Button>
@@ -69,8 +118,8 @@ export const AllTooltipTriggers = {
                         <Typography variant="h4" gutterBottom>
                             Tooltips around non-clickable elements
                         </Typography>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                            <Tooltip title="This is a tooltip" trigger="hover">
+                        <Stack direction={{ md: "row" }} gap={4} alignItems={{ xs: "stretch", md: "center" }}>
+                            <Tooltip title="This is a tooltip">
                                 <div>
                                     <NonClickable>Trigger: Hover</NonClickable>
                                 </div>
