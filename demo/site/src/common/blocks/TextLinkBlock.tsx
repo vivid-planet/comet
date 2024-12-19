@@ -23,8 +23,8 @@ export const TextLinkBlock = withPreview(
 );
 
 const Link = styled(LinkBlock)`
-    color: ${({ theme }) => theme.colors.black};
+    color: ${({ theme }) => theme.palette.text.primary};
     &:hover {
-        color: ${({ theme }) => theme.colors.primary};
+        color: ${({ theme }) => theme.palette.primary.main};
     }
 `;

@@ -38,7 +38,7 @@ const TopLevelNavigation = styled.ol`
     list-style-type: none;
     padding: 0;
     margin: 0;
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.palette.primary.main};
 `;
 
 const SubLevelNavigation = styled.ol`
@@ -47,7 +47,7 @@ const SubLevelNavigation = styled.ol`
     min-width: 100px;
     list-style-type: none;
     padding: 5px;
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.palette.primary.main};
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 `;
 
@@ -66,7 +66,7 @@ const TopLevelLinkContainer = styled.li`
 const Link = styled(PageLink)`
     text-decoration: none;
     padding: 5px 10px;
-    color: ${({ theme }) => theme.colors.n200};
+    color: ${({ theme }) => theme.palette.text.primary};
     font-size: 12px;
 
     &:hover {
@@ -74,6 +74,6 @@ const Link = styled(PageLink)`
     }
 
     &.active {
-        color: ${({ theme }) => theme.colors.white};
+        color: ${({ theme }) => theme.palette.text.inverted};
     }
 `;
