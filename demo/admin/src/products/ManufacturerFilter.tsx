@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { InputBase } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
-import * as React from "react";
+import { useState } from "react";
 import { useIntl } from "react-intl";
 import { useDebounce } from "use-debounce";
 
@@ -23,7 +23,7 @@ const manufacturersQuery = gql`
 // Source: https://mui.com/x/react-data-grid/filtering/customization/#multiple-values-operator
 function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
     const intl = useIntl();
-    const [search, setSearch] = React.useState<string | undefined>(undefined);
+    const [search, setSearch] = useState<string | undefined>(undefined);
     const [debouncedSearch] = useDebounce(search, 500);
 
     const { data } = useQuery<GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables>(manufacturersQuery, {

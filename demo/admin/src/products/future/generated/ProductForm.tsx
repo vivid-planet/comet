@@ -36,7 +36,7 @@ import {
 import { FormControlLabel, InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormSpy } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
@@ -81,7 +81,7 @@ interface FormProps {
     id?: string;
 }
 
-export function ProductForm({ id }: FormProps): React.ReactElement {
+export function ProductForm({ id }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();
@@ -92,7 +92,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = useMemo<Partial<FormValues>>(
         () =>
             data?.product
                 ? {

@@ -6,7 +6,7 @@ import { queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@co
 import { InputAdornment } from "@mui/material";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { productFormFragment, productQuery, updateProductMutation } from "./ProductPriceForm.gql";
@@ -26,14 +26,14 @@ interface FormProps {
     id: string;
 }
 
-export function ProductPriceForm({ id }: FormProps): React.ReactElement {
+export function ProductPriceForm({ id }: FormProps) {
     const client = useApolloClient();
 
     const formApiRef = useFormApiRef<FormValues>();
 
     const { data, error, loading, refetch } = useQuery<GQLProductQuery, GQLProductQueryVariables>(productQuery, { variables: { id } });
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = useMemo<Partial<FormValues>>(
         () =>
             data?.product
                 ? {
