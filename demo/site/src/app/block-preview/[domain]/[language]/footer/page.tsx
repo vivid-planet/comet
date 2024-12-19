@@ -1,20 +1,21 @@
 "use client";
 
-import { BlockPreviewProvider, IFrameBridgeProvider, useIFrameBridge } from "@comet/cms-site";
+import { useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
 import { FooterContentBlockData } from "@src/blocks.generated";
 import { FooterContentBlock } from "@src/layout/footer/blocks/FooterContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
-import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { withBlockPreview } from "@src/util/blockPreview";
 import { useEffect, useState } from "react";
 
-const PreviewPage = () => {
+export default withBlockPreview(() => {
     const iFrameBridge = useIFrameBridge();
 
-    const graphQLFetch = createGraphQLFetch();
+    const { fetch, graphQLFetch } = useBlockPreviewFetch();
 
     const [blockData, setBlockData] = useState<FooterContentBlockData>();
     useEffect(() => {
         async function load() {
+            if (!graphQLFetch) return;
             if (!iFrameBridge.block) {
                 setBlockData(undefined);
                 return;
@@ -28,19 +29,7 @@ const PreviewPage = () => {
             setBlockData(newData);
         }
         load();
-    }, [iFrameBridge.block, graphQLFetch]);
+    }, [iFrameBridge.block, fetch, graphQLFetch]);
 
     return <div>{blockData && <FooterContentBlock data={blockData} />}</div>;
-};
-
-const IFrameBridgePreviewPage = () => {
-    return (
-        <IFrameBridgeProvider>
-            <BlockPreviewProvider>
-                <PreviewPage />
-            </BlockPreviewProvider>
-        </IFrameBridgeProvider>
-    );
-};
-
-export default IFrameBridgePreviewPage;
+});
