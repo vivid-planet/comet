@@ -128,7 +128,7 @@ The class-validator peer dependency has been bumped to v0.14.0:
 npx @comet/upgrade v8/update-class-validator.ts
 ```
 
-#### Remove passport
+### Remove passport
 
 Remove all passport-dependencies and add @nestjs/jwt
 
