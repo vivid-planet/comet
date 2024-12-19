@@ -1084,8 +1084,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       react-date-range:
-        specifier: ^1.4.0
-        version: 1.4.0(date-fns@4.1.0)(react@17.0.2)
+        specifier: ^2.0.1
+        version: 2.0.1(date-fns@4.1.0)(react@17.0.2)
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -13519,10 +13519,10 @@ packages:
     peerDependencies:
       react: '>= 16.8.0'
 
-  react-date-range@1.4.0:
-    resolution: {integrity: sha512-+9t0HyClbCqw1IhYbpWecjsiaftCeRN5cdhsi9v06YdimwyMR2yYHWcgVn3URwtN/txhqKpEZB6UX1fHpvK76w==}
+  react-date-range@2.0.1:
+    resolution: {integrity: sha512-jwKYc9zcjYMg2hWbPht+6BF2wjGG5DkRVNJLRXn2Y0B/QCOOnvQX6YXziZVujVADWmgsBaoQnILdmzYw+Bwh0g==}
     peerDependencies:
-      date-fns: 2.0.0-alpha.7 || >=2.0.0
+      date-fns: 3.0.6 || >=3.0.0
       react: ^0.14 || ^15.0.0-rc || >=15.0
 
   react-dev-utils@12.0.1:
@@ -30515,7 +30515,7 @@ snapshots:
     dependencies:
       react: 17.0.2
 
-  react-date-range@1.4.0(date-fns@4.1.0)(react@17.0.2):
+  react-date-range@2.0.1(date-fns@4.1.0)(react@17.0.2):
     dependencies:
       classnames: 2.3.2
       date-fns: 4.1.0
