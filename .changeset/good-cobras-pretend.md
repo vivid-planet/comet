@@ -2,7 +2,10 @@
 "@comet/admin": minor
 ---
 
-Show tooltips on both `hover` and `focus` when using the default `hover` trigger and deprecate the `trigger` prop
+Adjust how tooltips are triggered
 
-This was done to achieve consistent behavior across elements and ensure tooltips are always shown before the user interacts with the underlying element.
-The `trigger` prop will be removed in a future major version, with the combined `hover`/`focus` trigger becoming the only supported behavior.
+This is to achieve a more consistent and user-friendly experience by ensuring tooltips are always shown when the user interacts with the underlying element.
+
+-   When using the default `hover` trigger, tooltips will now be shown on both `hover` and `focus`. Previously, you had to choose between `hover` and `focus`.
+-   The `trigger` prop is deprecated and will be removed in a future major version. The combined `hover`/`focus` trigger will be the only supported behavior.
+-   Tooltips on touch devices will be shown immediately when the user starts interacting with the underlying element.
