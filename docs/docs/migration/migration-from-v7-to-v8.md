@@ -172,6 +172,13 @@ Perform the following changes:
     }
     ```
 
+### Import `Tooltip` from `@comet/admin` package
+
+```diff
+- import { Tooltip } from "@mui/material";
++ import { Tooltip } from "@comet/admin";
+```
+
 ### Update MUI - X Packages
 
 In `package.json` update the version of the MUI X packages to `^7.22.3`.

@@ -63,6 +63,11 @@ module.exports = {
                         importNames: ["GridColDef"],
                         message: "Please use GridColDef from @comet/admin instead",
                     },
+                    {
+                        name: "@mui/material",
+                        importNames: ["Tooltip"],
+                        message: "Please use Tooltip from @comet/admin instead",
+                    },
                 ],
             },
         ],
