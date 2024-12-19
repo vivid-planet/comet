@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
+import { Tooltip } from "@comet/admin";
 import { CometColor, Domain, DomainLocked } from "@comet/admin-icons";
-import { Grid, Tooltip, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { ReactNode, useCallback, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { RouteComponentProps, useHistory, useLocation } from "react-router";

@@ -5,11 +5,12 @@ import {
     StackPageTitle,
     StackSwitch,
     StackSwitchApiContext,
+    Tooltip,
     UndoSnackbar,
     useSnackbarApi,
 } from "@comet/admin";
 import { Add, Copy, Delete, Invisible, Paste, Visible } from "@comet/admin-icons";
-import { Box, Checkbox, FormControlLabel, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent, FunctionComponent, ReactNode, useCallback, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";

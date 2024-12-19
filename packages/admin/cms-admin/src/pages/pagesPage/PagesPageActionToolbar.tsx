@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
-import { UndoSnackbar, useSnackbarApi } from "@comet/admin";
+import { Tooltip, UndoSnackbar, useSnackbarApi } from "@comet/admin";
 import { Archive, Copy, Delete, Disabled, Online, Paste, ThreeDotSaving, TreeCollapseAll } from "@comet/admin-icons";
-import { Button, Checkbox, Grid, IconButton, Tooltip, useTheme } from "@mui/material";
+import { Button, Checkbox, Grid, IconButton, useTheme } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
