@@ -30,7 +30,7 @@
         "@comet/admin-icons": "workspace:^7.10.0",
         "@mui/utils": "^6.0.0",
         "date-fns": "^4.1.0",
-        "react-date-range": "^1.4.0"
+        "react-date-range": "^2.0.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
