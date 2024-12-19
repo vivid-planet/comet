@@ -61,7 +61,7 @@ export const LatestContentUpdatesDashboardWidget = <Row extends MinimalRow>({
             icon={<Reload />}
             header={<FormattedMessage id="dashboard.latestContentUpdatesWidget.title" defaultMessage="Latest Content Updates" />}
         >
-            <DataGrid disableRowSelectionOnClick disableColumnMenu hideFooter autoHeight columns={columns} rows={rows} loading={loading} />
+            <DataGrid disableColumnMenu hideFooter autoHeight columns={columns} rows={rows} loading={loading} />
         </DashboardWidgetRoot>
     );
 };

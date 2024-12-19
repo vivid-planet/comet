@@ -22,6 +22,7 @@ import { GetMuiComponentTheme } from "./getComponentsTheme";
 export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing }) => ({
     ...component,
     defaultProps: {
+        disableRowSelectionOnClick: true,
         slots: {
             /* @TODO: add FilterPanelAddIcon to display Comet Add Icon once MUI Datagrid is updated to v6 or higher  */
             QuickFilterIcon: Search,

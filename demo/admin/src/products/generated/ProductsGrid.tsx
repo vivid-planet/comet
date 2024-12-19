@@ -237,7 +237,6 @@ export function ProductsGrid() {
         <MainContent fullHeight>
             <DataGridPro
                 {...dataGridProps}
-                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}

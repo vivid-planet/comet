@@ -350,7 +350,7 @@ export const SingleGridFullHeight = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent fullHeight>
-                    <DataGrid disableRowSelectionOnClick columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} />
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} />
                 </StackMainContent>
             </>
         );
@@ -386,14 +386,7 @@ export const SingleGridAutoHeight = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent>
-                    <DataGrid
-                        disableRowSelectionOnClick
-                        columns={columns}
-                        rows={rows}
-                        loading={loading}
-                        slots={{ toolbar: GridToolbar }}
-                        autoHeight
-                    />
+                    <DataGrid columns={columns} rows={rows} loading={loading} slots={{ toolbar: GridToolbar }} autoHeight />
                 </StackMainContent>
             </>
         );
@@ -468,7 +461,7 @@ export const GridWithFormInADialog = {
                     <ToolbarAutomaticTitleItem />
                 </StackToolbar>
                 <StackMainContent fullHeight>
-                    <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                    <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                 </StackMainContent>
                 <Dialog open={!!editingId} onClose={() => setEditingId(undefined)}>
                     <SaveBoundary onAfterSave={() => setEditingId(undefined)}>
@@ -566,7 +559,7 @@ export const GridWithFormOnAPage = {
                         <ToolbarAutomaticTitleItem />
                     </StackToolbar>
                     <StackMainContent fullHeight>
-                        <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                        <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                     </StackMainContent>
                 </StackPage>
                 <StackPage name="add">
@@ -684,7 +677,7 @@ export const NestedGridsAndFormsWithTabs = {
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
                         <StackMainContent fullHeight>
-                            <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                         </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
@@ -701,7 +694,7 @@ export const NestedGridsAndFormsWithTabs = {
                                             </RouterTab>
                                             <RouterTab path="/child-items" label="Child items in Grid">
                                                 <FullHeightGridContainer>
-                                                    <DataGrid disableRowSelectionOnClick rows={rows} columns={childGridColumns} loading={loading} />
+                                                    <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
                                                 </FullHeightGridContainer>
                                             </RouterTab>
                                         </RouterTabs>
@@ -809,7 +802,7 @@ export const NestedFormInGridInTabsInGrid = {
                             <ToolbarAutomaticTitleItem />
                         </StackToolbar>
                         <StackMainContent fullHeight>
-                            <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
+                            <DataGrid rows={rows} columns={columns} loading={loading} slots={{ toolbar: GridToolbar }} />
                         </StackMainContent>
                     </StackPage>
                     <StackPage name="edit">
@@ -828,7 +821,7 @@ export const NestedFormInGridInTabsInGrid = {
                                                 <StackSwitch>
                                                     <StackPage name="grid">
                                                         <FullHeightGridContainer>
-                                                            <DataGrid disableRowSelectionOnClick rows={rows} columns={columns} loading={loading} />
+                                                            <DataGrid rows={rows} columns={columns} loading={loading} />
                                                         </FullHeightGridContainer>
                                                     </StackPage>
                                                     <StackPage name="edit">
@@ -931,7 +924,6 @@ export const GridWithSelectionAndMoreActionsMenu = {
                 </StackToolbar>
                 <StackMainContent fullHeight>
                     <DataGrid
-                        disableRowSelectionOnClick
                         rows={rows}
                         columns={columns}
                         loading={loading}
@@ -1008,7 +1000,6 @@ export const GridWithSelectionInDialog = {
                 <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
                     <DialogTitle>Selected items</DialogTitle>
                     <DataGrid
-                        disableRowSelectionOnClick
                         rows={rows}
                         columns={columns}
                         loading={loading}
