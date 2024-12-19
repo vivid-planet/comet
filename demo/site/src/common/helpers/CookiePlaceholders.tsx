@@ -26,5 +26,5 @@ const Root = styled.div`
     justify-content: center;
     text-align: center;
     align-items: center;
-    background-color: ${({ theme }) => theme.colors.n200};
+    background-color: ${({ theme }) => theme.palette.primary.light};
 `;

@@ -6,14 +6,14 @@ export const Container = styled.div`
 `;
 
 export const Link = styled.a`
-    color: ${({ theme }) => theme.colors.n400};
+    color: ${({ theme }) => theme.palette.primary.main};
     text-decoration: none;
 
     font-size: 14px;
 
     :last-child {
         font-weight: 500;
-        color: ${({ theme }) => theme.colors.black};
+        color: ${({ theme }) => theme.palette.text.primary};
     }
 `;
 
@@ -22,7 +22,7 @@ export const Divider = styled.span`
     width: 15px;
     height: 1px;
     margin: 0 10px 5px 10px;
-    background-color: ${({ theme }) => theme.colors.n200};
+    background-color: ${({ theme }) => theme.palette.primary.light};
 `;
 
 export const GridRoot = styled.div`
