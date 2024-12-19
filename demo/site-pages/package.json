@@ -36,7 +36,14 @@
         "react-dom": "^18.2.0",
         "react-intl": "^6.0.0",
         "redraft": "^0.10.0",
+<<<<<<< HEAD
         "styled-components": "^6.1.8"
+=======
+        "sitemap": "^6.0.0",
+        "styled-components": "^6.1.8",
+        "swiper": "^11.1.15",
+        "ts-node": "^10.0.0"
+>>>>>>> main
     },
     "devDependencies": {
         "@babel/core": "^7.0.0",

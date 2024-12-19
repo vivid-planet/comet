@@ -4,14 +4,14 @@ import { LinkListBlock } from "@src/blocks/LinkListBlock";
 import styled from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
-import { HeadlineBlock } from "./HeadlineBlock";
-import RichTextBlock from "./RichTextBlock";
+import { HeadingBlock } from "./HeadingBlock";
+import { RichTextBlock } from "./RichTextBlock";
 import SpaceBlock from "./SpaceBlock";
 
 const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
-    richtext: (props) => <RichTextBlock data={props} />,
-    headline: (props) => <HeadlineBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
+    headline: (props) => <HeadingBlock data={props} />,
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     linkList: (props) => <LinkListBlock data={props} />,
 };

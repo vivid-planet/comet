@@ -1,5 +1,5 @@
 "use client";
-import { DamImageBlock } from "@src/blocks/DamImageBlock";
+import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import Link from "next/link";
 import styled from "styled-components";
 

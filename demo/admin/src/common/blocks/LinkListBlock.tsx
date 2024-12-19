@@ -1,10 +1,9 @@
 import { createListBlock } from "@comet/blocks-admin";
+import { TextLinkBlock } from "@src/common/blocks/TextLinkBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
 import { UserGroupChip } from "@src/userGroups/UserGroupChip";
 import { UserGroupContextMenuItem } from "@src/userGroups/UserGroupContextMenuItem";
 import { FormattedMessage } from "react-intl";
-
-import { TextLinkBlock } from "./TextLinkBlock";
 
 export const LinkListBlock = createListBlock({
     name: "LinkList",
