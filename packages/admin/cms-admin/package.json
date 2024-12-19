@@ -68,7 +68,7 @@
         "react-split": "^2.0.0",
         "react-virtualized-auto-sizer": "^1.0.0",
         "react-window": "^1.0.0",
-        "rimraf": "^3.0.0",
+        "rimraf": "^6.0.1",
         "slugify": "^1.0.0",
         "use-debounce": "^6.0.0",
         "uuid": "^9.0.0"
