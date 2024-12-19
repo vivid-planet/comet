@@ -32,7 +32,7 @@
         "@mui/x-data-grid-pro": "^7.22.3",
         "@types/node": "^22.0.0",
         "apollo-link-rest": "^0.8.0-beta.0",
-        "date-fns": "^4.1.0",
+        "date-fns": "^2.28.0",
         "faker": "^5.5.3",
         "final-form": "^4.16.1",
         "graphql": "^15.0.0",
