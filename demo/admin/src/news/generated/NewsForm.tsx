@@ -29,7 +29,7 @@ import { IconButton, MenuItem } from "@mui/material";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
-import React from "react";
+import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { NewsContentBlock } from "../blocks/NewsContentBlock";
@@ -58,7 +58,7 @@ interface FormProps {
     id?: string;
 }
 
-export function NewsForm({ id }: FormProps): React.ReactElement {
+export function NewsForm({ id }: FormProps) {
     const stackApi = useStackApi();
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
@@ -71,7 +71,7 @@ export function NewsForm({ id }: FormProps): React.ReactElement {
         id ? { variables: { id } } : { skip: true },
     );
 
-    const initialValues = React.useMemo<Partial<FormValues>>(
+    const initialValues = useMemo<Partial<FormValues>>(
         () =>
             data?.news
                 ? {
