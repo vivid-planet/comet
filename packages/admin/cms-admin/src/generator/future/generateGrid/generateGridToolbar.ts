@@ -10,6 +10,7 @@ type Options = {
     allowAdding: boolean;
     instanceGqlType: string;
     gqlType: string;
+    newEntryText: string | undefined;
 };
 
 export const generateGridToolbar = ({
@@ -21,6 +22,7 @@ export const generateGridToolbar = ({
     allowAdding,
     instanceGqlType,
     gqlType,
+    newEntryText,
 }: Options) => {
     const showMoreActionsMenu = excelExport;
 
@@ -31,14 +33,7 @@ export const generateGridToolbar = ({
                 ${hasFilter ? filterItem : ""}
                 <ToolbarFillSpace />
                 ${showMoreActionsMenu ? renderMoreActionsMenu(excelExport) : ""}
-              ${
-                  allowAdding
-                      ? renderToolbarActions(
-                            forwardToolbarAction,
-                            getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`),
-                        )
-                      : ""
-              }
+              ${allowAdding ? renderToolbarActions(forwardToolbarAction, instanceGqlType, gqlType, newEntryText) : ""}
             </DataGridToolbar>
         );
     }`.replace(/^\s+\n/gm, "");
@@ -100,9 +95,21 @@ const renderMoreActionsMenu = (excelExport: boolean | undefined) => {
     />`;
 };
 
-const renderToolbarActions = (forwardToolbarAction: boolean | undefined, addItemText: string) => {
+const renderToolbarActions = (
+    forwardToolbarAction: boolean | undefined,
+    instanceGqlType: string,
+    gqlType: string,
+    newEntryText: string | undefined,
+) => {
     if (forwardToolbarAction) {
         return `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`;
+    }
+
+    let addItemText = getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`);
+
+    if (newEntryText) {
+        // This requires a different message-id to prevent other grids with this type but no custom text from having the same id
+        addItemText = getFormattedMessageNode(`${instanceGqlType}.newEntry`, newEntryText);
     }
 
     return `<ToolbarActions>

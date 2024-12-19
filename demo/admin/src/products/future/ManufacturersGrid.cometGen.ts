@@ -6,6 +6,7 @@ export const ManufacturersGrid: GridConfig<GQLManufacturer> = {
     gqlType: "Manufacturer",
     fragmentName: "ManufacturersGridFuture", // configurable as it must be unique across project
     queryParamsPrefix: "manufacturers",
+    newEntryText: "Add Manufacturer",
     columns: [
         { type: "text", name: "id", headerName: "ID" },
         { type: "text", name: "name", headerName: "Name" },
