@@ -1,6 +1,6 @@
-import { createComponentSlot, ThemedComponentBaseProps } from "@comet/admin";
+import { createComponentSlot, ThemedComponentBaseProps, Tooltip } from "@comet/admin";
 import { MoreHorizontal } from "@comet/admin-icons";
-import { ComponentsOverrides, css, ListItemIcon as MuiListItemIcon, Menu, MenuItem, Theme, Tooltip, useThemeProps } from "@mui/material";
+import { ComponentsOverrides, css, ListItemIcon as MuiListItemIcon, Menu, MenuItem, Theme, useThemeProps } from "@mui/material";
 import { Editor } from "draft-js";
 import { MouseEvent, RefObject, useState } from "react";
 import { FormattedMessage } from "react-intl";
