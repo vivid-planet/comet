@@ -1,14 +1,14 @@
 import { createBlocksBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
-import { HeadlineBlock } from "@src/common/blocks/HeadlineBlock";
+import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 
 export const NewsContentBlock = createBlocksBlock({
     name: "NewsContentBlock",
     supportedBlocks: {
-        headline: HeadlineBlock,
-        richtext: RichTextBlock,
+        heading: HeadingBlock,
+        richText: RichTextBlock,
         image: DamImageBlock,
         textImage: TextImageBlock,
     },
