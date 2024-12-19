@@ -1,4 +1,4 @@
-import { EntityMetadata } from "@mikro-orm/core";
+import { EntityMetadata } from "@mikro-orm/postgresql";
 import * as path from "path";
 
 import { CrudSingleGeneratorOptions, hasFieldFeature } from "./crud-generator.decorator";
@@ -24,7 +24,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
             return hasFieldFeature(metadata.class, prop.name, "input") && prop.type === "RootBlockType";
         });
 
-        const serviceOut = `import { ObjectQuery } from "@mikro-orm/core";
+        const serviceOut = `import { ObjectQuery } from "@mikro-orm/postgresql";
     import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository } from "@mikro-orm/postgresql";
     import { Injectable } from "@nestjs/common";
@@ -39,7 +39,7 @@ export async function generateCrudSingle(generatorOptions: CrudSingleGeneratorOp
 
         const resolverOut = `import { InjectRepository } from "@mikro-orm/nestjs";
     import { EntityRepository, EntityManager } from "@mikro-orm/postgresql";
-    import { FindOptions } from "@mikro-orm/core";
+    import { FindOptions } from "@mikro-orm/postgresql";
     import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
     import { RequiredPermission, SortDirection, validateNotModified } from "@comet/cms-api";
     

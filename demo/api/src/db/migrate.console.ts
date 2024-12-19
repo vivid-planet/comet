@@ -1,4 +1,4 @@
-import { MikroORM } from "@mikro-orm/core";
+import { MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 

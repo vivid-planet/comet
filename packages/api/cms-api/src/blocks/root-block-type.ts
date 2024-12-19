@@ -1,4 +1,4 @@
-import { Type } from "@mikro-orm/core";
+import { Type } from "@mikro-orm/postgresql";
 import opentelemetry from "@opentelemetry/api";
 
 import { Block, BlockDataInterface, isBlockInputInterface, transformToBlockSave, TraversableTransformBlockResponse } from "./block";

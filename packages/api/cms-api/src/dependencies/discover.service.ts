@@ -1,5 +1,4 @@
-import { EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/core";
-import { EntityClass } from "@mikro-orm/core/typings";
+import { EntityClass, EntityMetadata, EntityRepository, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { TypeMetadataStorage } from "@nestjs/graphql";
 import { ObjectTypeMetadata } from "@nestjs/graphql/dist/schema-builder/metadata/object-type.metadata";

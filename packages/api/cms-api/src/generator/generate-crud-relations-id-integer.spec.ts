@@ -1,5 +1,4 @@
-import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Ref } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Ref } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -7,7 +6,7 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntityCategoryWithIntegerId extends BaseEntity<TestEntityCategoryWithIntegerId, "id"> {
+class TestEntityCategoryWithIntegerId extends BaseEntity {
     @PrimaryKey({ columnType: "int", type: "integer" })
     id: number;
 
@@ -16,7 +15,7 @@ class TestEntityCategoryWithIntegerId extends BaseEntity<TestEntityCategoryWithI
 }
 
 @Entity()
-class TestEntityCategoryWithIntId extends BaseEntity<TestEntityCategoryWithIntId, "id"> {
+class TestEntityCategoryWithIntId extends BaseEntity {
     @PrimaryKey({ columnType: "int", type: "int" })
     id: number;
 
@@ -25,7 +24,7 @@ class TestEntityCategoryWithIntId extends BaseEntity<TestEntityCategoryWithIntId
 }
 
 @Entity()
-class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
+class TestEntityProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -43,6 +42,7 @@ describe("GenerateCrudRelationsIdNumber", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
                 }),
             );
@@ -75,6 +75,7 @@ describe("GenerateCrudRelationsIdNumber", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
                 }),
             );

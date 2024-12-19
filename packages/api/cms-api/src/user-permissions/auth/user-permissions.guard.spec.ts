@@ -1,6 +1,5 @@
 import { createMock } from "@golevelup/ts-jest";
-import { BaseEntity, Entity, MikroORM, PrimaryKey } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { ExecutionContext } from "@nestjs/common";
 import { ModuleRef, Reflector } from "@nestjs/core";
 
@@ -13,7 +12,7 @@ import { CurrentUser } from "../dto/current-user";
 import { UserPermissionsGuard } from "./user-permissions.guard";
 
 @Entity()
-class TestEntity extends BaseEntity<TestEntity, "id"> {
+class TestEntity extends BaseEntity {
     @PrimaryKey()
     id: number;
 }

@@ -1,4 +1,4 @@
-import { EntityMetadata } from "@mikro-orm/core";
+import { EntityMetadata } from "@mikro-orm/postgresql";
 import { plural } from "pluralize";
 
 export function classNameToInstanceName(className: string): string {
