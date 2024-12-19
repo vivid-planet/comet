@@ -153,9 +153,10 @@ export function composeBlocks<BlockMap extends BaseBlockMap>(
                 };
             }),
         },
+        register() {
+            registerBlock(this);
+        },
     };
-
-    registerBlock(block);
 
     return block;
 }

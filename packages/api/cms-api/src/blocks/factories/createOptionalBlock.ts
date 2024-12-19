@@ -14,6 +14,7 @@ import {
     ExtractBlockInput,
     isBlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
 } from "../block";
@@ -76,5 +77,16 @@ export function createOptionalBlock<DecoratedBlock extends Block>(
         }
     }
 
-    return createBlock(BlockOptional, BlockOptionalInput, nameOrOptions);
+    const decoratedBlock = block;
+
+    return createBlock(BlockOptional, BlockOptionalInput, nameOrOptions, {
+        overwrite: (block) => {
+            block.register = function () {
+                registerBlock(decoratedBlock);
+                registerBlock(this);
+            };
+
+            return block;
+        },
+    });
 }
