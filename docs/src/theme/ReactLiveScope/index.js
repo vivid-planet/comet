@@ -46,7 +46,6 @@ if (ExecutionEnvironment.canUseDOM) {
     const cometAdminDateTimeImports = require("@comet/admin-date-time");
     const { Toolbar, ...cometAdminRteImports } = require("@comet/admin-rte");
     const cometAdminColorPickerImports = require("@comet/admin-color-picker");
-    const cometAdminReactSelectImports = require("@comet/admin-react-select");
     const cometAdminThemeImports = require("@comet/admin-theme");
     const { Card, CardContent, FormControlLabel, Grid, Chip, IconButton, Typography, Box } = require("@mui/material");
     const { Form } = require("react-final-form");
@@ -75,10 +74,6 @@ if (ExecutionEnvironment.canUseDOM) {
         {
             name: "@comet/admin-color-picker",
             imports: cometAdminColorPickerImports,
-        },
-        {
-            name: "@comet/admin-react-select",
-            imports: cometAdminReactSelectImports,
         },
         {
             name: "@comet/admin-theme",
