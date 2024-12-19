@@ -133,5 +133,120 @@ export const CombinationFieldsTestProductsGrid: GridConfig<GQLProduct> = {
                 },
             },
         },
+        {
+            type: "combination",
+            name: "nestedGroups",
+            headerName: "Nested groups",
+            primaryText: {
+                type: "formattedMessage",
+                message: 'This product is named "{title}" and is a "{type}"',
+                valueFields: {
+                    title: "title",
+                    type: "type",
+                },
+            },
+            secondaryText: {
+                type: "group",
+                fields: [
+                    {
+                        type: "number",
+                        field: "price",
+                        currency: "EUR",
+                    },
+                    {
+                        type: "text",
+                        field: "category.title",
+                    },
+                    {
+                        type: "group",
+                        fields: [
+                            {
+                                type: "number",
+                                field: "price",
+                                currency: "EUR",
+                            },
+                            {
+                                type: "text",
+                                field: "category.title",
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        {
+            type: "combination",
+            name: "twoGroups",
+            headerName: "Two groups",
+            primaryText: {
+                type: "group",
+                fields: [
+                    {
+                        type: "text",
+                        field: "category.title",
+                    },
+                    {
+                        type: "number",
+                        field: "price",
+                        currency: "EUR",
+                    },
+                ],
+            },
+            secondaryText: {
+                type: "group",
+                fields: [
+                    {
+                        type: "text",
+                        field: "category.title",
+                    },
+                    {
+                        type: "text",
+                        field: "description",
+                    },
+                ],
+            },
+        },
+        {
+            type: "combination",
+            name: "groupInFormattedMessage",
+            headerName: "Group in formatted message",
+            primaryText: {
+                type: "formattedMessage",
+                message: 'This product is named "{title}" and is a "{type}"',
+                valueFields: {
+                    title: "title",
+                    type: "type",
+                },
+            },
+            secondaryText: {
+                type: "formattedMessage",
+                message: "Price: {price} • Category: {category} • Same values again: ({nestedValues})",
+                valueFields: {
+                    price: {
+                        type: "number",
+                        field: "price",
+                        currency: "EUR",
+                    },
+                    category: {
+                        type: "text",
+                        field: "category.title",
+                    },
+                    nestedValues: {
+                        type: "group",
+                        fields: [
+                            {
+                                type: "number",
+                                field: "price",
+                                currency: "EUR",
+                            },
+                            {
+                                type: "text",
+                                field: "category.title",
+                            },
+                        ],
+                    },
+                },
+            },
+        },
     ],
 };
