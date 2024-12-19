@@ -1,5 +1,16 @@
 # @comet/admin-theme
 
+## 7.11.0
+
+### Minor Changes
+
+-   a4fcdeb51: Enable vertical resizing for `TextAreaField` and other multiline inputs
+
+### Patch Changes
+
+-   a30f0ee4d: Fix `border-color` of `InputBase` on default and hover state
+    -   @comet/admin-icons@7.11.0
+
 ## 7.10.0
 
 ### Minor Changes
