@@ -648,9 +648,6 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:*
         version: link:../packages/admin/admin-icons
-      '@comet/admin-react-select':
-        specifier: workspace:*
-        version: link:../packages/admin/admin-react-select
       '@comet/admin-rte':
         specifier: workspace:*
         version: link:../packages/admin/admin-rte
@@ -1217,70 +1214,6 @@ importers:
       ts-node:
         specifier: ^10.0.0
         version: 10.9.1(@swc/core@1.4.8(@swc/helpers@0.5.5))(@types/node@22.9.0)(typescript@4.9.4)
-      typescript:
-        specifier: ^4.0.0
-        version: 4.9.4
-
-  packages/admin/admin-react-select:
-    dependencies:
-      '@comet/admin':
-        specifier: workspace:^7.10.0
-        version: link:../admin
-      '@comet/admin-icons':
-        specifier: workspace:^7.10.0
-        version: link:../admin-icons
-    devDependencies:
-      '@babel/cli':
-        specifier: ^7.17.6
-        version: 7.20.7(@babel/core@7.26.0)
-      '@babel/core':
-        specifier: ^7.20.12
-        version: 7.26.0
-      '@comet/admin-babel-preset':
-        specifier: workspace:^7.10.0
-        version: link:../admin-babel-preset
-      '@comet/eslint-config':
-        specifier: workspace:^7.10.0
-        version: link:../../eslint-config
-      '@mui/material':
-        specifier: ^6.0.0
-        version: 6.1.2(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
-      '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
-      '@types/react-select':
-        specifier: ^3.1.2
-        version: 3.1.2
-      eslint:
-        specifier: ^8.0.0
-        version: 8.57.1
-      final-form:
-        specifier: ^4.16.1
-        version: 4.20.9
-      npm-run-all:
-        specifier: ^4.1.5
-        version: 4.1.5
-      prettier:
-        specifier: ^2.0.0
-        version: 2.8.3
-      react:
-        specifier: ^17.0
-        version: 17.0.2
-      react-dom:
-        specifier: ^17.0
-        version: 17.0.2(react@17.0.2)
-      react-final-form:
-        specifier: ^6.3.1
-        version: 6.5.9(final-form@4.20.9)(react@17.0.2)
-      react-select:
-        specifier: ^3.0.4
-        version: 3.2.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
       typescript:
         specifier: ^4.0.0
         version: 4.9.4
@@ -2339,9 +2272,6 @@ importers:
       '@comet/admin-icons':
         specifier: workspace:*
         version: link:../packages/admin/admin-icons
-      '@comet/admin-react-select':
-        specifier: workspace:*
-        version: link:../packages/admin/admin-react-select
       '@comet/admin-rte':
         specifier: workspace:*
         version: link:../packages/admin/admin-rte
@@ -2411,9 +2341,6 @@ importers:
       react-intl:
         specifier: ^6.0.0
         version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
-      react-select:
-        specifier: ^3.0.4
-        version: 3.2.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       use-debounce:
         specifier: ^6.0.0
         version: 6.0.1(react@17.0.2)
@@ -7195,9 +7122,6 @@ packages:
 
   '@types/react-router@5.1.20':
     resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
-
-  '@types/react-select@3.1.2':
-    resolution: {integrity: sha512-ygvR/2FL87R2OLObEWFootYzkvm67LRA+URYEAcBuvKk7IXmdsnIwSGm60cVXGaqkJQHozb2Cy1t94tCYb6rJA==}
 
   '@types/react-transition-group@4.4.11':
     resolution: {integrity: sha512-RM05tAniPZ5DZPzzNFP+DmrcOdD0efDUxMy3145oljWSl3x9ZV5vhme98gTxFrj2lhXvmGNnUiuDyJgY9IKkNA==}
@@ -22906,12 +22830,6 @@ snapshots:
     dependencies:
       '@types/history': 4.7.11
       '@types/react': 17.0.53
-
-  '@types/react-select@3.1.2':
-    dependencies:
-      '@types/react': 17.0.53
-      '@types/react-dom': 17.0.18
-      '@types/react-transition-group': 4.4.11
 
   '@types/react-transition-group@4.4.11':
     dependencies:
