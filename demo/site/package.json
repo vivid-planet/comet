@@ -26,6 +26,11 @@
         "@opentelemetry/auto-instrumentations-node": "^0.50.0",
         "@opentelemetry/exporter-prometheus": "^0.53.0",
         "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
+<<<<<<< HEAD
+=======
+        "@opentelemetry/instrumentation-runtime-node": "^0.11.0",
+        "@opentelemetry/sdk-metrics": "^1.26.0",
+>>>>>>> main
         "@opentelemetry/sdk-node": "^0.53.0",
         "cache-manager": "^5.5.3",
         "graphql": "^15.0.0",
@@ -35,8 +40,17 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-intl": "^6.0.0",
+<<<<<<< HEAD
         "redraft": "^0.10.0",
         "styled-components": "^6.1.8"
+=======
+        "react-is": "^17.0.2",
+        "react-select": "^5.8.0",
+        "redraft": "^0.10.2",
+        "styled-components": "^6.1.8",
+        "swiper": "^11.1.15",
+        "ts-node": "^10.0.0"
+>>>>>>> main
     },
     "devDependencies": {
         "@babel/core": "^7.0.0",

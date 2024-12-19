@@ -1,10 +1,10 @@
 import { PropsWithData, withPreview } from "@comet/cms-site";
-import { DemoTextLinkBlockData } from "@src/blocks.generated";
+import { TextLinkBlockData } from "@src/blocks.generated";
 
 import { LinkBlock } from "./LinkBlock";
 
 export const TextLinkBlock = withPreview(
-    ({ data: { link, text } }: PropsWithData<DemoTextLinkBlockData>) => {
+    ({ data: { link, text } }: PropsWithData<TextLinkBlockData>) => {
         return (
             <LinkBlock data={link}>
                 <a>{text}</a>
