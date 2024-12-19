@@ -185,6 +185,18 @@ export const createUsePage: CreateUsePage =
                 };
             };
 
+            const generateStateFromSession = async (sessionState: string): Promise<PS> => {
+                const output = JSON.parse(sessionState) as Output;
+                const pageState = {} as PS;
+                for (const [key, value] of Object.entries(rootBlocks)) {
+                    const state = await value.output2State(output[key]);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (pageState as any)[key] = state;
+                }
+
+                return { ...pageState };
+            };
+
             let hasChanges: boolean | undefined = undefined;
 
             try {
@@ -236,28 +248,41 @@ export const createUsePage: CreateUsePage =
 
             // manage sync of page state and gql-api
             useEffect(() => {
-                if (data?.page) {
-                    const page = {
-                        ...data.page,
-                        document:
-                            data.page.document && data.page.document.__typename === gqlPageType
-                                ? {
-                                      ...data.page.document,
+                const loadPageState = async () => {
+                    const sessionStoragePageState = window.sessionStorage.getItem(`pageState_${pageId}`);
 
-                                      ...Object.entries(rootBlocks).reduce(
-                                          (a, [key, value]) => ({
-                                              ...a,
-                                              [key]: value.input2State(data.page?.document?.[key]),
-                                          }),
-                                          {},
-                                      ),
-                                  }
-                                : createEmptyPageDocument(),
-                    } as unknown as PS;
-                    setPageState(page);
-                    setReferenceOutput(generateOutput(page));
-                }
-            }, [data, pageId]);
+                    if (data?.page) {
+                        const page = {
+                            ...data.page,
+                            document:
+                                data.page.document && data.page.document.__typename === gqlPageType
+                                    ? {
+                                          ...data.page.document,
+
+                                          ...Object.entries(rootBlocks).reduce(
+                                              (a, [key, value]) => ({
+                                                  ...a,
+                                                  [key]: value.input2State(data.page?.document?.[key]),
+                                              }),
+                                              {},
+                                          ),
+                                      }
+                                    : createEmptyPageDocument(),
+                        } as unknown as PS;
+
+                        if (sessionStoragePageState) {
+                            const state = await generateStateFromSession(sessionStoragePageState);
+                            setPageState(state);
+                            setReferenceOutput(generateOutput(page));
+                            window.sessionStorage.removeItem(`pageState_${pageId}`);
+                        } else if (!pageState) {
+                            setPageState(page);
+                            setReferenceOutput(generateOutput(page));
+                        }
+                    }
+                };
+                loadPageState();
+            }, [data, pageId, pageState]);
 
             const handleSavePage = useCallback(async () => {
                 // TODO show progress and error handling
@@ -324,6 +349,9 @@ export const createUsePage: CreateUsePage =
                             },
                         });
                     } catch (error) {
+                        if (hasChanges) {
+                            window.sessionStorage.setItem(`pageState_${pageId}`, JSON.stringify(generateOutput(pageState)));
+                        }
                         console.error(error);
                         setSaveError("error");
                     } finally {
@@ -337,7 +365,7 @@ export const createUsePage: CreateUsePage =
                 } else {
                     throw new Error("No page state");
                 }
-            }, [data, client, pageId, pageState, onValidationFailed, checkForSaveConflict]);
+            }, [data, client, pageId, pageState, onValidationFailed, checkForSaveConflict, hasChanges]);
 
             // allow to create an updateHandler for each block-node
             const createHandleUpdate = useCallback((key: string) => {
