@@ -1,5 +1,16 @@
 # @comet/admin
 
+## 7.11.0
+
+### Patch Changes
+
+-   1e01cca21: Prevent scrolling of `DialogTitle` and `DialogActions` in `EditDialog`
+-   a30f0ee4d: Fix `border-color` of `InputBase` on default and hover state
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [a4fcdeb51]
+    -   @comet/admin-theme@7.11.0
+    -   @comet/admin-icons@7.11.0
+
 ## 7.10.0
 
 ### Minor Changes
