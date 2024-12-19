@@ -1,5 +1,16 @@
 # @comet/admin-rte
 
+## 7.11.0
+
+### Patch Changes
+
+-   Updated dependencies [1e01cca21]
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [20f63417e]
+-   Updated dependencies [e9f547d95]
+    -   @comet/admin@7.11.0
+    -   @comet/admin-icons@7.11.0
+
 ## 7.10.0
 
 ### Patch Changes
