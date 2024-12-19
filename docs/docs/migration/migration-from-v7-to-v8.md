@@ -150,18 +150,20 @@ npx @comet/upgrade v8/remove-passport.ts
 
 :::
 
-Wrap the strategies in `...createAuthGuardProviders()`:
+Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`:
 
 ```diff title=api/src/auth/auth.module.ts
 -   createStaticCredentialsBasicStrategy({ ... }),
 -   createAuthProxyJwtStrategy({ ... }),
+-   createStaticCredentialsBasicStrategy({ ... }),
 +   ...createAuthGuardProviders(
-+       createStaticCredentialsBasicStrategy({ ... }),
-+       createAuthProxyJwtStrategy({ ... }),
++       createBasicAuthService({ ... }),
++       createJwtAuthService({ ... }),
++       createStaticUserAuthService({ ... }),
 +   ),
 ```
 
-:::note The configuration of the strategies may have changed slightly. Consulting the code completion should help to adapt.
+:::note The configuration of the AuthServices have changed slightly. Consulting the code completion should help to adapt.
 
 Replace `createAuthResolver` with the class name:
 
@@ -169,6 +171,8 @@ Replace `createAuthResolver` with the class name:
 -   useClass: createCometAuthGuard([...]),
 +   useClass: CometAuthGuard,
 ```
+
+:::note `CometAuthGuard` does not support Passport strategies anymore. Consider rewriting or wrapping into `AuthServiceInterface`. However, you still can use passport strategies in conjunction with the provided `AuthGuard` from `@nestjs/passport`.
 
 Import `JwtModule` from `@nestjs/jwt`:
 
