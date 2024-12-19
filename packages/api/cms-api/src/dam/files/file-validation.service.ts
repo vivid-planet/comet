@@ -8,7 +8,7 @@ export class FileValidationService {
     constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
 
     async validateFile(file: FileUploadInput): Promise<undefined | string> {
-        let error = await this.validateFileMetadata(file);
+        let error = this.validateFileMetadata(file);
 
         if (error === undefined) {
             error = await this.validateFileContents(file);
@@ -17,12 +17,7 @@ export class FileValidationService {
         return error;
     }
 
-    async validateFileMetadata(file: FileUploadInput): Promise<undefined | string> {
-        //maximum file size
-        if (file.size > this.config.maxFileSize * 1024 * 1024) {
-            return "File is too large";
-        }
-
+    validateFileMetadata(file: Pick<FileUploadInput, "fieldname" | "originalname" | "encoding" | "mimetype">): undefined | string {
         //mime type in an accepted mime type
         if (!this.config.acceptedMimeTypes.includes(file.mimetype)) {
             return "Unsupported mime type";
@@ -31,7 +26,7 @@ export class FileValidationService {
         //extension matched mime type
         const extension = file.originalname.split(".").pop()?.toLowerCase();
         if (extension === undefined) {
-            return `Invalid file name: Missing file extension`;
+            return "Invalid file name: Missing file extension";
         }
 
         let supportedExtensions: readonly string[] | undefined;
