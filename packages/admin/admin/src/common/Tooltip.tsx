@@ -14,9 +14,11 @@ import { cloneElement, ComponentProps, useState } from "react";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export interface TooltipProps extends MuiTooltipProps {
+    // @deprecated Triggers other than the default "hover" will be removed in the future.
     trigger?: "hover" | "focus" | "click";
     variant?: Variant;
 }
+
 type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success";
 
 export type TooltipClassKey = "root" | Variant | MuiTooltipClassKey;
