@@ -148,7 +148,7 @@ export function generateFormField({
     let startAdornment: AdornmentData = { adornmentString: "" };
     let endAdornment: AdornmentData = { adornmentString: "" };
 
-    if (config.startAdornment) {
+    if ("startAdornment" in config && config.startAdornment) {
         startAdornment = getAdornmentData({
             adornmentData: config.startAdornment,
         });
@@ -157,7 +157,7 @@ export function generateFormField({
         }
     }
 
-    if (config.endAdornment) {
+    if ("endAdornment" in config && config.endAdornment) {
         endAdornment = getAdornmentData({
             adornmentData: config.endAdornment,
         });
@@ -387,7 +387,8 @@ export function generateFormField({
             variant="horizontal"
             fullWidth
             name="${nameWithPrefix}"
-            label={${fieldLabel}}>
+            label={${fieldLabel}}
+            ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
             ${
                 config.helperText
                     ? `helperText={<FormattedMessage id=` +
@@ -395,7 +396,7 @@ export function generateFormField({
                       `defaultMessage="${config.helperText}" />}`
                     : ""
             }
-            ${validateCode}
+            ${validateCode}>
             {(props) =>
                 <FinalFormSelect ${config.readOnly ? readOnlyPropsWithLock : ""} {...props}>
                 ${values
@@ -521,6 +522,7 @@ export function generateFormField({
                 fullWidth
                 name="${nameWithPrefix}"
                 label={${fieldLabel}}
+                ${config.startAdornment ? `startAdornment={<InputAdornment position="start">${startAdornment.adornmentString}</InputAdornment>}` : ""}
                 loadOptions={async () => {
                     const { data } = await client.query<GQL${queryName}Query, GQL${queryName}QueryVariables>({
                         query: gql\`query ${queryName}${
