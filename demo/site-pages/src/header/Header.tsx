@@ -88,7 +88,7 @@ const TopLevelLinkContainer = styled.li`
 const Link = styled.a<{ $active: boolean }>`
     text-decoration: none;
     padding: 5px 10px;
-    color: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.black)};
+    color: ${({ $active, theme }) => ($active ? theme.palette.primary.main : theme.palette.text.primary)};
 
     &:hover {
         text-decoration: underline;
