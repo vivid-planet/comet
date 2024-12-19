@@ -78,8 +78,8 @@ export function MasterLayout(inProps: MasterLayoutProps) {
     useEffect(() => {
         if (!menuRef.current) return;
 
-        const resizeObserver = new ResizeObserver((entries) => {
-            for (const entry of entries) {
+        const resizeObserver = new ResizeObserver(([entry]) => {
+            if (entry) {
                 setMenuWidth(entry.contentRect.width);
             }
         });
