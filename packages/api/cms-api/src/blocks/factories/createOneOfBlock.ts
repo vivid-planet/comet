@@ -18,6 +18,7 @@ import {
     isBlockDataInterface,
     isBlockInputInterface,
     MigrateOptions,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
 } from "../block";
@@ -319,5 +320,22 @@ export function createOneOfBlock<BlockMap extends BaseBlockMap>(
         migrate = nameOrOptions.migrate;
     }
 
-    return createBlock(OneOfBlockData, OneOfBlockInput, { name, blockMeta: new Meta(OneOfBlockData), migrate });
+    return createBlock(
+        OneOfBlockData,
+        OneOfBlockInput,
+        { name, blockMeta: new Meta(OneOfBlockData), migrate },
+        {
+            overwrite: (block) => {
+                block.register = function () {
+                    for (const block of Object.values(supportedBlocks)) {
+                        block.register();
+                    }
+
+                    registerBlock(this);
+                };
+
+                return block;
+            },
+        },
+    );
 }

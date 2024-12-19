@@ -12,6 +12,7 @@ interface ChildBlockOptions {
     nullable?: boolean;
 }
 export function ChildBlock(block: Block, options?: ChildBlockOptions): PropertyDecorator {
+    block.register();
     const nullable = options?.nullable ? true : false;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

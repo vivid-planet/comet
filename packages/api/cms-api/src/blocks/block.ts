@@ -214,6 +214,10 @@ export type Block<BlockType extends BlockDataInterface = BlockDataInterface, Blo
     blockInputFactory: BlockInputFactory<BlockInputType>;
     blockMeta: BlockMetaInterface;
     blockInputMeta: BlockMetaInterface;
+    /**
+     * Register a block for the block meta
+     */
+    register: () => void;
 };
 
 const blocks: Block[] = [];
@@ -275,16 +279,20 @@ export function createBlock<BlockType extends BlockDataInterface, BlockInputType
         blockInputFactory: decorateBlockInputFactory,
         blockMeta: options.blockMeta ? options.blockMeta : new AnnotationBlockMeta(BlockData),
         blockInputMeta: options.blockInputMeta ? options.blockInputMeta : new AnnotationBlockMeta(BlockInput),
+        register() {
+            registerBlock(this);
+        },
     };
 
     const finalBlock = overwrite(block);
-    registerBlock(finalBlock);
 
     return finalBlock;
 }
 
 export function registerBlock(block: Block): void {
-    blocks.push(block);
+    if (!blocks.find((existingBlock) => existingBlock.name === block.name)) {
+        blocks.push(block);
+    }
 }
 
 export function getRegisteredBlocks(): Block[] {

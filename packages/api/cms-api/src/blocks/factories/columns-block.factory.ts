@@ -13,6 +13,7 @@ import {
     ExtractBlockInput,
     isBlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
 } from "../block";
@@ -127,6 +128,15 @@ export class ColumnsBlockFactory {
             }
         }
 
-        return createBlock(ColumnsBlockData, ColumnsBlockInput, nameOrOptions);
+        return createBlock(ColumnsBlockData, ColumnsBlockInput, nameOrOptions, {
+            overwrite: (block) => {
+                block.register = function () {
+                    registerBlock(contentBlock);
+                    registerBlock(this);
+                };
+
+                return block;
+            },
+        });
     }
 }

@@ -14,6 +14,7 @@ import {
     ExtractBlockInput,
     isBlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
 } from "../block";
@@ -151,5 +152,16 @@ export function createListBlock<B extends Block>(
         }
     }
 
-    return createBlock(ListBlockData, ListBlockInput, name);
+    const listItemBlock = block;
+
+    return createBlock(ListBlockData, ListBlockInput, name, {
+        overwrite: (block) => {
+            block.register = function () {
+                registerBlock(listItemBlock);
+                registerBlock(this);
+            };
+
+            return block;
+        },
+    });
 }

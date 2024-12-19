@@ -189,9 +189,10 @@ export function createRichTextBlock<LinkBlock extends Block>(
         blockInputFactory: decorateBlockInputFactory,
         blockMeta: new AnnotationBlockMeta(RichTextBlockData),
         blockInputMeta: new AnnotationBlockMeta(RichTextBlockInput),
+        register() {
+            registerBlock(this);
+        },
     };
-
-    registerBlock(RichTextBlock);
 
     return RichTextBlock;
 }

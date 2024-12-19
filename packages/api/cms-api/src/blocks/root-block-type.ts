@@ -12,6 +12,7 @@ export class RootBlockType extends Type<BlockDataInterface | null, TraversableTr
     constructor(block: Block) {
         super();
         this.block = block;
+        this.block.register();
     }
 
     convertToDatabaseValue(value: BlockDataInterface | null): TraversableTransformBlockResponse | null {
