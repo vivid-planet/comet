@@ -1,5 +1,4 @@
 import { withAdminRedirectMiddleware } from "./middleware/adminRedirect";
-import { withBlockPreviewMiddleware } from "./middleware/blockPreview";
 import { chain } from "./middleware/chain";
 import { withCspHeadersMiddleware } from "./middleware/cspHeaders";
 import { withDamRewriteMiddleware } from "./middleware/damRewrite";
@@ -14,7 +13,6 @@ export default chain([
     withAdminRedirectMiddleware,
     withDamRewriteMiddleware,
     withCspHeadersMiddleware, // order matters: after redirects (that don't need csp headers), before everything else that needs csp headers
-    withBlockPreviewMiddleware,
     withPredefinedPagesMiddleware,
     withDomainRewriteMiddleware, // must be last (rewrites all urls)
 ]);
@@ -23,14 +21,12 @@ export const config = {
     matcher: [
         /*
          * Match all request paths except for the ones starting with:
-         * - api (API routes)
          * - _next/static (static files)
          * - _next/image (image optimization files)
          * - favicon.ico, favicon.svg, favicon.png
          * - manifest.json
-         * - robots.txt
          */
-        "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json|robots.txt).*)",
+        "/((?!_next/static|_next/image|favicon.ico|favicon.svg|favicon.png|manifest.json).*)",
     ],
     // TODO find a better solution for this (https://nextjs.org/docs/messages/edge-dynamic-code-evaluation)
     unstable_allowDynamic: [
