@@ -146,7 +146,11 @@ export class UserPermissionsService {
             }
         }
 
-        return contentScopes.map((cs) => sortContentScopeKeysAlphabetically(cs));
+        return contentScopes
+            .map((cs) => JSON.stringify(cs))
+            .filter((value, index, self) => self.indexOf(value) === index)
+            .map((cs) => JSON.parse(cs))
+            .map((cs) => sortContentScopeKeysAlphabetically(cs));
     }
 
     normalizeContentScopes(contentScopes: ContentScope[], availableContentScopes: ContentScope[]): ContentScope[] {
