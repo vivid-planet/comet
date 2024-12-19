@@ -4,6 +4,7 @@ import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { DamScope } from "@src/dam/dto/dam-scope";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
+import { StageBlock } from "@src/documents/pages/blocks/stage.block";
 import { PageInput } from "@src/documents/pages/dto/page.input";
 import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
@@ -74,6 +75,7 @@ export class ManyImagesTestPageFixtureService {
                 userGroup: UserGroup.All,
             })),
         });
+        pageInput.stage = StageBlock.blockInputFactory({ blocks: [] });
 
         await this.entityManager.persistAndFlush(
             this.pagesRespository.create({

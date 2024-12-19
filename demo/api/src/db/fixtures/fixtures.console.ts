@@ -8,6 +8,7 @@ import { CONFIG } from "@src/config/config.module";
 import { generateSeoBlock } from "@src/db/fixtures/generators/blocks/seo.generator";
 import { Link } from "@src/documents/links/entities/link.entity";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
+import { StageBlock } from "@src/documents/pages/blocks/stage.block";
 import { PageInput } from "@src/documents/pages/dto/page.input";
 import { Page } from "@src/documents/pages/entities/page.entity";
 import { PageTreeNodeScope } from "@src/page-tree/dto/page-tree-node-scope";
@@ -35,6 +36,7 @@ const getDefaultPageInput = (): PageInput => {
     const pageInput = new PageInput();
     pageInput.seo = generateSeoBlock();
     pageInput.content = PageContentBlock.blockInputFactory({ blocks: [] });
+    pageInput.stage = StageBlock.blockInputFactory({ blocks: [] });
     return pageInput;
 };
 
