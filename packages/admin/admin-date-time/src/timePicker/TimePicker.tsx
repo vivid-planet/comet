@@ -17,14 +17,14 @@ import { getClosestDateToDate, getDateFromTimeValue, getDateRangeListByMinuteSte
 
 export type TimePickerClassKey = InputWithPopperClassKey | "startAdornment" | "timeOptionsList" | "timeOptionItem";
 
-export type SlotProps = ThemedComponentBaseProps<{
+type SlotProps = ThemedComponentBaseProps<{
     root: typeof InputWithPopper;
     startAdornment: typeof InputAdornment;
     timeOptionsList: typeof MenuList;
     timeOptionItem: typeof MenuItem;
 }>["slotProps"];
 
-export const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
+const Root = createComponentSlot(InputWithPopper)<TimePickerClassKey>({
     componentName: "TimePicker",
     slotName: "root",
 })();

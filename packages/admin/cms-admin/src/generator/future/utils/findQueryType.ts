@@ -1,6 +1,6 @@
 import { IntrospectionObjectType, IntrospectionQuery } from "graphql";
 
-export function findQueryType(queryName: string, schema: IntrospectionQuery) {
+function findQueryType(queryName: string, schema: IntrospectionQuery) {
     const queryType = schema.__schema.types.find((type) => type.name === schema.__schema.queryType.name) as IntrospectionObjectType | undefined;
     if (!queryType) throw new Error("Can't find Query type in gql schema");
     const ret = queryType.fields.find((field) => field.name === queryName);

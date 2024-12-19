@@ -16,7 +16,7 @@ const EXPECTED_YT_ID_LENGTH = 11;
 
 @ValidatorConstraint({ name: "IsValidYoutubeIdentifier" })
 @Injectable()
-export class IsValidYouTubeIdentifierConstraint implements ValidatorConstraintInterface {
+class IsValidYouTubeIdentifierConstraint implements ValidatorConstraintInterface {
     validate(value: unknown): boolean {
         if (!isString(value)) {
             return false;

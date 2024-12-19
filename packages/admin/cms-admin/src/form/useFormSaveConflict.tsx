@@ -3,7 +3,7 @@ import { MutableRefObject } from "react";
 
 import { useSaveConflict } from "../pages/useSaveConflict";
 
-export interface FormSaveConflictOptions<FormValues, InitialFormValues> {
+interface FormSaveConflictOptions<FormValues, InitialFormValues> {
     checkConflict: () => Promise<boolean>;
     formApiRef: MutableRefObject<FormApi<FormValues, InitialFormValues> | undefined>;
     loadLatestVersion: () => Promise<void>;

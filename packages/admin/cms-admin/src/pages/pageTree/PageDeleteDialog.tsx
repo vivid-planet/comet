@@ -9,7 +9,7 @@ import { GQLPageTreePageFragment } from "../pageTree/usePageTree";
 import { DeleteContentInformation, PageCount, PageVisibility, WarningIcon, WarningIconWrapper } from "./PageDeleteDialog.sc";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";
 
-export interface PageDeleteDialogProps {
+interface PageDeleteDialogProps {
     dialogOpen: boolean;
     handleCancelClick: () => void;
     handleDeleteClick: () => void;

@@ -7,7 +7,7 @@ export interface CopyFilesResponseInterface {
     mappedFiles: Array<MappedFileInterface>;
 }
 
-export interface MappedFileInterface {
+interface MappedFileInterface {
     rootFile: FileInterface;
     copy: FileInterface;
 }

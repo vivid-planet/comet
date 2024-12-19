@@ -46,10 +46,6 @@ A complete list of the admin-icons can be found here: [Storybook](https://comet-
 
 Provides a customizable rich-text-editor component to allow advanced formatting of text.
 
-#### @comet/admin-react-select
-
-Provides a set of select components for use in forms, built with react-final-form.
-
 #### @comet/admin-date-time
 
 Provides components for selecting date and time or a range or combination of date and time.

@@ -67,14 +67,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         }
         \${${instanceEntityName}FormFragment}
     \`;
-    
-    export const ${instanceEntityName}FormCheckForChangesQuery = gql\`
-        query ${entityName}FormCheckForChanges($id: ID!) {
-            ${instanceEntityName}(id: $id) {
-                updatedAt
-            }
-        }
-    \`;
+
 
     export const create${entityName}Mutation = gql\`
         mutation Create${entityName}(${hasScope ? `$scope: ${entityName}ContentScopeInput!, ` : ""}$input: ${entityName}Input!) {

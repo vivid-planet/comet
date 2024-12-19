@@ -114,7 +114,7 @@ interface Props {
     apiRef: MutableRefObject<PromptHandlerApi | undefined>;
 }
 
-export type SaveActionSuccess = boolean;
+type SaveActionSuccess = boolean;
 export type SaveAction = (() => Promise<SaveActionSuccess>) | (() => SaveActionSuccess);
 export type ResetAction = () => void;
 

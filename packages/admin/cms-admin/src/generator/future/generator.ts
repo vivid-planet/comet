@@ -113,7 +113,7 @@ export type FormConfig<T extends { __typename?: string }> = {
     fields: (FormFieldConfig<T> | FormLayoutConfig<T>)[];
 };
 
-export type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
+type TabsConfig = { type: "tabs"; tabs: { name: string; content: GeneratorConfig }[] };
 
 export type BaseColumnConfig = Pick<GridColDef, "headerName" | "width" | "minWidth" | "maxWidth" | "flex" | "pinned" | "disableExport"> & {
     headerInfoTooltip?: string;
@@ -162,7 +162,9 @@ export type GridConfig<T extends { __typename?: string }> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GeneratorConfig = FormConfig<any> | GridConfig<any> | TabsConfig;
 
-export type GeneratorReturn = { code: string; gqlDocuments: Record<string, string> };
+type GQLDocumentConfig = { document: string; export: boolean };
+export type GQLDocumentConfigMap = Record<string, GQLDocumentConfig>;
+export type GeneratorReturn = { code: string; gqlDocuments: GQLDocumentConfigMap };
 
 export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
     const schema = await loadSchema("./schema.gql", {
@@ -196,7 +198,8 @@ export async function runFutureGenerate(filePattern = "src/**/*.cometGen.ts") {
             }
             outputCode += generated.code;
             for (const queryName in generated.gqlDocuments) {
-                gqlDocumentsOutputCode += `export const ${queryName} = gql\`${generated.gqlDocuments[queryName]}\`\n`;
+                const exportStatement = generated.gqlDocuments[queryName].export ? "export " : "";
+                gqlDocumentsOutputCode += `${exportStatement} const ${queryName} = gql\`${generated.gqlDocuments[queryName].document}\`\n`;
             }
         }
 

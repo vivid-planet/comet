@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { messages } from "../messages";
 import { RouterPrompt } from "../router/Prompt";
 
-export type SaveActionSuccess = boolean;
+type SaveActionSuccess = boolean;
 export interface SaveBoundaryApi {
     save: () => Promise<SaveActionSuccess>;
     register: (id: string, props: SavableProps) => void;
@@ -23,7 +23,7 @@ export function useSaveBoundaryApi() {
     return useContext(SaveBoundaryApiContext);
 }
 
-export const SavableContext = createContext<Savable | undefined>(undefined);
+const SavableContext = createContext<Savable | undefined>(undefined);
 export function useSavable() {
     return useContext(SavableContext);
 }

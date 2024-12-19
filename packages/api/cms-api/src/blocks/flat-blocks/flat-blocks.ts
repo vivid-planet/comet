@@ -36,7 +36,7 @@ export class FlatBlockNode {
     }
 }
 
-export interface RootBlockInfo {
+interface RootBlockInfo {
     visible: boolean;
     name: string;
     rootPath: string;

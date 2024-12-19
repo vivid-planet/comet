@@ -298,3 +298,18 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + }
 + <DataGrid /* other props */ >
 ```
+
+### Remove @comet/admin-react-select
+
+```diff
+- "@comet/admin-react-select": "^7.x.x",
+```
+
+It is recommended to use the `AutocompleteField` or the `SelectField` components from `@comet/admin` instead:
+
+```diff
+- import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
+- <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
++ import { AutocompleteField } from "@comet/admin";
++ <AutocompleteField name="color" label="Color" options={options} fullWidth />;
+```
