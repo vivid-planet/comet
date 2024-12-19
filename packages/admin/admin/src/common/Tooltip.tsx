@@ -9,7 +9,7 @@ import {
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import { cloneElement, ComponentProps, useState } from "react";
+import { cloneElement, ComponentProps, useEffect, useRef, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
@@ -192,6 +192,8 @@ export const Tooltip = (inProps: TooltipProps) => {
     } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
     const theme = useTheme();
 
+    const [touchIsAllowedToClickButton, setTouchIsAllowedToClickButton] = useState(false);
+
     const [open, setOpen] = useState(false);
 
     const handleTooltipClose = () => {
@@ -228,6 +230,27 @@ export const Tooltip = (inProps: TooltipProps) => {
         },
     };
 
+    const itemRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const el = itemRef.current;
+
+        if (el) {
+            const handleTouchStart = () => {
+                if (!touchIsAllowedToClickButton) {
+                    console.log("### DISABLE ElementInteraction");
+                    el.setAttribute("disabled", "true");
+                }
+            };
+
+            el.addEventListener("touchstart", handleTouchStart);
+
+            return () => {
+                el.removeEventListener("touchstart", handleTouchStart);
+            };
+        }
+    }, [touchIsAllowedToClickButton]);
+
     return trigger === "click" ? (
         <ClickAwayListener onClickAway={handleTooltipClose}>
             <TooltipRoot
@@ -242,7 +265,30 @@ export const Tooltip = (inProps: TooltipProps) => {
             </TooltipRoot>
         </ClickAwayListener>
     ) : (
-        <TooltipRoot disableHoverListener={trigger === "focus"} {...commonTooltipProps}>
+        <TooltipRoot
+            disableHoverListener={trigger === "focus"}
+            ref={itemRef}
+            enterTouchDelay={0}
+            leaveTouchDelay={5000}
+            disableInteractive
+            onOpen={(event) => {
+                const eventTarget = event.target;
+
+                setTimeout(() => {
+                    console.log("### SET TOUCH IS NOW ALLOWED AGAIN");
+                    setTouchIsAllowedToClickButton(true);
+                    eventTarget.removeAttribute("disabled");
+                }, 200);
+
+                console.log("### onOpen", { event, el: event.target });
+            }}
+            onClose={(event) => {
+                console.log("### onClose", { event, el: event.target });
+                setTouchIsAllowedToClickButton(false);
+            }}
+            // leaveDelay={0}
+            {...commonTooltipProps}
+        >
             {children}
         </TooltipRoot>
     );
