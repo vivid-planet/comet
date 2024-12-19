@@ -242,7 +242,7 @@ export const Tooltip = (inProps: TooltipProps) => {
             </TooltipRoot>
         </ClickAwayListener>
     ) : (
-        <TooltipRoot disableHoverListener={trigger === "focus"} {...commonTooltipProps}>
+        <TooltipRoot disableHoverListener={trigger === "focus"} enterTouchDelay={0} {...commonTooltipProps}>
             {children}
         </TooltipRoot>
     );
