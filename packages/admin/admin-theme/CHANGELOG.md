@@ -1,5 +1,11 @@
 # @comet/admin-theme
 
+## 6.17.17
+
+### Patch Changes
+
+-   @comet/admin-icons@6.17.17
+
 ## 6.17.16
 
 ### Patch Changes
