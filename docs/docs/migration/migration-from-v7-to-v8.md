@@ -292,17 +292,18 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + <DataGrid /* other props */ >
 ```
 
-## Remove react barrel imports
+## ESLint
 
-Because the new JSX transform will automatically import the necessary `react/jsx-runtime` functions, React will no longer need to be in scope when you use JSX.
+### Remove React barrel imports
 
-### Steps to run codemod and fix ESLint issues
+Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
+Use individual named imports instead, e.g, `import { useState } from "react"`.
 
-It's recommended to do this separately in `admin/` and `site/` directories.
+It is recommended to perform the following steps separately in the `admin/` and `site/` directories:
 
-1. Replace `import * as React from "react";` with `import React from "react";` in your codebase. (This step is optional but improves the results of the codemod.)
+1. Replace `import * as React from "react";` with `import React from "react";` in your codebase (This step is optional but improves the results of the codemod).
 
-2. Run the codemod to update React imports: (option `--force` is required to because of changes of step one above)
+2. Run the codemod to update React imports (option `--force` is required to because of changes of step one above):
 
     ```sh
     npx react-codemod update-react-imports --force
@@ -314,4 +315,4 @@ It's recommended to do this separately in `admin/` and `site/` directories.
     ```
 
 These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
-The codemod does not handle all cases, so manual adjustments may be necessary.
+The codemod does not handle all cases, so manual adjustments may still be necessary.
