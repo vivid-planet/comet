@@ -2,7 +2,7 @@
 "@comet/eslint-config": major
 ---
 
-Add eslint rule to restrict barrel react imports
+Enable rule to restrict barrel React imports
 
-Because the new JSX transform will automatically import the necessary `react/jsx-runtime` functions, React will no
-longer need to be in scope when you use JSX.
+Importing `React` is no longer necessary due the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
+Use individual named imports instead, e.g, `import { useState } from "react"`.
