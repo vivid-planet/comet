@@ -73,14 +73,14 @@ const TopLevelLinkContainer = styled.li`
 const Link = styled(PageLink)`
     text-decoration: none;
     padding: 5px 10px;
-    color: ${({ theme }) => theme.colors.black};
+    color: ${({ theme }) => theme.palette.text.primary};
 
     &:hover {
         text-decoration: underline;
     }
 
     &.active {
-        color: ${({ theme }) => theme.colors.primary};
+        color: ${({ theme }) => theme.palette.primary.main};
     }
 `;
 
