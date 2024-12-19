@@ -1,7 +1,7 @@
 import { readFile } from "fs/promises";
 
 import { FileUploadInput } from "./dto/file-upload.input";
-import { getValidExtensionsForMimetype, svgContainsJavaScript } from "./files.utils";
+import { getValidExtensionsForMimetype, isValidSvg } from "./files.utils";
 
 export class FileValidationService {
     constructor(public config: { maxFileSize: number; acceptedMimeTypes: string[] }) {}
@@ -45,8 +45,8 @@ export class FileValidationService {
         if (file.mimetype === "image/svg+xml") {
             const fileContent = await readFile(file.path, { encoding: "utf-8" });
 
-            if (svgContainsJavaScript(fileContent)) {
-                return "SVG must not contain JavaScript";
+            if (!isValidSvg(fileContent)) {
+                return "SVG contains forbidden content (e.g., JavaScript, security-relevant tags or attributes)";
             }
         }
 
