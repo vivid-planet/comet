@@ -1,6 +1,6 @@
 import { BlocksBlockFixturesGeneratorMap, ExtractBlockInput, ExtractBlockInputFactoryProps, FileInterface } from "@comet/cms-api";
 import { Config } from "@src/config/config";
-import { PageContentBlock } from "@src/pages/blocks/page-content.block";
+import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import faker from "faker";
 
 import { generateImageBlock } from "./image.generator";
@@ -13,7 +13,7 @@ export const generateBlocksBlock = (
     config: Config,
     blockCfg: Partial<BlocksBlockFixturesGeneratorMap<typeof PageContentBlock>> = {
         space: generateSpaceBlock,
-        richtext: generateRichtextBlock,
+        richText: generateRichtextBlock,
         image: () => generateImageBlock(imageFiles),
         textImage: () => generateTextImageBlock(imageFiles, config),
     },

@@ -36,6 +36,7 @@ export const productFormFragment = gql`
         datasheets {
             ...FinalFormFileUpload
         }
+        lastCheckedAt
     }
     ${finalFormFileUploadFragment}
     ${finalFormFileUploadDownloadableFragment}

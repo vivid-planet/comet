@@ -130,9 +130,10 @@ export function createEditPageNode({
         });
 
         let parentPath: string | null = null;
+        const hasParentNode = parentNodeData?.pageTreeNode?.path != undefined;
 
         if (parentNodeData?.pageTreeNode) {
-            parentPath = parentNodeData.pageTreeNode.slug === "home" ? "/home" : parentNodeData.pageTreeNode.path;
+            parentPath = parentNodeData.pageTreeNode.slug === "home" && hasParentNode ? "/home" : parentNodeData.pageTreeNode.path;
         }
 
         const options = Object.keys(documentTypes).map((type) => ({
@@ -150,6 +151,7 @@ export function createEditPageNode({
                     // The unchanged slug is expected to be available
                     return "Available";
                 }
+
                 const { data } = await apollo.query<GQLIsPathAvailableQuery, GQLIsPathAvailableQueryVariables>({
                     query: isPathAvailableQuery,
                     variables: {
@@ -338,7 +340,7 @@ export function createEditPageNode({
                                                     variant="horizontal"
                                                 >
                                                     <Typography>
-                                                        {values.slug === "home"
+                                                        {values.slug === "home" && parentPath === null
                                                             ? "/"
                                                             : parentPath === null
                                                             ? `/${values.slug}`
