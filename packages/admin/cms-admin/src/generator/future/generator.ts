@@ -50,7 +50,7 @@ export type FormFieldConfig<T> = (
       }
     | { type: "boolean" }
     | { type: "date" }
-    // TODO | { type: "dateTime"; }
+    | { type: "dateTime" } // TODO add InputBaseFieldConfig once merged (!2645)
     | {
           type: "staticSelect";
           values?: Array<{ value: string; label: string } | string>;
