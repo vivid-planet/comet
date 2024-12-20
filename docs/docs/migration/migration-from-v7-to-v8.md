@@ -128,6 +128,8 @@ The class-validator peer dependency has been bumped to v0.14.0:
 npx @comet/upgrade v8/update-class-validator.ts
 ```
 
+:::
+
 ### Remove passport
 
 Remove all passport-dependencies and add @nestjs/jwt
@@ -163,7 +165,9 @@ Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`
 +   ),
 ```
 
-:::note The configuration of the AuthServices have changed slightly. Consulting the code completion should help to adapt.
+::: note Configuration changes
+The configuration of the AuthServices have changed slightly compared to the strategies, however they remain similar. Consulting the code completion should help to adapt.
+:::
 
 Replace `createAuthResolver` with the class name:
 
@@ -172,7 +176,9 @@ Replace `createAuthResolver` with the class name:
 +   useClass: CometAuthGuard,
 ```
 
-:::note `CometAuthGuard` does not support Passport strategies anymore. Consider rewriting or wrapping into `AuthServiceInterface`. However, you still can use passport strategies in conjunction with the provided `AuthGuard` from `@nestjs/passport`.
+:::note Passport not supported anymore
+`CometAuthGuard` does not support Passport strategies anymore. Consider rewriting or wrapping into `AuthServiceInterface`. However, you still can use passport strategies in conjunction with the provided `AuthGuard` from `@nestjs/passport`.
+:::
 
 Import `JwtModule` from `@nestjs/jwt`:
 
