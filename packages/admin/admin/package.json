@@ -64,7 +64,7 @@
         "@types/final-form-set-field-data": "^1.0.3",
         "@types/history": "^4.0.0",
         "@types/jest": "^29.5.0",
-        "@types/lodash.debounce": "^4.0.6",
+        "@types/lodash.debounce": "^4.0.9",
         "@types/lodash.isequal": "^4.5.5",
         "@types/node": "^22.0.0",
         "@types/react": "^17.0.0",
