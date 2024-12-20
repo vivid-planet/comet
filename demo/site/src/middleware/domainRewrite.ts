@@ -5,6 +5,12 @@ import { CustomMiddleware } from "./chain";
 
 export function withDomainRewriteMiddleware(middleware: CustomMiddleware) {
     return async (request: NextRequest) => {
+        // These paths don't require a rewrite
+        const pathname = request.nextUrl.pathname;
+        if (pathname.startsWith("/block-preview/") || pathname === "/robots.txt" || pathname.startsWith("/api/")) {
+            return NextResponse.next();
+        }
+
         const headers = request.headers;
         const host = getHostByHeaders(headers);
         const siteConfig = await getSiteConfigForHost(host);
