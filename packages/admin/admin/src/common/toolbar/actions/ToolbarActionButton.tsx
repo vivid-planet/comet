@@ -7,7 +7,7 @@ import { useWindowSize } from "../../../helpers/useWindowSize";
 
 export type ToolbarActionButtonClassKey = "root" | "tooltip" | "button" | "iconButton" | "text" | "outlined" | "contained";
 
-type ToolbarActionButtonProps = ButtonProps &
+export type ToolbarActionButtonProps = ButtonProps &
     ThemedComponentBaseProps<{
         tooltip: typeof Tooltip;
         iconButton: typeof IconButton;
