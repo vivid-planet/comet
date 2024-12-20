@@ -1786,7 +1786,7 @@ importers:
         specifier: 3.645.0
         version: 3.645.0
       '@azure-rest/ai-translation-text':
-        specifier: ^1.0.0-beta.1
+        specifier: ^1.0.0
         version: 1.0.0
       '@azure/openai':
         specifier: 1.0.0-beta.11
