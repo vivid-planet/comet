@@ -1,7 +1,7 @@
-import { FileWithCustomMetaData } from "@comet/cms-admin";
+import { FileWithDamUploadMetadata } from "@comet/cms-admin";
 
 export interface PicsumImage {
-    file: FileWithCustomMetaData;
+    file: FileWithDamUploadMetadata;
     url: string;
 }
 
@@ -37,7 +37,7 @@ export async function getRandomPicsumImage(): Promise<PicsumImage> {
         }
 
         const fileName = extractFileNameFromUrl(image.origin);
-        const acceptedFile: FileWithCustomMetaData = new File([image.blob], fileName, { type: mimeType });
+        const acceptedFile: FileWithDamUploadMetadata = new File([image.blob], fileName, { type: mimeType });
         acceptedFile.importSource = {
             importSourceId: image.origin,
             importSourceType: "picsum",

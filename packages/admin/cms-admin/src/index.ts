@@ -56,7 +56,7 @@ export { useDamAcceptedMimeTypes } from "./dam/config/useDamAcceptedMimeTypes";
 export { useDamConfig } from "./dam/config/useDamConfig";
 export { useCurrentDamFolder } from "./dam/CurrentDamFolderProvider";
 export { DamPage } from "./dam/DamPage";
-export type { FileWithCustomMetaData } from "./dam/DataGrid/fileUpload/useDamFileUpload";
+export type { FileWithDamUploadMetadata } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { useDamFileUpload } from "./dam/DataGrid/fileUpload/useDamFileUpload";
 export { createDamFileDependency } from "./dam/dependencies/createDamFileDependency";
 export { DashboardHeader, DashboardHeaderProps } from "./dashboard/DashboardHeader";

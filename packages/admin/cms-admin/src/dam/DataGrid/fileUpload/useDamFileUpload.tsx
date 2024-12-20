@@ -31,7 +31,7 @@ import {
     GQLDamFolderForFolderUploadMutationVariables,
 } from "./useDamFileUpload.gql.generated";
 
-export interface FileWithCustomMetaData extends File {
+export interface FileWithDamUploadMetadata extends File {
     path?: string;
     license?: GQLLicenseInput;
     title?: string;
@@ -39,7 +39,7 @@ export interface FileWithCustomMetaData extends File {
     importSource?: ImportSource;
 }
 
-export interface FileWithFolderPath extends FileWithCustomMetaData {
+export interface FileWithFolderPath extends FileWithDamUploadMetadata {
     folderPath?: string;
 }
 
@@ -48,7 +48,7 @@ interface UploadDamFileOptions {
 }
 
 interface Files {
-    acceptedFiles: FileWithCustomMetaData[];
+    acceptedFiles: FileWithDamUploadMetadata[];
     fileRejections: FileRejection[];
 }
 
@@ -87,7 +87,7 @@ interface RejectedFile {
     file: File;
 }
 
-const addFolderPathToFiles = async (acceptedFiles: FileWithCustomMetaData[]): Promise<FileWithFolderPath[]> => {
+const addFolderPathToFiles = async (acceptedFiles: FileWithDamUploadMetadata[]): Promise<FileWithFolderPath[]> => {
     const newFiles = [];
 
     for (const file of acceptedFiles) {
