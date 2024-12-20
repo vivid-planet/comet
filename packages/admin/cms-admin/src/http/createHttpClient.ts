@@ -8,7 +8,11 @@ export function createHttpClient(apiUrl: string): AxiosInstance {
         "x-preview-dam-urls": "1",
     };
     const requestInterceptor = async (config: AxiosRequestConfig) => {
+        if (config.headers == null) {
+            config.headers = {};
+        }
         config.headers["x-include-invisible-content"] = ["Pages:Unpublished", "Pages:Archived", "Blocks:Invisible"];
+
         return Promise.resolve(config);
     };
 
