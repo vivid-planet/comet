@@ -22,7 +22,6 @@ export const Content = createComponentSlot("div")<AppHeaderButtonClassKey>({
         align-items: center;
         justify-content: center;
         height: 100%;
-        min-width: var(--header-height);
         box-sizing: border-box;
         padding-left: ${theme.spacing(2)};
         padding-right: ${theme.spacing(2)};

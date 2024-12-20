@@ -170,7 +170,7 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
 
                                 [theme.breakpoints.up("md")]: {
                                     "&:not(:first-of-type)": {
-                                        marginLeft: `${theme.spacing(2)}`,
+                                        marginLeft: theme.spacing(2),
                                     },
                                 },
                             }),
