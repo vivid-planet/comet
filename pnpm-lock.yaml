@@ -1789,8 +1789,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@azure/openai':
-        specifier: 1.0.0-beta.11
-        version: 1.0.0-beta.11
+        specifier: 1.0.0-beta.13
+        version: 1.0.0-beta.13
       '@azure/storage-blob':
         specifier: ^12.23.0
         version: 12.24.0
@@ -2936,8 +2936,8 @@ packages:
     resolution: {integrity: sha512-aK4s3Xxjrx3daZr3VylxejK3vG5ExXck5WOHDJ8in/k9AqlfIyFMMT1uG7u8mNjX+QRILTIn0/Xgschfh/dQ9g==}
     engines: {node: '>=12.0.0'}
 
-  '@azure/openai@1.0.0-beta.11':
-    resolution: {integrity: sha512-OXS27xkG1abiGf5VZUKnkJKr1VCo8+6EUrTGW5aSVjc5COqX8jAUqVAOZsQVCHBdtWYSBULlZkc0ncKMTRQAiQ==}
+  '@azure/openai@1.0.0-beta.13':
+    resolution: {integrity: sha512-oHE5ScnPTXALmyEBgqokZlYVT7F76EfrKjMWF+YcFJdUxk9Adhvht2iL5v+QpmlAIMdkih1q8DkTs/tApDjBpw==}
     engines: {node: '>=18.0.0'}
 
   '@azure/storage-blob@12.24.0':
@@ -16808,7 +16808,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@azure/openai@1.0.0-beta.11':
+  '@azure/openai@1.0.0-beta.13':
     dependencies:
       '@azure-rest/core-client': 1.4.0
       '@azure/core-auth': 1.4.0
