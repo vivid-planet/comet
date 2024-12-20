@@ -63,7 +63,7 @@
         "@storybook/theming": "^8.4.7",
         "@types/draft-js": "^0.11.10",
         "@types/faker": "^5.5.8",
-        "@types/history": "^4.0.0",
+        "@types/history": "^4.7.11",
         "@types/qs": "^6.9.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",

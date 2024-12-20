@@ -882,7 +882,7 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       '@types/history':
-        specifier: ^4.0.0
+        specifier: ^4.7.11
         version: 4.7.11
       '@types/jest':
         specifier: ^29.5.0
@@ -2418,7 +2418,7 @@ importers:
         specifier: ^5.5.8
         version: 5.5.9
       '@types/history':
-        specifier: ^4.0.0
+        specifier: ^4.7.11
         version: 4.7.11
       '@types/qs':
         specifier: ^6.9.0
