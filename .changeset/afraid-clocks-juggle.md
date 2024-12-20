@@ -2,4 +2,4 @@
 "@comet/cms-api": minor
 ---
 
-Pass allowed permissions to getPermissionsForUser
+Pass available permissions to `AccessControlService.getPermissionsForUser`
