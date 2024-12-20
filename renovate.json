@@ -63,8 +63,8 @@
             "matchPackageNames": ["/^open-telemetry/*/"]
         },
         {
-            "groupName": "testing-library",
-            "matchPackageNames": ["/^@testing-library/*/"]
+            "groupName": "lodash",
+            "matchPackageNames": ["/^lodash.*/", "/^@types/lodash.*/"]
         },
         {
             "matchUpdateTypes": ["major"],
