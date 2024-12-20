@@ -180,7 +180,6 @@ export function ProductVariantsGrid({ product }: Props) {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

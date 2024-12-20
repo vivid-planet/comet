@@ -380,7 +380,6 @@ export function ProductsGrid({ toolbarAction, rowAction, actionsColumnWidth = 52
     return (
         <DataGridPro
             {...dataGridProps}
-            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

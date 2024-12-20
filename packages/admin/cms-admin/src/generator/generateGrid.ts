@@ -421,12 +421,11 @@ export async function writeCrudGrid(
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
         if (error) throw error;
         const rows = data?.${gridQuery}.nodes ?? [];
-    
+
         return (
             <MainContent fullHeight>
                 <DataGridPro
                     {...dataGridProps}
-                    disableRowSelectionOnClick
                     rows={rows}
                     rowCount={rowCount}
                     columns={columns}
