@@ -16,6 +16,8 @@ It automatically installs the new versions of all `@comet` libraries, runs an ES
 -   Run MUI codemods
 -   Upgrade MUI X packages to v6
 -   Upgrade NestJS packages to v10
+-   Remove passport-dependencies (we don't use passport anymore)
+-   Add @nestjs/jwt dependencies
 
 </details>
 
@@ -127,6 +129,63 @@ npx @comet/upgrade v8/update-class-validator.ts
 ```
 
 :::
+
+### Remove passport
+
+Remove all passport-dependencies and add @nestjs/jwt
+
+```diff title=api/package.json
+{
+    "dependencies": {
+-       "@nestjs/passport": "^9.0.0",
+-       ...other passport dependencies
++       "@nestjs/jwt": "^10.2.0",
+    }
+}
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/remove-passport.ts
+```
+
+:::
+
+Rename the `strategy`-factories and wrap them in `...createAuthGuardProviders()`:
+
+```diff title=api/src/auth/auth.module.ts
+-   createStaticCredentialsBasicStrategy({ ... }),
+-   createAuthProxyJwtStrategy({ ... }),
+-   createStaticCredentialsBasicStrategy({ ... }),
++   ...createAuthGuardProviders(
++       createBasicAuthService({ ... }),
++       createJwtAuthService({ ... }),
++       createStaticUserAuthService({ ... }),
++   ),
+```
+
+::: note Configuration changes
+The configuration of the AuthServices have changed slightly compared to the strategies, however they remain similar. Consulting the code completion should help to adapt.
+:::
+
+Replace `createAuthResolver` with the class name:
+
+```diff title=api/src/auth/auth.module.ts
+-   useClass: createCometAuthGuard([...]),
++   useClass: CometAuthGuard,
+```
+
+:::note Passport not supported anymore
+`CometAuthGuard` does not support Passport strategies anymore. Consider rewriting or wrapping into `AuthServiceInterface`. However, you still can use passport strategies in conjunction with the provided `AuthGuard` from `@nestjs/passport`.
+:::
+
+Import `JwtModule` from `@nestjs/jwt`:
+
+```diff title=api/src/auth/auth.module.ts
+    exports: [UserService, AccessControlService],
++   imports: [JwtModule],
+```
 
 ## Admin
 
