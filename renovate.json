@@ -72,6 +72,7 @@
         }
     ],
     "rangeStrategy": "bump",
+    "lockFileMaintenance": { "enabled": true },
     "labels": ["dependencies"],
     "baseBranches": ["next"]
 }
