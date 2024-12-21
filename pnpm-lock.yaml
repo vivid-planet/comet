@@ -220,7 +220,7 @@ importers:
         specifier: ^2.0.0
         version: 2.1.0
       dotenv-cli:
-        specifier: ^4.0.0
+        specifier: ^4.1.1
         version: 4.1.1
       eslint:
         specifier: ^8.0.0
@@ -23959,7 +23959,7 @@ snapshots:
     dependencies:
       chalk: 2.4.2
       magic-string: 0.25.9
-      minimist: 1.2.7
+      minimist: 1.2.8
       os-homedir: 1.0.2
       regexpu-core: 4.8.0
       vlq: 1.0.1
@@ -25392,7 +25392,7 @@ snapshots:
       cross-spawn: 7.0.3
       dotenv: 8.6.0
       dotenv-expand: 5.1.0
-      minimist: 1.2.7
+      minimist: 1.2.8
 
   dotenv-cli@7.4.2:
     dependencies:
@@ -28264,7 +28264,7 @@ snapshots:
 
   json5@1.0.2:
     dependencies:
-      minimist: 1.2.7
+      minimist: 1.2.8
 
   json5@2.2.3: {}
 
@@ -29344,7 +29344,7 @@ snapshots:
 
   mkdirp@0.5.6:
     dependencies:
-      minimist: 1.2.7
+      minimist: 1.2.8
 
   mkdirp@1.0.4: {}
 
