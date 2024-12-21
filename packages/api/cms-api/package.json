@@ -100,7 +100,7 @@
         "@types/jest": "^29.5.0",
         "@types/jsonwebtoken": "^8.5.9",
         "@types/lodash.isequal": "^4.0.0",
-        "@types/mime": "^2.0.0",
+        "@types/mime": "^2.0.3",
         "@types/mime-db": "^1.0.0",
         "@types/multer": "^1.4.12",
         "@types/node": "^22.0.0",
