@@ -30,8 +30,8 @@ importers:
         specifier: ^8.15.4
         version: 8.16.0
       dotenv-cli:
-        specifier: ^7.0.0
-        version: 7.4.2
+        specifier: ^7.4.4
+        version: 7.4.4
       husky:
         specifier: ^7.0.4
         version: 7.0.4
@@ -401,8 +401,8 @@ importers:
         specifier: ^8.0.0
         version: 8.3.4
       dotenv-cli:
-        specifier: ^7.0.0
-        version: 7.4.2
+        specifier: ^7.4.4
+        version: 7.4.4
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
@@ -8594,6 +8594,10 @@ packages:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
 
+  cross-spawn@7.0.6:
+    resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
+    engines: {node: '>= 8'}
+
   crypto-random-string@2.0.0:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
     engines: {node: '>=8'}
@@ -9253,8 +9257,8 @@ packages:
     resolution: {integrity: sha512-XvKv1pa+UBrsr3CtLGBsR6NdsoS7znqaHUf4Knj0eZO+gOI/hjj9KgWDP+KjpfEbj6wAba1UpbhaP9VezNkWhg==}
     hasBin: true
 
-  dotenv-cli@7.4.2:
-    resolution: {integrity: sha512-SbUj8l61zIbzyhIbg0FwPJq6+wjbzdn9oEtozQpZ6kW2ihCcapKVZj49oCT3oPM+mgQm+itgvUQcG5szxVrZTA==}
+  dotenv-cli@7.4.4:
+    resolution: {integrity: sha512-XkBYCG0tPIes+YZr4SpfFv76SQrV/LeCE8CI7JSEMi3VR9MvTihCGTOtbIexD6i2mXF+6px7trb1imVCXSNMDw==}
     hasBin: true
 
   dotenv-expand@10.0.0:
@@ -23959,7 +23963,7 @@ snapshots:
     dependencies:
       chalk: 2.4.2
       magic-string: 0.25.9
-      minimist: 1.2.7
+      minimist: 1.2.8
       os-homedir: 1.0.2
       regexpu-core: 4.8.0
       vlq: 1.0.1
@@ -24632,6 +24636,12 @@ snapshots:
       which: 1.3.1
 
   cross-spawn@7.0.3:
+    dependencies:
+      path-key: 3.1.1
+      shebang-command: 2.0.0
+      which: 2.0.2
+
+  cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
       shebang-command: 2.0.0
@@ -25394,12 +25404,12 @@ snapshots:
       dotenv-expand: 5.1.0
       minimist: 1.2.7
 
-  dotenv-cli@7.4.2:
+  dotenv-cli@7.4.4:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       dotenv: 16.4.5
       dotenv-expand: 10.0.0
-      minimist: 1.2.7
+      minimist: 1.2.8
 
   dotenv-expand@10.0.0: {}
 
@@ -29344,7 +29354,7 @@ snapshots:
 
   mkdirp@0.5.6:
     dependencies:
-      minimist: 1.2.7
+      minimist: 1.2.8
 
   mkdirp@1.0.4: {}
 
