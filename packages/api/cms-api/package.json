@@ -102,7 +102,7 @@
         "@types/lodash.isequal": "^4.0.0",
         "@types/mime": "^2.0.0",
         "@types/mime-db": "^1.0.0",
-        "@types/multer": "^1.4.4",
+        "@types/multer": "^1.4.12",
         "@types/node": "^22.0.0",
         "@types/node-fetch": "^2.6.2",
         "@types/passport-http": "^0.3.9",
