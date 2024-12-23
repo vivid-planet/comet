@@ -25,7 +25,6 @@ export const Content = createComponentSlot("div")<AppHeaderButtonClassKey>({
         box-sizing: border-box;
         padding-left: ${theme.spacing(2)};
         padding-right: ${theme.spacing(2)};
-        min-width: auto;
 
         ${theme.breakpoints.up("md")} {
             padding-left: ${theme.spacing(4)};
