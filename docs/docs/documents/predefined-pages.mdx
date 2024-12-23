@@ -48,7 +48,7 @@ The following files should be copied:
 
 #### Creation of the migration
 
-Execute the command `npm --prefix api run mikro-orm:migration:generate` to create a migration for the new entity.
+Execute the command `npx --prefix api mikro-orm migration:create` to create a migration for the new entity.
 Ensure the database is running (`npx dev-pm start docker`).
 The created migration should look like this:
 
