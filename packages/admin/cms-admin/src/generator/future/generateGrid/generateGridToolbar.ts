@@ -11,6 +11,7 @@ type Options = {
     instanceGqlType: string;
     gqlType: string;
     newEntryText: string | undefined;
+    fragmentName: string;
 };
 
 export const generateGridToolbar = ({
@@ -23,6 +24,7 @@ export const generateGridToolbar = ({
     instanceGqlType,
     gqlType,
     newEntryText,
+    fragmentName,
 }: Options) => {
     const showMoreActionsMenu = excelExport;
 
@@ -33,7 +35,7 @@ export const generateGridToolbar = ({
                 ${hasFilter ? filterItem : ""}
                 <ToolbarFillSpace />
                 ${showMoreActionsMenu ? renderMoreActionsMenu(excelExport) : ""}
-              ${allowAdding ? renderToolbarActions(forwardToolbarAction, instanceGqlType, gqlType, newEntryText) : ""}
+              ${allowAdding ? renderToolbarActions(forwardToolbarAction, instanceGqlType, gqlType, newEntryText, fragmentName) : ""}
             </DataGridToolbar>
         );
     }`.replace(/^\s+\n/gm, "");
@@ -100,21 +102,15 @@ const renderToolbarActions = (
     instanceGqlType: string,
     gqlType: string,
     newEntryText: string | undefined,
+    fragmentName: string,
 ) => {
     if (forwardToolbarAction) {
         return `{toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}`;
     }
 
-    let addItemText = getFormattedMessageNode(`${instanceGqlType}.new${gqlType}`, `New ${camelCaseToHumanReadable(gqlType)}`);
-
-    if (newEntryText) {
-        // This requires a different message-id to prevent other grids with this type but no custom text from having the same id
-        addItemText = getFormattedMessageNode(`${instanceGqlType}.newEntry`, newEntryText);
-    }
-
     return `<ToolbarActions>
         <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-            ${addItemText}
+            ${getFormattedMessageNode(`${instanceGqlType}.new${fragmentName}Entry`, newEntryText ?? `New ${camelCaseToHumanReadable(gqlType)}`)}
         </Button>
     </ToolbarActions>`;
 };
