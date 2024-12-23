@@ -16,6 +16,7 @@ import {
     ExtractBlockInputFactoryProps,
     isBlockDataInterface,
     isBlockInputInterface,
+    registerBlock,
     SimpleBlockInputInterface,
     TraversableTransformBlockResponse,
 } from "../block";
@@ -223,7 +224,19 @@ export function createBlocksBlock<BlockMap extends BaseBlockMap>(
         }
     }
 
-    return createBlock(BlocksBlockData, BlocksBlockInput, nameOrOptions);
+    return createBlock(BlocksBlockData, BlocksBlockInput, nameOrOptions, {
+        overwrite: (block) => {
+            block.register = function () {
+                for (const block of Object.values(supportedBlocks)) {
+                    block.register();
+                }
+
+                registerBlock(this);
+            };
+
+            return block;
+        },
+    });
 }
 
 // internal helper
