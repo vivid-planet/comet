@@ -10,6 +10,7 @@ export { AppHeaderMenuButton, AppHeaderMenuButtonClassKey, AppHeaderMenuButtonPr
 export { buildCreateRestMutation, buildDeleteRestMutation, buildUpdateRestMutation } from "./buildRestMutation";
 export { readClipboardText } from "./clipboard/readClipboardText";
 export { writeClipboardText } from "./clipboard/writeClipboardText";
+export { Button, ButtonClassKey, ButtonProps } from "./common/buttons/Button";
 export { CancelButton, CancelButtonClassKey, CancelButtonProps } from "./common/buttons/cancel/CancelButton";
 export { ClearInputButton, ClearInputButtonClassKey, ClearInputButtonProps } from "./common/buttons/clearinput/ClearInputButton";
 export { CopyToClipboardButton, CopyToClipboardButtonClassKey, CopyToClipboardButtonProps } from "./common/buttons/CopyToClipboardButton";
@@ -28,6 +29,7 @@ export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } 
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
 export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./common/MainContent";
+export { ToolbarActionButton, ToolbarActionButtonClassKey, ToolbarActionButtonProps } from "./common/toolbar/actions/ToolbarActionButton";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
 export {
     ToolbarAutomaticTitleItem,
@@ -74,11 +76,6 @@ export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvi
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
 export { FinalFormSaveButton } from "./FinalFormSaveButton";
-export {
-    FinalFormSaveCancelButtonsLegacy,
-    FinalFormSaveCancelButtonsLegacyClassKey,
-    FinalFormSaveCancelButtonsLegacyProps,
-} from "./FinalFormSaveCancelButtonsLegacy";
 export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";
 export {
     /**
