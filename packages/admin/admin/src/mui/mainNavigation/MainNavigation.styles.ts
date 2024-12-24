@@ -1,7 +1,7 @@
 import { css, Drawer as MuiDrawer, drawerClasses, DrawerProps, Theme } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { DEFAULT_DRAWER_WIDTH, DEFAULT_DRAWER_WIDTH_COLLAPSED } from "./Menu";
+import { DEFAULT_DRAWER_WIDTH, DEFAULT_DRAWER_WIDTH_COLLAPSED } from "./MainNavigation";
 
 const getOpenedAnimation = (theme: Theme, drawerVariant: DrawerProps["variant"], drawerWidth: number = DEFAULT_DRAWER_WIDTH) => css`
     width: ${drawerVariant === "temporary" ? "100%" : `${drawerWidth}px`};
@@ -18,7 +18,7 @@ const getClosedAnimation = (
     transition: width ${theme.transitions.easing.sharp} ${theme.transitions.duration.leavingScreen}ms;
 `;
 
-export type MenuClassKey = "drawer" | "permanent" | "temporary" | "open" | "closed";
+export type MainNavigationClassKey = "drawer" | "permanent" | "temporary" | "open" | "closed";
 
 export type OwnerState = {
     drawerWidth: number;
@@ -38,7 +38,7 @@ const getSharedStyles = (theme: Theme, headerHeight: number) => css`
     }
 `;
 
-export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, OwnerState>({
+export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MainNavigationClassKey, OwnerState>({
     componentName: "Menu",
     slotName: "temporary",
     classesResolver(ownerState) {
@@ -66,7 +66,7 @@ export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, Owne
     `,
 );
 
-export const PermanentDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, OwnerState>({
+export const PermanentDrawer = createComponentSlot(MuiDrawer)<MainNavigationClassKey, OwnerState>({
     componentName: "Menu",
     slotName: "permanent",
     classesResolver(ownerState) {

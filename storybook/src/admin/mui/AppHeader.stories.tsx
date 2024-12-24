@@ -6,9 +6,9 @@ import {
     AppHeaderMenuButton,
     CometLogo,
     MainContent,
+    MainNavigation,
+    MainNavigationItemRouterLink,
     MasterLayout,
-    Menu as CometMenu,
-    MenuItemRouterLink,
 } from "@comet/admin";
 import { Account, Dashboard, Language, Logout, Preview } from "@comet/admin-icons";
 import { Avatar, Box, Button, Divider, MenuItem, MenuList } from "@mui/material";
@@ -28,9 +28,9 @@ function AccountHeaderItem() {
 
 function Menu() {
     return (
-        <CometMenu>
-            <MenuItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" selected />
-        </CometMenu>
+        <MainNavigation>
+            <MainNavigationItemRouterLink primary="Dashboard" icon={<Dashboard />} to="/dashboard" selected />
+        </MainNavigation>
     );
 }
 

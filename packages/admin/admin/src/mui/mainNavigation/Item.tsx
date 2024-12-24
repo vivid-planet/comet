@@ -2,19 +2,19 @@ import { ComponentsOverrides, ListItemButton, ListItemButtonProps, ListItemIcon,
 import { ReactElement, ReactNode, useContext } from "react";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MenuContext } from "./Context";
-import { Icon, MenuItemClassKey, OwnerState, Root, Text } from "./Item.styles";
+import { MainNavigationContext } from "./Context";
+import { Icon, MainNavigationItemClassKey, OwnerState, Root, Text } from "./Item.styles";
 
-export type MenuItemLevel = 1 | 2 | 3;
+export type MainNavigationItemLevel = 1 | 2 | 3;
 
-export interface MenuItemProps
+export interface MainNavigationItemProps
     extends ThemedComponentBaseProps<{
             root: typeof ListItemButton;
             icon: typeof ListItemIcon;
             text: typeof ListItemText;
         }>,
         ListItemButtonProps {
-    level?: MenuItemLevel;
+    level?: MainNavigationItemLevel;
     primary: ReactNode;
     secondary?: ReactNode;
     icon?: ReactElement;
@@ -24,7 +24,7 @@ export interface MenuItemProps
     hasSubitems?: boolean;
 }
 
-export const MenuItem = (inProps: MenuItemProps) => {
+export const MainNavigationItem = (inProps: MainNavigationItemProps) => {
     const {
         primary,
         secondary,
@@ -38,7 +38,7 @@ export const MenuItem = (inProps: MenuItemProps) => {
         ...restProps
     } = useThemeProps({ props: inProps, name: "CometAdminMenuItem" });
 
-    const { drawerVariant } = useContext(MenuContext);
+    const { drawerVariant } = useContext(MainNavigationContext);
 
     if (level > 3) throw new Error("Maximum nesting level of 2 exceeded.");
 
@@ -70,11 +70,11 @@ export const MenuItem = (inProps: MenuItemProps) => {
 
 declare module "@mui/material/styles" {
     interface ComponentsPropsList {
-        CometAdminMenuItem: MenuItemProps;
+        CometAdminMenuItem: MainNavigationItemProps;
     }
 
     interface ComponentNameToClassKey {
-        CometAdminMenuItem: MenuItemClassKey;
+        CometAdminMenuItem: MainNavigationItemClassKey;
     }
 
     interface Components {
