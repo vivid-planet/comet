@@ -48,6 +48,9 @@ export interface FeedbackButtonProps
 
 type FeedbackButtonDisplayState = "idle" | "loading" | "success" | "error";
 
+/**
+ * @deprecated Use `Button` from `@comet/admin` instead
+ */
 export function FeedbackButton(inProps: FeedbackButtonProps) {
     const {
         onClick,
