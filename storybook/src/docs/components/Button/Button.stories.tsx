@@ -1,5 +1,5 @@
 import { Button, FeedbackButton, ToolbarActionButton } from "@comet/admin";
-import { Add, ArrowRight } from "@comet/admin-icons";
+import { Add, ArrowRight, Favorite } from "@comet/admin-icons";
 import { Box, Card, CardContent, CardHeader, Chip, Stack, SxProps, Theme } from "@mui/material";
 import { Children, cloneElement, ReactElement, ReactNode } from "react";
 
@@ -261,6 +261,17 @@ export const ResponsiveBehavior = {
                                 responsiveBehavior={{
                                     mobileIcon: <ArrowRight />,
                                 }}
+                                variant="outlined"
+                            >
+                                Button
+                            </Button>
+                            <Button
+                                responsiveBehavior={{
+                                    breakpoint: "md",
+                                    mobileIcon: "endIcon",
+                                }}
+                                startIcon={<ArrowRight />}
+                                endIcon={<Favorite />}
                                 variant="outlined"
                             >
                                 Button
