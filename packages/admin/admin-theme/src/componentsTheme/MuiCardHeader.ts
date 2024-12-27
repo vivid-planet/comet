@@ -7,14 +7,17 @@ export const getMuiCardHeader: GetMuiComponentTheme<"MuiCardHeader"> = (componen
         root: {
             backgroundColor: palette.grey["A200"],
             color: "#fff",
-
-            "& .MuiButtonBase-root": {
-                paddingTop: 0,
-                paddingBottom: 0,
-            },
         },
         action: {
             alignSelf: "center",
+            "& > .MuiButton-root": {
+                marginTop: "-12px",
+                marginBottom: "-12px",
+            },
+            "& > .MuiIconButton-root": {
+                marginTop: "-12px",
+                marginBottom: "-12px",
+            },
         },
     }),
 });
