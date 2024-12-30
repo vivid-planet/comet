@@ -7,6 +7,8 @@ export const getMuiCardHeader: GetMuiComponentTheme<"MuiCardHeader"> = (componen
         root: {
             backgroundColor: palette.grey["A200"],
             color: "#fff",
+            paddingBottom: "20px",
+            paddingTop: "20px",
         },
         action: {
             alignSelf: "center",
