@@ -49,9 +49,13 @@ export const DamVideoBlock = withPreview(
         const inViewRef = useRef<HTMLDivElement>(null);
         const videoRef = useRef<HTMLVideoElement>(null);
 
-        const inView = useIsElementInViewport(inViewRef);
+        const handleInViewChange = (inView: boolean) => {
+            if (autoplay) {
+                inView ? playDamVideo(videoRef) : pauseDamVideo(videoRef);
+            }
+        };
 
-        inView && autoplay ? playDamVideo(videoRef) : pauseDamVideo(videoRef);
+        useIsElementInViewport(inViewRef, handleInViewChange);
 
         return (
             <>

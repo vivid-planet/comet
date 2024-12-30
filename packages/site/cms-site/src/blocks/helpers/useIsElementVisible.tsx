@@ -1,20 +1,20 @@
-import { RefObject, useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export const useIsElementInViewport = (ref: RefObject<HTMLDivElement>) => {
-    const [isVisible, setIsVisible] = useState(false);
-
+export const useIsElementInViewport = (ref: React.RefObject<Element>, callback: (inView: boolean) => void) => {
     useEffect(() => {
-        const options = { root: null, rootMargin: "0px", threshold: 0.5 };
-        const observer = new IntersectionObserver((entries) => {
-            setIsVisible(entries[0].isIntersecting);
-        }, options);
-        if (ref.current) observer.observe(ref.current);
-        const inViewRefValue = ref.current;
+        if (!ref.current) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                callback(entry.isIntersecting);
+            },
+            { threshold: 0.5 },
+        );
+
+        observer.observe(ref.current);
 
         return () => {
-            if (inViewRefValue) observer.unobserve(inViewRefValue);
+            observer.disconnect();
         };
-    }, [ref]);
-
-    return isVisible;
+    }, [ref, callback]);
 };

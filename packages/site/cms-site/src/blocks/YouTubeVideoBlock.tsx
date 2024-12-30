@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { ReactElement, ReactNode, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
@@ -42,23 +42,28 @@ export const YouTubeVideoBlock = withPreview(
         const hasPreviewImage = !!(previewImage && previewImage.damFile);
         const iframeRef = useRef<HTMLIFrameElement | null>(null);
         const inViewRef = useRef(null);
-        const inView = useIsElementInViewport(inViewRef);
 
-        const pauseYoutubeVideo = () => {
+        const pauseYouTubeVideo = () => {
             if (iframeRef.current?.contentWindow) {
                 iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "*");
             }
         };
 
-        const playYoutubeVideo = () => {
+        const playYouTubeVideo = () => {
             if (iframeRef.current?.contentWindow) {
                 iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"playVideo","args":""}`, "*");
             }
         };
 
-        useEffect(() => {
-            inView && autoplay ? playYoutubeVideo() : pauseYoutubeVideo();
-        }, [autoplay, inView]);
+        useIsElementInViewport(inViewRef, (inView: boolean) => {
+            if (autoplay) {
+                if (inView) {
+                    playYouTubeVideo();
+                } else {
+                    pauseYouTubeVideo();
+                }
+            }
+        });
 
         if (!youtubeIdentifier) {
             return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
@@ -75,7 +80,6 @@ export const YouTubeVideoBlock = withPreview(
         if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
 
         if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
-        // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
         if (loop && identifier) searchParams.append("playlist", identifier);
 
         const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
