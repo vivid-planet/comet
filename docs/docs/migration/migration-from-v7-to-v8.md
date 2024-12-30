@@ -174,7 +174,7 @@ Perform the following changes:
 
 ### Rename `Menu` and related components to `MainNavigation` in `@comet/admin`
 
-To better differentiate between imports from `@comet/admin` and `mui`, `Menu` and its related components are renamed:
+To better differentiate between imports from `@comet/admin` and `@mui/material`, the following components and related types have been renamed:
 
 -   `Menu` → `MainNavigation`
 -   `MenuProps` → `MainNavigationProps`
