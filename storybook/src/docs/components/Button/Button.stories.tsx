@@ -1,7 +1,7 @@
-import { Button, FeedbackButton, ToolbarActionButton } from "@comet/admin";
+import { Button, ButtonFeedbackState, FeedbackButton, ToolbarActionButton } from "@comet/admin";
 import { Add, ArrowRight, Favorite } from "@comet/admin-icons";
-import { Box, Card, CardContent, CardHeader, Chip, Stack, SxProps, Theme } from "@mui/material";
-import { Children, cloneElement, ReactElement, ReactNode } from "react";
+import { Box, Card, CardContent, CardHeader, Chip, Stack, SxProps, Theme, Typography } from "@mui/material";
+import { Children, cloneElement, ReactElement, ReactNode, useState } from "react";
 
 export default {
     title: "Docs/Components/Button",
@@ -287,12 +287,24 @@ export const ResponsiveBehavior = {
 export const FeedbackBehavior = {
     // TODO
     render: () => {
+        const [firstButtonLoading, setFirstButtonLoading] = useState(false);
+        const [secondButtonLoading, setSecondButtonLoading] = useState(false);
+
+        const [firstButtonHasErrors, setFirstButtonHasErrors] = useState(false);
+        const [secondButtonHasErrors, setSecondButtonHasErrors] = useState(false);
+
+        const [thirdButtonState, setThirdButtonState] = useState<ButtonFeedbackState>("none");
+        const [fourthButtonState, setFourthButtonState] = useState<ButtonFeedbackState>("none");
+
         return (
             <Stack gap={4}>
                 <Card>
                     <CardHeader title="Legacy (FeedbackButton)" />
                     <CardContent>
-                        <GroupOfElements sx={{ alignItems: "center" }}>
+                        <Typography variant="h6" gutterBottom>
+                            Uncontrolled (feedback state depends on the promise)
+                        </Typography>
+                        <Stack direction="row" gap={4} mb={8}>
                             <FeedbackButton
                                 startIcon={<Add />}
                                 onClick={() => {
@@ -309,8 +321,51 @@ export const FeedbackBehavior = {
                             >
                                 This will fail
                             </FeedbackButton>
+                        </Stack>
+                        <Typography variant="h6" gutterBottom>
+                            Controlled (feedback state depends on the props)
+                        </Typography>
+                        <Stack direction="row" gap={4} mb={8}>
                             <FeedbackButton
+                                loading={firstButtonLoading}
+                                hasErrors={firstButtonHasErrors}
                                 startIcon={<Add />}
+                                onClick={() => {
+                                    setFirstButtonLoading(true);
+
+                                    setTimeout(() => {
+                                        setFirstButtonLoading(false);
+                                        setFirstButtonHasErrors(false);
+                                    }, 1000);
+                                }}
+                            >
+                                This will succeed
+                            </FeedbackButton>
+                            <FeedbackButton
+                                loading={secondButtonLoading}
+                                hasErrors={secondButtonHasErrors}
+                                startIcon={<Add />}
+                                onClick={() => {
+                                    setSecondButtonLoading(true);
+
+                                    setTimeout(() => {
+                                        setSecondButtonLoading(false);
+                                        setSecondButtonHasErrors(true);
+
+                                        setTimeout(() => {
+                                            setSecondButtonHasErrors(false);
+                                        }, 1000);
+                                    }, 1000);
+                                }}
+                            >
+                                This will fail
+                            </FeedbackButton>
+                        </Stack>
+                        <Typography variant="h6" gutterBottom>
+                            With custom messages and no icon
+                        </Typography>
+                        <Stack direction="row" gap={4} mb={8}>
+                            <FeedbackButton
                                 onClick={() => {
                                     return new Promise((resolve) => setTimeout(resolve, 500));
                                 }}
@@ -320,7 +375,6 @@ export const FeedbackBehavior = {
                                 Custom message (succeeds)
                             </FeedbackButton>
                             <FeedbackButton
-                                startIcon={<Add />}
                                 onClick={() => {
                                     return new Promise((_, reject) => setTimeout(reject, 500));
                                 }}
@@ -329,15 +383,19 @@ export const FeedbackBehavior = {
                             >
                                 Custom message (fails)
                             </FeedbackButton>
-                        </GroupOfElements>
+                        </Stack>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader title="New (Button)" />
                     <CardContent>
-                        <GroupOfElements sx={{ alignItems: "center" }}>
+                        <Typography variant="h6" gutterBottom>
+                            Uncontrolled (feedback state depends on the promise)
+                        </Typography>
+                        <Stack direction="row" gap={4} mb={8}>
                             <Button
                                 variant="contained"
+                                responsiveBehavior
                                 startIcon={<Add />}
                                 feedbackBehavior
                                 onClick={() => {
@@ -348,6 +406,7 @@ export const FeedbackBehavior = {
                             </Button>
                             <Button
                                 variant="contained"
+                                responsiveBehavior
                                 startIcon={<Add />}
                                 feedbackBehavior
                                 onClick={() => {
@@ -356,9 +415,63 @@ export const FeedbackBehavior = {
                             >
                                 This will fail
                             </Button>
+                        </Stack>
+                        <Typography variant="h6" gutterBottom>
+                            Controlled (feedback state depends on the props)
+                        </Typography>
+                        <Stack direction="row" gap={4} mb={8}>
                             <Button
                                 variant="contained"
+                                responsiveBehavior
                                 startIcon={<Add />}
+                                feedbackBehavior={{
+                                    state: thirdButtonState,
+                                }}
+                                onClick={() => {
+                                    setThirdButtonState("loading");
+
+                                    setTimeout(() => {
+                                        setThirdButtonState("success");
+
+                                        setTimeout(() => {
+                                            setThirdButtonState("none");
+                                        }, 2000);
+                                    }, 1000);
+                                }}
+                            >
+                                This will succeed
+                            </Button>
+                            <Button
+                                variant="contained"
+                                responsiveBehavior
+                                startIcon={<Add />}
+                                feedbackBehavior={{
+                                    state: fourthButtonState,
+                                }}
+                                onClick={() => {
+                                    setFourthButtonState("loading");
+
+                                    setTimeout(() => {
+                                        setFourthButtonState("error");
+
+                                        setTimeout(() => {
+                                            setFourthButtonState("none");
+                                        }, 5000);
+                                    }, 1000);
+                                }}
+                            >
+                                This will fail
+                            </Button>
+                        </Stack>
+                        <Typography variant="h6" gutterBottom>
+                            With custom messages and no icon
+                        </Typography>
+                        <Stack direction="row" gap={4} mb={8}>
+                            <Button
+                                variant="contained"
+                                responsiveBehavior={{
+                                    mobileIcon: <Add />,
+                                }}
                                 feedbackBehavior={{
                                     successMessage: "This worked and has a custom message",
                                     errorMessage: "This failed but at least it has a custom message",
@@ -371,7 +484,9 @@ export const FeedbackBehavior = {
                             </Button>
                             <Button
                                 variant="contained"
-                                startIcon={<Add />}
+                                responsiveBehavior={{
+                                    mobileIcon: <Add />,
+                                }}
                                 feedbackBehavior={{
                                     successMessage: "This worked and has a custom message",
                                     errorMessage: "This failed but at least it has a custom message",
@@ -382,7 +497,7 @@ export const FeedbackBehavior = {
                             >
                                 Custom message (fails)
                             </Button>
-                        </GroupOfElements>
+                        </Stack>
                     </CardContent>
                 </Card>
             </Stack>

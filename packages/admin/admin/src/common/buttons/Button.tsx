@@ -1,3 +1,4 @@
+import { ThreeDotSaving } from "@comet/admin-icons";
 import {
     Breakpoint,
     Button as MuiButton,
@@ -5,24 +6,27 @@ import {
     ComponentsOverrides,
     css,
     Theme,
-    Tooltip,
     useTheme,
     useThemeProps,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../helpers/useWindowSize";
+import { Tooltip } from "../Tooltip";
 
-type StateClassKey = "usingResponsiveBehavior";
-type SlotClassKey = "root" | "mobileTooltip";
+type StateClassKey = "usingResponsiveBehavior" | "feedbackStateLoading" | "feedbackStateSuccess" | "feedbackStateError";
+type SlotClassKey = "root" | "mobileTooltip" | "successFeedback" | "errorFeedback";
 
 export type ButtonClassKey = StateClassKey | SlotClassKey;
 
 type ButtonThemeProps = ThemedComponentBaseProps<{
     root: typeof MuiButton;
     mobileTooltip: typeof Tooltip;
+    successFeedback: typeof Tooltip;
+    errorFeedback: typeof Tooltip;
 }>;
 
 type ResponsiveBehaviorSettings = {
@@ -35,39 +39,31 @@ type ResponsiveBehaviorOptions = Omit<Partial<ResponsiveBehaviorSettings>, "mobi
 };
 
 type FeedbackBehaviorOptions = {
+    state?: ButtonFeedbackState | null;
     successMessage?: ReactNode;
     errorMessage?: ReactNode;
-    loading?: boolean;
-    hasError?: boolean;
-    tooltipDuration?: {
-        success?: number;
-        error?: number;
-    };
+    successDuration?: number;
+    errorDuration?: number;
 };
+
+export type ButtonFeedbackState = "none" | "loading" | "success" | "error";
 
 type OwnerState = {
     usingResponsiveBehavior: boolean;
+    feedbackState: ButtonFeedbackState;
 };
-
-/**
- * TODO:
- * - Restrice imports from MuiButton
- * - Consider if we should also use this for IconButtons (and restrict imports from MuiIconButton)
- */
 
 type CustomButtonProps = {
     responsiveBehavior?: boolean | ResponsiveBehaviorOptions;
-
-    // TODO: Implement feedback on click behavior
-    // TODO: Figure out if we only need the controlled or uncontrolled version
     feedbackBehavior?: boolean | FeedbackBehaviorOptions;
-
     iconMapping?: {
         loading?: ReactNode;
     };
 };
 
-export type ButtonProps = CustomButtonProps & ButtonThemeProps & MuiButtonProps;
+type OnClick = ((event: React.MouseEvent<HTMLElement>) => void) | ((event: React.MouseEvent<HTMLElement>) => Promise<void>);
+
+export type ButtonProps = CustomButtonProps & ButtonThemeProps & MuiButtonProps & { onClick?: OnClick };
 
 const getResponsiveBehaviorSettings = (propValue: ButtonProps["responsiveBehavior"], startIcon: ReactNode, endIcon: ReactNode) => {
     let settings: ResponsiveBehaviorSettings = {
@@ -93,8 +89,26 @@ const getResponsiveBehaviorSettings = (propValue: ButtonProps["responsiveBehavio
     return settings;
 };
 
+const defaultFeedbackBehaviorSettings = {
+    successMessage: <FormattedMessage id="comet.feedbackButton.tooltipSuccessMessage" defaultMessage="Success" />,
+    errorMessage: <FormattedMessage id="comet.feedbackButton.tooltipErrorMessage" defaultMessage="Error" />,
+    successDuration: 2000,
+    errorDuration: 5000,
+    state: null,
+};
+
 export const Button = (props: ButtonProps) => {
-    const { slotProps, responsiveBehavior, feedbackBehavior, children, startIcon, endIcon, ...restProps } = useThemeProps({
+    const {
+        iconMapping = {},
+        slotProps,
+        responsiveBehavior,
+        feedbackBehavior,
+        children,
+        onClick,
+        startIcon,
+        endIcon,
+        ...restProps
+    } = useThemeProps({
         props,
         name: "CometAdminButton",
     });
@@ -102,18 +116,58 @@ export const Button = (props: ButtonProps) => {
     const windowSize = useWindowSize();
     const theme = useTheme();
 
+    const { loading: loadingIcon = <ThreeDotSaving /> } = iconMapping;
+
     const responsiveBehaviorSettings = getResponsiveBehaviorSettings(responsiveBehavior, startIcon, endIcon);
     const usingResponsiveBehavior = Boolean(responsiveBehavior) && windowSize.width < theme.breakpoints.values[responsiveBehaviorSettings.breakpoint];
 
+    const [uncontrolledFeedbackState, setUncontrolledFeedbackState] = useState<ButtonFeedbackState>("none");
+    const feedbackBehaviorSettings: Required<FeedbackBehaviorOptions> =
+        typeof feedbackBehavior === "object" ? { ...defaultFeedbackBehaviorSettings, ...feedbackBehavior } : defaultFeedbackBehaviorSettings;
+    const feedbackStateIsControlledByProp = feedbackBehaviorSettings.state !== null;
+    const feedbackState = feedbackBehaviorSettings.state ?? uncontrolledFeedbackState;
+
+    const handleClick: OnClick = async (event) => {
+        if (feedbackStateIsControlledByProp) {
+            onClick?.(event);
+            return;
+        }
+
+        try {
+            setUncontrolledFeedbackState("loading");
+            await onClick?.(event);
+            setUncontrolledFeedbackState("success");
+            setTimeout(() => {
+                setUncontrolledFeedbackState("none");
+            }, feedbackBehaviorSettings.successDuration);
+        } catch (error) {
+            setUncontrolledFeedbackState("error");
+            setTimeout(() => {
+                setUncontrolledFeedbackState("none");
+            }, feedbackBehaviorSettings.errorDuration);
+        }
+    };
+
+    const loadingFeedbackStateProps =
+        feedbackState === "loading"
+            ? {
+                  disabled: true,
+                  startIcon: loadingIcon,
+              }
+            : {};
+
     const ownerState: OwnerState = {
         usingResponsiveBehavior,
+        feedbackState,
     };
 
     const buttonNode = (
         <Root
             startIcon={usingResponsiveBehavior ? undefined : startIcon}
             endIcon={usingResponsiveBehavior ? undefined : endIcon}
+            onClick={handleClick}
             ownerState={ownerState}
+            {...loadingFeedbackStateProps}
             {...restProps}
             {...slotProps?.root}
         >
@@ -121,28 +175,50 @@ export const Button = (props: ButtonProps) => {
         </Root>
     );
 
-    if (usingResponsiveBehavior) {
-        return (
-            <MobileTooltip title={children} {...slotProps?.mobileTooltip}>
-                {buttonNode}
-            </MobileTooltip>
-        );
-    }
+    const buttonNodeWithResponsiveBehavior = usingResponsiveBehavior ? (
+        <MobileTooltip title={children} {...slotProps?.mobileTooltip}>
+            {buttonNode}
+        </MobileTooltip>
+    ) : (
+        buttonNode
+    );
 
-    return buttonNode;
+    return (
+        <SuccessFeedback
+            open={feedbackState === "success"}
+            variant="success"
+            placement="top-start"
+            title={feedbackBehaviorSettings.successMessage}
+            {...slotProps?.successFeedback}
+        >
+            <ErrorFeedback
+                open={feedbackState === "error"}
+                variant="error"
+                placement="top-start"
+                title={feedbackBehaviorSettings.errorMessage}
+                {...slotProps?.errorFeedback}
+            >
+                <span>{buttonNodeWithResponsiveBehavior}</span>
+            </ErrorFeedback>
+        </SuccessFeedback>
+    );
 };
 
 const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
     componentName: "Button",
     slotName: "root",
     classesResolver(ownerState) {
-        return [ownerState.usingResponsiveBehavior && "usingResponsiveBehavior"];
+        return [
+            ownerState.usingResponsiveBehavior && "usingResponsiveBehavior",
+            ownerState.feedbackState === "loading" && "feedbackStateLoading",
+            ownerState.feedbackState === "success" && "feedbackStateSuccess",
+            ownerState.feedbackState === "error" && "feedbackStateError",
+        ];
     },
 })(
     ({ ownerState }) => css`
         ${ownerState.usingResponsiveBehavior &&
         css`
-            // TODO: Should the size be smaller than in the standard button design? Like the 'ToolbarActionButton'
             min-width: 0;
         `}
     `,
@@ -151,6 +227,16 @@ const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
 const MobileTooltip = createComponentSlot(Tooltip)<ButtonClassKey>({
     componentName: "Button",
     slotName: "mobileTooltip",
+})();
+
+const SuccessFeedback = createComponentSlot(Tooltip)<ButtonClassKey>({
+    componentName: "Button",
+    slotName: "successFeedback",
+})();
+
+const ErrorFeedback = createComponentSlot(Tooltip)<ButtonClassKey>({
+    componentName: "Button",
+    slotName: "errorFeedback",
 })();
 
 declare module "@mui/material/styles" {
