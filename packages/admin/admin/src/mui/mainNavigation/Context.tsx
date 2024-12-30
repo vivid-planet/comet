@@ -1,16 +1,16 @@
 import { ComponentType, createContext, Dispatch, FunctionComponent, SetStateAction } from "react";
 
-export interface IMainNavigationContext {
+export interface MainNavigationContextValue {
     open: boolean;
     toggleOpen: () => void;
     drawerVariant: "temporary" | "permanent";
     setDrawerVariant: Dispatch<SetStateAction<"temporary" | "permanent">>;
 }
 
-export interface IWithMainNavigation {
-    mainNavigation: IMainNavigationContext;
+export interface WithMainNavigation {
+    mainNavigation: MainNavigationContextValue;
 }
-export const MainNavigationContext = createContext<IMainNavigationContext>({
+export const MainNavigationContext = createContext<MainNavigationContextValue>({
     open: false,
     toggleOpen: () => {
         // nothing
@@ -21,7 +21,7 @@ export const MainNavigationContext = createContext<IMainNavigationContext>({
     },
 });
 
-export const withMainNavigation = <P extends object>(WrappedComponent: ComponentType<P & IWithMainNavigation>): FunctionComponent<P> => {
+export const withMainNavigation = <P extends object>(WrappedComponent: ComponentType<P & WithMainNavigation>): FunctionComponent<P> => {
     return (props: P) => {
         return <MainNavigationContext.Consumer>{(value) => <WrappedComponent {...props} mainNavigation={value!} />}</MainNavigationContext.Consumer>;
     };

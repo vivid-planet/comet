@@ -185,8 +185,8 @@ To better differentiate between imports from `@comet/admin` and `mui`, `Menu` an
 -   `MenuCollapsibleItem` → `MainNavigationCollapsibleItem`
 -   `MenuCollapsibleItemProps` → `MainNavigationCollapsibleItemProps`
 -   `MenuCollapsibleItemClassKey` → `MainNavigationCollapsibleItemClassKey`
--   `IMenuContent` → `IMainNavigation`
--   `IWithMenu` → `IWithMainNavigation`
+-   `IMenuContent` → `MainNavigationContextValue`
+-   `IWithMenu` → `WithMainNavigation`
 -   `withMenu` → `withMainNavigation`
 -   `MenuContext` → `MainNavigationContext`
 -   `MenuItemAnchorLink` → `MainNavigationItemAnchorLink`

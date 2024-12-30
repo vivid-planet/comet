@@ -1,7 +1,7 @@
 import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { IMainNavigationContext } from "./Context";
+import { MainNavigationContextValue } from "./Context";
 import { MainNavigationItemLevel } from "./Item";
 
 export type MainNavigationItemClassKey =
@@ -24,7 +24,7 @@ export type OwnerState = {
     hasIcon: boolean;
     hasSecondaryText: boolean;
     hasSecondaryAction: boolean;
-    variant: IMainNavigationContext["drawerVariant"];
+    variant: MainNavigationContextValue["drawerVariant"];
 };
 
 export const Root = createComponentSlot(ListItemButton)<MainNavigationItemClassKey, OwnerState>({
