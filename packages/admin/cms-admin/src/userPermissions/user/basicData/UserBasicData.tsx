@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, Loading, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { Field, FillSpace, FinalForm, FinalFormInput, Loading, ToolbarTitleItem } from "@comet/admin";
 import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
@@ -36,7 +36,7 @@ export const UserPermissionsUserPageBasicDataPanel = ({ userId }: { userId: stri
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />
                 </ToolbarTitleItem>
-                <ToolbarFillSpace />
+                <FillSpace />
             </CardToolbar>
             <CardContent>
                 <FinalForm

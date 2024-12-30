@@ -1,11 +1,11 @@
 import {
     ExcelExportButton,
+    FillSpace,
     IRow,
     MainContent,
     Table,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useExportDisplayedTableData,
     VisibleType,
@@ -45,7 +45,7 @@ export const ExportVisibility = () => {
                 <ToolbarItem>
                     <Typography variant="h3">Export Visibility</Typography>
                 </ToolbarItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <ExcelExportButton exportApi={exportApi} />
                 </ToolbarActions>

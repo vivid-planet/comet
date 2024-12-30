@@ -1,5 +1,6 @@
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     MainContent,
@@ -10,7 +11,6 @@ import {
     Table,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
@@ -66,7 +66,7 @@ export const StackEditDialogHooks = {
                                 <ToolbarItem>
                                     <Typography variant="h3">Table Stack Edit Dialog</Typography>
                                 </ToolbarItem>
-                                <ToolbarFillSpace />
+                                <FillSpace />
                                 <ToolbarActions>
                                     <Button
                                         color="primary"

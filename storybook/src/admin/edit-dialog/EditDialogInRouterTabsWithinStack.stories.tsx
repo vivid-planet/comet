@@ -1,6 +1,7 @@
 import {
     DataGridToolbar,
     EditDialog,
+    FillSpace,
     FinalForm,
     IEditDialogApi,
     MainContent,
@@ -18,7 +19,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit } from "@comet/admin-icons";
@@ -137,7 +137,7 @@ function Toolbar({ toolbarAction }: { toolbarAction?: ReactNode }) {
                     />
                 </Typography>
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );
@@ -227,7 +227,7 @@ export const ProductDetailsPage = ({ productId }: ProductDetailsProps) => {
                                     <StackToolbar>
                                         <ToolbarBackButton />
                                         <ToolbarAutomaticTitleItem />
-                                        <ToolbarFillSpace />
+                                        <FillSpace />
                                         <ToolbarActions>
                                             <SaveBoundarySaveButton />
                                         </ToolbarActions>
@@ -311,7 +311,7 @@ export const EditDialogInRouterTabsWithinStack = {
                                         <StackToolbar>
                                             <ToolbarBackButton />
                                             <ToolbarAutomaticTitleItem />
-                                            <ToolbarFillSpace />
+                                            <FillSpace />
                                             <ToolbarActions>
                                                 <SaveBoundarySaveButton />
                                             </ToolbarActions>

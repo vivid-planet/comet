@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
+    FillSpace,
     filterByFragment,
     GridColDef,
     GridFilterButton,
@@ -9,7 +10,6 @@ import {
     StackLink,
     Toolbar,
     ToolbarAutomaticTitleItem,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -38,7 +38,7 @@ function ProductTagsTableToolbar() {
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>

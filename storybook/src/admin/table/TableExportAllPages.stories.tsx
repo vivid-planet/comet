@@ -2,12 +2,12 @@ import { gql } from "@apollo/client";
 import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
+    FillSpace,
     MainContent,
     Table,
     TableQuery,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useExportPagedTableQuery,
     useTableQuery,
@@ -97,7 +97,7 @@ export const ExportAllPages = () => {
                         <ToolbarItem>
                             <Typography variant="h3">Export All Pages</Typography>
                         </ToolbarItem>
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         <ToolbarActions>
                             <ExcelExportButton exportApi={exportApi} />
                         </ToolbarActions>

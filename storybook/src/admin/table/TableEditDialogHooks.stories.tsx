@@ -1,5 +1,6 @@
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     MainContent,
@@ -7,7 +8,6 @@ import {
     Table,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
@@ -74,7 +74,7 @@ export const EditDialogHooks = {
                     <ToolbarItem>
                         <Typography variant="h3">Edit Dialog Hooks</Typography>
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button
                             color="primary"

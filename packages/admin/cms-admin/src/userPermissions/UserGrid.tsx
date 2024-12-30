@@ -1,13 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackSwitchApiContext,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useDataGridRemote,
     usePersistentColumnState,
@@ -232,7 +232,7 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
                         <ToolbarItem>
                             <GridFilterButton />
                         </ToolbarItem>
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
                     </DataGridToolbar>
                 ),

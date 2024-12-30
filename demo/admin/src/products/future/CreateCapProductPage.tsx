@@ -1,4 +1,5 @@
 import {
+    FillSpace,
     MainContent,
     SaveBoundary,
     SaveBoundarySaveButton,
@@ -7,7 +8,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { CreateCapProductForm } from "@src/products/future/generated/CreateCapProductForm";
@@ -21,7 +21,7 @@ export function CreateCapProductPage() {
                 <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <SaveBoundarySaveButton />
                     </ToolbarActions>

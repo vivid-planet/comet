@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { Stack, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, Stack, Toolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { parseISO } from "date-fns";
@@ -50,7 +50,7 @@ export function PublisherPage() {
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.publisher.title" defaultMessage="Publisher" />
                 </ToolbarTitleItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <PublishButton />
                 </ToolbarActions>

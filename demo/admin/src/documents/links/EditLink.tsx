@@ -1,16 +1,5 @@
 import { gql } from "@apollo/client";
-import {
-    Loading,
-    MainContent,
-    messages,
-    RouterPrompt,
-    RouterTab,
-    RouterTabs,
-    Toolbar,
-    ToolbarFillSpace,
-    ToolbarItem,
-    useStackApi,
-} from "@comet/admin";
+import { FillSpace, Loading, MainContent, messages, RouterPrompt, RouterTab, RouterTabs, Toolbar, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
 import { AdminComponentRoot } from "@comet/blocks-admin";
 import { ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
@@ -109,7 +98,7 @@ export const EditLink = ({ id }: Props) => {
                     </IconButton>
                 </ToolbarItem>
                 <PageName pageId={id} />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarItem>{pageSaveButton}</ToolbarItem>
             </Toolbar>
             <MainContent>

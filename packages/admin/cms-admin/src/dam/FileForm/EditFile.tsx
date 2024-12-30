@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import {
+    FillSpace,
     FinalForm,
     FinalFormSaveButton,
     Loading,
@@ -10,7 +11,6 @@ import {
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
     ToolbarTitleItem,
 } from "@comet/admin";
@@ -202,7 +202,7 @@ const EditFileInner = ({ file, id, contentScopeIndicator }: EditFileInnerProps) 
                                     />
                                 </ToolbarItem>
                             )}
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         <ToolbarActions>
                             <FinalFormSaveButton />
                         </ToolbarActions>

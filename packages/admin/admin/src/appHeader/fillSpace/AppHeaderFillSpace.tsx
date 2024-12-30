@@ -17,6 +17,9 @@ const Root = createComponentSlot("div")<AppHeaderFillSpaceClassKey>({
     flex-grow: 1;
 `);
 
+/**
+ * @deprecated Use `FillSpace` instead.
+ */
 export function AppHeaderFillSpace(inProps: AppHeaderFillSpaceProps) {
     const { slotProps, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderFillSpace" });
 
