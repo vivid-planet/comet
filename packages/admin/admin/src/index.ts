@@ -76,6 +76,11 @@ export { createFetch, FetchContext, FetchProvider, useFetch } from "./fetchProvi
 export { FileIcon } from "./fileIcons/FileIcon";
 export { FinalForm, FinalFormSubmitEvent, useFormApiRef } from "./FinalForm";
 export { FinalFormSaveButton } from "./FinalFormSaveButton";
+export {
+    FinalFormSaveCancelButtonsLegacy,
+    FinalFormSaveCancelButtonsLegacyClassKey,
+    FinalFormSaveCancelButtonsLegacyProps,
+} from "./FinalFormSaveCancelButtonsLegacy";
 export { FinalFormSaveSplitButton } from "./FinalFormSaveSplitButton";
 export {
     /**
