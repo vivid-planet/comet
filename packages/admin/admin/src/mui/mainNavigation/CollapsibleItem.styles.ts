@@ -2,22 +2,22 @@ import { Typography } from "@mui/material";
 import { css } from "@mui/material/styles";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { IMenuContext } from "./Context";
-import { MenuItem as CometMenuItem, MenuItemLevel } from "./Item";
+import { IMainNavigationContext } from "./Context";
+import { MainNavigationItem as CometMainNavigationItem, MainNavigationItemLevel } from "./Item";
 
-export type MenuCollapsibleItemClassKey = "root" | "open" | "childSelected" | "menuItem" | "itemTitle" | "collapsibleIndicator";
+export type MainNavigationCollapsibleItemClassKey = "root" | "open" | "childSelected" | "mainNavigationItem" | "itemTitle" | "collapsibleIndicator";
 
 export type OwnerState = {
     childSelected: boolean;
     open: boolean;
     menuOpen: boolean;
     subMenuOpen: boolean;
-    level: MenuItemLevel;
-    variant: IMenuContext["drawerVariant"];
+    level: MainNavigationItemLevel;
+    variant: IMainNavigationContext["drawerVariant"];
 };
 
-export const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
-    componentName: "MenuCollapsibleItem",
+export const Root = createComponentSlot("div")<MainNavigationCollapsibleItemClassKey, OwnerState>({
+    componentName: "MainNavigationCollapsibleItem",
     slotName: "root",
     classesResolver: (ownerState) => {
         return [ownerState.open && "open", ownerState.childSelected && "childSelected"];
@@ -32,9 +32,9 @@ export const Root = createComponentSlot("div")<MenuCollapsibleItemClassKey, Owne
     `,
 );
 
-export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemClassKey, OwnerState>({
-    componentName: "MenuCollapsibleItem",
-    slotName: "menuItem",
+export const MainNavigationItem = createComponentSlot(CometMainNavigationItem)<MainNavigationCollapsibleItemClassKey, OwnerState>({
+    componentName: "MainNavigationCollapsibleItem",
+    slotName: "mainNavigationItem",
 })(
     ({ theme, ownerState }) => css`
         background-color: ${theme.palette.common.white};
@@ -59,12 +59,12 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
 
         ${ownerState.childSelected &&
         css`
-            .CometAdminMenuItem-text,
-            .CometAdminMenuItem-icon {
+            .CometAdminMainNavigationItem-text,
+            .CometAdminMainNavigationItem-icon {
                 color: ${theme.palette.primary.main};
             }
 
-            .CometAdminMenuItem-primary {
+            .CometAdminMainNavigationItem-primary {
                 ${(ownerState.level === 2 || ownerState.level === 3) &&
                 css`
                     font-weight: 600;
@@ -74,8 +74,8 @@ export const MenuItem = createComponentSlot(CometMenuItem)<MenuCollapsibleItemCl
     `,
 );
 
-export const ItemTitle = createComponentSlot(Typography)<MenuCollapsibleItemClassKey>({
-    componentName: "MenuCollapsibleItem",
+export const ItemTitle = createComponentSlot(Typography)<MainNavigationCollapsibleItemClassKey>({
+    componentName: "MainNavigationCollapsibleItem",
     slotName: "itemTitle",
 })(
     ({ theme }) => css`
@@ -87,8 +87,8 @@ export const ItemTitle = createComponentSlot(Typography)<MenuCollapsibleItemClas
     `,
 );
 
-export const CollapsibleIndicator = createComponentSlot("div")<MenuCollapsibleItemClassKey, OwnerState>({
-    componentName: "MenuCollapsibleItem",
+export const CollapsibleIndicator = createComponentSlot("div")<MainNavigationCollapsibleItemClassKey, OwnerState>({
+    componentName: "MainNavigationCollapsibleItem",
     slotName: "collapsibleIndicator",
 })(
     ({ theme, ownerState }) => css`

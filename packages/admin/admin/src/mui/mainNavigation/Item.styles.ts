@@ -1,10 +1,10 @@
 import { css, ListItemButton, ListItemIcon, listItemIconClasses, ListItemText, listItemTextClasses } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { IMenuContext } from "./Context";
-import { MenuItemLevel } from "./Item";
+import { IMainNavigationContext } from "./Context";
+import { MainNavigationItemLevel } from "./Item";
 
-export type MenuItemClassKey =
+export type MainNavigationItemClassKey =
     | "root"
     | "level1"
     | "level2"
@@ -17,18 +17,18 @@ export type MenuItemClassKey =
     | "text";
 
 export type OwnerState = {
-    level: MenuItemLevel;
+    level: MainNavigationItemLevel;
     open: boolean;
     collapsibleOpen: boolean;
     hasSubItems: boolean;
     hasIcon: boolean;
     hasSecondaryText: boolean;
     hasSecondaryAction: boolean;
-    variant: IMenuContext["drawerVariant"];
+    variant: IMainNavigationContext["drawerVariant"];
 };
 
-export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerState>({
-    componentName: "MenuItem",
+export const Root = createComponentSlot(ListItemButton)<MainNavigationItemClassKey, OwnerState>({
+    componentName: "MainNavigationItem",
     slotName: "root",
     classesResolver(ownerState) {
         return [
@@ -321,12 +321,12 @@ export const Root = createComponentSlot(ListItemButton)<MenuItemClassKey, OwnerS
     `,
 );
 
-export const Icon = createComponentSlot(ListItemIcon)<MenuItemClassKey, OwnerState>({
-    componentName: "MenuItem",
+export const Icon = createComponentSlot(ListItemIcon)<MainNavigationItemClassKey, OwnerState>({
+    componentName: "MainNavigationItem",
     slotName: "icon",
 })();
 
-export const Text = createComponentSlot(ListItemText)<MenuItemClassKey, OwnerState>({
-    componentName: "MenuItem",
+export const Text = createComponentSlot(ListItemText)<MainNavigationItemClassKey, OwnerState>({
+    componentName: "MainNavigationItem",
     slotName: "text",
 })();

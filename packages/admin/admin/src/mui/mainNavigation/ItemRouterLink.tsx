@@ -4,9 +4,9 @@ import { ReactNode } from "react";
 import { Link, LinkProps, Route } from "react-router-dom";
 
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
-import { MenuItem, MenuItemProps } from "./Item";
+import { MainNavigationItem, MainNavigationItemProps } from "./Item";
 
-interface MenuItemRouterLinkStandardProps
+interface MainNavigationRouterLinkItemStandardProps
     extends ThemedComponentBaseProps<{
         badge: typeof Badge;
     }> {
@@ -14,10 +14,15 @@ interface MenuItemRouterLinkStandardProps
     badgeContent?: ReactNode;
 }
 
-export type MenuItemRouterLinkProps = MenuItemRouterLinkStandardProps & MenuItemProps & ListItemProps & LinkProps;
+export type MainNavigationItemRouterLinkProps = MainNavigationRouterLinkItemStandardProps & MainNavigationItemProps & ListItemProps & LinkProps;
 
-export const MenuItemRouterLink = ({ badgeContent, secondaryAction: passedSecondaryAction, slotProps, ...restProps }: MenuItemRouterLinkProps) => {
-    const { badge, ...menuItemSlotProps } = slotProps ?? {};
+export const MainNavigationItemRouterLink = ({
+    badgeContent,
+    secondaryAction: passedSecondaryAction,
+    slotProps,
+    ...restProps
+}: MainNavigationItemRouterLinkProps) => {
+    const { badge, ...mainNavigationItemSlotProps } = slotProps ?? {};
 
     const secondaryAction = badgeContent ? ( // prioritize badgeContent over passed secondaryAction
         <Badge
@@ -36,7 +41,13 @@ export const MenuItemRouterLink = ({ badgeContent, secondaryAction: passedSecond
         <Route path={restProps.to} strict={false}>
             {({ match }) => {
                 return (
-                    <MenuItem selected={!!match} secondaryAction={secondaryAction} component={Link} slotProps={menuItemSlotProps} {...restProps} />
+                    <MainNavigationItem
+                        selected={!!match}
+                        secondaryAction={secondaryAction}
+                        component={Link}
+                        slotProps={mainNavigationItemSlotProps}
+                        {...restProps}
+                    />
                 );
             }}
         </Route>

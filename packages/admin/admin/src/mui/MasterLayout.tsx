@@ -6,8 +6,8 @@ import { AppHeader } from "../appHeader/AppHeader";
 import { AppHeaderMenuButton } from "../appHeader/menuButton/AppHeaderMenuButton";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../helpers/ThemedComponentBaseProps";
+import { MainNavigationContext } from "./mainNavigation/Context";
 import { MasterLayoutContext } from "./MasterLayoutContext";
-import { MenuContext } from "./menu/Context";
 
 export type MasterLayoutClassKey = "root" | "header" | "contentWrapper";
 
@@ -71,7 +71,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
     };
 
     return (
-        <MenuContext.Provider value={{ open, toggleOpen, drawerVariant, setDrawerVariant }}>
+        <MainNavigationContext.Provider value={{ open, toggleOpen, drawerVariant, setDrawerVariant }}>
             <MasterLayoutContext.Provider value={{ headerHeight }}>
                 <CssBaseline />
                 <Root {...slotProps?.root} {...restProps}>
@@ -93,7 +93,7 @@ export function MasterLayout(inProps: MasterLayoutProps) {
                     </ContentWrapper>
                 </Root>
             </MasterLayoutContext.Provider>
-        </MenuContext.Provider>
+        </MainNavigationContext.Provider>
     );
 }
 

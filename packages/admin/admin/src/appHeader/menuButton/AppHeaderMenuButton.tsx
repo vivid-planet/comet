@@ -3,7 +3,7 @@ import { ComponentsOverrides, css, IconButton, IconButtonClassKey, IconButtonPro
 import { ReactNode, useContext } from "react";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { MenuContext } from "../../mui/menu/Context";
+import { MainNavigationContext } from "../../mui/mainNavigation/Context";
 
 export type AppHeaderMenuButtonProps = IconButtonProps;
 
@@ -11,7 +11,7 @@ export type AppHeaderMenuButtonClassKey = IconButtonClassKey;
 
 export const AppHeaderMenuButton = (inProps: AppHeaderMenuButtonProps) => {
     const { children: propChildren, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminAppHeaderMenuButton" });
-    const { toggleOpen, open, drawerVariant } = useContext(MenuContext);
+    const { toggleOpen, open, drawerVariant } = useContext(MainNavigationContext);
 
     const closeIcons: Record<typeof drawerVariant, ReactNode> = {
         temporary: <Close />,

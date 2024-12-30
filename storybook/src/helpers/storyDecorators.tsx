@@ -1,4 +1,4 @@
-import { AppHeader, AppHeaderMenuButton, MasterLayout, Menu, MenuItemRouterLink, Stack } from "@comet/admin";
+import { AppHeader, AppHeaderMenuButton, MainNavigation, MainNavigationItemRouterLink, MasterLayout, Stack } from "@comet/admin";
 import { Dashboard } from "@comet/admin-icons";
 import { ComponentType } from "react";
 import { Route } from "react-router";
@@ -11,9 +11,9 @@ export function masterLayoutDecorator() {
     );
 
     const MasterMenu = () => (
-        <Menu>
-            <MenuItemRouterLink primary="Example Page" to="/" icon={<Dashboard />} />
-        </Menu>
+        <MainNavigation>
+            <MainNavigationItemRouterLink primary="Example Page" to="/" icon={<Dashboard />} />
+        </MainNavigation>
     );
 
     return (Story: ComponentType) => {

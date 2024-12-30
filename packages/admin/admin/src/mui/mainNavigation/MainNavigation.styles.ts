@@ -1,7 +1,7 @@
 import { css, Drawer as MuiDrawer, drawerClasses, DrawerProps, Theme } from "@mui/material";
 
 import { createComponentSlot } from "../../helpers/createComponentSlot";
-import { DEFAULT_DRAWER_WIDTH, DEFAULT_DRAWER_WIDTH_COLLAPSED } from "./Menu";
+import { DEFAULT_DRAWER_WIDTH, DEFAULT_DRAWER_WIDTH_COLLAPSED } from "./MainNavigation";
 
 const getOpenedAnimation = (theme: Theme, drawerVariant: DrawerProps["variant"], drawerWidth: number = DEFAULT_DRAWER_WIDTH) => css`
     width: ${drawerVariant === "temporary" ? "100%" : `${drawerWidth}px`};
@@ -18,7 +18,7 @@ const getClosedAnimation = (
     transition: width ${theme.transitions.easing.sharp} ${theme.transitions.duration.leavingScreen}ms;
 `;
 
-export type MenuClassKey = "drawer" | "permanent" | "temporary" | "open" | "closed";
+export type MainNavigationClassKey = "drawer" | "permanent" | "temporary" | "open" | "closed";
 
 export type OwnerState = {
     drawerWidth: number;
@@ -33,13 +33,13 @@ const getSharedStyles = (theme: Theme, headerHeight: number) => css`
     height: calc(100% - ${headerHeight}px);
     top: ${headerHeight}px;
 
-    .CometAdminMenuItemGroup-root + .CometAdminMenuItem-root {
+    .CometAdminMainNavigationItemGroup-root + .CometAdminMainNavigationItem-root {
         margin-top: ${theme.spacing(8)};
     }
 `;
 
-export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, OwnerState>({
-    componentName: "Menu",
+export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MainNavigationClassKey, OwnerState>({
+    componentName: "MainNavigation",
     slotName: "temporary",
     classesResolver(ownerState) {
         return ["drawer", ownerState.open ? "open" : "closed"];
@@ -66,8 +66,8 @@ export const TemporaryDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, Owne
     `,
 );
 
-export const PermanentDrawer = createComponentSlot(MuiDrawer)<MenuClassKey, OwnerState>({
-    componentName: "Menu",
+export const PermanentDrawer = createComponentSlot(MuiDrawer)<MainNavigationClassKey, OwnerState>({
+    componentName: "MainNavigation",
     slotName: "permanent",
     classesResolver(ownerState) {
         return ["drawer", ownerState.open ? "open" : "closed"];
