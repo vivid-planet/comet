@@ -7,7 +7,7 @@ import { useWindowSize } from "../../../helpers/useWindowSize";
 
 export type ToolbarActionButtonClassKey = "root" | "tooltip" | "button" | "iconButton" | "text" | "outlined" | "contained";
 
-type ToolbarActionButtonProps = ButtonProps &
+export type ToolbarActionButtonProps = ButtonProps &
     ThemedComponentBaseProps<{
         tooltip: typeof Tooltip;
         iconButton: typeof IconButton;
@@ -65,6 +65,9 @@ const StyledButton = createComponentSlot(Button)<ToolbarActionButtonClassKey, Ow
     },
 })();
 
+/**
+ * @deprecated Use `Button` from `@comet/admin` instead
+ */
 export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
     const { children, slotProps = {}, ...restProps } = useThemeProps({ props, name: "CometAdminToolbarActionButton" });
     const { iconButton: iconButtonProps, tooltip: tooltipProps, button: buttonProps } = slotProps;
