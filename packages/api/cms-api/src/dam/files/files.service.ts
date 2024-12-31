@@ -630,7 +630,11 @@ export class FilesService {
 
         let exifData: Record<string, string | number | Uint8Array | number[] | Uint16Array> | undefined;
         if (exifrSupportedMimetypes.includes(file.mimetype)) {
-            exifData = await exifr.parse(file.path);
+            try {
+                exifData = await exifr.parse(file.path);
+            } catch {
+                // empty
+            }
         }
 
         return { exifData, contentHash, image };
