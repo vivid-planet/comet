@@ -30,7 +30,7 @@
     "dependencies": {
         "@comet/admin": "workspace:^7.10.0",
         "@comet/admin-icons": "workspace:^7.10.0",
-        "detect-browser": "^5.2.1",
+        "detect-browser": "^5.3.0",
         "draft-js-export-html": "^1.4.1",
         "draft-js-import-html": "^1.4.1",
         "draftjs-conductor": "^3.0.0",
