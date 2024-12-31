@@ -17,3 +17,4 @@ rgba
 subcomponent
 subpage
 typesafe
+exif
