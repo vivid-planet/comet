@@ -2,7 +2,7 @@
 title: Deployment
 ---
 
-Deploying a Comet application requires a couple of [microservices](../getting-started/microservices.md). The following sections describe the necessary services and how to deploy them.
+Deploying a Comet application requires a couple of [microservices](/docs/#microservices). The following sections describe the necessary services and how to deploy them.
 
 ## IDP
 
@@ -34,7 +34,7 @@ We provide [Helm](https://helm.sh/) Charts, which are available on [GitHub](http
 
 Comet applications can also be deployed without Kubernetes. Two options are serverless container platforms (e.g., [Azure Container Apps](https://azure.microsoft.com/en-us/products/container-apps) or [Digital Ocean App Platform](https://docs.digitalocean.com/products/app-platform/)) or Docker Compose.
 
-It's important to note that deploying without Kubernetes comes with its own set of limitations. You won't be able to use the `KubernetesModule`. Additionally, [CronJobs](../features-modules/cron-jobs/index.md) must be handled differently and might require an external service. Consequently, you won't be able to use the `CronJobModule`.
+It's important to note that deploying without Kubernetes comes with its own set of limitations. You won't be able to use the `KubernetesModule`. Additionally, [CronJobs](/docs/features-modules/cron-jobs/) must be handled differently and might require an external service. Consequently, you won't be able to use the `CronJobModule`.
 
 #### Serverless
 

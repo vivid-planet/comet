@@ -19,7 +19,7 @@ COMET DXP checks authentication in two dimensions:
 
 **Permissions** are used for access control to specific resolvers or controllers.
 
-**Content Scopes** (also referred to as scopes) are used to control which data is allowed to be handled (see [documentation about content scopes](/docs/content-scope)).
+**Content Scopes** (also referred to as scopes) are used to control which data is allowed to be handled (see [documentation about content scopes](/docs/core-concepts/content-scope)).
 
 Users in COMET DXP possess permissions and scopes. Every operation is assigned to one or more permissions and handles data that is bound to a scope. The system then tries to match if the requested permissions and scopes are covered by the user's permissions and scopes.
 

@@ -52,4 +52,4 @@ You can then use `useContentScope()` to access the currently selected scope, whi
 
 COMET's user permission feature will automatically validate `scope` arguments of GraphQL operations and check if a user has access to the entity's scope. The column must be named `scope` for this to work.
 
-For nested entities or operations without a `scope` argument please refer to [Evaluate Content Scopes](/docs/content-scope/evaluate-content-scopes) which describes how to decorate the resolvers/controllers properly.
+For nested entities or operations without a `scope` argument please refer to [Evaluate Content Scopes](evaluate-content-scopes) which describes how to decorate the resolvers/controllers properly.

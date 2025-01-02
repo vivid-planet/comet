@@ -36,7 +36,7 @@ Future version will support a dot-like notation (e.g. `news` will subsume `news.
 
 ## Scope check
 
-The scope check needs to know which scope is used for the current operation. This is described in [Evaluate Content Scopes documentation](/docs/content-scope/evaluate-content-scopes).
+The scope check needs to know which scope is used for the current operation. This is described in [Evaluate Content Scopes documentation](/docs/core-concepts/content-scope/evaluate-content-scopes).
 
 :::caution
 COMET DXP validates the data relevant for the operation, but cannot check if the validated data is finally used. You are responsible for applying the validated data in your operations.

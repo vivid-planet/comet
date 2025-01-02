@@ -2,7 +2,7 @@
 title: Cron Jobs
 ---
 
-Cron Jobs are defined as [console commands](../console-commands/index.md). The preferred way to run them is as a [Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/). Advantages of using Kubernetes Cron Jobs:
+Cron Jobs are defined as [console commands](../console-commands). The preferred way to run them is as a [Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/). Advantages of using Kubernetes Cron Jobs:
 
 -   You can run multiple instances of the API in parallel without additional configuration for Cron Jobs.
 -   Different resources can be used for Cron Jobs and the API.

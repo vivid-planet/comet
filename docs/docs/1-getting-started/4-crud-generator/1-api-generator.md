@@ -138,8 +138,8 @@ A `status` field lets you filter items by status in the list query.
 
 ### scope
 
-The API generator treats a `scope` as a [COMET content scope](/docs/content-scope/). A `scope` arg is added to the list
-and create operations, ensuring the [scope check](/docs/user-permissions/access-control/#scope-check) can be made.
+The API generator treats a `scope` as a [COMET content scope](/docs/core-concepts/content-scope/). A `scope` arg is added to the list
+and create operations, ensuring the [scope check](/docs/core-concepts/user-permissions/access-control/#scope-check) can be made.
 
 If no `scope` field is present, the scope check is skipped for all operations.
 
