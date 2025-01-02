@@ -95,7 +95,7 @@
         "@types/final-form-set-field-touched": "^1.0.3",
         "@types/jest": "^29.5.0",
         "@types/js-cookie": "^3.0.6",
-        "@types/lodash.escaperegexp": "^4.0.0",
+        "@types/lodash.escaperegexp": "^4.1.9",
         "@types/lodash.isequal": "^4.5.8",
         "@types/mime-db": "^1.43.1",
         "@types/node": "^22.0.0",
