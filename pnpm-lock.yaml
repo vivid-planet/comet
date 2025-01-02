@@ -1672,8 +1672,8 @@ importers:
         specifier: ^3.0.6
         version: 3.0.6
       '@types/lodash.escaperegexp':
-        specifier: ^4.0.0
-        version: 4.1.7
+        specifier: ^4.1.9
+        version: 4.1.9
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
@@ -7008,8 +7008,8 @@ packages:
   '@types/lodash.debounce@4.0.9':
     resolution: {integrity: sha512-Ma5JcgTREwpLRwMM+XwBR7DaWe96nC38uCBDFKZWbNKD+osjVzdpnUSwBcqCptrp16sSOLBAUb50Car5I0TCsQ==}
 
-  '@types/lodash.escaperegexp@4.1.7':
-    resolution: {integrity: sha512-2TfHizz0jsnyVkV4X1PMyk6KkibXTBHM43X+6BCR3KE6KgADdbirSF+oiEvPQl6mwuHXZjkxar9d4AFYORgfww==}
+  '@types/lodash.escaperegexp@4.1.9':
+    resolution: {integrity: sha512-CMQc8v16YzhnPZnMhYQuJUksI8BmL1jy/lHJkiXi4/t24Lx7Qvy7qxew1abrDJGa1T2i0NzLLaR27NK1/qp5Ow==}
 
   '@types/lodash.isequal@4.5.8':
     resolution: {integrity: sha512-uput6pg4E/tj2LGxCZo9+y27JNyB2OZuuI/T5F+ylVDYuqICLG2/ktjxx0v6GvVntAf8TvEzeQLcV0ffRirXuA==}
@@ -22749,7 +22749,7 @@ snapshots:
     dependencies:
       '@types/lodash': 4.14.191
 
-  '@types/lodash.escaperegexp@4.1.7':
+  '@types/lodash.escaperegexp@4.1.9':
     dependencies:
       '@types/lodash': 4.14.191
 
