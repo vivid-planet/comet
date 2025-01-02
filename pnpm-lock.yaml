@@ -2000,8 +2000,8 @@ importers:
         specifier: ^0.3.11
         version: 0.3.11
       '@types/passport-jwt':
-        specifier: ^3.0.7
-        version: 3.0.8
+        specifier: ^3.0.13
+        version: 3.0.13
       '@types/pluralize':
         specifier: ^0.0.29
         version: 0.0.29
@@ -7079,8 +7079,8 @@ packages:
   '@types/passport-http@0.3.11':
     resolution: {integrity: sha512-FO0rDRYtuha9m2ZgRx5+jrgrrkAnUzgzdItFI0dwKBC6k9pArK677Gtan67u6+Qah2nXVP3M1uZ5p90SpBT5Zg==}
 
-  '@types/passport-jwt@3.0.8':
-    resolution: {integrity: sha512-VKJZDJUAHFhPHHYvxdqFcc5vlDht8Q2pL1/ePvKAgqRThDaCc84lSYOTQmnx3+JIkDlN+2KfhFhXIzlcVT+Pcw==}
+  '@types/passport-jwt@3.0.13':
+    resolution: {integrity: sha512-fjHaC6Bv8EpMMqzTnHP32SXlZGaNfBPC/Po5dmRGYi2Ky7ljXPbGnOy+SxZqa6iZvFgVhoJ1915Re3m93zmcfA==}
 
   '@types/passport-strategy@0.2.35':
     resolution: {integrity: sha512-o5D19Jy2XPFoX2rKApykY15et3Apgax00RRLf0RUotPDUsYrQa7x4howLYr9El2mlUApHmCMv5CZ1IXqKFQ2+g==}
@@ -22805,7 +22805,7 @@ snapshots:
       '@types/express': 4.17.16
       '@types/passport': 1.0.11
 
-  '@types/passport-jwt@3.0.8':
+  '@types/passport-jwt@3.0.13':
     dependencies:
       '@types/express': 4.17.16
       '@types/jsonwebtoken': 8.5.9

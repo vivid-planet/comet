@@ -106,7 +106,7 @@
         "@types/node": "^22.0.0",
         "@types/node-fetch": "^2.6.2",
         "@types/passport-http": "^0.3.11",
-        "@types/passport-jwt": "^3.0.7",
+        "@types/passport-jwt": "^3.0.13",
         "@types/pluralize": "^0.0.29",
         "@types/probe-image-size": "^7.0.0",
         "@types/request-ip": "^0.0.41",
