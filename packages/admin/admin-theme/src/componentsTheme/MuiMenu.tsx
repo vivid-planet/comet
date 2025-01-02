@@ -12,8 +12,11 @@ export const getMuiMenu: GetMuiComponentTheme<"MuiMenu"> = (component, theme) =>
             },
 
             "& .MuiDivider-root": {
-                margin: "8px 10px",
                 borderColor: theme.palette.grey[50],
+            },
+
+            "& .MuiDivider-root, &.MuiMenuItem-root+.MuiDivider-root": {
+                margin: "8px 10px",
             },
         },
     }),
