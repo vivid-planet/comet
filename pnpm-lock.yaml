@@ -1687,8 +1687,8 @@ importers:
         specifier: ^0.11.4
         version: 0.11.4
       '@types/pluralize':
-        specifier: ^0.0.29
-        version: 0.0.29
+        specifier: ^0.0.33
+        version: 0.0.33
       '@types/react':
         specifier: ^17.0.0
         version: 17.0.53
@@ -2003,8 +2003,8 @@ importers:
         specifier: ^3.0.13
         version: 3.0.13
       '@types/pluralize':
-        specifier: ^0.0.29
-        version: 0.0.29
+        specifier: ^0.0.33
+        version: 0.0.33
       '@types/probe-image-size':
         specifier: ^7.0.0
         version: 7.2.0
@@ -7100,8 +7100,8 @@ packages:
   '@types/picomatch@2.3.0':
     resolution: {integrity: sha512-O397rnSS9iQI4OirieAtsDqvCj4+3eY1J+EPdNTKuHuRWIfUoGyzX294o8C4KJYaLqgSrd2o60c5EqCU8Zv02g==}
 
-  '@types/pluralize@0.0.29':
-    resolution: {integrity: sha512-BYOID+l2Aco2nBik+iYS4SZX0Lf20KPILP5RGmM1IgzdwNdTs0eebiFriOPcej1sX9mLnSoiNte5zcFxssgpGA==}
+  '@types/pluralize@0.0.33':
+    resolution: {integrity: sha512-JOqsl+ZoCpP4e8TDke9W79FDcSgPAR0l6pixx2JHkhnRjvShyYiAYw2LVsnA7K08Y6DeOnaU6ujmENO4os/cYg==}
 
   '@types/prettier@2.7.2':
     resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
@@ -22838,7 +22838,7 @@ snapshots:
 
   '@types/picomatch@2.3.0': {}
 
-  '@types/pluralize@0.0.29': {}
+  '@types/pluralize@0.0.33': {}
 
   '@types/prettier@2.7.2': {}
 
