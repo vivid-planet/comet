@@ -197,8 +197,6 @@ To better differentiate between imports from `@comet/admin` and `@mui/material`,
 -   `MenuItemRouterLink` → `MainNavigationItemRouterLink`
 -   `MenuItemRouterLinkProps` → `MainNavigationItemRouterLinkProps`
 
-It is recommended to use the provided upgrade script (https://github.com/vivid-planet/comet-upgrade/pull/45) for updating the naming.
-
 ### Import `Tooltip` from `@comet/admin` package
 
 ```diff
