@@ -45,14 +45,6 @@ const config = {
                     alt: "COMET DXP logo",
                     src: "img/comet-logo.svg",
                 },
-                items: [
-                    {
-                        type: "doc",
-                        docId: "overview/Overview",
-                        position: "left",
-                        label: "Docs",
-                    },
-                ],
             },
             footer: {
                 style: "dark",
