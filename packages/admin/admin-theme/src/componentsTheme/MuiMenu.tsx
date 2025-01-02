@@ -7,7 +7,7 @@ export const getMuiMenu: GetMuiComponentTheme<"MuiMenu"> = (component, theme) =>
         paper: { minWidth: 220, borderRadius: "4px" },
         root: {
             "& .MuiMenuItem-root": {
-                padding: "8px 15px 8px 30px !important",
+                padding: "8px 15px 8px 30px",
                 columnGap: "10px",
             },
 
