@@ -45,7 +45,7 @@
         "@types/get-image-colors": "^4.0.0",
         "base64url": "^3.0.1",
         "class-transformer": "^0.5.1",
-        "commander": "^9.3.0",
+        "commander": "^9.5.0",
         "cron-parser": "^3.5.0",
         "dataloader": "^2.1.0",
         "date-fns": "^4.1.0",
