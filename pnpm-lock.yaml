@@ -2448,7 +2448,7 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
       draft-js-import-markdown:
-        specifier: ^1.4.0
+        specifier: ^1.4.1
         version: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
       eslint:
         specifier: ^8.57.0
