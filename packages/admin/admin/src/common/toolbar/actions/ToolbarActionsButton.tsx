@@ -76,7 +76,7 @@ export const ToolbarActionButton = (props: ToolbarActionButtonProps) => {
 
     return useIconButton && icon ? (
         <StyledTooltip title={children} {...tooltipProps}>
-            <StyledIconButton ownerState={ownerState} {...iconButtonProps}>
+            <StyledIconButton ownerState={ownerState} {...restProps} {...iconButtonProps}>
                 {icon}
             </StyledIconButton>
         </StyledTooltip>
