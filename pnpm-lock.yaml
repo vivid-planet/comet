@@ -398,7 +398,7 @@ importers:
         specifier: ^2.3.8
         version: 2.3.8
       '@types/uuid':
-        specifier: ^8.0.0
+        specifier: ^8.3.4
         version: 8.3.4
       dotenv-cli:
         specifier: ^7.4.4
@@ -1440,7 +1440,7 @@ importers:
         specifier: ^5.0.0
         version: 5.3.3
       '@types/uuid':
-        specifier: ^8.0.0
+        specifier: ^8.3.4
         version: 8.3.4
       chokidar-cli:
         specifier: ^2.0.0
