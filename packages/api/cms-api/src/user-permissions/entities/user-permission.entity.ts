@@ -1,7 +1,7 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { ContentScope } from "../interfaces/content-scope.interface";
 
@@ -18,7 +18,7 @@ registerEnumType(UserPermissionSource, {
 export class UserPermission extends BaseEntity<UserPermission, "id"> {
     @Field(() => ID)
     @PrimaryKey({ type: "uuid" })
-    id: string = v4();
+    id: string = uuid();
 
     @Property()
     userId: string;
