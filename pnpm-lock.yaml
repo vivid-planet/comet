@@ -322,7 +322,7 @@ importers:
         specifier: ^7.118.0
         version: 7.118.0
       class-transformer:
-        specifier: ^0.5.0
+        specifier: ^0.5.1
         version: 0.5.1
       class-validator:
         specifier: ^0.14.1
@@ -1819,7 +1819,7 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       class-transformer:
-        specifier: ^0.5.0
+        specifier: ^0.5.1
         version: 0.5.1
       commander:
         specifier: ^9.3.0
