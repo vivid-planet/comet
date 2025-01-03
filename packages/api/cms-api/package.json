@@ -112,7 +112,7 @@
         "@types/request-ip": "^0.0.41",
         "@types/rimraf": "^3.0.0",
         "@types/uuid": "^9.0.0",
-        "chokidar-cli": "^2.0.0",
+        "chokidar-cli": "^2.1.0",
         "class-validator": "^0.14.1",
         "eslint": "^8.0.0",
         "express": "^4.0.0",
