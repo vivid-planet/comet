@@ -3,7 +3,7 @@ import { Save } from "@comet/admin-icons";
 import { Button, DialogActions, DialogContent, DialogContentText, DialogProps, FormControlLabel, MenuItem } from "@mui/material";
 import { Form } from "react-final-form";
 
-type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth";
+type DialogSize = Exclude<DialogProps["maxWidth"], false> | "fullWidth" | "fullScreen";
 
 type DialogSizeOptions = {
     [label: string]: DialogSize;
@@ -16,6 +16,7 @@ const dialogSizeOptions: DialogSizeOptions = {
     "LG (1280px)": "lg",
     "XL (1920px)": "xl",
     FullWidth: "fullWidth",
+    FullScreen: "fullScreen",
 };
 
 const selectOptions = [
@@ -79,7 +80,8 @@ export const _Dialog = {
                                 onClose={selectedDialogOnClose === "callback" ? () => console.log("Dialog closed") : undefined}
                                 open={true}
                                 fullWidth={selectedDialogSize === "fullWidth"}
-                                maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize}
+                                fullScreen={selectedDialogSize === "fullScreen"}
+                                maxWidth={selectedDialogSize !== "fullWidth" && selectedDialogSize !== "fullScreen" && selectedDialogSize}
                             >
                                 <>{selectedDialogSize === "xs" ? <ConfirmationDialogContent /> : <DefaultDialogContent />}</>
                             </Dialog>
