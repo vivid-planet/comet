@@ -138,7 +138,7 @@
         "@nestjs/graphql": "^12.2.2",
         "@nestjs/platform-express": "^10.4.15",
         "@sentry/node": "^7.0.0",
-        "class-validator": "^0.14.0",
+        "class-validator": "^0.14.1",
         "express": "^4.21.2",
         "graphql": "^16.6.0",
         "nestjs-console": "^9.0.0",
