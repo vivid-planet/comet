@@ -34,7 +34,7 @@
         "@comet/admin-icons": "workspace:^7.10.0",
         "lodash.isequal": "^4.5.0",
         "rimraf": "^3.0.0",
-        "scroll-into-view-if-needed": "^2.0.0",
+        "scroll-into-view-if-needed": "^3.1.0",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
