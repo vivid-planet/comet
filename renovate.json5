@@ -72,31 +72,31 @@
         },
 
         {
+            // Can't upgrade because: > v5 doesn't support Prompts, so we don't want to upgrade atm
             "matchPackageNames": ["react-router", "react-router-dom", "@types/react-router", "@types/react-router-dom"],
-            "allowedVersions": "^5.0.0",
-            "cantUpgradeBecause": "> v5 doesn't support Prompts, so we don't want to upgrade atm"
+            "allowedVersions": "^5.0.0"
         },
         {
+            // Can't upgrade because: react-router v5 has a dependency to history v4
             "matchPackageNames": ["history", "@types/history"],
-            "allowedVersions": "^4.0.0",
-            "cantUpgradeBecause": "react-router v5 has a dependency to history v4"
+            "allowedVersions": "^4.0.0"
         },
         {
+            // Can't upgrade because: draft-js only supports v3.7.4
             "matchPackageNames": ["immutable", "@types/immutable"],
-            "allowedVersions": "^3.7.4",
-            "cantUpgradeBecause": "draft-js only supports v3.7.4"
+            "allowedVersions": "^3.7.4"
         },
         {
+            // Can't upgrade because: v5 is pure ESM
             "matchPackageNames": ["change-case"],
             "matchFileNames": ["packages/**"],
-            "allowedVersions": "^4.0.0",
-            "cantUpgradeBecause": "v5 is pure ESM"
+            "allowedVersions": "^4.0.0"
         },
         {
-            "matchPackageNames": ["query-string"],
+            // Can't upgrade because: v8 is pure ESM
+            "matchPackageNames": ["query-string"], // test comment
             "matchFileNames": ["packages/**"],
             "allowedVersions": "^7.0.0",
-            "cantUpgradeBecause": "v8 is pure ESM"
         }
     ],
     "rangeStrategy": "bump",
