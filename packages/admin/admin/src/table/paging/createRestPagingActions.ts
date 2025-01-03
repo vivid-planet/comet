@@ -1,4 +1,4 @@
-import * as queryString from "query-string";
+import queryString from "query-string";
 
 import { IPagingApi } from "../useTableQueryPaging";
 import { IPagingInfo } from "./IPagingInfo";
