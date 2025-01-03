@@ -121,6 +121,11 @@ export function createPageTreeResolver({
             if (this.config.reservedPaths.includes(requestedPath)) {
                 return SlugAvailability.Reserved;
             }
+
+            if (slug == "home" && requestedPath !== "/home") {
+                return SlugAvailability.Reserved;
+            }
+
             const nodeWithSamePath = await this.pageTreeService.nodeWithSamePath(requestedPath, nonEmptyScopeOrNothing(scope));
 
             if (nodeWithSamePath) {

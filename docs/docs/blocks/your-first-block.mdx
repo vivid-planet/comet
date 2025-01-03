@@ -95,7 +95,7 @@ export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, 
 export const PageContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
-            richtext: RichTextBlock,
+            richText: RichTextBlock,
             image: ImageBlock,
             space: SpaceBlock,
             headline: HeadlineBlock, // Newly added HeadlineBlock
@@ -294,7 +294,7 @@ In the same way, we registered the block in the API, we need to register our adm
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
     supportedBlocks: {
-        richtext: RichTextBlock,
+        richText: RichTextBlock,
         image: ImageBlock,
         space: SpaceBlock,
         headline: HeadlineBlock, // Newly added HeadlineBlock
@@ -416,7 +416,7 @@ You might have already guessed it: We need to register the Headline block once a
 
 ```tsx title="PageContentBlock.tsx"
 const supportedBlocks: SupportedBlocks = {
-    richtext: (props) => <RichTextBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
     image: (props) => <ImageBlock data={props} />,
     space: (props) => <SpaceBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />, // Newly added HeadlineBlock
@@ -446,7 +446,7 @@ The complete code for our Headline site block (including all necessary imports) 
 import { HeadlineBlockData } from "@src/blocks.generated";
 import * as React from "react";
 import { Renderers } from "redraft";\n
-import RichTextBlock from "./RichTextBlock";\n
+import { RichTextBlock } from "./RichTextBlock";\n
 const headlineTags: { [key: string]: React.ElementType } = {
     "header-one": "h1",
     "header-two": "h2",
