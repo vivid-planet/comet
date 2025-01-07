@@ -30,8 +30,6 @@ export const MediaGalleryBlock = withPreview(
                 $aspectRatioVertical={aspectRatioValues[1]}
             >
                 {data.items.blocks.map((block) => (
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
                     <SwiperSlide key={block.key}>
                         <MediaBlock data={block.props.media} aspectRatio={data.aspectRatio} />
                         <MediaCaption variant="p200">{block.props.caption}</MediaCaption>
@@ -80,8 +78,6 @@ const MediaCaption = styled(Typography)`
     }
 `;
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const SwiperWrapper = styled(Swiper)<{ $aspectRatioHorizontal: string; $aspectRatioVertical: string }>`
     --swiper-button-size: 16px;
 

@@ -78,6 +78,11 @@
                 "peerDependencies": {
                     "@types/react": "*"
                 }
+            },
+            "swiper": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
+                }
             }
         }
     }
