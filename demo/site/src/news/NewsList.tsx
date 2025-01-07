@@ -1,5 +1,5 @@
 "use client";
-import { DamImageBlock } from "@src/blocks/DamImageBlock";
+import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -32,9 +32,9 @@ const Card = styled(Link)`
     padding: 5px;
     color: black;
     text-decoration: none;
-    border: 1px solid ${({ theme }) => theme.colors.lightGray};
+    border: 1px solid ${({ theme }) => theme.palette.gray[200]};
 
     &:hover {
-        border-color: ${({ theme }) => theme.colors.primary};
+        border-color: ${({ theme }) => theme.palette.primary.main};
     }
 `;

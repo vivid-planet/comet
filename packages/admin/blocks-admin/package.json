@@ -32,7 +32,13 @@
     "dependencies": {
         "@comet/admin": "workspace:^7.10.0",
         "@comet/admin-icons": "workspace:^7.10.0",
+<<<<<<< HEAD
         "lodash.isequal": "^4.5.0",
+=======
+        "@mui/lab": "^5.0.0-alpha.76",
+        "clipboard-copy": "^4.0.0",
+        "lodash.isequal": "^4.0.0",
+>>>>>>> main
         "rimraf": "^3.0.0",
         "scroll-into-view-if-needed": "^2.0.0",
         "uuid": "^9.0.0"

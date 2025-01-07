@@ -8,29 +8,27 @@ import {
     useContentScopeConfig as useContentScopeConfigLibrary,
     useCurrentUser,
 } from "@comet/cms-admin";
+import { ContentScope } from "@src/site-configs";
 
-type Domain = "main" | "secondary" | string;
-type Language = "en" | string;
-export interface ContentScope {
-    domain: Domain;
-    language: Language;
-}
-
-// convenince wrapper for app (Bind Generic)
+// convenience wrapper for app (Bind Generic)
 export function useContentScope(): UseContentScopeApi<ContentScope> {
     return useContentScopeLibrary<ContentScope>();
 }
 
+<<<<<<< HEAD
 // @TODO (maybe): make factory in library to statically create Provider
 
 /** @knipignore */
+=======
+>>>>>>> main
 export function useContentScopeConfig(p: ContentScopeConfigProps): void {
     return useContentScopeConfigLibrary(p);
 }
 
-const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
+export const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "children">) => {
     const user = useCurrentUser();
 
+    // TODO in COMET: filter already in API, avoid type cast, support labels
     const userContentScopes = user.allowedContentScopes.filter(
         (value, index, self) => self.map((x) => JSON.stringify(x)).indexOf(JSON.stringify(value)) == index,
     ) as ContentScope[];
@@ -46,5 +44,3 @@ const ContentScopeProvider = ({ children }: Pick<ContentScopeProviderProps, "chi
         </ContentScopeProviderLibrary>
     );
 };
-
-export default ContentScopeProvider;

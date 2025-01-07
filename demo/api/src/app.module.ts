@@ -25,8 +25,14 @@ import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
+<<<<<<< HEAD
 import { LinksModule } from "@src/links/links.module";
 import { PagesModule } from "@src/pages/pages.module";
+=======
+import { LinksModule } from "@src/documents/links/links.module";
+import { PagesModule } from "@src/documents/pages/pages.module";
+import { ValidationError } from "apollo-server-express";
+>>>>>>> main
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";
@@ -35,10 +41,11 @@ import { UserService } from "./auth/user.service";
 import { DamScope } from "./dam/dto/dam-scope";
 import { DamFile } from "./dam/entities/dam-file.entity";
 import { DamFolder } from "./dam/entities/dam-folder.entity";
+import { Link } from "./documents/links/entities/link.entity";
+import { Page } from "./documents/pages/entities/page.entity";
 import { PredefinedPage } from "./documents/predefined-pages/entities/predefined-page.entity";
 import { PredefinedPagesModule } from "./documents/predefined-pages/predefined-pages.module";
 import { FooterModule } from "./footer/footer.module";
-import { Link } from "./links/entities/link.entity";
 import { MenusModule } from "./menus/menus.module";
 import { NewsLinkBlock } from "./news/blocks/news-link.block";
 import { NewsModule } from "./news/news.module";
@@ -46,7 +53,6 @@ import { OpenTelemetryModule } from "./open-telemetry/open-telemetry.module";
 import { PageTreeNodeCreateInput, PageTreeNodeUpdateInput } from "./page-tree/dto/page-tree-node.input";
 import { PageTreeNodeScope } from "./page-tree/dto/page-tree-node-scope";
 import { PageTreeNode } from "./page-tree/entities/page-tree-node.entity";
-import { Page } from "./pages/entities/page.entity";
 import { ProductsModule } from "./products/products.module";
 import { RedirectScope } from "./redirects/dto/redirect-scope";
 
