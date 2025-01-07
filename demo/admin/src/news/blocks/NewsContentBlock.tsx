@@ -2,7 +2,6 @@ import { createBlocksBlock } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
-import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 
 export const NewsContentBlock = createBlocksBlock({
     name: "NewsContentBlock",
@@ -10,6 +9,5 @@ export const NewsContentBlock = createBlocksBlock({
         heading: HeadingBlock,
         richText: RichTextBlock,
         image: DamImageBlock,
-        textImage: TextImageBlock,
     },
 });

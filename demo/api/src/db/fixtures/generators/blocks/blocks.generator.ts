@@ -1,22 +1,20 @@
 import { BlocksBlockFixturesGeneratorMap, ExtractBlockInput, ExtractBlockInputFactoryProps } from "@comet/blocks-api";
 import { FileInterface } from "@comet/cms-api";
 import { Config } from "@src/config/config";
+import { generateImageBlock } from "@src/db/fixtures/generators/blocks/image.generator";
 import { PageContentBlock } from "@src/documents/pages/blocks/page-content.block";
 import faker from "faker";
 
-import { generateImageBlock } from "./image.generator";
 import { generateRichtextBlock } from "./richtext.generator";
 import { generateSpaceBlock } from "./space.generator";
-import { generateTextImageBlock } from "./text-image.generator";
 
 export const generateBlocksBlock = (
     imageFiles: FileInterface[],
     config: Config,
     blockCfg: Partial<BlocksBlockFixturesGeneratorMap<typeof PageContentBlock>> = {
         space: generateSpaceBlock,
-        richText: generateRichtextBlock,
+        richtext: generateRichtextBlock,
         image: () => generateImageBlock(imageFiles),
-        textImage: () => generateTextImageBlock(imageFiles, config),
     },
 ): ExtractBlockInput<typeof PageContentBlock> => {
     const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];
