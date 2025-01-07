@@ -9,11 +9,11 @@ type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & 
 
 export const DamImageBlock = withPreview(
     ({ data: { block }, aspectRatio, ...imageProps }: PropsWithData<DamImageBlockData> & DamImageProps) => {
-        if (!block) {
+        if (!block || !block.props.damFile) {
             return <PreviewSkeleton type="media" hasContent={false} />;
         }
 
-        if (block.type === "pixelImage" && "cropArea" in block.props) {
+        if (block.type === "pixelImage" && "urlTemplate" in block.props) {
             return <PixelImageBlock data={block.props} aspectRatio={aspectRatio} {...imageProps} />;
         } else if (block.type === "svgImage") {
             return <SvgImageBlock data={block.props} />;
