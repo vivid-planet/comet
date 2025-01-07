@@ -1,4 +1,4 @@
-import { RteBold } from "@comet/admin-icons";
+import { RteBold, RteItalic, RteRedo, RteStrikethrough, RteUndo } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -31,8 +31,20 @@ export const RichTextEditorTipTap: React.FC<RichTextEditorTipTapProps> = ({ cont
             {editor ? (
                 <>
                     <div>
+                        <IconButton onClick={() => editor.chain().focus().undo().run()}>
+                            <RteUndo />
+                        </IconButton>
+                        <IconButton onClick={() => editor.chain().focus().redo().run()}>
+                            <RteRedo />
+                        </IconButton>
                         <IconButton onClick={() => editor.chain().focus().toggleBold().run()}>
                             <RteBold />
+                        </IconButton>
+                        <IconButton onClick={() => editor.chain().focus().toggleItalic().run()}>
+                            <RteItalic />
+                        </IconButton>
+                        <IconButton onClick={() => editor.chain().focus().toggleStrike().run()}>
+                            <RteStrikethrough />
                         </IconButton>
                     </div>
 

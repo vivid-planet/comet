@@ -1,4 +1,3 @@
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -7,6 +6,7 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import React, { useEffect, useState } from "react";
 
+import DebugTreeViewPlugin from "./RichTextEditorLexicalDebug";
 import ToolbarPlugin from "./RichTextEditorLexicalToolbar";
 
 const theme = {
@@ -51,11 +51,22 @@ export const RichTextEditorLexical: React.FC<RichTextEditorLexicalProps> = ({ co
     return (
         <LexicalComposer initialConfig={initialConfig}>
             <ToolbarPlugin />
-            <RichTextPlugin contentEditable={<ContentEditable />} ErrorBoundary={LexicalErrorBoundary} />
+            <div
+                style={{
+                    padding: "20px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    backgroundColor: "#fefefe",
+                    color: "#000000",
+                    marginBottom: "20px",
+                }}
+            >
+                <RichTextPlugin contentEditable={<ContentEditable />} ErrorBoundary={LexicalErrorBoundary} />
+            </div>
 
             <HistoryPlugin />
-            <AutoFocusPlugin />
             <OnChangePlugin onChange={onChange} />
+            <DebugTreeViewPlugin />
         </LexicalComposer>
     );
 };
