@@ -1,5 +1,14 @@
 # @comet/cms-api
 
+## 7.11.0
+
+### Patch Changes
+
+-   fb2297b2d: Fix `notEqual` operation for enum filter
+-   6778c4e97: Prevent the creation of a second home page
+-   Updated dependencies [58a99bbdd]
+    -   @comet/blocks-api@7.11.0
+
 ## 7.10.0
 
 ### Patch Changes
