@@ -5,8 +5,8 @@ import { useContentScope } from "@src/common/ContentScopeProvider";
 import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { FormBuilderAddForm } from "./FormBuilderAddForm";
 import FormBuilderPreviewAndForm from "./FormBuilderPreviewAndForm";
-import { FormBuilderAddForm } from "./generated/FormBuilderAddForm";
 import { FormBuildersGrid } from "./generated/FormBuildersGrid";
 
 export const FormBuilderPage = () => {
