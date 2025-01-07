@@ -17,7 +17,7 @@ export const ProductsGrid: GridConfig<GQLProduct> = {
         { field: "price", sort: "asc" },
     ],
     initialFilter: {
-        items: [{ columnField: "type", operatorValue: "is", value: "Shirt" }],
+        items: [{ field: "type", operator: "is", value: "Shirt" }],
     },
     columns: [
         {

@@ -1049,19 +1049,6 @@
                 "name": "copyrightNotice",
                 "kind": "String",
                 "nullable": false
-<<<<<<< HEAD
-            },
-            {
-                "name": "location",
-                "kind": "String",
-                "nullable": false
-            },
-            {
-                "name": "contactUs",
-                "kind": "String",
-                "nullable": false
-=======
->>>>>>> main
             }
         ]
     },

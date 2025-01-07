@@ -25,14 +25,8 @@ import { Config } from "@src/config/config";
 import { ConfigModule } from "@src/config/config.module";
 import { ContentGenerationService } from "@src/content-generation/content-generation.service";
 import { DbModule } from "@src/db/db.module";
-<<<<<<< HEAD
-import { LinksModule } from "@src/links/links.module";
-import { PagesModule } from "@src/pages/pages.module";
-=======
 import { LinksModule } from "@src/documents/links/links.module";
 import { PagesModule } from "@src/documents/pages/pages.module";
-import { ValidationError } from "apollo-server-express";
->>>>>>> main
 import { Request } from "express";
 
 import { AccessControlService } from "./auth/access-control.service";

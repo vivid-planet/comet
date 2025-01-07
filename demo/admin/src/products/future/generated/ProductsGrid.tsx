@@ -144,7 +144,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 { field: "price", sort: "asc" },
             ],
             initialFilter: {
-                items: [{ columnField: "type", operatorValue: "is", value: "Shirt" }],
+                items: [{ field: "type", operator: "is", value: "Shirt" }],
             },
             queryParamsPrefix: "products",
         }),

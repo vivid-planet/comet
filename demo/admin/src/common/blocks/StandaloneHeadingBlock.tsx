@@ -1,7 +1,6 @@
 import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
 import { StandaloneHeadingBlockData } from "@src/blocks.generated";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";
-import * as React from "react";
 import { FormattedMessage } from "react-intl";
 
 export const StandaloneHeadingBlock = createCompositeBlock(

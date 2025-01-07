@@ -8,6 +8,7 @@ import { topMenuPageTreeNodeFragment, TopNavigation } from "@src/topNavigation/T
 import { gql, GraphQLClient } from "graphql-request";
 import Head from "next/head";
 
+import { StageBlock } from "./blocks/StageBlock";
 import { GQLPageQuery } from "./Page.generated";
 
 // @TODO: Scope for menu should also be of type PageTreeNodeScopeInput
@@ -19,6 +20,7 @@ const pageQuery = gql`
                 ... on Page {
                     content
                     seo
+                    stage
                 }
             }
             ...Breadcrumbs
@@ -65,6 +67,7 @@ export default function Page(props: GQLPageQuery): JSX.Element {
             {document?.__typename === "Page" && <SeoBlock data={document.seo} title={props.pageContent?.name ?? ""} />}
             <TopNavigation data={props.topMenu} />
             <Header header={props.header} />
+            {document?.__typename === "Page" && <StageBlock data={document.stage} />}
             {props.pageContent && <Breadcrumbs {...props.pageContent} />}
             {document?.__typename === "Page" ? <div>{document.content && <PageContentBlock data={document.content} />}</div> : null}
         </>

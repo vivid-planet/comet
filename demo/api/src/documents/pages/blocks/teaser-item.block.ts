@@ -3,12 +3,12 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { MediaBlock } from "@src/common/blocks/media.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { TextLinkBlock } from "@src/common/blocks/text-link.block";
@@ -43,7 +43,7 @@ class TeaserItemBlockInput extends BlockInput {
     link: ExtractBlockInput<typeof TextLinkBlock>;
 
     transformToBlockData(): TeaserItemBlockData {
-        return inputToData(TeaserItemBlockData, this);
+        return blockInputToData(TeaserItemBlockData, this);
     }
 }
 

@@ -1,6 +1,5 @@
 import { Assets, Dashboard, Data, PageTree, Snips, Wrench } from "@comet/admin-icons";
 import {
-    AllCategories,
     ContentScopeIndicator,
     createRedirectsPage,
     CronJobsPage,
@@ -23,7 +22,7 @@ import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { NewsPage } from "@src/news/NewsPage";
-import { categoryToUrlParam, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
+import { categoryToUrlParam, pageTreeCategories, urlParamToCategory } from "@src/pageTree/pageTreeCategories";
 import ProductCategoriesPage from "@src/products/categories/ProductCategoriesPage";
 import { CombinationFieldsTestProductsPage } from "@src/products/future/CombinationFieldsTestProductsPage";
 import { CreateCapProductPage as FutureCreateCapProductPage } from "@src/products/future/CreateCapProductPage";
@@ -39,13 +38,6 @@ import { Redirect, RouteComponentProps } from "react-router";
 
 import { ComponentDemo } from "./ComponentDemo";
 import { EditPageNode } from "./EditPageNode";
-
-export const pageTreeCategories: AllCategories = [
-    {
-        category: "MainNavigation",
-        label: <FormattedMessage id="menu.pageTree.mainNavigation" defaultMessage="Main navigation" />,
-    },
-];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const pageTreeDocumentTypes: Record<string, DocumentInterface<any, any>> = {

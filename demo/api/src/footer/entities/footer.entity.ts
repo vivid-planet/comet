@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import { BlockDataInterface, CrudSingleGenerator, RootBlock, RootBlockDataScalar, RootBlockEntity, RootBlockType } from "@comet/cms-api";
-=======
-import { ExtractBlockData, RootBlock, RootBlockEntity } from "@comet/blocks-api";
-import { CrudSingleGenerator, DocumentInterface, RootBlockDataScalar, RootBlockType } from "@comet/cms-api";
->>>>>>> main
+import { CrudSingleGenerator, ExtractBlockData, RootBlock, RootBlockDataScalar, RootBlockEntity, RootBlockType } from "@comet/cms-api";
 import { BaseEntity, Embedded, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { v4 } from "uuid";
@@ -15,7 +10,7 @@ import { FooterScope } from "../dto/footer-scope";
 @ObjectType()
 @RootBlockEntity()
 @CrudSingleGenerator({ targetDirectory: `${__dirname}/../generated/`, requiredPermission: ["pageTree"] })
-export class Footer extends BaseEntity<Footer, "id"> implements DocumentInterface {
+export class Footer extends BaseEntity<Footer, "id"> {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
     @PrimaryKey({ type: "uuid" })

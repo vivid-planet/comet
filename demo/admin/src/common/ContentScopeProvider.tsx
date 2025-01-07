@@ -14,13 +14,9 @@ import { ContentScope } from "@src/site-configs";
 export function useContentScope(): UseContentScopeApi<ContentScope> {
     return useContentScopeLibrary<ContentScope>();
 }
-
-<<<<<<< HEAD
 // @TODO (maybe): make factory in library to statically create Provider
 
 /** @knipignore */
-=======
->>>>>>> main
 export function useContentScopeConfig(p: ContentScopeConfigProps): void {
     return useContentScopeConfigLibrary(p);
 }

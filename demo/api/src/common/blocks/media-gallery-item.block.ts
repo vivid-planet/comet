@@ -3,13 +3,13 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
-import { IsUndefinable } from "@comet/cms-api";
+    IsUndefinable,
+} from "@comet/cms-api";
 import { MediaBlock } from "@src/common/blocks/media.block";
 import { IsString } from "class-validator";
 
@@ -31,7 +31,7 @@ class MediaGalleryItemBlockInput extends BlockInput {
     caption?: string;
 
     transformToBlockData(): MediaGalleryItemBlockData {
-        return inputToData(MediaGalleryItemBlockData, this);
+        return blockInputToData(MediaGalleryItemBlockData, this);
     }
 }
 

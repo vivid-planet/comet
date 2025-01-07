@@ -3,13 +3,13 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
-import { SvgImageBlock } from "@comet/cms-api";
+    SvgImageBlock,
+} from "@comet/cms-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsString } from "class-validator";
 
@@ -43,7 +43,7 @@ class KeyFactsItemBlockInput extends BlockInput {
     description: ExtractBlockInput<typeof RichTextBlock>;
 
     transformToBlockData(): KeyFactsItemBlockData {
-        return inputToData(KeyFactsItemBlockData, this);
+        return blockInputToData(KeyFactsItemBlockData, this);
     }
 }
 

@@ -28,11 +28,13 @@ import { Route, Switch } from "react-router";
 import { ContentScopeProvider } from "./common/ContentScopeProvider";
 import { additionalPageTreeNodeFieldsFragment } from "./common/EditPageNode";
 import MasterHeader from "./common/MasterHeader";
-import { AppMasterMenu, masterMenuData, pageTreeCategories, pageTreeDocumentTypes } from "./common/MasterMenu";
+import { AppMasterMenu, masterMenuData, pageTreeDocumentTypes } from "./common/MasterMenu";
 import { ImportFromPicsum } from "./dam/ImportFromPicsum";
 import { Link } from "./documents/links/Link";
 import { Page } from "./documents/pages/Page";
 import { getMessages } from "./lang";
+import { NewsDependency } from "./news/dependencies/NewsDependency";
+import { pageTreeCategories } from "./pageTree/pageTreeCategories";
 
 const GlobalStyle = () => (
     <Global
@@ -92,6 +94,7 @@ export function App() {
                                 entityDependencyMap={{
                                     Page,
                                     Link,
+                                    News: NewsDependency,
                                     DamFile: createDamFileDependency(),
                                 }}
                             >

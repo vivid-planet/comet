@@ -15,18 +15,7 @@ export function GridFilterButton(props: ButtonProps) {
     }, [apiRef]);
 
     return (
-<<<<<<< HEAD
-        <Button
-            startIcon={<Filter />}
-            variant="outlined"
-            onClick={handleFilterClick}
-            sx={(theme) => ({
-                borderColor: theme.palette.grey[100],
-            })}
-        >
-=======
         <ToolbarActionButton startIcon={<Filter />} variant="outlined" onClick={handleFilterClick} {...props}>
->>>>>>> main
             <FormattedMessage {...messages.filter} />
         </ToolbarActionButton>
     );

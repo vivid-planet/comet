@@ -48,12 +48,7 @@ interface FormProps {
     scope: GQLNewsContentScopeInput;
 }
 
-<<<<<<< HEAD
-export function NewsForm({ id }: FormProps) {
-    const stackApi = useStackApi();
-=======
-export function NewsForm({ id, scope }: FormProps): React.ReactElement {
->>>>>>> main
+export function NewsForm({ id, scope }: FormProps) {
     const client = useApolloClient();
     const mode = id ? "edit" : "add";
     const formApiRef = useFormApiRef<FormValues>();

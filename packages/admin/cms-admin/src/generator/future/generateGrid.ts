@@ -525,7 +525,7 @@ export function generateGrid(
                         }
                       items: [${config.initialFilter.items
                           .map((item) => {
-                              return `{columnField: "${item.columnField}", operatorValue: "${item.operatorValue}", value: "${item.value}" }`;
+                              return `{ field: "${item.field}", operator: "${item.operator}", value: "${item.value}" }`;
                           })
                           .join(",\n")} ],},`
                       : ""
@@ -563,11 +563,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-<<<<<<< HEAD
-    import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-=======
-    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
->>>>>>> main
+    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,

@@ -23,7 +23,7 @@ import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { BlockPreviewContent } from "@comet/blocks-admin";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
-import { DataGridPro, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -100,37 +100,14 @@ export function NewsGrid() {
     const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("NewsGrid") };
     const { scope } = useContentScope();
 
-<<<<<<< HEAD
-    const columns: GridColDef<GQLNewsListFragment>[] = [
-        { field: "slug", headerName: intl.formatMessage({ id: "news.slug", defaultMessage: "Slug" }), width: 150 },
-        { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), width: 150 },
-        {
-            field: "status",
-            headerName: intl.formatMessage({ id: "news.status", defaultMessage: "Status" }),
-            type: "singleSelect",
-            valueOptions: [
-                { value: "Active", label: intl.formatMessage({ id: "news.status.active", defaultMessage: "Active" }) },
-                { value: "Deleted", label: intl.formatMessage({ id: "news.status.deleted", defaultMessage: "Deleted" }) },
-            ],
-            width: 150,
-        },
-        {
-            field: "date",
-            headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }),
-            type: "dateTime",
-            valueGetter: (value) => value && new Date(value),
-            width: 150,
-        },
-=======
     const columns: GridColDef<GQLNewsGridFragment>[] = [
         { field: "title", headerName: intl.formatMessage({ id: "news.title", defaultMessage: "Title" }), flex: 1, minWidth: 150 },
         { ...dataGridDateColumn, field: "date", headerName: intl.formatMessage({ id: "news.date", defaultMessage: "Date" }), flex: 1, minWidth: 150 },
->>>>>>> main
         {
             field: "category",
             headerName: intl.formatMessage({ id: "news.category", defaultMessage: "Category" }),
             type: "singleSelect",
-            valueFormatter: ({ value }) => value?.toString(),
+            valueFormatter: (value, row) => row.category?.toString(),
             valueOptions: [
                 {
                     value: "Events",
@@ -168,25 +145,8 @@ export function NewsGrid() {
             renderCell: (params) => {
                 return <BlockPreviewContent block={NewsContentBlock} input={params.row.content} />;
             },
-<<<<<<< HEAD
-        },
-        {
-            field: "createdAt",
-            headerName: intl.formatMessage({ id: "news.createdAt", defaultMessage: "Created At" }),
-            type: "dateTime",
-            valueGetter: (value) => value && new Date(value),
-            width: 150,
-        },
-        {
-            field: "updatedAt",
-            headerName: intl.formatMessage({ id: "news.updatedAt", defaultMessage: "Updated At" }),
-            type: "dateTime",
-            valueGetter: (value) => value && new Date(value),
-            width: 150,
-=======
             flex: 1,
             minWidth: 150,
->>>>>>> main
         },
         {
             field: "actions",
@@ -250,31 +210,15 @@ export function NewsGrid() {
     const rows = data?.newsList.nodes ?? [];
 
     return (
-<<<<<<< HEAD
-        <MainContent fullHeight>
-            <DataGridPro
-                {...dataGridProps}
-                rows={rows}
-                rowCount={rowCount}
-                columns={columns}
-                loading={loading}
-                slots={{
-                    toolbar: NewsGridToolbar,
-                }}
-            />
-        </MainContent>
-=======
         <DataGridPro
             {...dataGridProps}
-            disableSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}
             loading={loading}
-            components={{
-                Toolbar: NewsGridToolbar,
+            slots={{
+                toolbar: NewsGridToolbar as GridSlotsComponent["toolbar"],
             }}
         />
->>>>>>> main
     );
 }

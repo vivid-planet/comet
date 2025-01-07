@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import { ExtractBlockInputFactoryProps, FileInterface, ImagePosition } from "@comet/cms-api";
-=======
-import { ExtractBlockInputFactoryProps } from "@comet/blocks-api";
-import { FileInterface, ImagePosition } from "@comet/cms-api";
 import { TextImageBlock } from "@src/common/blocks/text-image.block";
->>>>>>> main
 import { Config } from "@src/config/config";
 import faker from "faker";
 

@@ -3,12 +3,12 @@ import {
     BlockDataInterface,
     BlockField,
     BlockInput,
+    blockInputToData,
     ChildBlock,
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-    inputToData,
-} from "@comet/blocks-api";
+} from "@comet/cms-api";
 import { CallToActionListBlock } from "@src/common/blocks/call-to-action-list.block";
 import { HeadingBlock } from "@src/common/blocks/heading.block";
 import { MediaBlock } from "@src/common/blocks/media.block";
@@ -52,7 +52,7 @@ class BillboardTeaserBlockInput extends BlockInput {
     callToActionList: ExtractBlockInput<typeof CallToActionListBlock>;
 
     transformToBlockData(): BillboardTeaserBlockData {
-        return inputToData(BillboardTeaserBlockData, this);
+        return blockInputToData(BillboardTeaserBlockData, this);
     }
 }
 

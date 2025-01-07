@@ -28,11 +28,7 @@ export function createConfig() {
     };
 }
 
-<<<<<<< HEAD
 type Config = ReturnType<typeof createConfig>;
-=======
-export type Config = ReturnType<typeof createConfig>;
->>>>>>> main
 
 const ConfigContext = createContext<Config | undefined>(undefined);
 

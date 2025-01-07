@@ -1,14 +1,14 @@
 "use client";
-import { CookieSafe, PropsWithData, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
-import { YouTubeVideoBlockData } from "@src/blocks.generated";
+import { CookieSafe, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
 import { cookieIds } from "@src/util/cookieIds";
+import { ComponentProps } from "react";
 import styled from "styled-components";
 
 import { FallbackCookiePlaceholder, LoadingCookiePlaceholder } from "../helpers/CookiePlaceholders";
 
 const aspectRatio = "16x9";
 
-export const CookieSafeYouTubeVideoBlock = (props: PropsWithData<YouTubeVideoBlockData>) => {
+export const CookieSafeYouTubeVideoBlock = (props: ComponentProps<typeof YouTubeVideoBlock>) => {
     const { consentedCookies } = useCookieApi();
 
     return (

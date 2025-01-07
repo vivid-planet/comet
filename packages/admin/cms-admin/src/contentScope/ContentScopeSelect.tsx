@@ -189,45 +189,18 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                 <Fragment key={group.value}>
                                     {showGroupHeader && (
                                         <ListSubheader
-<<<<<<< HEAD
                                             sx={(theme) => ({
                                                 paddingX: theme.spacing(3),
-                                            })}
-                                        >
-                                            <Typography variant="overline">
-=======
-                                            sx={({ spacing }) => ({
-                                                paddingX: spacing(3),
-                                                paddingTop: spacing(4),
-                                                paddingBottom: spacing(2),
+                                                paddingTop: theme.spacing(4),
+                                                paddingBottom: theme.spacing(2),
                                                 lineHeight: "inherit",
                                             })}
                                         >
-                                            <Typography variant="overline" color={(theme) => theme.palette.grey[500]}>
->>>>>>> main
+                                            <Typography variant="overline" sx={(theme) => ({ color: theme.palette.grey[500] })}>
                                                 {matches ? <MarkedMatches text={groupLabel} matches={matches} /> : groupLabel}
                                             </Typography>
                                         </ListSubheader>
                                     )}
-<<<<<<< HEAD
-                                    {group.options.map((option) => (
-                                        <ListItemButton
-                                            key={JSON.stringify(option)}
-                                            onClick={() => {
-                                                hideDropdown();
-                                                onChange(optionToValue<Value>(option));
-                                                setSearchValue("");
-                                            }}
-                                            selected={option === selectedOption}
-                                            sx={(theme) => ({
-                                                paddingX: theme.spacing(6),
-                                            })}
-                                        >
-                                            {renderOption?.(option, searchValue)}
-                                        </ListItemButton>
-                                    ))}
-                                    {showGroupDivider && <Divider sx={{ margin: 2, borderColor: "grey.50" }} />}
-=======
                                     {group.options.map((option) => {
                                         const isSelected = option === selectedOption;
 
@@ -255,7 +228,6 @@ export function ContentScopeSelect<Value extends ContentScopeInterface = Content
                                             sx={({ spacing, palette }) => ({ marginX: "8px", marginY: spacing(2), borderColor: palette.grey[50] })}
                                         />
                                     )}
->>>>>>> main
                                 </Fragment>
                             );
                         })}

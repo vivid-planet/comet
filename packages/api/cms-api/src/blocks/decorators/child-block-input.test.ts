@@ -1,6 +1,6 @@
-import { BlockData, BlockDataInterface, BlockInput, createBlock, ExtractBlockData, ExtractBlockInput, inputToData } from "../block";
-import { createRichTextBlock } from "../createRichTextBlock";
+import { BlockData, BlockDataInterface, BlockInput, blockInputToData, createBlock, ExtractBlockData, ExtractBlockInput } from "../block";
 import { ExternalLinkBlock } from "../ExternalLinkBlock";
+import { createRichTextBlock } from "../factories/createRichTextBlock";
 import { ChildBlock } from "./child-block";
 import { ChildBlockInput } from "./child-block-input";
 
@@ -16,7 +16,7 @@ class HeadlineBlockInput extends BlockInput {
     headline: ExtractBlockInput<typeof RichTextBlock>;
 
     transformToBlockData(): BlockDataInterface {
-        return inputToData(HeadlineBlockData, this);
+        return blockInputToData(HeadlineBlockData, this);
     }
 }
 

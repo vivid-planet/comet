@@ -1,10 +1,10 @@
 import { Button, ButtonProps, ComponentsOverrides, IconButton } from "@mui/material";
 import { css, Theme, useTheme, useThemeProps } from "@mui/material/styles";
 
-import { Tooltip } from "../../../common/Tooltip";
 import { createComponentSlot } from "../../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../../helpers/useWindowSize";
+import { Tooltip } from "../../Tooltip";
 
 export type ToolbarActionButtonClassKey = "root" | "tooltip" | "button" | "iconButton" | "text" | "outlined" | "contained";
 

@@ -8,13 +8,8 @@ import {
     ChildBlockInput,
     createBlock,
     ExtractBlockInput,
-<<<<<<< HEAD:demo/api/src/pages/blocks/layout.block.ts
 } from "@comet/cms-api";
-=======
-    inputToData,
-} from "@comet/blocks-api";
 import { MediaBlock } from "@src/common/blocks/media.block";
->>>>>>> main:demo/api/src/documents/pages/blocks/layout.block.ts
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsEnum } from "class-validator";
 

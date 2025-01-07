@@ -22,10 +22,6 @@ export const newsQuery = gql`
     }
     ${newsFormFragment}
 `;
-<<<<<<< HEAD:demo/admin/src/news/generated/NewsForm.gql.ts
-
-=======
->>>>>>> main:demo/admin/src/news/generated/NewsForm.gql.tsx
 export const createNewsMutation = gql`
     mutation CreateNews($scope: NewsContentScopeInput!, $input: NewsInput!) {
         createNews(scope: $scope, input: $input) {

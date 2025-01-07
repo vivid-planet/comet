@@ -1,8 +1,14 @@
+import { gql, previewParams } from "@comet/cms-site";
+import { Footer } from "@src/layout/footer/Footer";
+import { footerFragment } from "@src/layout/footer/Footer.fragment";
+import { createGraphQLFetch } from "@src/util/graphQLClient";
 import { IntlProvider } from "@src/util/IntlProvider";
 import { loadMessages } from "@src/util/loadMessages";
 import { setNotFoundContext } from "@src/util/NotFoundContext";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { PropsWithChildren } from "react";
+
+import { GQLLayoutQuery, GQLLayoutQueryVariables } from "./layout.generated";
 
 export default async function Page({ children, params: { domain, language } }: PropsWithChildren<{ params: { domain: string; language: string } }>) {
     const siteConfig = getSiteConfigForDomain(domain);
@@ -12,9 +18,27 @@ export default async function Page({ children, params: { domain, language } }: P
     setNotFoundContext({ domain, language });
 
     const messages = await loadMessages(language);
+
+    const { previewData } = (await previewParams()) || { previewData: undefined };
+    const graphqlFetch = createGraphQLFetch(previewData);
+
+    const { footer } = await graphqlFetch<GQLLayoutQuery, GQLLayoutQueryVariables>(
+        gql`
+            query Layout($domain: String!, $language: String!) {
+                footer: footer(scope: { domain: $domain, language: $language }) {
+                    ...Footer
+                }
+            }
+
+            ${footerFragment}
+        `,
+        { domain, language },
+    );
+
     return (
         <IntlProvider locale={language} messages={messages}>
             {children}
+            {footer && <Footer footer={footer} />}
         </IntlProvider>
     );
 }

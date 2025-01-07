@@ -29,15 +29,9 @@ import {
     ToolbarItem,
 } from "@comet/admin";
 import { Add, Edit, Html, Select as SelectIcon } from "@comet/admin-icons";
-<<<<<<< HEAD
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
-import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
-import { ReactNode, useEffect, useRef, useState } from "react";
-=======
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
-import { DataGrid, GridSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid, GridRowSelectionModel, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
->>>>>>> main
 
 import { masterLayoutDecorator, stackRouteDecorator } from "../../helpers/storyDecorators";
 import { storyRouterDecorator } from "../../story-router.decorator";
@@ -700,15 +694,9 @@ export const NestedGridsAndFormsWithTabs = {
                                                 </FieldSet>
                                             </RouterTab>
                                             <RouterTab path="/child-items" label="Child items in Grid">
-<<<<<<< HEAD
-                                                <FullHeightGridContainer>
-                                                    <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
-                                                </FullHeightGridContainer>
-=======
                                                 <FullHeightContent>
-                                                    <DataGrid disableSelectionOnClick rows={rows} columns={childGridColumns} loading={loading} />
+                                                    <DataGrid rows={rows} columns={childGridColumns} loading={loading} />
                                                 </FullHeightContent>
->>>>>>> main
                                             </RouterTab>
                                         </RouterTabs>
                                     </StackMainContent>
@@ -833,15 +821,9 @@ export const NestedFormInGridInTabsInGrid = {
                                             <RouterTab path="/child-items" label="Child items in Grid">
                                                 <StackSwitch>
                                                     <StackPage name="grid">
-<<<<<<< HEAD
-                                                        <FullHeightGridContainer>
-                                                            <DataGrid rows={rows} columns={columns} loading={loading} />
-                                                        </FullHeightGridContainer>
-=======
                                                         <FullHeightContent>
-                                                            <DataGrid disableSelectionOnClick rows={rows} columns={columns} loading={loading} />
+                                                            <DataGrid rows={rows} columns={columns} loading={loading} />
                                                         </FullHeightContent>
->>>>>>> main
                                                     </StackPage>
                                                     <StackPage name="edit">
                                                         {(id) => {

@@ -7,30 +7,19 @@ import {
     ChildBlock,
     ChildBlockInput,
     createBlock,
+    DamImageBlock,
     ExtractBlockInput,
-<<<<<<< HEAD
 } from "@comet/cms-api";
-=======
-    inputToData,
-} from "@comet/blocks-api";
-import { DamImageBlock } from "@comet/cms-api";
->>>>>>> main
 import { LinkListBlock } from "@src/common/blocks/link-list.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { IsString } from "class-validator";
 
-<<<<<<< HEAD
-class FooterBlockData extends BlockData {
-    @ChildBlock(LinkListBlock)
-    popularTopicsLinks: BlockDataInterface;
-=======
 class FooterContentBlockData extends BlockData {
     @ChildBlock(RichTextBlock)
     text: ExtractBlockInput<typeof RichTextBlock>;
 
     @ChildBlock(DamImageBlock)
     image: BlockDataInterface;
->>>>>>> main
 
     @ChildBlock(LinkListBlock)
     linkList: BlockDataInterface;
@@ -53,23 +42,8 @@ class FooterContentBlockInput extends BlockInput {
     @IsString()
     copyrightNotice: string;
 
-<<<<<<< HEAD
-    @BlockField()
-    @IsOptional()
-    @IsString()
-    location?: string;
-
-    @BlockField()
-    @IsOptional()
-    @IsString()
-    contactUs?: string;
-
-    transformToBlockData(): FooterBlockData {
-        return blockInputToData(FooterBlockData, this);
-=======
     transformToBlockData(): FooterContentBlockData {
-        return inputToData(FooterContentBlockData, this);
->>>>>>> main
+        return blockInputToData(FooterContentBlockData, this);
     }
 }
 

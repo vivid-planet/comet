@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 import { BlockInputInterface, SitemapPageChangeFrequency, SitemapPagePriority } from "@comet/cms-api";
-import { SeoBlock } from "@src/pages/blocks/seo.block";
-=======
-import { BlockInputInterface } from "@comet/blocks-api";
-import { SitemapPageChangeFrequency, SitemapPagePriority } from "@comet/cms-api";
 import { SeoBlock } from "@src/documents/pages/blocks/seo.block";
->>>>>>> main
 
 export const generateSeoBlock = (): BlockInputInterface => {
     // @TODO Introduce randomness
