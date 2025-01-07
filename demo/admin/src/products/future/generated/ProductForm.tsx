@@ -21,12 +21,13 @@ import {
     useFormApiRef,
     useStackSwitchApi,
 } from "@comet/admin";
-import { FinalFormDatePicker } from "@comet/admin-date-time";
-import { Lock } from "@comet/admin-icons";
+import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
+import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
 import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
     DamImageBlock,
     FileUploadField,
+    GQLFinalFormFileUploadDownloadableFragment,
     GQLFinalFormFileUploadFragment,
     queryUpdatedAt,
     resolveHasSaveConflict,
@@ -62,7 +63,7 @@ const rootBlocks = {
 };
 
 type ProductFormDetailsFragment = Omit<GQLProductFormDetailsFragment, "priceList" | "datasheets"> & {
-    priceList: GQLFinalFormFileUploadFragment | null;
+    priceList: GQLFinalFormFileUploadDownloadableFragment | null;
     datasheets: GQLFinalFormFileUploadFragment[];
 };
 
@@ -107,6 +108,7 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                           : undefined,
                       availableSince: data.product.availableSince ? new Date(data.product.availableSince) : undefined,
                       image: rootBlocks.image.input2State(data.product.image),
+                      lastCheckedAt: data.product.lastCheckedAt ? new Date(data.product.lastCheckedAt) : undefined,
                   }
                 : {
                       inStock: false,
@@ -396,6 +398,11 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 name="availableSince"
                                 component={FinalFormDatePicker}
                                 label={<FormattedMessage id="product.availableSince" defaultMessage="Available Since" />}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        <CalendarTodayIcon />
+                                    </InputAdornment>
+                                }
                             />
                             <Field
                                 name="image"
@@ -418,6 +425,12 @@ export function ProductForm({ id }: FormProps): React.ReactElement {
                                 variant="horizontal"
                                 multiple
                                 maxFileSize={4194304}
+                            />
+                            <DateTimeField
+                                variant="horizontal"
+                                fullWidth
+                                name="lastCheckedAt"
+                                label={<FormattedMessage id="product.lastCheckedAt" defaultMessage="Last checked at" />}
                             />
                         </FieldSet>
                     </>

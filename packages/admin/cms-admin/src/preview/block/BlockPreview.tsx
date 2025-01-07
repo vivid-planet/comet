@@ -4,6 +4,7 @@ import { Grid, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect } from "react";
 
+import { useCmsBlockContext } from "../../blocks/useCmsBlockContext";
 import { useContentScope } from "../../contentScope/Provider";
 import { DeviceToggle } from "../common/DeviceToggle";
 import { IFrameViewer } from "../common/IFrameViewer";
@@ -20,14 +21,17 @@ function BlockPreview({ url, previewState, previewApi: { device, setDevice, show
     const iFrameBridge = useIFrameBridge();
     const { scope } = useContentScope();
 
+    // TODO Comet 8: get graphQLApiUrl from CometConfig (https://github.com/vivid-planet/comet/pull/2602)
+    const cmsBlockContext = useCmsBlockContext();
+    const graphQLApiUrl = `${cmsBlockContext.damConfig.apiUrl}/graphql`;
+
     useEffect(() => {
         if (iFrameBridge.iFrameReady) {
             iFrameBridge.sendBlockState(previewState);
-        }
-        if (iFrameBridge.iFrameReady) {
             iFrameBridge.sendContentScope(scope);
+            iFrameBridge.sendGraphQLApiUrl(graphQLApiUrl);
         }
-    }, [iFrameBridge, previewState, scope]);
+    }, [iFrameBridge, previewState, scope, graphQLApiUrl]);
 
     const handleMinimizeClick = () => {
         setMinimized((minimized) => !minimized);

@@ -27,7 +27,7 @@ export const DamVideoBlock = withPreview(
         previewImageIcon,
     }: DamVideoBlockProps) => {
         if (damFile === undefined) {
-            return <PreviewSkeleton type="media" hasContent={false} />;
+            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
         }
 
         const [showPreviewImage, setShowPreviewImage] = useState(true);

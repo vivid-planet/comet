@@ -1,5 +1,170 @@
 # @comet/cms-api
 
+## 7.10.0
+
+### Patch Changes
+
+-   7b2adae8b: API Generator: Don't generate an update input for the single generator
+    -   @comet/blocks-api@7.10.0
+
+## 7.9.0
+
+### Patch Changes
+
+-   @comet/blocks-api@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+-   44a54554c: Allow replacing a file with a new one on the file detail page in the DAM
+-   45fbc54c1: Rename `User` to `UserPermissionsUser` in GraphQL schema
+
+    This prevents naming collisions if a web wants to use a `User` type.
+
+    Additionally prefix remaining user permissions-specific actions with `UserPermissions`.
+
+-   c6d3ac36b: Add support for file replacement on upload in the DAM
+
+    When uploading a file to the DAM with the same filename as an existing file, it's now possible to replace the existing file.
+    This is useful when you want to update a file without changing its URL.
+
+### Patch Changes
+
+-   bfa5dbac8: Fix schema generation if `FileUpload` object type isn't used
+
+    Previously, the file uploads module always added the `downloadUrl` and `imageUrl` fields to the `FileUpload` object type, even if the type wasn't used in the application.
+    This lead to errors when generating the GraphQL schema.
+
+    Now, the fields are only added if the `download` option of the module is used.
+
+    Note: As a consequence, the `finalFormFileUploadFragment` doesn't include the fields anymore.
+    To enable downloading file uploads in forms, use the newly added `finalFormFileUploadDownloadableFragment`:
+
+    ```diff
+    export const productFormFragment = gql`
+        fragment ProductFormFragment on Product {
+            priceList {
+    -           ...FinalFormFileUpload
+    +           ...FinalFormFileUploadDownloadable
+            }
+        }
+
+    -   ${finalFormFileUploadFragment}
+    +   ${finalFormFileUploadDownloadableFragment}
+    `;
+    ```
+
+-   02a5bdc68: API Generator: Fix generated types for position code
+-   f20ec6ce5: Make class-validator a peer dependency
+-   Updated dependencies [f20ec6ce5]
+    -   @comet/blocks-api@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+-   af892c106: Prevent the API from crashing because of stream errors when delivering a file
+-   253aebbc1: Allow overriding `requestHandler` in `BlobStorageS3Storage`
+-   af892c106: Prevent socket exhaustion in `BlobStorageS3Storage`
+
+    By default, the S3 client allows a maximum of 50 open sockets.
+    A socket is only released once a file is streamed completely.
+    Meaning, it can remain open forever if a file stream is interrupted (e.g., when the user leaves the site).
+    This could lead to socket exhaustion, preventing further file delivery.
+
+    To resolve this, the following changes were made:
+
+    1. Add a close handler to destroy the stream when the client disconnects
+    2. Set a 60-second `requestTimeout` to close unused connections
+
+    -   @comet/blocks-api@7.7.0
+
+## 7.6.0
+
+### Minor Changes
+
+-   73c07ea6e: Set content scopes in request object
+
+    This allows accessing the affected content scopes inside a block's transformer service.
+
+    **Example**
+
+    ```ts
+    import { Inject, Injectable } from "@nestjs/common";
+    import { CONTEXT } from "@nestjs/graphql";
+
+    /* ... */
+
+    @Injectable()
+    export class PixelImageBlockTransformerService implements BlockTransformerServiceInterface<PixelImageBlockData, TransformResponse> {
+        constructor(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            @Inject(CONTEXT) private readonly context: any,
+        ) {}
+
+        async transformToPlain(block: PixelImageBlockData) {
+            // Get the affected content scopes
+            const contentScopes = this.context.req.contentScopes;
+
+            // Do something with the content scopes
+
+            /* ... */
+        }
+    }
+    ```
+
+-   671e2b234: Create site preview JWT in the API
+
+    With this change the site preview can be deployed unprotected. Authentication is made via a JWT created in the API and validated in the site. A separate domain for the site preview is still necessary.
+
+    **Note:** This requires the `sitePreviewSecret` option to be configured in the `PageTreeModule`.
+    Run `npx @comet/upgrade@latest v7/add-site-preview-secret.ts` in the root of your project to perform the necessary code changes.
+    Changes to the deployment setup might still be necessary.
+
+-   f8ae0843c: API Generator: Add support for disabling sort/filter using the `@CrudField()` decorator for embeddables
+-   d535e3207: Improve error message for empty IDs arrays in `@AffectedEntity`
+-   44ec9eb3f: Redirects: Add `redirectBySource` query that can be used to query for a single redirect by source
+-   3ea66fb38: Add support for user impersonation
+
+    Prerequisites for setups with separate domains for admin and api: `credentials: "include"` must be set in the `createApolloClient` function in the admin.
+
+    Adds an "Impersonation" button to the detail view of a user in the User Permissions admin panel. The impersonation can be exited by clicking the button in the user's info on the top right.
+
+### Patch Changes
+
+-   700ddc340: Fix copy/paste for documents containing a `DamFileDownloadLinkBlock`
+-   979d5f455: Improve error message in `Migration20240702123233`
+
+    `Migration20240702123233` adds a valid file extension to every DamFile#name that doesn't have an extension yet.
+    Previously, the migration crashed without a helpful error message if the mimetype of a file wasn't in [mime-db](https://www.npmjs.com/package/mime-db).
+    Now, the migration throws an error including the problematic mimetype.
+
+-   b03f3dfc1: Call `createUserFromRequest` before `createUserFromIdToken`
+
+    The latter is marked as deprecated and should only be used if the
+    first one is not defined.
+
+-   cc2a11781: Redirects: Improve GraphQL API performance by preloading the page tree to speed up target page lookup
+
+    Also, increase the maximum limit from 100 to 1000.
+
+-   72cf8fd12: Treat `null` and `undefined` scope dimensions the same in `AccessControlService#isAllowed`
+
+    Optional scope dimensions may sometimes be `null` or `undefined` depending on how the scope object is created.
+    For instance, when the scope is loaded from the database, the optional dimension will be `null`, but when the scope is coming from GraphQL, the dimension can be `undefined`.
+    Due to strict equality comparison, this led to incorrect access control checks in `AccessControlService#isAllowed`.
+    This is now prevented by treating `null` and `undefined` dimensions as the same when checking the scope.
+
+-   6b0ecebed: DAM: Fix/set cache-control headers
+
+    -   Public endpoints should cache files for 1 day
+    -   Private endpoints should cache files for 1 year - but only in local caches (not CDN)
+
+-   6f931911c: Avoid duplicate file extension in `createFileUploadInputFromUrl`
+-   Updated dependencies [9e2b0fac8]
+    -   @comet/blocks-api@7.6.0
+
 ## 7.5.0
 
 ### Minor Changes

@@ -1,0 +1,77 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended", ":semanticCommitsDisabled"],
+    "packageRules": [
+        {
+            "groupName": "babel",
+            "matchPackageNames": ["/@babel/*/"]
+        },
+        {
+            "groupName": "lodash",
+            "matchPackageNames": ["/^lodash.*/"]
+        },
+        {
+            "groupName": "linters",
+            "matchPackageNames": ["/^eslint/", "/^prettier/"]
+        },
+        {
+            "groupName": "typescript",
+            "matchPackageNames": ["/typescript/"]
+        },
+        {
+            "groupName": "Storybook",
+            "matchPackageNames": ["/^@storybook/", "/^storybook/"]
+        },
+        {
+            "groupName": "Mui-X",
+            "matchPackageNames": ["/^@mui/x/"]
+        },
+        {
+            "groupName": "Docusaurus",
+            "matchPackageNames": ["/^@docusaurus/*/", "/@tsconfig/docusaurus/"]
+        },
+        {
+            "groupName": "Mui",
+            "matchPackageNames": ["/@mui/material/", "/@mui/system/", "/@mui/utils/", "/@mui/lab/"]
+        },
+        {
+            "groupName": "emotion",
+            "matchPackageNames": ["/@emotion/*/"]
+        },
+        {
+            "groupName": "Final Form",
+            "matchPackageNames": ["/final-form/", "/react-final-form/"]
+        },
+        {
+            "groupName": "React Router",
+            "matchPackageNames": ["/^react-router/"]
+        },
+        {
+            "matchPackageNames": ["@graphql-codegen/*"],
+            "groupName": "GraphQL Codegen"
+        },
+        {
+            "groupName": "Mikro-ORM",
+            "matchPackageNames": ["/^@mikro-orm/*/"]
+        },
+        {
+            "groupName": "NestJS",
+            "matchPackageNames": ["/^@nestjs/*/"]
+        },
+        {
+            "groupName": "OpenTelemetry",
+            "matchPackageNames": ["/^open-telemetry/*/"]
+        },
+        {
+            "groupName": "lodash",
+            "matchPackageNames": ["/^lodash.*/", "/^@types/lodash.*/"]
+        },
+        {
+            "matchUpdateTypes": ["major"],
+            "labels": ["major", "dependencies"]
+        }
+    ],
+    "rangeStrategy": "bump",
+    "labels": ["dependencies"],
+    "baseBranches": ["next"]
+}

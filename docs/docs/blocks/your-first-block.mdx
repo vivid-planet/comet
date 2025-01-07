@@ -56,7 +56,7 @@ Note how we use the `RichTextBlock`, a COMET DXP block, to create our Headline b
 
 Once we have defined the block data, we also need to define the block input. The block input is used to create a new instance of a block. To be more precise, the block input is used to create the block data, which is stored in the database. In most cases, the block input is nearly identical to the block data. For our headline block, the block input should be the following:
 
-<!-- TODO: ein vergleich mit einem DTO und/oder GraphQL Input Type kann vielleicht helfen -->
+<!-- TODO Add a comparison to GraphQL object and input type -->
 
 ```ts title="headline.block.ts"
 import { inputToData } from "@comet/blocks-api";
@@ -95,7 +95,7 @@ export const HeadlineBlock = createBlock(HeadlineBlockData, HeadlineBlockInput, 
 export const PageContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
-            richtext: RichTextBlock,
+            richText: RichTextBlock,
             image: ImageBlock,
             space: SpaceBlock,
             headline: HeadlineBlock, // Newly added HeadlineBlock
@@ -105,7 +105,7 @@ export const PageContentBlock = createBlocksBlock(
 );
 ```
 
-The `PageContenBlock` is created using the `createBlocksBlock` helper, which is one of multiple blocks helper. You may ignore the specifics of this root block for now.
+The `PageContentBlock` is created using the `createBlocksBlock` helper, which is one of multiple blocks helper. You may ignore the specifics of this root block for now.
 
 ### Part One - Done!
 
@@ -227,8 +227,6 @@ export const HeadlineBlock = createCompositeBlock(
 
 Please note that the names of the keys of the `blocks` object must be the same as the name of fields in the the API block (eyebrow, headline and level).
 
-<!-- wollten wir nicht eher createCompositeSettings präferieren? -->
-
 ### The Admin Component
 
 ![HeadlineBlockAdminSite](images/headline-block-admin.png)
@@ -296,7 +294,7 @@ In the same way, we registered the block in the API, we need to register our adm
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
     supportedBlocks: {
-        richtext: RichTextBlock,
+        richText: RichTextBlock,
         image: ImageBlock,
         space: SpaceBlock,
         headline: HeadlineBlock, // Newly added HeadlineBlock
@@ -418,7 +416,7 @@ You might have already guessed it: We need to register the Headline block once a
 
 ```tsx title="PageContentBlock.tsx"
 const supportedBlocks: SupportedBlocks = {
-    richtext: (props) => <RichTextBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
     image: (props) => <ImageBlock data={props} />,
     space: (props) => <SpaceBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />, // Newly added HeadlineBlock
@@ -448,7 +446,7 @@ The complete code for our Headline site block (including all necessary imports) 
 import { HeadlineBlockData } from "@src/blocks.generated";
 import * as React from "react";
 import { Renderers } from "redraft";\n
-import RichTextBlock from "./RichTextBlock";\n
+import { RichTextBlock } from "./RichTextBlock";\n
 const headlineTags: { [key: string]: React.ElementType } = {
     "header-one": "h1",
     "header-two": "h2",

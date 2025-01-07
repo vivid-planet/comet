@@ -4,6 +4,8 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     CrudMoreActionsMenu,
+    dataGridDateColumn,
+    dataGridDateTimeColumn,
     DataGridToolbar,
     ExportApi,
     filterByFragment,
@@ -29,9 +31,10 @@ import { CircularProgress, useTheme } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridRenderCellParams, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { GQLProductFilter } from "@src/graphql.generated";
 import * as React from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
 
 import { ProductsGridPreviewAction } from "../../ProductsGridPreviewAction";
+import { ManufacturerFilterOperators } from "../ManufacturerFilter";
 import {
     GQLCreateProductMutation,
     GQLCreateProductMutationVariables,
@@ -46,12 +49,18 @@ const productsFragment = gql`
     fragment ProductsGridFuture on Product {
         id
         title
-        description
         price
-        inStock
         type
+        category {
+            title
+        }
+        inStock
+        description
         availableSince
         createdAt
+        manufacturer {
+            name
+        }
     }
 `;
 
@@ -123,6 +132,10 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 { field: "inStock", sort: "desc" },
                 { field: "price", sort: "asc" },
             ],
+            initialFilter: {
+                items: [{ columnField: "type", operatorValue: "is", value: "Shirt" }],
+            },
+            queryParamsPrefix: "products",
         }),
         ...usePersistentColumnState("ProductsGrid"),
     };
@@ -136,14 +149,56 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             filterable: false,
             sortable: false,
             renderCell: ({ row }) => {
-                return <GridCellContent primaryText={row.title} secondaryText={row.description} />;
+                const typeLabels: Record<string, React.ReactNode> = {
+                    Cap: <FormattedMessage id="product.overview.secondaryText.type.Cap" defaultMessage="great Cap" />,
+                    Shirt: <FormattedMessage id="product.overview.secondaryText.type.Shirt" defaultMessage="Shirt" />,
+                    Tie: <FormattedMessage id="product.overview.secondaryText.type.Tie" defaultMessage="Tie" />,
+                };
+                const inStockLabels: Record<string, React.ReactNode> = {
+                    true: <FormattedMessage id="product.overview.secondaryText.inStock.true" defaultMessage="In stock" />,
+                    false: <FormattedMessage id="product.overview.secondaryText.inStock.false" defaultMessage="Out of stock" />,
+                };
+                return (
+                    <GridCellContent
+                        primaryText={row.title ?? "-"}
+                        secondaryText={
+                            <FormattedMessage
+                                id="product.overview.secondaryText"
+                                defaultMessage="{price} • {type} • {category} • {inStock}"
+                                values={{
+                                    price:
+                                        typeof row.price === "undefined" || row.price === null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.price.empty" defaultMessage="No price" />
+                                        ) : (
+                                            <FormattedNumber
+                                                value={row.price}
+                                                minimumFractionDigits={2}
+                                                maximumFractionDigits={2}
+                                                style="currency"
+                                                currency="EUR"
+                                            />
+                                        ),
+                                    type:
+                                        row.type == null ? (
+                                            <FormattedMessage id="product.overview.secondaryText.type.empty" defaultMessage="No type" />
+                                        ) : (
+                                            typeLabels[`${row.type}`] ?? row.type
+                                        ),
+                                    category: row.category?.title ?? (
+                                        <FormattedMessage id="product.overview.secondaryText.category.empty" defaultMessage="No category" />
+                                    ),
+                                    inStock: row.inStock == null ? "-" : inStockLabels[`${row.inStock}`] ?? row.inStock,
+                                }}
+                            />
+                        }
+                    />
+                );
             },
             flex: 1,
             visible: theme.breakpoints.down("md"),
             disableExport: true,
-            sortBy: ["title", "description"],
+            sortBy: ["title", "price", "type", "category", "inStock"],
             minWidth: 200,
-            maxWidth: 250,
         },
         {
             field: "title",
@@ -157,7 +212,6 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             field: "description",
             headerName: intl.formatMessage({ id: "product.description", defaultMessage: "Description" }),
             flex: 1,
-            visible: theme.breakpoints.up("md"),
             minWidth: 150,
         },
         {
@@ -172,12 +226,13 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             ),
             type: "number",
             flex: 1,
+            visible: theme.breakpoints.up("md"),
             minWidth: 150,
             maxWidth: 150,
         },
         {
             field: "inStock",
-            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In Stock" }),
+            headerName: intl.formatMessage({ id: "product.inStock", defaultMessage: "In stock" }),
             type: "singleSelect",
             valueFormatter: ({ value }) => value?.toString(),
             valueOptions: [
@@ -204,6 +259,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             ],
             renderCell: renderStaticSelectCell,
             flex: 1,
+            visible: theme.breakpoints.up("md"),
             minWidth: 80,
         },
         {
@@ -227,25 +283,30 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             ],
             renderCell: renderStaticSelectCell,
             flex: 1,
+            visible: theme.breakpoints.up("md"),
             minWidth: 150,
             maxWidth: 150,
         },
         {
+            ...dataGridDateColumn,
             field: "availableSince",
             headerName: intl.formatMessage({ id: "product.availableSince", defaultMessage: "Available Since" }),
-            type: "date",
-            valueGetter: ({ row }) => row.availableSince && new Date(row.availableSince),
-            valueFormatter: ({ value }) => (value ? intl.formatDate(value) : ""),
             width: 140,
         },
         {
+            ...dataGridDateTimeColumn,
             field: "createdAt",
             headerName: intl.formatMessage({ id: "product.createdAt", defaultMessage: "Created At" }),
-            type: "dateTime",
-            valueGetter: ({ row }) => row.createdAt && new Date(row.createdAt),
-            valueFormatter: ({ value }) =>
-                value ? intl.formatDate(value, { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric" }) : "",
             width: 170,
+        },
+        {
+            field: "manufacturer",
+            headerName: intl.formatMessage({ id: "product.manufacturer.name", defaultMessage: "Manufacturer" }),
+            sortable: false,
+            valueGetter: ({ row }) => row.manufacturer?.name,
+            filterOperators: ManufacturerFilterOperators,
+            flex: 1,
+            minWidth: 150,
         },
         {
             field: "actions",
