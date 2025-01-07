@@ -1053,6 +1053,37 @@
         ]
     },
     {
+        "name": "FullWidthImage",
+        "fields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "content",
+                "kind": "Block",
+                "block": "OptionalRichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "content",
+                "kind": "Block",
+                "block": "OptionalRichText",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Heading",
         "fields": [
             {
@@ -1920,6 +1951,35 @@
         ]
     },
     {
+        "name": "OptionalRichText",
+        "fields": [
+            {
+                "name": "block",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "block",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": true
+            },
+            {
+                "name": "visible",
+                "kind": "Boolean",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "PageContent",
         "fields": [
             {
@@ -1963,7 +2023,8 @@
                                 "newsDetail": "NewsDetail",
                                 "newsList": "NewsList",
                                 "layout": "Layout",
-                                "textImage": "TextImage"
+                                "textImage": "TextImage",
+                                "fullWidthImage": "FullWidthImage"
                             },
                             "nullable": false
                         },
@@ -2024,7 +2085,8 @@
                                 "newsDetail": "NewsDetail",
                                 "newsList": "NewsList",
                                 "layout": "Layout",
-                                "textImage": "TextImage"
+                                "textImage": "TextImage",
+                                "fullWidthImage": "FullWidthImage"
                             },
                             "nullable": false
                         },

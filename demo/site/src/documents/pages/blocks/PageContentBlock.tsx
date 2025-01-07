@@ -15,6 +15,7 @@ import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { BillboardTeaserBlock } from "@src/documents/pages/blocks/BillboardTeaserBlock";
 import { ColumnsBlock } from "@src/documents/pages/blocks/ColumnsBlock";
 import { ContentGroupBlock } from "@src/documents/pages/blocks/ContentGroupBlock";
+import { FullWidthImageBlock } from "@src/documents/pages/blocks/FullWidthImageBlock";
 import { KeyFactsBlock } from "@src/documents/pages/blocks/KeyFactsBlock";
 import { TeaserBlock } from "@src/documents/pages/blocks/TeaserBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
@@ -40,6 +41,7 @@ const supportedBlocks: SupportedBlocks = {
     image: (props) => <DamImageBlock data={props} aspectRatio="inherit" />,
     layout: (props) => <LayoutBlock data={props} />,
     textImage: (props) => <TextImageBlock data={props} />,
+    fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

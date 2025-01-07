@@ -18,6 +18,7 @@ import { NewsListBlock } from "@src/news/blocks/news-list.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
+import { FullWidthImageBlock } from "./full-width-image.block";
 import { LayoutBlock } from "./layout.block";
 
 const supportedBlocks = {
@@ -40,6 +41,7 @@ const supportedBlocks = {
     newsList: NewsListBlock,
     layout: LayoutBlock,
     textImage: TextImageBlock,
+    fullWidthImage: FullWidthImageBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
