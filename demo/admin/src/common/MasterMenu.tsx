@@ -10,7 +10,6 @@ import {
     MasterMenu,
     MasterMenuData,
     PagesPage,
-    PublisherPage,
     UserPermissionsPage,
 } from "@comet/cms-admin";
 import { ImportFromPicsum } from "@src/dam/ImportFromPicsum";
@@ -166,15 +165,6 @@ export const masterMenuData: MasterMenuData = [
         primary: <FormattedMessage id="menu.system" defaultMessage="System" />,
         icon: <Wrench />,
         items: [
-            {
-                type: "route",
-                primary: <FormattedMessage id="menu.publisher" defaultMessage="Publisher" />,
-                route: {
-                    path: "/system/publisher",
-                    component: PublisherPage,
-                },
-                requiredPermission: "builds",
-            },
             {
                 type: "route",
                 primary: <FormattedMessage id="menu.cronJobs" defaultMessage="Cron Jobs" />,

@@ -117,44 +117,6 @@ enum LicenseType {
   RIGHTS_MANAGED
 }
 
-type BuildTemplate {
-  id: ID!
-  name: String!
-
-  """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
-  """
-  label: String
-}
-
-type AutoBuildStatus {
-  hasChangesSinceLastBuild: Boolean!
-  lastCheck: DateTime
-  nextCheck: DateTime!
-}
-
-type Build {
-  id: ID!
-  status: KubernetesJobStatus!
-  name: String
-
-  """
-  Human readable label provided by comet-dxp.com/label annotation. Use name as fallback if not present
-  """
-  label: String
-  trigger: String
-  startTime: DateTime
-  completionTime: DateTime
-  estimatedCompletionTime: DateTime
-}
-
-enum KubernetesJobStatus {
-  pending
-  active
-  succeeded
-  failed
-}
-
 type KubernetesCronJob {
   id: ID!
   name: String!
@@ -179,6 +141,13 @@ type KubernetesJob {
   status: KubernetesJobStatus!
   startTime: DateTime
   completionTime: DateTime
+}
+
+enum KubernetesJobStatus {
+  pending
+  active
+  succeeded
+  failed
 }
 
 type FilenameResponse {
@@ -763,9 +732,6 @@ type Query {
   userPermissionsAvailablePermissions: [String!]!
   userPermissionsContentScopes(userId: String!, skipManual: Boolean): [JSONObject!]!
   userPermissionsAvailableContentScopes: [JSONObject!]!
-  buildTemplates: [BuildTemplate!]!
-  builds(limit: Float): [Build!]!
-  autoBuildStatus: AutoBuildStatus!
   link(id: ID!): Link
   page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
@@ -1186,7 +1152,6 @@ type Mutation {
   userPermissionsDeletePermission(id: ID!): Boolean!
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
-  createBuilds(input: CreateBuildsInput!): Boolean!
   saveLink(id: ID!, input: LinkInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Link!
   savePage(pageId: ID!, input: PageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Page!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
@@ -1258,10 +1223,6 @@ input UserPermissionOverrideContentScopesInput {
 
 input UserContentScopesInput {
   contentScopes: [JSONObject!]! = []
-}
-
-input CreateBuildsInput {
-  names: [String!]!
 }
 
 input LinkInput {
