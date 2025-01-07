@@ -2462,9 +2462,6 @@ importers:
       graphql-mocks:
         specifier: ^0.10.0
         version: 0.10.0(graphql@15.8.0)
-      immutable:
-        specifier: ~3.7.4
-        version: 3.7.6
       msw:
         specifier: ^0.35.0
         version: 0.35.0
