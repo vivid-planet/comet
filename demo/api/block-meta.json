@@ -1751,7 +1751,8 @@
                             "blocks": {
                                 "headline": "Heading",
                                 "richText": "RichText",
-                                "image": "DamImage"
+                                "image": "DamImage",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -1787,7 +1788,8 @@
                             "blocks": {
                                 "headline": "Heading",
                                 "richText": "RichText",
-                                "image": "DamImage"
+                                "image": "DamImage",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         }
@@ -1960,7 +1962,8 @@
                                 "image": "DamImage",
                                 "newsDetail": "NewsDetail",
                                 "newsList": "NewsList",
-                                "layout": "Layout"
+                                "layout": "Layout",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         },
@@ -2020,7 +2023,8 @@
                                 "image": "DamImage",
                                 "newsDetail": "NewsDetail",
                                 "newsList": "NewsList",
-                                "layout": "Layout"
+                                "layout": "Layout",
+                                "textImage": "TextImage"
                             },
                             "nullable": false
                         },
@@ -2979,6 +2983,65 @@
                 "name": "link",
                 "kind": "Block",
                 "block": "TextLink",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "TextImage",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "imagePosition",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "right"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "imageAspectRatio",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "image",
+                "kind": "Block",
+                "block": "DamImage",
+                "nullable": false
+            },
+            {
+                "name": "imagePosition",
+                "kind": "Enum",
+                "enum": [
+                    "left",
+                    "right"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "imageAspectRatio",
+                "kind": "String",
                 "nullable": false
             }
         ]

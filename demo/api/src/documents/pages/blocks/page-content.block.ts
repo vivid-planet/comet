@@ -7,6 +7,7 @@ import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
+import { TextImageBlock } from "@src/common/blocks/text-image.block";
 import { BillboardTeaserBlock } from "@src/documents/pages/blocks/billboard-teaser.block";
 import { ColumnsBlock } from "@src/documents/pages/blocks/columns.block";
 import { ContentGroupBlock } from "@src/documents/pages/blocks/content-group.block";
@@ -38,6 +39,7 @@ const supportedBlocks = {
     newsDetail: NewsDetailBlock,
     newsList: NewsListBlock,
     layout: LayoutBlock,
+    textImage: TextImageBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {

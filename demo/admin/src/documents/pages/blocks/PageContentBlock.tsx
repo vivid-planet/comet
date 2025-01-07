@@ -8,6 +8,7 @@ import { SpaceBlock } from "@src/common/blocks/SpaceBlock";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/StandaloneCallToActionListBlock";
 import { StandaloneHeadingBlock } from "@src/common/blocks/StandaloneHeadingBlock";
 import { StandaloneMediaBlock } from "@src/common/blocks/StandaloneMediaBlock";
+import { TextImageBlock } from "@src/common/blocks/TextImageBlock";
 import { NewsDetailBlock } from "@src/news/blocks/NewsDetailBlock";
 import { NewsListBlock } from "@src/news/blocks/NewsListBlock";
 import { userGroupAdditionalItemFields } from "@src/userGroups/userGroupAdditionalItemFields";
@@ -41,6 +42,7 @@ export const PageContentBlock = createBlocksBlock({
         newsDetail: NewsDetailBlock,
         newsList: NewsListBlock,
         layout: LayoutBlock,
+        textImage: TextImageBlock,
     },
     additionalItemFields: {
         ...userGroupAdditionalItemFields,
