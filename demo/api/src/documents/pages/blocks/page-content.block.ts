@@ -17,6 +17,8 @@ import { NewsListBlock } from "@src/news/blocks/news-list.block";
 import { UserGroup } from "@src/user-groups/user-group";
 import { IsEnum } from "class-validator";
 
+import { LayoutBlock } from "./layout.block";
+
 const supportedBlocks = {
     accordion: AccordionBlock,
     anchor: AnchorBlock,
@@ -35,6 +37,7 @@ const supportedBlocks = {
     image: DamImageBlock,
     newsDetail: NewsDetailBlock,
     newsList: NewsListBlock,
+    layout: LayoutBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {
