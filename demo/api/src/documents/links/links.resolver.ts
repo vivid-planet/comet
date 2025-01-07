@@ -25,8 +25,9 @@ export class LinksResolver {
     ) {}
 
     @Query(() => Link, { nullable: true })
-    async link(@Args("linkId", { type: () => ID }) linkId: string): Promise<Link | null> {
-        return this.repository.findOne(linkId);
+    @AffectedEntity(Link)
+    async link(@Args("id", { type: () => ID }) id: string): Promise<Link | null> {
+        return this.repository.findOne(id);
     }
 
     @ResolveField(() => PageTreeNode, { nullable: true })
@@ -37,7 +38,7 @@ export class LinksResolver {
     @Mutation(() => Link)
     @AffectedEntity(Link, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async saveLink(
-        @Args("linkId", { type: () => ID }) linkId: string,
+        @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => LinkInput }) input: LinkInput,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
         @Args("attachedPageTreeNodeId", { nullable: true, type: () => ID }) attachedPageTreeNodeId?: string,
@@ -50,7 +51,7 @@ export class LinksResolver {
             }
         }
 
-        let link = await this.repository.findOne(linkId);
+        let link = await this.repository.findOne(id);
 
         if (link) {
             if (lastUpdatedAt) {
@@ -60,7 +61,7 @@ export class LinksResolver {
             link.assign({ content: input.content.transformToBlockData() });
         } else {
             link = this.repository.create({
-                id: linkId,
+                id,
                 content: input.content.transformToBlockData(),
             });
 
@@ -68,7 +69,7 @@ export class LinksResolver {
         }
 
         if (attachedPageTreeNodeId) {
-            await this.pageTreeService.attachDocument({ id: linkId, type: "Link" }, attachedPageTreeNodeId);
+            await this.pageTreeService.attachDocument({ id, type: "Link" }, attachedPageTreeNodeId);
         }
 
         await this.entityManager.flush();

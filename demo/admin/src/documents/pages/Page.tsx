@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { messages } from "@comet/admin";
 import { File, FileNotMenu } from "@comet/admin-icons";
 import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
 import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
@@ -14,7 +15,7 @@ import { StageBlock } from "./blocks/StageBlock";
 import { EditPage } from "./EditPage";
 
 export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageInput> & DependencyInterface = {
-    displayName: <FormattedMessage id="generic.page" defaultMessage="Page" />,
+    displayName: <FormattedMessage {...messages.page} />,
     editComponent: EditPage,
     menuIcon: File,
     hideInMenuIcon: FileNotMenu,

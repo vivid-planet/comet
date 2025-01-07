@@ -766,7 +766,7 @@ type Query {
   buildTemplates: [BuildTemplate!]!
   builds(limit: Float): [Build!]!
   autoBuildStatus: AutoBuildStatus!
-  link(linkId: ID!): Link
+  link(id: ID!): Link
   page(id: ID!): Page!
   pageTreeNode(id: ID!): PageTreeNode
   pageTreeNodeByPath(path: String!, scope: PageTreeNodeScopeInput!): PageTreeNode
@@ -1187,7 +1187,7 @@ type Mutation {
   userPermissionsUpdateOverrideContentScopes(input: UserPermissionOverrideContentScopesInput!): UserPermission!
   userPermissionsUpdateContentScopes(userId: String!, input: UserContentScopesInput!): Boolean!
   createBuilds(input: CreateBuildsInput!): Boolean!
-  saveLink(linkId: ID!, input: LinkInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Link!
+  saveLink(id: ID!, input: LinkInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Link!
   savePage(pageId: ID!, input: PageInput!, lastUpdatedAt: DateTime, attachedPageTreeNodeId: ID): Page!
   updatePageTreeNode(id: ID!, input: PageTreeNodeUpdateInput!): PageTreeNode!
   deletePageTreeNode(id: ID!): Boolean!
