@@ -209,6 +209,8 @@ export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRout
 export { Menu, MenuProps } from "./mui/menu/Menu";
 export { MenuClassKey } from "./mui/menu/Menu.styles";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
+export { RichTextEditorLexical, RichTextEditorLexicalProps } from "./richTextEditor/RichTextEditorLexical";
+export { RichTextEditorTipTap, RichTextEditorTipTapProps } from "./richTextEditor/RichTextEditorTipTap";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog, RouterConfirmationDialogClassKey, RouterConfirmationDialogProps } from "./router/ConfirmationDialog";
 export { RouterContext } from "./router/Context";
