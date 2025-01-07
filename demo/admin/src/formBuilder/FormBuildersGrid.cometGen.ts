@@ -1,6 +1,5 @@
 import { future_GridConfig as GridConfig } from "@comet/cms-admin";
-
-import { GQLFormBuilder } from "../graphql.generated";
+import { GQLFormBuilder } from "@src/graphql.generated";
 
 export const FormBuildersGrid: GridConfig<GQLFormBuilder> = {
     type: "grid",
