@@ -7,6 +7,7 @@ import faker from "faker";
 
 import { generateRichtextBlock } from "./richtext.generator";
 import { generateSpaceBlock } from "./space.generator";
+import { generateTextImageBlock } from "./text-image.generator";
 
 export const generateBlocksBlock = (
     imageFiles: FileInterface[],
@@ -15,6 +16,7 @@ export const generateBlocksBlock = (
         space: generateSpaceBlock,
         richtext: generateRichtextBlock,
         image: () => generateImageBlock(imageFiles),
+        textImage: () => generateTextImageBlock(imageFiles, config),
     },
 ): ExtractBlockInput<typeof PageContentBlock> => {
     const blocks: ExtractBlockInputFactoryProps<typeof PageContentBlock>["blocks"] = [];
