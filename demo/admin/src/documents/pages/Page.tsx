@@ -1,6 +1,9 @@
 import { gql } from "@apollo/client";
 import { File, FileNotMenu } from "@comet/admin-icons";
 import { createDocumentDependencyMethods, createDocumentRootBlocksMethods, DependencyInterface, DocumentInterface } from "@comet/cms-admin";
+import { PageTreePage } from "@comet/cms-admin/lib/pages/pageTree/usePageTree";
+import { Chip } from "@mui/material";
+import { GQLPageTreeNodeAdditionalFieldsFragment } from "@src/common/EditPageNode.generated";
 import { GQLPage, GQLPageInput } from "@src/graphql.generated";
 import { categoryToUrlParam } from "@src/pageTree/pageTreeCategories";
 import { FormattedMessage } from "react-intl";
@@ -47,6 +50,12 @@ export const Page: DocumentInterface<Pick<GQLPage, "content" | "seo">, GQLPageIn
             }
         }
     `,
+    InfoTag: ({ page }: { page: PageTreePage & GQLPageTreeNodeAdditionalFieldsFragment }) => {
+        if (page.userGroup !== "All") {
+            return <Chip size="small" label={page.userGroup} />;
+        }
+        return null;
+    },
     ...createDocumentRootBlocksMethods({
         content: PageContentBlock,
         seo: SeoBlock,
