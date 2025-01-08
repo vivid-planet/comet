@@ -163,7 +163,7 @@ The MikroORM peer dependency has been bumped to v6.
     npx @comet/upgrade v8/mikro-orm-delete-rule.ts
     ```
 
-    Add dotenv call to `ormconfig.cli.ts`:
+    Add a `mikro-orm` script with a dotenv call to `package.json`:
 
     ```sh
     npx @comet/upgrade v8/mikro-orm-dotenv.ts
