@@ -7,7 +7,7 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiInputBase">(component?.styleOverrides, {
         root: {
-            border: `1px solid ${palette.grey[200]}`,
+            border: `1px solid ${palette.grey[100]}`,
             borderRadius: 2,
             backgroundColor: "#fff",
 
@@ -18,6 +18,10 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
             [`&.${inputBaseClasses.disabled}`]: {
                 borderColor: palette.grey[100],
                 backgroundColor: palette.grey[50],
+            },
+
+            [`&:hover:not(.${inputBaseClasses.disabled}):not(.${inputBaseClasses.focused})`]: {
+                borderColor: palette.grey[200],
             },
         },
         adornedStart: {
@@ -42,6 +46,7 @@ export const getMuiInputBase: GetMuiComponentTheme<"MuiInputBase"> = (component,
         },
         inputMultiline: {
             padding: `calc(${spacing(2)} - 1px)`,
+            resize: "vertical",
         },
         inputAdornedStart: {
             paddingLeft: spacing(2),

@@ -30,9 +30,9 @@ export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } 
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
 export { MainContent, MainContentClassKey, MainContentProps, StackMainContent } from "./common/MainContent";
+export { ToolbarActionButtonClassKey } from "./common/toolbar/actions/ToolbarActionButton";
+export { ToolbarActionButton } from "./common/toolbar/actions/ToolbarActionButton";
 export { ToolbarActions, ToolbarActionsClassKey } from "./common/toolbar/actions/ToolbarActions";
-export { ToolbarActionButtonClassKey } from "./common/toolbar/actions/ToolbarActionsButton";
-export { ToolbarActionButton } from "./common/toolbar/actions/ToolbarActionsButton";
 export {
     ToolbarAutomaticTitleItem,
     ToolbarAutomaticTitleItemClassKey,

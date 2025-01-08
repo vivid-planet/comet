@@ -1,6 +1,6 @@
 "use client";
 
-import { DamImageBlock } from "@src/blocks/DamImageBlock";
+import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { NewsContentBlock } from "@src/news/blocks/NewsContentBlock";
 import { FormattedDate } from "react-intl";
 
