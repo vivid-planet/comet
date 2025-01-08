@@ -1,5 +1,5 @@
 import { TextField } from "@comet/admin";
-import { BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface } from "@comet/blocks-admin";
+import { BlockInterface, BlocksFinalForm, createBlockSkeleton, LinkBlockInterface } from "@comet/cms-admin";
 import { NewsLinkBlockData, NewsLinkBlockInput } from "@src/blocks.generated";
 
 type State = NewsLinkBlockData;

@@ -1,9 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
 import { Link } from "@comet/admin-icons";
-import { AdminComponentButton, AdminComponentNestedButton } from "@comet/blocks-admin";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { AdminComponentButton } from "../../blocks/blocks/common/AdminComponentButton";
+import { AdminComponentNestedButton } from "../../blocks/blocks/common/AdminComponentNestedButton";
 import { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
 import PageTreeSelectDialog, { GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 

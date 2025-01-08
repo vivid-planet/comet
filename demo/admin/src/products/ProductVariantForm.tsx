@@ -1,7 +1,6 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { Field, filterByFragment, FinalForm, FinalFormInput, FinalFormSubmitEvent, Loading, useFormApiRef, useStackSwitchApi } from "@comet/admin";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-import { DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
+import { BlockState, createFinalFormBlock, DamImageBlock, queryUpdatedAt, resolveHasSaveConflict, useFormSaveConflict } from "@comet/cms-admin";
 import { FormApi } from "final-form";
 import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";

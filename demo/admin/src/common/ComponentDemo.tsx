@@ -39,9 +39,11 @@ import {
     createFinalFormBlock,
     createListBlock,
     createOptionalBlock,
+    DamImageBlock,
+    FinalFormToggleButtonGroup,
+    PixelImageBlock,
     resolveNewState,
-} from "@comet/blocks-admin";
-import { DamImageBlock, FinalFormToggleButtonGroup, PixelImageBlock } from "@comet/cms-admin";
+} from "@comet/cms-admin";
 import { Box, FormControlLabel, Grid, MenuItem, Typography } from "@mui/material";
 import { ReactNode, useState } from "react";
 

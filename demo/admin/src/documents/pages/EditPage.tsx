@@ -1,8 +1,9 @@
 import { gql } from "@apollo/client";
 import { Loading, MainContent, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
-import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
+    AdminComponentRoot,
+    AdminTabLabel,
     AzureAiTranslatorProvider,
     BlockPreviewWithTabs,
     ContentScopeIndicator,

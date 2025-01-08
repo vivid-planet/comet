@@ -16,15 +16,17 @@ import { ChangeEvent, FunctionComponent, ReactNode, useCallback, useEffect, useS
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton, AdminComponentPaper, BlockPreviewContent } from "../..";
 import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
 import { useBlockClipboard } from "../../clipboard/useBlockClipboard";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
 import { parallelAsyncEvery } from "../../utils/parallelAsyncEvery";
 import { AddBlockDrawer } from "../common/AddBlockDrawer";
+import { AdminComponentButton } from "../common/AdminComponentButton";
+import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
 import { AdminComponentStickyHeader } from "../common/AdminComponentStickyHeader";
+import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";

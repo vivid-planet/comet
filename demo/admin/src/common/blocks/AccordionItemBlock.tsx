@@ -6,7 +6,7 @@ import {
     createCompositeBlock,
     createCompositeBlockTextField,
     createCompositeSetting,
-} from "@comet/blocks-admin";
+} from "@comet/cms-admin";
 import { AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { SpaceBlock } from "@src/common/blocks/SpaceBlock";

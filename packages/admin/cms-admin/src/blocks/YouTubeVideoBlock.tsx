@@ -1,20 +1,16 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import {
-    AdminComponentSection,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    createBlockSkeleton,
-    resolveNewState,
-    SelectPreviewComponent,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { YouTubeVideoBlockData, YouTubeVideoBlockInput } from "../blocks.generated";
+import { useAdminComponentPaper } from "./blocks/common/AdminComponentPaper";
+import { AdminComponentSection } from "./blocks/common/AdminComponentSection";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockInterface, BlockState } from "./blocks/types";
+import { resolveNewState } from "./blocks/utils";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { PixelImageBlock } from "./PixelImageBlock";
 
 type State = Omit<YouTubeVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };

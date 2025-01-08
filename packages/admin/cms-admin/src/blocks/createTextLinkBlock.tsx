@@ -1,20 +1,16 @@
 import { Field, FinalFormInput, messages } from "@comet/admin";
-import {
-    AdminComponentPaper,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    composeBlocks,
-    createBlockSkeleton,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";
+import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
+import { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import decomposeUpdateStateAction from "./blocks/helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
+import { BlockCategory, BlockInterface, BlockState } from "./blocks/types";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
 
 interface CreateTextLinkBlockOptions {
     name?: string;

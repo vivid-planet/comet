@@ -6,14 +6,15 @@ import { ReactNode } from "react";
 import { FormattedMessage, IntlShape, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { AdminComponentButton, BlockPreviewContent } from "../..";
 import { BlocksFinalForm } from "../../form/BlocksFinalForm";
 import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
 import { parallelAsyncEvery } from "../../utils/parallelAsyncEvery";
+import { AdminComponentButton } from "../common/AdminComponentButton";
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { AdminComponentSection } from "../common/AdminComponentSection";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
+import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";

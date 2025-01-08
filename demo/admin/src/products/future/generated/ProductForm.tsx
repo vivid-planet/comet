@@ -23,8 +23,9 @@ import {
 } from "@comet/admin";
 import { DateTimeField, FinalFormDatePicker } from "@comet/admin-date-time";
 import { CalendarToday as CalendarTodayIcon, Lock } from "@comet/admin-icons";
-import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
 import {
+    BlockState,
+    createFinalFormBlock,
     DamImageBlock,
     FileUploadField,
     GQLFinalFormFileUploadDownloadableFragment,

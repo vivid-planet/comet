@@ -40,7 +40,7 @@ export const PageContentBlock = createBlocksBlock(
 ### Admin
 
 ```tsx title="PageContentBlock.tsx"
-import { createBlocksBlock } from "@comet/blocks-admin";
+import { createBlocksBlock } from "@comet/cms-admin";
 
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
@@ -119,7 +119,7 @@ import {
     ColumnsLayoutPreviewSpacing,
     createBlocksBlock,
     createColumnsBlock,
-} from "@comet/blocks-admin";
+} from "@comet/cms-admin";
 
 const ColumnsContentBlock = createBlocksBlock({
     name: "ColumnsContent",
@@ -198,7 +198,7 @@ The CompositeBlock factory composes several child blocks and fields into a block
 For most of your blocks, you will use this factory to create the block in the admin.
 
 ```tsx title="FullWidthImageBlock.tsx"
-import { createCompositeBlock } from "@comet/blocks-admin";
+import { createCompositeBlock } from "@comet/cms-admin";
 
 export const FullWidthImageBlock = createCompositeBlock({
     name: "FullWidthImage",
@@ -401,7 +401,7 @@ export const LinkListBlock = createListBlock({ block: TextLinkBlock }, "LinkList
 ### Admin
 
 ```tsx title="LinkListBlock.tsx"
-import { createListBlock } from "@comet/blocks-admin";
+import { createListBlock } from "@comet/cms-admin";
 
 export const LinkListBlock = createListBlock({
     name: "LinkList",
@@ -455,7 +455,7 @@ export const LinkBlock = createOneOfBlock(
 ### Admin
 
 ```tsx title="LinkBlock.tsx"
-import { createOneOfBlock } from "@comet/blocks-admin";
+import { createOneOfBlock } from "@comet/cms-admin";
 
 export const LinkBlock = createOneOfBlock({
     supportedBlocks: {
@@ -526,7 +526,7 @@ export const OptionalImageBlock = createOptionalBlock(ImageBlock);
 ### Admin
 
 ```tsx title="OptionalImageBlock.tsx"
-import { createOptionalBlock } from "@comet/blocks-admin";
+import { createOptionalBlock } from "@comet/cms-admin";
 
 export const OptionalImageBlock = createOptionalBlock(ImageBlock);
 ```
@@ -708,7 +708,7 @@ export const SpaceBlock = createSpaceBlock({ spacing: Spacing }, "DemoSpace");
 ### Admin
 
 ```tsx title="SpaceBlock.tsx"
-import { createSpaceBlock } from "@comet/blocks-admin";
+import { createSpaceBlock } from "@comet/cms-admin";
 
 const options: { value: string; label: string }[] = [
     { value: "d150", label: "Dynamic 150" },

@@ -1,17 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Field } from "@comet/admin";
 import { Crop, Delete, MoreVertical, OpenNewTab } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-    IPreviewContext,
-    SelectPreviewComponent,
-} from "@comet/blocks-admin";
-import { BlockDependency } from "@comet/blocks-admin/lib/blocks/types";
 import { ButtonBase, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
@@ -24,7 +13,13 @@ import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
+import { AdminComponentButton } from "./blocks/common/AdminComponentButton";
+import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockDependency, BlockInterface, IPreviewContext } from "./blocks/types";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { EditImageDialog } from "./image/EditImageDialog";
 import { GQLImageBlockDamFileQuery, GQLImageBlockDamFileQueryVariables } from "./PixelImageBlock.generated";
 import { useCmsBlockContext } from "./useCmsBlockContext";

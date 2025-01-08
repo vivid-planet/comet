@@ -1,6 +1,5 @@
 import { messages } from "@comet/admin";
-import { createCompositeBlock, createOptionalBlock } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { createCompositeBlock, createOptionalBlock, DamImageBlock } from "@comet/cms-admin";
 import { customBlockCategory } from "@src/common/blocks/customBlockCategories";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";

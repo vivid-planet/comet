@@ -1,5 +1,6 @@
-import { AdminComponentPart, AdminTabs, IFrameBridgeProvider } from "@comet/blocks-admin";
-
+import { AdminTabs } from "../../blocks/blocks/common/AdminTabs";
+import { AdminComponentPart } from "../../blocks/blocks/types";
+import { IFrameBridgeProvider } from "../../blocks/iframebridge/IFrameBridge";
 import { SplitPreview } from "./SplitPreview";
 import { BlockPreviewApi } from "./useBlockPreview";
 

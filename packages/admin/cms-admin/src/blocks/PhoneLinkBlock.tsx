@@ -1,10 +1,13 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
 import { FormattedMessage } from "react-intl";
 
 import { PhoneLinkBlockData, PhoneLinkBlockInput } from "../blocks.generated";
 import { isPhoneNumber } from "../validation/isPhoneNumber";
 import { validatePhoneNumber } from "../validation/validatePhoneNumber";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockInterface } from "./blocks/types";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 
 export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockData, PhoneLinkBlockInput> = {
     ...createBlockSkeleton(),

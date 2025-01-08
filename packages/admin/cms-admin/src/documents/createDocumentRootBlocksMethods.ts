@@ -1,5 +1,4 @@
-import { BlockDependency, BlockInterface } from "@comet/blocks-admin";
-
+import { BlockDependency, BlockInterface } from "../blocks/blocks/types";
 import { DocumentInterface } from "./types";
 
 export function createDocumentRootBlocksMethods<

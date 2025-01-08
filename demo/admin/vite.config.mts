@@ -69,7 +69,6 @@ export default defineConfig(({ mode }) => {
                 "@comet/admin-icons",
                 "@comet/admin-theme",
                 "@comet/cms-admin",
-                "@comet/blocks-admin",
             ],
         },
         resolve: {

@@ -1,19 +1,6 @@
 import { gql, useApolloClient } from "@apollo/client";
 import { Field, FieldContainer } from "@comet/admin";
 import { Delete, MoreVertical, OpenNewTab, Video } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    AdminComponentSection,
-    BlockCategory,
-    BlockDependency,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    createBlockSkeleton,
-    resolveNewState,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { useState } from "react";
@@ -24,8 +11,15 @@ import { useContentScope } from "../contentScope/Provider";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
+import { AdminComponentButton } from "./blocks/common/AdminComponentButton";
+import { AdminComponentPaper, useAdminComponentPaper } from "./blocks/common/AdminComponentPaper";
+import { AdminComponentSection } from "./blocks/common/AdminComponentSection";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockDependency, BlockInterface, BlockState } from "./blocks/types";
+import { resolveNewState } from "./blocks/utils";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { PixelImageBlock } from "./PixelImageBlock";
 

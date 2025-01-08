@@ -1,4 +1,4 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { CallToActionBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 

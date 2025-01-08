@@ -1,6 +1,7 @@
-import { BlockInterface, createCompositeBlock } from "@comet/blocks-admin";
 import { FormattedMessage } from "react-intl";
 
+import { createCompositeBlock } from "./blocks/factories/createCompositeBlock";
+import { BlockInterface } from "./blocks/types";
 import { PixelImageBlock } from "./PixelImageBlock";
 
 interface CreateImageLinkBlockOptions {

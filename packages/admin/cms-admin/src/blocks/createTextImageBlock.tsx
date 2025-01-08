@@ -1,18 +1,15 @@
 import { messages } from "@comet/admin";
-import {
-    AdminComponentPaper,
-    AdminComponentSection,
-    BlockCategory,
-    BlockInterface,
-    composeBlocks,
-    createBlockSkeleton,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
 import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
 import { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";
+import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
+import { AdminComponentSection } from "./blocks/common/AdminComponentSection";
+import { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import decomposeUpdateStateAction from "./blocks/helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
+import { BlockCategory, BlockInterface } from "./blocks/types";
 import { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
 import { ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
 import { useCmsBlockContext } from "./useCmsBlockContext";
