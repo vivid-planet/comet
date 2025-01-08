@@ -36,10 +36,6 @@
         "@azure-rest/ai-translation-text": "^1.0.0",
         "@azure/openai": "1.0.0-beta.11",
         "@azure/storage-blob": "^12.23.0",
-<<<<<<< HEAD
-=======
-        "@comet/blocks-api": "workspace:^7.11.0",
->>>>>>> main
         "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^4.0.2",
         "@hapi/accept": "^5.0.2",

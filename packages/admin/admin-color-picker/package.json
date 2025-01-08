@@ -35,15 +35,9 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-<<<<<<< HEAD
-        "@comet/admin-babel-preset": "workspace:^7.10.0",
-        "@comet/eslint-config": "workspace:^7.10.0",
-        "@mui/material": "^6.3.0",
-=======
         "@comet/admin-babel-preset": "workspace:^7.11.0",
         "@comet/eslint-config": "workspace:^7.11.0",
-        "@mui/material": "^5.0.0",
->>>>>>> main
+        "@mui/material": "^6.3.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/tinycolor2": "^1.4.2",
