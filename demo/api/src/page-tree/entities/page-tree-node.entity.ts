@@ -1,5 +1,5 @@
 import { PageTreeNodeBase } from "@comet/cms-api";
-import { Embedded, Entity, Enum } from "@mikro-orm/postgresql";
+import { Embedded, Entity, Enum, Index, ManyToOne } from "@mikro-orm/postgresql";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { UserGroup } from "@src/user-groups/user-group";
 
@@ -13,6 +13,11 @@ export class PageTreeNode extends PageTreeNodeBase {
     @Embedded(() => PageTreeNodeScope)
     @Field(() => PageTreeNodeScope)
     scope: PageTreeNodeScope;
+
+    // must be overwritten too because PageTreeNode is different from BasePageTreeNode
+    @ManyToOne(() => PageTreeNode, { nullable: true, joinColumn: "parentId" })
+    @Index()
+    parent?: PageTreeNode;
 
     @Enum({ items: () => PageTreeNodeCategory })
     @Field(() => PageTreeNodeCategory)
