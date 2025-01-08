@@ -1,7 +1,6 @@
 import { createListBlock } from "@comet/blocks-admin";
+import { TeaserItemBlock } from "@src/documents/pages/blocks/TeaserItemBlock";
 import { FormattedMessage } from "react-intl";
-
-import { TeaserItemBlock } from "./TeaserItemBlock";
 
 export const TeaserBlock = createListBlock({
     name: "Teaser",

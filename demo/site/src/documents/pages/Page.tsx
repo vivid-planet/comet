@@ -1,7 +1,7 @@
 import { generateImageUrl, gql, previewParams } from "@comet/cms-site";
-import { PageContentBlock } from "@src/common/blocks/PageContentBlock";
 import Breadcrumbs from "@src/common/components/Breadcrumbs";
 import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment";
+import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
 import { Header } from "@src/layout/header/Header";
 import { headerFragment } from "@src/layout/header/Header.fragment";
