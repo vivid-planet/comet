@@ -43,9 +43,9 @@ interface IDragItem {
 export function BlockRow(props: BlockRowProps): JSX.Element {
     const { index, onAddNewBlock, slideIn } = props;
     const ref = useRef<HTMLDivElement>(null);
-    const [, drop] = useDrop({
+    const [, drop] = useDrop<IDragItem>({
         accept: ItemTypes.BLOCK,
-        hover(item: IDragItem, monitor: DropTargetMonitor) {
+        hover(item, monitor: DropTargetMonitor) {
             if (!ref.current) {
                 return;
             }

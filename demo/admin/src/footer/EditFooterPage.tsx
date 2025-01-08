@@ -1,9 +1,10 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
-import { AdminComponentRoot, BlockState } from "@comet/blocks-admin";
 import {
+    AdminComponentRoot,
     BlockPreviewWithTabs,
+    BlockState,
     ContentScopeIndicator,
     resolveHasSaveConflict,
     useBlockPreview,

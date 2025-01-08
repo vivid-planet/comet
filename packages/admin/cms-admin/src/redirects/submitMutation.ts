@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
 import { ApolloError } from "@apollo/client/errors";
 import { FetchResult } from "@apollo/client/link/core";
-import { BlockInterface } from "@comet/blocks-admin";
 
+import { BlockInterface } from "../blocks/blocks/types";
 import { GQLRedirectInput } from "../graphql.generated";
 import { createRedirectMutation, FormValues, GQLCreateRedirectMutation, GQLUpdateRedirectMutation, updateRedirectMutation } from "./RedirectForm";
 

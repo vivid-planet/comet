@@ -18,12 +18,13 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Delete as DeleteIcon, Edit } from "@comet/admin-icons";
-import { BlockInterface, BlockPreviewContent } from "@comet/blocks-admin";
 import { Button, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DataGrid, getGridSingleSelectOperators, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { BlockPreviewContent } from "../blocks/blocks/common/blockRow/BlockPreviewContent";
+import { BlockInterface } from "../blocks/blocks/types";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
 import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";

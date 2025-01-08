@@ -1,7 +1,8 @@
 // Same file in admin and site
 
+import { ExternalLinkBlockData } from "../../blocks.generated";
+
 // Messages sent from iFrame -> Admin
-import { ExternalLinkBlockData } from "../blocks.generated";
 
 export enum IFrameMessageType {
     Ready = "Ready",

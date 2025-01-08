@@ -12,8 +12,7 @@ import {
     useStackApi,
 } from "@comet/admin";
 import { ArrowLeft } from "@comet/admin-icons";
-import { AdminComponentRoot } from "@comet/blocks-admin";
-import { ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
+import { AdminComponentRoot, ContentScopeIndicator, createUsePage, PageName } from "@comet/cms-admin";
 import { IconButton } from "@mui/material";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { useIntl } from "react-intl";

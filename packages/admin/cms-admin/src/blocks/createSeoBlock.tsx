@@ -1,20 +1,5 @@
 import { Field, FinalFormInput, FinalFormSelect, messages } from "@comet/admin";
 import { Add, Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    AdminComponentSectionGroup,
-    BlockInterface,
-    BlocksFinalForm,
-    BlockState,
-    Collapsible,
-    CollapsibleSwitchButtonHeader,
-    composeBlocks,
-    createBlockSkeleton,
-    createOptionalBlock,
-    decomposeUpdateStateAction,
-    withAdditionalBlockAttributes,
-} from "@comet/blocks-admin";
 import { Box, Divider, Grid, IconButton, MenuItem, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import arrayMutators from "final-form-arrays";
@@ -24,6 +9,18 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { validateUrl } from "../validation/validateUrl";
+import { AdminComponentButton } from "./blocks/common/AdminComponentButton";
+import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
+import { AdminComponentSectionGroup } from "./blocks/common/AdminComponentSectionGroup";
+import { createOptionalBlock } from "./blocks/factories/createOptionalBlock";
+import { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import decomposeUpdateStateAction from "./blocks/helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
+import { BlockInterface, BlockState } from "./blocks/types";
+import { Collapsible } from "./common/Collapsible";
+import { CollapsibleSwitchButtonHeader } from "./common/CollapsibleSwitchButtonHeader";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { PixelImageBlock } from "./PixelImageBlock";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";

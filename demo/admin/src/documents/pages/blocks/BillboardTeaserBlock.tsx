@@ -1,4 +1,4 @@
-import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
+import { BlockCategory, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { BillboardTeaserBlockData } from "@src/blocks.generated";
 import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
 import { HeadingBlock } from "@src/common/blocks/HeadingBlock";

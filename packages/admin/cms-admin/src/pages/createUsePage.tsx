@@ -1,18 +1,13 @@
 import { ApolloError, gql, TypedDocumentNode, useApolloClient, useQuery } from "@apollo/client";
 import { messages, SaveButton, SaveButtonProps } from "@comet/admin";
-import {
-    BindBlockAdminComponent,
-    BlockInterface,
-    BlockState,
-    DispatchSetStateAction,
-    parallelAsyncEvery,
-    resolveNewState,
-} from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
 import { createElement, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
+import { BindBlockAdminComponent, BlockInterface, BlockState, DispatchSetStateAction } from "../blocks/blocks/types";
+import { resolveNewState } from "../blocks/blocks/utils";
+import { parallelAsyncEvery } from "../blocks/utils/parallelAsyncEvery";
 import { GQLDocumentInterface } from "../graphql.generated";
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";
 import { LocalPageTreeNodeDocumentAnchorsProvider } from "./LocalPageTreeNodeDocumentAnchors";

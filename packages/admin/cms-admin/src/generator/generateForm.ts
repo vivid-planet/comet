@@ -129,8 +129,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     } from "@comet/admin";
     import { DateField } from "@comet/admin-date-time";
     import { ArrowLeft } from "@comet/admin-icons";
-    import { BlockState, createFinalFormBlock } from "@comet/blocks-admin";
-    import { ContentScopeIndicator, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
+    import { BlockState, ContentScopeIndicator, createFinalFormBlock, resolveHasSaveConflict, useFormSaveConflict, queryUpdatedAt } from "@comet/cms-admin";
     import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";

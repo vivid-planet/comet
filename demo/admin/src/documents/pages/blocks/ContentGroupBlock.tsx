@@ -1,5 +1,4 @@
-import { BlockCategory, createBlocksBlock, createCompositeBlock, createCompositeBlockSelectField } from "@comet/blocks-admin";
-import { AnchorBlock } from "@comet/cms-admin";
+import { AnchorBlock, BlockCategory, createBlocksBlock, createCompositeBlock, createCompositeBlockSelectField } from "@comet/cms-admin";
 import { ContentGroupBlockData } from "@src/blocks.generated";
 import { AccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { MediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";

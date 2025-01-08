@@ -1,15 +1,5 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect } from "@comet/admin";
-import {
-    AdminComponentPaper,
-    BlockCategory,
-    BlockDependency,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-    LinkBlockInterface,
-    SelectPreviewComponent,
-} from "@comet/blocks-admin";
 import { Box, Divider, MenuItem } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
@@ -17,7 +7,12 @@ import { FormattedMessage } from "react-intl";
 import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
+import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockDependency, BlockInterface, LinkBlockInterface } from "./blocks/types";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
 
 type State = InternalLinkBlockData;

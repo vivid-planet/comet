@@ -273,6 +273,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                 selectedCount,
                 toggleVisible,
                 deleteBlocks,
+                // @ts-expect-error missing AdditionalItemFields generic in createUseAdminComponent
             } = useAdminComponent({ state, updateState });
 
             return (

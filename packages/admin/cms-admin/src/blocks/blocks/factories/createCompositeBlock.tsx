@@ -93,8 +93,7 @@ export const createCompositeBlock = <Options extends CreateCompositeBlockOptions
     if (hasGroups(options)) {
         groups = options.groups;
     } else {
-        // TODO blocks-admin won't build without this (unnecessary) explicit cast
-        groups = { default: { blocks: (options as CreateCompositeBlockOptionsBase).blocks } };
+        groups = { default: { blocks: options.blocks } };
     }
 
     const blockConfigs: Record<string, BlockConfiguration> = Object.values(groups).reduce((blocks, group) => ({ ...blocks, ...group.blocks }), {});

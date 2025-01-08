@@ -1,7 +1,7 @@
 import { TypedDocumentNode } from "@apollo/client";
-import { BlockDependency, ReplaceDependencyObject } from "@comet/blocks-admin";
 import { SvgIconProps } from "@mui/material";
 
+import { BlockDependency, ReplaceDependencyObject } from "../blocks/blocks/types";
 import { GQLDocumentInterface, Maybe } from "../graphql.generated";
 import { PageTreePage } from "../pages/pageTree/usePageTree";
 

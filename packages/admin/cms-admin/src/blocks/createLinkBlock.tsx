@@ -1,18 +1,14 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import {
-    AdminComponentSection,
-    BlockInterface,
-    BlocksFinalForm,
-    createOneOfBlock,
-    CreateOneOfBlockOptions,
-    LinkBlockInterface,
-    useAdminComponentPaper,
-} from "@comet/blocks-admin";
 import { Box } from "@mui/system";
 import { FormattedMessage } from "react-intl";
 
 import { LinkBlockData } from "../blocks.generated";
+import { useAdminComponentPaper } from "./blocks/common/AdminComponentPaper";
+import { AdminComponentSection } from "./blocks/common/AdminComponentSection";
+import { createOneOfBlock, CreateOneOfBlockOptions } from "./blocks/factories/createOneOfBlock";
+import { BlockInterface, LinkBlockInterface } from "./blocks/types";
 import { ExternalLinkBlock } from "./ExternalLinkBlock";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { InternalLinkBlock } from "./InternalLinkBlock";
 
 interface CreateLinkBlockOptions extends Omit<CreateOneOfBlockOptions<boolean>, "name" | "supportedBlocks"> {

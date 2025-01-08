@@ -1,7 +1,7 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { SpaceBlockData, SpaceBlockInput } from "../blocks.generated";
+import { SpaceBlockData, SpaceBlockInput } from "../../blocks.generated";
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";

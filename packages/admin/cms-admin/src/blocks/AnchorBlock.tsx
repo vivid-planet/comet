@@ -1,8 +1,11 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { AnchorBlockData, AnchorBlockInput } from "../blocks.generated";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockInterface } from "./blocks/types";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 
 const AnchorBlock: BlockInterface<AnchorBlockData, AnchorBlockData, AnchorBlockInput> = {
     ...createBlockSkeleton(),

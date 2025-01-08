@@ -1,8 +1,11 @@
 import { Field } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createOneOfBlock, resolveNewState } from "@comet/blocks-admin";
 import { FormattedMessage } from "react-intl";
 
 import { PixelImageBlockData, SvgImageBlockData } from "../../blocks.generated";
+import { createOneOfBlock } from "../../blocks/blocks/factories/createOneOfBlock";
+import { BlockCategory, BlockInterface } from "../../blocks/blocks/types";
+import { resolveNewState } from "../../blocks/blocks/utils";
+import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
 import { PixelImageBlock } from "../../blocks/PixelImageBlock";
 import { SvgImageBlock } from "../../blocks/SvgImageBlock";
 import { FileField, GQLDamFileFieldFileFragment } from "../../form/file/FileField";

@@ -1,5 +1,5 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
+import { BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/cms-admin";
 import { NewsDetailBlockData, NewsDetailBlockInput } from "@src/blocks.generated";
 
 type State = NewsDetailBlockData;

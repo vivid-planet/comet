@@ -14,12 +14,14 @@ import {
     ToolbarTitleItem,
     useStackSwitchApi,
 } from "@comet/admin";
-import { BlockInterface, BlockState, createFinalFormBlock, isValidUrl } from "@comet/blocks-admin";
 import { MenuItem } from "@mui/material";
 import isEqual from "lodash.isequal";
 import { useMemo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { BlockInterface, BlockState } from "../blocks/blocks/types";
+import { createFinalFormBlock } from "../blocks/form/createFinalFormBlock";
+import { isValidUrl } from "../blocks/validators/isValidUrl";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { GQLRedirectSourceTypeValues } from "../graphql.generated";
 import { GQLRedirectSourceAvailableQuery, GQLRedirectSourceAvailableQueryVariables } from "./RedirectForm.generated";

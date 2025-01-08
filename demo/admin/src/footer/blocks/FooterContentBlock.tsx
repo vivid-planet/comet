@@ -1,5 +1,4 @@
-import { createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { createCompositeBlock, createCompositeBlockTextField, DamImageBlock } from "@comet/cms-admin";
 import { LinkListBlock } from "@src/common/blocks/LinkListBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";

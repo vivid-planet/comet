@@ -1,9 +1,12 @@
 import { Field, FinalFormInput } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton, SelectPreviewComponent } from "@comet/blocks-admin";
 import { isEmail } from "class-validator";
 import { FormattedMessage } from "react-intl";
 
 import { EmailLinkBlockData, EmailLinkBlockInput } from "../blocks.generated";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockInterface } from "./blocks/types";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 
 export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockData, EmailLinkBlockInput> = {
     ...createBlockSkeleton(),

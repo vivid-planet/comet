@@ -1,4 +1,4 @@
-import { createSpaceBlock } from "@comet/blocks-admin";
+import { createSpaceBlock } from "@comet/cms-admin";
 import { SpaceBlockData } from "@src/blocks.generated";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

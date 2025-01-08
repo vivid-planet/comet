@@ -10,7 +10,7 @@ import {
     createCompositeBlock,
     createCompositeSetting,
     FinalFormLayoutSelect,
-} from "@comet/blocks-admin";
+} from "@comet/cms-admin";
 import { LayoutBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { FormattedMessage } from "react-intl";

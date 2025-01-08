@@ -1,5 +1,4 @@
 import { IRteOptions, makeRteApi, pasteAndFilterText, Rte } from "@comet/admin-rte";
-import { BlockCategory, BlockInterface, createBlockSkeleton, LinkBlockInterface, SelectPreviewComponent } from "@comet/blocks-admin";
 import {
     BlockMapBuilder,
     convertFromHTML,
@@ -14,6 +13,9 @@ import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
+import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockInterface, LinkBlockInterface } from "./blocks/types";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
 

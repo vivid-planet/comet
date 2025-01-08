@@ -1,21 +1,17 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect, messages } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
-import {
-    AdminComponentButton,
-    AdminComponentPaper,
-    BlockCategory,
-    BlockDependency,
-    BlockInterface,
-    BlocksFinalForm,
-    createBlockSkeleton,
-} from "@comet/blocks-admin";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
 import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
+import { AdminComponentButton } from "../../blocks/blocks/common/AdminComponentButton";
+import { AdminComponentPaper } from "../../blocks/blocks/common/AdminComponentPaper";
+import { createBlockSkeleton } from "../../blocks/blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockDependency, BlockInterface } from "../../blocks/blocks/types";
 import { CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
+import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
 import { DamPathLazy } from "../../form/file/DamPathLazy";
 import { FileField } from "../../form/file/FileField";
 import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";

@@ -20,8 +20,7 @@ import {
     usePersistentColumnState,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
-import { BlockPreviewContent } from "@comet/blocks-admin";
-import { DamImageBlock } from "@comet/cms-admin";
+import { BlockPreviewContent, DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
 import { useContentScope } from "@src/common/ContentScopeProvider";

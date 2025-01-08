@@ -1,12 +1,12 @@
 import { Field, FieldContainer, FormSection } from "@comet/admin";
 import { Reset } from "@comet/admin-icons";
-import { AdminComponentSection } from "@comet/blocks-admin";
 import { Button, FormControlLabel, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
+import { AdminComponentSection } from "../../blocks/blocks/common/AdminComponentSection";
 import { ChooseFocalPoint } from "../../common/image/ChooseFocalPoint";
 import { EditImageFormValues } from "./EditFile";
 
