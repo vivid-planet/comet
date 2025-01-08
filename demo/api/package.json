@@ -17,7 +17,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project ./tsconfig.lint.json",
         "lint:generated-files-not-modified": "$npm_execpath api-generator && git diff --exit-code HEAD -- src/**/generated",
-        "mikro-orm": "mikro-orm",
+        "mikro-orm": "dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- mikro-orm",
         "mikro-orm:drop": "mikro-orm schema:drop -r",
         "mikro-orm:migration:generate": "mikro-orm migration:create",
         "start": "$npm_execpath prebuild && dotenv -c -e .env.site-configs -- nest start --debug --watch --preserveWatchOutput",
