@@ -6,7 +6,7 @@ export const FormBuildersGrid: GridConfig<GQLFormBuilder> = {
     gqlType: "FormBuilder",
     fragmentName: "FormBuildersGrid",
     toolbarActionProp: true,
-    copyPaste: false, // TODO: Should/can we enable this?
+    copyPaste: false, // TODO: Fix this, current problem: "Unknown error: Clipboard contains an invalid format"
     columns: [
         { type: "text", name: "name", headerName: "Name", flex: 2 },
         { type: "date", name: "createdAt", headerName: "Created" },
