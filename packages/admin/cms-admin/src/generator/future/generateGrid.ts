@@ -506,7 +506,7 @@ export function generateGrid(
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
     const dataGridRemoteParameters =
-        config.initialSort || config.queryParamsPrefix
+        config.initialSort || config.queryParamsPrefix || config.initialFilter
             ? `{${
                   config.initialSort
                       ? ` initialSort: [${config.initialSort
@@ -514,6 +514,20 @@ export function generateGrid(
                                 return `{field: "${item.field}", sort: "${item.sort}"}`;
                             })
                             .join(",\n")} ], `
+                      : ""
+              }
+              ${
+                  config.initialFilter
+                      ? `initialFilter:{ ${
+                            config.initialFilter.linkOperator
+                                ? `linkOperator: GridLinkOperator.${config.initialFilter.linkOperator === "or" ? "Or" : "And"},`
+                                : ""
+                        }
+                      items: [${config.initialFilter.items
+                          .map((item) => {
+                              return `{ field: "${item.field}", operator: "${item.operator}", value: "${item.value}" }`;
+                          })
+                          .join(",\n")} ],},`
                       : ""
               }
               ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
@@ -549,7 +563,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,

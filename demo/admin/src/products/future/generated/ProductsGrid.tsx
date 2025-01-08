@@ -143,6 +143,9 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
                 { field: "inStock", sort: "desc" },
                 { field: "price", sort: "asc" },
             ],
+            initialFilter: {
+                items: [{ field: "type", operator: "is", value: "Shirt" }],
+            },
             queryParamsPrefix: "products",
         }),
         ...usePersistentColumnState("ProductsGrid"),
