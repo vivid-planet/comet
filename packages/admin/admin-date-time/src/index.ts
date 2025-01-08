@@ -10,6 +10,7 @@ export {
      */
     FinalFormDatePickerProps,
 } from "./datePicker/FinalFormDatePicker";
+export { DatePickerNavigationClassKey, DatePickerNavigationProps } from "./DatePickerNavigation";
 export { DateRangeField, DateRangeFieldProps } from "./dateRangePicker/DateRangeField";
 export { DateRange, DateRangePicker, DateRangePickerProps } from "./dateRangePicker/DateRangePicker";
 export {
@@ -23,6 +24,7 @@ export {
     FinalFormDateRangePickerProps,
 } from "./dateRangePicker/FinalFormDateRangePicker";
 export { DateTimeField, DateTimeFieldProps } from "./dateTimePicker/DateTimeField";
+export { DateTimePickerClassKey } from "./dateTimePicker/DateTimePicker";
 export { DateTimePicker, DateTimePickerProps } from "./dateTimePicker/DateTimePicker";
 export {
     /**
@@ -34,6 +36,7 @@ export {
      */
     FinalFormDateTimePickerProps,
 } from "./dateTimePicker/FinalFormDateTimePicker";
+export { FinalFormTimePickerProps } from "./timePicker/FinalFormTimePicker";
 export {
     /**
      * @deprecated Use `<TimeField />` instead of `<Field component={FinalFormTimePicker} />`
@@ -41,6 +44,7 @@ export {
     FinalFormTimePicker,
 } from "./timePicker/FinalFormTimePicker";
 export { TimeField, TimeFieldProps } from "./timePicker/TimeField";
+export { TimePickerClassKey } from "./timePicker/TimePicker";
 export { TimePicker, TimePickerProps } from "./timePicker/TimePicker";
 export {
     /**
@@ -53,5 +57,6 @@ export {
     FinalFormTimeRangePickerProps,
 } from "./timeRangePicker/FinalFormTimeRangePicker";
 export { TimeRangeField, TimeRangeFieldProps } from "./timeRangePicker/TimeRangeField";
+export { TimeRangePickerClassKey } from "./timeRangePicker/TimeRangePicker";
 export { TimeRange, TimeRangePicker, TimeRangePickerProps } from "./timeRangePicker/TimeRangePicker";
 export { DateFnsLocaleContext, DateFnsLocaleProvider, useDateFnsLocale } from "./utils/DateFnsLocaleProvider";

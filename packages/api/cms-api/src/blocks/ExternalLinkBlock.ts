@@ -28,4 +28,3 @@ class ExternalLinkBlockInput extends BlockInput {
 }
 
 export const ExternalLinkBlock = createBlock(ExternalLinkBlockData, ExternalLinkBlockInput, "ExternalLink");
-export type { ExternalLinkBlockData, ExternalLinkBlockInput };

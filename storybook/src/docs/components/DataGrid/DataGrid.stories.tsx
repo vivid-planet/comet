@@ -545,7 +545,6 @@ export const _CrudMoreActionsMenu = {
                     rows={exampleRows}
                     columns={exampleColumns}
                     checkboxSelection
-                    disableRowSelectionOnClick
                     onRowSelectionModelChange={(newSelectionModel) => {
                         setSelectionModel(newSelectionModel);
                     }}

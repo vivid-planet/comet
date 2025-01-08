@@ -7,7 +7,7 @@ import { damAreFilenamesOccupied } from "./ManualDuplicatedFilenamesHandler.gql"
 import { GQLDamAreFilenamesOccupiedQuery, GQLDamAreFilenamesOccupiedQueryVariables } from "./ManualDuplicatedFilenamesHandler.gql.generated";
 import { ManuallyHandleDuplicatedFilenamesDialog } from "./ManuallyHandleDuplicatedFilenamesDialog";
 
-export interface ManualDuplicatedFilenamesHandlerApi {
+interface ManualDuplicatedFilenamesHandlerApi {
     checkForDuplicates: (fileData: FilenameData[]) => Promise<GQLFilenameResponse[]>;
     letUserHandleDuplicates: (fileData: FilenameData[]) => Promise<{ filenames: FilenameData[]; duplicateAction: DuplicateAction }>;
 }
@@ -17,7 +17,7 @@ export interface FilenameData {
     folderId?: string;
 }
 
-export const ManualDuplicatedFilenamesHandlerContext = createContext<ManualDuplicatedFilenamesHandlerApi | undefined>(undefined);
+const ManualDuplicatedFilenamesHandlerContext = createContext<ManualDuplicatedFilenamesHandlerApi | undefined>(undefined);
 
 export const useManualDuplicatedFilenamesHandler = (): ManualDuplicatedFilenamesHandlerApi | undefined => {
     return useContext(ManualDuplicatedFilenamesHandlerContext);

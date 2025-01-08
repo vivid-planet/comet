@@ -28,5 +28,5 @@ export const exampleColumns: GridColDef[] = [
 
 export const ExampleDataGrid = (props: Partial<DataGridProps>) => {
     const dataGridProps = usePersistentColumnState("ResponsiveColumnsStory");
-    return <DataGrid disableRowSelectionOnClick rows={exampleRows} columns={exampleColumns} {...dataGridProps} {...props} />;
+    return <DataGrid rows={exampleRows} columns={exampleColumns} {...dataGridProps} {...props} />;
 };

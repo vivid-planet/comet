@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 
 import { GQLPageQuery, GQLPageQueryVariables } from "./PageName.generated";
 
-export const pageFragment = gql`
+const pageFragment = gql`
     fragment Page on PageTreeNode {
         id
         name

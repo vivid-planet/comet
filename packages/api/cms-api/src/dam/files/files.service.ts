@@ -37,7 +37,7 @@ import { FoldersService } from "./folders.service";
 
 const exifrSupportedMimetypes = ["image/jpeg", "image/tiff", "image/x-iiq", "image/heif", "image/heic", "image/avif", "image/png"];
 
-export const withFilesSelect = (
+const withFilesSelect = (
     qb: QueryBuilder<FileInterface>,
     args: {
         query?: string;

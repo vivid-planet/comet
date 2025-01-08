@@ -16,7 +16,7 @@ import { UpdateFolderInput } from "./dto/folder.input";
 import { FOLDER_TABLE_NAME, FolderInterface } from "./entities/folder.entity";
 import { FilesService } from "./files.service";
 
-export const withFoldersSelect = (
+const withFoldersSelect = (
     qb: QueryBuilder<FolderInterface>,
     args: {
         includeArchived?: boolean;

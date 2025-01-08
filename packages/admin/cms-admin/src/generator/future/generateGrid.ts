@@ -16,7 +16,14 @@ import { generateGqlFieldList } from "./generateGrid/generateGqlFieldList";
 import { generateGridToolbar } from "./generateGrid/generateGridToolbar";
 import { getForwardedGqlArgs } from "./generateGrid/getForwardedGqlArgs";
 import { getPropsForFilterProp } from "./generateGrid/getPropsForFilterProp";
-import { ActionsGridColumnConfig, GeneratorReturn, GridColumnConfig, GridConfig, StaticSelectLabelCellContent } from "./generator";
+import {
+    ActionsGridColumnConfig,
+    GeneratorReturn,
+    GQLDocumentConfigMap,
+    GridColumnConfig,
+    GridConfig,
+    StaticSelectLabelCellContent,
+} from "./generator";
 import { camelCaseToHumanReadable } from "./utils/camelCaseToHumanReadable";
 import { findMutationType } from "./utils/findMutationType";
 import { findQueryTypeOrThrow } from "./utils/findQueryType";
@@ -154,7 +161,7 @@ export function generateGrid(
     const instanceGqlType = gqlType[0].toLowerCase() + gqlType.substring(1);
     const instanceGqlTypePlural = gqlTypePlural[0].toLowerCase() + gqlTypePlural.substring(1);
     const gridQuery = config.query ? config.query : instanceGqlType != instanceGqlTypePlural ? instanceGqlTypePlural : `${instanceGqlTypePlural}List`;
-    const gqlDocuments: Record<string, string> = {};
+    const gqlDocuments: GQLDocumentConfigMap = {};
     const imports: Imports = [];
     const iconsToImport: string[] = ["Add", "Edit"];
     const props: Prop[] = [];
@@ -245,7 +252,7 @@ export function generateGrid(
 
     const forwardToolbarAction = allowAdding && renderToolbar && config.toolbarActionProp;
     if (forwardToolbarAction) {
-        props.push({ name: "toolbarAction", type: "React.ReactNode", optional: true });
+        props.push({ name: "toolbarAction", type: "ReactNode", optional: true });
     }
 
     const sortArg = gridQueryType.args.find((arg) => arg.name === "sort");
@@ -485,7 +492,7 @@ export function generateGrid(
     if (forwardRowAction) {
         props.push({
             name: "rowAction",
-            type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => React.ReactNode`,
+            type: `(params: GridRenderCellParams<any, GQL${fragmentName}Fragment, any>) => ReactNode`,
             optional: true,
         });
         props.push({
@@ -499,7 +506,7 @@ export function generateGrid(
     const { gridPropsTypeCode, gridPropsParamsCode } = generateGridPropsCode(props);
     const gridToolbarComponentName = `${gqlTypePlural}GridToolbar`;
     const dataGridRemoteParameters =
-        config.initialSort || config.queryParamsPrefix
+        config.initialSort || config.queryParamsPrefix || config.initialFilter
             ? `{${
                   config.initialSort
                       ? ` initialSort: [${config.initialSort
@@ -507,6 +514,20 @@ export function generateGrid(
                                 return `{field: "${item.field}", sort: "${item.sort}"}`;
                             })
                             .join(",\n")} ], `
+                      : ""
+              }
+              ${
+                  config.initialFilter
+                      ? `initialFilter:{ ${
+                            config.initialFilter.linkOperator
+                                ? `linkOperator: GridLinkOperator.${config.initialFilter.linkOperator === "or" ? "Or" : "And"},`
+                                : ""
+                        }
+                      items: [${config.initialFilter.items
+                          .map((item) => {
+                              return `{ field: "${item.field}", operator: "${item.operator}", value: "${item.value}" }`;
+                          })
+                          .join(",\n")} ],},`
                       : ""
               }
               ${config.queryParamsPrefix ? `queryParamsPrefix: "${config.queryParamsPrefix}",` : ""}
@@ -542,7 +563,7 @@ export function generateGrid(
     import { Add as AddIcon, Edit, Info, MoreVertical, Excel } from "@comet/admin-icons";
     import { BlockPreviewContent } from "@comet/blocks-admin";
     import { Alert, Button, Box, IconButton, Typography, useTheme, Menu, MenuItem, ListItemIcon, ListItemText, CircularProgress } from "@mui/material";
-    import { DataGridPro, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
+    import { DataGridPro, GridLinkOperator, GridRenderCellParams, GridSlotsComponent, GridToolbarProps, GridColumnHeaderTitle, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import {
         GQL${gqlTypePlural}GridQuery,
@@ -553,7 +574,7 @@ export function generateGrid(
         GQLDelete${gqlType}Mutation,
         GQLDelete${gqlType}MutationVariables
     } from "./${baseOutputFilename}.generated";
-    import * as React from "react";
+    import { ReactNode } from "react";
     import { FormattedMessage, FormattedNumber, useIntl } from "react-intl";
     ${generateImportsCode(imports)}
 
@@ -647,7 +668,7 @@ export function generateGrid(
 
     ${gridPropsTypeCode}
 
-    export function ${gqlTypePlural}Grid(${gridPropsParamsCode}): React.ReactElement {
+    export function ${gqlTypePlural}Grid(${gridPropsParamsCode}) {
         ${showCrudContextMenuInActionsColumn ? "const client = useApolloClient();" : ""}
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(${dataGridRemoteParameters}), ...usePersistentColumnState("${gqlTypePlural}Grid") };
@@ -869,7 +890,6 @@ export function generateGrid(
         return (
             <DataGridPro
                 {...dataGridProps}
-                disableRowSelectionOnClick
                 rows={rows}
                 rowCount={rowCount}
                 columns={columns}

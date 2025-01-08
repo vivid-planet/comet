@@ -21,7 +21,6 @@ import {
 import { Add as AddIcon, Edit as EditIcon, Info } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridColumnHeaderTitle, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -102,7 +101,7 @@ function ManufacturersGridToolbar() {
     );
 }
 
-export function ManufacturersGrid(): React.ReactElement {
+export function ManufacturersGrid() {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -291,7 +290,6 @@ export function ManufacturersGrid(): React.ReactElement {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

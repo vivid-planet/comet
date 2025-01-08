@@ -1,5 +1,6 @@
+import { Tooltip } from "@comet/admin";
 import { Archive, Delete, Error as ErrorIcon, Move, Restore, ThreeDotSaving } from "@comet/admin-icons";
-import { Divider, IconButton as CometAdminIconButton, Tooltip, Typography } from "@mui/material";
+import { Divider, IconButton as CometAdminIconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";

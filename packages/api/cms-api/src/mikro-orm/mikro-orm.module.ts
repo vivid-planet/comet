@@ -29,8 +29,6 @@ import { Migration20240814090503 } from "./migrations/Migration20240814090503";
 import { Migration20240814090541 } from "./migrations/Migration20240814090541";
 import { Migration20240814090653 } from "./migrations/Migration20240814090653";
 
-export const PG_UNIQUE_CONSTRAINT_VIOLATION = "23505";
-
 export interface MikroOrmModuleOptions {
     ormConfig: MikroOrmNestjsOptions;
 }

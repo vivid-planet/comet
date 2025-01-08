@@ -3,6 +3,7 @@ import {
     ComponentsOverrides,
     Popper as MuiPopper,
     Theme,
+    // eslint-disable-next-line no-restricted-imports
     Tooltip as MuiTooltip,
     tooltipClasses,
     TooltipClassKey as MuiTooltipClassKey,
@@ -14,9 +15,13 @@ import { cloneElement, ComponentProps, ReactElement, useState } from "react";
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export interface TooltipProps extends MuiTooltipProps {
+    /**
+     * @deprecated Triggers other than the default "hover" will be removed in the future.
+     */
     trigger?: "hover" | "focus" | "click";
     variant?: Variant;
 }
+
 type Variant = "light" | "dark" | "neutral" | "primary" | "error" | "success";
 
 export type TooltipClassKey = "root" | Variant | MuiTooltipClassKey;
@@ -243,7 +248,7 @@ export const Tooltip = (inProps: TooltipProps) => {
             </TooltipRoot>
         </ClickAwayListener>
     ) : (
-        <TooltipRoot disableFocusListener={trigger === "hover"} disableHoverListener={trigger === "focus"} {...commonTooltipProps}>
+        <TooltipRoot disableHoverListener={trigger === "focus"} enterTouchDelay={0} {...commonTooltipProps}>
             {children}
         </TooltipRoot>
     );

@@ -4,13 +4,13 @@ import {
     StackPage,
     StackSwitch,
     Toolbar,
+    ToolbarActionButton,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
     ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
-import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
 import { ArrowRight, Save } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
 import { ReactNode } from "react";

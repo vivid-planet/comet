@@ -67,14 +67,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         }
         \${${instanceEntityName}FormFragment}
     \`;
-    
-    export const ${instanceEntityName}FormCheckForChangesQuery = gql\`
-        query ${entityName}FormCheckForChanges($id: ID!) {
-            ${instanceEntityName}(id: $id) {
-                updatedAt
-            }
-        }
-    \`;
+
 
     export const create${entityName}Mutation = gql\`
         mutation Create${entityName}(${hasScope ? `$scope: ${entityName}ContentScopeInput!, ` : ""}$input: ${entityName}Input!) {
@@ -141,7 +134,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
     import { IconButton, FormControlLabel, MenuItem } from "@mui/material";
     import { FormApi } from "final-form";
     import isEqual from "lodash.isequal";
-    import React from "react";
+    import { useMemo } from "react";
     import { FormattedMessage } from "react-intl";
     import { useContentScope } from "@src/common/ContentScopeProvider";
     import { create${entityName}Mutation, ${instanceEntityName}CheckForChangesQuery, ${instanceEntityName}FormFragment, ${instanceEntityName}FormQuery, update${entityName}Mutation } from "./${entityName}Form.gql";
@@ -187,7 +180,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
         id?: string;
     }
 
-    export function ${entityName}Form({ id }: FormProps): React.ReactElement {
+    export function ${entityName}Form({ id }: FormProps) {
         const stackApi = useStackApi();
         const client = useApolloClient();
         const mode = id ? "edit" : "add";
@@ -199,7 +192,7 @@ export async function writeCrudForm(generatorConfig: CrudGeneratorConfig, schema
             id ? { variables: { id } } : { skip: true },
         );
     
-        const initialValues = React.useMemo<Partial<FormValues>>(() => data?.${instanceEntityName}
+        const initialValues = useMemo<Partial<FormValues>>(() => data?.${instanceEntityName}
             ? {
                   ...filterByFragment<GQL${entityName}FormFragment>(${instanceEntityName}FormFragment, data.${instanceEntityName}),
                   ${numberFields.map((field) => `${field.name}: String(data.${instanceEntityName}.${field.name}),`).join("\n")}

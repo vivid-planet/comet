@@ -235,7 +235,6 @@ export async function writeCrudGrid(
         GQLDelete${entityName}Mutation,
         GQLDelete${entityName}MutationVariables 
     } from "./${classNamePlural}Grid.generated";
-    import * as React from "react";
     import { FormattedMessage, useIntl } from "react-intl";
     ${Object.entries(rootBlocks)
         .map(([rootBlockKey, rootBlock]) => `import { ${rootBlock.name} } from "${rootBlock.import}";`)
@@ -317,7 +316,7 @@ export async function writeCrudGrid(
         );
     }
     
-    export function ${classNamePlural}Grid(): React.ReactElement {
+    export function ${classNamePlural}Grid() {
         const client = useApolloClient();
         const intl = useIntl();
         const dataGridProps = { ...useDataGridRemote(), ...usePersistentColumnState("${classNamePlural}Grid") };
@@ -422,12 +421,11 @@ export async function writeCrudGrid(
         const rowCount = useBufferedRowCount(data?.${gridQuery}.totalCount);
         if (error) throw error;
         const rows = data?.${gridQuery}.nodes ?? [];
-    
+
         return (
             <MainContent fullHeight>
                 <DataGridPro
                     {...dataGridProps}
-                    disableRowSelectionOnClick
                     rows={rows}
                     rowCount={rowCount}
                     columns={columns}

@@ -47,7 +47,7 @@ export const Basic = {
             },
         ];
 
-        return <DataGrid autoHeight rows={gridRows} columns={gridColumns} disableRowSelectionOnClick />;
+        return <DataGrid autoHeight rows={gridRows} columns={gridColumns} />;
     },
     name: "GridCellContent",
 };

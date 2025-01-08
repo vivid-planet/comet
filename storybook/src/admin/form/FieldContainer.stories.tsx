@@ -1,5 +1,4 @@
 import { FieldSet, TextField } from "@comet/admin";
-import * as React from "react";
 import { Form } from "react-final-form";
 
 export default {

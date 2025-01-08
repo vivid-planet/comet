@@ -248,6 +248,13 @@ Perform the following changes:
     }
     ```
 
+### Import `Tooltip` from `@comet/admin` package
+
+```diff
+- import { Tooltip } from "@mui/material";
++ import { Tooltip } from "@comet/admin";
+```
+
 ### Update MUI - X Packages
 
 In `package.json` update the version of the MUI X packages to `^7.22.3`.
@@ -367,3 +374,43 @@ The recommended way to handle errors is to use the `ErrorBoundary` in the parent
 + }
 + <DataGrid /* other props */ >
 ```
+
+### Remove @comet/admin-react-select
+
+```diff
+- "@comet/admin-react-select": "^7.x.x",
+```
+
+It is recommended to use the `AutocompleteField` or the `SelectField` components from `@comet/admin` instead:
+
+```diff
+- import { FinalFormReactSelectStaticOptions } from "@comet/admin-react-select";
+- <Field name="color" type="text" component={FinalFormReactSelectStaticOptions} fullWidth options={options} />;
++ import { AutocompleteField } from "@comet/admin";
++ <AutocompleteField name="color" label="Color" options={options} fullWidth />;
+```
+
+## ESLint
+
+### Remove React barrel imports
+
+Importing `React` is no longer necessary due to the new JSX transform, which automatically imports the necessary `react/jsx-runtime` functions.
+Use individual named imports instead, e.g, `import { useState } from "react"`.
+
+It is recommended to perform the following steps separately in the `admin/` and `site/` directories:
+
+1. Replace `import * as React from "react";` with `import React from "react";` in your codebase (This step is optional but improves the results of the codemod).
+
+2. Run the codemod to update React imports (option `--force` is required to because of changes of step one above):
+
+    ```sh
+    npx react-codemod update-react-imports --force
+    ```
+
+3. Run ESLint with the `--fix` option to automatically fix issues:
+    ```sh
+    npm run lint:eslint --fix
+    ```
+
+These steps will help automate the process of updating React imports and fixing linting issues, making the migration smoother.
+The codemod does not handle all cases, so manual adjustments may still be necessary.

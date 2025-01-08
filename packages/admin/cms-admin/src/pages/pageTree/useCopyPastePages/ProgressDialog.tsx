@@ -23,7 +23,7 @@ function LinearProgressWithLabel({ message, ...props }: LinearProgressProps & { 
     );
 }
 
-export function ProgressDialog(props: { title: ReactNode; progress: number | undefined; message?: ReactNode; onCancel?: () => void }) {
+function ProgressDialog(props: { title: ReactNode; progress: number | undefined; message?: ReactNode; onCancel?: () => void }) {
     return (
         <>
             {props.progress !== undefined && (

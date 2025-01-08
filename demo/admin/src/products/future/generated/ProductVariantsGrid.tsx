@@ -22,7 +22,6 @@ import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { DamImageBlock } from "@comet/cms-admin";
 import { Button, IconButton } from "@mui/material";
 import { DataGridPro, GridSlotsComponent, GridToolbarQuickFilter } from "@mui/x-data-grid-pro";
-import * as React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import {
@@ -99,7 +98,7 @@ type Props = {
     product: string;
 };
 
-export function ProductVariantsGrid({ product }: Props): React.ReactElement {
+export function ProductVariantsGrid({ product }: Props) {
     const client = useApolloClient();
     const intl = useIntl();
     const dataGridProps = {
@@ -181,7 +180,6 @@ export function ProductVariantsGrid({ product }: Props): React.ReactElement {
     return (
         <DataGridPro
             {...dataGridProps}
-            disableRowSelectionOnClick
             rows={rows}
             rowCount={rowCount}
             columns={columns}

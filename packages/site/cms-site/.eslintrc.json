@@ -3,18 +3,6 @@
     "ignorePatterns": ["src/*.generated.ts", "lib/**"],
     "rules": {
         "@next/next/no-html-link-for-pages": "off", // disabled because lib has no pages dir
-        "@comet/no-other-module-relative-import": "off",
-        "react/react-in-jsx-scope": "off",
-        "no-restricted-imports": [
-            "error",
-            {
-                "paths": [
-                    {
-                        "name": "react",
-                        "importNames": ["default"]
-                    }
-                ]
-            }
-        ]
+        "@comet/no-other-module-relative-import": "off"
     }
 }
