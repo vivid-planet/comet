@@ -34,10 +34,6 @@ export const ImportFromPicsum = () => {
             { acceptedFiles: [picsumImage.file], fileRejections: [] },
             {
                 folderId,
-                importSource: {
-                    importSourceId: picsumImage.url,
-                    importSourceType: "picsum",
-                },
             },
         );
         handleCloseDialog();

@@ -18,11 +18,10 @@ import { SpaceBlock } from "@src/common/blocks/space.block";
 import { StandaloneCallToActionListBlock } from "@src/common/blocks/standalone-call-to-action-list.block";
 import { StandaloneHeadingBlock } from "@src/common/blocks/standalone-heading.block";
 import { StandaloneMediaBlock } from "@src/common/blocks/standalone-media.block";
+import { ColumnsBlock } from "@src/documents/pages/blocks/columns.block";
+import { KeyFactsBlock } from "@src/documents/pages/blocks/key-facts.block";
+import { TeaserBlock } from "@src/documents/pages/blocks/teaser.block";
 import { IsEnum } from "class-validator";
-
-import { ColumnsBlock } from "./columns.block";
-import { KeyFactsBlock } from "./key-facts.block";
-import { TeaserBlock } from "./teaser.block";
 
 const ContentBlock = createBlocksBlock(
     {
@@ -31,7 +30,7 @@ const ContentBlock = createBlocksBlock(
             anchor: AnchorBlock,
             space: SpaceBlock,
             teaser: TeaserBlock,
-            richText: RichTextBlock,
+            richtext: RichTextBlock,
             heading: StandaloneHeadingBlock,
             columns: ColumnsBlock,
             callToActionList: StandaloneCallToActionListBlock,
