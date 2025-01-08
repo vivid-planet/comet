@@ -94,7 +94,7 @@
         },
         {
             // Can't upgrade because: v8 is pure ESM
-            "matchPackageNames": ["query-string"], // test comment
+            "matchPackageNames": ["query-string"],
             "matchFileNames": ["packages/**"],
             "allowedVersions": "^7.0.0",
         }
