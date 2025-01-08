@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-icons",
-    "version": "7.10.0",
+    "version": "7.11.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -29,9 +29,15 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
+<<<<<<< HEAD
         "@comet/admin-babel-preset": "workspace:^7.10.0",
         "@comet/eslint-config": "workspace:^7.10.0",
         "@mui/material": "^6.3.0",
+=======
+        "@comet/admin-babel-preset": "workspace:^7.11.0",
+        "@comet/eslint-config": "workspace:^7.11.0",
+        "@mui/material": "^5.0.0",
+>>>>>>> main
         "@types/cli-progress": "^3.8.0",
         "@types/node": "^22.0.0",
         "@types/react": "^17.0.0",
