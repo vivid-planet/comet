@@ -1,8 +1,8 @@
+import { pascalCase, pascalCaseTransformMerge } from "change-case";
 import { Presets, SingleBar } from "cli-progress";
 import { ESLint } from "eslint";
 import { XMLBuilder, XMLParser } from "fast-xml-parser";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
-import { pascalCase, pascalCaseTransformMerge } from "pascal-case";
 import * as path from "path";
 
 const eslint = new ESLint({ fix: true });

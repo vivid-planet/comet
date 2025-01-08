@@ -1,26 +1,22 @@
 import { Columns4 } from "@comet/admin-icons";
-import { GridToolbarColumnsButton } from "@mui/x-data-grid";
-import { ComponentProps } from "react";
+import { ButtonProps } from "@mui/material";
+import { GridPreferencePanelsValue, useGridApiContext } from "@mui/x-data-grid";
+import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
+import { ToolbarActionButton } from "../common/toolbar/actions/ToolbarActionButton";
 import { messages } from "../messages";
 
-type Props = ComponentProps<typeof GridToolbarColumnsButton>;
+export function GridColumnsButton(props: ButtonProps) {
+    const apiRef = useGridApiContext();
 
-export function GridColumnsButton(props: Props) {
+    const handleFilterClick = useCallback(() => {
+        apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
+    }, [apiRef]);
+
     return (
-        <GridToolbarColumnsButton
-            {...props}
-            slotProps={{
-                ...props.slotProps,
-                button: {
-                    variant: "outlined",
-                    startIcon: <Columns4 />,
-                    children: <FormattedMessage {...messages.columns} />,
-                    color: "info",
-                    ...props.slotProps?.button,
-                },
-            }}
-        />
+        <ToolbarActionButton startIcon={<Columns4 />} variant="outlined" onClick={handleFilterClick} {...props}>
+            <FormattedMessage {...messages.columns} />
+        </ToolbarActionButton>
     );
 }
