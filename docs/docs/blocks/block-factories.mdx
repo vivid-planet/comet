@@ -28,7 +28,7 @@ import { createBlocksBlock } from "@comet/blocks-api";
 export const PageContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
-            richtext: RichTextBlock,
+            richText: RichTextBlock,
             image: DamImageBlock,
             linkList: LinkListBlock,
         },
@@ -45,7 +45,7 @@ import { createBlocksBlock } from "@comet/blocks-admin";
 export const PageContentBlock = createBlocksBlock({
     name: "PageContent",
     supportedBlocks: {
-        richtext: RichTextBlock,
+        richText: RichTextBlock,
         image: DamImageBlock,
         linkList: LinkListBlock,
     },
@@ -59,7 +59,7 @@ import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 
 const supportedBlocks: SupportedBlocks = {
-    richtext: (props) => <RichTextBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
     image: (props) => <DamImageBlock data={props} />,
     linkList: (props) => <LinkListBlock data={props} />,
 };
@@ -93,7 +93,7 @@ const ColumnsContentBlock = createBlocksBlock(
     {
         supportedBlocks: {
             space: SpaceBlock,
-            richtext: RichTextBlock,
+            richText: RichTextBlock,
             headline: HeadlineBlock,
             image: DamImageBlock,
         },
@@ -125,7 +125,7 @@ const ColumnsContentBlock = createBlocksBlock({
     name: "ColumnsContent",
     supportedBlocks: {
         space: SpaceBlock,
-        richtext: RichTextBlock,
+        richText: RichTextBlock,
         headline: HeadlineBlock,
         image: DamImageBlock,
     },
@@ -171,7 +171,7 @@ import { ColumnsBlockData, ColumnsContentBlockData } from "@src/blocks.generated
 
 const supportedBlocks: SupportedBlocks = {
     space: (props) => <SpaceBlock data={props} />,
-    richtext: (props) => <RichTextBlock data={props} />,
+    richText: (props) => <RichTextBlock data={props} />,
     headline: (props) => <HeadlineBlock data={props} />,
     image: (props) => <DamImageBlock data={props} />,
 };
