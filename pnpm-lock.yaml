@@ -153,8 +153,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.1(react@17.0.2)
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.0.3
+        version: 11.0.3
     devDependencies:
       '@comet/cli':
         specifier: workspace:*
@@ -210,9 +210,6 @@ importers:
       '@types/react-router-dom':
         specifier: ^5.0.0
         version: 5.3.3
-      '@types/uuid':
-        specifier: ^7.0.0
-        version: 7.0.5
       '@vitejs/plugin-react-swc':
         specifier: ^3.6.0
         version: 3.6.0(@swc/helpers@0.5.5)(vite@5.1.8(@types/node@22.9.0)(terser@5.36.0))
@@ -367,8 +364,8 @@ importers:
         specifier: ^1.0.0
         version: 1.6.5
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.0.3
+        version: 11.0.3
     devDependencies:
       '@comet/eslint-config':
         specifier: workspace:*
@@ -397,9 +394,6 @@ importers:
       '@types/response-time':
         specifier: ^2.3.8
         version: 2.3.8
-      '@types/uuid':
-        specifier: ^8.0.0
-        version: 8.3.4
       dotenv-cli:
         specifier: ^7.4.4
         version: 7.4.4
@@ -845,8 +839,8 @@ importers:
         specifier: ^1.0.0
         version: 1.1.1(react@17.0.2)
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.0.3
+        version: 11.0.3
     devDependencies:
       '@apollo/client':
         specifier: ^3.7.0
@@ -932,9 +926,6 @@ importers:
       '@types/testing-library__jest-dom':
         specifier: ^5.14.9
         version: 5.14.9
-      '@types/uuid':
-        specifier: ^9.0.0
-        version: 9.0.8
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
@@ -1169,8 +1160,8 @@ importers:
         specifier: ^1.0.0
         version: 1.1.1(react@17.0.2)
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.0.3
+        version: 11.0.3
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -1199,9 +1190,6 @@ importers:
       '@types/react-dom':
         specifier: ^17.0.0
         version: 17.0.18
-      '@types/uuid':
-        specifier: ^10.0.0
-        version: 10.0.0
       change-case:
         specifier: ^4.1.2
         version: 4.1.2
@@ -1409,8 +1397,8 @@ importers:
         specifier: ^2.0.0
         version: 2.2.31
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.0.3
+        version: 11.0.3
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -1460,9 +1448,6 @@ importers:
       '@types/react-router-dom':
         specifier: ^5.0.0
         version: 5.3.3
-      '@types/uuid':
-        specifier: ^8.0.0
-        version: 8.3.4
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1626,8 +1611,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.1(react@17.0.2)
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.0.3
+        version: 11.0.3
     devDependencies:
       '@apollo/client':
         specifier: ^3.7.0
@@ -1731,9 +1716,6 @@ importers:
       '@types/react-window':
         specifier: ^1.0.0
         version: 1.8.5
-      '@types/uuid':
-        specifier: ^9.0.0
-        version: 9.0.8
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1939,8 +1921,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.0.3
+        version: 11.0.3
       uuid-by-string:
         specifier: ^4.0.0
         version: 4.0.0
@@ -2035,9 +2017,6 @@ importers:
       '@types/rimraf':
         specifier: ^3.0.0
         version: 3.0.2
-      '@types/uuid':
-        specifier: ^9.0.0
-        version: 9.0.8
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2387,8 +2366,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.1(react@17.0.2)
       uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
+        specifier: ^11.0.3
+        version: 11.0.3
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -2456,9 +2435,6 @@ importers:
       '@types/react-router-dom':
         specifier: ^4.3.5
         version: 4.3.5
-      '@types/uuid':
-        specifier: ^9.0.0
-        version: 9.0.8
       draft-js:
         specifier: ^0.11.5
         version: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -7281,15 +7257,6 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
-
-  '@types/uuid@10.0.0':
-    resolution: {integrity: sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==}
-
-  '@types/uuid@7.0.5':
-    resolution: {integrity: sha512-hKB88y3YHL8oPOs/CNlaXtjWn93+Bs48sDQR37ZUqG2tLeCS7EA1cmnkKsuQsub9OKEB/y/Rw9zqJqqNSbqVlQ==}
-
-  '@types/uuid@8.3.4':
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
 
   '@types/uuid@9.0.8':
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
@@ -23090,12 +23057,6 @@ snapshots:
   '@types/unist@2.0.6': {}
 
   '@types/unist@3.0.3': {}
-
-  '@types/uuid@10.0.0': {}
-
-  '@types/uuid@7.0.5': {}
-
-  '@types/uuid@8.3.4': {}
 
   '@types/uuid@9.0.8': {}
 
