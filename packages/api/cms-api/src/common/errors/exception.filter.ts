@@ -5,6 +5,7 @@ import {
     ExceptionFilter as NestExceptionFilter,
     HttpException,
     InternalServerErrorException,
+    Logger,
 } from "@nestjs/common";
 import { ErrorHttpStatusCode } from "@nestjs/common/utils/http-error-by-code.util";
 import { Response } from "express";
@@ -14,6 +15,8 @@ import { CometValidationException } from "./validation.exception";
 
 @Catch()
 export class ExceptionFilter implements NestExceptionFilter {
+    protected readonly logger = new Logger(ExceptionFilter.name);
+
     constructor(private readonly debug: boolean) {}
 
     catch(exception: Error, host: ArgumentsHost) {
@@ -40,7 +43,7 @@ export class ExceptionFilter implements NestExceptionFilter {
         } else {
             returnedError = this.debug ? exception : new InternalServerErrorException();
             statusCode = "getStatus" in returnedError && typeof returnedError.getStatus === "function" ? returnedError.getStatus() : 500;
-            console.error(exception); // Log for debugging
+            this.logger.error(exception); // Log for debugging
         }
 
         const ctxType = host.getType<"http" | "graphql">(); // Check if it's an HTTP or GraphQL request
