@@ -20,6 +20,7 @@ export function AdminTabs({ children }: AdminTabsProps): JSX.Element | null {
     }
     const [firstTab, ...otherTabs] = children;
     const selectedTab = children.find((tab) => tab.key === selected) ? selected : firstTab.key; //fall back to first, as <Switch> does
+
     return (
         <Root key="tabs">
             <Tabs value={selectedTab} variant="scrollable" scrollButtons="auto">
