@@ -14,7 +14,10 @@ type Props = PropsWithData<TextInputBlockData> & {
 
 export const TextAreaBlock = withPreview(
     ({ data: { label, placeholder, required, name }, formId }: Props) => {
+        if (!name) return null;
+
         const uniqueId = `${formId}-${name}`;
+
         return (
             <div>
                 <Label htmlFor={uniqueId} required={required}>
