@@ -9,7 +9,7 @@ export const FormBuildersGrid: GridConfig<GQLFormBuilder> = {
     copyPaste: false, // TODO: Should/can we enable this?
     columns: [
         { type: "text", name: "name", headerName: "Name", flex: 2 },
-        { type: "date", name: "createdAt", headerName: "Erstellt am" },
-        { type: "date", name: "updatedAt", headerName: "Zuletzt geändert" },
+        { type: "date", name: "createdAt", headerName: "Created" },
+        { type: "date", name: "updatedAt", headerName: "Last updated" },
     ],
 };

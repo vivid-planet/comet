@@ -96,14 +96,14 @@ export function FormBuildersGrid({ toolbarAction }: Props): React.ReactElement {
         {
             ...dataGridDateColumn,
             field: "createdAt",
-            headerName: intl.formatMessage({ id: "formBuilder.createdAt", defaultMessage: "Erstellt am" }),
+            headerName: intl.formatMessage({ id: "formBuilder.createdAt", defaultMessage: "Created" }),
             flex: 1,
             minWidth: 150,
         },
         {
             ...dataGridDateColumn,
             field: "updatedAt",
-            headerName: intl.formatMessage({ id: "formBuilder.updatedAt", defaultMessage: "Zuletzt geändert" }),
+            headerName: intl.formatMessage({ id: "formBuilder.updatedAt", defaultMessage: "Last updated" }),
             flex: 1,
             minWidth: 150,
         },
