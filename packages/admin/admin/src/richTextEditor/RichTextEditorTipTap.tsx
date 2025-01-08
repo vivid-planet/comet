@@ -29,8 +29,8 @@ export const RichTextEditorTipTap: React.FC<RichTextEditorTipTapProps> = ({ cont
     return (
         <div>
             {editor ? (
-                <>
-                    <div>
+                <div>
+                    <div style={{ padding: "10px", border: "1px solid #ccc", borderRadius: "5px", backgroundColor: "#fefefe", color: "#000000" }}>
                         <IconButton onClick={() => editor.chain().focus().undo().run()}>
                             <RteUndo />
                         </IconButton>
@@ -46,10 +46,10 @@ export const RichTextEditorTipTap: React.FC<RichTextEditorTipTapProps> = ({ cont
                         <IconButton onClick={() => editor.chain().focus().toggleStrike().run()}>
                             <RteStrikethrough />
                         </IconButton>
-                    </div>
 
-                    <EditorContent editor={editor} />
-                </>
+                        <EditorContent editor={editor} />
+                    </div>
+                </div>
             ) : (
                 <FormattedMessage id="comet.admin.richTextEditor.loading" defaultMessage="Loading" />
             )}

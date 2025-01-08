@@ -9,7 +9,7 @@ export default {
 };
 
 export const RichTextEditorLexicalStory = function Story() {
-    const [content] = useState(undefined);
+    const [content] = useState();
 
     return (
         <div style={{ padding: "20px" }}>

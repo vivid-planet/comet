@@ -17,10 +17,23 @@ export const RichTextEditorTipTapStory = function Story() {
     };
 
     return (
-        <div style={{ padding: "20px" }}>
+        <div>
             <h1>TipTap Rich Text Editor POC</h1>
             <div style={{ padding: "20px", border: "1px solid #ccc", borderRadius: "5px" }}>
                 <RichTextEditorTipTap content={content} onChange={handleContentChange} />
+            </div>
+            <div
+                style={{
+                    marginTop: "20px",
+                    padding: "20px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    color: "#fefefe",
+                    backgroundColor: "#000000",
+                }}
+            >
+                <h2>Content HTML</h2>
+                <pre>{content}</pre>
             </div>
         </div>
     );
