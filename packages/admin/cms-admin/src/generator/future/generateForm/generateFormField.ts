@@ -4,7 +4,7 @@ import { Adornment, FormConfig, FormFieldConfig, isFormFieldConfig } from "../ge
 import { camelCaseToHumanReadable } from "../utils/camelCaseToHumanReadable";
 import { findQueryTypeOrThrow } from "../utils/findQueryType";
 import { Imports } from "../utils/generateImportsCode";
-import { isFieldOptional } from "../utils/isFieldOptional";
+import { isFieldOptional, isFieldOptionalInApi } from "../utils/isFieldOptional";
 import { findFieldByName, GenerateFieldsReturn } from "./generateFields";
 
 type AdornmentData = {
@@ -111,6 +111,15 @@ export function generateFormField({
     if (!introspectionField) throw new Error(`didn't find field ${name} in gql introspection type ${gqlType}`);
     const introspectionFieldType = introspectionField.type.kind === "NON_NULL" ? introspectionField.type.ofType : introspectionField.type;
 
+    const fieldIsOptionalInApi = isFieldOptionalInApi({ name: String(config.name), gqlIntrospection, gqlType });
+    const hideable = config.hideable && fieldIsOptionalInApi;
+    if (config.hideable && !fieldIsOptionalInApi) {
+        console.warn(
+            `Field ${String(
+                config.name,
+            )}: Required input can not be hideable. Try generating a second form without this field to enable providing a value via prop.`,
+        );
+    }
     const required = !isFieldOptional({ config, gqlIntrospection, gqlType });
 
     //TODO verify introspectionField.type is compatbile with config.type
@@ -122,6 +131,8 @@ export function generateFormField({
     const imports: Imports = [];
     const defaultFormValuesConfig: GenerateFieldsReturn["formValuesConfig"][0] = {
         destructFromFormValues: config.virtual ? name : undefined,
+        initializationCode: hideable ? `${name}: hideFields?.${name} ? undefined : data.${dataRootName}.${name}` : undefined,
+        initializationVarDependency: hideable ? `hideFields` : undefined,
     };
     let formValuesConfig: GenerateFieldsReturn["formValuesConfig"] = [defaultFormValuesConfig]; // FormFields should only contain one entry
 
@@ -219,7 +230,9 @@ export function generateFormField({
         }
         formValueToGqlInputCode = !config.virtual ? `${name}: ${assignment},` : ``;
 
-        let initializationAssignment = `String(data.${dataRootName}.${nameWithPrefix})`;
+        let initializationAssignment = hideable
+            ? `hideFields?.${name} ? undefined : String(data.${dataRootName}.${nameWithPrefix})`
+            : `String(data.${dataRootName}.${nameWithPrefix})`;
         if (!required) {
             initializationAssignment = `data.${dataRootName}.${nameWithPrefix} ? ${initializationAssignment} : undefined`;
         }
@@ -230,6 +243,7 @@ export function generateFormField({
                     omitFromFragmentType: name,
                     typeCode: `${name}${!required ? `?` : ``}: string;`,
                     initializationCode: `${name}: ${initializationAssignment}`,
+                    initializationVarDependency: hideable ? `hideFields` : undefined,
                 },
             },
         ];
@@ -279,7 +293,8 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    defaultInitializationCode: `${name}: false`,
+                    defaultInitializationCode: hideable ? `${name}: hideFields?.${name} ? undefined : false` : `${name}: false`,
+                    initializationVarDependency: hideable ? `hideFields` : undefined,
                 },
             },
         ];
@@ -308,7 +323,10 @@ export function generateFormField({
             {
                 ...defaultFormValuesConfig,
                 ...{
-                    initializationCode: `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
+                    initializationCode: hideable
+                        ? `${name}: hideFields?.${name} && data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`
+                        : `${name}: data.${dataRootName}.${nameWithPrefix} ? new Date(data.${dataRootName}.${nameWithPrefix}) : undefined`,
+                    initializationVarDependency: hideable ? `hideFields` : undefined,
                 },
             },
         ];
@@ -349,8 +367,13 @@ export function generateFormField({
                 ...defaultFormValuesConfig,
                 ...{
                     typeCode: `${name}: BlockState<typeof rootBlocks.${name}>;`,
-                    initializationCode: `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
-                    defaultInitializationCode: `${name}: rootBlocks.${name}.defaultValues()`,
+                    initializationCode: hideable
+                        ? `${name}: hideFields?.${name} ? rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix}) : undefined`
+                        : `${name}: rootBlocks.${name}.input2State(data.${dataRootName}.${nameWithPrefix})`,
+                    defaultInitializationCode: hideable
+                        ? `${name}: hideFields?.${name} ? rootBlocks.${name}.defaultValues() : undefined`
+                        : `${name}: rootBlocks.${name}.defaultValues()`,
+                    initializationVarDependency: hideable ? `hideFields` : undefined,
                 },
             },
         ];
@@ -580,7 +603,8 @@ export function generateFormField({
         throw new Error(`Unsupported type`);
     }
     return {
-        code,
+        code: hideable ? `{ !hideFields?.${name} && ${code} }` : code,
+        props: hideable ? [{ name: `hideFields.${name}`, type: `boolean`, optional: true }] : [],
         hooksCode,
         formValueToGqlInputCode,
         formFragmentFields: [formFragmentField],

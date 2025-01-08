@@ -69,6 +69,7 @@ export type FormFieldConfig<T> = (
     name: keyof T;
     label?: string;
     required?: boolean;
+    hideable?: boolean;
     virtual?: boolean;
     validate?: ImportReference;
     helperText?: string;

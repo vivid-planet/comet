@@ -1,4 +1,5 @@
 import { IntrospectionQuery } from "graphql";
+import objectPath from "object-path";
 
 import { generateFields, GenerateFieldsReturn } from "./generateForm/generateFields";
 import { getForwardedGqlArgs } from "./generateForm/getForwardedGqlArgs";
@@ -7,6 +8,9 @@ import { findMutationTypeOrThrow } from "./utils/findMutationType";
 import { generateImportsCode, Imports } from "./utils/generateImportsCode";
 
 export type Prop = { type: string; optional: boolean; name: string };
+function isProp(arg: unknown): arg is Prop {
+    return typeof arg === "object" && arg !== null && "name" in arg && "type" in arg;
+}
 function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; formPropsParamsCode: string } {
     if (!props.length) return { formPropsTypeCode: "", formPropsParamsCode: "" };
 
@@ -20,11 +24,35 @@ function generateFormPropsCode(props: Prop[]): { formPropsTypeCode: string; form
         return acc;
     }, []);
 
+    type ObjectType = { [key: string]: ObjectType | Prop };
+    const propsObject: ObjectType = uniqueProps.reduce((acc, prop) => {
+        objectPath.set(acc, prop.name, prop);
+        return acc;
+    }, {});
+
+    const convertToTypeRecursive = (obj: ObjectType): { typeStructure: string; allValuesOptional: boolean } => {
+        let typeStructure = "";
+        let allValuesOptional = true;
+        for (const key in obj) {
+            const valueForKey = obj[key];
+            if (isProp(valueForKey)) {
+                allValuesOptional = allValuesOptional && valueForKey.optional;
+                typeStructure += ` ${key}${valueForKey.optional ? `?` : ``}: ${valueForKey.type}`;
+            } else {
+                const { typeStructure: childTypeStructure, allValuesOptional: allChildValuesOptional } = convertToTypeRecursive(valueForKey);
+                allValuesOptional = allValuesOptional && allChildValuesOptional;
+                typeStructure += ` ${key}${allChildValuesOptional ? `?` : ``}: ${childTypeStructure}, `;
+            }
+        }
+        return { typeStructure: `{ ${typeStructure} }`, allValuesOptional };
+    };
+
+    const { typeStructure } = convertToTypeRecursive(propsObject);
     return {
-        formPropsTypeCode: `interface FormProps {
-            ${uniqueProps.map((prop) => `${prop.name}${prop.optional ? `?` : ``}: ${prop.type};`).join("\n")}
-        }`,
-        formPropsParamsCode: `{${uniqueProps.map((prop) => prop.name).join(", ")}}: FormProps`,
+        formPropsTypeCode: `interface FormProps ${typeStructure}`,
+        formPropsParamsCode: `{${Object.keys(propsObject)
+            .map((rootProp) => rootProp)
+            .join(", ")}}: FormProps`,
     };
 }
 
@@ -90,8 +118,6 @@ export function generateForm(
         }
     }
 
-    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
-
     const rootBlockFields = formFields
         .filter((field) => field.type == "block")
         .map((field) => {
@@ -136,10 +162,13 @@ export function generateForm(
         gqlDocuments[name] = generatedFields.gqlDocuments[name];
     }
     imports.push(...generatedFields.imports);
+    props.push(...generatedFields.props);
     hooksCode += generatedFields.hooksCode;
     formValueToGqlInputCode += generatedFields.formValueToGqlInputCode;
     formFragmentFields.push(...generatedFields.formFragmentFields);
     formValuesConfig.push(...generatedFields.formValuesConfig);
+
+    const { formPropsTypeCode, formPropsParamsCode } = generateFormPropsCode(props);
 
     gqlDocuments[`${instanceGqlType}FormFragment`] = `
         fragment ${formFragmentName} on ${gqlType} {
@@ -353,7 +382,12 @@ export function generateForm(
                 .map((config) => config.defaultInitializationCode)
                 .join(",\n")}
         }
-    , [data]);`
+    , [${[
+        "data",
+        ...formValuesConfig
+            .filter((formValueConfig) => !!formValueConfig.initializationVarDependency)
+            .map((formValueConfig) => formValueConfig.initializationVarDependency),
+    ].join(", ")}]);`
                 : `const initialValues = {
                 ${formValuesConfig
                     .filter((config) => !!config.defaultInitializationCode)
