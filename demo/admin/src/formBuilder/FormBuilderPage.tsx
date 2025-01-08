@@ -43,7 +43,7 @@ export const FormBuilderPage = () => {
                         </SaveBoundary>
                     </Dialog>
                 </StackPage>
-                <StackPage name="edit">{(id) => <FormBuilderPreviewAndForm id={id} mode="edit" />}</StackPage>
+                <StackPage name="edit">{(id) => <FormBuilderPreviewAndForm id={id} />}</StackPage>
             </StackSwitch>
         </Stack>
     );

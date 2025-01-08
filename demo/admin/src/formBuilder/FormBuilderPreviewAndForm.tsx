@@ -44,11 +44,9 @@ import {
     GQLUpdateFormBuilderMutationVariables,
 } from "./FormBuilderPreviewAndForm.gql.generated";
 
-interface FormBuilderPreviewAndFormProps {
-    // TODO: Make id required and hardcode mode as "edit"
-    id?: string;
-    mode: "edit" | "add";
-}
+type FormBuilderPreviewAndFormProps = {
+    id: string;
+};
 
 const rootBlocks = {
     blocks: FormBuilderBlock,
@@ -60,9 +58,7 @@ type FormBuilderState = GQLFormBuilderInput & {
 
 type FormBuilderOutput = GQLFormBuilderInput;
 
-export default function FormBuilderPreviewAndForm({ id, mode }: FormBuilderPreviewAndFormProps) {
-    if (mode == "edit" && !id) throw new Error("id is required for mode edit");
-
+export default function FormBuilderPreviewAndForm({ id }: FormBuilderPreviewAndFormProps) {
     const { match: contentScopeMatch } = useContentScope();
     const client = useApolloClient();
     const formBuilderBasePath = "form-builder";
@@ -73,9 +69,9 @@ export default function FormBuilderPreviewAndForm({ id, mode }: FormBuilderPrevi
         FormBuilderState,
         FormBuilderOutput
     >({
-        mode,
+        mode: "edit",
         query: formBuilderDetailQuery,
-        variables: id ? { id } : undefined,
+        variables: { id },
         input2State: ({ formBuilder }) => ({
             name: formBuilder.name,
             submitButtonText: formBuilder.submitButtonText,
@@ -96,9 +92,7 @@ export default function FormBuilderPreviewAndForm({ id, mode }: FormBuilderPrevi
     const saveConflict = useSaveConflictQuery<GQLCheckForChangesFormBuilderQuery, GQLCheckForChangesFormBuilderQueryVariables>(
         checkForChangesQuery,
         {
-            variables: {
-                id: id as string,
-            },
+            variables: { id },
             resolveHasConflict: (data) => {
                 return resolveHasSaveConflict(query.data?.formBuilder?.updatedAt, data?.formBuilder?.updatedAt);
             },
@@ -116,8 +110,6 @@ export default function FormBuilderPreviewAndForm({ id, mode }: FormBuilderPrevi
     );
 
     const handleSubmit = async (formValues: FormBuilderState) => {
-        if (!id) throw new Error("id is required"); // TODO: IS THIS REQUIRED??
-
         if (await saveConflict.checkForConflicts()) throw new Error("Conflicts detected");
         const output: GQLFormBuilderInput = {
             ...formValues,
