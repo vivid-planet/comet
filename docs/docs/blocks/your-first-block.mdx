@@ -67,7 +67,6 @@ class HeadlineBlockInput extends BlockInput {
     @BlockField({ nullable: true })
     eyebrow?: string;
 
-    @ValidateNested()
     @ChildBlockInput(RichTextBlock)
     headline: ExtractBlockInput<typeof RichTextBlock>;
 
@@ -151,7 +150,6 @@ export class HeadlineBlockInput extends BlockInput {
     @IsString()
     @BlockField()
     eyebrow?: string;\n
-    @ValidateNested()
     @ChildBlockInput(RichTextBlock)
     headline: ExtractBlockInput<typeof RichTextBlock>;\n
     @IsEnum(HeadlineLevel)
