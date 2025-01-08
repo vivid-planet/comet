@@ -1,5 +1,5 @@
 ---
-title: Migration
+title: Migration Guide
 ---
 
 This chapter contains instructions for migrating from one COMET DXP version to another.
