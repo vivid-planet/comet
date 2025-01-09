@@ -1,4 +1,4 @@
-import { AnyEntity } from "@mikro-orm/core";
+import { AnyEntity } from "@mikro-orm/postgresql";
 import { CustomDecorator, SetMetadata, Type } from "@nestjs/common";
 
 import { ContentScope } from "../../user-permissions/interfaces/content-scope.interface";

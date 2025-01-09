@@ -13,8 +13,8 @@ DTOs for the feature. For this, the entity must be annotated with the `CrudGener
 
 ```ts
 @CrudGenerator({ targetDirectory: `${__dirname}/../generated/` })
-export class Product extends BaseEntity<Product, "id"> {
-    // ...
+export class Product extends BaseEntity {
+    ...
 }
 ```
 

@@ -1,4 +1,4 @@
-import { BaseEntity } from "@mikro-orm/core";
+import { BaseEntity } from "@mikro-orm/postgresql";
 import {
     BadRequestException,
     Body,
@@ -79,7 +79,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
             @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
-        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
+        ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -118,7 +118,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
             @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
-        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
+        ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
             const transformedBody = plainToInstance(UploadFileBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 
@@ -170,7 +170,7 @@ export function createFilesController({ Scope: PassedScope }: { Scope?: Type<Dam
             @GetCurrentUser() user: CurrentUser,
             @Headers("x-preview-dam-urls") previewDamUrls: string | undefined,
             @Headers("x-relative-dam-urls") relativeDamUrls: string | undefined,
-        ): Promise<Omit<FileInterface, keyof BaseEntity<FileInterface, "id">> & { fileUrl: string }> {
+        ): Promise<Omit<FileInterface, keyof BaseEntity> & { fileUrl: string }> {
             const { fileId, ...transformedBody } = plainToInstance(ReplaceFileByIdBody, body);
             const errors = await validate(transformedBody, { whitelist: true, forbidNonWhitelisted: true });
 

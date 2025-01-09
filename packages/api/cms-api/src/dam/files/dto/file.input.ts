@@ -22,13 +22,11 @@ import { DamScopeInterface } from "../../types";
 import { LicenseType } from "../entities/license.embeddable";
 
 export class ImageFileInput {
-    @IsOptional()
     @IsInt()
-    width?: number;
+    width: number;
 
-    @IsOptional()
     @IsInt()
-    height?: number;
+    height: number;
 
     @IsOptional()
     @IsObject()
@@ -37,7 +35,7 @@ export class ImageFileInput {
     @Type(() => ImageCropAreaInput)
     @IsOptional()
     @ValidateNested()
-    cropArea?: ImageCropAreaInput;
+    cropArea: ImageCropAreaInput;
 }
 
 @InputType()
