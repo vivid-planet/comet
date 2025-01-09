@@ -3131,13 +3131,19 @@
                 "nullable": true
             },
             {
-                "name": "required",
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
                 "kind": "Boolean",
                 "nullable": false
             },
             {
-                "name": "name",
-                "kind": "String",
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
                 "nullable": false
             },
             {
@@ -3153,13 +3159,19 @@
                 "nullable": true
             },
             {
-                "name": "required",
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
                 "kind": "Boolean",
                 "nullable": false
             },
             {
-                "name": "name",
-                "kind": "String",
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
                 "nullable": false
             },
             {
@@ -3237,17 +3249,39 @@
                 "nullable": true
             },
             {
-                "name": "required",
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
                 "kind": "Boolean",
                 "nullable": false
             },
             {
-                "name": "name",
-                "kind": "String",
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "inputType",
+                "kind": "Enum",
+                "enum": [
+                    "text",
+                    "email",
+                    "phone",
+                    "number"
+                ],
                 "nullable": false
             },
             {
                 "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "unit",
                 "kind": "String",
                 "nullable": true
             }
@@ -3259,17 +3293,39 @@
                 "nullable": true
             },
             {
-                "name": "required",
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
                 "kind": "Boolean",
                 "nullable": false
             },
             {
-                "name": "name",
-                "kind": "String",
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "inputType",
+                "kind": "Enum",
+                "enum": [
+                    "text",
+                    "email",
+                    "phone",
+                    "number"
+                ],
                 "nullable": false
             },
             {
                 "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "unit",
                 "kind": "String",
                 "nullable": true
             }

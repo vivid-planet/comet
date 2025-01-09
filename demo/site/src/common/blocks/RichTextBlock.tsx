@@ -30,7 +30,7 @@ export const defaultRichTextInlineStyleMap: Renderers["inline"] = {
 /**
  * Define the renderers
  */
-const defaultRichTextRenderers: Renderers = {
+export const defaultRichTextRenderers: Renderers = {
     /**
      * Those callbacks will be called recursively to render a nested structure
      */
@@ -86,7 +86,7 @@ const defaultRichTextRenderers: Renderers = {
     },
 };
 
-interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
+export interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
     renderers?: Renderers;
     disableLastBottomSpacing?: boolean;
 }

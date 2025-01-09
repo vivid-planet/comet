@@ -7,8 +7,8 @@ import { Form } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 import { styled } from "styled-components";
 
-import { TextAreaBlock } from "./TextAreaBlock";
-import { TextInputBlock } from "./TextInputBlock";
+import { TextAreaBlock } from "./fields/TextAreaBlock";
+import { TextInputBlock } from "./fields/TextInputBlock";
 
 const getSupportedBlocks = (formId: string): SupportedBlocks => {
     return {
