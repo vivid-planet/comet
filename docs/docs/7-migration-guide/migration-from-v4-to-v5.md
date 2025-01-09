@@ -1,10 +1,6 @@
 ---
 title: Migrating from v4 to v5
-<<<<<<< HEAD:docs/docs/migration/migration-from-v4-to-v5.md
-sidebar_position: 4
-=======
 sidebar_position: -5
->>>>>>> main:docs/docs/7-migration-guide/migration-from-v4-to-v5.md
 ---
 
 # Migrating from v4 to v5

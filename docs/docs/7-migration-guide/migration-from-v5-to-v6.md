@@ -1,10 +1,6 @@
 ---
 title: Migrating from v5 to v6
-<<<<<<< HEAD:docs/docs/migration/migration-from-v5-to-v6.md
-sidebar_position: 3
-=======
 sidebar_position: -6
->>>>>>> main:docs/docs/7-migration-guide/migration-from-v5-to-v6.md
 ---
 
 # Migrating from v5 to v6

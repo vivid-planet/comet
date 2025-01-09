@@ -1,10 +1,6 @@
 ---
 title: Migrating from v6 to v7
-<<<<<<< HEAD:docs/docs/migration/migration-from-v6-to-v7.md
-sidebar_position: 2
-=======
 sidebar_position: -7
->>>>>>> main:docs/docs/7-migration-guide/migration-from-v6-to-v7.md
 ---
 
 # Migrating from v6 to v7

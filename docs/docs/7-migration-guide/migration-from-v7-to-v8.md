@@ -1,6 +1,6 @@
 ---
 title: Migrating from v7 to v8
-sidebar_position: 1
+sidebar_position: -8
 ---
 
 # Migrating from v7 to v8
