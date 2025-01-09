@@ -2014,9 +2014,6 @@ importers:
       '@types/request-ip':
         specifier: ^0.0.41
         version: 0.0.41
-      '@types/rimraf':
-        specifier: ^3.0.0
-        version: 3.0.2
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -6923,9 +6920,6 @@ packages:
   '@types/glob@7.2.0':
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
 
-  '@types/glob@8.0.1':
-    resolution: {integrity: sha512-8bVUjXZvJacUFkJXHdyZ9iH1Eaj5V7I8c4NdH5sQJsdXkqT4CA5Dhb4yb4VE/3asyx4L9ayZr1NIhTsWHczmMw==}
-
   '@types/graceful-fs@4.1.6':
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
 
@@ -7197,9 +7191,6 @@ packages:
 
   '@types/retry@0.12.0':
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
-
-  '@types/rimraf@3.0.2':
-    resolution: {integrity: sha512-F3OznnSLAUxFrCEu/L5PY8+ny8DtcFRjx7fZZ9bycvXRi3KPTRS9HOitGZwvPg0juRhXFWIeKX58cnX5YqLohQ==}
 
   '@types/sax@1.2.4':
     resolution: {integrity: sha512-pSAff4IAxJjfAXUG6tFkO7dsSbTmf8CtUpfhhZ5VhkRpC4628tJhh3+V6H1E+/Gs9piSzYKT5yzHO5M4GG9jkw==}
@@ -22700,11 +22691,6 @@ snapshots:
       '@types/minimatch': 5.1.2
       '@types/node': 22.9.0
 
-  '@types/glob@8.0.1':
-    dependencies:
-      '@types/minimatch': 5.1.2
-      '@types/node': 22.9.0
-
   '@types/graceful-fs@4.1.6':
     dependencies:
       '@types/node': 22.9.0
@@ -23019,11 +23005,6 @@ snapshots:
       '@types/node': 22.9.0
 
   '@types/retry@0.12.0': {}
-
-  '@types/rimraf@3.0.2':
-    dependencies:
-      '@types/glob': 8.0.1
-      '@types/node': 22.9.0
 
   '@types/sax@1.2.4':
     dependencies:
