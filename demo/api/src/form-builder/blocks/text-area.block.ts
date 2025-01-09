@@ -1,22 +1,11 @@
 import { BlockField, createBlock, inputToData } from "@comet/blocks-api";
-import { IsOptional, IsString, isString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 import { BaseFieldBlockData, BaseFieldBlockInput } from "./base-field.block";
 
 class TextAreaBlockData extends BaseFieldBlockData {
     @BlockField({ nullable: true })
     placeholder?: string;
-
-    validateSubmittedInput(value: string): boolean {
-        if (!super.requiresValidation(value)) {
-            return true;
-        }
-        if (!isString(value)) {
-            return false;
-        }
-
-        return true;
-    }
 }
 
 class TextAreaBlockInput extends BaseFieldBlockInput {

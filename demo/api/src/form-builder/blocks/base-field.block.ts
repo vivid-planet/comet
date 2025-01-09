@@ -10,15 +10,6 @@ export class BaseFieldBlockData extends BlockData {
 
     @BlockField()
     name: string;
-
-    // Dummy function for the blocks that extend this class
-    validateSubmittedInput(_submittedValue: unknown): boolean {
-        return false;
-    }
-
-    requiresValidation(value: unknown): boolean {
-        return this.required || !!value;
-    }
 }
 
 export class BaseFieldBlockInput extends BlockInput {
