@@ -62,7 +62,7 @@ You must recreate the block index views after
 -   executing database migrations
 -   executing the fixtures (because they drop the whole database and recreate it)
 
-You can automate this process by following the steps in the [migration guide](/docs/migration/migration-from-v5-to-v6/#block-index).
+You can automate this process by following the steps in the [migration guide](/docs/migration-guide/migration-from-v5-to-v6/#block-index).
 For new projects, it should already be automated.
 
 ### Displaying dependencies in the admin interface
