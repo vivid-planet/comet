@@ -48,7 +48,11 @@ export function UserHeaderItem(props: PropsWithChildren<UserHeaderItemProps>) {
     );
 
     return (
-        <AppHeaderDropdown buttonChildren={buttonChildren ?? (isMobile ? accountIcon : user.name)} startIcon={isMobile ? undefined : accountIcon}>
+        <AppHeaderDropdown
+            buttonChildren={buttonChildren ?? (isMobile ? accountIcon : user.name)}
+            startIcon={isMobile ? undefined : accountIcon}
+            dropdownArrow={isMobile ? null : undefined}
+        >
             <Box width={300} padding={0}>
                 <Box padding={4}>
                     <LoggedInInfo variant="caption">
