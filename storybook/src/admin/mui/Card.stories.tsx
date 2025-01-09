@@ -1,6 +1,5 @@
 import { ArrowRight, Reload } from "@comet/admin-icons";
 import { Button, Card, CardContent, CardHeader, Grid, IconButton, Typography } from "@mui/material";
-import * as React from "react";
 
 export default {
     title: "@comet/admin/mui",
