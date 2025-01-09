@@ -28,6 +28,7 @@
         "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
         "@opentelemetry/instrumentation-runtime-node": "^0.11.0",
         "@opentelemetry/sdk-node": "^0.53.0",
+        "@pigment-css/react": "^0.0.29",
         "cache-manager": "^5.7.6",
         "graphql": "^15.0.0",
         "ioredis": "^5.4.1",
@@ -42,6 +43,7 @@
     },
     "devDependencies": {
         "@babel/core": "^7.0.0",
+        "@pigment-css/nextjs-plugin": "^0.0.29",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@graphql-codegen/add": "^3.2.3",
