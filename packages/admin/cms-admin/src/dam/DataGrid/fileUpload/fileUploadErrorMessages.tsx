@@ -85,3 +85,13 @@ export const SvgContainsJavaScriptError = (): React.ReactElement => (
         }}
     />
 );
+
+export const FilenameTooLongError = () => (
+    <FormattedMessage
+        id="comet.file.errors.filenameTooLong"
+        defaultMessage="<strong>Filename is too long.</strong> The filename can't exceed 255 characters."
+        values={{
+            strong: formatStrong,
+        }}
+    />
+);
