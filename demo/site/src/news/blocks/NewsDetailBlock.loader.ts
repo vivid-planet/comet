@@ -3,7 +3,7 @@ import { NewsLinkBlockData } from "@src/blocks.generated";
 
 import { GQLNewsBlockDetailQuery, GQLNewsBlockDetailQueryVariables } from "./NewsDetailBlock.loader.generated";
 
-export interface LoadedData {
+interface LoadedData {
     title: string;
 }
 

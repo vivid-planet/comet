@@ -10,7 +10,6 @@ import {
     withPreview,
 } from "@comet/cms-site";
 import { LinkBlockData } from "@src/blocks.generated";
-import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
 import { PropsWithChildren } from "react";
 
 import { InternalLinkBlock } from "./InternalLinkBlock";
@@ -25,11 +24,6 @@ const supportedBlocks: SupportedBlocks = {
         <ExternalLinkBlock data={props} title={title} className={className}>
             {children}
         </ExternalLinkBlock>
-    ),
-    news: ({ children, title, className, ...props }) => (
-        <NewsLinkBlock data={props} title={title} className={className}>
-            {children}
-        </NewsLinkBlock>
     ),
     damFileDownload: ({ children, title, className, ...props }) => (
         <DamFileDownloadLinkBlock data={props} title={title} className={className}>

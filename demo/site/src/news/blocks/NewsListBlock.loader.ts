@@ -3,7 +3,7 @@ import { NewsListBlockData } from "@src/blocks.generated";
 
 import { GQLNewsListBlockNewsFragment, GQLNewsListBlockQuery, GQLNewsListBlockQueryVariables } from "./NewsListBlock.loader.generated";
 
-export type LoadedData = GQLNewsListBlockNewsFragment[];
+type LoadedData = GQLNewsListBlockNewsFragment[];
 
 export const loader: BlockLoader<NewsListBlockData> = async ({ blockData, graphQLFetch }): Promise<LoadedData> => {
     if (blockData.ids.length === 0) {
