@@ -1,5 +1,5 @@
 import { BlockField, createBlock, inputToData } from "@comet/blocks-api";
-import { IsOptional, IsString, isString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 import { BaseFieldBlockData, BaseFieldBlockInput } from "./base-field.block";
 
