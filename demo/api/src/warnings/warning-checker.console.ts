@@ -8,6 +8,7 @@ import { Command, Console } from "nestjs-console";
 import { v5 } from "uuid";
 
 import { Warning } from "./entities/warning.entity";
+import { WarningSeverity } from "./entities/warning-severity.enum";
 
 @Injectable()
 @Console()
@@ -58,14 +59,14 @@ export class WarningCheckerConsole {
                             if (warningEntity) {
                                 warningEntity.assign({
                                     type,
-                                    severity: warning.severity,
+                                    severity: WarningSeverity[warning.severity],
                                 });
                             } else {
                                 await this.warningsRepository.create({
                                     id,
                                     type,
                                     message: warning.message,
-                                    severity: warning.severity,
+                                    severity: WarningSeverity[warning.severity],
                                 });
                             }
                         }

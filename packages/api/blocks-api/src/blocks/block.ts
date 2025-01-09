@@ -53,12 +53,13 @@ export declare type BlockIndexItem = {
 } & BlockIndexData;
 export declare type BlockIndex = Array<BlockIndexItem>;
 
-// TODO: use from WarningModule after the warning module is in the package (this enum is currently duplicated)
-export enum WarningSeverity {
+// TODO: import from WarningModule after the warning module is in the package (this enum is currently duplicated)
+enum WarningEntityWarningSeverity {
     critical = "critical",
     high = "high",
     low = "low",
 }
+export type WarningSeverity = `${WarningEntityWarningSeverity}`;
 
 interface BlockWarning {
     message: string;
