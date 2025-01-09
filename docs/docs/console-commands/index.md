@@ -62,7 +62,7 @@ npm run console:prod demo-command
 
 ## Best practices
 
--   Use kebap case for command names and arguments.
+-   Use kebab case for command names and arguments.
 -   Dangerous commands (e.g. resetting the database) should check the `NODE_ENV` and only run locally.
 
 ```ts

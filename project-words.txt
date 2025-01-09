@@ -6,7 +6,6 @@ blockname
 codemods
 GraphQLJSONObject
 imgproxy
-kebap
 Logische
 Mikro
 Mimetypes
