@@ -2015,7 +2015,7 @@ importers:
         specifier: ^0.0.41
         version: 0.0.41
       '@types/rimraf':
-        specifier: ^3.0.0
+        specifier: ^3.0.2
         version: 3.0.2
       chokidar-cli:
         specifier: ^3.0.0
