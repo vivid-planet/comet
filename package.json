@@ -13,6 +13,7 @@
         "build:docs": "pnpm recursive --filter '@comet/eslint-plugin' --filter '@comet/admin*' --filter 'comet-docs' run build",
         "clean": "pnpm recursive run clean",
         "copy-schema-files": "node copy-schema-files.js",
+        "dev": "pnpm dev:admin && pnpm dev:cms && pnpm dev:demo",
         "dev:admin": "dev-pm start @comet-admin",
         "dev:cms": "dev-pm start @cms",
         "dev:cms:admin": "dev-pm start @cms-admin",
