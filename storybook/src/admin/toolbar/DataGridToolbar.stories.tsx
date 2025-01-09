@@ -1,4 +1,4 @@
-import { DataGridToolbar, FillSpace, GridFilterButton, StackLink, ToolbarActions, ToolbarItem } from "@comet/admin";
+import { DataGridToolbar, FillSpace, GridColumnsButton, GridFilterButton, StackLink, ToolbarActions, ToolbarItem } from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Button } from "@mui/material";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -36,6 +36,9 @@ export const _DataGridToolbar = {
                             </ToolbarItem>
                             <ToolbarItem>
                                 <GridFilterButton />
+                            </ToolbarItem>
+                            <ToolbarItem>
+                                <GridColumnsButton />
                             </ToolbarItem>
                             <FillSpace />
                             <ToolbarActions>

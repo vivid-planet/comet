@@ -1,4 +1,4 @@
-import { PageLink } from "@src/header/PageLink";
+import { PageLink } from "@src/layout/header/PageLink";
 import { gql } from "graphql-request";
 import styled from "styled-components";
 
