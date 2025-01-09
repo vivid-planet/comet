@@ -28,7 +28,6 @@ export default async function Page({ params }: Props) {
     );
 }
 
-// TODO: Check if we need to add scope here
 const formBuilderQuery = gql`
     query FormBuilder($id: ID!) {
         formBuilder(id: $id) {
