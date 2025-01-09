@@ -10,7 +10,6 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-    // TODO support multiple domains, get domain by Host header
     const { previewData } = (await previewParams()) || { previewData: undefined };
 
     const graphqlFetch = createGraphQLFetch(previewData);
