@@ -24,7 +24,7 @@ export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInp
 export { CometLogo } from "./common/CometLogo";
 export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
-export { FillSpace, FillSpaceClassKey } from "./common/FillSpace";
+export { FillSpace, FillSpaceClassKey, FillSpaceProps } from "./common/FillSpace";
 export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } from "./common/FullHeightContent";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
