@@ -23,7 +23,6 @@ export const TextInputBlock = withPreview(
                 <Label htmlFor={uniqueId} required={required}>
                     {label}
                 </Label>
-                {/* @ts-expect-error TODO: Fix the error "'Field' cannot be used as a JSX component." */}
                 <Field type="text" name={name} id={uniqueId} component={FieldComponent} placeholder={placeholder} required={required} />
             </div>
         );

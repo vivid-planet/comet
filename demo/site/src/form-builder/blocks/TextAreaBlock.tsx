@@ -23,7 +23,6 @@ export const TextAreaBlock = withPreview(
                 <Label htmlFor={uniqueId} required={required}>
                     {label}
                 </Label>
-                {/* @ts-expect-error TODO: Fix the error "'Field' cannot be used as a JSX component." */}
                 <Field name={name} id={uniqueId} component={FieldComponent} placeholder={placeholder} required={required} />
             </div>
         );

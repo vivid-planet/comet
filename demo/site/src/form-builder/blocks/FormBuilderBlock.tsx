@@ -35,7 +35,6 @@ export const FormBuilderBlock = ({
     formId,
 }: Props) => {
     return (
-        // @ts-expect-error TODO: Fix the error "'Form' cannot be used as a JSX component."
         <Form onSubmit={submitValues}>
             {({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>
