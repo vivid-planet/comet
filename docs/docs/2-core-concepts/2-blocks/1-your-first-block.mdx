@@ -66,7 +66,6 @@ class HeadlineBlockInput extends BlockInput {
     @BlockField({ nullable: true })
     eyebrow?: string;
 
-    @ValidateNested()
     @ChildBlockInput(RichTextBlock)
     headline: ExtractBlockInput<typeof RichTextBlock>;
 
@@ -128,7 +127,7 @@ The complete code for our Headline API block (including all necessary imports) c
     inputToData,
 } from "@comet/blocks-api";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
-import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";\n
+import { IsEnum, IsOptional, IsString } from "class-validator";\n
 export enum HeadlineLevel {
     HeaderOne = "header-one",
     HeaderTwo = "header-two",
@@ -150,7 +149,6 @@ export class HeadlineBlockInput extends BlockInput {
     @IsString()
     @BlockField()
     eyebrow?: string;\n
-    @ValidateNested()
     @ChildBlockInput(RichTextBlock)
     headline: ExtractBlockInput<typeof RichTextBlock>;\n
     @IsEnum(HeadlineLevel)
