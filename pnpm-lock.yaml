@@ -1849,7 +1849,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.1
       got:
-        specifier: ^11.8.0
+        specifier: ^11.8.6
         version: 11.8.6
       graphql-parse-resolve-info:
         specifier: ^4.13.0
