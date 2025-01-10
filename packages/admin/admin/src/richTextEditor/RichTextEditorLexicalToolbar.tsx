@@ -82,6 +82,7 @@ export default function ToolbarPlugin() {
             >
                 <RteUndo />
             </IconButton>
+
             <IconButton
                 disabled={!canRedo}
                 onClick={() => {
@@ -90,6 +91,7 @@ export default function ToolbarPlugin() {
             >
                 <RteRedo />
             </IconButton>
+
             <IconButton
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
@@ -97,6 +99,7 @@ export default function ToolbarPlugin() {
             >
                 <RteBold color={isBold ? "secondary" : "disabled"} />
             </IconButton>
+
             <IconButton
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
@@ -104,6 +107,7 @@ export default function ToolbarPlugin() {
             >
                 <RteItalic color={isItalic ? "secondary" : "disabled"} />
             </IconButton>
+
             <IconButton
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
@@ -111,6 +115,7 @@ export default function ToolbarPlugin() {
             >
                 <RteUnderlined color={isUnderline ? "secondary" : "disabled"} />
             </IconButton>
+
             <IconButton
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
@@ -118,6 +123,7 @@ export default function ToolbarPlugin() {
             >
                 <RteStrikethrough color={isStrikethrough ? "secondary" : "disabled"} />
             </IconButton>
+
             <IconButton
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
@@ -125,6 +131,7 @@ export default function ToolbarPlugin() {
             >
                 <ArrowLeft />
             </IconButton>
+
             <IconButton
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
@@ -132,6 +139,7 @@ export default function ToolbarPlugin() {
             >
                 <ArrowDown />
             </IconButton>
+
             <IconButton
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
@@ -139,6 +147,7 @@ export default function ToolbarPlugin() {
             >
                 <ArrowRight />
             </IconButton>
+
             <IconButton
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");

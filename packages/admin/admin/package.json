@@ -35,6 +35,7 @@
         "@mui/lab": "^5.0.0-alpha.76",
         "@mui/private-theming": "^5.0.0",
         "@tiptap/core": "^2.10.3",
+        "@tiptap/extension-text-style": "^2.10.3",
         "@tiptap/pm": "^2.10.3",
         "@tiptap/react": "^2.10.3",
         "@tiptap/starter-kit": "^2.10.3",

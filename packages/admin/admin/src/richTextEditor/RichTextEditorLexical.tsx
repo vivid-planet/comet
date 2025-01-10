@@ -4,13 +4,81 @@ import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 import DebugTreeViewPlugin from "./RichTextEditorLexicalDebug";
 import ToolbarPlugin from "./RichTextEditorLexicalToolbar";
 
 const theme = {
-    // Theme styling goes here
+    ltr: "ltr",
+    rtl: "rtl",
+    paragraph: "editor-paragraph",
+    quote: "editor-quote",
+    heading: {
+        h1: "editor-heading-h1",
+        h2: "editor-heading-h2",
+        h3: "editor-heading-h3",
+        h4: "editor-heading-h4",
+        h5: "editor-heading-h5",
+        h6: "editor-heading-h6",
+    },
+    list: {
+        nested: {
+            listitem: "editor-nested-listitem",
+        },
+        ol: "editor-list-ol",
+        ul: "editor-list-ul",
+        listitem: "editor-listItem",
+        listitemChecked: "editor-listItemChecked",
+        listitemUnchecked: "editor-listItemUnchecked",
+    },
+    hashtag: "editor-hashtag",
+    image: "editor-image",
+    link: "editor-link",
+    text: {
+        bold: "editor-textBold",
+        code: "editor-textCode",
+        italic: "editor-textItalic",
+        strikethrough: "editor-textStrikethrough",
+        subscript: "editor-textSubscript",
+        superscript: "editor-textSuperscript",
+        underline: "editor-textUnderline",
+        underlineStrikethrough: "editor-textUnderlineStrikethrough",
+    },
+    code: "editor-code",
+    codeHighlight: {
+        atrule: "editor-tokenAttr",
+        attr: "editor-tokenAttr",
+        boolean: "editor-tokenProperty",
+        builtin: "editor-tokenSelector",
+        cdata: "editor-tokenComment",
+        char: "editor-tokenSelector",
+        class: "editor-tokenFunction",
+        "class-name": "editor-tokenFunction",
+        comment: "editor-tokenComment",
+        constant: "editor-tokenProperty",
+        deleted: "editor-tokenProperty",
+        doctype: "editor-tokenComment",
+        entity: "editor-tokenOperator",
+        function: "editor-tokenFunction",
+        important: "editor-tokenVariable",
+        inserted: "editor-tokenSelector",
+        keyword: "editor-tokenAttr",
+        namespace: "editor-tokenVariable",
+        number: "editor-tokenProperty",
+        operator: "editor-tokenOperator",
+        prolog: "editor-tokenComment",
+        property: "editor-tokenProperty",
+        punctuation: "editor-tokenPunctuation",
+        regex: "editor-tokenVariable",
+        selector: "editor-tokenSelector",
+        string: "editor-tokenSelector",
+        symbol: "editor-tokenProperty",
+        tag: "editor-tokenProperty",
+        url: "editor-tokenOperator",
+        variable: "editor-tokenVariable",
+    },
 };
 
 function onError(error: Error) {
@@ -51,18 +119,9 @@ export const RichTextEditorLexical: React.FC<RichTextEditorLexicalProps> = ({ co
     return (
         <LexicalComposer initialConfig={initialConfig}>
             <ToolbarPlugin />
-            <div
-                style={{
-                    padding: "20px",
-                    border: "1px solid #ccc",
-                    borderRadius: "5px",
-                    backgroundColor: "#fefefe",
-                    color: "#000000",
-                    marginBottom: "20px",
-                }}
-            >
+            <RichTextWrapper style={{}}>
                 <RichTextPlugin contentEditable={<ContentEditable />} ErrorBoundary={LexicalErrorBoundary} />
-            </div>
+            </RichTextWrapper>
 
             <HistoryPlugin />
             <OnChangePlugin onChange={onChange} />
@@ -70,3 +129,32 @@ export const RichTextEditorLexical: React.FC<RichTextEditorLexicalProps> = ({ co
         </LexicalComposer>
     );
 };
+
+const RichTextWrapper = styled("div")`
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fefefe;
+    color: #000000;
+    margin-bottom: 20px;
+
+    .editor-textBold {
+        font-weight: bold;
+    }
+
+    .editor-textItalic {
+        font-style: italic;
+    }
+
+    .editor-textUnderline {
+        text-decoration: underline;
+    }
+
+    .editor-textStrikethrough {
+        text-decoration: line-through;
+    }
+
+    .editor-textUnderlineStrikethrough {
+        text-decoration: underline line-through;
+    }
+`;

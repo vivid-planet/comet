@@ -1141,6 +1141,9 @@ importers:
       '@tiptap/core':
         specifier: ^2.10.3
         version: 2.10.3(@tiptap/pm@2.10.3)
+      '@tiptap/extension-text-style':
+        specifier: ^2.10.3
+        version: 2.11.0(@tiptap/core@2.10.3)
       '@tiptap/pm':
         specifier: ^2.10.3
         version: 2.10.3
@@ -16054,8 +16057,8 @@ packages:
       '@tiptap/core': 2.10.3(@tiptap/pm@2.10.3)
     dev: false
 
-  /@tiptap/extension-text-style@2.10.3(@tiptap/core@2.10.3):
-    resolution: {integrity: sha512-TalYIdlF7vBA4afFhmido7AORdBbu3sV+HCByda0FiNbM6cjng3Nr9oxHOCVJy+ChqrcgF4m54zDfLmamdyu5Q==}
+  /@tiptap/extension-text-style@2.11.0(@tiptap/core@2.10.3):
+    resolution: {integrity: sha512-vuA16wMZ6J3fboL7FObwV2f5uN9Vg0WYmqU7971vxzJyaRj9VE1eeH8Kh5fq4RgwDzc13MZGvZZV4HcE1R8o8A==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
     dependencies:
@@ -16134,7 +16137,7 @@ packages:
       '@tiptap/extension-paragraph': 2.10.3(@tiptap/core@2.10.3)
       '@tiptap/extension-strike': 2.10.3(@tiptap/core@2.10.3)
       '@tiptap/extension-text': 2.10.3(@tiptap/core@2.10.3)
-      '@tiptap/extension-text-style': 2.10.3(@tiptap/core@2.10.3)
+      '@tiptap/extension-text-style': 2.11.0(@tiptap/core@2.10.3)
       '@tiptap/pm': 2.10.3
     dev: false
 
