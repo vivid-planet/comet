@@ -334,7 +334,7 @@ importers:
         specifier: ^4.17.1
         version: 4.21.1
       faker:
-        specifier: ^5.0.0
+        specifier: ^5.5.3
         version: 5.5.3
       graphql:
         specifier: ^16.6.0
@@ -386,7 +386,7 @@ importers:
         specifier: ^4.0.0
         version: 4.17.16
       '@types/faker':
-        specifier: ^5.0.0
+        specifier: ^5.5.9
         version: 5.5.9
       '@types/node':
         specifier: ^22.0.0
@@ -2412,7 +2412,7 @@ importers:
         specifier: ^0.11.10
         version: 0.11.10
       '@types/faker':
-        specifier: ^5.5.8
+        specifier: ^5.5.9
         version: 5.5.9
       '@types/history':
         specifier: ^4.7.11
