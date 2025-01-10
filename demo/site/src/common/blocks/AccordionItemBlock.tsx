@@ -55,20 +55,19 @@ export const AccordionItemBlock = ({ data: { title, content, openByDefault } }: 
 };
 // export default withPreview(AccordionItemBlock, { label: "AccordionItem" });
 
-const TitleWrapper = styled.button`
-    appearance: none;
-    border: none;
-    background-color: transparent;
-    color: inherit;
+const TitleWrapper = styled("button")(({ theme }) => ({
+    appearance: "none",
+    border: "none",
+    backgroundColor: "transparent",
+    color: "inherit",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    cursor: "pointer",
+    borderTop: `1px solid ${theme.palette.gray["300"]}`,
+    padding: `${theme.spacing.S300} 0`,
+}));
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    border-top: 1px solid ${({ theme }) => theme.palette.gray["300"]};
-`;
-
-//padding: ${({ theme }) => theme.spacing.S300} 0;
 const IconWrapper = styled.div`
     display: inline-block;
     width: 32px;
@@ -102,11 +101,12 @@ const ContentWrapper = styled.div`
     overflow: hidden;
 `;
 
-//paddingBottom: theme.spacing.S300,
+
 const ContentWrapperInner = styled("div", {
     shouldForwardProp: createShouldForwardPropBlockList(["isExpanded"]),
 })<{ isExpanded: boolean }>(({ theme }) => ({
     marginTop: "-100%",
+    paddingBottom: theme.spacing.S300
     opacity: 0,
     transition: "margin-top 0.8s ease-out 0.3s, opacity 0.3s linear",
     variants: [
