@@ -1,5 +1,11 @@
 # @comet/admin
 
+## 5.10.0
+
+### Patch Changes
+
+-   @comet/admin-icons@5.10.0
+
 ## 5.9.6
 
 ### Patch Changes

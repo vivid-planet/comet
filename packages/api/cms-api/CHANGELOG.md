@@ -1,5 +1,17 @@
 # @comet/cms-api
 
+## 5.10.0
+
+### Minor Changes
+
+-   453f0c4a4: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+### Patch Changes
+
+-   @comet/blocks-api@5.10.0
+
 ## 5.9.6
 
 ### Patch Changes
