@@ -29,6 +29,7 @@
     "dependencies": {
         "@apollo/server": "^4.11.3",
         "@comet/cms-api": "workspace:*",
+        "@faker-js/faker": "^5.5.3",
         "@kubernetes/client-node": "^0.22.3",
         "@mikro-orm/cli": "^6.4.5",
         "@mikro-orm/core": "^6.4.5",
@@ -51,7 +52,6 @@
         "compression": "^1.7.5",
         "cookie-parser": "^1.4.7",
         "express": "^4.21.2",
-        "faker": "^5.5.3",
         "graphql": "^16.6.0",
         "graphql-scalars": "^1.24.1",
         "helmet": "^4.6.0",

@@ -267,6 +267,9 @@ importers:
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../../packages/api/cms-api
+      '@faker-js/faker':
+        specifier: ^5.5.3
+        version: 5.5.3
       '@kubernetes/client-node':
         specifier: ^0.22.3
         version: 0.22.3
@@ -333,9 +336,6 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.21.2
-      faker:
-        specifier: ^5.5.3
-        version: 5.5.3
       graphql:
         specifier: ^16.6.0
         version: 16.9.0
@@ -370,9 +370,6 @@ importers:
       '@comet/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@faker-js/faker':
-        specifier: ^7.6.0
-        version: 7.6.0
       '@nestjs/cli':
         specifier: ^10.4.9
         version: 10.4.9(@swc/core@1.10.11(@swc/helpers@0.5.5))
@@ -4729,6 +4726,10 @@ packages:
   '@eslint/plugin-kit@0.2.5':
     resolution: {integrity: sha512-lB05FkqEdUg2AA0xEbUz0SnkXT1LcCTa438W4IWTUh4hdOnVbQyOJ81OrDXsJk/LSiJHubgGEFoR5EHq1NsH1A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@faker-js/faker@5.5.3':
+    resolution: {integrity: sha512-R11tGE6yIFwqpaIqcfkcg7AICXzFg14+5h5v0TfF/9+RMDL6jhzCy/pxHVOfbALGdtVYdt6JdR21tuxEgl34dw==}
+    deprecated: Please update to a newer version.
 
   '@faker-js/faker@7.6.0':
     resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
@@ -19938,6 +19939,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.10.0
       levn: 0.4.1
+
+  '@faker-js/faker@5.5.3': {}
 
   '@faker-js/faker@7.6.0': {}
 
