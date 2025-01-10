@@ -1,6 +1,7 @@
 import { BaseBlocksBlockItemData, BaseBlocksBlockItemInput, BlockField, createBlocksBlock } from "@comet/blocks-api";
 import { AnchorBlock, DamImageBlock } from "@comet/cms-api";
 import { AccordionBlock } from "@src/common/blocks/accordion.block";
+import { DebugBlock } from "@src/common/blocks/debug.block";
 import { MediaGalleryBlock } from "@src/common/blocks/media-gallery.block";
 import { RichTextBlock } from "@src/common/blocks/rich-text.block";
 import { SpaceBlock } from "@src/common/blocks/space.block";
@@ -42,6 +43,7 @@ const supportedBlocks = {
     layout: LayoutBlock,
     textImage: TextImageBlock,
     fullWidthImage: FullWidthImageBlock,
+    debug: DebugBlock,
 };
 
 class BlocksBlockItemData extends BaseBlocksBlockItemData(supportedBlocks) {

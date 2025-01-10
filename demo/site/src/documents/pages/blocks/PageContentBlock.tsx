@@ -4,6 +4,7 @@ import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";
 import { AnchorBlock } from "@src/common/blocks/AnchorBlock";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
+import { DebugBlock } from "@src/common/blocks/DebugBlock";
 import { LayoutBlock } from "@src/common/blocks/LayoutBlock";
 import { PageContentMediaGalleryBlock } from "@src/common/blocks/MediaGalleryBlock";
 import { PageContentRichTextBlock } from "@src/common/blocks/RichTextBlock";
@@ -42,6 +43,7 @@ const supportedBlocks: SupportedBlocks = {
     layout: (props) => <LayoutBlock data={props} />,
     textImage: (props) => <TextImageBlock data={props} />,
     fullWidthImage: (props) => <FullWidthImageBlock data={props} />,
+    debug: (props) => <DebugBlock data={props} />,
 };
 
 export const PageContentBlock = ({ data }: PropsWithData<PageContentBlockData>) => {

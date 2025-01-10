@@ -956,6 +956,23 @@
         ]
     },
     {
+        "name": "Debug",
+        "fields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "title",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
         "name": "EmailLink",
         "fields": [
             {
@@ -2024,7 +2041,8 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "debug": "Debug"
                             },
                             "nullable": false
                         },
@@ -2086,7 +2104,8 @@
                                 "newsList": "NewsList",
                                 "layout": "Layout",
                                 "textImage": "TextImage",
-                                "fullWidthImage": "FullWidthImage"
+                                "fullWidthImage": "FullWidthImage",
+                                "debug": "Debug"
                             },
                             "nullable": false
                         },

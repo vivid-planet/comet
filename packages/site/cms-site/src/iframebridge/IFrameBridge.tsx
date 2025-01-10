@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 
 import { createContext, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
@@ -121,7 +122,20 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
 
     useEffect(() => {
         if (childrenWrapperRef.current) {
-            const mutationObserver = new MutationObserver(() => {
+            const mutationObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    const target = mutation.target as HTMLElement;
+                    const attribute = mutation.attributeName;
+                    const oldValue = mutation.oldValue;
+                    // @ts-expect-error DEBUG
+                    const newValue = target.getAttribute(attribute);
+
+                    console.log(
+                        `### DOM Mutation on ${target.tagName} - changed attribute: '${attribute}' from '${oldValue}' to '${newValue}'`,
+                        mutation,
+                    );
+                });
+
                 recalculatePreviewElementsData();
             });
 
