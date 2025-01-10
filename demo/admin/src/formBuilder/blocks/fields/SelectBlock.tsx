@@ -7,10 +7,10 @@ import {
     createCompositeBlockTextField,
 } from "@comet/blocks-admin";
 import { SelectBlockData } from "@src/blocks.generated";
-import { propsAndValidationGroup } from "@src/formBuilder/blocks/fields/common";
 import { FormattedMessage } from "react-intl";
 
 import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
+import { propsAndValidationGroup } from "../common/propsAndValidationGroup";
 import { SelectOptionsBlock } from "./SelectOptionsBlock";
 
 const selectTypeOptions: Array<SelectFieldOption<SelectBlockData["selectType"]>> = [

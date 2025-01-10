@@ -1,8 +1,8 @@
 import { BlockCategory, BlockInterface, createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
-import { propsAndValidationGroup } from "@src/formBuilder/blocks/fields/common";
 import { FormattedMessage } from "react-intl";
 
 import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
+import { propsAndValidationGroup } from "../common/propsAndValidationGroup";
 
 export const TextAreaBlock: BlockInterface = createCompositeBlock(
     {

@@ -7,10 +7,10 @@ import {
     createCompositeBlockTextField,
 } from "@comet/blocks-admin";
 import { TextInputBlockData } from "@src/blocks.generated";
-import { propsAndValidationGroup } from "@src/formBuilder/blocks/fields/common";
 import { FormattedMessage } from "react-intl";
 
 import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
+import { propsAndValidationGroup } from "../common/propsAndValidationGroup";
 
 const inputTypeOptions: Array<SelectFieldOption<TextInputBlockData["inputType"]>> = [
     { value: "text", label: <FormattedMessage id="blocks.textInput.type.text" defaultMessage="Text" /> },
