@@ -3,7 +3,7 @@ import { AzureOpenAI } from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 import { FilesService } from "../../dam/files/files.service";
-import { ContentGenerationServiceInterface } from "../content-generation-service.interface";
+import { ContentGenerationServiceInterface, SeoTags, validateObjectAgainstSeoTags } from "../content-generation-service.interface";
 import { AZURE_OPEN_AI_CONTENT_GENERATION_SERVICE_CONFIG } from "./azure-open-ai.constants";
 
 export type AzureOpenAiContentGenerationServiceConfig = AzureOpenAiConfig | ConfigByMethod;
@@ -115,5 +115,64 @@ export class AzureOpenAiContentGenerationService {
         ];
         const result = await client.chat.completions.create({ messages: prompt, model: "", max_tokens: 300 });
         return result.choices[0].message?.content ?? "";
+    }
+
+    async generateSeoTags(content: string): Promise<SeoTags> {
+        const config = this.getConfigForMethod("generateSeoTags");
+
+        const client = new OpenAIClient(config.apiUrl, new AzureKeyCredential(config.apiKey));
+        const prompt: ChatRequestMessage[] = [
+            {
+                role: "system",
+                content: `You are a SEO expert. You will receive a JSON representing the content of a  website. Your task is to generate a SEO-optimized HTML title, meta description, OpenGraph title and OpenGraph description for the website.
+                    
+                    Return a JSON object with the following format:
+                    {
+                        "htmlTitle": "",
+                        "metaDescription": "",
+                        "ogTitle": "",
+                        "ogDescription": "",
+                    }
+                    
+                    Only answer in valid JSON. Don't put the JSON in quotation marks or markdown. Don't include any placeholders.
+                    `,
+            },
+            {
+                role: "user",
+                content: [
+                    {
+                        type: "text",
+                        text: content,
+                    },
+                ],
+            },
+        ];
+
+        let seoTags: SeoTags | undefined;
+        let tries = 0;
+        do {
+            const result = await client.getChatCompletions(config.deploymentId, prompt, { maxTokens: 300 });
+            tries++;
+
+            const response = result.choices[0].message?.content;
+
+            if (response) {
+                try {
+                    const json = JSON.parse(response);
+                    console.log("json ", json);
+                    if (validateObjectAgainstSeoTags(json)) {
+                        seoTags = json;
+                    }
+                } catch {
+                    seoTags = undefined;
+                }
+            }
+        } while (seoTags === undefined && tries < 3);
+
+        if (seoTags === undefined) {
+            throw new Error("Failed to generate SEO tags");
+        }
+
+        return seoTags;
     }
 }

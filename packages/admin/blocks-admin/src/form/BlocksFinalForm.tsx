@@ -1,4 +1,9 @@
+<<<<<<< HEAD
+import { FinalFormContextProvider, FinalFormContextProviderProps } from "@comet/admin";
+import { renderComponent } from "@comet/admin/lib/finalFormRenderComponent";
+=======
 import { FinalFormContextProvider, FinalFormContextProviderProps, renderFinalFormChildren } from "@comet/admin";
+>>>>>>> extract-text-content
 import { AnyObject, Form, FormProps, FormRenderProps, FormSpy } from "react-final-form";
 
 interface AutoSaveSpyProps<FormValues> {
@@ -39,7 +44,11 @@ export function BlocksFinalForm<FormValues = AnyObject>({ onSubmit, children, ..
             <>
                 <AutosaveSpy<FormValues> onSubmit={onSubmit} />
                 <FinalFormContextProvider {...finalFormContextValues}>
+<<<<<<< HEAD
+                    {renderComponent(
+=======
                     {renderFinalFormChildren(
+>>>>>>> extract-text-content
                         {
                             children: children,
                             component: rest.component,
