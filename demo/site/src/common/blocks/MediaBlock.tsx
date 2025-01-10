@@ -1,4 +1,4 @@
-import { DamVideoBlock, OneOfBlock, PreviewSkeleton, PropsWithData, SupportedBlocks, VimeoVideoBlock, withPreview } from "@comet/cms-site";
+import { DamVideoBlock, OneOfBlock, PreviewSkeleton, PropsWithData, SupportedBlocks, VimeoVideoBlock } from "@comet/cms-site";
 import { MediaBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 
@@ -19,13 +19,12 @@ interface MediaBlockProps extends PropsWithData<MediaBlockData> {
     fill?: boolean;
 }
 
-export const MediaBlock = withPreview(
-    ({ data, sizes = "100vw", aspectRatio, fill }: MediaBlockProps) => {
-        return (
-            <PreviewSkeleton type="media" hasContent={Boolean(data)}>
-                <OneOfBlock data={data} supportedBlocks={getSupportedBlocks(sizes, aspectRatio, fill)} />
-            </PreviewSkeleton>
-        );
-    },
-    { label: "Media" },
-);
+export const MediaBlock = ({ data, sizes = "100vw", aspectRatio, fill }: MediaBlockProps) => {
+    return (
+        <PreviewSkeleton type="media" hasContent={Boolean(data)}>
+            <OneOfBlock data={data} supportedBlocks={getSupportedBlocks(sizes, aspectRatio, fill)} />
+        </PreviewSkeleton>
+    );
+};
+
+//export default withPreview(MediaBlock, { label: "Media" });

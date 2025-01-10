@@ -1,4 +1,3 @@
-"use client";
 import { BlocksBlock, PropsWithData, SupportedBlocks } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
 import { PageContentAccordionBlock } from "@src/common/blocks/AccordionBlock";

@@ -1,3 +1,6 @@
+import "@pigment-css/react/styles.css";
+import "@src/util/ResponsiveSpacingStyling";
+
 import { CookieApiProvider, useLocalStorageCookieApi, useOneTrustCookieApi as useProductionCookieApi } from "@comet/cms-site";
 import { ErrorHandler } from "@src/util/ErrorHandler";
 import StyledComponentsRegistry from "@src/util/StyledComponentsRegistry";

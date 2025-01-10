@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from "@pigment-css/react";
 
 export const Container = styled.div`
     padding: 30px 0;

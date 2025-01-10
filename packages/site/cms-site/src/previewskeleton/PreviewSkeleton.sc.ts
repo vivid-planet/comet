@@ -1,24 +1,25 @@
-import styled, { css } from "styled-components";
+import { styled } from "@pigment-css/react";
 
 interface BarSkeletonStyleProps {
     $backgroundColor: string;
     $color: string;
 }
-export const BarSkeleton = styled.div<BarSkeletonStyleProps>`
-    min-height: 20px;
-    background-color: ${({ $backgroundColor }) => $backgroundColor};
-    color: ${({ $color }) => $color};
-    margin-bottom: 5px;
-    margin-right: 5px;
-`;
+export const BarSkeleton = styled.div<BarSkeletonStyleProps>({
+    minHeight: "20px",
+    backgroundColor: ({ $backgroundColor }) => $backgroundColor,
+    color: ({ $color }) => $color,
+    marginBottom: "5px",
+    marginRight: "5px",
+});
+
 interface RowsContainerStyleProps {
     $width: string;
 }
 
-export const RowsContainer = styled.div<RowsContainerStyleProps>`
-    width: ${({ $width }) => $width};
-    min-width: 300px;
-`;
+export const RowsContainer = styled.div<RowsContainerStyleProps>({
+    width: ({ $width }) => $width,
+    minWidth: "300px",
+});
 
 interface RowsSkeletonStyleProps {
     $width: string;
@@ -26,13 +27,13 @@ interface RowsSkeletonStyleProps {
     $color: string;
 }
 
-export const RowSkeleton = styled.div<RowsSkeletonStyleProps>`
-    margin-bottom: 10px;
-    width: ${({ $width }) => $width};
-    background-color: ${({ $backgroundColor }) => $backgroundColor};
-    color: ${({ $color }) => $color};
-    min-height: 20px;
-`;
+export const RowSkeleton = styled.div<RowsSkeletonStyleProps>({
+    marginBottom: "10px",
+    width: ({ $width }) => $width,
+    backgroundColor: ({ $backgroundColor }) => $backgroundColor,
+    color: ({ $color }) => $color,
+    minHeight: "20px",
+});
 
 interface ImageSkeletonStyleProps {
     $backgroundColor: string;
@@ -41,17 +42,10 @@ interface ImageSkeletonStyleProps {
     $height: string | number | undefined;
 }
 
-export const ImageContainer = styled.div<ImageSkeletonStyleProps>`
-    background-color: ${({ $backgroundColor }) => $backgroundColor};
-    color: ${({ $color }) => $color};
-    width: 100%;
-
-    ${({ $aspectRatio, $height = 300 }) =>
-        typeof $aspectRatio === "undefined"
-            ? css`
-                  height: ${$height};
-              `
-            : css`
-                  aspect-ratio: ${$aspectRatio};
-              `}
-`;
+export const ImageContainer = styled.div<ImageSkeletonStyleProps>({
+    backgroundColor: ({ $backgroundColor }) => $backgroundColor,
+    color: ({ $color }) => $color,
+    width: "100%",
+    height: ({ $aspectRatio, $height = 300 }) => (typeof $aspectRatio === "undefined" ? $height : undefined),
+    aspectRatio: ({ $aspectRatio }) => (typeof $aspectRatio !== "undefined" ? $aspectRatio : undefined),
+});

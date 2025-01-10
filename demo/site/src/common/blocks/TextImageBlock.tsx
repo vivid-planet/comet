@@ -1,43 +1,46 @@
-"use client";
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData } from "@comet/cms-site";
+import { styled } from "@pigment-css/react";
 import { TextImageBlockData } from "@src/blocks.generated";
-import styled, { css } from "styled-components";
 
 import { DamImageBlock } from "./DamImageBlock";
 import { RichTextBlock } from "./RichTextBlock";
 
-export const TextImageBlock = withPreview(
-    ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
-        return (
-            <Root imagePosition={imagePosition}>
-                <ImageContainer>
-                    <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />
-                </ImageContainer>
-                <TextContainer>
-                    <RichTextBlock data={text} />
-                </TextContainer>
-            </Root>
-        );
-    },
-    { label: "Text/Image" },
-);
+type TextImageBlockProps = PropsWithData<TextImageBlockData>;
 
-const Root = styled.div<{ imagePosition: TextImageBlockData["imagePosition"] }>`
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
+export const TextImageBlock = ({ data: { text, image, imageAspectRatio, imagePosition } }: TextImageBlockProps) => {
+    return (
+        <Root imagePosition={imagePosition}>
+            <ImageContainer>
+                <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />
+            </ImageContainer>
+            <TextContainer>
+                <RichTextBlock data={text} />
+            </TextContainer>
+        </Root>
+    );
+};
 
-    ${({ imagePosition }) =>
-        imagePosition === "left" &&
-        css`
-            flex-direction: row-reverse;
-        `}
-`;
+//export const TextImageBlock = withPreview(TextImageBlock, { label: "Text/Image" });
+export const Root = styled("div")<{ imagePosition: TextImageBlockData["imagePosition"] }>({
+    display: "flex",
+    flexDirection: "row",
+    gap: "20px",
+    variants: [
+        {
+            props: {
+                imagePosition: "left",
+            },
+            style: {
+                flexDirection: "row-reverse",
+            },
+        },
+    ],
+});
 
-const ImageContainer = styled.div`
+export const ImageContainer = styled.div`
     flex: 1;
 `;
 
-const TextContainer = styled.div`
+export const TextContainer = styled.div`
     flex: 2;
 `;

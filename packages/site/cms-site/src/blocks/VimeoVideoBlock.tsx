@@ -1,9 +1,8 @@
 "use client";
+import { styled } from "@pigment-css/react";
 import { ReactNode, useState } from "react";
-import styled, { css } from "styled-components";
 
 import { VimeoVideoBlockData } from "../blocks.generated";
-import { withPreview } from "../iframebridge/withPreview";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
@@ -32,85 +31,77 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     previewImageIcon?: ReactNode;
 }
 
-export const VimeoVideoBlock = withPreview(
-    ({
-        data: { vimeoIdentifier, autoplay, loop, showControls, previewImage },
-        aspectRatio = "16x9",
-        previewImageSizes,
-        renderPreviewImage,
-        fill,
-        previewImageIcon,
-    }: VimeoVideoBlockProps) => {
-        const [showPreviewImage, setShowPreviewImage] = useState(true);
-        const hasPreviewImage = !!(previewImage && previewImage.damFile);
+export const VimeoVideoBlock = ({
+    data: { vimeoIdentifier, autoplay, loop, showControls, previewImage },
+    aspectRatio = "16x9",
+    previewImageSizes,
+    renderPreviewImage,
+    fill,
+    previewImageIcon,
+}: VimeoVideoBlockProps) => {
+    const [showPreviewImage, setShowPreviewImage] = useState(true);
+    const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
-        if (!vimeoIdentifier) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
+    if (!vimeoIdentifier) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
 
-        const identifier = parseVimeoIdentifier(vimeoIdentifier);
+    const identifier = parseVimeoIdentifier(vimeoIdentifier);
 
-        const searchParams = new URLSearchParams();
+    const searchParams = new URLSearchParams();
 
-        if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
-            searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
-        if (autoplay) searchParams.append("muted", "1");
+    if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
+        searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
+    if (autoplay) searchParams.append("muted", "1");
 
-        if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
+    if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
 
-        if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
+    if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
 
-        searchParams.append("dnt", "1");
+    searchParams.append("dnt", "1");
 
-        const vimeoBaseUrl = "https://player.vimeo.com/video/";
-        const vimeoUrl = new URL(`${vimeoBaseUrl}${identifier ?? ""}`);
-        vimeoUrl.search = searchParams.toString();
+    const vimeoBaseUrl = "https://player.vimeo.com/video/";
+    const vimeoUrl = new URL(`${vimeoBaseUrl}${identifier ?? ""}`);
+    vimeoUrl.search = searchParams.toString();
 
-        return (
-            <>
-                {hasPreviewImage && showPreviewImage ? (
-                    renderPreviewImage ? (
-                        renderPreviewImage({
-                            onPlay: () => setShowPreviewImage(false),
-                            image: previewImage,
-                            aspectRatio,
-                            sizes: previewImageSizes,
-                            fill: fill,
-                            icon: previewImageIcon,
-                        })
-                    ) : (
-                        <VideoPreviewImage
-                            onPlay={() => setShowPreviewImage(false)}
-                            image={previewImage}
-                            aspectRatio={aspectRatio}
-                            sizes={previewImageSizes}
-                            fill={fill}
-                            icon={previewImageIcon}
-                        />
-                    )
+    return (
+        <>
+            {hasPreviewImage && showPreviewImage ? (
+                renderPreviewImage ? (
+                    renderPreviewImage({
+                        onPlay: () => setShowPreviewImage(false),
+                        image: previewImage,
+                        aspectRatio,
+                        sizes: previewImageSizes,
+                        fill: fill,
+                        icon: previewImageIcon,
+                    })
                 ) : (
-                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <VimeoContainer src={vimeoUrl.toString()} allow="autoplay" allowFullScreen style={{ border: 0 }} />
-                    </VideoContainer>
-                )}
-            </>
-        );
-    },
-    { label: "Video" },
-);
+                    <VideoPreviewImage
+                        onPlay={() => setShowPreviewImage(false)}
+                        image={previewImage}
+                        aspectRatio={aspectRatio}
+                        sizes={previewImageSizes}
+                        fill={fill}
+                        icon={previewImageIcon}
+                    />
+                )
+            ) : (
+                <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
+                    <VimeoContainer src={vimeoUrl.toString()} allow="autoplay" allowFullScreen style={{ border: 0 }} />
+                </VideoContainer>
+            )}
+        </>
+    );
+};
 
-const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>`
-    overflow: hidden;
-    position: relative;
+//export default withPreview(VimeoVideoBlock, { label: "Video" });
 
-    ${({ $aspectRatio, $fill }) =>
-        $fill
-            ? css`
-                  width: 100%;
-                  height: 100%;
-              `
-            : css`
-                  aspect-ratio: ${$aspectRatio};
-              `}
-`;
+const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>({
+    overflow: "hidden",
+    position: "relative",
+    width: ({ $fill }) => ($fill ? "100%" : undefined),
+    height: ({ $fill }) => ($fill ? "100%" : undefined),
+    aspectRatio: ({ $fill, $aspectRatio }) => (!$fill ? $aspectRatio : undefined),
+});
 
 const VimeoContainer = styled.iframe`
     position: absolute;

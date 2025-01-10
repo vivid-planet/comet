@@ -1,3 +1,4 @@
+"use client";
 import { usePreview } from "@comet/cms-site";
 import {
     DamFileDownloadLinkBlockData,

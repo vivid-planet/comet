@@ -1,8 +1,8 @@
-"use client";
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData } from "@comet/cms-site";
+import { styled } from "@pigment-css/react";
 import { StandaloneCallToActionListBlockData } from "@src/blocks.generated";
+import { createShouldForwardPropBlockList } from "@src/util/createShouldForwardPropBlockList";
 import { CSSProperties } from "react";
-import styled from "styled-components";
 
 import { CallToActionListBlock } from "./CallToActionListBlock";
 
@@ -14,18 +14,21 @@ const alignmentMap: Record<StandaloneCallToActionListBlockData["alignment"], CSS
     right: "flex-end",
 };
 
-export const StandaloneCallToActionListBlock = withPreview(
-    ({ data: { callToActionList, alignment } }: StandaloneCallToActionListBlockProps) => {
-        return (
-            <Root $alignment={alignmentMap[alignment]}>
-                <CallToActionListBlock data={callToActionList} />
-            </Root>
-        );
-    },
-    { label: "CallToActionList" },
-);
+export const StandaloneCallToActionListBlock = ({ data: { callToActionList, alignment } }: StandaloneCallToActionListBlockProps) => {
+    return (
+        <Root alignment={alignmentMap[alignment]}>
+            <CallToActionListBlock data={callToActionList} />
+        </Root>
+    );
+};
+//export default withPreview(StandaloneCallToActionListBlock, { label: "CallToActionList" });
 
-const Root = styled.div<{ $alignment: CSSProperties["justifyContent"] }>`
-    display: flex;
-    justify-content: ${({ $alignment }) => $alignment};
-`;
+type RootStyleProps = {
+    alignment: CSSProperties["justifyContent"];
+};
+const Root = styled("div", {
+    shouldForwardProp: createShouldForwardPropBlockList(["alignment"]),
+})<RootStyleProps>({
+    display: "flex",
+    justifyContent: ({ alignment }) => alignment,
+});

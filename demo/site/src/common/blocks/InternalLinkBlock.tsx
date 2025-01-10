@@ -1,4 +1,3 @@
-"use client";
 import { PropsWithData } from "@comet/cms-site";
 import { InternalLinkBlockData } from "@src/blocks.generated";
 import Link from "next/link";
@@ -23,7 +22,7 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
     }
 
     return (
-        <Link href={href} title={title} className={className}>
+        <Link href={href} title={title} className={className} passHref legacyBehavior>
             {children}
         </Link>
     );

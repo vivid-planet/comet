@@ -1,28 +1,29 @@
-import { ListBlock, PropsWithData, withPreview } from "@comet/cms-site";
+import { ListBlock, PropsWithData } from "@comet/cms-site";
+import { styled } from "@pigment-css/react";
 import { AccordionBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
-import styled from "styled-components";
 
 import { AccordionItemBlock } from "./AccordionItemBlock";
 
 type AccordionBlockProps = PropsWithData<AccordionBlockData>;
 
-const AccordionBlock = withPreview(
-    ({ data }: AccordionBlockProps) => (
-        <Root>
-            <ListBlock data={data} block={(block) => <AccordionItemBlock data={block} />} />
-        </Root>
-    ),
-    { label: "Accordion" },
+export const AccordionBlock = ({ data }: AccordionBlockProps) => (
+    <Root>
+        <ListBlock data={data} block={(block) => <AccordionItemBlock data={block} />} />
+    </Root>
 );
 
-export const PageContentAccordionBlock = (props: AccordionBlockProps) => (
-    <PageLayout grid>
-        <PageLayoutContent>
-            <AccordionBlock {...props} />
-        </PageLayoutContent>
-    </PageLayout>
-);
+//export default withPreview(AccordionBlock, { label: "Accordion" });
+
+export const PageContentAccordionBlock = (props: AccordionBlockProps) => {
+    return (
+        <PageLayout grid>
+            <PageLayoutContent>
+                <AccordionBlock {...props} />
+            </PageLayoutContent>
+        </PageLayout>
+    );
+};
 
 const Root = styled.div`
     display: flex;

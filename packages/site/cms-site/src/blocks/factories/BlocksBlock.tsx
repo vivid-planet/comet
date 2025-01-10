@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 
-import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
-import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
+//import { ErrorHandlerBoundary } from "../../errorHandler/ErrorHandlerBoundary";
+//import { PreviewSkeleton } from "../../previewskeleton/PreviewSkeleton";
 import { SupportedBlocks } from "./types";
 
 interface Props {
@@ -12,9 +12,9 @@ interface Props {
 }
 
 export const BlocksBlock = ({ supportedBlocks, data: { blocks } }: Props) => {
-    if (blocks.length === 0) {
+    /*if (blocks.length === 0) {
         return <PreviewSkeleton hasContent={false} />;
-    }
+    }*/
 
     return (
         <>
@@ -35,7 +35,11 @@ export const BlocksBlock = ({ supportedBlocks, data: { blocks } }: Props) => {
 
                 return (
                     <Fragment key={block.key}>
-                        <ErrorHandlerBoundary>{blockFunction(block.props)}</ErrorHandlerBoundary>
+                        {/*<ErrorHandlerBoundary>*/}
+
+                        {blockFunction(block.props)}
+
+                        {/*}</ErrorHandlerBoundary>*/}
                     </Fragment>
                 );
             })}

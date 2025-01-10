@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from "@pigment-css/react";
 
 import { PreviewOverlayElement } from "./PreviewOverlayElement";
 import { useIFrameBridge } from "./useIFrameBridge";
@@ -34,7 +34,7 @@ export const PreviewOverlay = () => {
     );
 };
 
-const OverlayRoot = styled.div`
+export const OverlayRoot = styled.div`
     position: absolute;
     z-index: 2;
     top: 0;

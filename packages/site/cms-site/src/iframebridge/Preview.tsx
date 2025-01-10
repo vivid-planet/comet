@@ -1,8 +1,8 @@
 "use client";
 
+import { styled } from "@pigment-css/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import scrollIntoView from "scroll-into-view-if-needed";
-import styled from "styled-components";
 
 import { useIFrameBridge } from "./useIFrameBridge";
 import { BLOCK_PREVIEW_CONTAINER_DATA_ATTRIBUTE } from "./utils";

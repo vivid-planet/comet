@@ -1,3 +1,4 @@
+"use client";
 // eslint-disable-next-line no-restricted-imports
 import NextImage, { ImageLoaderProps, ImageProps as NextImageProps } from "next/image";
 

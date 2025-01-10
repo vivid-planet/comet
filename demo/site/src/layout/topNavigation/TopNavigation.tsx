@@ -1,6 +1,5 @@
-"use client";
+import { styled } from "@pigment-css/react";
 import { PageLink } from "@src/layout/header/PageLink";
-import styled from "styled-components";
 
 import { GQLTopMenuPageTreeNodeFragment } from "./TopNavigation.fragment.generated";
 

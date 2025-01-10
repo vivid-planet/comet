@@ -1,4 +1,3 @@
-"use client";
 import { FooterContentBlock } from "@src/layout/footer/blocks/FooterContentBlock";
 
 import { GQLFooterFragment } from "./Footer.fragment.generated";

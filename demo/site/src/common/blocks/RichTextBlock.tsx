@@ -1,9 +1,9 @@
-"use client";
-import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
+import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData } from "@comet/cms-site";
+import { styled } from "@pigment-css/react";
 import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
+import { createShouldForwardPropBlockList } from "@src/util/createShouldForwardPropBlockList";
 import redraft, { Renderers, TextBlockRenderFn } from "redraft";
-import styled, { css } from "styled-components";
 
 import { Typography, TypographyProps } from "../components/Typography";
 import { isValidLink } from "../helpers/HiddenIfInvalidLink";
@@ -91,18 +91,17 @@ interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
     disableLastBottomSpacing?: boolean;
 }
 
-export const RichTextBlock = withPreview(
-    ({ data, renderers = defaultRichTextRenderers, disableLastBottomSpacing }: RichTextBlockProps) => {
-        const rendered = redraft(data.draftContent, renderers);
+export const RichTextBlock = ({ data, renderers = defaultRichTextRenderers, disableLastBottomSpacing }: RichTextBlockProps) => {
+    const rendered = redraft(data.draftContent, renderers);
 
-        return (
-            <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
-                {disableLastBottomSpacing ? <DisableLastBottomSpacing>{rendered}</DisableLastBottomSpacing> : rendered}
-            </PreviewSkeleton>
-        );
-    },
-    { label: "Rich Text" },
-);
+    return (
+        <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
+            {disableLastBottomSpacing ? <DisableLastBottomSpacing>{rendered}</DisableLastBottomSpacing> : rendered}
+        </PreviewSkeleton>
+    );
+};
+
+//export default withPreview(RichTextBlock, { label: "Rich Text" });
 
 export const PageContentRichTextBlock = (props: RichTextBlockProps) => (
     <PageLayout grid>
@@ -112,20 +111,18 @@ export const PageContentRichTextBlock = (props: RichTextBlockProps) => (
     </PageLayout>
 );
 
-const DisableLastBottomSpacing = styled.div`
-    ${({ theme }) =>
-        css`
-            > *:last-child {
-                margin-bottom: 0;
+const DisableLastBottomSpacing = styled.div(({ theme }) => ({
+    "> *:last-child": {
+        marginBottom: 0,
+        [theme.breakpoints.xs.mediaQuery]: {
+            marginBottom: 0,
+        },
+    },
+}));
 
-                ${theme.breakpoints.xs.mediaQuery} {
-                    margin-bottom: 0;
-                }
-            }
-        `};
-`;
-
-const Text = styled(Typography)`
+const Text = styled(Typography, {
+    shouldForwardProp: createShouldForwardPropBlockList(["bottomSpacing"]),
+})`
     white-space: pre-line;
 
     /* Show empty lines as spacing between paragraphs */
@@ -135,9 +132,9 @@ const Text = styled(Typography)`
     }
 `;
 
-const OrderedListItem = styled(Text)<{ $depth: number }>`
-    list-style-type: ${({ $depth }) => ($depth % 3 === 1 ? "lower-alpha" : $depth % 3 === 2 ? "lower-roman" : "decimal")};
-`;
+const OrderedListItem = styled(Text)<{ $depth: number }>({
+    listStyleType: ({ $depth }) => ($depth % 3 === 1 ? "lower-alpha" : $depth % 3 === 2 ? "lower-roman" : "decimal"),
+});
 
 const InlineLink = styled(LinkBlock)`
     color: ${({ theme }) => theme.palette.primary.main};

@@ -38,6 +38,7 @@ export default async function Page({ children, params: { domain, language } }: P
     return (
         <IntlProvider locale={language} messages={messages}>
             {children}
+
             {footer && <Footer footer={footer} />}
         </IntlProvider>
     );

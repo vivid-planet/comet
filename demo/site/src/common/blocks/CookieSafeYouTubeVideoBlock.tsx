@@ -1,8 +1,9 @@
 "use client";
 import { CookieSafe, useCookieApi, YouTubeVideoBlock } from "@comet/cms-site";
+import { styled } from "@pigment-css/react";
 import { cookieIds } from "@src/util/cookieIds";
+import { createShouldForwardPropBlockList } from "@src/util/createShouldForwardPropBlockList";
 import { ComponentProps } from "react";
-import styled from "styled-components";
 
 import { FallbackCookiePlaceholder, LoadingCookiePlaceholder } from "../helpers/CookiePlaceholders";
 
@@ -12,7 +13,7 @@ export const CookieSafeYouTubeVideoBlock = (props: ComponentProps<typeof YouTube
     const { consentedCookies } = useCookieApi();
 
     return (
-        <Root $aspectRatio={aspectRatio.replace("x", "/")}>
+        <Root aspectRatio={aspectRatio.replace("x", "/")}>
             <CookieSafe
                 consented={consentedCookies.includes(cookieIds.thirdParty)}
                 fallback={<FallbackCookiePlaceholder />}
@@ -24,7 +25,10 @@ export const CookieSafeYouTubeVideoBlock = (props: ComponentProps<typeof YouTube
     );
 };
 
-const Root = styled.div<{ $aspectRatio: React.CSSProperties["aspectRatio"] }>`
-    position: relative;
-    aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
-`;
+type RootStyleProps = {
+    aspectRatio: React.CSSProperties["aspectRatio"];
+};
+const Root = styled("div", { shouldForwardProp: createShouldForwardPropBlockList(["aspectRatio"]) })<RootStyleProps>({
+    position: "relative",
+    aspectRatio: ({ aspectRatio }) => aspectRatio,
+});

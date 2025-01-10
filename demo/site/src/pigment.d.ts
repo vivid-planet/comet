@@ -6,39 +6,75 @@ interface Breakpoint {
 }
 
 type ThemeBreakpoints = {
-    b560: Breakpoint;
-    b960: Breakpoint;
-    b1280: Breakpoint;
-    b1600: Breakpoint;
-    b1920: Breakpoint;
+    xs: Breakpoint;
+    sm: Breakpoint;
+    md: Breakpoint;
+    lg: Breakpoint;
 };
 
 declare module "@pigment-css/react/theme" {
     interface ThemeTokens {
-        colors: {
-            primary: string;
-            textPrimary: string;
-            lightGray: string;
-            white: string;
-            black: string;
-            lightBackground: string;
-            linkBlue: string;
-            darkBlue: string;
-            darkBlueSec: string;
-            purple: string;
-            n050: string;
-            n100: string;
-            n200: string;
-            n300: string;
-            n400: string;
-            n500: string;
-            n600: string;
-            n700: string;
-            n800: string;
-            n900: string;
+        palette: {
+            primary: {
+                light: string;
+                main: string;
+                dark: string;
+                contrastText: string;
+            };
+            text: {
+                primary: string;
+                secondary: string;
+                inverted: string;
+            };
+            gray: {
+                50: string;
+                100: string;
+                200: string;
+                300: string;
+                400: string;
+                500: string;
+                600: string;
+                700: string;
+                800: string;
+                900: string;
+            };
+            error: {
+                main: string;
+                light: string;
+                dark: string;
+                contrastText: string;
+            };
+            warning: {
+                main: string;
+                light: string;
+                dark: string;
+                contrastText: string;
+            };
+            info: {
+                main: string;
+                light: string;
+                dark: string;
+                contrastText: string;
+            };
+            success: {
+                main: string;
+                light: string;
+                dark: string;
+                contrastText: string;
+            };
         };
-        fonts: {
-            primary: string;
+        fontFamily: string;
+        spacing: {
+            D100: string;
+            D200: string;
+            D300: string;
+            D400: string;
+            S100: string;
+            S200: string;
+            S300: string;
+            S400: string;
+            S500: string;
+            S600: string;
         };
         breakpoints: ThemeBreakpoints;
         easings: {
