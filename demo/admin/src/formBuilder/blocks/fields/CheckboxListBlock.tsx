@@ -26,7 +26,7 @@ export const CheckboxListBlock: BlockInterface = createCompositeBlock(
                     },
                     infoText: {
                         block: FieldInfoTextBlock,
-                        title: <FormattedMessage id="blocks.checkboxList.helperText" defaultMessage="Helper Text" />,
+                        title: <FormattedMessage id="blocks.checkboxList.infoText" defaultMessage="Info Text" />,
                         hiddenInSubroute: true,
                     },
                 },

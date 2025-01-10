@@ -20,7 +20,7 @@ const CheckboxItemBlock: BlockInterface = createCompositeBlock(
                     },
                     infoText: {
                         block: FieldInfoTextBlock,
-                        title: <FormattedMessage id="blocks.checkboxItems.helperText" defaultMessage="Helper Text" />,
+                        title: <FormattedMessage id="blocks.checkboxItems.infoText" defaultMessage="Info Text" />,
                     },
                 },
             },

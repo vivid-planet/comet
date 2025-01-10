@@ -32,7 +32,7 @@ export const TextAreaBlock: BlockInterface = createCompositeBlock(
                     },
                     infoText: {
                         block: FieldInfoTextBlock,
-                        title: <FormattedMessage id="blocks.textArea.helperText" defaultMessage="Helper Text" />,
+                        title: <FormattedMessage id="blocks.textArea.infoText" defaultMessage="Info Text" />,
                     },
                 },
             },
