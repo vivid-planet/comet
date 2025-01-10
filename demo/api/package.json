@@ -49,7 +49,7 @@
         "compression": "^1.7.5",
         "cookie-parser": "^1.4.7",
         "express": "^4.17.1",
-        "faker": "^5.0.0",
+        "@faker-js/faker": "^5.5.3",
         "graphql": "^16.6.0",
         "graphql-scalars": "^1.23.0",
         "helmet": "^4.6.0",
