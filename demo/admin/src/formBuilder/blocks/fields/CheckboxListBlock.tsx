@@ -3,40 +3,43 @@ import { FormattedMessage } from "react-intl";
 
 import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
 import { propsAndValidationGroup } from "../common/propsAndValidationGroup";
+import { CheckboxItemsBlock } from "./CheckboxItemsBlock";
 
-export const TextAreaBlock: BlockInterface = createCompositeBlock(
+export const CheckboxListBlock: BlockInterface = createCompositeBlock(
     {
-        name: "TextArea",
+        name: "CheckboxList",
         category: BlockCategory.Form,
-        displayName: <FormattedMessage id="blocks.textArea" defaultMessage="Text Area" />,
+        displayName: <FormattedMessage id="blocks.checkboxList" defaultMessage="Checkbox List" />,
         groups: {
             display: {
-                title: <FormattedMessage id="blocks.textArea.display" defaultMessage="Display" />,
+                title: <FormattedMessage id="blocks.checkboxList.display" defaultMessage="Display" />,
                 paper: true,
                 blocks: {
                     label: {
                         block: createCompositeBlockTextField({
                             fieldProps: {
-                                label: <FormattedMessage id="blocks.textArea.label" defaultMessage="Label" />,
+                                label: <FormattedMessage id="blocks.checkboxList.label" defaultMessage="Label" />,
                                 fullWidth: true,
                             },
                         }),
-                    },
-                    placeholder: {
-                        block: createCompositeBlockTextField({
-                            fieldProps: {
-                                label: <FormattedMessage id="blocks.textArea.placeholderText" defaultMessage="Placeholder Text" />,
-                                fullWidth: true,
-                            },
-                        }),
+                        hiddenInSubroute: true,
                     },
                     infoText: {
                         block: FieldInfoTextBlock,
-                        title: <FormattedMessage id="blocks.textArea.infoText" defaultMessage="Info Text" />,
+                        title: <FormattedMessage id="blocks.checkboxList.infoText" defaultMessage="Info Text" />,
+                        hiddenInSubroute: true,
                     },
                 },
             },
             propsAndValidation: propsAndValidationGroup,
+            items: {
+                title: <FormattedMessage id="blocks.checkboxList.items" defaultMessage="Checkbox Items" />,
+                blocks: {
+                    items: {
+                        block: CheckboxItemsBlock,
+                    },
+                },
+            },
         },
     },
     (block) => {

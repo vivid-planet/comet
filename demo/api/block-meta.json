@@ -434,6 +434,175 @@
         ]
     },
     {
+        "name": "CheckboxItem",
+        "fields": [
+            {
+                "name": "label",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "label",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "CheckboxItems",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "CheckboxItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "CheckboxItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "CheckboxList",
+        "fields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "items",
+                "kind": "Block",
+                "block": "CheckboxItems",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "items",
+                "kind": "Block",
+                "block": "CheckboxItems",
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Columns",
         "fields": [
             {
@@ -1080,7 +1249,9 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "textInput": "TextInput",
-                                "textArea": "TextArea"
+                                "textArea": "TextArea",
+                                "select": "Select",
+                                "checkboxList": "CheckboxList"
                             },
                             "nullable": false
                         }
@@ -1115,7 +1286,9 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "textInput": "TextInput",
-                                "textArea": "TextArea"
+                                "textArea": "TextArea",
+                                "select": "Select",
+                                "checkboxList": "CheckboxList"
                             },
                             "nullable": false
                         }
@@ -2505,6 +2678,179 @@
         ]
     },
     {
+        "name": "Select",
+        "fields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "selectType",
+                "kind": "Enum",
+                "enum": [
+                    "singleSelect",
+                    "multiSelect"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "options",
+                "kind": "Block",
+                "block": "SelectOptionList",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "selectType",
+                "kind": "Enum",
+                "enum": [
+                    "singleSelect",
+                    "multiSelect"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "options",
+                "kind": "Block",
+                "block": "SelectOptionList",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SelectOption",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "SelectOptionList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SelectOption",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SelectOption",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ]
+    },
+    {
         "name": "Seo",
         "fields": [
             {
@@ -3131,13 +3477,19 @@
                 "nullable": true
             },
             {
-                "name": "required",
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
                 "kind": "Boolean",
                 "nullable": false
             },
             {
-                "name": "name",
-                "kind": "String",
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
                 "nullable": false
             },
             {
@@ -3153,13 +3505,19 @@
                 "nullable": true
             },
             {
-                "name": "required",
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
                 "kind": "Boolean",
                 "nullable": false
             },
             {
-                "name": "name",
-                "kind": "String",
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
                 "nullable": false
             },
             {
@@ -3237,17 +3595,39 @@
                 "nullable": true
             },
             {
-                "name": "required",
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
                 "kind": "Boolean",
                 "nullable": false
             },
             {
-                "name": "name",
-                "kind": "String",
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "inputType",
+                "kind": "Enum",
+                "enum": [
+                    "text",
+                    "email",
+                    "phone",
+                    "number"
+                ],
                 "nullable": false
             },
             {
                 "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "unit",
                 "kind": "String",
                 "nullable": true
             }
@@ -3259,17 +3639,39 @@
                 "nullable": true
             },
             {
-                "name": "required",
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
                 "kind": "Boolean",
                 "nullable": false
             },
             {
-                "name": "name",
-                "kind": "String",
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "inputType",
+                "kind": "Enum",
+                "enum": [
+                    "text",
+                    "email",
+                    "phone",
+                    "number"
+                ],
                 "nullable": false
             },
             {
                 "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "unit",
                 "kind": "String",
                 "nullable": true
             }

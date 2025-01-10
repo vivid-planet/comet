@@ -15,7 +15,7 @@ class TextAreaBlockInput extends BaseFieldBlockInput {
     placeholder?: string;
 
     transformToBlockData(): TextAreaBlockData {
-        return inputToData(TextAreaBlockData, this);
+        return inputToData(TextAreaBlockData, super.getBlockDataWithUpdatedFieldName(this));
     }
 }
 
