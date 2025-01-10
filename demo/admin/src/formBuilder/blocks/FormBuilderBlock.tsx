@@ -1,5 +1,6 @@
 import { createBlocksBlock } from "@comet/blocks-admin";
 
+import { SelectBlock } from "./fields/SelectBlock";
 import { TextAreaBlock } from "./fields/TextAreaBlock";
 import { TextInputBlock } from "./fields/TextInputBlock";
 
@@ -8,5 +9,6 @@ export const FormBuilderBlock = createBlocksBlock({
     supportedBlocks: {
         textInput: TextInputBlock,
         textArea: TextAreaBlock,
+        select: SelectBlock,
     },
 });
