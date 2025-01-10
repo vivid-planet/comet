@@ -253,8 +253,8 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5
       express:
-        specifier: ^4.18.2
-        version: 4.21.1
+        specifier: ^4.21.2
+        version: 4.21.2
       helmet:
         specifier: ^7.0.0
         version: 7.2.0
@@ -331,8 +331,8 @@ importers:
         specifier: ^1.4.7
         version: 1.4.7
       express:
-        specifier: ^4.17.1
-        version: 4.21.1
+        specifier: ^4.21.2
+        version: 4.21.2
       faker:
         specifier: ^5.5.3
         version: 5.5.3
@@ -381,10 +381,10 @@ importers:
         version: 1.7.5
       '@types/cookie-parser':
         specifier: ^1.4.8
-        version: 1.4.8(@types/express@4.17.16)
+        version: 1.4.8(@types/express@4.17.21)
       '@types/express':
-        specifier: ^4.0.0
-        version: 4.17.16
+        specifier: ^4.17.21
+        version: 4.17.21
       '@types/faker':
         specifier: ^5.5.9
         version: 5.5.9
@@ -1973,8 +1973,8 @@ importers:
         specifier: ^0.11.10
         version: 0.11.10
       '@types/express':
-        specifier: ^4.0.0
-        version: 4.17.16
+        specifier: ^4.17.21
+        version: 4.17.21
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.0
@@ -2024,8 +2024,8 @@ importers:
         specifier: ^8.0.0
         version: 8.57.1
       express:
-        specifier: ^4.0.0
-        version: 4.21.1
+        specifier: ^4.21.2
+        version: 4.21.2
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
@@ -6885,8 +6885,8 @@ packages:
   '@types/express-serve-static-core@4.17.33':
     resolution: {integrity: sha512-TPBqmR/HRYI3eC2E5hmiivIzv+bidAfXofM+sbonAGvyDhySGw9/PQZFt2BLOrjUUR++4eJVpx6KnLQK1Fk9tA==}
 
-  '@types/express@4.17.16':
-    resolution: {integrity: sha512-LkKpqRZ7zqXJuvoELakaFYuETHjZkSol8EV6cNnyishutDBCCdv6+dsKPbKkCcIk57qRphOLY5sEgClw1bO3gA==}
+  '@types/express@4.17.21':
+    resolution: {integrity: sha512-ejlPM315qwLpaQlQDTjPdsUFSc6ZsP4AN6AlWnogPjQ7CVi7PYF3YVz+CY3jE2pwYf7E/7HlDAN0rV2GxTG0HQ==}
 
   '@types/faker@5.5.9':
     resolution: {integrity: sha512-uCx6mP3UY5SIO14XlspxsGjgaemrxpssJI0Ol+GfhxtcKpv9pgRZYsS4eeKeHVLje6Qtc8lGszuBI461+gVZBA==}
@@ -9782,10 +9782,6 @@ packages:
   expect@29.5.0:
     resolution: {integrity: sha512-yM7xqUrCO2JdpFo4XpM82t+PJBFybdqoQuJLDGeDX2ij8NZzqRHyu3Hp188/JX7SWqud+7t4MUdvcgGBICMHZg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-
-  express@4.21.1:
-    resolution: {integrity: sha512-YSFlK1Ee0/GC8QaO91tHcDxJiE/X4FbpAyQWkxAvG6AXCuR65YzK8ua6D9hvi/TzUfZMpc+BwuM1IPw8fmQBiQ==}
-    engines: {node: '>= 0.10.0'}
 
   express@4.21.2:
     resolution: {integrity: sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==}
@@ -12898,9 +12894,6 @@ packages:
   path-scurry@2.0.0:
     resolution: {integrity: sha512-ypGJsmGtdXUOeM5u93TyeIEfEhM6s+ljAhrk5vAvSx8uyY/02OvrZnA0YNGUrPXfpJMgI1ODd3nwz8Npx4O4cg==}
     engines: {node: 20 || >=22}
-
-  path-to-regexp@0.1.10:
-    resolution: {integrity: sha512-7lf7qcQidTku0Gu3YDPc8DJ1q7OOucfa/BSsIwjuh56VU7katFvuM8hULfkwB3Fns/rsVF7PwPKVw1sl5KQS9w==}
 
   path-to-regexp@0.1.12:
     resolution: {integrity: sha512-RA1GjUVMnvYFxuqovrEqZoxxW5NUZqbwKtYz/Tt7nXerk0LbLblQmrsgdeOxV5SFHf0UDggjS/bSeOZwt1pmEQ==}
@@ -16166,12 +16159,12 @@ snapshots:
       '@apollo/utils.usagereporting': 2.1.0(graphql@16.9.0)
       '@apollo/utils.withrequired': 2.0.1
       '@graphql-tools/schema': 9.0.19(graphql@16.9.0)
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
       '@types/express-serve-static-core': 4.17.33
       '@types/node-fetch': 2.6.2
       async-retry: 1.3.3
       cors: 2.8.5
-      express: 4.21.1
+      express: 4.21.2
       graphql: 16.9.0
       loglevel: 1.8.1
       lru-cache: 7.18.3
@@ -22596,7 +22589,7 @@ snapshots:
 
   '@types/compression@1.7.5':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
 
   '@types/concat-stream@2.0.3':
     dependencies:
@@ -22611,9 +22604,9 @@ snapshots:
     dependencies:
       '@types/node': 22.9.0
 
-  '@types/cookie-parser@1.4.8(@types/express@4.17.16)':
+  '@types/cookie-parser@1.4.8(@types/express@4.17.21)':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
 
   '@types/cookie@0.4.1': {}
 
@@ -22650,7 +22643,7 @@ snapshots:
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
 
-  '@types/express@4.17.16':
+  '@types/express@4.17.21':
     dependencies:
       '@types/body-parser': 1.19.2
       '@types/express-serve-static-core': 4.17.33
@@ -22824,7 +22817,7 @@ snapshots:
 
   '@types/multer@1.4.12':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
 
   '@types/mysql@2.15.26':
     dependencies:
@@ -22866,23 +22859,23 @@ snapshots:
 
   '@types/passport-http@0.3.11':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
       '@types/passport': 1.0.11
 
   '@types/passport-jwt@3.0.13':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
       '@types/jsonwebtoken': 8.5.9
       '@types/passport-strategy': 0.2.35
 
   '@types/passport-strategy@0.2.35':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
       '@types/passport': 1.0.11
 
   '@types/passport@1.0.11':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
 
   '@types/pg-pool@2.0.6':
     dependencies:
@@ -22997,7 +22990,7 @@ snapshots:
 
   '@types/response-time@2.3.8':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
       '@types/node': 22.9.0
 
   '@types/responselike@1.0.0':
@@ -23018,7 +23011,7 @@ snapshots:
 
   '@types/serve-index@1.9.1':
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
 
   '@types/serve-static@1.15.0':
     dependencies:
@@ -26180,42 +26173,6 @@ snapshots:
       jest-message-util: 29.5.0
       jest-util: 29.7.0
 
-  express@4.21.1:
-    dependencies:
-      accepts: 1.3.8
-      array-flatten: 1.1.1
-      body-parser: 1.20.3
-      content-disposition: 0.5.4
-      content-type: 1.0.5
-      cookie: 0.7.1
-      cookie-signature: 1.0.6
-      debug: 2.6.9
-      depd: 2.0.0
-      encodeurl: 2.0.0
-      escape-html: 1.0.3
-      etag: 1.8.1
-      finalhandler: 1.3.1
-      fresh: 0.5.2
-      http-errors: 2.0.0
-      merge-descriptors: 1.0.3
-      methods: 1.1.2
-      on-finished: 2.4.1
-      parseurl: 1.3.3
-      path-to-regexp: 0.1.10
-      proxy-addr: 2.0.7
-      qs: 6.13.0
-      range-parser: 1.2.1
-      safe-buffer: 5.2.1
-      send: 0.19.0
-      serve-static: 1.16.2
-      setprototypeof: 1.2.0
-      statuses: 2.0.1
-      type-is: 1.6.18
-      utils-merge: 1.0.1
-      vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
-
   express@4.21.2:
     dependencies:
       accepts: 1.3.8
@@ -27304,7 +27261,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-middleware@2.0.6(@types/express@4.17.16):
+  http-proxy-middleware@2.0.6(@types/express@4.17.21):
     dependencies:
       '@types/http-proxy': 1.17.9
       http-proxy: 1.18.1
@@ -27312,7 +27269,7 @@ snapshots:
       is-plain-obj: 3.0.0
       micromatch: 4.0.8
     optionalDependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
     transitivePeerDependencies:
       - debug
 
@@ -28425,7 +28382,7 @@ snapshots:
 
   jwks-rsa@3.0.1:
     dependencies:
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
       '@types/jsonwebtoken': 9.0.5
       debug: 4.3.7
       jose: 4.15.9
@@ -30071,8 +30028,6 @@ snapshots:
     dependencies:
       lru-cache: 11.0.2
       minipass: 7.1.2
-
-  path-to-regexp@0.1.10: {}
 
   path-to-regexp@0.1.12: {}
 
@@ -33153,7 +33108,7 @@ snapshots:
     dependencies:
       '@types/bonjour': 3.5.10
       '@types/connect-history-api-fallback': 1.3.5
-      '@types/express': 4.17.16
+      '@types/express': 4.17.21
       '@types/serve-index': 1.9.1
       '@types/serve-static': 1.15.0
       '@types/sockjs': 0.3.33
@@ -33165,10 +33120,10 @@ snapshots:
       compression: 1.7.5
       connect-history-api-fallback: 2.0.0
       default-gateway: 6.0.3
-      express: 4.21.1
+      express: 4.21.2
       graceful-fs: 4.2.11
       html-entities: 2.3.3
-      http-proxy-middleware: 2.0.6(@types/express@4.17.16)
+      http-proxy-middleware: 2.0.6(@types/express@4.17.21)
       ipaddr.js: 2.2.0
       open: 8.4.0
       p-retry: 4.6.2
