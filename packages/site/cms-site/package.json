@@ -28,7 +28,7 @@
     "dependencies": {
         "jose": "^5.2.4",
         "rimraf": "^6.0.1",
-        "scroll-into-view-if-needed": "^2.0.0",
+        "scroll-into-view-if-needed": "^3.1.0",
         "server-only": "^0.0.1",
         "usehooks-ts": "^3.1.0"
     },
