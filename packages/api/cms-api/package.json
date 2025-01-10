@@ -33,8 +33,12 @@
     },
     "dependencies": {
         "@aws-sdk/client-s3": "3.645.0",
+<<<<<<< HEAD
         "@azure-rest/ai-translation-text": "^1.0.0",
         "@azure/openai": "1.0.0-beta.11",
+=======
+        "@azure-rest/ai-translation-text": "^1.0.0-beta.1",
+>>>>>>> main
         "@azure/storage-blob": "^12.23.0",
         "@fast-csv/parse": "^4.3.6",
         "@golevelup/nestjs-discovery": "^4.0.2",
@@ -66,6 +70,7 @@
         "mime-db": "^1.0.0",
         "multer": "^1.4.4",
         "node-fetch": "^2.0.0",
+        "openai": "^4.77.3",
         "passport": "^0.6.0",
         "passport-custom": "^1.1.1",
         "passport-http": "^0.3.0",
