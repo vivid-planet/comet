@@ -1080,7 +1080,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "textInput": "TextInput",
-                                "textArea": "TextArea"
+                                "textArea": "TextArea",
+                                "select": "Select"
                             },
                             "nullable": false
                         }
@@ -1115,7 +1116,8 @@
                             "kind": "OneOfBlocks",
                             "blocks": {
                                 "textInput": "TextInput",
-                                "textArea": "TextArea"
+                                "textArea": "TextArea",
+                                "select": "Select"
                             },
                             "nullable": false
                         }
@@ -2500,6 +2502,179 @@
             {
                 "name": "draftContent",
                 "kind": "Json",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "Select",
+        "fields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "selectType",
+                "kind": "Enum",
+                "enum": [
+                    "singleSelect",
+                    "multiSelect"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "options",
+                "kind": "Block",
+                "block": "SelectOptionList",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "infoText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "selectType",
+                "kind": "Enum",
+                "enum": [
+                    "singleSelect",
+                    "multiSelect"
+                ],
+                "nullable": false
+            },
+            {
+                "name": "placeholder",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "options",
+                "kind": "Block",
+                "block": "SelectOptionList",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "SelectOption",
+        "fields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "text",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "SelectOptionList",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SelectOption",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "SelectOption",
+                            "nullable": false
+                        }
+                    ]
+                },
                 "nullable": false
             }
         ]

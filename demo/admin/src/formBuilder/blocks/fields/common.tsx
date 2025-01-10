@@ -22,6 +22,7 @@ export const propsAndValidationGroup = {
                     </BlocksFinalForm>
                 ),
             }),
+            hiddenInSubroute: true,
         },
         mandatory: {
             // TODO: Use helper function once merged: https://github.com/vivid-planet/comet/pull/3052
@@ -37,6 +38,7 @@ export const propsAndValidationGroup = {
                     </BlocksFinalForm>
                 ),
             }),
+            hiddenInSubroute: true,
         },
     },
 };
