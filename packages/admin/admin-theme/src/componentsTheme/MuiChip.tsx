@@ -1,5 +1,4 @@
 import { Clear } from "@comet/admin-icons";
-import { chipClasses } from "@mui/material";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
@@ -98,17 +97,22 @@ export const getMuiChip: GetMuiComponentTheme<"MuiChip"> = (component, { palette
         },
         filledDefault: {
             backgroundColor: palette.grey["100"],
+            "&.MuiChip-clickable": {
+                "&:hover": {
+                    backgroundColor: palette.grey["200"],
+                },
+            },
+        },
+        filledInfo: {
+            backgroundColor: "#fff",
+            "&.MuiChip-clickable": {
+                "&:hover": {
+                    backgroundColor: palette.grey["50"],
+                },
+            },
         },
         outlinedDefault: {
             borderColor: palette.grey["100"],
-        },
-        clickableColorDefault: {
-            [`&.${chipClasses.filled}:hover`]: {
-                backgroundColor: palette.grey["200"],
-            },
-            [`&.${chipClasses.outlined}:hover`]: {
-                backgroundColor: palette.grey["50"],
-            },
         },
     }),
     defaultProps: {

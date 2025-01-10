@@ -160,7 +160,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                             <div>
                                 {inheritedDamSettings !== undefined && (
                                     <>
-                                        <Box padding={8} paddingBottom={6}>
+                                        <Box padding={8} paddingTop={0}>
                                             <FormSection
                                                 title={<FormattedMessage id="comet.blocks.image.dam" defaultMessage="DAM" />}
                                                 disableMarginBottom
@@ -183,7 +183,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                         {dependencyMap["DamFile"] && damFileId && (
                                             <Box padding={7} paddingTop={0}>
                                                 <Button
-                                                    variant="text"
+                                                    variant="outlined"
                                                     color="inherit"
                                                     onClick={async () => {
                                                         const path = await dependencyMap["DamFile"].resolvePath({
@@ -199,7 +199,7 @@ export function EditImageDialog({ image, initialValues, onSubmit, onClose, inher
                                                 </Button>
                                             </Box>
                                         )}
-                                        <Divider />
+                                        <Divider sx={{ marginLeft: 8, marginRight: 8 }} />
                                     </>
                                 )}
                                 <Box padding={8}>

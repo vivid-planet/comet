@@ -38,6 +38,7 @@ schema.gql
 schema.json
 block-meta.json
 src/**/*.generated.ts
+src/site-configs.d.ts
 
 public/sitemap.xml
 public/robots.txt

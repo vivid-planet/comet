@@ -41,6 +41,7 @@ export { getRequestContextHeadersFromRequest, RequestContext, RequestContextInte
 export { getRequestFromExecutionContext } from "./common/decorators/utils";
 export { CometException } from "./common/errors/comet.exception";
 export { CometEntityNotFoundException } from "./common/errors/entity-not-found.exception";
+export { ExceptionFilter } from "./common/errors/exception.filter";
 export { ExceptionInterceptor } from "./common/errors/exception.interceptor";
 export { CometValidationException } from "./common/errors/validation.exception";
 export { ValidationExceptionFactory } from "./common/errors/validation.exception-factory";
@@ -156,8 +157,10 @@ export { PageTreeNodeDocumentEntityScopeService } from "./page-tree/page-tree-no
 export { PageTreeReadApiService } from "./page-tree/page-tree-read-api.service";
 export { PageTreeNodeCategory, PageTreeNodeInterface, PageTreeNodeVisibility, ScopeInterface } from "./page-tree/types";
 export { PageExists, PageExistsConstraint } from "./page-tree/validators/page-exists.validator";
+export { RedirectInterface } from "./redirects/entities/redirect-entity.factory";
+export { REDIRECTS_LINK_BLOCK } from "./redirects/redirects.constants";
 export { RedirectGenerationType, RedirectSourceTypeValues } from "./redirects/redirects.enum";
-export { RedirectsModule } from "./redirects/redirects.module";
+export { RedirectsLinkBlock, RedirectsModule } from "./redirects/redirects.module";
 export { createRedirectsResolver } from "./redirects/redirects.resolver";
 export { RedirectsService } from "./redirects/redirects.service";
 export { IsValidRedirectSource, IsValidRedirectSourceConstraint } from "./redirects/validators/isValidRedirectSource";

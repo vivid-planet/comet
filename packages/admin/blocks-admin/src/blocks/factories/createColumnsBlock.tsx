@@ -165,7 +165,11 @@ export function createColumnsBlock<T extends BlockInterface>({
                     return {
                         key: column.key,
                         visible: column.visible,
-                        props: contentBlock.createPreviewState(column.props, { ...previewContext, parentUrl: blockAdminRoute }),
+                        props: contentBlock.createPreviewState(column.props, {
+                            ...previewContext,
+                            parentUrlSubRoute: undefined,
+                            parentUrl: blockAdminRoute,
+                        }),
                         adminRoute: blockAdminRoute,
                         adminMeta: { route: blockAdminRoute },
                     };
@@ -460,6 +464,12 @@ export function createColumnsBlock<T extends BlockInterface>({
 
             const childPath = contentBlock.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
+        },
+
+        extractTextContents: (state) => {
+            return state.columns.reduce<string[]>((contents, column) => {
+                return [...contents, ...(contentBlock.extractTextContents?.(column.props) ?? [])];
+            }, []);
         },
     };
 

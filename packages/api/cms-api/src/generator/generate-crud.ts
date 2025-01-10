@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityMetadata } from "@mikro-orm/core";
+import { EntityMetadata, ReferenceType } from "@mikro-orm/core";
 import * as path from "path";
 import { singular } from "pluralize";
 
@@ -63,6 +63,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
             hasFieldFeature(metadata.class, prop.name, "filter") &&
             !prop.name.startsWith("scope_") &&
             prop.name != "position" &&
+            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "filter")) && // the whole embeddable has filter disabled
             (prop.enum ||
                 prop.type === "string" ||
                 prop.type === "text" ||
@@ -84,6 +85,7 @@ export function buildOptions(metadata: EntityMetadata<any>, generatorOptions: Cr
         (prop) =>
             hasFieldFeature(metadata.class, prop.name, "sort") &&
             !prop.name.startsWith("scope_") &&
+            (!prop.embedded || hasFieldFeature(metadata.class, prop.embedded[0], "sort")) && // the whole embeddable has sort disabled
             (prop.type === "string" ||
                 prop.type === "text" ||
                 prop.type === "DecimalType" ||
@@ -462,7 +464,19 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
     const { classNameSingular, fileNameSingular, classNamePlural } = buildNameVariants(metadata);
     const { hasPositionProp, positionGroupProps } = buildOptions(metadata, generatorOptions);
 
-    const positionGroupType = positionGroupProps.length ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${prop.type}`).join(",")} }` : false;
+    const positionGroupType = positionGroupProps.length
+        ? `{ ${positionGroupProps
+              .map((prop) => {
+                  const notSupportedReferenceTypes = [ReferenceType.ONE_TO_MANY, ReferenceType.MANY_TO_MANY];
+                  if (notSupportedReferenceTypes.includes(prop.reference)) {
+                      throw new Error(`Not supported reference-type for position-group. ${prop.name}`);
+                  }
+                  return `${prop.name}${prop.nullable ? `?` : ``}: ${
+                      [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference) ? "string" : prop.type
+                  }`;
+              })
+              .join(",")} }`
+        : false;
 
     const serviceOut = `import { FilterQuery } from "@mikro-orm/core";
     import { InjectRepository } from "@mikro-orm/nestjs";
@@ -538,9 +552,9 @@ function generateService({ generatorOptions, metadata }: { generatorOptions: Cru
 
                 ${
                     positionGroupProps.length
-                        ? `getPositionGroupCondition(data: ${positionGroupType}): FilterQuery<${metadata.className}> {
+                        ? `getPositionGroupCondition(group: ${positionGroupType}): FilterQuery<${metadata.className}> {
                     return {
-                        ${positionGroupProps.map((field) => `${field.name}: { $eq: data.${field.name} }`).join(",")}
+                        ${positionGroupProps.map((field) => `${field.name}: { $eq: group.${field.name} }`).join(",")}
                     };
                 }`
                         : ``
@@ -1161,7 +1175,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
                           positionGroupProps.length
                               ? `{ ${positionGroupProps
-                                    .map((prop) => (prop.name === "scope" ? `scope` : `${prop.name}: input.${prop.name}`))
+                                    .map((prop) =>
+                                        prop.name === "scope"
+                                            ? `scope`
+                                            : dedicatedResolverArgProps.find(
+                                                  (dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name,
+                                              ) !== undefined
+                                            ? prop.name
+                                            : `${prop.name}: input.${prop.name}`,
+                                    )
                                     .join(",")} }`
                               : ``
                       });
@@ -1170,7 +1192,15 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 await this.${instanceNamePlural}Service.incrementPositions(${
                           positionGroupProps.length
                               ? `{ ${positionGroupProps
-                                    .map((prop) => (prop.name === "scope" ? `scope` : `${prop.name}: input.${prop.name}`))
+                                    .map((prop) =>
+                                        prop.name === "scope"
+                                            ? `scope`
+                                            : dedicatedResolverArgProps.find(
+                                                  (dedicatedResolverArgProp) => dedicatedResolverArgProp.name === prop.name,
+                                              ) !== undefined
+                                            ? prop.name
+                                            : `${prop.name}: input.${prop.name}`,
+                                    )
                                     .join(",")} }, `
                               : ``
                       }position);
@@ -1207,7 +1237,16 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
             if (input.position !== undefined) {
                 const lastPosition = await this.${instanceNamePlural}Service.getLastPosition(${
                           positionGroupProps.length
-                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} }`
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} }`
                               : ``
                       });
                 if (input.position > lastPosition + 1) {
@@ -1216,13 +1255,31 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                 if (${instanceNameSingular}.position < input.position) {
                     await this.${instanceNamePlural}Service.decrementPositions(${
                           positionGroupProps.length
-                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} },`
                               : ``
                       }${instanceNameSingular}.position, input.position);
                 } else if (${instanceNameSingular}.position > input.position) {
                     await this.${instanceNamePlural}Service.incrementPositions(${
                           positionGroupProps.length
-                              ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                              ? `{ ${positionGroupProps
+                                    .map(
+                                        (prop) =>
+                                            `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                    ? `${prop.nullable ? `?` : ``}.id`
+                                                    : ``
+                                            }`,
+                                    )
+                                    .join(",")} },`
                               : ``
                       }input.position, ${instanceNameSingular}.position);
                 }
@@ -1251,7 +1308,16 @@ function generateResolver({ generatorOptions, metadata }: { generatorOptions: Cr
                       hasPositionProp
                           ? `await this.${instanceNamePlural}Service.decrementPositions(${
                                 positionGroupProps.length
-                                    ? `{ ${positionGroupProps.map((prop) => `${prop.name}: ${instanceNameSingular}.${prop.name}`).join(",")} },`
+                                    ? `{ ${positionGroupProps
+                                          .map(
+                                              (prop) =>
+                                                  `${prop.name}: ${instanceNameSingular}.${prop.name}${
+                                                      [ReferenceType.MANY_TO_ONE, ReferenceType.ONE_TO_ONE].includes(prop.reference)
+                                                          ? `${prop.nullable ? `?` : ``}.id`
+                                                          : ``
+                                                  }`,
+                                          )
+                                          .join(",")} },`
                                     : ``
                             }${instanceNameSingular}.position);`
                           : ""

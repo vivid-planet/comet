@@ -7,7 +7,7 @@ import { OffsetBasedPaginationArgs } from "../../common/pagination/offset-based.
 import { SortDirection } from "../../common/sorting/sort-direction.enum";
 
 @InputType()
-class UserFilter {
+class UserPermissionsUserFilter {
     @Field(() => StringFilter, { nullable: true })
     @ValidateNested()
     @Type(() => StringFilter)
@@ -23,31 +23,31 @@ class UserFilter {
     @Type(() => StringFilter)
     status?: StringFilter;
 
-    @Field(() => [UserFilter], { nullable: true })
-    @Type(() => UserFilter)
+    @Field(() => [UserPermissionsUserFilter], { nullable: true })
+    @Type(() => UserPermissionsUserFilter)
     @ValidateNested({ each: true })
-    and?: UserFilter[];
+    and?: UserPermissionsUserFilter[];
 
-    @Field(() => [UserFilter], { nullable: true })
-    @Type(() => UserFilter)
+    @Field(() => [UserPermissionsUserFilter], { nullable: true })
+    @Type(() => UserPermissionsUserFilter)
     @ValidateNested({ each: true })
-    or?: UserFilter[];
+    or?: UserPermissionsUserFilter[];
 }
 
-enum UserSortField {
+enum UserPermissionsUserSortField {
     name = "name",
     email = "email",
     status = "status",
 }
-registerEnumType(UserSortField, {
-    name: "UserSortField",
+registerEnumType(UserPermissionsUserSortField, {
+    name: "UserPermissionsUserSortField",
 });
 
 @InputType()
-class UserSort {
-    @Field(() => UserSortField)
-    @IsEnum(UserSortField)
-    field: UserSortField;
+class UserPermissionsUserSort {
+    @Field(() => UserPermissionsUserSortField)
+    @IsEnum(UserPermissionsUserSortField)
+    field: UserPermissionsUserSortField;
 
     @Field(() => SortDirection, { defaultValue: SortDirection.ASC })
     @IsEnum(SortDirection)
@@ -61,13 +61,13 @@ export class FindUsersArgs extends OffsetBasedPaginationArgs {
     @IsString()
     search?: string;
 
-    @Field(() => UserFilter, { nullable: true })
+    @Field(() => UserPermissionsUserFilter, { nullable: true })
     @ValidateNested()
-    @Type(() => UserFilter)
-    filter?: UserFilter;
+    @Type(() => UserPermissionsUserFilter)
+    filter?: UserPermissionsUserFilter;
 
-    @Field(() => [UserSort], { nullable: true })
+    @Field(() => [UserPermissionsUserSort], { nullable: true })
     @ValidateNested({ each: true })
-    @Type(() => UserSort)
-    sort?: UserSort[];
+    @Type(() => UserPermissionsUserSort)
+    sort?: UserPermissionsUserSort[];
 }

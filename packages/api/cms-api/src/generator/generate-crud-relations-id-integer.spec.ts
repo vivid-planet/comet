@@ -1,5 +1,5 @@
 import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Ref } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -40,11 +40,12 @@ describe("GenerateCrudRelationsIdNumber", () => {
     describe("resolver class", () => {
         it("input type to category relation with primary key type integer should be number with integer validator", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -71,11 +72,12 @@ describe("GenerateCrudRelationsIdNumber", () => {
 
         it("input type to category relation with primary key type int should be number with integer validator", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityProduct, TestEntityCategoryWithIntegerId, TestEntityCategoryWithIntId],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityProduct"));
             const lintedOut = await lintGeneratedFiles(out);

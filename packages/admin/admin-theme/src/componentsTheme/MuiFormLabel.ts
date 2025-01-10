@@ -11,6 +11,17 @@ export const getMuiFormLabel: GetMuiComponentTheme<"MuiFormLabel"> = (component,
             lineHeight: "20px",
             fontWeight: typography.fontWeightBold,
             marginBottom: 4,
+
+            "&.Mui-disabled": {
+                color: palette.text.primary,
+            },
+
+            "&.Mui-focused": {
+                color: palette.text.primary,
+            },
+        },
+        asterisk: {
+            marginLeft: "4px",
         },
     }),
 });

@@ -36,7 +36,7 @@ export function createAuthProxyJwtStrategy({
         }
 
         async validate(request: Request, idToken: JwtPayload): Promise<CurrentUser> {
-            return this.service.createCurrentUser(await this.service.createUser(request, idToken));
+            return this.service.createCurrentUser(await this.service.createUser(request, idToken), request);
         }
     }
     return AuthProxyJwtStrategy;

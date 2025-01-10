@@ -9,8 +9,7 @@ const SubRoutesContext = createContext<SubRoutesContext | undefined>(undefined);
 export function SubRouteIndexRoute({ children }: { children?: ReactNode }) {
     const location = useLocation();
     const match = useRouteMatch();
-    const subRoutesContext = useContext(SubRoutesContext);
-    const urlPrefix = subRoutesContext?.path || match.url;
+    const urlPrefix = useSubRoutePrefix();
 
     const matchIndex = matchPath(location.pathname, { path: match.url, exact: true });
     const routeProps = matchIndex ? { path: match.url, exact: true } : { path: urlPrefix };

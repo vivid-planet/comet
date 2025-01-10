@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CancelButton, MainContent, StackLink, Toolbar, ToolbarFillSpace, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
+import { CancelButton, FillSpace, MainContent, StackLink, Toolbar, ToolbarTitleItem, useStackSwitchApi } from "@comet/admin";
 import { Play, Time } from "@comet/admin-icons";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -57,7 +57,7 @@ function CronJobsToolbar() {
             <ToolbarTitleItem>
                 <FormattedMessage id="comet.cronJobs.title" defaultMessage="Cron Jobs" />
             </ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
         </Toolbar>
     );
 }

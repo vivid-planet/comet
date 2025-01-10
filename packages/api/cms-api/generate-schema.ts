@@ -4,6 +4,7 @@ import { Field, GraphQLSchemaBuilderModule, GraphQLSchemaFactory, ObjectType, Qu
 import { writeFile } from "fs/promises";
 import { printSchema } from "graphql";
 
+import { GenerateSeoTagsResolver } from "./lib/content-generation/generate-seo-tags.resolver";
 import {
     BuildsResolver,
     createAuthResolver,
@@ -113,6 +114,7 @@ async function generateSchema(): Promise<void> {
         AzureAiTranslatorResolver,
         GenerateAltTextResolver,
         GenerateImageTitleResolver,
+        GenerateSeoTagsResolver,
         FileUploadsResolver,
         SitePreviewResolver,
     ]);

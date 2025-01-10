@@ -9,7 +9,9 @@ export function DamScopeProvider({ children }: { children?: ReactNode }) {
     const { scope: completeScope } = useContentScope();
 
     const damScope = scopeParts.reduce((damScope, scope) => {
-        damScope[scope] = completeScope[scope];
+        if (completeScope[scope] !== undefined) {
+            damScope[scope] = completeScope[scope];
+        }
         return damScope;
     }, {} as Record<string, unknown>);
 

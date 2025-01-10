@@ -2,7 +2,7 @@ import { FormSection, PrettyBytes, Table } from "@comet/admin";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { isDateString } from "class-validator";
-import { FormattedDate, FormattedTime, useIntl } from "react-intl";
+import { FormattedDate, useIntl } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 interface ImageInfos {
@@ -109,13 +109,7 @@ export const ImageInfos = ({ imageInfos: { width, height, fileSize, fileFormat, 
                                     if (typeof row.value === "object") {
                                         return JSON.stringify(row.value);
                                     } else if (typeof row.value === "string" && isDateString(row.value)) {
-                                        return (
-                                            <>
-                                                <FormattedDate value={row.value} day="2-digit" month="2-digit" year="numeric" />
-                                                {" - "}
-                                                <FormattedTime value={row.value} />
-                                            </>
-                                        );
+                                        return <FormattedDate value={row.value} dateStyle="medium" timeStyle="short" />;
                                     }
 
                                     return String(row.value);

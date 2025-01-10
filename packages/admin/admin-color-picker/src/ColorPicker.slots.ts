@@ -203,6 +203,7 @@ export const FooterClearButton = createComponentSlot(ButtonBase)<ColorPickerClas
     ({ theme }) => css`
         padding: ${theme.spacing(2)};
         border-radius: ${theme.shape.borderRadius};
+        gap: 8px;
     `,
 );
 

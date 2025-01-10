@@ -1,10 +1,9 @@
 import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { StoryContext } from "@storybook/addons";
+import { Decorator } from "@storybook/react";
 import { RestLink } from "apollo-link-rest";
-import * as React from "react";
 
-export function apolloRestStoryDecorator(options?: { uri?: string; responseTransformer?: RestLink.ResponseTransformer }) {
-    return (Story: React.ComponentType, c: StoryContext) => {
+export function apolloRestStoryDecorator(options?: { uri?: string; responseTransformer?: RestLink.ResponseTransformer }): Decorator {
+    return (Story) => {
         const link = ApolloLink.from([
             new RestLink({
                 uri: options?.uri || "https://jsonplaceholder.typicode.com/",

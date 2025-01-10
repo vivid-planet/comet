@@ -17,7 +17,6 @@ const Root = createComponentSlot("div")<ToolbarBackButtonClassKey>({
     ({ theme }) => css`
         flex: 0;
         display: flex;
-        align-items: stretch;
 
         .CometAdminToolbarItem-root {
             padding: 0;
@@ -30,10 +29,12 @@ const IconButton = createComponentSlot(MuiIconButton)<ToolbarBackButtonClassKey>
     slotName: "iconButton",
 })(
     ({ theme }) => css`
-        padding: 0 ${theme.spacing(1)};
+        padding: ${theme.spacing(1)};
+        margin: auto;
+        height: fit-content;
 
         ${theme.breakpoints.up("sm")} {
-            padding: 0 ${theme.spacing(2)};
+            padding: ${theme.spacing(2)};
         }
     `,
 );

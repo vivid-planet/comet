@@ -1,4 +1,4 @@
-import { MikroORM, UseRequestContext } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { Injectable, Logger } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 
@@ -18,7 +18,7 @@ export class ChangesCheckerConsole {
         command: "check-changes",
         description: "Checks if changes since last build happened and triggers a new build if so",
     })
-    @UseRequestContext()
+    @CreateRequestContext()
     async execute(): Promise<void> {
         this.logger.log("Checking if changes since last build occurred...");
 

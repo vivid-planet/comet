@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { Field, Int } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -56,11 +56,12 @@ class TestEntityWithIntegerTypes extends BaseEntity<TestEntityWithIntegerTypes, 
 describe("GenerateCrudInputInteger", () => {
     it("should generate correct input type for integer values", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithIntegerTypes],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntityWithIntegerTypes],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithIntegerTypes"));
         const lintedOut = await lintGeneratedFiles(out);

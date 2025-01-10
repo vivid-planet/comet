@@ -1,4 +1,5 @@
 import { BaseEntity, DateType, Entity, Enum, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { defineConfig } from "@mikro-orm/postgresql";
 import { Field, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -90,11 +91,12 @@ describe("GenerateCrudInput", () => {
     describe("string input class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithString],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithString],
+                }),
+            );
 
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithString"));
             //console.log(out);
@@ -124,11 +126,12 @@ describe("GenerateCrudInput", () => {
     describe("date input class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithDate],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithDate],
+                }),
+            );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithDate"));
             //console.log(out);
             const lintedOutput = await lintSource(out[0].content);
@@ -158,11 +161,12 @@ describe("GenerateCrudInput", () => {
     describe("boolean input class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithBoolean],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithBoolean],
+                }),
+            );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithBoolean"));
             //console.log(out);
             const lintedOutput = await lintSource(out[0].content);
@@ -193,11 +197,12 @@ describe("GenerateCrudInput", () => {
     describe("enum input class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithEnum],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithEnum],
+                }),
+            );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEnum"));
             const lintedOutput = await lintSource(out[0].content);
             //console.log(lintedOutput);
@@ -228,11 +233,12 @@ describe("GenerateCrudInput", () => {
     describe("uuid input class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithUuid],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithUuid],
+                }),
+            );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithUuid"));
             const lintedOutput = await lintSource(out[0].content);
             //console.log(lintedOutput);
@@ -263,11 +269,12 @@ describe("GenerateCrudInput", () => {
     describe("text type input class", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithTextRuntimeType],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithTextRuntimeType],
+                }),
+            );
             const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithTextRuntimeType"));
             const lintedOutput = await lintSource(out[0].content);
             //console.log(lintedOutput);
@@ -298,11 +305,12 @@ describe("GenerateCrudInput", () => {
     describe("nullable props input class with initializer", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithNullablePropWithInitializer],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithNullablePropWithInitializer],
+                }),
+            );
             const out = await generateCrudInput(
                 { targetDirectory: __dirname },
                 orm.em.getMetadata().get("TestEntityWithNullablePropWithInitializer"),
@@ -343,11 +351,12 @@ describe("GenerateCrudInput", () => {
     describe("nullable props input class without initializer", () => {
         it("should be a valid generated ts file", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithNullablePropWithoutInitializer],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithNullablePropWithoutInitializer],
+                }),
+            );
             const out = await generateCrudInput(
                 { targetDirectory: __dirname },
                 orm.em.getMetadata().get("TestEntityWithNullablePropWithoutInitializer"),

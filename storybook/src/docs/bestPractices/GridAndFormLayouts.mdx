@@ -1,0 +1,84 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as GridAndFormLayoutsStories from "./GridAndFormLayouts.stories";
+
+<Meta of={GridAndFormLayoutsStories} />
+
+# Grid and Form Layouts
+
+These stories should be used as starting points when building admin interfaces to make sure the behavior and look is consistent throughout applications.
+
+## Forms
+
+Examples of small and large forms, used in pages directly and in dialogs.
+
+### Simple form on a page
+
+All fields of a form should be wrapped inside a `FieldSet`, unless the form is used inside a dialog or a sidebar. <br />
+A title for a single `FieldSet` is not necessary.
+
+<Canvas of={GridAndFormLayoutsStories.SimpleFormOnAPage} />
+
+### Large form on a page
+
+Use multiple `FieldSet` components for large forms to separate into multiple sections. <br />
+It's recommended to set a title for each `FieldSet`.
+
+<Canvas of={GridAndFormLayoutsStories.LargeFormOnAPage} />
+
+### Simple form in a dialog
+
+Do not use `FieldSet` for a form inside a dialog.
+
+<Canvas of={GridAndFormLayoutsStories.SimpleFormInADialog} />
+
+### Large form in a dialog
+
+For large forms, use multiple `FormSection` components to create separation. <br />
+Do not use `FieldSet` for a form inside a dialog.
+
+<Canvas of={GridAndFormLayoutsStories.LargeFormInADialog} />
+
+## Grids
+
+Examples of `DataGrid` used on pages and some special use cases.
+
+### Single Grid
+
+If only the grid is used on the page, wrap it in a `StackMainContent` with `fullHeight`.
+
+<Canvas of={GridAndFormLayoutsStories.SingleGridFullHeight} />
+
+### Single Grid (Auto Height)
+
+If you are sure that there will always only be very few items in the grid, you can use `autoHeight` on the `DataGrid` and skip the `fullHeight` prop on `StackMainContent`
+
+<Canvas of={GridAndFormLayoutsStories.SingleGridAutoHeight} />
+
+### Grid selection with more actions menu
+
+<Canvas of={GridAndFormLayoutsStories.GridWithSelectionAndMoreActionsMenu} />
+
+### Grid-Selection in dialog
+
+<Canvas of={GridAndFormLayoutsStories.GridWithSelectionInDialog} />
+
+## Combinations of Grids and Forms
+
+Examples of how to combine grids and forms in different use cases, such as dialogs and tabs.
+
+### Grid with a Form in a Dialog
+
+<Canvas of={GridAndFormLayoutsStories.GridWithFormInADialog} />
+
+### Grid with a Form on a Page
+
+<Canvas of={GridAndFormLayoutsStories.GridWithFormOnAPage} />
+
+### Nested Grids and Forms with Tabs
+
+<Canvas of={GridAndFormLayoutsStories.NestedGridsAndFormsWithTabs} />
+
+### Nested Form in Grid in Tabs in Grid
+
+<Canvas of={GridAndFormLayoutsStories.NestedFormInGridInTabsInGrid} />

@@ -233,7 +233,7 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
                             visible: child.visible,
                             type: child.type,
                             adminRoute: blockAdminRoute,
-                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrlSubRoute: undefined, parentUrl: blockAdminRoute }),
                             // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
                             ...(Object.keys(additionalItemFields ?? {}).reduce(
                                 (fields, field) => ({ ...fields, [field]: child[field] }),
@@ -862,6 +862,15 @@ export function createBlocksBlock<AdditionalItemFields extends Record<string, un
 
             const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/blocks/${childPath}`;
+        },
+        extractTextContents: (state) => {
+            return state.blocks.reduce<string[]>((content, child) => {
+                const block = blockForType(child.type);
+                if (!block) {
+                    throw new Error(`No Block found for type ${child.type}`); // for TS
+                }
+                return [...content, ...(block.extractTextContents?.(child.props) ?? [])];
+            }, []);
         },
     };
     return BlocksBlock;

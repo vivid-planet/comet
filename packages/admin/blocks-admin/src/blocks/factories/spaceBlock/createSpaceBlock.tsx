@@ -34,7 +34,7 @@ export const createSpaceBlock = <T extends string | number>({
             return (
                 <SelectPreviewComponent>
                     <BlocksFinalForm<{ spacing: T }> onSubmit={updateState} initialValues={state}>
-                        <SelectField name="spacing" fullWidth>
+                        <SelectField name="spacing" fullWidth required>
                             {options.map(({ value, label }) => (
                                 <MenuItem key={value} value={value}>
                                     {label}
@@ -49,6 +49,8 @@ export const createSpaceBlock = <T extends string | number>({
         previewContent: ({ spacing }) => {
             return [{ type: "text", content: options.find((option) => option.value === spacing)?.label }];
         },
+
+        extractTextContents: () => [],
     };
 
     return SpaceBlock;

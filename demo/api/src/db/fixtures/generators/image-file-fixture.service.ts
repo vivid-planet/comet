@@ -17,11 +17,8 @@ export class ImageFileFixtureService {
 
             const downloadedImage = await createFileUploadInputFromUrl(image_path);
             console.log(`Downloading ${IMAGE_FILE_PATHS[index]} done.`);
-            downloadedImage.mimetype = "image/png";
-            downloadedImage.originalname = `${IMAGE_FILE_PATHS[index]}.png`;
 
             console.log(`Uploading ${downloadedImage.originalname}.`);
-
             const file = await this.filesService.upload(downloadedImage, { scope });
             console.log(`Uploading ${downloadedImage.originalname} done.`);
             images.push(file);

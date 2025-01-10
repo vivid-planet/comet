@@ -27,10 +27,10 @@ jobs:
 
             - uses: pnpm/action-setup@v4
 
-            - name: Use Node.js 18.x
+            - name: Use Node.js 22.x
               uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 22
                   registry-url: "https://registry.npmjs.org"
                   cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
 
@@ -46,8 +46,9 @@ jobs:
               run: pnpm run test
 
             - name: Upload test results
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               if: success() || failure()
               with:
                   name: test-results
                   path: packages/**/junit.xml
+                  overwrite: true

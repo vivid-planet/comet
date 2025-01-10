@@ -1,5 +1,5 @@
 import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property, Ref } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -45,11 +45,12 @@ class Product extends BaseEntity<Product, "id"> {
 describe("generate-crud relations two levels", () => {
     it("should be a valid generated ts file", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [Product, ProductData, ProductVariant],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [Product, ProductData, ProductVariant],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("Product"));
         const lintedOut = await lintGeneratedFiles(out);

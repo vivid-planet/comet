@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import { MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, MainContent, StackLink, Toolbar, ToolbarBackButton, ToolbarTitleItem } from "@comet/admin";
 import { List } from "@comet/admin-icons";
 import { IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -62,7 +62,7 @@ function JobsToolbar(props: { cronJobName: string }) {
                     }}
                 />
             </ToolbarTitleItem>
-            <ToolbarFillSpace />
+            <FillSpace />
         </Toolbar>
     );
 }

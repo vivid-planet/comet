@@ -1,12 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
-import { Field, FinalForm, FinalFormInput, Loading, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { Field, FillSpace, FinalForm, FinalFormInput, Loading, ToolbarTitleItem } from "@comet/admin";
 import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FormattedMessage } from "react-intl";
 
 import { GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables } from "./UserBasicData.generated";
 
-export const UserBasicData = ({ id }: { id: string }) => {
+export const UserPermissionsUserPageBasicDataPanel = ({ userId }: { userId: string }) => {
     const { data, error, loading } = useQuery<GQLUserBasicDataQuery, GQLUserBasicDataQueryVariables>(
         gql`
             query UserBasicData($id: String!) {
@@ -18,7 +18,7 @@ export const UserBasicData = ({ id }: { id: string }) => {
             }
         `,
         {
-            variables: { id },
+            variables: { id: userId },
         },
     );
 
@@ -36,7 +36,7 @@ export const UserBasicData = ({ id }: { id: string }) => {
                 <ToolbarTitleItem>
                     <FormattedMessage id="comet.userPermissions.basicData" defaultMessage="Basic Data" />
                 </ToolbarTitleItem>
-                <ToolbarFillSpace />
+                <FillSpace />
             </CardToolbar>
             <CardContent>
                 <FinalForm

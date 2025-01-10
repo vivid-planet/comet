@@ -205,7 +205,11 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                         return {
                             key: child.key,
                             visible: child.visible,
-                            props: block.createPreviewState(child.props, { ...previewCtx, parentUrl: blockAdminRoute }),
+                            props: block.createPreviewState(child.props, {
+                                ...previewCtx,
+                                parentUrlSubRoute: undefined,
+                                parentUrl: blockAdminRoute,
+                            }),
                             // Type cast to suppress "'AdditionalItemFields' could be instantiated with a different subtype of constraint 'Record<string, unknown>'" error
                             ...(Object.keys(additionalItemFields ?? {}).reduce(
                                 (fields, field) => ({ ...fields, [field]: child[field] }),
@@ -524,6 +528,12 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
 
             const childPath = block.resolveDependencyPath(blockItem.props, pathArr.slice(3).join("."));
             return `${blockItem.key}/edit/${childPath}`;
+        },
+        extractTextContents: (state) => {
+            const content = state.blocks.reduce<string[]>((content, child) => {
+                return [...content, ...(block.extractTextContents?.(child.props) ?? [])];
+            }, []);
+            return content;
         },
     };
     return BlockListBlock;

@@ -48,25 +48,24 @@ const config = {
                 items: [
                     {
                         type: "doc",
-                        docId: "overview/Overview",
+                        docId: "Overview",
                         position: "left",
                         label: "Docs",
+                    },
+                    {
+                        href: "https://storybook.comet-dxp.com/",
+                        position: "right",
+                        label: "Storybook",
+                    },
+                    {
+                        href: "https://github.com/vivid-planet/comet",
+                        position: "right",
+                        label: "GitHub",
                     },
                 ],
             },
             footer: {
                 style: "dark",
-                links: [
-                    {
-                        title: "More",
-                        items: [
-                            {
-                                label: "GitHub",
-                                href: "https://github.com/vivid-planet/comet",
-                            },
-                        ],
-                    },
-                ],
                 copyright: `Copyright © ${new Date().getFullYear()} Vivid Planet Software GmbH. Built with Docusaurus.`,
             },
             prism: {

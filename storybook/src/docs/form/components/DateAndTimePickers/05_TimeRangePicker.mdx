@@ -1,0 +1,29 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as TimeRangePickerStories from "./05_TimeRangePicker.stories";
+
+<Meta of={TimeRangePickerStories} />
+
+# Time-Range Picker
+
+To use the `TimeRangePicker` and `FinalFormTimeRangePicker` components, install the `@comet/admin-date-time` package.
+
+## Value type
+
+The `value` prop and the value returned by `onChange` are objects with `start` and `end` time-values. <br />
+Each time-value is a 24-hour `string` formatted as `HH:MM`, similar to the [HTML time input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time).
+
+```ts
+type TimeRange = {
+    start: string; // "HH:MM"
+    end: string; // "HH:MM"
+};
+```
+
+## Basic usage
+
+<Canvas of={TimeRangePickerStories.Basic} />
+
+## Usage inside a Final Form
+
+<Canvas of={TimeRangePickerStories.FinalForm} />

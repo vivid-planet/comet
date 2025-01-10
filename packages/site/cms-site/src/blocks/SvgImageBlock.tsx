@@ -12,7 +12,7 @@ interface SvgImageBlockProps extends PropsWithData<SvgImageBlockData> {
 
 export const SvgImageBlock = withPreview(
     ({ data: { damFile }, width = "100%", height = "auto" }: SvgImageBlockProps) => {
-        if (!damFile) return <PreviewSkeleton type="media" hasContent={false} />;
+        if (!damFile) return <PreviewSkeleton type="media" hasContent={false} height={height === "auto" ? undefined : height} />;
         return (
             // eslint-disable-next-line @next/next/no-img-element
             <img

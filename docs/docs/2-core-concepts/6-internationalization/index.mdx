@@ -1,0 +1,103 @@
+---
+title: Internationalization (i18n)
+sidebar_position: 6
+---
+
+The following page describes core translation concepts. We use [FormatJS](https://formatjs.io/) for translations. These design principles were considered:
+
+-   Translations should be updatable without any changes to the codebase
+-   [Application workflow](https://formatjs.io/docs/getting-started/application-workflow) from FormatJS
+-   Independence from any translation vendor
+
+## Masking strings
+
+All strings that should be translated must be masked using [`<FormattedMessage />`](https://formatjs.io/docs/react-intl/components#formattedmessage) or, if not possible, [`intl.formatMessage()`](https://formatjs.io/docs/react-intl/api#formatmessage). To ensure that all strings are translated we use [`@calm/eslint-plugin-react-intl`](https://www.npmjs.com/package/@calm/eslint-plugin-react-intl).
+
+A stable and unique ID must be used to identify the string. IDs must be prefixed with a project identifier to prevent clashes with other translations. IDs must be named camelCase with dots representing hierarchy.
+
+:::caution
+
+Translations are lost when an ID changes. Changing an existing ID should be well considered.
+
+:::
+
+Examples:
+
+```ts
+<FormattedMessage id="cometDemo.menu.dashboard" defaultMessage="Dashboard" />
+<FormattedMessage id="cometDemo.menu.pageTree.mainNavigation" defaultMessage="Main navigation" />
+```
+
+## Extracting strings
+
+All masked strings are extracted using `intl:extract` and pushed to a translation repository. This repository is used to work with the translation vendor. The CI/CD should ensure that changes to the extracted messages are pushed to the translation repository. Subsequently, the messages are pushed from the translation repository to the translation vendor. Updated translations should be synced from the translation vendor back to the translation repository (e.g., by using a repository integration).
+
+## Including translations
+
+All strings in all languages should be pulled from the translation repository to the application codebase. Currently, this can be accomplished using `intl:update`.
+
+:::note
+
+In the future, we want to host all translation strings somewhere outside of the application (e.g., a S3 bucket) and dynamically include them during runtime.
+
+:::
+
+## Compiling translations
+
+Before using the translation strings, they are compiled using `intl:compile` to [skip parsing them during runtime](https://formatjs.io/docs/getting-started/message-distribution/#compiling-messages).
+
+## Application integration
+
+```ts title="lang.ts"
+import { ResolvedIntlConfig } from "react-intl";
+
+import comet_demo_messages_de from "../lang-compiled/comet-demo-lang/de.json";
+import comet_demo_messages_en from "../lang-compiled/comet-demo-lang/en.json";
+import comet_messages_de from "../lang-compiled/comet-lang/de.json";
+import comet_messages_en from "../lang-compiled/comet-lang/en.json";
+
+const cometMessages = {
+    en: comet_messages_en,
+    de: comet_messages_de,
+};
+
+const cometDemoMessages = {
+    en: comet_demo_messages_en,
+    de: comet_demo_messages_de,
+};
+
+export const getMessages = (): ResolvedIntlConfig["messages"] => {
+    // in dev mode we use the default messages to have immediate changes
+    if (process.env.NODE_ENV === "development") {
+        return {};
+    }
+
+    return {
+        ...cometMessages["en"],
+        ...cometDemoMessages["en"],
+    };
+};
+```
+
+```ts title="App.tsx"
+import { getMessages } from "./lang";
+
+<IntlProvider locale="en" messages={getMessages()}>
+    ...
+</IntlProvider>;
+```
+
+## Common Messages
+
+Comet DXP provides a set of commonly used messages exported from `@comet/admin`. They are already translated and can be used inside applications.
+
+```ts
+import { messages } from "@comet/admin";
+
+<FormattedMessage {...messages.save} />
+
+...
+
+intl.formatMessage(messages.save);
+
+```

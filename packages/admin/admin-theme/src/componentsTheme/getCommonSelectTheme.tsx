@@ -28,4 +28,5 @@ export const commonSelectStyleOverrides = {
 export const getCommonIconStyleOverrides = (palette: Palette) => ({
     right: 10,
     color: palette.grey[900],
+    fontSize: 12,
 });

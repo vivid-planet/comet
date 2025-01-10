@@ -1,0 +1,23 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as NumberFieldStories from "./NumberField.stories";
+
+<Meta of={NumberFieldStories} />
+
+# Number Field
+
+The NumberField can be used for number inputs. It automatically formats the numbers with thousand-separators and decimal symbols in the current locale. You can also use it for currency inputs by passing the currency symbol as `startAdornment` or `endAdornment`. The value is stored as type `number` in the form values.
+
+## Basic usage
+
+<Canvas of={NumberFieldStories.Basic} />
+
+## Usage with decimals
+
+The decimals prop is used to define, how many decimal digits the value should have.
+
+<Canvas of={NumberFieldStories.WithDecimals} />
+
+## Usage as Currency Field
+
+<Canvas of={NumberFieldStories.Currency} />

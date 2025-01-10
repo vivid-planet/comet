@@ -1,5 +1,5 @@
 import { BaseEntity, Embeddable, Embedded, Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -24,11 +24,12 @@ export class TestEntity extends BaseEntity<TestEntity, "id"> {
 describe("GenerateCrud without find condition", () => {
     it("where should be typed as ObjectQuery as it is when findCondition is used", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntity, TestEntityScope],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntity, TestEntityScope],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntity"));
         const lintedOut = await lintGeneratedFiles(out);

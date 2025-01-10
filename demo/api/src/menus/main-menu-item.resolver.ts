@@ -8,7 +8,7 @@ import {
     validateNotModified,
 } from "@comet/cms-api";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { PageTreeNode } from "@src/page-tree/entities/page-tree-node.entity";
 
@@ -21,6 +21,7 @@ export class MainMenuItemResolver {
     constructor(
         @InjectRepository(MainMenuItem) private readonly mainMenuItemRepository: EntityRepository<MainMenuItem>,
         private readonly pageTreeService: PageTreeService,
+        private readonly entityManager: EntityManager,
     ) {}
 
     @Query(() => MainMenuItem)
@@ -63,9 +64,9 @@ export class MainMenuItemResolver {
             }
 
             existingItem.assign({ content: input.content ? input.content.transformToBlockData() : null });
-            await this.mainMenuItemRepository.persistAndFlush(existingItem);
+            await this.entityManager.persistAndFlush(existingItem);
         } else {
-            await this.mainMenuItemRepository.persistAndFlush(
+            await this.entityManager.persistAndFlush(
                 this.mainMenuItemRepository.create({
                     node: node as unknown as PageTreeNode,
                     content: input.content ? input.content.transformToBlockData() : null,

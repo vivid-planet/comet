@@ -20,6 +20,13 @@ export const getMuiSwitch: GetMuiComponentTheme<"MuiSwitch"> = (component, { pal
             margin: 9,
             padding: 3,
             color: palette.grey[200],
+            "&:hover": {
+                color: palette.grey[400],
+
+                [`& + .${switchClasses.track}`]: {
+                    border: `1px solid ${palette.grey[400]}`,
+                },
+            },
 
             [`&.${switchClasses.checked}`]: {
                 transform: "translateX(20px)",
@@ -43,6 +50,13 @@ export const getMuiSwitch: GetMuiComponentTheme<"MuiSwitch"> = (component, { pal
         colorPrimary: {
             [`&.${switchClasses.switchBase}.${switchClasses.checked}`]: {
                 color: palette.primary.main,
+                "&:hover": {
+                    color: palette.primary.dark,
+
+                    [`& + .${switchClasses.track}`]: {
+                        border: `1px solid ${palette.primary.dark}`,
+                    },
+                },
             },
             [`&.${switchClasses.checked} + .${switchClasses.track}`]: {
                 backgroundColor: "#fff",

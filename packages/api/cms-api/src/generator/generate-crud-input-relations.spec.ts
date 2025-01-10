@@ -1,4 +1,5 @@
 import { BaseEntity, Collection, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Ref } from "@mikro-orm/core";
+import { defineConfig } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -26,11 +27,12 @@ export class Product extends BaseEntity<Product, "id"> {
 describe("GenerateCrudInputRelations", () => {
     it("n:1 input dto should contain relation id", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [Product, ProductCategory],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [Product, ProductCategory],
+            }),
+        );
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("Product"));
         const lintedOutput = await lintSource(out[0].content);
@@ -58,11 +60,12 @@ describe("GenerateCrudInputRelations", () => {
 
     it("1:n input dto should contain relation id", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [Product, ProductCategory],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [Product, ProductCategory],
+            }),
+        );
 
         const out = await generateCrudInput({ targetDirectory: __dirname }, orm.em.getMetadata().get("ProductCategory"));
         const lintedOutput = await lintSource(out[0].content);

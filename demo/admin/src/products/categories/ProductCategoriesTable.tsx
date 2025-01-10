@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import {
     CrudContextMenu,
     DataGridToolbar,
+    FillSpace,
     filterByFragment,
     GridColDef,
     GridFilterButton,
@@ -9,7 +10,6 @@ import {
     muiGridPagingToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -37,7 +37,7 @@ function ProductCategoriesTableToolbar() {
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
@@ -57,15 +57,15 @@ const columns: GridColDef<GQLProductsCategoriesListFragment>[] = [
         width: 150,
     },
     {
-        field: "action",
+        field: "actions",
         headerName: "",
         sortable: false,
         filterable: false,
         renderCell: (params) => {
             return (
                 <>
-                    <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                        <Edit color="primary" />
+                    <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                        <Edit />
                     </IconButton>
                     <CrudContextMenu
                         onPaste={async ({ input, client }) => {

@@ -1,8 +1,17 @@
 import { gql } from "@apollo/client";
 import { Field, FinalFormSelect, messages } from "@comet/admin";
 import { Delete } from "@comet/admin-icons";
-import { AdminComponentButton, AdminComponentPaper, BlockCategory, BlockInterface, BlocksFinalForm, createBlockSkeleton } from "@comet/blocks-admin";
+import {
+    AdminComponentButton,
+    AdminComponentPaper,
+    BlockCategory,
+    BlockDependency,
+    BlockInterface,
+    BlocksFinalForm,
+    createBlockSkeleton,
+} from "@comet/blocks-admin";
 import { Box, Divider, MenuItem, Typography } from "@mui/material";
+import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
@@ -66,6 +75,33 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
         return ret;
     },
 
+    dependencies: (state) => {
+        const dependencies: BlockDependency[] = [];
+
+        if (state.file?.id) {
+            dependencies.push({
+                targetGraphqlObjectType: "DamFile",
+                id: state.file.id,
+                data: {
+                    damFile: state.file,
+                },
+            });
+        }
+
+        return dependencies;
+    },
+
+    replaceDependenciesInOutput: (output, replacements) => {
+        const clonedOutput: DamFileDownloadLinkBlockInput = deepClone(output);
+        const replacement = replacements.find((replacement) => replacement.type === "DamFile" && replacement.originalId === output.fileId);
+
+        if (replacement) {
+            clonedOutput.fileId = replacement.replaceWithId;
+        }
+
+        return clonedOutput;
+    },
+
     definesOwnPadding: true,
 
     AdminComponent: ({ state, updateState }) => {
@@ -122,5 +158,14 @@ export const DamFileDownloadLinkBlock: BlockInterface<DamFileDownloadLinkBlockDa
                 </AdminComponentPaper>
             </BlocksFinalForm>
         );
+    },
+
+    extractTextContents: (state) => {
+        const contents = [];
+
+        if (state.file?.altText) contents.push(state.file.altText);
+        if (state.file?.title) contents.push(state.file.title);
+
+        return contents;
     },
 };

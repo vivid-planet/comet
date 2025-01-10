@@ -1,11 +1,14 @@
+import { getSiteConfig } from "@src/util/siteConfig";
 import { MetadataRoute } from "next";
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
+    const siteConfig = await getSiteConfig();
+
     return {
         rules: {
             userAgent: "*",
             allow: "/",
         },
-        sitemap: `${process.env.SITE_URL}/sitemap.xml`, // TODO support multiple site domains
+        sitemap: `${siteConfig.url}/sitemap.xml`,
     };
 }

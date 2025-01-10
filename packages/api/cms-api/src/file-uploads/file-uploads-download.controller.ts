@@ -1,6 +1,18 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { Controller, Get, GoneException, Headers, Inject, NotFoundException, Param, Res, Type, UnsupportedMediaTypeException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Controller,
+    Get,
+    GoneException,
+    Headers,
+    Inject,
+    NotFoundException,
+    Param,
+    Res,
+    Type,
+    UnsupportedMediaTypeException,
+} from "@nestjs/common";
 import { Response } from "express";
 import mime from "mime";
 import fetch from "node-fetch";
@@ -37,7 +49,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
         @Get(":hash/:id/:timeout")
         async download(@Param() { hash, ...params }: HashDownloadParams, @Res() res: Response, @Headers("range") range?: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid hash");
             }
 
             if (Date.now() > params.timeout) {
@@ -103,7 +115,7 @@ export function createFileUploadsDownloadController(options: { public: boolean }
         @Get(":hash/:id/:timeout/:resizeWidth/:filename")
         async image(@Param() { hash, ...params }: HashImageParams, @Res() res: Response, @Headers("Accept") accept: string): Promise<void> {
             if (!this.isValidHash(hash, params)) {
-                throw new NotFoundException();
+                throw new BadRequestException("Invalid hash");
             }
 
             if (Date.now() > params.timeout) {

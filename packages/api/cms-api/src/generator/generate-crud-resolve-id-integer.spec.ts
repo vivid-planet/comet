@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, PrimaryKey } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/postgresql";
+import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 
 import { generateCrud } from "./generate-crud";
@@ -14,11 +14,12 @@ class TestEntityWithIntegerId extends BaseEntity<TestEntityWithIntegerId, "id"> 
 describe("GenerateCrudResolveIdInteger", () => {
     it("should generate item resolver with correctly typed id parameter", async () => {
         LazyMetadataStorage.load();
-        const orm = await MikroORM.init({
-            type: "postgresql",
-            dbName: "test-db",
-            entities: [TestEntityWithIntegerId],
-        });
+        const orm = await MikroORM.init(
+            defineConfig({
+                dbName: "test-db",
+                entities: [TestEntityWithIntegerId],
+            }),
+        );
 
         const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithIntegerId"));
         const lintedOut = await lintGeneratedFiles(out);

@@ -177,7 +177,7 @@ function useCopyPastePages(): UseCopyPastePagesApi {
                 errorDialog?.showError({
                     title: <FormattedMessage {...messages.error} />,
                     userMessage: (
-                        <FormattedMessage id="comet.pages.cannotPastePage" defaultMessage="An unexpected error occured when pasting pages." />
+                        <FormattedMessage id="comet.pages.cannotPastePage" defaultMessage="An unexpected error occurred when pasting pages." />
                     ),
                     error: String(e),
                 });

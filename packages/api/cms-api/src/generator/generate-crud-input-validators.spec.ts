@@ -1,4 +1,5 @@
 import { BaseEntity, Entity, MikroORM, PrimaryKey, Property } from "@mikro-orm/core";
+import { defineConfig } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import {
     IsEmail,
@@ -94,11 +95,12 @@ describe("GenerateDefinedValidatorDecorators", () => {
     describe("simple validator", () => {
         it("should set IsEmail decorator", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithEmail],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithEmail],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithEmail"));
             const lintedOut = await lintGeneratedFiles(out);
@@ -129,11 +131,12 @@ describe("GenerateDefinedValidatorDecorators", () => {
         describe("case sensitive validator", () => {
             it("should set IsISO8601 decorator", async () => {
                 LazyMetadataStorage.load();
-                const orm = await MikroORM.init({
-                    type: "postgresql",
-                    dbName: "test-db",
-                    entities: [TestEntityWithCaseSensitiveConstraintName],
-                });
+                const orm = await MikroORM.init(
+                    defineConfig({
+                        dbName: "test-db",
+                        entities: [TestEntityWithCaseSensitiveConstraintName],
+                    }),
+                );
 
                 const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithCaseSensitiveConstraintName"));
                 const lintedOut = await lintGeneratedFiles(out);
@@ -164,11 +167,12 @@ describe("GenerateDefinedValidatorDecorators", () => {
         describe("shortened decorator name", () => {
             it("should set Length decorator", async () => {
                 LazyMetadataStorage.load();
-                const orm = await MikroORM.init({
-                    type: "postgresql",
-                    dbName: "test-db",
-                    entities: [TestEntityWithShortenedDecoratorName],
-                });
+                const orm = await MikroORM.init(
+                    defineConfig({
+                        dbName: "test-db",
+                        entities: [TestEntityWithShortenedDecoratorName],
+                    }),
+                );
 
                 const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"));
                 const lintedOut = await lintGeneratedFiles(out);
@@ -199,11 +203,12 @@ describe("GenerateDefinedValidatorDecorators", () => {
         describe("decorator with arguments", () => {
             it("should set defined arguments", async () => {
                 LazyMetadataStorage.load();
-                const orm = await MikroORM.init({
-                    type: "postgresql",
-                    dbName: "test-db",
-                    entities: [TestEntityWithShortenedDecoratorName],
-                });
+                const orm = await MikroORM.init(
+                    defineConfig({
+                        dbName: "test-db",
+                        entities: [TestEntityWithShortenedDecoratorName],
+                    }),
+                );
 
                 const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithShortenedDecoratorName"));
                 const lintedOut = await lintGeneratedFiles(out);
@@ -235,11 +240,12 @@ describe("GenerateDefinedValidatorDecorators", () => {
         describe("relative path", () => {
             it("should set IsValidRedirectSource decorator", async () => {
                 LazyMetadataStorage.load();
-                const orm = await MikroORM.init({
-                    type: "postgresql",
-                    dbName: "test-db",
-                    entities: [TestEntityWithRelativeImportDecorator],
-                });
+                const orm = await MikroORM.init(
+                    defineConfig({
+                        dbName: "test-db",
+                        entities: [TestEntityWithRelativeImportDecorator],
+                    }),
+                );
 
                 const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithRelativeImportDecorator"));
                 const lintedOut = await lintGeneratedFiles(out);
@@ -271,11 +277,12 @@ describe("GenerateDefinedValidatorDecorators", () => {
     describe("validator defined in file", () => {
         it("should set IsTrueAsString decorator", async () => {
             LazyMetadataStorage.load();
-            const orm = await MikroORM.init({
-                type: "postgresql",
-                dbName: "test-db",
-                entities: [TestEntityWithValidatorDefinedInFile],
-            });
+            const orm = await MikroORM.init(
+                defineConfig({
+                    dbName: "test-db",
+                    entities: [TestEntityWithValidatorDefinedInFile],
+                }),
+            );
 
             const out = await generateCrud({ targetDirectory: __dirname }, orm.em.getMetadata().get("TestEntityWithValidatorDefinedInFile"));
             const lintedOut = await lintGeneratedFiles(out);

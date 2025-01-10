@@ -10,12 +10,12 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
 
 interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<ImageProps, "src" | "width" | "height" | "alt"> {
-    aspectRatio: string | "inherit";
+    aspectRatio: string | number | "inherit";
 }
 
 export const PixelImageBlock = withPreview(
     ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
-        if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} />;
+        if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
 
         // If we have a crop area set, DAM setting are overwritten, so we use that
         const usedCropArea = cropArea ?? damFile.image.cropArea;

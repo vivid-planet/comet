@@ -18,6 +18,9 @@ const Root = createComponentSlot("div")<ToolbarFillSpaceClassKey>({
     flex-grow: 1;
 `);
 
+/**
+ * @deprecated Use `FillSpace` instead.
+ */
 export const ToolbarFillSpace = (inProps: ToolbarFillSpaceProps) => {
     const { children, ...restProps } = useThemeProps({ props: inProps, name: "CometAdminToolbarFillSpace" });
     return <Root {...restProps}>{children}</Root>;

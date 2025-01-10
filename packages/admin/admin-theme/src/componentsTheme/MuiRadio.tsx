@@ -41,7 +41,7 @@ export const getMuiRadio: GetMuiComponentTheme<"MuiRadio"> = (component, { palet
                     fill: "#fff",
                 },
                 "& .background": {
-                    fill: palette.grey[200],
+                    fill: palette.grey[100],
                 },
             },
         },
