@@ -19,6 +19,7 @@ import { Link } from "@src/documents/links/Link";
 import { Page } from "@src/documents/pages/Page";
 import { PredefinedPage } from "@src/documents/predefinedPages/PredefinedPage";
 import { EditFooterPage } from "@src/footer/EditFooterPage";
+import { FormBuilderPage } from "@src/formBuilder/FormBuilderPage";
 import { GQLPageTreeNodeCategory } from "@src/graphql.generated";
 import MainMenu from "@src/mainMenu/MainMenu";
 import { NewsLinkBlock } from "@src/news/blocks/NewsLinkBlock";
@@ -157,6 +158,15 @@ export const masterMenuData: MasterMenuData = [
                     component: EditFooterPage,
                 },
                 requiredPermission: "pageTree",
+            },
+            {
+                type: "route",
+                primary: <FormattedMessage id="menu.project-snips.formBuilder" defaultMessage="Form Builder" />,
+                route: {
+                    path: "/project-snips/form-builder",
+                    component: FormBuilderPage,
+                },
+                requiredPermission: "formBuilders",
             },
         ],
         requiredPermission: "pageTree",

@@ -7,7 +7,11 @@ export class AccessControlService extends AbstractAccessControlService {
         if (user.isAdmin) {
             return UserPermissions.allPermissions;
         } else {
-            return [{ permission: "products" }, { permission: "news", contentScopes: [{ domain: "secondary", language: "en" }] }];
+            return [
+                { permission: "products" },
+                { permission: "news", contentScopes: [{ domain: "secondary", language: "en" }] },
+                { permission: "formBuilders", contentScopes: [{ domain: "secondary", language: "en" }] },
+            ];
         }
     }
     getContentScopesForUser(user: User): ContentScopesForUser {

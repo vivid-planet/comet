@@ -83,6 +83,11 @@
                 "peerDependencies": {
                     "@types/react": "^18.0.0"
                 }
+            },
+            "react-final-form": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
+                }
             }
         }
     }
