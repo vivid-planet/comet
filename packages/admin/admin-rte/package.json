@@ -63,12 +63,12 @@
         "typescript": "^4.0.0"
     },
     "peerDependencies": {
-        "@mui/material": "^6.3.0",
+        "@mui/material": "^6.0.0",
         "draft-js": "^0.11.4",
-        "final-form": "^4.20.10",
+        "final-form": "^4.16.1",
         "react": "^17.0",
         "react-dom": "^17.0",
-        "react-final-form": "^6.5.9",
+        "react-final-form": "^6.3.1",
         "react-intl": "^5.0.0 || ^6.0.0"
     },
     "publishConfig": {
