@@ -87,7 +87,7 @@ function createDominantImageDataUrl(w: number, h: number, dominantColor = "#ffff
     return `data:image/svg+xml;base64,${toBase64(svg)}`;
 }
 
-export const ImageContainer = styled.div<{ $aspectRatio: number }>({
+const ImageContainer = styled.div<{ $aspectRatio: number }>({
     position: "relative",
     width: "100%",
     aspectRatio: ({ $aspectRatio }) => $aspectRatio,

@@ -34,7 +34,7 @@ export const PreviewOverlay = () => {
     );
 };
 
-export const OverlayRoot = styled.div`
+const OverlayRoot = styled.div`
     position: absolute;
     z-index: 2;
     top: 0;

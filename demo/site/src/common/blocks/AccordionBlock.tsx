@@ -7,7 +7,7 @@ import { AccordionItemBlock } from "./AccordionItemBlock";
 
 type AccordionBlockProps = PropsWithData<AccordionBlockData>;
 
-export const AccordionBlock = ({ data }: AccordionBlockProps) => (
+const AccordionBlock = ({ data }: AccordionBlockProps) => (
     <Root>
         <ListBlock data={data} block={(block) => <AccordionItemBlock data={block} />} />
     </Root>

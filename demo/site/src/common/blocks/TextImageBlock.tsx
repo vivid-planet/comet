@@ -21,7 +21,7 @@ export const TextImageBlock = ({ data: { text, image, imageAspectRatio, imagePos
 };
 
 //export const TextImageBlock = withPreview(TextImageBlock, { label: "Text/Image" });
-export const Root = styled("div")<{ imagePosition: TextImageBlockData["imagePosition"] }>({
+const Root = styled("div")<{ imagePosition: TextImageBlockData["imagePosition"] }>({
     display: "flex",
     flexDirection: "row",
     gap: "20px",
@@ -37,10 +37,10 @@ export const Root = styled("div")<{ imagePosition: TextImageBlockData["imagePosi
     ],
 });
 
-export const ImageContainer = styled.div`
+const ImageContainer = styled.div`
     flex: 1;
 `;
 
-export const TextContainer = styled.div`
+const TextContainer = styled.div`
     flex: 2;
 `;

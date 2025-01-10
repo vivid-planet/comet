@@ -72,7 +72,7 @@ export const DamVideoBlock = ({
 };
 //export default withPreview(DamVideoBlock, { label: "Video" });
 
-export const Video = styled.video<{ $aspectRatio: string; $fill?: boolean }>({
+const Video = styled.video<{ $aspectRatio: string; $fill?: boolean }>({
     width: "100%",
     objectFit: "cover",
     aspectRatio: ({ $fill, $aspectRatio }) => ($fill ? undefined : $aspectRatio),

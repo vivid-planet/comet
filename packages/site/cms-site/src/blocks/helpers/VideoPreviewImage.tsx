@@ -22,13 +22,13 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw",
     );
 };
 
-export const Root = styled.div<{ $fill?: boolean }>({
+const Root = styled.div<{ $fill?: boolean }>({
     position: "relative",
     width: "100%",
     height: ({ $fill }) => ($fill ? "100%" : undefined),
 });
 
-export const IconWrapper = styled.button`
+const IconWrapper = styled.button`
     position: absolute;
     top: 0;
     right: 0;
@@ -45,7 +45,7 @@ export const IconWrapper = styled.button`
     cursor: pointer;
 `;
 
-export const PlayIcon = styled.span`
+const PlayIcon = styled.span`
     width: 64px;
     height: 64px;
     box-sizing: border-box;
