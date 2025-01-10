@@ -60,7 +60,7 @@ export const SelectBlock: BlockInterface = createCompositeBlock(
                     },
                     infoText: {
                         block: FieldInfoTextBlock,
-                        title: <FormattedMessage id="blocks.select.helperText" defaultMessage="Helper Text" />,
+                        title: <FormattedMessage id="blocks.select.infoText" defaultMessage="Info Text" />,
                         hiddenInSubroute: true,
                     },
                 },

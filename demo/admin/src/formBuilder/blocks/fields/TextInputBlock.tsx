@@ -67,7 +67,7 @@ export const TextInputBlock: BlockInterface = createCompositeBlock(
                     },
                     infoText: {
                         block: FieldInfoTextBlock,
-                        title: <FormattedMessage id="blocks.textInput.helperText" defaultMessage="Helper Text" />,
+                        title: <FormattedMessage id="blocks.textInput.infoText" defaultMessage="Info Text" />,
                     },
                 },
             },
