@@ -19,5 +19,28 @@ module.exports = {
                 ],
             },
         ],
+        "no-restricted-syntax": [
+            "error",
+            {
+                selector:
+                    "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier][property.name=/^NEXT_PUBLIC/]",
+                message: "Avoid using NEXT_PUBLIC_ environment variables",
+            },
+        ],
     },
+    overrides: [
+        {
+            files: ["next.config.js"],
+            rules: {
+                "no-restricted-syntax": [
+                    "error",
+                    {
+                        selector:
+                            "MemberExpression[type=MemberExpression][object.type=MemberExpression][object.object.type=Identifier][object.object.name=process][object.property.type=Identifier][object.property.name=env][property.type=Identifier][property.name=NODE_ENV]",
+                        message: "Avoid using environment variables other than NODE_ENV",
+                    },
+                ],
+            },
+        },
+    ],
 };
