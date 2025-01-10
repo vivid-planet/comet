@@ -1816,8 +1816,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       '@types/get-image-colors':
-        specifier: ^4.0.0
-        version: 4.0.2
+        specifier: ^4.0.5
+        version: 4.0.5
       base64url:
         specifier: ^3.0.1
         version: 3.0.1
@@ -1846,7 +1846,7 @@ importers:
         specifier: ^16.5.4
         version: 16.5.4
       get-image-colors:
-        specifier: ^4.0.0
+        specifier: ^4.0.1
         version: 4.0.1
       got:
         specifier: ^11.8.6
@@ -6914,8 +6914,8 @@ packages:
   '@types/fs-extra@11.0.4':
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
 
-  '@types/get-image-colors@4.0.2':
-    resolution: {integrity: sha512-8E/xA3Dyl70sboWbjjt+UEHTC2Nvv6EIDxPx5nCSTN+QfBWbx60gGyBH0pQ9ABrRNqQ2gKtGboK3MoZodxMWtw==}
+  '@types/get-image-colors@4.0.5':
+    resolution: {integrity: sha512-4d3eLaB8Hz+KpGwkqZx/AO2Omvp5lFbAV5z6MqLV3bUQR1tHLsIbbLgESOS+/APrtad8oDg7BzQbE/hAzrOUHA==}
 
   '@types/glob@7.2.0':
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
@@ -22681,7 +22681,7 @@ snapshots:
       '@types/jsonfile': 6.1.4
       '@types/node': 22.9.0
 
-  '@types/get-image-colors@4.0.2':
+  '@types/get-image-colors@4.0.5':
     dependencies:
       '@types/chroma-js': 2.1.4
       '@types/node': 22.9.0
