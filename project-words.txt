@@ -17,8 +17,5 @@ rgba
 subcomponent
 subpage
 typesafe
-<<<<<<< HEAD
 exceljs
-=======
 exif
->>>>>>> main
