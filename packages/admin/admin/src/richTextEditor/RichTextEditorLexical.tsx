@@ -7,6 +7,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
+import { CustomAutoFocusPlugin, HtmlViewerPlugin, SetInitialValuePlugin } from "./RichTextEditorLexical.utils";
 import DebugTreeViewPlugin from "./RichTextEditorLexicalDebug";
 import ToolbarPlugin from "./RichTextEditorLexicalToolbar";
 
@@ -113,11 +114,11 @@ export const RichTextEditorLexical: React.FC<RichTextEditorLexicalProps> = ({ co
         namespace: "RichTextEditorLexical",
         theme,
         onError,
-        editorState: content,
     };
 
     return (
         <LexicalComposer initialConfig={initialConfig}>
+            <SetInitialValuePlugin initHtml={content ?? ""} />
             <ToolbarPlugin />
             <RichTextWrapper style={{}}>
                 <RichTextPlugin contentEditable={<ContentEditable />} ErrorBoundary={LexicalErrorBoundary} />
@@ -126,6 +127,8 @@ export const RichTextEditorLexical: React.FC<RichTextEditorLexicalProps> = ({ co
             <HistoryPlugin />
             <OnChangePlugin onChange={onChange} />
             <DebugTreeViewPlugin />
+            <HtmlViewerPlugin />
+            <CustomAutoFocusPlugin />
         </LexicalComposer>
     );
 };
