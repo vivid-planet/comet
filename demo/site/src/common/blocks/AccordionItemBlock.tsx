@@ -101,12 +101,11 @@ const ContentWrapper = styled.div`
     overflow: hidden;
 `;
 
-
 const ContentWrapperInner = styled("div", {
     shouldForwardProp: createShouldForwardPropBlockList(["isExpanded"]),
 })<{ isExpanded: boolean }>(({ theme }) => ({
     marginTop: "-100%",
-    paddingBottom: theme.spacing.S300
+    paddingBottom: theme.spacing.S300,
     opacity: 0,
     transition: "margin-top 0.8s ease-out 0.3s, opacity 0.3s linear",
     variants: [
