@@ -1,5 +1,22 @@
 # @comet/cms-admin
 
+## 6.18.0
+
+### Minor Changes
+
+-   ed126f836: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+### Patch Changes
+
+-   @comet/admin@6.18.0
+-   @comet/admin-date-time@6.18.0
+-   @comet/admin-icons@6.18.0
+-   @comet/admin-rte@6.18.0
+-   @comet/admin-theme@6.18.0
+-   @comet/blocks-admin@6.18.0
+
 ## 6.17.17
 
 ### Patch Changes
