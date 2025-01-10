@@ -1,8 +1,6 @@
-"use client";
-
+import { FormattedDate } from "@src/clientWrapper/react-intl/FormattedDateClient";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { NewsContentBlock } from "@src/news/blocks/NewsContentBlock";
-import { FormattedDate } from "react-intl";
 
 import { GQLNewsDetailPageFragment } from "./fragment.generated";
 

@@ -1,5 +1,5 @@
+import { styled } from "@pigment-css/react";
 import { ReactNode } from "react";
-import styled, { css } from "styled-components";
 
 import { PixelImageBlockData } from "../../blocks.generated";
 import { PixelImageBlock } from "../PixelImageBlock";
@@ -22,16 +22,11 @@ export const VideoPreviewImage = ({ onPlay, image, aspectRatio, sizes = "100vw",
     );
 };
 
-const Root = styled.div<{ $fill?: boolean }>`
-    position: relative;
-    width: 100%;
-
-    ${({ $fill }) =>
-        $fill &&
-        css`
-            height: 100%;
-        `}
-`;
+const Root = styled.div<{ $fill?: boolean }>({
+    position: "relative",
+    width: "100%",
+    height: ({ $fill }) => ($fill ? "100%" : undefined),
+});
 
 const IconWrapper = styled.button`
     position: absolute;

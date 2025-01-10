@@ -1,13 +1,14 @@
-import styled, { css } from "styled-components";
+"use client";
+import { styled } from "@pigment-css/react";
 
 import { OverlayElementData } from "./IFrameBridge";
 import { useIFrameBridge } from "./useIFrameBridge";
 
-type Props = {
+type PreviewOverlayElementProps = {
     element: OverlayElementData;
 };
 
-export const PreviewOverlayElement = ({ element }: Props) => {
+export const PreviewOverlayElement = ({ element }: PreviewOverlayElementProps) => {
     const iFrameBridge = useIFrameBridge();
 
     const isSelected = element.adminRoute === iFrameBridge.selectedAdminRoute;
@@ -42,57 +43,6 @@ type RootProps = {
     isHoveredInBlockList: boolean;
 };
 
-const elementHoverStyles = css`
-    outline-color: #29b6f6;
-    outline-style: solid;
-
-    &:after {
-        background-color: #29b6f6;
-    }
-`;
-
-const Root = styled.div<RootProps>`
-    position: absolute;
-    cursor: pointer;
-    outline: 1px solid transparent;
-    outline-offset: -1px;
-
-    &:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        opacity: 0.25;
-    }
-
-    &:hover {
-        ${elementHoverStyles}
-    }
-
-    ${({ isHoveredInBlockList: isHovered }) => isHovered && elementHoverStyles}
-
-    ${({ showBlockOutlines: showOutlines, isHoveredInBlockList: isHovered }) =>
-        Boolean(showOutlines && !isHovered) &&
-        css`
-            &:not(:hover) {
-                outline-color: #d9d9d9;
-                outline-style: dashed;
-            }
-        `}
-
-    ${({ blockIsSelected }) =>
-        blockIsSelected &&
-        css`
-            outline-color: #29b6f6;
-
-            ${Label} {
-                display: inline-block;
-            }
-        `}
-`;
-
 const Label = styled.div`
     position: absolute;
     padding: 2px 2px 2px 2px;
@@ -104,3 +54,60 @@ const Label = styled.div`
     font-size: 12px;
     display: none;
 `;
+
+// TODO: untested
+const Root = styled.div<RootProps>({
+    position: "absolute",
+    cursor: "pointer",
+    outline: "1px solid transparent",
+    outlineOffset: "-1px",
+
+    "&:after": {
+        content: '""',
+        position: "absolute",
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        opacity: 0.25,
+    },
+
+    "&:hover": {
+        outlineColor: "#29b6f6",
+        outlineStyle: "solid",
+        "&:after": {
+            backgroundColor: "#29b6f6",
+        },
+    },
+
+    variants: [
+        {
+            props: { isHoveredInBlockList: true },
+            style: {
+                outlineColor: "#29b6f6",
+                outlineStyle: "solid",
+                "&:after": {
+                    backgroundColor: "#29b6f6",
+                },
+            },
+        },
+        {
+            props: { showBlockOutlines: true, isHoveredInBlockList: false },
+            style: {
+                "&:not(:hover)": {
+                    outlineColor: "#d9d9d9",
+                    outlineStyle: "dashed",
+                },
+            },
+        },
+        {
+            props: { isSelected: true },
+            style: {
+                outlineColor: "#29b6f6",
+                [`& ${Label}`]: {
+                    display: "inline-block",
+                },
+            },
+        },
+    ],
+});

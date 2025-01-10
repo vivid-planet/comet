@@ -1,11 +1,9 @@
 "use client";
 
+import { styled } from "@pigment-css/react";
 import { ReactElement, ReactNode, useState } from "react";
-import styled, { css } from "styled-components";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
-import { withPreview } from "../iframebridge/withPreview";
-import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -29,88 +27,83 @@ interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
     previewImageIcon?: ReactNode;
 }
 
-export const YouTubeVideoBlock = withPreview(
-    ({
-        data: { youtubeIdentifier, autoplay, loop, showControls, previewImage },
-        aspectRatio = "16x9",
-        previewImageSizes,
-        renderPreviewImage,
-        fill,
-        previewImageIcon,
-    }: YouTubeVideoBlockProps) => {
-        const [showPreviewImage, setShowPreviewImage] = useState(true);
-        const hasPreviewImage = !!(previewImage && previewImage.damFile);
+export const YouTubeVideoBlock = ({
+    data: { youtubeIdentifier, autoplay, loop, showControls, previewImage },
+    aspectRatio = "16x9",
+    previewImageSizes,
+    renderPreviewImage,
+    fill,
+    previewImageIcon,
+}: YouTubeVideoBlockProps) => {
+    const [showPreviewImage, setShowPreviewImage] = useState(true);
+    const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
-        if (!youtubeIdentifier) {
-            return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
-        }
+    /*if (!youtubeIdentifier) {
+        return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
+    }*/
+    if (!youtubeIdentifier) {
+        return null;
+    }
 
-        const identifier = parseYoutubeIdentifier(youtubeIdentifier);
-        const searchParams = new URLSearchParams();
-        searchParams.append("modestbranding", "1");
-        searchParams.append("rel", "0");
+    const identifier = parseYoutubeIdentifier(youtubeIdentifier);
+    const searchParams = new URLSearchParams();
+    searchParams.append("modestbranding", "1");
+    searchParams.append("rel", "0");
 
-        if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
-            searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
-        if (autoplay) searchParams.append("mute", "1");
+    if (autoplay !== undefined || (hasPreviewImage && !showPreviewImage))
+        searchParams.append("autoplay", Number(autoplay || (hasPreviewImage && !showPreviewImage)).toString());
+    if (autoplay) searchParams.append("mute", "1");
 
-        if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
+    if (showControls !== undefined) searchParams.append("controls", Number(showControls).toString());
 
-        if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
-        // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
-        if (loop && identifier) searchParams.append("playlist", identifier);
+    if (loop !== undefined) searchParams.append("loop", Number(loop).toString());
+    // the playlist parameter is needed so that the video loops. See https://developers.google.com/youtube/player_parameters#loop
+    if (loop && identifier) searchParams.append("playlist", identifier);
 
-        const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
-        const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
-        youtubeUrl.search = searchParams.toString();
+    const youtubeBaseUrl = "https://www.youtube-nocookie.com/embed/";
+    const youtubeUrl = new URL(`${youtubeBaseUrl}${identifier ?? ""}`);
+    youtubeUrl.search = searchParams.toString();
 
-        return (
-            <>
-                {hasPreviewImage && showPreviewImage ? (
-                    renderPreviewImage ? (
-                        renderPreviewImage({
-                            onPlay: () => setShowPreviewImage(false),
-                            image: previewImage,
-                            aspectRatio,
-                            sizes: previewImageSizes,
-                            fill: fill,
-                            icon: previewImageIcon,
-                        })
-                    ) : (
-                        <VideoPreviewImage
-                            onPlay={() => setShowPreviewImage(false)}
-                            image={previewImage}
-                            aspectRatio={aspectRatio}
-                            sizes={previewImageSizes}
-                            fill={fill}
-                            icon={previewImageIcon}
-                        />
-                    )
+    return (
+        <>
+            {hasPreviewImage && showPreviewImage ? (
+                renderPreviewImage ? (
+                    renderPreviewImage({
+                        onPlay: () => setShowPreviewImage(false),
+                        image: previewImage,
+                        aspectRatio,
+                        sizes: previewImageSizes,
+                        fill: fill,
+                        icon: previewImageIcon,
+                    })
                 ) : (
-                    <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
-                        <YouTubeContainer src={youtubeUrl.toString()} allow="autoplay" />
-                    </VideoContainer>
-                )}
-            </>
-        );
-    },
-    { label: "Video" },
-);
+                    <VideoPreviewImage
+                        onPlay={() => setShowPreviewImage(false)}
+                        image={previewImage}
+                        aspectRatio={aspectRatio}
+                        sizes={previewImageSizes}
+                        fill={fill}
+                        icon={previewImageIcon}
+                    />
+                )
+            ) : (
+                <VideoContainer $aspectRatio={aspectRatio.replace("x", "/")} $fill={fill}>
+                    <YouTubeContainer src={youtubeUrl.toString()} allow="autoplay" />
+                </VideoContainer>
+            )}
+        </>
+    );
+};
 
-const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>`
-    overflow: hidden;
-    position: relative;
+//export default withPreview(YouTubeVideoBlock, { label: "Video" });
 
-    ${({ $aspectRatio, $fill }) =>
-        $fill
-            ? css`
-                  width: 100%;
-                  height: 100%;
-              `
-            : css`
-                  aspect-ratio: ${$aspectRatio};
-              `}
-`;
+const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>({
+    overflow: "hidden",
+    position: "relative",
+    width: ({ $fill }) => ($fill != null ? "100%" : undefined),
+    height: ({ $fill }) => ($fill ? "100%" : "auto"),
+    aspectRatio: ({ $fill, $aspectRatio }) => ($fill ? undefined : $aspectRatio),
+});
 
 const YouTubeContainer = styled.iframe`
     position: absolute;

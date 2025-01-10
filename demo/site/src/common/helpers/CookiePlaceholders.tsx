@@ -1,5 +1,5 @@
 import { useCookieApi } from "@comet/cms-site";
-import styled from "styled-components";
+import { styled } from "@pigment-css/react";
 
 export const LoadingCookiePlaceholder = () => (
     <Root>

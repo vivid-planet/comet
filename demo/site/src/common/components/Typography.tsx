@@ -1,185 +1,11 @@
-import { ComponentProps } from "react";
-import styled, { css } from "styled-components";
+import { styled } from "@pigment-css/react";
+import { createShouldForwardPropBlockList } from "@src/util/createShouldForwardPropBlockList";
+import { PropsWithChildren } from "react";
 
 type TypographyVariant = "h600" | "h550" | "h500" | "h450" | "h400" | "h350" | "p300" | "p200";
 
-const typographyVariantStyle: Record<TypographyVariant, ReturnType<typeof css>> = {
-    h600: css`
-        font-size: 32px;
-        line-height: 35px;
-        font-weight: 700;
-        margin-bottom: 20px;
-
-        ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-            font-size: 48px;
-            line-height: 53px;
-            margin-bottom: 24px;
-        }
-
-        ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-            font-size: 61px;
-            line-height: 67px;
-            margin-bottom: 32px;
-        }
-
-        ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
-            font-size: 90px;
-            line-height: 99px;
-            margin-bottom: 40px;
-        }
-    `,
-    h550: css`
-        font-size: 29px;
-        line-height: 32px;
-        font-weight: 700;
-        margin-bottom: 18px;
-
-        ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-            font-size: 39px;
-            line-height: 43px;
-            margin-bottom: 20px;
-        }
-
-        ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-            font-size: 48px;
-            line-height: 53px;
-            margin-bottom: 24px;
-        }
-
-        ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
-            font-size: 67px;
-            line-height: 74px;
-            margin-bottom: 30px;
-        }
-    `,
-    h500: css`
-        font-size: 26px;
-        line-height: 29px;
-        font-weight: 700;
-        margin-bottom: 18px;
-
-        ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-            font-size: 33px;
-            line-height: 36px;
-            margin-bottom: 20px;
-        }
-
-        ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-            font-size: 39px;
-            line-height: 43px;
-            margin-bottom: 24px;
-        }
-
-        ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
-            font-size: 50px;
-            line-height: 55px;
-            margin-bottom: 30px;
-        }
-    `,
-    h450: css`
-        font-size: 23px;
-        line-height: 26px;
-        font-weight: 700;
-        margin-bottom: 16px;
-
-        ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-            font-size: 28px;
-            line-height: 31px;
-            margin-bottom: 18px;
-        }
-
-        ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-            font-size: 31px;
-            line-height: 34px;
-            margin-bottom: 20px;
-        }
-
-        ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
-            font-size: 38px;
-            line-height: 42px;
-            margin-bottom: 22px;
-        }
-    `,
-    h400: css`
-        font-size: 20px;
-        line-height: 22px;
-        font-weight: 700;
-        margin-bottom: 16px;
-
-        ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-            font-size: 23px;
-            line-height: 25px;
-            margin-bottom: 16px;
-        }
-
-        ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-            font-size: 25px;
-            line-height: 28px;
-            margin-bottom: 18px;
-        }
-
-        ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
-            font-size: 28px;
-            line-height: 31px;
-            margin-bottom: 18px;
-        }
-    `,
-    h350: css`
-        font-size: 18px;
-        line-height: 20px;
-        font-weight: 700;
-        margin-bottom: 16px;
-
-        ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
-            font-size: 20px;
-            line-height: 22px;
-            margin-bottom: 16px;
-        }
-
-        ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-            font-size: 21px;
-            line-height: 23px;
-            margin-bottom: 18px;
-        }
-
-        ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
-            font-size: 22px;
-            line-height: 24px;
-            margin-bottom: 18px;
-        }
-    `,
-    p300: css`
-        font-size: 16px;
-        line-height: 22px;
-        font-weight: 400;
-        margin-bottom: 16px;
-
-        ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-            font-size: 17px;
-            line-height: 24px;
-            margin-bottom: 17px;
-        }
-
-        ${({ theme }) => theme.breakpoints.lg.mediaQuery} {
-            font-size: 18px;
-            line-height: 26px;
-            margin-bottom: 18px;
-        }
-    `,
-    p200: css`
-        font-size: 14px;
-        line-height: 20px;
-        font-weight: 400;
-        margin-bottom: 14px;
-
-        ${({ theme }) => theme.breakpoints.md.mediaQuery} {
-            font-size: 15px;
-            line-height: 22px;
-            margin-bottom: 15px;
-        }
-    `,
-};
-
+//TODO: handle as mapping
+/*
 const variantToElementMap: Record<TypographyVariant, "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p"> = {
     h600: "h1",
     h550: "h2",
@@ -189,17 +15,211 @@ const variantToElementMap: Record<TypographyVariant, "h1" | "h2" | "h3" | "h4" |
     h350: "h6",
     p300: "p",
     p200: "p",
+};*/
+
+export type TypographyProps = {
+    variant?: TypographyVariant;
+    bottomSpacing?: boolean;
+    as?: unknown;
 };
 
-export const Typography = styled.div.attrs<{
+export const Typography = ({ children, variant = "p300", bottomSpacing }: PropsWithChildren<TypographyProps>) => {
+    return <StyledDiv variant={variant}>{children}</StyledDiv>;
+};
+
+const StyledDiv = styled("div", {
+    shouldForwardProp: createShouldForwardPropBlockList(["bottomSpacing"]),
+})<TypographyProps>(({ theme }) => ({
+    marginTop: 0,
+    fontFamily: theme.fontFamily,
+    variants: [
+        {
+            props: { variant: "h600" },
+            style: {
+                fontSize: "32px",
+                lineHeight: "35px",
+                fontWeight: 700,
+                marginBottom: "20px",
+                [theme.breakpoints.sm.mediaQuery]: {
+                    fontSize: "48px",
+                    lineHeight: "53px",
+                    marginBottom: "24px",
+                },
+                [theme.breakpoints.md.mediaQuery]: {
+                    fontSize: "61px",
+                    lineHeight: "67px",
+                    marginBottom: "32px",
+                },
+                [theme.breakpoints.lg.mediaQuery]: {
+                    fontSize: "90px",
+                    lineHeight: "99px",
+                    marginBottom: "40px",
+                },
+            },
+        },
+        {
+            props: { variant: "h550" },
+            style: {
+                fontSize: "29px",
+                lineHeight: "32px",
+                fontWeight: 700,
+                marginBottom: "18px",
+                [theme.breakpoints.sm.mediaQuery]: {
+                    fontSize: "39px",
+                    lineHeight: "43px",
+                    marginBottom: "20px",
+                },
+                [theme.breakpoints.md.mediaQuery]: {
+                    fontSize: "48px",
+                    lineHeight: "53px",
+                    marginBottom: "24px",
+                },
+                [theme.breakpoints.lg.mediaQuery]: {
+                    fontSize: "67px",
+                    lineHeight: "74px",
+                    marginBottom: "30px",
+                },
+            },
+        },
+        {
+            props: { variant: "h500" },
+            style: {
+                fontSize: "26px",
+                lineHeight: "29px",
+                fontWeight: 700,
+                marginBottom: "18px",
+                [theme.breakpoints.sm.mediaQuery]: {
+                    fontSize: "33px",
+                    lineHeight: "36px",
+                    marginBottom: "20px",
+                },
+                [theme.breakpoints.md.mediaQuery]: {
+                    fontSize: "39px",
+                    lineHeight: "43px",
+                    marginBottom: "24px",
+                },
+                [theme.breakpoints.lg.mediaQuery]: {
+                    fontSize: "50px",
+                    lineHeight: "55px",
+                    marginBottom: "30px",
+                },
+            },
+        },
+        {
+            props: { variant: "h450" },
+            style: {
+                fontSize: "23px",
+                lineHeight: "26px",
+                fontWeight: 700,
+                marginBottom: "16px",
+                [theme.breakpoints.sm.mediaQuery]: {
+                    fontSize: "28px",
+                    lineHeight: "31px",
+                    marginBottom: "18px",
+                },
+                [theme.breakpoints.md.mediaQuery]: {
+                    fontSize: "31px",
+                    lineHeight: "34px",
+                    marginBottom: "20px",
+                },
+                [theme.breakpoints.lg.mediaQuery]: {
+                    fontSize: "38px",
+                    lineHeight: "42px",
+                    marginBottom: "22px",
+                },
+            },
+        },
+        {
+            props: { variant: "h400" },
+            style: {
+                fontSize: "20px",
+                lineHeight: "22px",
+                fontWeight: 700,
+                marginBottom: "16px",
+                [theme.breakpoints.sm.mediaQuery]: {
+                    fontSize: "23px",
+                    lineHeight: "25px",
+                    marginBottom: "16px",
+                },
+                [theme.breakpoints.md.mediaQuery]: {
+                    fontSize: "25px",
+                    lineHeight: "28px",
+                    marginBottom: "18px",
+                },
+                [theme.breakpoints.lg.mediaQuery]: {
+                    fontSize: "28px",
+                    lineHeight: "31px",
+                    marginBottom: "18px",
+                },
+            },
+        },
+        {
+            props: { variant: "h350" },
+            style: {
+                fontSize: "18px",
+                lineHeight: "20px",
+                fontWeight: 700,
+                marginBottom: "16px",
+                [theme.breakpoints.sm.mediaQuery]: {
+                    fontSize: "20px",
+                    lineHeight: "22px",
+                    marginBottom: "16px",
+                },
+                [theme.breakpoints.md.mediaQuery]: {
+                    fontSize: "21px",
+                    lineHeight: "23px",
+                    marginBottom: "18px",
+                },
+                [theme.breakpoints.lg.mediaQuery]: {
+                    fontSize: "22px",
+                    lineHeight: "24px",
+                    marginBottom: "18px",
+                },
+            },
+        },
+        {
+            props: { variant: "p300" },
+            style: {
+                fontSize: "16px",
+                lineHeight: "22px",
+                fontWeight: 400,
+                marginBottom: "16px",
+                [theme.breakpoints.md.mediaQuery]: {
+                    fontSize: "17px",
+                    lineHeight: "24px",
+                    marginBottom: "17px",
+                },
+                [theme.breakpoints.lg.mediaQuery]: {
+                    fontSize: "18px",
+                    lineHeight: "26px",
+                    marginBottom: "18px",
+                },
+            },
+        },
+        {
+            props: { variant: "p200" },
+            style: {
+                fontSize: "14px",
+                lineHeight: "20px",
+                fontWeight: 400,
+                marginBottom: "14px",
+                [theme.breakpoints.md.mediaQuery]: {
+                    fontSize: "15px",
+                    lineHeight: "22px",
+                    marginBottom: "15px",
+                },
+            },
+        },
+    ],
+}));
+
+/*export const Typography2 = styled.div.attrs<{
     as?: unknown;
     variant?: TypographyVariant;
     bottomSpacing?: boolean;
 }>((props) => ({ as: props.as ?? variantToElementMap[props.variant ?? "p300"] }))`
-    font-family: ${({ theme }) => theme.fontFamily};
-    ${({ variant = "p300" }) => typographyVariantStyle[variant]};
-    margin-top: 0;
 
+// TODO: add disable bottomSpacing
     ${({ theme, bottomSpacing }) =>
         !bottomSpacing &&
         css`
@@ -210,5 +230,6 @@ export const Typography = styled.div.attrs<{
             }
         `};
 `;
+*/
 
-export type TypographyProps = ComponentProps<typeof Typography>;
+//export type TypographyProps = ComponentProps<typeof Typography>;

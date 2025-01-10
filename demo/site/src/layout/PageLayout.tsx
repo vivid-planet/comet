@@ -1,5 +1,5 @@
+import { styled } from "@pigment-css/react";
 import { HTMLAttributes } from "react";
-import styled, { css } from "styled-components";
 
 const pageLayoutGridTotalColumns = 24;
 const pageLayoutMaxWidth = 1920;
@@ -10,14 +10,9 @@ interface PageLayoutProps extends HTMLAttributes<HTMLDivElement> {
 
 export const PageLayout = ({ grid, ...restProps }: PageLayoutProps) => <Root $grid={grid} {...restProps} />;
 
-const Root = styled.div<{ $grid?: boolean }>`
-    max-width: ${pageLayoutMaxWidth}px;
-    margin: 0 auto;
-
-    ${({ $grid }) =>
-        $grid &&
-        css`
-            display: grid;
-            grid-template-columns: repeat(${pageLayoutGridTotalColumns}, 1fr);
-        `}
-`;
+const Root = styled.div<{ $grid?: boolean }>({
+    maxWidth: pageLayoutMaxWidth,
+    margin: "0 auto",
+    display: ({ $grid }) => ($grid ? "grid" : "block"),
+    gridTemplateColumns: `repeat(${pageLayoutGridTotalColumns}, 1fr)`,
+});
