@@ -40,15 +40,15 @@ const defaultRichTextRenderers: Renderers = {
      * Note that children are an array of blocks with same styling,
      */
     blocks: {
-        unstyled: createTextBlockRenderFn({ bottomSpacing: true }),
-        "paragraph-standard": createTextBlockRenderFn({ bottomSpacing: true }),
-        "paragraph-small": createTextBlockRenderFn({ variant: "p200", bottomSpacing: true }),
-        "header-one": createTextBlockRenderFn({ variant: "h600", bottomSpacing: true }),
-        "header-two": createTextBlockRenderFn({ variant: "h550", bottomSpacing: true }),
-        "header-three": createTextBlockRenderFn({ variant: "h500", bottomSpacing: true }),
-        "header-four": createTextBlockRenderFn({ variant: "h450", bottomSpacing: true }),
-        "header-five": createTextBlockRenderFn({ variant: "h400", bottomSpacing: true }),
-        "header-six": createTextBlockRenderFn({ variant: "h350", bottomSpacing: true }),
+        unstyled: createTextBlockRenderFn({ $bottomSpacing: true }),
+        "paragraph-standard": createTextBlockRenderFn({ $bottomSpacing: true }),
+        "paragraph-small": createTextBlockRenderFn({ variant: "p200", $bottomSpacing: true }),
+        "header-one": createTextBlockRenderFn({ variant: "h600", $bottomSpacing: true }),
+        "header-two": createTextBlockRenderFn({ variant: "h550", $bottomSpacing: true }),
+        "header-three": createTextBlockRenderFn({ variant: "h500", $bottomSpacing: true }),
+        "header-four": createTextBlockRenderFn({ variant: "h450", $bottomSpacing: true }),
+        "header-five": createTextBlockRenderFn({ variant: "h400", $bottomSpacing: true }),
+        "header-six": createTextBlockRenderFn({ variant: "h350", $bottomSpacing: true }),
         // List
         // or depth for nested lists
         "unordered-list-item": (children, { depth, keys }) => (
