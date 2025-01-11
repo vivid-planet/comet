@@ -44,20 +44,13 @@ export interface CrudMoreActionsMenuProps
 }
 
 interface CrudMoreActionsGroupProps {
-    groupTitle: ReactNode;
+    groupTitle?: ReactNode;
     menuListProps?: MenuListProps;
-    shouldShowTitle: boolean;
     typographyProps?: ComponentProps<typeof Typography>;
 }
 
-function CrudMoreActionsGroup({
-    groupTitle,
-    children,
-    menuListProps,
-    typographyProps,
-    shouldShowTitle,
-}: PropsWithChildren<CrudMoreActionsGroupProps>) {
-    if (shouldShowTitle) {
+function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
+    if (groupTitle) {
         return (
             <>
                 <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
@@ -127,6 +120,8 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
 
     const handleClose = () => setAnchorEl(null);
+    const hasOverallActions = !!overallActions?.length;
+    const hasSelectiveActions = !!selectiveActions?.length;
 
     return (
         <>
@@ -145,10 +140,13 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     menuProps?.onClose?.(event, reason);
                 }}
             >
-                {!!overallActions?.length && (
+                {hasOverallActions && (
                     <CrudMoreActionsGroup
-                        groupTitle={<FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />}
-                        shouldShowTitle={!!selectiveActions?.length}
+                        groupTitle={
+                            hasSelectiveActions ? (
+                                <FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />
+                            ) : undefined
+                        }
                         {...groupProps}
                     >
                         {overallActions.map((item, index) => {
@@ -177,12 +175,15 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     </CrudMoreActionsGroup>
                 )}
 
-                {!!overallActions?.length && !!selectiveActions?.length && <CrudMoreActionsDivider {...dividerProps} />}
+                {hasOverallActions && hasSelectiveActions && <CrudMoreActionsDivider {...dividerProps} />}
 
-                {!!selectiveActions?.length && (
+                {hasSelectiveActions && (
                     <CrudMoreActionsGroup
-                        groupTitle={<FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />}
-                        shouldShowTitle={!!overallActions?.length}
+                        groupTitle={
+                            hasOverallActions ? (
+                                <FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />
+                            ) : undefined
+                        }
                         {...groupProps}
                     >
                         {selectiveActions.map((item, index) => {
