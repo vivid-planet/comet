@@ -260,21 +260,21 @@ export function generateFormField({
 
         formFragmentField = `${name} { min max }`;
     } else if (config.type == "boolean") {
-        code = `<Field name="${nameWithPrefix}" label="" type="checkbox" variant="horizontal" fullWidth ${validateCode}>
-            {(props) => (
-                <FormControlLabel
-                    label={${fieldLabel}}
-                    control={<FinalFormCheckbox ${config.readOnly ? readOnlyProps : ""} {...props} />}
-                    ${
-                        config.helperText
-                            ? `helperText={<FormattedMessage id=` +
-                              `"${formattedMessageRootId}.${name}.helperText" ` +
-                              `defaultMessage="${config.helperText}" />}`
-                            : ""
-                    }
-                />
-            )}
-        </Field>`;
+        code = `<CheckboxField
+                        label={${fieldLabel}}
+                        name="${nameWithPrefix}"
+                        fullWidth
+                        variant="horizontal"
+                        ${config.readOnly ? readOnlyProps : ""}
+                        ${
+                            config.helperText
+                                ? `helperText={<FormattedMessage id=` +
+                                  `"${formattedMessageRootId}.${name}.helperText" ` +
+                                  `defaultMessage="${config.helperText}" />}`
+                                : ""
+                        }
+                        ${validateCode}
+                    />`;
         formValuesConfig = [
             {
                 ...defaultFormValuesConfig,

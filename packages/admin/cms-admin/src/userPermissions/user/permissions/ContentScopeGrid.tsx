@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { Field, FillSpace, FinalForm, FinalFormCheckbox, Loading, SaveButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
+import { CheckboxListField, FillSpace, FinalForm, Loading, SaveButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
@@ -58,7 +58,6 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
     if (!data) {
         return <Loading />;
     }
-
     return (
         <Card>
             <FinalForm<FormValues>
@@ -79,24 +78,21 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     </ToolbarActions>
                 </CardToolbar>
                 <CardContent>
-                    {data.availableContentScopes.map((contentScope: ContentScope) => (
-                        <Field
-                            disabled={data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, contentScope))}
-                            key={JSON.stringify(contentScope)}
-                            name="contentScopes"
-                            fullWidth
-                            variant="horizontal"
-                            type="checkbox"
-                            component={FinalFormCheckbox}
-                            value={JSON.stringify(contentScope)}
-                            label={Object.entries(contentScope).map(([scope, value]) => (
+                    <CheckboxListField
+                        fullWidth
+                        name="contentScopes"
+                        layout="column"
+                        options={data.availableContentScopes.map((contentScope: ContentScope) => ({
+                            label: Object.entries(contentScope).map(([scope, value]) => (
                                 <>
                                     {camelCaseToHumanReadable(scope)}: {camelCaseToHumanReadable(value)}
                                     <br />
                                 </>
-                            ))}
-                        />
-                    ))}
+                            )),
+                            value: JSON.stringify(contentScope),
+                            disabled: data.userContentScopesSkipManual.some((cs: ContentScope) => isEqual(cs, contentScope)),
+                        }))}
+                    />
                 </CardContent>
             </FinalForm>
         </Card>
