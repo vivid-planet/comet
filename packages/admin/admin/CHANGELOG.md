@@ -1,5 +1,90 @@
 # @comet/admin
 
+## 7.11.0
+
+### Minor Changes
+
+-   b8b8e2747: Make `GridFilterButton` and `GridColumnsButton` responsive by moving their text to a tooltip on mobile
+
+    -   This also makes the button's styles consistent with the standard `Button` component
+    -   `GridFilterButton` now supports props to override the default button props
+
+-   e9f547d95: Adjust how tooltips are triggered
+
+    This is to achieve a more consistent and user-friendly experience by ensuring tooltips are always shown when the user interacts with the underlying element.
+
+    -   When using the default `hover` trigger, tooltips will now be shown on both `hover` and `focus`. Previously, you had to choose between `hover` and `focus`.
+    -   The `trigger` prop is deprecated and will be removed in a future major version. The combined `hover`/`focus` trigger will be the only supported behavior.
+    -   Tooltips on touch devices will be shown immediately when the user starts interacting with the underlying element.
+
+### Patch Changes
+
+-   1e01cca21: Prevent scrolling of `DialogTitle` and `DialogActions` in `EditDialog`
+-   a30f0ee4d: Fix `border-color` of `InputBase` on default and hover state
+-   20f63417e: Prevent the page content from overflowing the window, causing a horizontal scrollbar
+
+    This happened when using elements like `Tabs` that are intended to be horizontally scrollable and could, therefore, be wider than the window.
+
+-   8114a6ae7: Fix `onClick` and other props not being passed to the icon version of some button components
+-   Updated dependencies [9f2a1272b]
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [a4fcdeb51]
+-   Updated dependencies [5ba64aab6]
+    -   @comet/admin-theme@7.11.0
+    -   @comet/admin-icons@7.11.0
+
+## 7.10.0
+
+### Minor Changes
+
+-   8f924d591: Add new custom `Dialog`
+
+    The component extends the MUI `Dialog` component to enable common use cases:
+
+    -   The `title` prop can be used to set the dialog title
+    -   A close button is shown when the `onClose` is used
+
+    **Example**
+
+    ```tsx
+    <Dialog
+        title="Dialog Title"
+        onClose={() => {
+            // Handle dialog closing here
+        }}
+    />
+    ```
+
+-   6eba5abea: Add a `forceVerticalContainerSize` prop to `FieldContainer`
+
+    Use it to define below which container size the `vertical` styling is applied when using the `horizontal` variant.
+
+-   589b0b9ee: Enhance `FieldContainer` with `secondaryHelperText` prop and `helperTextIcon` prop
+
+    -   `helperTextIcon` displays an icon alongside the text for `helperText`, `error` or `warning`.
+    -   `secondaryHelperText` provides an additional helper text positioned beneath the input field, aligned to the bottom-right corner.
+
+    **Example:**
+
+    ```tsx
+    <FieldContainer label="Helper Text Icon" helperTextIcon={<Info />} helperText="Helper Text with icon" secondaryHelperText="0/100">
+        <InputBase onChange={handleChange} value={value} placeholder="Placeholder" />
+    </FieldContainer>
+    ```
+
+### Patch Changes
+
+-   aa02ca13f: Fix a bug in `useDataGridExcelExport` that would cause an Excel export to fail when a cell's value was `undefined`
+-   6eba5abea: Prevent unintended layout shift after the initial render of `FieldContainer` when using the `horizontal` variant
+-   bf6b03fe0: Fix alignment of `Alert` icon with the title
+-   Updated dependencies [7e94c55f6]
+-   Updated dependencies [22f3d402e]
+-   Updated dependencies [b51bf6d85]
+-   Updated dependencies [71876ea69]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin-theme@7.10.0
+    -   @comet/admin-icons@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes

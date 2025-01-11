@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
-import { CheckboxListField, FinalForm, Loading, SaveButton, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { CheckboxListField, FillSpace, FinalForm, Loading, SaveButton, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Card, CardContent, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import isEqual from "lodash.isequal";
@@ -70,7 +70,7 @@ export const ContentScopeGrid = ({ userId }: { userId: string }) => {
                     <ToolbarTitleItem>
                         <FormattedMessage id="comet.userPermissions.scopes" defaultMessage="Scopes" />
                     </ToolbarTitleItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <SaveButton type="submit">
                             <FormattedMessage id="comet.userPermissions.save" defaultMessage="Save" />

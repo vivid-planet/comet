@@ -1,5 +1,31 @@
 # @comet/blocks-admin
 
+## 7.11.0
+
+### Patch Changes
+
+-   Updated dependencies [b8b8e2747]
+-   Updated dependencies [1e01cca21]
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [20f63417e]
+-   Updated dependencies [e9f547d95]
+-   Updated dependencies [8114a6ae7]
+    -   @comet/admin@7.11.0
+    -   @comet/admin-icons@7.11.0
+
+## 7.10.0
+
+### Patch Changes
+
+-   Updated dependencies [8f924d591]
+-   Updated dependencies [aa02ca13f]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [bf6b03fe0]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin@7.10.0
+    -   @comet/admin-icons@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes

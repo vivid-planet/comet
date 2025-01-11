@@ -2,12 +2,12 @@ import { gql } from "@apollo/client";
 import {
     createRestStartLimitPagingActions,
     ExcelExportButton,
+    FillSpace,
     MainContent,
     Table,
     TableQuery,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useExportDisplayedTableData,
     useExportTableQuery,
@@ -15,7 +15,6 @@ import {
     useTableQueryPaging,
 } from "@comet/admin";
 import { Typography } from "@mui/material";
-import * as React from "react";
 
 import { apolloRestStoryDecorator } from "../../apollo-rest-story.decorator";
 
@@ -91,7 +90,7 @@ export const ExportWithLimit = () => {
                         <ToolbarItem>
                             <Typography variant="h3">Export Visibility With Limit</Typography>
                         </ToolbarItem>
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         <ToolbarActions>
                             <ExcelExportButton exportApi={exportCurrentPageApi}>Aktuelle Seite exportieren</ExcelExportButton>
                             <ExcelExportButton exportApi={exportApi}>Export All (max. 5000 Rows)</ExcelExportButton>

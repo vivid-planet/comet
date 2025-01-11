@@ -1,5 +1,4 @@
 import { Field, FinalForm, FinalFormInput, FormSection, SaveButton } from "@comet/admin";
-import * as React from "react";
 
 export default {
     title: "stories/form/FinalForm",

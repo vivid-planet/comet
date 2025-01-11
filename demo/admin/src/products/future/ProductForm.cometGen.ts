@@ -70,6 +70,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
                 { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4, download: true },
                 { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4, download: false },
+                { type: "dateTime", name: "lastCheckedAt", label: "Last checked at" },
             ],
         },
     ],

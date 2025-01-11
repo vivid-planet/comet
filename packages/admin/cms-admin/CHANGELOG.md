@@ -1,5 +1,60 @@
 # @comet/cms-admin
 
+## 7.11.0
+
+### Minor Changes
+
+-   3acbb04d4: Update design of the user menu in the header and add information about the impersonated user
+
+### Patch Changes
+
+-   94cc411a6: Adapt styling of `ContentScopeSelect` to match the Comet design
+-   6778c4e97: Prevent the creation of a second home page
+-   7992a9a9e: Enable setting `importSourceId` and `importSourceType` for each individual file in the `useDamFileUpload#uploadFiles` function
+-   Updated dependencies [b8b8e2747]
+-   Updated dependencies [9f2a1272b]
+-   Updated dependencies [1e01cca21]
+-   Updated dependencies [a30f0ee4d]
+-   Updated dependencies [a4fcdeb51]
+-   Updated dependencies [5ba64aab6]
+-   Updated dependencies [20f63417e]
+-   Updated dependencies [e9f547d95]
+-   Updated dependencies [8114a6ae7]
+    -   @comet/admin@7.11.0
+    -   @comet/admin-theme@7.11.0
+    -   @comet/admin-date-time@7.11.0
+    -   @comet/admin-icons@7.11.0
+    -   @comet/admin-rte@7.11.0
+    -   @comet/blocks-admin@7.11.0
+
+## 7.10.0
+
+### Minor Changes
+
+-   2b9fac2cf: Add support for passing title and alt text to `useDamFileUpload`
+
+    This can be useful when importing files from an external DAM.
+
+### Patch Changes
+
+-   d210ef74a: Remove vertical and horizontal scroll bars from block preview iframe
+-   Updated dependencies [7e94c55f6]
+-   Updated dependencies [22f3d402e]
+-   Updated dependencies [8f924d591]
+-   Updated dependencies [aa02ca13f]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [6eba5abea]
+-   Updated dependencies [bf6b03fe0]
+-   Updated dependencies [b51bf6d85]
+-   Updated dependencies [71876ea69]
+-   Updated dependencies [589b0b9ee]
+    -   @comet/admin-theme@7.10.0
+    -   @comet/admin@7.10.0
+    -   @comet/admin-date-time@7.10.0
+    -   @comet/admin-icons@7.10.0
+    -   @comet/admin-rte@7.10.0
+    -   @comet/blocks-admin@7.10.0
+
 ## 7.9.0
 
 ### Minor Changes

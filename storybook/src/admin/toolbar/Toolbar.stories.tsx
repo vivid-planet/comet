@@ -1,4 +1,5 @@
 import {
+    FillSpace,
     Stack,
     StackLink,
     StackPage,
@@ -7,17 +8,16 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
 } from "@comet/admin";
 import { ToolbarActionButton } from "@comet/admin/lib/common/toolbar/actions/ToolbarActionButton";
 import { ArrowRight, Save } from "@comet/admin-icons";
 import { Chip } from "@mui/material";
-import * as React from "react";
+import { ReactNode } from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
-function StackWrapper({ children }: { children: React.ReactNode }) {
+function StackWrapper({ children }: { children: ReactNode }) {
     return (
         <Stack topLevelTitle="Stack Root">
             <StackSwitch initialPage="root">
@@ -43,7 +43,7 @@ function Story() {
             <ToolbarItem>
                 <Chip label="Chip text" />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>
                 <ToolbarActionButton startIcon={<ArrowRight />}>Secondary button</ToolbarActionButton>
                 <ToolbarActionButton startIcon={<Save />} variant="contained">
