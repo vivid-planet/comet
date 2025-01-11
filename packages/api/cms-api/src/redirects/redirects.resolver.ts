@@ -1,6 +1,6 @@
-import { FindOptions, wrap } from "@mikro-orm/core";
+import { FilterQuery, FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 
@@ -17,6 +17,7 @@ import { RedirectInputInterface } from "./dto/redirect-input.factory";
 import { RedirectUpdateActivenessInput } from "./dto/redirect-update-activeness.input";
 import { RedirectsArgsFactory } from "./dto/redirects-args.factory";
 import { RedirectInterface } from "./entities/redirect-entity.factory";
+import { RedirectSourceTypeValues } from "./redirects.enum";
 import { RedirectsService } from "./redirects.service";
 import { RedirectScopeInterface } from "./types";
 
@@ -57,6 +58,7 @@ export function createRedirectsResolver({
             private readonly redirectService: RedirectsService,
             @InjectRepository("Redirect") private readonly repository: EntityRepository<RedirectInterface>,
             private readonly pageTreeReadApi: PageTreeReadApiService,
+            private readonly entityManager: EntityManager,
         ) {}
 
         @Query(() => [Redirect], { deprecationReason: "Use paginatedRedirects instead. Will be removed in the next version." })
@@ -103,8 +105,22 @@ export function createRedirectsResolver({
 
         @Query(() => Redirect)
         @AffectedEntity(Redirect)
-        async redirect(@Args("id", { type: () => ID }) id: string): Promise<RedirectInterface | null> {
-            const redirect = await this.repository.findOne(id);
+        async redirect(@Args("id", { type: () => ID }) id: string): Promise<RedirectInterface> {
+            const redirect = await this.repository.findOneOrFail(id);
+            return redirect;
+        }
+
+        @Query(() => Redirect, { nullable: true })
+        async redirectBySource(
+            @Args("scope", { type: () => Scope, defaultValue: hasNonEmptyScope ? undefined : {} }) scope: typeof Scope,
+            @Args("source", { type: () => String }) source: string,
+            @Args("sourceType", { type: () => RedirectSourceTypeValues }) sourceType: RedirectSourceTypeValues,
+        ): Promise<RedirectInterface | null> {
+            const where: FilterQuery<RedirectInterface> = { source, sourceType };
+            if (hasNonEmptyScope) {
+                where.scope = scope;
+            }
+            const redirect = await this.repository.findOne(where);
             return redirect ?? null;
         }
 
@@ -131,7 +147,7 @@ export function createRedirectsResolver({
                 ...input,
                 target: input.target.transformToBlockData(),
             });
-            await this.repository.persistAndFlush(entity);
+            await this.entityManager.persistAndFlush(entity);
             return this.repository.findOneOrFail(entity.id);
         }
 
@@ -152,7 +168,7 @@ export function createRedirectsResolver({
             }
 
             wrap(redirect).assign({ ...input, target: input.target.transformToBlockData() });
-            await this.repository.persistAndFlush(redirect);
+            await this.entityManager.persistAndFlush(redirect);
             return this.repository.findOneOrFail(id);
         }
 
@@ -165,7 +181,7 @@ export function createRedirectsResolver({
             const redirect = await this.repository.findOneOrFail(id);
 
             wrap(redirect).assign({ active: input.active });
-            await this.repository.persistAndFlush(redirect);
+            await this.entityManager.persistAndFlush(redirect);
 
             return this.repository.findOneOrFail(id);
         }
@@ -174,7 +190,7 @@ export function createRedirectsResolver({
         @AffectedEntity(Redirect)
         async deleteRedirect(@Args("id", { type: () => ID }) id: string): Promise<boolean> {
             const entity = await this.repository.findOneOrFail(id);
-            await this.repository.removeAndFlush(entity);
+            await this.entityManager.removeAndFlush(entity);
             return true;
         }
     }

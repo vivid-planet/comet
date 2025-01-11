@@ -1,0 +1,30 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+
+import * as TooltipStories from "./Tooltip.stories";
+
+<Meta of={TooltipStories} />
+
+# Tooltip
+
+> Tooltips display informative text when users hover over, focus on, or tap an element.
+>
+> \- [MUI Docs](https://mui.com/material-ui/react-tooltip/)
+
+The Comet Admin `Tooltip` extends [Material UI's `Tooltip`](https://mui.com/material-ui/react-tooltip) by adding a trigger prop that allows showing the Tooltip on focus/click without the need for `ClickAwayListener`.
+
+#### Props
+
+| Name                 | Type                                             | Description                                                                                                                  |
+| :------------------- | :----------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| trigger (deprecated) | "hover", "focus", "click" (optional)             | Defines the type of event that causes a tooltip to show. <br />(_Only the default "hover" will be supported in the future._) |
+| variant              | "light", "dark", "neutral", "primary" (optional) | Defines the color scheme of a tooltip.                                                                                       |
+
+In addition to its own props, the Tooltip component also accepts all props from the Material UI Tooltip component.
+
+#### Example trigger
+
+<Canvas of={TooltipStories.BasicTooltip} />
+
+#### Example variant
+
+<Canvas of={TooltipStories.TooltipVariant} />

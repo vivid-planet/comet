@@ -11,14 +11,6 @@ const cometConfig = require("./src/comet-config.json");
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-    async rewrites() {
-        return [
-            {
-                source: "/dam/:path*",
-                destination: process.env.API_URL + "/dam/:path*",
-            },
-        ];
-    },
     images: {
         deviceSizes: cometConfig.dam.allowedImageSizes,
     },

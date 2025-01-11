@@ -1,4 +1,5 @@
 import {
+    FillSpace,
     MainContent,
     RouterTab,
     RouterTabs,
@@ -6,13 +7,13 @@ import {
     SaveBoundarySaveButton,
     Stack,
     StackLink,
+    StackMainContent,
     StackPage,
     StackSwitch,
     StackToolbar,
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
@@ -28,7 +29,7 @@ const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
-        <ToolbarFillSpace />
+        <FillSpace />
         <ToolbarActions>
             <SaveBoundarySaveButton />
         </ToolbarActions>
@@ -42,7 +43,7 @@ export function ProductsPage() {
             <StackSwitch>
                 <StackPage name="grid">
                     <StackToolbar scopeIndicator={<ContentScopeIndicator global />} />
-                    <MainContent fullHeight>
+                    <StackMainContent fullHeight>
                         <ProductsGrid
                             toolbarAction={
                                 <Button
@@ -57,38 +58,38 @@ export function ProductsPage() {
                                 </Button>
                             }
                             rowAction={(params) => (
-                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                    <Edit color="primary" />
+                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                                    <Edit />
                                 </IconButton>
                             )}
                             actionsColumnWidth={116}
                         />
-                    </MainContent>
+                    </StackMainContent>
                 </StackPage>
                 <StackPage name="edit" title={intl.formatMessage({ id: "products.editProduct", defaultMessage: "Edit Product" })}>
                     {(selectedProductId) => (
                         <SaveBoundary>
-                            <FormToolbar />
-                            <RouterTabs>
-                                <RouterTab
-                                    forceRender={true}
-                                    path=""
-                                    label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
-                                >
-                                    <MainContent>
-                                        <ProductForm id={selectedProductId} />
-                                    </MainContent>
-                                </RouterTab>
-                                <RouterTab
-                                    forceRender={true}
-                                    path="/price"
-                                    label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
-                                >
-                                    <MainContent>
-                                        <ProductPriceForm id={selectedProductId} />
-                                    </MainContent>
-                                </RouterTab>
-                            </RouterTabs>
+                            <>
+                                <FormToolbar />
+                                <StackMainContent>
+                                    <RouterTabs>
+                                        <RouterTab
+                                            forceRender={true}
+                                            path=""
+                                            label={intl.formatMessage({ id: "products.product", defaultMessage: "Product" })}
+                                        >
+                                            <ProductForm id={selectedProductId} />
+                                        </RouterTab>
+                                        <RouterTab
+                                            forceRender={true}
+                                            path="/price"
+                                            label={intl.formatMessage({ id: "products.price", defaultMessage: "Price" })}
+                                        >
+                                            <ProductPriceForm id={selectedProductId} />
+                                        </RouterTab>
+                                    </RouterTabs>
+                                </StackMainContent>
+                            </>
                         </SaveBoundary>
                     )}
                 </StackPage>
