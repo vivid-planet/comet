@@ -374,7 +374,7 @@ export const createOneOfBlock = <T extends boolean = boolean>({
                                 {variant === "radio" && (
                                     <>
                                         <Box display="flex" flexDirection="column" padding={3}>
-                                            <RadioGroupField name="blocktype" fullWidth options={options} />
+                                            <RadioGroupField name="blockType" fullWidth options={options} />
                                         </Box>
                                         {activeBlock.block && <Divider />}
                                     </>
