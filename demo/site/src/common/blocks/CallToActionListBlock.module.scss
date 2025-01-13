@@ -1,0 +1,13 @@
+@use '../../app/variables';
+
+.root{
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--spacing-s300);
+
+    @media screen and (min-width: variables.$sm) {
+        gap: var(--spacing-s400);
+        
+    }
+
+}
