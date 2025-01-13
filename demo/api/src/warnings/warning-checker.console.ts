@@ -79,10 +79,10 @@ export class WarningCheckerConsole {
                             }
                         }
                     }
-                    await this.entityManager.flush();
                 }
                 offset += queryBuilderLimit;
             } while (rootBlocks.length > 0);
         }
+        await this.entityManager.flush();
     }
 }
