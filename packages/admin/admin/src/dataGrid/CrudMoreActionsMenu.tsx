@@ -61,6 +61,11 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
     );
 }
 
+const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuClassKey>({
+    componentName: "CrudMoreActions",
+    slotName: "divider",
+})();
+
 const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "chip",
@@ -82,6 +87,11 @@ const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKe
         margin: 0 10px;
     `,
 );
+
+const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
+    componentName: "CrudMoreActions",
+    slotName: "menuItem",
+})();
 
 export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveActions, selectionSize }: CrudMoreActionsMenuProps) {
     const {
@@ -125,7 +135,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
                             return (
                                 <div key={index}>
-                                    <MenuItem
+                                    <MoreActionsMenuItem
                                         key={index}
                                         disabled={!!selectionSize}
                                         {...rest}
@@ -136,8 +146,8 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                     >
                                         {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
-                                    </MenuItem>
-                                    {!!divider && <Divider />}
+                                    </MoreActionsMenuItem>
+                                    {!!divider && <CrudMoreActionsDivider />}
                                 </div>
                             );
                         })}
@@ -158,7 +168,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
 
                             return (
                                 <div key={index}>
-                                    <MenuItem
+                                    <MoreActionsMenuItem
                                         key={index}
                                         disabled={!selectionSize}
                                         {...rest}
@@ -172,8 +182,8 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                         {!!selectionSize && (
                                             <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />
                                         )}
-                                    </MenuItem>
-                                    {!!divider && <Divider />}
+                                    </MoreActionsMenuItem>
+                                    {!!divider && <CrudMoreActionsDivider />}
                                 </div>
                             );
                         })}
