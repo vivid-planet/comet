@@ -39,7 +39,7 @@ importers:
         specifier: ^5.38.1
         version: 5.38.1(@types/node@22.9.0)(typescript@5.7.2)
       lint-staged:
-        specifier: ^12.3.7
+        specifier: ^12.5.0
         version: 12.5.0(enquirer@2.3.6)
       prettier:
         specifier: ^2.0.0
