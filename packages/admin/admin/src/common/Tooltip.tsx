@@ -1,5 +1,4 @@
 import {
-    ClickAwayListener,
     ComponentsOverrides,
     Popper as MuiPopper,
     Theme,
@@ -10,15 +9,11 @@ import {
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import { cloneElement, ComponentProps, ReactElement, useState } from "react";
+import { ComponentProps, useState } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
 export interface TooltipProps extends MuiTooltipProps {
-    /**
-     * @deprecated Triggers other than the default "hover" will be removed in the future.
-     */
-    trigger?: "hover" | "focus" | "click";
     variant?: Variant;
 }
 
@@ -185,26 +180,10 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
 );
 
 export const Tooltip = (inProps: TooltipProps) => {
-    const {
-        trigger = "hover",
-        variant = "dark",
-        disableInteractive,
-        arrow,
-        children,
-        ...props
-    } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
+    const { variant = "dark", disableInteractive, arrow, children, ...props } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
     const theme = useTheme();
 
-    const [open, setOpen] = useState(false);
-
-    const handleTooltipClose = () => {
-        setOpen(false);
-    };
-
-    const toggleTooltip = (event: MouseEvent) => {
-        event.stopPropagation();
-        setOpen(!open);
-    };
+    const [open] = useState(false);
 
     const ownerState: OwnerState = {
         variant,
@@ -234,21 +213,8 @@ export const Tooltip = (inProps: TooltipProps) => {
         },
     };
 
-    return trigger === "click" ? (
-        <ClickAwayListener onClickAway={handleTooltipClose}>
-            <TooltipRoot
-                onClose={handleTooltipClose}
-                open={open}
-                disableFocusListener
-                disableHoverListener
-                disableTouchListener
-                {...commonTooltipProps}
-            >
-                {cloneElement(children as ReactElement<any, any>, { onClick: toggleTooltip })}
-            </TooltipRoot>
-        </ClickAwayListener>
-    ) : (
-        <TooltipRoot disableHoverListener={trigger === "focus"} enterTouchDelay={0} {...commonTooltipProps}>
+    return (
+        <TooltipRoot enterTouchDelay={0} {...commonTooltipProps}>
             {children}
         </TooltipRoot>
     );
