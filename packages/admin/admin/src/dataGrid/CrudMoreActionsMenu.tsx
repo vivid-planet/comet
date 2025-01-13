@@ -27,7 +27,6 @@ export type CrudMoreActionsMenuClassKey = "root" | "group" | "divider" | "button
 interface ActionItem extends ComponentProps<typeof MenuItem> {
     label: ReactNode;
     icon?: ReactNode;
-    divider?: boolean;
 }
 
 export interface CrudMoreActionsMenuProps
@@ -36,7 +35,7 @@ export interface CrudMoreActionsMenuProps
         menuItem: typeof MenuItem;
         button: typeof Button;
         group: typeof CrudMoreActionsGroup;
-        divider: typeof CrudMoreActionsDivider;
+        divider: typeof Divider;
         chip: typeof Chip;
     }> {
     selectionSize?: number;
@@ -65,12 +64,7 @@ function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyP
 const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "divider",
-})(
-    ({ theme }) => css`
-        margin: 8px 10px;
-        border-color: ${theme.palette.grey[50]};
-    `,
-);
+})();
 
 const MoreActionsSelectedItemsChip = createComponentSlot(Chip)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
@@ -97,19 +91,13 @@ const MoreActionsButton = createComponentSlot(Button)<CrudMoreActionsMenuClassKe
 const MoreActionsMenuItem = createComponentSlot(MenuItem)<CrudMoreActionsMenuClassKey>({
     componentName: "CrudMoreActions",
     slotName: "menuItem",
-})(
-    css`
-        padding: 8px 15px 8px 30px !important;
-        column-gap: 10px;
-    `,
-);
+})();
 
 export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveActions, selectionSize }: CrudMoreActionsMenuProps) {
     const {
         menu: menuProps,
         button: buttonProps,
         group: groupProps,
-        divider: dividerProps,
         chip: chipProps,
     } = slotProps ?? { menu: {}, button: {}, group: {}, divider: {}, chip: {} };
 
@@ -127,7 +115,6 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
             </MoreActionsButton>
             <Menu
                 keepMounted={false}
-                PaperProps={{ sx: { minWidth: 220, borderRadius: "4px" } }}
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
                 {...menuProps}
@@ -157,17 +144,17 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                             handleClose();
                                         }}
                                     >
-                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                     </MoreActionsMenuItem>
-                                    {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
+                                    {!!divider && <CrudMoreActionsDivider />}
                                 </div>
                             );
                         })}
                     </CrudMoreActionsGroup>
                 )}
 
-                {!!overallActions?.length && !!selectiveActions?.length && <CrudMoreActionsDivider {...dividerProps} />}
+                {!!overallActions?.length && !!selectiveActions?.length && <Divider />}
 
                 {!!selectiveActions?.length && (
                     <CrudMoreActionsGroup
@@ -190,13 +177,13 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                             handleClose();
                                         }}
                                     >
-                                        {!!icon && <ListItemIcon sx={{ minWidth: "unset !important" }}>{icon}</ListItemIcon>}
+                                        {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                         {!!selectionSize && (
                                             <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />
                                         )}
                                     </MoreActionsMenuItem>
-                                    {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
+                                    {!!divider && <CrudMoreActionsDivider />}
                                 </div>
                             );
                         })}
