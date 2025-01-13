@@ -190,8 +190,6 @@ const Children = createComponentSlot(MuiAccordionDetails)<FieldSetClassKey, Owne
     },
 })(
     ({ theme, ownerState }) => css`
-        display: flex;
-        flex-direction: column;
         padding: 20px;
 
         ${!ownerState.hiddenSummary &&
