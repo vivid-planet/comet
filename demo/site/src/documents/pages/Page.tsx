@@ -4,6 +4,8 @@ import { breadcrumbsFragment } from "@src/common/components/Breadcrumbs.fragment
 import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 import { StageBlock } from "@src/documents/pages/blocks/StageBlock";
 import { GQLPageTreeNodeScopeInput } from "@src/graphql.generated";
+import { Footer } from "@src/layout/footer/Footer";
+import { footerFragment } from "@src/layout/footer/Footer.fragment";
 import { Header } from "@src/layout/header/Header";
 import { headerFragment } from "@src/layout/header/Header.fragment";
 import { TopNavigation } from "@src/layout/topNavigation/TopNavigation";
@@ -33,6 +35,9 @@ const pageQuery = gql`
         header: mainMenu(scope: { domain: $domain, language: $language }) {
             ...Header
         }
+        footer: footer(scope: { domain: $domain, language: $language }) {
+            ...Footer
+        }
 
         topMenu(scope: { domain: $domain, language: $language }) {
             ...TopMenuPageTreeNode
@@ -40,6 +45,7 @@ const pageQuery = gql`
     }
     ${breadcrumbsFragment}
     ${headerFragment}
+    ${footerFragment}
     ${topMenuPageTreeNodeFragment}
 `;
 
@@ -154,6 +160,7 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
                 <StageBlock data={document.stage} />
                 <PageContentBlock data={data.pageContent.document.content} />
             </div>
+            {data?.footer && <Footer footer={data?.footer} />}
         </>
     );
 }
