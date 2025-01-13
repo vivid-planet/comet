@@ -1,6 +1,6 @@
 type ResolveUrlOptions = {
     /**
-     * If provided, the baseUrl will be prepended to the resulting path
+     * the baseUrl will be prepended to the resulting path
      *
      * Sample: "http://localhost:3000"
      * @default: "/"
