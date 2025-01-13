@@ -5,7 +5,7 @@ export const Container = styled.div`
     grid-column: 2 / 24;
 `;
 
-export const Link = styled.a`
+export const Link = styled.span`
     color: ${({ theme }) => theme.palette.primary.main};
     text-decoration: none;
 
