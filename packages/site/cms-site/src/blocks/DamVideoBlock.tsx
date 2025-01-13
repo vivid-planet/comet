@@ -34,10 +34,9 @@ export const DamVideoBlock = withPreview(
         const [showPreviewImage, setShowPreviewImage] = useState(true);
         const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
-        const inViewRef = useRef<HTMLDivElement>(null);
         const videoRef = useRef<HTMLVideoElement>(null);
 
-        useIsElementInViewport(inViewRef, (inView) => {
+        useIsElementInViewport(videoRef, (inView) => {
             if (autoplay && videoRef.current) {
                 inView ? videoRef.current.play() : videoRef.current.pause();
             }
@@ -66,20 +65,18 @@ export const DamVideoBlock = withPreview(
                         />
                     )
                 ) : (
-                    <div ref={inViewRef}>
-                        <Video
-                            autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
-                            controls={showControls}
-                            loop={loop}
-                            playsInline
-                            muted={autoplay}
-                            ref={videoRef}
-                            $aspectRatio={aspectRatio.replace("x", " / ")}
-                            $fill={fill}
-                        >
-                            <source src={damFile.fileUrl} type={damFile.mimetype} />
-                        </Video>
-                    </div>
+                    <Video
+                        autoPlay={autoplay || (hasPreviewImage && !showPreviewImage)}
+                        controls={showControls}
+                        loop={loop}
+                        playsInline
+                        muted={autoplay}
+                        ref={videoRef}
+                        $aspectRatio={aspectRatio.replace("x", " / ")}
+                        $fill={fill}
+                    >
+                        <source src={damFile.fileUrl} type={damFile.mimetype} />
+                    </Video>
                 )}
             </>
         );
