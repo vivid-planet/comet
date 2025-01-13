@@ -212,7 +212,7 @@ importers:
         version: 5.3.3
       '@vitejs/plugin-react-swc':
         specifier: ^3.6.0
-        version: 3.6.0(@swc/helpers@0.5.5)(vite@5.1.8(@types/node@22.9.0)(terser@5.36.0))
+        version: 3.6.0(@swc/helpers@0.5.5)(vite@5.1.8(@types/node@22.9.0)(sass@1.83.1)(terser@5.36.0))
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -242,10 +242,10 @@ importers:
         version: 4.9.4
       vite:
         specifier: ^5.1.6
-        version: 5.1.8(@types/node@22.9.0)(terser@5.36.0)
+        version: 5.1.8(@types/node@22.9.0)(sass@1.83.1)(terser@5.36.0)
       vite-plugin-html:
         specifier: ^3.2.2
-        version: 3.2.2(vite@5.1.8(@types/node@22.9.0)(terser@5.36.0))
+        version: 3.2.2(vite@5.1.8(@types/node@22.9.0)(sass@1.83.1)(terser@5.36.0))
 
   demo/admin/server:
     dependencies:
@@ -459,7 +459,7 @@ importers:
         version: 11.0.2
       next:
         specifier: ^14.2.22
-        version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.83.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -518,6 +518,9 @@ importers:
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
@@ -527,6 +530,12 @@ importers:
       prettier:
         specifier: ^2.0.0
         version: 2.8.3
+      sass:
+        specifier: ^1.83.1
+        version: 1.83.1
+      typed-css-modules:
+        specifier: ^0.9.1
+        version: 0.9.1
       typescript:
         specifier: ^4.0.0
         version: 4.9.4
@@ -556,7 +565,7 @@ importers:
         version: 2.12.6(graphql@15.8.0)
       next:
         specifier: ^14.2.22
-        version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.83.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2250,7 +2259,7 @@ importers:
         version: 15.0.0
       next:
         specifier: ^14.2.22
-        version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.83.1)
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -2437,13 +2446,13 @@ importers:
         version: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       draft-js-export-html:
         specifier: ^1.4.1
-        version: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
+        version: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3)
       draft-js-export-markdown:
         specifier: ^1.4.0
-        version: 1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
+        version: 1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3)
       draft-js-import-markdown:
         specifier: ^1.4.1
-        version: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
+        version: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3)
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
@@ -5955,6 +5964,88 @@ packages:
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
 
+  '@parcel/watcher-android-arm64@2.5.0':
+    resolution: {integrity: sha512-qlX4eS28bUcQCdribHkg/herLe+0A9RyYC+mm2PXpncit8z5b3nSqGVzMNR3CmtAOgRutiZ02eIJJgP/b1iEFQ==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [arm64]
+    os: [android]
+
+  '@parcel/watcher-darwin-arm64@2.5.0':
+    resolution: {integrity: sha512-hyZ3TANnzGfLpRA2s/4U1kbw2ZI4qGxaRJbBH2DCSREFfubMswheh8TeiC1sGZ3z2jUf3s37P0BBlrD3sjVTUw==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@parcel/watcher-darwin-x64@2.5.0':
+    resolution: {integrity: sha512-9rhlwd78saKf18fT869/poydQK8YqlU26TMiNg7AIu7eBp9adqbJZqmdFOsbZ5cnLp5XvRo9wcFmNHgHdWaGYA==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@parcel/watcher-freebsd-x64@2.5.0':
+    resolution: {integrity: sha512-syvfhZzyM8kErg3VF0xpV8dixJ+RzbUaaGaeb7uDuz0D3FK97/mZ5AJQ3XNnDsXX7KkFNtyQyFrXZzQIcN49Tw==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@parcel/watcher-linux-arm-glibc@2.5.0':
+    resolution: {integrity: sha512-0VQY1K35DQET3dVYWpOaPFecqOT9dbuCfzjxoQyif1Wc574t3kOSkKevULddcR9znz1TcklCE7Ht6NIxjvTqLA==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [arm]
+    os: [linux]
+
+  '@parcel/watcher-linux-arm-musl@2.5.0':
+    resolution: {integrity: sha512-6uHywSIzz8+vi2lAzFeltnYbdHsDm3iIB57d4g5oaB9vKwjb6N6dRIgZMujw4nm5r6v9/BQH0noq6DzHrqr2pA==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [arm]
+    os: [linux]
+
+  '@parcel/watcher-linux-arm64-glibc@2.5.0':
+    resolution: {integrity: sha512-BfNjXwZKxBy4WibDb/LDCriWSKLz+jJRL3cM/DllnHH5QUyoiUNEp3GmL80ZqxeumoADfCCP19+qiYiC8gUBjA==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@parcel/watcher-linux-arm64-musl@2.5.0':
+    resolution: {integrity: sha512-S1qARKOphxfiBEkwLUbHjCY9BWPdWnW9j7f7Hb2jPplu8UZ3nes7zpPOW9bkLbHRvWM0WDTsjdOTUgW0xLBN1Q==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@parcel/watcher-linux-x64-glibc@2.5.0':
+    resolution: {integrity: sha512-d9AOkusyXARkFD66S6zlGXyzx5RvY+chTP9Jp0ypSTC9d4lzyRs9ovGf/80VCxjKddcUvnsGwCHWuF2EoPgWjw==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [x64]
+    os: [linux]
+
+  '@parcel/watcher-linux-x64-musl@2.5.0':
+    resolution: {integrity: sha512-iqOC+GoTDoFyk/VYSFHwjHhYrk8bljW6zOhPuhi5t9ulqiYq1togGJB5e3PwYVFFfeVgc6pbz3JdQyDoBszVaA==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [x64]
+    os: [linux]
+
+  '@parcel/watcher-win32-arm64@2.5.0':
+    resolution: {integrity: sha512-twtft1d+JRNkM5YbmexfcH/N4znDtjgysFaV9zvZmmJezQsKpkfLYJ+JFV3uygugK6AtIM2oADPkB2AdhBrNig==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@parcel/watcher-win32-ia32@2.5.0':
+    resolution: {integrity: sha512-+rgpsNRKwo8A53elqbbHXdOMtY/tAtTzManTWShB5Kk54N8Q9mzNWV7tV+IbGueCbcj826MfWGU3mprWtuf1TA==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [ia32]
+    os: [win32]
+
+  '@parcel/watcher-win32-x64@2.5.0':
+    resolution: {integrity: sha512-lPrxve92zEHdgeff3aiu4gDOIt4u7sJYha6wbdEZDCDUhtjTsOMiaJzG5lMY4GkWH8p0fMmO2Ppq5G5XXG+DQw==}
+    engines: {node: '>= 10.0.0'}
+    cpu: [x64]
+    os: [win32]
+
+  '@parcel/watcher@2.5.0':
+    resolution: {integrity: sha512-i0GV1yJnm2n3Yq1qw6QrUrd/LI9bE8WEBOTtOkpCXHHdyN3TAGgqAK/DAT05z4fq2x04cARXt2pDmjWjL92iTQ==}
+    engines: {node: '>= 10.0.0'}
+
   '@peculiar/asn1-schema@2.3.3':
     resolution: {integrity: sha512-6GptMYDMyWBHTUKndHaDsRZUO/XMSgIns2krxcm2L7SEExRHwawFvSwNBhqNPR9HJwv3MruAiF1bhN0we6j6GQ==}
 
@@ -9128,6 +9219,11 @@ packages:
     resolution: {integrity: sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==}
     engines: {node: '>=8'}
 
+  detect-libc@1.0.3:
+    resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
+    engines: {node: '>=0.10'}
+    hasBin: true
+
   detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
@@ -10669,6 +10765,9 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
+  icss-replace-symbols@1.1.0:
+    resolution: {integrity: sha512-chIaY3Vh2mh2Q3RGXttaDIzeiPvaVXJ+C4DAh/w3c37SKZ/U6PGMmuicR2EQQp9bKG8zLMCl7I+PtIoOOPp8Gg==}
+
   icss-utils@5.1.0:
     resolution: {integrity: sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==}
     engines: {node: ^10 || ^12 || >= 14}
@@ -10700,6 +10799,9 @@ packages:
   immutable@3.7.6:
     resolution: {integrity: sha512-AizQPcaofEtO11RZhPPHBOJRdo/20MKQF9mBLnVkBoyHi1/zXK8fzVdnEpSV9gxqtnh6Qomfp3F0xT5qP/vThw==}
     engines: {node: '>=0.8.0'}
+
+  immutable@5.0.3:
+    resolution: {integrity: sha512-P8IdPQHq3lA1xVeBRi5VPqUm5HDgKnx0Ru51wZz5mjxHr5n3RWhjIpOFU7ybkUxfB+5IToy+OLaHYDBIWsv+uw==}
 
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -11075,6 +11177,9 @@ packages:
   is-symbol@1.0.4:
     resolution: {integrity: sha512-C/CPBqKWnvdcxqIARxyOh4v1UUEOCHpgDa0WYgpKDFMszcrPcffg5uhwSgPCLD2WWxmq6isisz87tzT01tuGhg==}
     engines: {node: '>= 0.4'}
+
+  is-there@4.5.1:
+    resolution: {integrity: sha512-vIZ7HTXAoRoIwYSsTnxb0sg9L6rth+JOulNcavsbskQkCIWoSM2cjFOWZs4wGziGZER+Xgs/HXiCQZgiL8ppxQ==}
 
   is-typed-array@1.1.13:
     resolution: {integrity: sha512-uZ25/bUAlUY5fR4OKT4rZQEBrzQWYV9ZJYGGsUmEJ6thodVJ1HX64ePQ6Z0qPWP+m+Uq6e9UugrE38jeYsDSMw==}
@@ -12312,6 +12417,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  mkdirp@3.0.1:
+    resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   module-details-from-path@1.0.3:
     resolution: {integrity: sha512-ySViT69/76t8VhE1xXHK6Ch4NcDd26gx0MzKXLO+F7NOtnqH68d9zF94nT8ZWSxXh8ELOERsnJO/sWt1xZYw5A==}
 
@@ -12434,6 +12544,9 @@ packages:
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
+
+  node-addon-api@7.1.1:
+    resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
 
   node-bitmap@0.0.1:
     resolution: {integrity: sha512-Jx5lPaaLdIaOsj2mVLWMWulXF6GQVdyLvNSxmiYCvZ8Ma2hfKX0POoR2kgKOqz+oFsRreq0yYZjQ2wjE9VNzCA==}
@@ -14153,6 +14266,11 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
+  sass@1.83.1:
+    resolution: {integrity: sha512-EVJbDaEs4Rr3F0glJzFSOvtg2/oy2V/YrGFPqPY24UqcLDWcI9ZY5sN+qyO3c/QCZwzgfirvhXvINiJCE/OLcA==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
   sax@1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
 
@@ -15139,6 +15257,11 @@ packages:
   typed-array-length@1.0.6:
     resolution: {integrity: sha512-/OxDN6OtAk5KBpGb28T+HZc2M+ADtvRxXrKKbUwtsLgdoxgX13hyy7ek6bFRl5+aBs2yZzB0c4CnQfAtVypW/g==}
     engines: {node: '>= 0.4'}
+
+  typed-css-modules@0.9.1:
+    resolution: {integrity: sha512-W2HWKncdKd+bLWsnuWB2EyuQBzZ7KJ9Byr/67KLiiyGegcN52rOveun9JR8yAvuL5IXunRMxt0eORMtAUj5bmA==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   typedarray-to-buffer@3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
@@ -21469,6 +21592,67 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.28.0(@opentelemetry/api@1.9.0)
 
+  '@parcel/watcher-android-arm64@2.5.0':
+    optional: true
+
+  '@parcel/watcher-darwin-arm64@2.5.0':
+    optional: true
+
+  '@parcel/watcher-darwin-x64@2.5.0':
+    optional: true
+
+  '@parcel/watcher-freebsd-x64@2.5.0':
+    optional: true
+
+  '@parcel/watcher-linux-arm-glibc@2.5.0':
+    optional: true
+
+  '@parcel/watcher-linux-arm-musl@2.5.0':
+    optional: true
+
+  '@parcel/watcher-linux-arm64-glibc@2.5.0':
+    optional: true
+
+  '@parcel/watcher-linux-arm64-musl@2.5.0':
+    optional: true
+
+  '@parcel/watcher-linux-x64-glibc@2.5.0':
+    optional: true
+
+  '@parcel/watcher-linux-x64-musl@2.5.0':
+    optional: true
+
+  '@parcel/watcher-win32-arm64@2.5.0':
+    optional: true
+
+  '@parcel/watcher-win32-ia32@2.5.0':
+    optional: true
+
+  '@parcel/watcher-win32-x64@2.5.0':
+    optional: true
+
+  '@parcel/watcher@2.5.0':
+    dependencies:
+      detect-libc: 1.0.3
+      is-glob: 4.0.3
+      micromatch: 4.0.8
+      node-addon-api: 7.1.1
+    optionalDependencies:
+      '@parcel/watcher-android-arm64': 2.5.0
+      '@parcel/watcher-darwin-arm64': 2.5.0
+      '@parcel/watcher-darwin-x64': 2.5.0
+      '@parcel/watcher-freebsd-x64': 2.5.0
+      '@parcel/watcher-linux-arm-glibc': 2.5.0
+      '@parcel/watcher-linux-arm-musl': 2.5.0
+      '@parcel/watcher-linux-arm64-glibc': 2.5.0
+      '@parcel/watcher-linux-arm64-musl': 2.5.0
+      '@parcel/watcher-linux-x64-glibc': 2.5.0
+      '@parcel/watcher-linux-x64-musl': 2.5.0
+      '@parcel/watcher-win32-arm64': 2.5.0
+      '@parcel/watcher-win32-ia32': 2.5.0
+      '@parcel/watcher-win32-x64': 2.5.0
+    optional: true
+
   '@peculiar/asn1-schema@2.3.3':
     dependencies:
       asn1js: 3.0.5
@@ -23197,10 +23381,10 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react-swc@3.6.0(@swc/helpers@0.5.5)(vite@5.1.8(@types/node@22.9.0)(terser@5.36.0))':
+  '@vitejs/plugin-react-swc@3.6.0(@swc/helpers@0.5.5)(vite@5.1.8(@types/node@22.9.0)(sass@1.83.1)(terser@5.36.0))':
     dependencies:
       '@swc/core': 1.4.8(@swc/helpers@0.5.5)
-      vite: 5.1.8(@types/node@22.9.0)(terser@5.36.0)
+      vite: 5.1.8(@types/node@22.9.0)(sass@1.83.1)(terser@5.36.0)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -25299,6 +25483,9 @@ snapshots:
 
   detect-indent@6.1.0: {}
 
+  detect-libc@1.0.3:
+    optional: true
+
   detect-newline@3.1.0: {}
 
   detect-node@2.1.0: {}
@@ -25480,11 +25667,17 @@ snapshots:
       draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
       immutable: 3.7.6
 
-  draft-js-export-markdown@1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6):
+  draft-js-export-html@1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3):
     dependencies:
       draft-js: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
-      immutable: 3.7.6
+      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3)
+      immutable: 5.0.3
+
+  draft-js-export-markdown@1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3):
+    dependencies:
+      draft-js: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3)
+      immutable: 5.0.3
 
   draft-js-import-element@1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6):
     dependencies:
@@ -25493,23 +25686,35 @@ snapshots:
       immutable: 3.7.6
       synthetic-dom: 1.4.0
 
+  draft-js-import-element@1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3):
+    dependencies:
+      draft-js: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      draft-js-utils: 1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3)
+      immutable: 5.0.3
+      synthetic-dom: 1.4.0
+
   draft-js-import-html@1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6):
     dependencies:
       draft-js: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       draft-js-import-element: 1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
       immutable: 3.7.6
 
-  draft-js-import-markdown@1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6):
+  draft-js-import-markdown@1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3):
     dependencies:
       draft-js: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      draft-js-import-element: 1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6)
-      immutable: 3.7.6
+      draft-js-import-element: 1.4.0(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3)
+      immutable: 5.0.3
       synthetic-dom: 1.4.0
 
   draft-js-utils@1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@3.7.6):
     dependencies:
       draft-js: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       immutable: 3.7.6
+
+  draft-js-utils@1.4.1(draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(immutable@5.0.3):
+    dependencies:
+      draft-js: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      immutable: 5.0.3
 
   draft-js@0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
@@ -27346,6 +27551,8 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
+  icss-replace-symbols@1.1.0: {}
+
   icss-utils@5.1.0(postcss@8.4.49):
     dependencies:
       postcss: 8.4.49
@@ -27365,6 +27572,8 @@ snapshots:
   immer@9.0.21: {}
 
   immutable@3.7.6: {}
+
+  immutable@5.0.3: {}
 
   import-fresh@3.3.0:
     dependencies:
@@ -27705,6 +27914,8 @@ snapshots:
   is-symbol@1.0.4:
     dependencies:
       has-symbols: 1.0.3
+
+  is-there@4.5.1: {}
 
   is-typed-array@1.1.13:
     dependencies:
@@ -29415,6 +29626,8 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
+  mkdirp@3.0.1: {}
+
   module-details-from-path@1.0.3: {}
 
   mri@1.2.0: {}
@@ -29527,7 +29740,7 @@ snapshots:
       '@nestjs/core': 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/platform-express@10.4.15)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       commander: 11.1.0
 
-  next@14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.83.1):
     dependencies:
       '@next/env': 14.2.23
       '@swc/helpers': 0.5.5
@@ -29550,6 +29763,7 @@ snapshots:
       '@next/swc-win32-ia32-msvc': 14.2.23
       '@next/swc-win32-x64-msvc': 14.2.23
       '@opentelemetry/api': 1.9.0
+      sass: 1.83.1
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -29571,6 +29785,9 @@ snapshots:
       tslib: 2.8.1
 
   node-abort-controller@3.1.1: {}
+
+  node-addon-api@7.1.1:
+    optional: true
 
   node-bitmap@0.0.1: {}
 
@@ -30360,7 +30577,7 @@ snapshots:
 
   postcss@8.4.49:
     dependencies:
-      nanoid: 3.3.7
+      nanoid: 3.3.8
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -31445,6 +31662,14 @@ snapshots:
       is-regex: 1.1.4
 
   safer-buffer@2.1.2: {}
+
+  sass@1.83.1:
+    dependencies:
+      chokidar: 4.0.1
+      immutable: 5.0.3
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.5.0
 
   sax@1.2.4: {}
 
@@ -32539,6 +32764,22 @@ snapshots:
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
 
+  typed-css-modules@0.9.1:
+    dependencies:
+      camelcase: 6.3.0
+      chalk: 4.1.2
+      chokidar: 3.6.0
+      glob: 10.4.5
+      icss-replace-symbols: 1.1.0
+      is-there: 4.5.1
+      mkdirp: 3.0.1
+      postcss: 8.4.49
+      postcss-modules-extract-imports: 3.0.0(postcss@8.4.49)
+      postcss-modules-local-by-default: 4.0.0(postcss@8.4.49)
+      postcss-modules-scope: 3.0.0(postcss@8.4.49)
+      postcss-modules-values: 4.0.0(postcss@8.4.49)
+      yargs: 17.7.2
+
   typedarray-to-buffer@3.1.5:
     dependencies:
       is-typedarray: 1.0.0
@@ -32961,7 +33202,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite-plugin-html@3.2.2(vite@5.1.8(@types/node@22.9.0)(terser@5.36.0)):
+  vite-plugin-html@3.2.2(vite@5.1.8(@types/node@22.9.0)(sass@1.83.1)(terser@5.36.0)):
     dependencies:
       '@rollup/pluginutils': 4.2.1
       colorette: 2.0.19
@@ -32975,9 +33216,9 @@ snapshots:
       html-minifier-terser: 6.1.0
       node-html-parser: 5.4.2
       pathe: 0.2.0
-      vite: 5.1.8(@types/node@22.9.0)(terser@5.36.0)
+      vite: 5.1.8(@types/node@22.9.0)(sass@1.83.1)(terser@5.36.0)
 
-  vite@5.1.8(@types/node@22.9.0)(terser@5.36.0):
+  vite@5.1.8(@types/node@22.9.0)(sass@1.83.1)(terser@5.36.0):
     dependencies:
       esbuild: 0.19.12
       postcss: 8.4.49
@@ -32985,6 +33226,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.9.0
       fsevents: 2.3.3
+      sass: 1.83.1
       terser: 5.36.0
 
   vlq@1.0.1: {}

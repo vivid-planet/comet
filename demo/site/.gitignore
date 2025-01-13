@@ -51,3 +51,5 @@ lang
 lang-extracted
 lang-compiled
 /dist
+
+src/**/*.scss.d.ts

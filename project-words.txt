@@ -1,6 +1,7 @@
 Aktuelles
 Betrieb
 blockname
+clsx
 codemod
 codemods
 Embeddables
