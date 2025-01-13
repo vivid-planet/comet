@@ -6,7 +6,7 @@ export const getMuiMenuItem: GetMuiComponentTheme<"MuiMenuItem"> = (component, t
     styleOverrides: mergeOverrideStyles<"MuiMenuItem">(component?.styleOverrides, {
         root: {
             "& .MuiListItemIcon-root": {
-                minWidth: "16px",
+                minWidth: 0,
             },
         },
     }),
