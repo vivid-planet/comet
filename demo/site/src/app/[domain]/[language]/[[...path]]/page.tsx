@@ -3,6 +3,7 @@ import { ExternalLinkBlockData, InternalLinkBlockData, RedirectsLinkBlockData } 
 import { documentTypes } from "@src/documents";
 import { GQLPageTreeNodeScope } from "@src/graphql.generated";
 import { createGraphQLFetch } from "@src/util/graphQLClient";
+import { resolveUrl } from "@src/util/resolveUrl";
 import { getSiteConfigForDomain } from "@src/util/siteConfig";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -70,7 +71,10 @@ export default async function Page({ params }: PageProps) {
                     case "internal": {
                         const internalLink = target.block.props as InternalLinkBlockData;
                         if (internalLink.targetPage) {
-                            destination = `/${(internalLink.targetPage.scope as GQLPageTreeNodeScope).language}/${internalLink.targetPage.path}`;
+                            destination = resolveUrl({
+                                path: internalLink.targetPage.path,
+                                scope: { language: (internalLink.targetPage.scope as GQLPageTreeNodeScope).language },
+                            });
                         }
                         break;
                     }
@@ -79,6 +83,7 @@ export default async function Page({ params }: PageProps) {
                         break;
                 }
             }
+
             if (destination) {
                 redirect(destination);
             }
