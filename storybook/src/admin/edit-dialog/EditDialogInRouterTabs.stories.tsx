@@ -1,6 +1,7 @@
 import {
     DataGridToolbar,
     EditDialog,
+    FillSpace,
     FinalForm,
     IEditDialogApi,
     MainContent,
@@ -9,7 +10,6 @@ import {
     RouterTabs,
     TextField,
     ToolbarActions,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Add } from "@comet/admin-icons";
 import { Button, Typography } from "@mui/material";
@@ -71,7 +71,7 @@ interface ToolbarProps extends GridToolbarProps {
 function Toolbar({ toolbarAction }: ToolbarProps) {
     return (
         <DataGridToolbar>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarActions>{toolbarAction}</ToolbarActions>
         </DataGridToolbar>
     );

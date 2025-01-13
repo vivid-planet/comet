@@ -16,9 +16,9 @@ export const PreviewOverlayElement = ({ element }: Props) => {
     return (
         <Root
             key={element.adminRoute}
-            showBlockOutlines={iFrameBridge.showOutlines}
-            blockIsSelected={isSelected}
-            isHoveredInBlockList={isHovered}
+            $showBlockOutlines={iFrameBridge.showOutlines}
+            $blockIsSelected={isSelected}
+            $isHoveredInBlockList={isHovered}
             title={element.label}
             onClick={() => {
                 iFrameBridge.sendSelectComponent(element.adminRoute);
@@ -37,9 +37,9 @@ export const PreviewOverlayElement = ({ element }: Props) => {
 };
 
 type RootProps = {
-    showBlockOutlines: boolean;
-    blockIsSelected: boolean;
-    isHoveredInBlockList: boolean;
+    $showBlockOutlines: boolean;
+    $blockIsSelected: boolean;
+    $isHoveredInBlockList: boolean;
 };
 
 const elementHoverStyles = css`
@@ -71,10 +71,10 @@ const Root = styled.div<RootProps>`
         ${elementHoverStyles}
     }
 
-    ${({ isHoveredInBlockList: isHovered }) => isHovered && elementHoverStyles}
+    ${({ $isHoveredInBlockList }) => $isHoveredInBlockList && elementHoverStyles}
 
-    ${({ showBlockOutlines: showOutlines, isHoveredInBlockList: isHovered }) =>
-        Boolean(showOutlines && !isHovered) &&
+    ${({ $showBlockOutlines, $isHoveredInBlockList }) =>
+        Boolean($showBlockOutlines && !$isHoveredInBlockList) &&
         css`
             &:not(:hover) {
                 outline-color: #d9d9d9;
@@ -82,8 +82,8 @@ const Root = styled.div<RootProps>`
             }
         `}
 
-    ${({ blockIsSelected }) =>
-        blockIsSelected &&
+    ${({ $blockIsSelected }) =>
+        $blockIsSelected &&
         css`
             outline-color: #29b6f6;
 

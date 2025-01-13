@@ -1,8 +1,8 @@
 import {
     AppHeader,
-    AppHeaderFillSpace,
     AppHeaderMenuButton,
     CometLogo,
+    FillSpace,
     MainContent,
     MasterLayout,
     Menu,
@@ -71,7 +71,7 @@ const Header = () => (
     <AppHeader>
         <AppHeaderMenuButton />
         <CometLogo />
-        <AppHeaderFillSpace />
+        <FillSpace />
     </AppHeader>
 );
 
