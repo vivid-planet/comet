@@ -69,22 +69,19 @@ export class WarningCheckerConsole {
                                     const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
                                     const id = v5(`${tableName}${rootBlock["id"]};${warning.message}`, staticNamespace);
                                     // TODO: (in the next PRs) add blockInfos/metadata
-                                    const warningEntity = await this.warningsRepository.findOne({ id });
-                                    warning;
 
-                                    if (warningEntity) {
-                                        warningEntity.assign({
-                                            type,
-                                            severity: WarningSeverity[warning.severity],
-                                        });
-                                    } else {
-                                        this.warningsRepository.create({
+                                    await this.entityManager.upsert(
+                                        Warning,
+                                        {
+                                            createdAt: new Date(),
+                                            updatedAt: new Date(),
                                             id,
                                             type,
                                             message: warning.message,
                                             severity: WarningSeverity[warning.severity],
-                                        });
-                                    }
+                                        },
+                                        { onConflictExcludeFields: ["createdAt"] },
+                                    );
                                 }
                             }
                         }
