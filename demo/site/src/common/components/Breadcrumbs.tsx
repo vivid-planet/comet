@@ -12,13 +12,13 @@ const Breadcrumbs = ({ name, path, parentNodes }: GQLBreadcrumbsFragment) => {
                 <sc.Container>
                     {parentNodes.map((parentNode) => (
                         <Fragment key={parentNode.path}>
-                            <sc.StyledLink href={parentNode.path}> {parentNode.name}</sc.StyledLink>
+                            <sc.Link href={parentNode.path}> {parentNode.name}</sc.Link>
 
                             <sc.Divider />
                         </Fragment>
                     ))}
 
-                    <sc.StyledLink href={path}> {name}</sc.StyledLink>
+                    <sc.Link href={path}> {name}</sc.Link>
                 </sc.Container>
             )}
         </GridRoot>
