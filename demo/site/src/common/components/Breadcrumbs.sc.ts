@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -5,7 +6,7 @@ export const Container = styled.div`
     grid-column: 2 / 24;
 `;
 
-export const Link = styled.span`
+export const StyledLink = styled(Link)`
     color: ${({ theme }) => theme.palette.primary.main};
     text-decoration: none;
 
