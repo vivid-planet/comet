@@ -30,7 +30,7 @@
         "@opentelemetry/sdk-node": "^0.53.0",
         "cache-manager": "^5.7.6",
         "graphql": "^15.0.0",
-        "ioredis": "^5.4.1",
+        "ioredis": "^5.4.2",
         "lru-cache": "^11.0.1",
         "next": "^14.2.22",
         "react": "^18.3.1",
