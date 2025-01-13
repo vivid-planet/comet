@@ -41,7 +41,7 @@ export const AccordionItemBlock = withPreview(
                 <TitleWrapper onClick={() => setIsExpanded(!isExpanded)} aria-label={ariaLabelText}>
                     <Typography variant="h350">{title}</Typography>
                     <IconWrapper>
-                        <AnimatedChevron href="/assets/icons/chevron-down.svg#chevron-down" $isExpanded={isExpanded} />
+                        <AnimatedChevron href="/assets/icons/chevron-down.svg#root" $isExpanded={isExpanded} />
                     </IconWrapper>
                 </TitleWrapper>
                 <ContentWrapper aria-hidden={!isExpanded}>
