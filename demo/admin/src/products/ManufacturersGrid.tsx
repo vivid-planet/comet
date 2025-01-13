@@ -63,10 +63,7 @@ export function ManufacturersGrid() {
             renderHeader: () => (
                 <>
                     <GridColumnHeaderTitle label={intl.formatMessage({ id: "manufacturers.id", defaultMessage: "ID" })} columnWidth={150} />
-                    <Tooltip
-                        trigger="hover"
-                        title={<FormattedMessage id="comet.manufacturers.id.info" defaultMessage="The id of the manufacturer" />}
-                    >
+                    <Tooltip title={<FormattedMessage id="comet.manufacturers.id.info" defaultMessage="The id of the manufacturer" />}>
                         <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
                 </>

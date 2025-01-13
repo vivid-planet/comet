@@ -149,7 +149,6 @@ export function ManufacturersGrid() {
                         columnWidth={150}
                     />
                     <Tooltip
-                        trigger="hover"
                         title={
                             <FormattedMessage
                                 id="manufacturer.address.alternativeAddress.street.tooltip"
@@ -179,7 +178,6 @@ export function ManufacturersGrid() {
                         columnWidth={150}
                     />
                     <Tooltip
-                        trigger="hover"
                         title={
                             <FormattedMessage
                                 id="manufacturer.address.alternativeAddress.streetNumber.tooltip"
