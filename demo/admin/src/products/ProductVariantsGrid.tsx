@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import {
     DataGridToolbar,
+    FillSpace,
     GridColDef,
     GridFilterButton,
     muiGridFilterToGql,
     muiGridSortToGql,
     StackLink,
-    ToolbarFillSpace,
     ToolbarItem,
     useBufferedRowCount,
     useDataGridRemote,
@@ -36,7 +36,7 @@ function ProductVariantsGridToolbar() {
             <ToolbarItem>
                 <GridToolbarQuickFilter />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>

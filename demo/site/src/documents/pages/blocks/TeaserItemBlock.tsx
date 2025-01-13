@@ -14,37 +14,36 @@ const descriptionRenderers: Renderers = {
 
 export const TeaserItemBlock = withPreview(
     ({ data: { media, title, description, link } }: PropsWithData<TeaserItemBlockData>) => (
-        <LinkBlock data={link.link}>
-            <ItemContent>
-                <MediaMobile>
-                    <MediaBlock data={media} aspectRatio="1x1" sizes="20vw" />
-                </MediaMobile>
-                <MediaDesktop>
-                    <MediaBlock data={media} aspectRatio="16x9" sizes="20vw" />
-                </MediaDesktop>
-                <ContentContainer>
-                    <TitleTypography variant="h350">{title}</TitleTypography>
-                    <Typography variant="p200">
-                        <RichTextBlock data={description} renderers={descriptionRenderers} />
-                    </Typography>
-                    <TextLinkContainer>
-                        <SvgUse href="/assets/icons/arrow-right.svg#arrow-right" width={16} height={16} />
-                        <LinkText>{link.text}</LinkText>
-                    </TextLinkContainer>
-                </ContentContainer>
-            </ItemContent>
-        </LinkBlock>
+        <Link data={link.link}>
+            <MediaMobile>
+                <MediaBlock data={media} aspectRatio="1x1" sizes="20vw" />
+            </MediaMobile>
+            <MediaDesktop>
+                <MediaBlock data={media} aspectRatio="16x9" sizes="20vw" />
+            </MediaDesktop>
+            <ContentContainer>
+                <TitleTypography variant="h350">{title}</TitleTypography>
+                <Typography variant="p200">
+                    <RichTextBlock data={description} renderers={descriptionRenderers} />
+                </Typography>
+                <TextLinkContainer>
+                    <SvgUse href="/assets/icons/arrow-right.svg#arrow-right" width={16} height={16} />
+                    <LinkText>{link.text}</LinkText>
+                </TextLinkContainer>
+            </ContentContainer>
+        </Link>
     ),
     { label: "Teaser Item" },
 );
 
-const ItemContent = styled.a`
+const Link = styled(LinkBlock)`
     text-decoration: none;
     cursor: pointer;
     display: flex;
     flex: 1;
     flex-direction: row;
     gap: ${({ theme }) => theme.spacing.S300};
+    color: ${({ theme }) => theme.palette.text.primary};
 
     ${({ theme }) => theme.breakpoints.sm.mediaQuery} {
         flex: unset;
