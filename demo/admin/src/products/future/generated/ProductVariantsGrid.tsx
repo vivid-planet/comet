@@ -88,7 +88,7 @@ function ProductVariantsGridToolbar() {
             <ToolbarFillSpace />
             <ToolbarActions>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="productVariant.newProductVariant" defaultMessage="New Product Variant" />
+                    <FormattedMessage id="productVariant.newProductVariantsGridFutureEntry" defaultMessage="New Product Variant" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>
