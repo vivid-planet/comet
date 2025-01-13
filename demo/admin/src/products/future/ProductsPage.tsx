@@ -1,4 +1,5 @@
 import {
+    FillSpace,
     MainContent,
     RouterTab,
     RouterTabs,
@@ -13,7 +14,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Add as AddIcon, Edit } from "@comet/admin-icons";
 import { ContentScopeIndicator } from "@comet/cms-admin";
@@ -29,7 +29,7 @@ const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator global />}>
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
-        <ToolbarFillSpace />
+        <FillSpace />
         <ToolbarActions>
             <SaveBoundarySaveButton />
         </ToolbarActions>
@@ -58,8 +58,8 @@ export function ProductsPage() {
                                 </Button>
                             }
                             rowAction={(params) => (
-                                <IconButton component={StackLink} pageName="edit" payload={params.row.id}>
-                                    <Edit color="primary" />
+                                <IconButton color="primary" component={StackLink} pageName="edit" payload={params.row.id}>
+                                    <Edit />
                                 </IconButton>
                             )}
                             actionsColumnWidth={116}

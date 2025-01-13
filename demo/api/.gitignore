@@ -2,6 +2,7 @@
 /dist
 /node_modules
 .env
+src/site-configs.d.ts
 
 # Logs
 logs

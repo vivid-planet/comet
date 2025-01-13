@@ -1,6 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSaveButton,
@@ -10,7 +11,6 @@ import {
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarTitleItem,
     useStackSwitchApi,
 } from "@comet/admin";
@@ -183,7 +183,7 @@ export const RedirectForm = ({ mode, id, linkBlock, scope }: Props): JSX.Element
                         <ToolbarTitleItem>
                             {values.source ? values.source : <FormattedMessage id="comet.redirects.defaultTitle" defaultMessage="Redirect Detail" />}
                         </ToolbarTitleItem>
-                        <ToolbarFillSpace />
+                        <FillSpace />
                         <ToolbarActions>
                             <FinalFormSaveButton />
                         </ToolbarActions>

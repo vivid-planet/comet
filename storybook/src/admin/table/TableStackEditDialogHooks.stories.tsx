@@ -1,5 +1,6 @@
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     MainContent,
@@ -10,13 +11,11 @@ import {
     Table,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
 import { Add as AddIcon, Edit as EditIcon } from "@comet/admin-icons";
 import { Button, IconButton, Typography } from "@mui/material";
-import * as React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -67,7 +66,7 @@ export const StackEditDialogHooks = {
                                 <ToolbarItem>
                                     <Typography variant="h3">Table Stack Edit Dialog</Typography>
                                 </ToolbarItem>
-                                <ToolbarFillSpace />
+                                <FillSpace />
                                 <ToolbarActions>
                                     <Button
                                         color="primary"

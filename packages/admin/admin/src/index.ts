@@ -22,7 +22,9 @@ export { SplitButtonContext, SplitButtonContextOptions } from "./common/buttons/
 export { useSplitButtonContext } from "./common/buttons/split/useSplitButtonContext";
 export { ClearInputAdornment, ClearInputAdornmentProps } from "./common/ClearInputAdornment";
 export { CometLogo } from "./common/CometLogo";
+export { Dialog, DialogClassKey, DialogProps } from "./common/Dialog";
 export { FieldSet, FieldSetClassKey, FieldSetProps } from "./common/FieldSet";
+export { FillSpace, FillSpaceClassKey, FillSpaceProps } from "./common/FillSpace";
 export { FullHeightContent, FullHeightContentClassKey, FullHeightContentProps } from "./common/FullHeightContent";
 export { HoverActions, HoverActionsClassKey, HoverActionsProps } from "./common/HoverActions";
 export { Loading, LoadingProps } from "./common/Loading";
@@ -50,6 +52,7 @@ export { ExportApi, useDataGridExcelExport } from "./dataGrid/excelExport/useDat
 export { GridCellContent, GridCellContentClassKey, GridCellContentProps } from "./dataGrid/GridCellContent";
 export { GridColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
+export { dataGridDateColumn, dataGridDateTimeColumn } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
@@ -207,6 +210,7 @@ export { MenuItemRouterLink, MenuItemRouterLinkProps } from "./mui/menu/ItemRout
 export { Menu, MenuProps } from "./mui/menu/Menu";
 export { MenuClassKey } from "./mui/menu/Menu.styles";
 export { MuiThemeProvider } from "./mui/ThemeProvider";
+export { renderFinalFormChildren } from "./renderFinalFormChildren";
 export { RouterBrowserRouter } from "./router/BrowserRouter";
 export { RouterConfirmationDialog, RouterConfirmationDialogClassKey, RouterConfirmationDialogProps } from "./router/ConfirmationDialog";
 export { RouterContext } from "./router/Context";

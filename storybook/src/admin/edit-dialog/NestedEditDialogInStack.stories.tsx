@@ -1,7 +1,6 @@
 import { FinalForm, MainContent, Stack, StackBreadcrumbs, StackLink, StackPage, StackSwitch, TextField, useEditDialog } from "@comet/admin";
 import { Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import React from "react";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 

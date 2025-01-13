@@ -35,20 +35,20 @@ export function FileUploadsFileInterceptor(fieldName: string): Type<NestIntercep
                     filename: function (req, file, cb) {
                         // otherwise special characters aren't decoded properly (https://github.com/expressjs/multer/issues/836#issuecomment-1264338996)
                         file.originalname = Buffer.from(file.originalname, "latin1").toString("utf8");
-                        cb(null, `${uuid()}-${file.originalname}`);
+                        cb(null, uuid());
                     },
                 }),
                 limits: {
                     fileSize: fileValidationService.config.maxFileSize * 1024 * 1024,
                 },
                 fileFilter: (req, file, cb) => {
-                    this.fileValidationService.validateFileMetadata(file).then((result) => {
-                        if (result === undefined) {
-                            return cb(null, true);
-                        } else {
-                            return cb(new CometValidationException(result), false);
-                        }
-                    });
+                    const errorMessage = this.fileValidationService.validateFileMetadata(file);
+
+                    if (errorMessage === undefined) {
+                        cb(null, true);
+                    } else {
+                        cb(new CometValidationException(errorMessage), false);
+                    }
                 },
             };
 
