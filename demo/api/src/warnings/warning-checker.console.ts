@@ -69,7 +69,7 @@ export class WarningCheckerConsole {
                                         severity: WarningSeverity[warning.severity],
                                     });
                                 } else {
-                                    await this.warningsRepository.create({
+                                    this.warningsRepository.create({
                                         id,
                                         type,
                                         message: warning.message,
