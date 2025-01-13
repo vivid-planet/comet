@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactElement, ReactNode, RefObject, useRef, useState } from "react";
+import { ReactElement, ReactNode, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { DamVideoBlockData } from "../blocks.generated";
@@ -9,18 +9,6 @@ import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { useIsElementInViewport } from "./helpers/useIsElementVisible";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
-
-const playDamVideo = (videoRef: RefObject<HTMLVideoElement>) => {
-    if (videoRef.current) {
-        videoRef.current.play();
-    }
-};
-
-const pauseDamVideo = (videoRef: RefObject<HTMLVideoElement>) => {
-    if (videoRef.current) {
-        videoRef.current.pause();
-    }
-};
 
 interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     aspectRatio?: string;
@@ -49,13 +37,11 @@ export const DamVideoBlock = withPreview(
         const inViewRef = useRef<HTMLDivElement>(null);
         const videoRef = useRef<HTMLVideoElement>(null);
 
-        const handleInViewChange = (inView: boolean) => {
-            if (autoplay) {
-                inView ? playDamVideo(videoRef) : pauseDamVideo(videoRef);
+        useIsElementInViewport(inViewRef, (inView) => {
+            if (autoplay && videoRef.current) {
+                inView ? videoRef.current.play() : videoRef.current.pause();
             }
-        };
-
-        useIsElementInViewport(inViewRef, handleInViewChange);
+        });
 
         return (
             <>
