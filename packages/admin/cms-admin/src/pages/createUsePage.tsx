@@ -7,6 +7,7 @@ import {
     DispatchSetStateAction,
     parallelAsyncEvery,
     resolveNewState,
+    useBlockContext,
 } from "@comet/blocks-admin";
 import isEqual from "lodash.isequal";
 import { createElement, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
@@ -172,6 +173,7 @@ export const createUsePage: CreateUsePage =
             const [referenceOutput, setReferenceOutput] = useState<undefined | Output>(undefined);
             const [saving, setSaving] = useState(false);
             const [saveError, setSaveError] = useState<"invalid" | "conflict" | "error" | undefined>();
+            const blockContext = useBlockContext();
 
             const generateOutput = (ps: PS): Output => {
                 return {
@@ -183,18 +185,6 @@ export const createUsePage: CreateUsePage =
                         {},
                     ),
                 };
-            };
-
-            const generateStateFromSession = async (sessionState: string): Promise<PS> => {
-                const output = JSON.parse(sessionState) as Output;
-                const pageState = {} as PS;
-                for (const [key, value] of Object.entries(rootBlocks)) {
-                    const state = await value.output2State(output[key]);
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (pageState as any)[key] = state;
-                }
-
-                return { ...pageState };
             };
 
             let hasChanges: boolean | undefined = undefined;
@@ -248,6 +238,15 @@ export const createUsePage: CreateUsePage =
 
             // manage sync of page state and gql-api
             useEffect(() => {
+                const generateStateFromSession = async (sessionState: string): Promise<PS> => {
+                    const { output, pageState } = JSON.parse(sessionState) as { output: Output; pageState: PS };
+                    for (const [key, value] of Object.entries(rootBlocks)) {
+                        const state = await value.output2State(output[key], blockContext);
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (pageState as any).document[key] = state;
+                    }
+                    return { ...pageState };
+                };
                 const loadPageState = async () => {
                     const sessionStoragePageState = window.sessionStorage.getItem(`pageState_${pageId}`);
 
@@ -282,7 +281,7 @@ export const createUsePage: CreateUsePage =
                     }
                 };
                 loadPageState();
-            }, [data, pageId, pageState]);
+            }, [data, pageId, pageState, blockContext]);
 
             const handleSavePage = useCallback(async () => {
                 // TODO show progress and error handling
@@ -350,7 +349,8 @@ export const createUsePage: CreateUsePage =
                         });
                     } catch (error) {
                         if (hasChanges) {
-                            window.sessionStorage.setItem(`pageState_${pageId}`, JSON.stringify(generateOutput(pageState)));
+                            const output = generateOutput(pageState);
+                            window.sessionStorage.setItem(`pageState_${pageId}`, JSON.stringify({ output, pageState }));
                         }
                         console.error(error);
                         setSaveError("error");
