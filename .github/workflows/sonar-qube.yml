@@ -1,15 +1,10 @@
 name: SonarCloud Code Analysis
 
 on:
-    pull_request:
+    workflow_run:
+        workflows: ["Test"]
         types:
-            - opened
-            - synchronize
-            - reopened
-    push:
-        branches:
-            - main
-            - next
+            - completed
 
 jobs:
     sonarqube:
