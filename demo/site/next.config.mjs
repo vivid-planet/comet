@@ -1,11 +1,15 @@
-/* eslint-disable */
-
 // @ts-check
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
+
+import { createRequire } from 'node:module';
+
+import nextBundleAnalyzer from "@next/bundle-analyzer";
+
+const require = createRequire(import.meta.url);
+import cometConfig from "./src/comet-config.json" with { type: "json" };
+
+const withBundleAnalyzer = nextBundleAnalyzer({
     enabled: process.env.ANALYZE === "true",
 });
-
-const cometConfig = require("./src/comet-config.json");
 
 /**
  * @type {import('next').NextConfig}
@@ -30,4 +34,4 @@ const nextConfig = {
     cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
 };
 
-module.exports = withBundleAnalyzer(nextConfig);
+export default withBundleAnalyzer(nextConfig);
