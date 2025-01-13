@@ -159,7 +159,7 @@ export const DependencyList = ({ query, variables }: DependencyListProps) => {
     return (
         <>
             <sc.Toolbar>
-                <Tooltip trigger="hover" title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
+                <Tooltip title={<FormattedMessage id="comet.dependencies.dataGrid.reloadTooltip" defaultMessage="Reload" />}>
                     <IconButton
                         onClick={() => {
                             refetch({
