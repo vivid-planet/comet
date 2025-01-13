@@ -149,7 +149,7 @@ export async function Page({ pageTreeNodeId, scope }: { pageTreeNodeId: string; 
             )}
             <TopNavigation data={data.topMenu} />
             <Header header={data.header} />
-            <Breadcrumbs {...data.pageContent} />
+            <Breadcrumbs {...data.pageContent} scope={scope} />
             <div>
                 <StageBlock data={document.stage} />
                 <PageContentBlock data={data.pageContent.document.content} />
