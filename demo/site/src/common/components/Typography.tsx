@@ -194,14 +194,14 @@ const variantToElementMap: Record<TypographyVariant, "h1" | "h2" | "h3" | "h4" |
 export const Typography = styled.div.attrs<{
     as?: unknown;
     variant?: TypographyVariant;
-    $bottomSpacing?: boolean;
+    bottomSpacing?: boolean;
 }>((props) => ({ as: props.as ?? variantToElementMap[props.variant ?? "p300"] }))`
     font-family: ${({ theme }) => theme.fontFamily};
     ${({ variant = "p300" }) => typographyVariantStyle[variant]};
     margin-top: 0;
 
-    ${({ theme, $bottomSpacing }) =>
-        !$bottomSpacing &&
+    ${({ theme, bottomSpacing }) =>
+        !bottomSpacing &&
         css`
             margin-bottom: 0;
 

@@ -14,12 +14,12 @@ const eyebrowRenderers: Renderers = {
 const getHeadlineRenderers = (htmlTag: keyof HTMLElementTagNameMap): Renderers => ({
     inline: defaultRichTextInlineStyleMap,
     blocks: {
-        "header-one": createTextBlockRenderFn({ variant: "h600", as: htmlTag, $bottomSpacing: true }),
-        "header-two": createTextBlockRenderFn({ variant: "h550", as: htmlTag, $bottomSpacing: true }),
-        "header-three": createTextBlockRenderFn({ variant: "h500", as: htmlTag, $bottomSpacing: true }),
-        "header-four": createTextBlockRenderFn({ variant: "h450", as: htmlTag, $bottomSpacing: true }),
-        "header-five": createTextBlockRenderFn({ variant: "h400", as: htmlTag, $bottomSpacing: true }),
-        "header-six": createTextBlockRenderFn({ variant: "h350", as: htmlTag, $bottomSpacing: true }),
+        "header-one": createTextBlockRenderFn({ variant: "h600", as: htmlTag, bottomSpacing: true }),
+        "header-two": createTextBlockRenderFn({ variant: "h550", as: htmlTag, bottomSpacing: true }),
+        "header-three": createTextBlockRenderFn({ variant: "h500", as: htmlTag, bottomSpacing: true }),
+        "header-four": createTextBlockRenderFn({ variant: "h450", as: htmlTag, bottomSpacing: true }),
+        "header-five": createTextBlockRenderFn({ variant: "h400", as: htmlTag, bottomSpacing: true }),
+        "header-six": createTextBlockRenderFn({ variant: "h350", as: htmlTag, bottomSpacing: true }),
     },
 });
 
@@ -41,7 +41,7 @@ export const HeadingBlock = withPreview(
         return (
             <>
                 {hasRichTextBlockContent(eyebrow) && (
-                    <Typography variant="h400" as="h5" $bottomSpacing>
+                    <Typography variant="h400" as="h5" bottomSpacing>
                         <RichTextBlock data={eyebrow} renderers={eyebrowRenderers} />
                     </Typography>
                 )}
