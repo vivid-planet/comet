@@ -31,49 +31,58 @@ export class WarningCheckerConsole {
         for (const rootBlockEntity of this.discoverService.discoverRootBlocks()) {
             const { metadata, column, block } = rootBlockEntity;
 
-            const queryBuilder = this.entityManager.createQueryBuilder(metadata.className);
-            queryBuilder.select(`id, "${column}"`).from(metadata.tableName);
-            const rootBlocks = (await queryBuilder.getResult()) as Array<{ [key: string]: BlockInput }>;
+            const queryBuilderLimit = 100;
+            const baseQueryBuilder = this.entityManager.createQueryBuilder(metadata.className);
+            baseQueryBuilder.select(`id, "${column}"`).from(metadata.tableName).limit(queryBuilderLimit);
+            let rootBlocks: Array<{ [key: string]: BlockInput }> = [];
+            let offset = 0;
 
-            for (const rootBlock of rootBlocks) {
-                const blockData = block.blockDataFactory(block.blockInputFactory(rootBlock[column]));
+            do {
+                const queryBuilder = baseQueryBuilder.clone();
+                queryBuilder.offset(offset);
+                rootBlocks = (await queryBuilder.getResult()) as Array<{ [key: string]: BlockInput }>;
 
-                const flatBlocks = new FlatBlocks(blockData, {
-                    name: block.name,
-                    visible: true,
-                    rootPath: "root",
-                });
-                for (const node of flatBlocks.depthFirst()) {
-                    const warnings = node.block.warnings();
+                for (const rootBlock of rootBlocks) {
+                    const blockData = block.blockDataFactory(block.blockInputFactory(rootBlock[column]));
 
-                    if (warnings.length > 0) {
-                        // TODO: (in the next PRs) auto resolve warnings
+                    const flatBlocks = new FlatBlocks(blockData, {
+                        name: block.name,
+                        visible: true,
+                        rootPath: "root",
+                    });
+                    for (const node of flatBlocks.depthFirst()) {
+                        const warnings = node.block.warnings();
 
-                        for (const warning of warnings) {
-                            const type = "Block";
-                            const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
-                            const id = v5(`${metadata.tableName}${rootBlock["id"]};${warning.message}`, staticNamespace);
-                            // TODO: (in the next PRs) add blockInfos/metadata
-                            const warningEntity = await this.warningsRepository.findOne({ id });
+                        if (warnings.length > 0) {
+                            // TODO: (in the next PRs) auto resolve warnings
 
-                            if (warningEntity) {
-                                warningEntity.assign({
-                                    type,
-                                    severity: WarningSeverity[warning.severity],
-                                });
-                            } else {
-                                await this.warningsRepository.create({
-                                    id,
-                                    type,
-                                    message: warning.message,
-                                    severity: WarningSeverity[warning.severity],
-                                });
+                            for (const warning of warnings) {
+                                const type = "Block";
+                                const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
+                                const id = v5(`${metadata.tableName}${rootBlock["id"]};${warning.message}`, staticNamespace);
+                                // TODO: (in the next PRs) add blockInfos/metadata
+                                const warningEntity = await this.warningsRepository.findOne({ id });
+
+                                if (warningEntity) {
+                                    warningEntity.assign({
+                                        type,
+                                        severity: WarningSeverity[warning.severity],
+                                    });
+                                } else {
+                                    await this.warningsRepository.create({
+                                        id,
+                                        type,
+                                        message: warning.message,
+                                        severity: WarningSeverity[warning.severity],
+                                    });
+                                }
                             }
                         }
                     }
+                    await this.entityManager.flush();
                 }
-                await this.entityManager.flush();
-            }
+                offset += queryBuilderLimit;
+            } while (rootBlocks.length > 0);
         }
     }
 }
