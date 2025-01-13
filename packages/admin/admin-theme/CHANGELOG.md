@@ -1,5 +1,15 @@
 # @comet/admin-theme
 
+## 7.12.0
+
+### Minor Changes
+
+-   ee597535a: Add styling of `Card` and `CardHeader` to align with Comet DXP design
+
+### Patch Changes
+
+-   @comet/admin-icons@7.12.0
+
 ## 7.11.0
 
 ### Minor Changes

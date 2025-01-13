@@ -1,5 +1,15 @@
 # @comet/blocks-admin
 
+## 7.12.0
+
+### Patch Changes
+
+-   5583c9cff: Allow passing a function as child to `BlocksFinalForm`
+-   Updated dependencies [e8003f9c7]
+-   Updated dependencies [5583c9cff]
+    -   @comet/admin@7.12.0
+    -   @comet/admin-icons@7.12.0
+
 ## 7.11.0
 
 ### Patch Changes

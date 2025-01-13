@@ -1,5 +1,21 @@
 # @comet/admin
 
+## 7.12.0
+
+### Minor Changes
+
+-   e8003f9c7: Add a new `FillSpace` component to replace `ToolbarFillSpace` and `AppHeaderFillSpace`
+
+    `ToolbarFillSpace` and `AppHeaderFillSpace` are now deprecated.
+
+-   5583c9cff: Export `renderFinalFormChildren` helper
+
+### Patch Changes
+
+-   Updated dependencies [ee597535a]
+    -   @comet/admin-theme@7.12.0
+    -   @comet/admin-icons@7.12.0
+
 ## 7.11.0
 
 ### Minor Changes

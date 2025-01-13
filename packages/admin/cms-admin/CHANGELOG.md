@@ -1,5 +1,42 @@
 # @comet/cms-admin
 
+## 7.12.0
+
+### Minor Changes
+
+-   604491df5: Validate filename length for uploads to DAM or FileUploads
+
+    The filename can't exceed 255 characters.
+
+### Patch Changes
+
+-   cf1a829c5: Remove `video/avi`, `image/psd` and `video/x-m4v` from default accepted mimetypes
+
+    None of this mimetypes had an actual impact:
+
+    -   `video/avi` doesn't actually exist
+    -   `image/psd` doesn't exist / is non-standard
+    -   `video/x-m4v` is a niche format and the mimetype is not widely used (e.g., Google Chrome and MacOS use `video/mp4`
+        instead)
+
+    So removing them shouldn't have any noticeable effects.
+
+-   cf1a829c5: Add `image/x-icon` to default accepted mimetypes
+
+    Previously, only `image/vnd.microsoft.icon` was supported. That could lead to problems uploading .ico files, since
+    `image/vnd.microsoft.icon` and `image/x-icon` are valid mimetypes for this format.
+
+-   Updated dependencies [e8003f9c7]
+-   Updated dependencies [5583c9cff]
+-   Updated dependencies [ee597535a]
+-   Updated dependencies [5583c9cff]
+    -   @comet/admin@7.12.0
+    -   @comet/admin-theme@7.12.0
+    -   @comet/blocks-admin@7.12.0
+    -   @comet/admin-date-time@7.12.0
+    -   @comet/admin-icons@7.12.0
+    -   @comet/admin-rte@7.12.0
+
 ## 7.11.0
 
 ### Minor Changes
