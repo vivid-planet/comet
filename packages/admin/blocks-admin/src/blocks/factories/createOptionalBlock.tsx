@@ -169,6 +169,14 @@ export function createOptionalBlock<T extends BlockInterface>(
         previewContent: ({ block, visible }, ctx) => {
             return block && visible ? decoratedBlock.previewContent(block, ctx) : [];
         },
+
+        extractTextContents: (state) => {
+            if (state.block === undefined) {
+                return [];
+            }
+
+            return decoratedBlock.extractTextContents?.(state.block) ?? [];
+        },
     };
     return OptionalBlock;
 }
