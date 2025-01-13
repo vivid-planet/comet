@@ -121,7 +121,21 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
 
     useEffect(() => {
         if (childrenWrapperRef.current) {
-            const mutationObserver = new MutationObserver(() => {
+            const mutationObserver = new MutationObserver((mutations) => {
+                const mutationsOnlyIncludeNameAndTypeAttributeChangesFromInputElement = mutations.every((mutation) => {
+                    if (mutation.target instanceof HTMLElement && mutation.target.tagName === "INPUT") {
+                        return mutation.attributeName === "name" || mutation.attributeName === "type";
+                    }
+                    return false;
+                });
+
+                if (mutationsOnlyIncludeNameAndTypeAttributeChangesFromInputElement) {
+                    // Recalculating the site/preview elements causes the site content to re-render.
+                    // When the site contains a input element, the `name` and `type` attributes immediately trigger the mutation observer.
+                    // Skipping the recalculation in this case prevents this infinite loop.
+                    return;
+                }
+
                 recalculatePreviewElementsData();
             });
 
