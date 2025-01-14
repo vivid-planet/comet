@@ -73,7 +73,7 @@
         "probe-image-size": "^7.0.0",
         "request-ip": "^3.3.0",
         "rimraf": "^6.0.1",
-        "slugify": "^1.6.4",
+        "slugify": "^1.6.6",
         "ts-morph": "^16.0.0",
         "uuid": "^11.0.3",
         "uuid-by-string": "^4.0.0"

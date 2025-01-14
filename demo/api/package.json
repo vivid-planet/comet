@@ -58,7 +58,7 @@
         "response-time": "^2.3.3",
         "rimraf": "^6.0.1",
         "rxjs": "^7.8.1",
-        "slugify": "^1.0.0",
+        "slugify": "^1.6.6",
         "uuid": "^11.0.3"
     },
     "devDependencies": {
