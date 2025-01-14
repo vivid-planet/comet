@@ -2,7 +2,7 @@ import { BlockCategory, BlockInterface, createCompositeBlock, createListBlock } 
 import { FormattedMessage } from "react-intl";
 
 import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
-import { propsAndValidationGroup } from "../common/propsAndValidationGroup";
+import { propsAndValidationGroup } from "../common/PropsAndValidationGroup";
 
 const CheckboxItemBlock: BlockInterface = createCompositeBlock(
     {

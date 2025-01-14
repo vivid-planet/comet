@@ -13,7 +13,7 @@ class CheckboxListBlockInput extends BaseFieldBlockInput {
     items: ExtractBlockInput<typeof CheckboxItemsBlock>;
 
     transformToBlockData(): CheckboxListBlockData {
-        return inputToData(CheckboxListBlockData, super.getBlockDataWithUpdatedFieldName(this));
+        return inputToData(CheckboxListBlockData, this);
     }
 }
 

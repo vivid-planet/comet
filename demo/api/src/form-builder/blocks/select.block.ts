@@ -33,7 +33,7 @@ class SelectBlockInput extends BaseFieldBlockInput {
     options: ExtractBlockInput<typeof SelectOptionsBlock>;
 
     transformToBlockData(): SelectBlockData {
-        return inputToData(SelectBlockData, super.getBlockDataWithUpdatedFieldName(this));
+        return inputToData(SelectBlockData, this);
     }
 }
 

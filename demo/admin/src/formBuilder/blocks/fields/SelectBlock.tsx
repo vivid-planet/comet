@@ -10,7 +10,7 @@ import { SelectBlockData } from "@src/blocks.generated";
 import { FormattedMessage } from "react-intl";
 
 import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
-import { propsAndValidationGroup } from "../common/propsAndValidationGroup";
+import { propsAndValidationGroup } from "../common/PropsAndValidationGroup";
 import { SelectOptionsBlock } from "./SelectOptionsBlock";
 
 const selectTypeOptions: Array<SelectFieldOption<SelectBlockData["selectType"]>> = [

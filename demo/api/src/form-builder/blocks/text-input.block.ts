@@ -35,7 +35,7 @@ class TextInputBlockInput extends BaseFieldBlockInput {
     unit?: string;
 
     transformToBlockData(): TextInputBlockData {
-        return inputToData(TextInputBlockData, super.getBlockDataWithUpdatedFieldName(this));
+        return inputToData(TextInputBlockData, this);
     }
 }
 
