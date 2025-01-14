@@ -17,6 +17,7 @@ export const NewsListBlock = withPreview(
                     <li key={news.id}>
                         <Link
                             href={createSiteUrl({
+                                baseUrl: "/",
                                 scope: {
                                     language: news.scope.language,
                                 },

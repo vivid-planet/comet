@@ -77,6 +77,7 @@ export default async function Page({ params }: PageProps) {
                         const internalLink = target.block.props as InternalLinkBlockData;
                         if (internalLink.targetPage) {
                             destination = createSiteUrl({
+                                baseUrl: "/",
                                 path: internalLink.targetPage.path,
                                 scope: { language: (internalLink.targetPage.scope as GQLPageTreeNodeScope).language },
                             });
