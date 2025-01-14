@@ -34,7 +34,7 @@ describe("IsSlug", () => {
             const validator = new IsSlugConstraint();
             expect(await validator.validate("%2E%2E%2Ftest")).toBeFalsy();
         });
-        it("should not allow  special characters ../", async () => {
+        it("should not allow special characters ../", async () => {
             const validator = new IsSlugConstraint();
             expect(await validator.validate("../test")).toBeFalsy();
         });
