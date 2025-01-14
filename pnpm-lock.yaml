@@ -1593,7 +1593,7 @@ importers:
         specifier: ^8.0.0
         version: 8.6.12(react@17.0.2)
       react-split:
-        specifier: ^2.0.0
+        specifier: ^2.0.14
         version: 2.0.14(react@17.0.2)
       react-virtualized-auto-sizer:
         specifier: ^1.0.0

@@ -65,7 +65,7 @@
         "react-final-form-arrays": "^3.1.4",
         "react-hotkeys-hook": "^3.4.7",
         "react-image-crop": "^8.0.0",
-        "react-split": "^2.0.0",
+        "react-split": "^2.0.14",
         "react-virtualized-auto-sizer": "^1.0.0",
         "react-window": "^1.0.0",
         "rimraf": "^6.0.1",
