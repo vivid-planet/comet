@@ -1599,8 +1599,8 @@ importers:
         specifier: ^1.0.25
         version: 1.0.25(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-window:
-        specifier: ^1.0.0
-        version: 1.8.8(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        specifier: ^1.8.11
+        version: 1.8.11(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1711,8 +1711,8 @@ importers:
         specifier: ^5.0.0
         version: 5.3.3
       '@types/react-window':
-        specifier: ^1.0.0
-        version: 1.8.5
+        specifier: ^1.8.8
+        version: 1.8.8
       chokidar-cli:
         specifier: ^3.0.0
         version: 3.0.0
@@ -7068,8 +7068,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react-window@1.8.5':
-    resolution: {integrity: sha512-V9q3CvhC9Jk9bWBOysPGaWy/Z0lxYcTXLtLipkt2cnRj1JOSFNF7wqGpkScSXMgBwC+fnVRg/7shwgddBG5ICw==}
+  '@types/react-window@1.8.8':
+    resolution: {integrity: sha512-8Ls660bHR1AUA2kuRvVG9D/4XpRC6wjAaPT9dil7Ckc76eP9TKWZwwmgfq8Q1LANX3QNDnoU4Zp48A3w+zK69Q==}
 
   '@types/react@17.0.53':
     resolution: {integrity: sha512-1yIpQR2zdYu1Z/dc1OxC+MA6GR240u3gcnP4l6mvj/PJiVaqHsQPmWttsvHsfnhfPbU2FuGmo0wSITPygjBmsw==}
@@ -13684,12 +13684,12 @@ packages:
       react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  react-window@1.8.8:
-    resolution: {integrity: sha512-D4IiBeRtGXziZ1n0XklnFGu7h9gU684zepqyKzgPNzrsrk7xOCxni+TCckjg2Nr/DiaEEGVVmnhYSlT2rB47dQ==}
+  react-window@1.8.11:
+    resolution: {integrity: sha512-+SRbUVT2scadgFSWx+R1P754xHPEqvcfSfVX10QYg6POOz+WNgkN48pS+BtZNIMGiL1HYrSEiCkwsMS15QogEQ==}
     engines: {node: '>8.0.0'}
     peerDependencies:
-      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   react@17.0.2:
     resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
@@ -22857,7 +22857,7 @@ snapshots:
     dependencies:
       '@types/react': 17.0.53
 
-  '@types/react-window@1.8.5':
+  '@types/react-window@1.8.8':
     dependencies:
       '@types/react': 17.0.53
 
@@ -30838,9 +30838,9 @@ snapshots:
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
 
-  react-window@1.8.8(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
+  react-window@1.8.11(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
-      '@babel/runtime': 7.25.7
+      '@babel/runtime': 7.26.0
       memoize-one: 5.2.1
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
