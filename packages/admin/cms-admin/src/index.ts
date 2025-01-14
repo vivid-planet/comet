@@ -1,6 +1,5 @@
 export { AnchorBlock } from "./blocks/AnchorBlock";
 export { readClipboard } from "./blocks/clipboard/readClipboard";
-export type { ClipboardContent } from "./blocks/clipboard/useBlockClipboard";
 export { useBlockClipboard } from "./blocks/clipboard/useBlockClipboard";
 export { writeClipboard } from "./blocks/clipboard/writeClipboard";
 export { CmsBlockContext, CmsBlockContextProvider } from "./blocks/CmsBlockContextProvider";
