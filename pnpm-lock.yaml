@@ -476,8 +476,8 @@ importers:
         specifier: ^6.1.8
         version: 6.1.12(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swiper:
-        specifier: ^11.1.15
-        version: 11.2.0(@types/react@18.3.18)
+        specifier: ^11.2.1
+        version: 11.2.1(@types/react@18.3.18)
       ts-node:
         specifier: ^10.0.0
         version: 10.9.1(@swc/core@1.4.8(@swc/helpers@0.5.5))(@types/node@22.9.0)(typescript@4.9.4)
@@ -579,8 +579,8 @@ importers:
         specifier: ^6.1.8
         version: 6.1.12(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swiper:
-        specifier: ^11.1.15
-        version: 11.2.0(@types/react@18.3.18)
+        specifier: ^11.2.1
+        version: 11.2.1(@types/react@18.3.18)
       ts-node:
         specifier: ^10.0.0
         version: 10.9.1(@swc/core@1.4.8(@swc/helpers@0.5.5))(@types/node@22.9.0)(typescript@4.9.4)
@@ -14688,8 +14688,8 @@ packages:
   swap-case@2.0.2:
     resolution: {integrity: sha512-kc6S2YS/2yXbtkSMunBtKdah4VFETZ8Oh6ONSmSd9bRxhqTrtARUCBUiWXH3xVPpvR7tz2CSnkuXVE42EcGnMw==}
 
-  swiper@11.2.0:
-    resolution: {integrity: sha512-rjjAKgDEs+grR2eQshVDCcE4KNPC7CI294nfcbV9gE8WCsLdvOYXDeZKUYevqAZZp8j5hE7kpT3dAGVKFBWlxQ==}
+  swiper@11.2.1:
+    resolution: {integrity: sha512-62G69+iQRIfUqTmJkWpZDcX891Ra8O9050ckt1/JI2H+0483g+gq0m7gINecDqMtDh2zt5dK+uzBRxGhGOOvQA==}
     engines: {node: '>= 4.7.0'}
     peerDependencies:
       '@types/react': ^18.0.0
@@ -32054,7 +32054,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  swiper@11.2.0(@types/react@18.3.18):
+  swiper@11.2.1(@types/react@18.3.18):
     dependencies:
       '@types/react': 18.3.18
 
