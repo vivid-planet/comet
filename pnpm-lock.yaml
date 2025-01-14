@@ -1710,9 +1710,6 @@ importers:
       '@types/react-router-dom':
         specifier: ^5.0.0
         version: 5.3.3
-      '@types/react-virtualized-auto-sizer':
-        specifier: ^1.0.4
-        version: 1.0.4
       '@types/react-window':
         specifier: ^1.0.0
         version: 1.8.5
@@ -7070,9 +7067,6 @@ packages:
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
     peerDependencies:
       '@types/react': '*'
-
-  '@types/react-virtualized-auto-sizer@1.0.4':
-    resolution: {integrity: sha512-nhYwlFiYa8M3S+O2T9QO/e1FQUYMr/wJENUdf/O0dhRi1RS/93rjrYQFYdbUqtdFySuhrtnEDX29P6eKOttY+A==}
 
   '@types/react-window@1.8.5':
     resolution: {integrity: sha512-V9q3CvhC9Jk9bWBOysPGaWy/Z0lxYcTXLtLipkt2cnRj1JOSFNF7wqGpkScSXMgBwC+fnVRg/7shwgddBG5ICw==}
@@ -22860,10 +22854,6 @@ snapshots:
       '@types/react': 17.0.53
 
   '@types/react-transition-group@4.4.12(@types/react@17.0.53)':
-    dependencies:
-      '@types/react': 17.0.53
-
-  '@types/react-virtualized-auto-sizer@1.0.4':
     dependencies:
       '@types/react': 17.0.53
 

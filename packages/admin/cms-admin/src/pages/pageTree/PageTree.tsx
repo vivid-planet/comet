@@ -5,7 +5,7 @@ import gql from "graphql-tag";
 import isEqual from "lodash.isequal";
 import { Dispatch, forwardRef, ForwardRefRenderFunction, SetStateAction, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { FormattedMessage } from "react-intl";
-import AutoSizer from "react-virtualized-auto-sizer";
+import AutoSizer, { type Size } from "react-virtualized-auto-sizer";
 import { Align, FixedSizeList as List } from "react-window";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -319,7 +319,7 @@ const PageTree: ForwardRefRenderFunction<PageTreeRefApi, PageTreeProps> = (
             <Root>
                 <Table>
                     <AutoSizer>
-                        {({ height, width }) => {
+                        {({ height, width }: Size) => {
                             return (
                                 // @TODO: adjust itemSize for smaller screens
                                 <List

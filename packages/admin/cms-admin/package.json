@@ -106,7 +106,6 @@
         "@types/react-image-crop": "^8.0.0",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.0.0",
-        "@types/react-virtualized-auto-sizer": "^1.0.4",
         "@types/react-window": "^1.0.0",
         "chokidar-cli": "^3.0.0",
         "csstype": "^3.1.3",
