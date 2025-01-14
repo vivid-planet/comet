@@ -153,8 +153,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1(react@17.0.2)
       uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
+        specifier: ^11.0.5
+        version: 11.0.5
     devDependencies:
       '@comet/cli':
         specifier: workspace:*
@@ -364,8 +364,8 @@ importers:
         specifier: ^1.6.6
         version: 1.6.6
       uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
+        specifier: ^11.0.5
+        version: 11.0.5
     devDependencies:
       '@comet/eslint-config':
         specifier: workspace:*
@@ -839,8 +839,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(react@17.0.2)
       uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
+        specifier: ^11.0.5
+        version: 11.0.5
     devDependencies:
       '@apollo/client':
         specifier: ^3.7.0
@@ -1160,8 +1160,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(react@17.0.2)
       uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
+        specifier: ^11.0.5
+        version: 11.0.5
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -1397,8 +1397,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
+        specifier: ^11.0.5
+        version: 11.0.5
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -1611,8 +1611,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1(react@17.0.2)
       uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
+        specifier: ^11.0.5
+        version: 11.0.5
     devDependencies:
       '@apollo/client':
         specifier: ^3.7.0
@@ -1912,8 +1912,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
+        specifier: ^11.0.5
+        version: 11.0.5
       uuid-by-string:
         specifier: ^4.0.0
         version: 4.0.0
@@ -2363,8 +2363,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1(react@17.0.2)
       uuid:
-        specifier: ^11.0.3
-        version: 11.0.3
+        specifier: ^11.0.5
+        version: 11.0.5
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -15332,6 +15332,10 @@ packages:
 
   uuid@11.0.3:
     resolution: {integrity: sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==}
+    hasBin: true
+
+  uuid@11.0.5:
+    resolution: {integrity: sha512-508e6IcKLrhxKdBbcA2b4KQZlLVp2+J5UwQ6F7Drckkc5N9ZJwFa4TgWtsww9UG8fGHbm6gbV19TdM5pQ4GaIA==}
     hasBin: true
 
   uuid@3.4.0:
@@ -32762,6 +32766,8 @@ snapshots:
       js-sha1: 0.6.0
 
   uuid@11.0.3: {}
+
+  uuid@11.0.5: {}
 
   uuid@3.4.0: {}
 

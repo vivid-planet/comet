@@ -71,7 +71,7 @@
         "rimraf": "^6.0.1",
         "slugify": "^1.6.6",
         "use-debounce": "^6.0.1",
-        "uuid": "^11.0.3"
+        "uuid": "^11.0.5"
     },
     "devDependencies": {
         "@apollo/client": "^3.7.0",
