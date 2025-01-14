@@ -833,7 +833,7 @@ importers:
         specifier: ^7.1.3
         version: 7.1.3
       react-dropzone:
-        specifier: ^14.0.0
+        specifier: ^14.3.5
         version: 14.3.5(react@17.0.2)
       use-constant:
         specifier: ^1.1.1
