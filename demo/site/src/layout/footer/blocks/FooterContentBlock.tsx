@@ -1,4 +1,4 @@
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { FooterContentBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
@@ -7,38 +7,40 @@ import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
 
-export const FooterContentBlock = ({ data: { text, image, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
+export const FooterContentBlock = ({ data }: PropsWithData<FooterContentBlockData>) => {
+    const { text, image, linkList, copyrightNotice } = data;
     return (
-        <Root>
-            <PageLayout grid>
-                <PageLayoutContent>
-                    <TopContainer>
-                        <ImageWrapper>
-                            <DamImageBlock data={image} aspectRatio="1/1" style={{ objectFit: "contain" }} />
-                        </ImageWrapper>
-                        <RichTextWrapper>
-                            <RichTextBlock data={text} disableLastBottomSpacing />
-                        </RichTextWrapper>
-                    </TopContainer>
-                    <HorizontalLine />
-                    <LinkCopyrightWrapper>
-                        {linkList.blocks.length > 0 && (
-                            <LinksWrapper>
-                                {linkList.blocks.map((block) => (
-                                    <LinkText key={block.key} as={LinkBlock} data={block.props.link} variant="p200">
-                                        {block.props.text}
-                                    </LinkText>
-                                ))}
-                            </LinksWrapper>
-                        )}
-                        {copyrightNotice && <CopyrightNotice variant="p200">{copyrightNotice}</CopyrightNotice>}
-                    </LinkCopyrightWrapper>
-                </PageLayoutContent>
-            </PageLayout>
-        </Root>
+        <WithPreviewComponent data={data} label="Footer">
+            <Root>
+                <PageLayout grid>
+                    <PageLayoutContent>
+                        <TopContainer>
+                            <ImageWrapper>
+                                <DamImageBlock data={image} aspectRatio="1/1" style={{ objectFit: "contain" }} />
+                            </ImageWrapper>
+                            <RichTextWrapper>
+                                <RichTextBlock data={text} disableLastBottomSpacing />
+                            </RichTextWrapper>
+                        </TopContainer>
+                        <HorizontalLine />
+                        <LinkCopyrightWrapper>
+                            {linkList.blocks.length > 0 && (
+                                <LinksWrapper>
+                                    {linkList.blocks.map((block) => (
+                                        <LinkText key={block.key} as={LinkBlock} data={block.props.link} variant="p200">
+                                            {block.props.text}
+                                        </LinkText>
+                                    ))}
+                                </LinksWrapper>
+                            )}
+                            {copyrightNotice && <CopyrightNotice variant="p200">{copyrightNotice}</CopyrightNotice>}
+                        </LinkCopyrightWrapper>
+                    </PageLayoutContent>
+                </PageLayout>
+            </Root>
+        </WithPreviewComponent>
     );
 };
-//export default withPreview(FooterContentBlock, { label: "Footer" });
 
 const Root = styled.footer`
     margin-top: auto;

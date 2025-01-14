@@ -1,4 +1,4 @@
-import { ListBlock, PropsWithData } from "@comet/cms-site";
+import { ListBlock, PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { CallToActionListBlockData } from "@src/blocks.generated";
 
@@ -8,12 +8,12 @@ type CallToActionListBlockProps = PropsWithData<CallToActionListBlockData>;
 
 export const CallToActionListBlock = ({ data }: CallToActionListBlockProps) =>
     data.blocks.length > 0 ? (
-        <Root>
-            <ListBlock data={data} block={(block) => <CallToActionBlock data={block} />} />
-        </Root>
+        <WithPreviewComponent data={data} label="Call To Action List">
+            <Root>
+                <ListBlock data={data} block={(block) => <CallToActionBlock data={block} />} />
+            </Root>
+        </WithPreviewComponent>
     ) : null;
-
-//export default withPreview(CallToActionListBlock, { label: "Call To Action List" });
 
 const Root = styled("div")(({ theme }) => ({
     display: "flex",

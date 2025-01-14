@@ -1,4 +1,4 @@
-import { ListBlock, PropsWithData } from "@comet/cms-site";
+import { ListBlock, PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { TeaserBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
@@ -6,16 +6,16 @@ import { PageLayout } from "@src/layout/PageLayout";
 import { TeaserItemBlock } from "./TeaserItemBlock";
 
 export const TeaserBlock = ({ data }: PropsWithData<TeaserBlockData>) => (
-    <PageLayout grid>
-        <PageLayoutContent>
-            <ItemWrapper>
-                <ListBlock data={data} block={(block) => <TeaserItemBlock data={block} />} />
-            </ItemWrapper>
-        </PageLayoutContent>
-    </PageLayout>
+    <WithPreviewComponent data={data} label="Teaser">
+        <PageLayout grid>
+            <PageLayoutContent>
+                <ItemWrapper>
+                    <ListBlock data={data} block={(block) => <TeaserItemBlock data={block} />} />
+                </ItemWrapper>
+            </PageLayoutContent>
+        </PageLayout>
+    </WithPreviewComponent>
 );
-
-//export default withPreview(TeaserBlock, { label: "Teaser" });
 
 const PageLayoutContent = styled.div`
     grid-column: 3 / -3;

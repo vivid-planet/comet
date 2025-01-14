@@ -4,6 +4,7 @@ import { styled } from "@pigment-css/react";
 import { ReactElement, ReactNode, useState } from "react";
 
 import { YouTubeVideoBlockData } from "../blocks.generated";
+import { WithPreviewComponent } from "../iframebridge/WithPreviewComponent";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -28,13 +29,14 @@ interface YouTubeVideoBlockProps extends PropsWithData<YouTubeVideoBlockData> {
 }
 
 export const YouTubeVideoBlock = ({
-    data: { youtubeIdentifier, autoplay, loop, showControls, previewImage },
+    data,
     aspectRatio = "16x9",
     previewImageSizes,
     renderPreviewImage,
     fill,
     previewImageIcon,
 }: YouTubeVideoBlockProps) => {
+    const { youtubeIdentifier, autoplay, loop, showControls, previewImage } = data;
     const [showPreviewImage, setShowPreviewImage] = useState(true);
     const hasPreviewImage = !!(previewImage && previewImage.damFile);
 
@@ -65,7 +67,7 @@ export const YouTubeVideoBlock = ({
     youtubeUrl.search = searchParams.toString();
 
     return (
-        <>
+        <WithPreviewComponent data={data} label="Video">
             {hasPreviewImage && showPreviewImage ? (
                 renderPreviewImage ? (
                     renderPreviewImage({
@@ -91,11 +93,9 @@ export const YouTubeVideoBlock = ({
                     <YouTubeContainer src={youtubeUrl.toString()} allow="autoplay" />
                 </VideoContainer>
             )}
-        </>
+        </WithPreviewComponent>
     );
 };
-
-//export default withPreview(YouTubeVideoBlock, { label: "Video" });
 
 const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>({
     overflow: "hidden",

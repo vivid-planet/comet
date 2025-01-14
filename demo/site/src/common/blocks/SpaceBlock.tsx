@@ -1,12 +1,14 @@
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { SpaceBlockData } from "@src/blocks.generated";
 
-export const SpaceBlock = ({ data: { spacing } }: PropsWithData<SpaceBlockData>) => {
-    return <Root spacing={spacing} />;
+export const SpaceBlock = ({ data }: PropsWithData<SpaceBlockData>) => {
+    return (
+        <WithPreviewComponent data={data} label="Space">
+            <Root spacing={data.spacing} />
+        </WithPreviewComponent>
+    );
 };
-
-//export default withPreview(SpaceBlock, { label: "Space" });
 
 type RootStyleProps = {
     spacing: SpaceBlockData["spacing"];

@@ -1,4 +1,4 @@
-import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData } from "@comet/cms-site";
+import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
@@ -95,13 +95,13 @@ export const RichTextBlock = ({ data, renderers = defaultRichTextRenderers, disa
     const rendered = redraft(data.draftContent, renderers);
 
     return (
-        <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
-            {disableLastBottomSpacing ? <DisableLastBottomSpacing>{rendered}</DisableLastBottomSpacing> : rendered}
-        </PreviewSkeleton>
+        <WithPreviewComponent data={data} label="Rich Text">
+            <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
+                {disableLastBottomSpacing ? <DisableLastBottomSpacing>{rendered}</DisableLastBottomSpacing> : rendered}
+            </PreviewSkeleton>
+        </WithPreviewComponent>
     );
 };
-
-//export default withPreview(RichTextBlock, { label: "Rich Text" });
 
 export const PageContentRichTextBlock = (props: RichTextBlockProps) => (
     <PageLayout grid>

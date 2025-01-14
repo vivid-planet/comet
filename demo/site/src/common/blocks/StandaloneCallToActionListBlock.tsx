@@ -1,4 +1,4 @@
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { StandaloneCallToActionListBlockData } from "@src/blocks.generated";
 import { createShouldForwardPropBlockList } from "@src/util/createShouldForwardPropBlockList";
@@ -14,14 +14,16 @@ const alignmentMap: Record<StandaloneCallToActionListBlockData["alignment"], CSS
     right: "flex-end",
 };
 
-export const StandaloneCallToActionListBlock = ({ data: { callToActionList, alignment } }: StandaloneCallToActionListBlockProps) => {
+export const StandaloneCallToActionListBlock = ({ data }: StandaloneCallToActionListBlockProps) => {
+    const { callToActionList, alignment } = data;
     return (
-        <Root alignment={alignmentMap[alignment]}>
-            <CallToActionListBlock data={callToActionList} />
-        </Root>
+        <WithPreviewComponent data={data} label="CallToActionList">
+            <Root alignment={alignmentMap[alignment]}>
+                <CallToActionListBlock data={callToActionList} />
+            </Root>
+        </WithPreviewComponent>
     );
 };
-//export default withPreview(StandaloneCallToActionListBlock, { label: "CallToActionList" });
 
 type RootStyleProps = {
     alignment: CSSProperties["justifyContent"];

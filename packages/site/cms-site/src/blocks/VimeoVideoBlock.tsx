@@ -3,6 +3,7 @@ import { styled } from "@pigment-css/react";
 import { ReactNode, useState } from "react";
 
 import { VimeoVideoBlockData } from "../blocks.generated";
+import { WithPreviewComponent } from "../iframebridge/WithPreviewComponent";
 import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
@@ -31,7 +32,7 @@ interface VimeoVideoBlockProps extends PropsWithData<VimeoVideoBlockData> {
     previewImageIcon?: ReactNode;
 }
 
-export const VimeoVideoBlock = ({
+const InternalVimeoVideoBlock = ({
     data: { vimeoIdentifier, autoplay, loop, showControls, previewImage },
     aspectRatio = "16x9",
     previewImageSizes,
@@ -93,7 +94,13 @@ export const VimeoVideoBlock = ({
     );
 };
 
-//export default withPreview(VimeoVideoBlock, { label: "Video" });
+export const VimeoVideoBlock = (props: VimeoVideoBlockProps) => {
+    return (
+        <WithPreviewComponent data={props.data} label="Video">
+            <InternalVimeoVideoBlock {...props} />
+        </WithPreviewComponent>
+    );
+};
 
 const VideoContainer = styled.div<{ $aspectRatio: string; $fill?: boolean }>({
     overflow: "hidden",

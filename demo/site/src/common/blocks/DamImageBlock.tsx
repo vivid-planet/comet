@@ -1,4 +1,4 @@
-import { PixelImageBlock, PreviewSkeleton, PropsWithData, SvgImageBlock } from "@comet/cms-site";
+import { PixelImageBlock, PreviewSkeleton, PropsWithData, SvgImageBlock, WithPreviewComponent } from "@comet/cms-site";
 import { DamImageBlockData, PixelImageBlockData, SvgImageBlockData } from "@src/blocks.generated";
 import { ImageProps as NextImageProps } from "next/image";
 
@@ -6,7 +6,7 @@ type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & 
     aspectRatio: string | "inherit";
 };
 
-export const DamImageBlock = ({ data: { block }, aspectRatio, ...imageProps }: PropsWithData<DamImageBlockData> & DamImageProps) => {
+const InternalDamImageBlock = ({ data: { block }, aspectRatio, ...imageProps }: PropsWithData<DamImageBlockData> & DamImageProps) => {
     if (!block) {
         return <PreviewSkeleton type="media" hasContent={false} />;
     }
@@ -23,5 +23,10 @@ export const DamImageBlock = ({ data: { block }, aspectRatio, ...imageProps }: P
         );
     }
 };
-
-//export default withPreview(DamImageBlock, { label: "Image" });
+export const DamImageBlock = (props: PropsWithData<DamImageProps>) => {
+    return (
+        <WithPreviewComponent data={props.data} label="Image">
+            <InternalDamImageBlock {...props} />
+        </WithPreviewComponent>
+    );
+};

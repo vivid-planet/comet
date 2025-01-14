@@ -6,6 +6,7 @@ import {
     PhoneLinkBlock,
     PropsWithData,
     SupportedBlocks,
+    WithPreviewComponent,
 } from "@comet/cms-site";
 import { LinkBlockData } from "@src/blocks.generated";
 import { PropsWithChildren } from "react";
@@ -46,10 +47,10 @@ interface LinkBlockProps extends PropsWithChildren<PropsWithData<LinkBlockData>>
 
 export const LinkBlock = ({ data, children, className }: LinkBlockProps) => {
     return (
-        <OneOfBlock data={data} supportedBlocks={supportedBlocks} className={className}>
-            {children}
-        </OneOfBlock>
+        <WithPreviewComponent data={data} label="Link">
+            <OneOfBlock data={data} supportedBlocks={supportedBlocks} className={className}>
+                {children}
+            </OneOfBlock>
+        </WithPreviewComponent>
     );
 };
-
-//export default withPreview(LinkBlock, { label: "Link" });

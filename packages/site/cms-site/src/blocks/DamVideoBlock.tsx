@@ -3,6 +3,8 @@ import { styled } from "@pigment-css/react";
 import { ReactElement, ReactNode, useState } from "react";
 
 import { DamVideoBlockData } from "../blocks.generated";
+import { WithPreviewComponent } from "../iframebridge/WithPreviewComponent";
+import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { VideoPreviewImage, VideoPreviewImageProps } from "./helpers/VideoPreviewImage";
 import { PropsWithData } from "./PropsWithData";
 
@@ -14,26 +16,20 @@ interface DamVideoBlockProps extends PropsWithData<DamVideoBlockData> {
     previewImageIcon?: ReactNode;
 }
 
-export const DamVideoBlock = ({
-    data: { damFile, autoplay, loop, showControls, previewImage },
-    aspectRatio = "16x9",
-    previewImageSizes,
-    renderPreviewImage,
-    fill,
-    previewImageIcon,
-}: DamVideoBlockProps) => {
-    /*if (damFile === undefined) {
-        return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
-    }*/
-
+export const DamVideoBlock = ({ data, aspectRatio = "16x9", previewImageSizes, renderPreviewImage, fill, previewImageIcon }: DamVideoBlockProps) => {
+    const { damFile, autoplay, loop, showControls, previewImage } = data;
     const [showPreviewImage, setShowPreviewImage] = useState(true);
+    if (damFile === undefined) {
+        return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
+    }
+
     const hasPreviewImage = Boolean(previewImage && previewImage.damFile);
 
     if (damFile === undefined) {
         return null;
     }
     return (
-        <>
+        <WithPreviewComponent data={data} label="Video">
             {hasPreviewImage && showPreviewImage ? (
                 renderPreviewImage ? (
                     renderPreviewImage({
@@ -67,10 +63,9 @@ export const DamVideoBlock = ({
                     <source src={damFile.fileUrl} type={damFile.mimetype} />
                 </Video>
             )}
-        </>
+        </WithPreviewComponent>
     );
 };
-//export default withPreview(DamVideoBlock, { label: "Video" });
 
 const Video = styled.video<{ $aspectRatio: string; $fill?: boolean }>({
     width: "100%",

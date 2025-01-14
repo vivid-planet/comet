@@ -1,4 +1,4 @@
-import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData } from "@comet/cms-site";
+import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { HeadingBlockData } from "@src/blocks.generated";
 import { Typography } from "@src/common/components/Typography";
@@ -33,31 +33,29 @@ const headlineTagMap: Record<HeadingBlockData["htmlTag"], keyof HTMLElementTagNa
 
 type HeadingBlockProps = PropsWithData<HeadingBlockData>;
 
-export const HeadingBlock = ({ data: { eyebrow, headline, htmlTag } }: HeadingBlockProps) => {
-    const headlineTag = headlineTagMap[htmlTag];
+export const HeadingBlock = ({ data }: HeadingBlockProps) => {
+    const headlineTag = headlineTagMap[data.htmlTag];
 
     return (
-        <>
-            {hasRichTextBlockContent(eyebrow) && (
+        <WithPreviewComponent label="Heading" data={data}>
+            {hasRichTextBlockContent(data.eyebrow) && (
                 <Typography variant="h400" as="h5" bottomSpacing>
-                    <RichTextBlock data={eyebrow} renderers={eyebrowRenderers} />
+                    <RichTextBlock data={data.eyebrow} renderers={eyebrowRenderers} />
                 </Typography>
             )}
             <PreviewSkeleton
-                hasContent={hasRichTextBlockContent(headline)}
+                hasContent={hasRichTextBlockContent(data.headline)}
                 title={
                     <HeadlineSkeleton variant="h550" as="span">
                         Headline
                     </HeadlineSkeleton>
                 }
             >
-                <RichTextBlock data={headline} renderers={getHeadlineRenderers(headlineTag)} />
+                <RichTextBlock data={data.headline} renderers={getHeadlineRenderers(headlineTag)} />
             </PreviewSkeleton>
-        </>
+        </WithPreviewComponent>
     );
 };
-
-//export default withPreview(HeadingBlock, { label: "Heading" });
 
 const HeadlineSkeleton = styled(Typography)`
     color: inherit;

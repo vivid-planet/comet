@@ -4,6 +4,7 @@ import { styled } from "@pigment-css/react";
 import NextImage, { ImageProps } from "next/image";
 
 import { PixelImageBlockData } from "../blocks.generated";
+import { WithPreviewComponent } from "../iframebridge/WithPreviewComponent";
 import { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, ImageDimensions, parseAspectRatio } from "../image/Image";
 //import { PreviewSkeleton } from "../previewskeleton/PreviewSkeleton";
 import { PropsWithData } from "./PropsWithData";
@@ -12,7 +13,7 @@ interface PixelImageBlockProps extends PropsWithData<PixelImageBlockData>, Omit<
     aspectRatio: string | number | "inherit";
 }
 
-export const PixelImageBlock = ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
+const InternalPixelImageBlock = ({ aspectRatio, data: { damFile, cropArea, urlTemplate }, fill, ...nextImageProps }: PixelImageBlockProps) => {
     //if (!damFile || !damFile.image) return <PreviewSkeleton type="media" hasContent={false} aspectRatio={aspectRatio} />;
     if (!damFile || !damFile.image) return null;
 
@@ -73,7 +74,13 @@ export const PixelImageBlock = ({ aspectRatio, data: { damFile, cropArea, urlTem
     return <ImageContainer $aspectRatio={usedAspectRatio}>{nextImage}</ImageContainer>;
 };
 
-//export default withPreview(PixelImageBlock, { label: "PixelImage" });
+export const PixelImageBlock = (props: PixelImageBlockProps) => {
+    return (
+        <WithPreviewComponent data={props.data} label="PixelImage">
+            <InternalPixelImageBlock {...props} />
+        </WithPreviewComponent>
+    );
+};
 
 // to be used as placeholderImage
 function createDominantImageDataUrl(w: number, h: number, dominantColor = "#ffffff"): string {

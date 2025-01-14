@@ -1,4 +1,4 @@
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { TeaserItemBlockData } from "@src/blocks.generated";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
@@ -12,30 +12,33 @@ const descriptionRenderers: Renderers = {
     inline: defaultRichTextInlineStyleMap,
 };
 
-export const TeaserItemBlock = ({ data: { media, title, description, link } }: PropsWithData<TeaserItemBlockData>) => (
-    <LinkBlock data={link.link}>
-        <ItemContent>
-            <MediaMobile>
-                <MediaBlock data={media} aspectRatio="1x1" sizes="20vw" />
-            </MediaMobile>
-            <MediaDesktop>
-                <MediaBlock data={media} aspectRatio="16x9" sizes="20vw" />
-            </MediaDesktop>
-            <ContentContainer>
-                <TitleTypography variant="h350">{title}</TitleTypography>
-                <Typography variant="p200">
-                    <RichTextBlock data={description} renderers={descriptionRenderers} />
-                </Typography>
-                <TextLinkContainer>
-                    <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} />
-                    <LinkText>{link.text}</LinkText>
-                </TextLinkContainer>
-            </ContentContainer>
-        </ItemContent>
-    </LinkBlock>
-);
-
-//export default withPreview(TeaserItemBlock, { label: "Teaser Item" });
+export const TeaserItemBlock = ({ data }: PropsWithData<TeaserItemBlockData>) => {
+    const { media, title, description, link } = data;
+    return (
+        <WithPreviewComponent data={data} label="Teaser Item">
+            <LinkBlock data={link.link}>
+                <ItemContent>
+                    <MediaMobile>
+                        <MediaBlock data={media} aspectRatio="1x1" sizes="20vw" />
+                    </MediaMobile>
+                    <MediaDesktop>
+                        <MediaBlock data={media} aspectRatio="16x9" sizes="20vw" />
+                    </MediaDesktop>
+                    <ContentContainer>
+                        <TitleTypography variant="h350">{title}</TitleTypography>
+                        <Typography variant="p200">
+                            <RichTextBlock data={description} renderers={descriptionRenderers} />
+                        </Typography>
+                        <TextLinkContainer>
+                            <SvgUse href="/assets/icons/arrow-right.svg#root" width={16} height={16} />
+                            <LinkText>{link.text}</LinkText>
+                        </TextLinkContainer>
+                    </ContentContainer>
+                </ItemContent>
+            </LinkBlock>
+        </WithPreviewComponent>
+    );
+};
 
 const ItemContent = styled.a`
     text-decoration: none;

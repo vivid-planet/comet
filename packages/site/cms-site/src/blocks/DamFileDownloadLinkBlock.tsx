@@ -1,6 +1,7 @@
 import { cloneElement, ReactElement } from "react";
 
 import { DamFileDownloadLinkBlockData } from "../blocks.generated";
+import { WithPreviewComponent } from "../iframebridge/WithPreviewComponent";
 import { PropsWithData } from "./PropsWithData";
 
 interface DamFileDownloadLinkBlockProps extends PropsWithData<DamFileDownloadLinkBlockData> {
@@ -10,7 +11,7 @@ interface DamFileDownloadLinkBlockProps extends PropsWithData<DamFileDownloadLin
     legacyBehavior?: boolean;
 }
 
-export const DamFileDownloadLinkBlock = ({
+const InternalDamFileDownloadLinkBlock = ({
     data: { file, openFileType },
     children,
     title,
@@ -39,4 +40,10 @@ export const DamFileDownloadLinkBlock = ({
     );
 };
 
-//export default withPreview(DamFileDownloadLinkBlock, { label: "DamFileDownloadLink" });
+export const DamFileDownloadLinkBlock = ({ children, ...props }: DamFileDownloadLinkBlockProps) => {
+    return (
+        <WithPreviewComponent data={props.data} label="DamFileDownloadLink">
+            <InternalDamFileDownloadLinkBlock {...props}>{children}</InternalDamFileDownloadLinkBlock>
+        </WithPreviewComponent>
+    );
+};

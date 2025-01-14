@@ -1,4 +1,4 @@
-import { PropsWithData } from "@comet/cms-site";
+import { PropsWithData, WithPreviewComponent } from "@comet/cms-site";
 import { styled } from "@pigment-css/react";
 import { BasicStageBlockData } from "@src/blocks.generated";
 import { CallToActionListBlock } from "@src/common/blocks/CallToActionListBlock";
@@ -9,32 +9,35 @@ import { PageLayout } from "@src/layout/PageLayout";
 import { createShouldForwardPropBlockList } from "@src/util/createShouldForwardPropBlockList";
 import { CSSProperties } from "react";
 
-export const BasicStageBlock = ({ data: { media, heading, text, overlay, alignment, callToActionList } }: PropsWithData<BasicStageBlockData>) => (
-    <Root>
-        <MediaPhone>
-            <MediaBlock data={media} aspectRatio="1x2" fill />
-        </MediaPhone>
-        <MediaTablet>
-            <MediaBlock data={media} aspectRatio="1x1" fill />
-        </MediaTablet>
-        <MediaTabletLandscape>
-            <MediaBlock data={media} aspectRatio="3x2" fill />
-        </MediaTabletLandscape>
-        <MediaDesktop>
-            <MediaBlock data={media} aspectRatio="16x9" fill />
-        </MediaDesktop>
-        <ImageOverlay overlay={overlay} />
-        <AbsoluteGridRoot grid>
-            <Content alignItems={alignment}>
-                <HeadingBlock data={heading} />
-                <RichTextBlock data={text} />
-                <CallToActionListBlock data={callToActionList} />
-            </Content>
-        </AbsoluteGridRoot>
-    </Root>
-);
-
-//export default withPreview(BasicStageBlock, { label: "Stage" });
+export const BasicStageBlock = ({ data }: PropsWithData<BasicStageBlockData>) => {
+    const { media, heading, text, overlay, alignment, callToActionList } = data;
+    return (
+        <WithPreviewComponent data={data} label="Stage">
+            <Root>
+                <MediaPhone>
+                    <MediaBlock data={media} aspectRatio="1x2" fill />
+                </MediaPhone>
+                <MediaTablet>
+                    <MediaBlock data={media} aspectRatio="1x1" fill />
+                </MediaTablet>
+                <MediaTabletLandscape>
+                    <MediaBlock data={media} aspectRatio="3x2" fill />
+                </MediaTabletLandscape>
+                <MediaDesktop>
+                    <MediaBlock data={media} aspectRatio="16x9" fill />
+                </MediaDesktop>
+                <ImageOverlay overlay={overlay} />
+                <AbsoluteGridRoot grid>
+                    <Content alignItems={alignment}>
+                        <HeadingBlock data={heading} />
+                        <RichTextBlock data={text} />
+                        <CallToActionListBlock data={callToActionList} />
+                    </Content>
+                </AbsoluteGridRoot>
+            </Root>
+        </WithPreviewComponent>
+    );
+};
 
 const Root = styled(PageLayout)`
     position: relative;
