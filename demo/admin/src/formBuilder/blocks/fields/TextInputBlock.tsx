@@ -1,11 +1,12 @@
-import { Field, SelectField, SelectFieldOption, TextField } from "@comet/admin";
-import { BlockCategory, BlockInterface, BlocksFinalForm, BlockState, createBlockSkeleton, createFinalFormBlock } from "@comet/blocks-admin";
-import { Paper, Typography } from "@mui/material";
+import { SelectField, SelectFieldOption, TextField } from "@comet/admin";
+import { BlocksFinalForm } from "@comet/blocks-admin";
 import { TextInputBlockData } from "@src/blocks.generated";
+import { createFieldBlock } from "@src/formBuilder/utils/createFieldBlock";
+import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
 import { FormattedMessage } from "react-intl";
 
-import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
-import { PropsAndValidationGroup } from "../common/PropsAndValidationGroup";
+import { PropsAndValidationGroup } from "../../utils/PropsAndValidationGroup";
+import { FieldInfoTextBlock, FieldInfoTextBlockField } from "../common/FieldInfoTextBlock";
 
 const inputTypeOptions: Array<SelectFieldOption<TextInputBlockData["inputType"]>> = [
     { value: "text", label: <FormattedMessage id="blocks.textInput.type.text" defaultMessage="Text" /> },
@@ -14,17 +15,8 @@ const inputTypeOptions: Array<SelectFieldOption<TextInputBlockData["inputType"]>
     { value: "number", label: <FormattedMessage id="blocks.textInput.type.number" defaultMessage="Number" /> },
 ];
 
-type Values = Pick<TextInputBlockData, "inputType" | "label" | "placeholder" | "unit" | "mandatory" | "fieldName"> & {
-    infoText: BlockState<typeof FieldInfoTextBlock>;
-};
-
-const FFInfoTextBlock = createFinalFormBlock(FieldInfoTextBlock);
-
-export const TextInputBlock: BlockInterface = {
-    ...createBlockSkeleton(),
+export const TextInputBlock = createFieldBlock({
     name: "TextInput",
-    category: BlockCategory.Form,
-    isValid: (state) => Boolean(state.fieldName),
     displayName: <FormattedMessage id="blocks.textInput" defaultMessage="Text Input" />,
     defaultValues: () => ({
         inputType: inputTypeOptions[0].value,
@@ -35,30 +27,10 @@ export const TextInputBlock: BlockInterface = {
         mandatory: false,
         fieldName: "",
     }),
-    previewContent: (state) => [{ type: "text", content: `${state.label}${state.fieldName ? ` (${state.fieldName})` : ""}` }],
-    input2State: (input) => ({
-        ...input,
-        infoText: input.infoText ? FieldInfoTextBlock.input2State(input.infoText) : FieldInfoTextBlock.defaultValues(),
-    }),
-    state2Output: (state) => ({
-        ...state,
-        infoText: FieldInfoTextBlock.state2Output(state.infoText),
-    }),
-    output2State: async (output, context) => ({
-        ...output,
-        infoText: await FieldInfoTextBlock.output2State(output.infoText, context),
-    }),
-    createPreviewState: (state, previewCtx) => ({
-        ...state,
-        infoText: FieldInfoTextBlock.createPreviewState(state.infoText, previewCtx),
-    }),
     AdminComponent: ({ state, updateState }) => {
         return (
-            <BlocksFinalForm<Values> onSubmit={updateState} initialValues={state}>
-                <Paper sx={{ padding: 4, mb: 4 }}>
-                    <Typography variant="h5" gutterBottom>
-                        <FormattedMessage id="blocks.textInput.display" defaultMessage="Display" />
-                    </Typography>
+            <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+                <DisplaySection>
                     <SelectField
                         name="inputType"
                         label={<FormattedMessage id="blocks.textInput.type" defaultMessage="Type" />}
@@ -75,10 +47,10 @@ export const TextInputBlock: BlockInterface = {
                     {state?.inputType === "number" && (
                         <TextField name="unit" label={<FormattedMessage id="blocks.textInput.unit" defaultMessage="Unit" />} fullWidth />
                     )}
-                    <Field name="infoText" component={FFInfoTextBlock} />
-                </Paper>
+                    <FieldInfoTextBlockField />
+                </DisplaySection>
                 <PropsAndValidationGroup />
             </BlocksFinalForm>
         );
     },
-};
+});

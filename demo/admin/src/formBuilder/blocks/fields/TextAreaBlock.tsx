@@ -1,46 +1,36 @@
-import { BlockCategory, BlockInterface, createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
+import { TextField } from "@comet/admin";
+import { BlocksFinalForm } from "@comet/blocks-admin";
+import { createFieldBlock } from "@src/formBuilder/utils/createFieldBlock";
+import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
+import { PropsAndValidationGroup } from "@src/formBuilder/utils/PropsAndValidationGroup";
 import { FormattedMessage } from "react-intl";
 
-import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
-import { propsAndValidationGroup } from "../common/PropsAndValidationGroup";
+import { FieldInfoTextBlock, FieldInfoTextBlockField } from "../common/FieldInfoTextBlock";
 
-export const TextAreaBlock: BlockInterface = createCompositeBlock(
-    {
-        name: "TextArea",
-        category: BlockCategory.Form,
-        displayName: <FormattedMessage id="blocks.textArea" defaultMessage="Text Area" />,
-        groups: {
-            display: {
-                title: <FormattedMessage id="blocks.textArea.display" defaultMessage="Display" />,
-                paper: true,
-                blocks: {
-                    label: {
-                        block: createCompositeBlockTextField({
-                            fieldProps: {
-                                label: <FormattedMessage id="blocks.textArea.label" defaultMessage="Label" />,
-                                fullWidth: true,
-                            },
-                        }),
-                    },
-                    placeholder: {
-                        block: createCompositeBlockTextField({
-                            fieldProps: {
-                                label: <FormattedMessage id="blocks.textArea.placeholderText" defaultMessage="Placeholder Text" />,
-                                fullWidth: true,
-                            },
-                        }),
-                    },
-                    infoText: {
-                        block: FieldInfoTextBlock,
-                        title: <FormattedMessage id="blocks.textArea.infoText" defaultMessage="Info Text" />,
-                    },
-                },
-            },
-            propsAndValidation: propsAndValidationGroup,
-        },
+export const TextAreaBlock = createFieldBlock({
+    name: "TextArea",
+    displayName: <FormattedMessage id="blocks.textArea" defaultMessage="Text Area" />,
+    defaultValues: () => ({
+        label: "",
+        placeholder: "",
+        infoText: FieldInfoTextBlock.defaultValues(),
+        mandatory: false,
+        fieldName: "",
+    }),
+    AdminComponent: ({ state, updateState }) => {
+        return (
+            <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+                <DisplaySection>
+                    <TextField name="label" label={<FormattedMessage id="blocks.textArea.label" defaultMessage="Label" />} fullWidth />
+                    <TextField
+                        name="placeholder"
+                        label={<FormattedMessage id="blocks.textArea.placeholderText" defaultMessage="Placeholder Text" />}
+                        fullWidth
+                    />
+                    <FieldInfoTextBlockField />
+                </DisplaySection>
+                <PropsAndValidationGroup />
+            </BlocksFinalForm>
+        );
     },
-    (block) => {
-        block.previewContent = (state) => [{ type: "text", content: state.label }];
-        return block;
-    },
-);
+});

@@ -1,49 +1,60 @@
-import { BlockCategory, BlockInterface, createCompositeBlock, createCompositeBlockTextField } from "@comet/blocks-admin";
+import { Field, TextField } from "@comet/admin";
+import { BlockInterface, BlocksFinalForm, createFinalFormBlock, HiddenInSubroute } from "@comet/blocks-admin";
+import { Paper, Typography } from "@mui/material";
+import { FieldInfoTextBlockField } from "@src/formBuilder/blocks/common/FieldInfoTextBlock";
+import { createFieldBlock } from "@src/formBuilder/utils/createFieldBlock";
+import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
+import { PropsAndValidationGroup } from "@src/formBuilder/utils/PropsAndValidationGroup";
 import { FormattedMessage } from "react-intl";
 
 import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
-import { propsAndValidationGroup } from "../common/PropsAndValidationGroup";
 import { CheckboxItemsBlock } from "./CheckboxItemsBlock";
 
-export const CheckboxListBlock: BlockInterface = createCompositeBlock(
-    {
-        name: "CheckboxList",
-        category: BlockCategory.Form,
-        displayName: <FormattedMessage id="blocks.checkboxList" defaultMessage="Checkbox List" />,
-        groups: {
-            display: {
-                title: <FormattedMessage id="blocks.checkboxList.display" defaultMessage="Display" />,
-                paper: true,
-                blocks: {
-                    label: {
-                        block: createCompositeBlockTextField({
-                            fieldProps: {
-                                label: <FormattedMessage id="blocks.checkboxList.label" defaultMessage="Label" />,
-                                fullWidth: true,
-                            },
-                        }),
-                        hiddenInSubroute: true,
-                    },
-                    infoText: {
-                        block: FieldInfoTextBlock,
-                        title: <FormattedMessage id="blocks.checkboxList.infoText" defaultMessage="Info Text" />,
-                        hiddenInSubroute: true,
-                    },
-                },
-            },
-            propsAndValidation: propsAndValidationGroup,
-            items: {
-                title: <FormattedMessage id="blocks.checkboxList.items" defaultMessage="Checkbox Items" />,
-                blocks: {
-                    items: {
-                        block: CheckboxItemsBlock,
-                    },
-                },
-            },
-        },
+const FinalFormCheckboxItemsBlock = createFinalFormBlock(CheckboxItemsBlock);
+
+export const CheckboxListBlock: BlockInterface = createFieldBlock({
+    name: "CheckboxList",
+    displayName: <FormattedMessage id="formBuilder.checkboxList" defaultMessage="Checkbox List" />,
+    input2State: (input) => ({
+        ...input,
+        items: CheckboxItemsBlock.input2State(input.items),
+    }),
+    state2Output: (state) => ({
+        ...state,
+        items: CheckboxItemsBlock.state2Output(state.items),
+    }),
+    output2State: async (output, context) => ({
+        ...output,
+        items: await CheckboxItemsBlock.output2State(output.items, context),
+    }),
+    createPreviewState: (state, previewCtx) => ({
+        ...state,
+        items: CheckboxItemsBlock.createPreviewState(state.items, previewCtx),
+    }),
+    defaultValues: () => ({
+        label: "",
+        infoText: FieldInfoTextBlock.defaultValues(),
+        mandatory: false,
+        fieldName: "",
+        items: CheckboxItemsBlock.defaultValues(),
+    }),
+    AdminComponent: ({ state, updateState }) => {
+        return (
+            <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+                <HiddenInSubroute>
+                    <DisplaySection>
+                        <TextField name="label" label={<FormattedMessage id="formBuilder.checkboxList.label" defaultMessage="Label" />} fullWidth />
+                        <FieldInfoTextBlockField />
+                    </DisplaySection>
+                    <PropsAndValidationGroup />
+                    <Paper variant="outlined" sx={{ p: 4 }}>
+                        <Typography variant="h5">
+                            <FormattedMessage id="formBuilder.checkboxList" defaultMessage="Checkbox List" />
+                        </Typography>
+                    </Paper>
+                </HiddenInSubroute>
+                <Field name="items" component={FinalFormCheckboxItemsBlock} fullWidth />
+            </BlocksFinalForm>
+        );
     },
-    (block) => {
-        block.previewContent = (state) => [{ type: "text", content: state.label }];
-        return block;
-    },
-);
+});
