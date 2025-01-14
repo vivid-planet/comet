@@ -54,10 +54,10 @@
         "graphql-scalars": "^1.23.0",
         "helmet": "^4.6.0",
         "nestjs-console": "^9.0.0",
-        "reflect-metadata": "^0.1.13",
+        "reflect-metadata": "^0.2.2",
         "response-time": "^2.3.2",
         "rimraf": "^6.0.1",
-        "rxjs": "^7.0.0",
+        "rxjs": "^7.8.1",
         "slugify": "^1.0.0",
         "uuid": "^11.0.3"
     },
