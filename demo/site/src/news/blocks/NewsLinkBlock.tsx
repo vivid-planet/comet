@@ -14,6 +14,7 @@ function NewsLinkBlock({ data: { news }, children, title, className }: PropsWith
     return (
         <Link
             href={createSiteUrl({
+                baseUrl: "/",
                 scope: {
                     language: news.scope.language,
                 },
