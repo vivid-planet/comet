@@ -473,8 +473,8 @@ importers:
         specifier: ^0.10.2
         version: 0.10.2
       styled-components:
-        specifier: ^6.1.8
-        version: 6.1.12(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^6.1.14
+        version: 6.1.14(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swiper:
         specifier: ^11.2.1
         version: 11.2.1(@types/react@18.3.18)
@@ -576,8 +576,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       styled-components:
-        specifier: ^6.1.8
-        version: 6.1.12(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^6.1.14
+        version: 6.1.14(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swiper:
         specifier: ^11.2.1
         version: 11.2.1(@types/react@18.3.18)
@@ -2267,8 +2267,8 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       styled-components:
-        specifier: ^6.0.0
-        version: 6.1.12(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^6.1.14
+        version: 6.1.14(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ts-jest:
         specifier: ^29.0.5
         version: 29.0.5(@babel/core@7.26.0)(@jest/types@29.6.3)(babel-jest@29.5.0(@babel/core@7.26.0))(jest@29.5.0(@types/node@22.9.0)(ts-node@10.9.1(@swc/core@1.4.8(@swc/helpers@0.5.5))(@types/node@22.9.0)(typescript@4.9.4)))(typescript@4.9.4)
@@ -14601,8 +14601,8 @@ packages:
   style-to-object@0.3.0:
     resolution: {integrity: sha512-CzFnRRXhzWIdItT3OmF8SQfWyahHhjq3HwcMNCNLn+N7klOOqPjMeG/4JSu77D7ypZdGvSzvkrbyeTMizz2VrA==}
 
-  styled-components@6.1.12:
-    resolution: {integrity: sha512-n/O4PzRPhbYI0k1vKKayfti3C/IGcPf+DqcrOB7O/ab9x4u/zjqraneT5N45+sIe87cxrCApXM8Bna7NYxwoTA==}
+  styled-components@6.1.14:
+    resolution: {integrity: sha512-KtfwhU5jw7UoxdM0g6XU9VZQFV4do+KrM8idiVCH5h4v49W+3p3yMe0icYwJgZQZepa5DbH04Qv8P0/RdcLcgg==}
     engines: {node: '>= 16'}
     peerDependencies:
       '@types/react': ^18.0.0
@@ -30247,7 +30247,7 @@ snapshots:
 
   postcss@8.4.38:
     dependencies:
-      nanoid: 3.3.7
+      nanoid: 3.3.8
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -31939,7 +31939,7 @@ snapshots:
     dependencies:
       inline-style-parser: 0.1.1
 
-  styled-components@6.1.12(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  styled-components@6.1.14(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@emotion/is-prop-valid': 1.2.2
       '@emotion/unitless': 0.8.1
