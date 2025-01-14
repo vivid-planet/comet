@@ -27,8 +27,8 @@ export const PageContentStandaloneHeadingBlock = (props: StandaloneHeadingBlockP
     </PageLayout>
 );
 
-const Root = styled.div<{ $textAlign: CSSProperties["textAlign"] }>({
-    textAlign: ({ $textAlign }) => $textAlign,
+const Root = styled.div<{ textAlign: CSSProperties["textAlign"] }>({
+    textAlign: ({ textAlign }) => textAlign,
 });
 
 const PageLayoutContent = styled.div`
