@@ -14,7 +14,6 @@ export { AdminTabs } from "./blocks/common/AdminTabs";
 export { BlockPreviewContent } from "./blocks/common/blockRow/BlockPreviewContent";
 export { BlockRow } from "./blocks/common/blockRow/BlockRow";
 export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
-export { usePromise } from "./blocks/common/usePromise";
 export { BlockContextProvider } from "./blocks/context/BlockContextProvider";
 export { useBlockContext } from "./blocks/context/useBlockContext";
 export { createImageLinkBlock } from "./blocks/createImageLinkBlock";
