@@ -1264,8 +1264,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/draft-js':
-        specifier: ^0.11.10
-        version: 0.11.10
+        specifier: ^0.11.18
+        version: 0.11.18
       '@types/immutable':
         specifier: ^3.8.7
         version: 3.8.7
@@ -1279,7 +1279,7 @@ importers:
         specifier: ^17.0.0
         version: 17.0.18
       draft-js:
-        specifier: ^0.11.4
+        specifier: ^0.11.7
         version: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       eslint:
         specifier: ^8.0.0
@@ -1663,8 +1663,8 @@ importers:
         specifier: ^7.23.5
         version: 7.23.5(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/draft-js':
-        specifier: ^0.11.10
-        version: 0.11.10
+        specifier: ^0.11.18
+        version: 0.11.18
       '@types/file-saver':
         specifier: ^2.0.7
         version: 2.0.7
@@ -1973,8 +1973,8 @@ importers:
         specifier: ^7.0.0
         version: 7.118.0
       '@types/draft-js':
-        specifier: ^0.11.10
-        version: 0.11.10
+        specifier: ^0.11.18
+        version: 0.11.18
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
@@ -2225,8 +2225,8 @@ importers:
         specifier: workspace:^7.11.0
         version: link:../../eslint-config
       '@types/draft-js':
-        specifier: ^0.11.10
-        version: 0.11.10
+        specifier: ^0.11.18
+        version: 0.11.18
       '@types/jest':
         specifier: ^29.5.0
         version: 29.5.0
@@ -2412,8 +2412,8 @@ importers:
         specifier: ^8.4.7
         version: 8.4.7(storybook@8.4.7(prettier@2.8.3))
       '@types/draft-js':
-        specifier: ^0.11.10
-        version: 0.11.10
+        specifier: ^0.11.18
+        version: 0.11.18
       '@types/faker':
         specifier: ^5.5.9
         version: 5.5.9
@@ -2436,7 +2436,7 @@ importers:
         specifier: ^4.3.5
         version: 4.3.5
       draft-js:
-        specifier: ^0.11.5
+        specifier: ^0.11.7
         version: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       draft-js-export-html:
         specifier: ^1.4.1
@@ -6781,8 +6781,8 @@ packages:
   '@types/doctrine@0.0.9':
     resolution: {integrity: sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==}
 
-  '@types/draft-js@0.11.10':
-    resolution: {integrity: sha512-o/DST8x0wNerwhRiaE577UHFIXb6HCywaZOZfj9TF2vU3CONvsCGoQmdOsKqERdXp+3ZNlSvFUH0B8lEEYOT4A==}
+  '@types/draft-js@0.11.18':
+    resolution: {integrity: sha512-lP6yJ+EKv5tcG1dflWgDKeezdwBa8wJ7KkiNrrHqXuXhl/VGes1SKjEfKHDZqOz19KQbrAhFvNhDPWwnQXYZGQ==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -22527,7 +22527,7 @@ snapshots:
 
   '@types/doctrine@0.0.9': {}
 
-  '@types/draft-js@0.11.10':
+  '@types/draft-js@0.11.18':
     dependencies:
       '@types/react': 17.0.53
       immutable: 3.7.6
