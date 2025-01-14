@@ -54,7 +54,7 @@
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
         "use-debounce": "^6.0.0",
-        "uuid": "^9.0.0"
+        "uuid": "^11.0.3"
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",
@@ -75,7 +75,6 @@
         "@types/react-dom": "^17.0.0",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^5.0.0",
-        "@types/uuid": "^7.0.0",
         "@vitejs/plugin-react-swc": "^3.6.0",
         "chokidar-cli": "^3.0.0",
         "dotenv-cli": "^4.1.1",

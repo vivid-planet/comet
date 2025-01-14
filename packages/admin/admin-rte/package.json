@@ -1,6 +1,6 @@
 {
     "name": "@comet/admin-rte",
-    "version": "7.10.0",
+    "version": "7.11.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/vivid-planet/comet",
@@ -28,8 +28,8 @@
         "test:watch": "jest --watch"
     },
     "dependencies": {
-        "@comet/admin": "workspace:^7.10.0",
-        "@comet/admin-icons": "workspace:^7.10.0",
+        "@comet/admin": "workspace:^7.11.0",
+        "@comet/admin-icons": "workspace:^7.11.0",
         "detect-browser": "^5.3.0",
         "draft-js-export-html": "^1.4.1",
         "draft-js-import-html": "^1.4.1",
@@ -39,8 +39,8 @@
     "devDependencies": {
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.20.12",
-        "@comet/admin-babel-preset": "workspace:^7.10.0",
-        "@comet/eslint-config": "workspace:^7.10.0",
+        "@comet/admin-babel-preset": "workspace:^7.11.0",
+        "@comet/eslint-config": "workspace:^7.11.0",
         "@mui/material": "^6.3.0",
         "@types/draft-js": "^0.11.10",
         "@types/immutable": "^3.8.7",
@@ -58,17 +58,17 @@
         "react-dom": "^17.0",
         "react-final-form": "^6.5.9",
         "react-intl": "^6.0.0",
-        "rimraf": "^3.0.2",
+        "rimraf": "^6.0.1",
         "ts-jest": "^29.0.0",
         "typescript": "^4.0.0"
     },
     "peerDependencies": {
-        "@mui/material": "^6.3.0",
+        "@mui/material": "^6.0.0",
         "draft-js": "^0.11.4",
-        "final-form": "^4.20.10",
+        "final-form": "^4.16.1",
         "react": "^17.0",
         "react-dom": "^17.0",
-        "react-final-form": "^6.5.9",
+        "react-final-form": "^6.3.1",
         "react-intl": "^5.0.0 || ^6.0.0"
     },
     "publishConfig": {

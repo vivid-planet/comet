@@ -19,3 +19,4 @@ subpage
 typesafe
 exceljs
 ormconfig
+exif

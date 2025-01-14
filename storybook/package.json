@@ -44,7 +44,7 @@
         "react-final-form": "^6.5.9",
         "react-intl": "^6.0.0",
         "use-debounce": "^6.0.0",
-        "uuid": "^9.0.0"
+        "uuid": "^11.0.3"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
@@ -62,14 +62,13 @@
         "@storybook/react-webpack5": "^8.4.7",
         "@storybook/theming": "^8.4.7",
         "@types/draft-js": "^0.11.10",
-        "@types/faker": "^5.5.8",
+        "@types/faker": "^5.5.9",
         "@types/history": "^4.7.11",
         "@types/qs": "^6.9.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "@types/react-router": "^5.1.20",
         "@types/react-router-dom": "^4.3.5",
-        "@types/uuid": "^9.0.0",
         "draft-js": "^0.11.5",
         "draft-js-export-html": "^1.4.1",
         "draft-js-export-markdown": "^1.4.0",

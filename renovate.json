@@ -71,7 +71,6 @@
             "labels": ["major", "dependencies"]
         }
     ],
-    "rangeStrategy": "bump",
     "labels": ["dependencies"],
     "baseBranches": ["next"]
 }
