@@ -38,7 +38,7 @@
         "react-intl": "^6.0.0",
         "redraft": "^0.10.2",
         "styled-components": "^6.1.8",
-        "swiper": "^11.1.15",
+        "swiper": "^11.2.1",
         "ts-node": "^10.0.0"
     },
     "devDependencies": {
