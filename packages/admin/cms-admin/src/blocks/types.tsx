@@ -14,7 +14,7 @@ interface AdminMetaInterface {
     route: string;
 }
 
-export interface PreviewStateInterface {
+export interface BlockPreviewStateInterface {
     adminMeta?: AdminMetaInterface;
 }
 
@@ -94,7 +94,7 @@ export interface AnonymousBlockInterface<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState = InputApi & PreviewStateInterface,
+    PreviewState = InputApi & BlockPreviewStateInterface,
 > extends BlockMethods<InputApi, State, OutputApi, PreviewState> {
     AdminComponent: BlockAdminComponent<State>;
     definesOwnPadding?: boolean;
@@ -108,7 +108,7 @@ export interface BlockInterface<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface,
+    PreviewState extends BlockPreviewStateInterface = InputApi & BlockPreviewStateInterface,
 > extends AnonymousBlockInterface<InputApi, State, OutputApi, PreviewState> {
     name: string;
     displayName: ReactNode;
@@ -122,7 +122,7 @@ export interface RootBlockInterface<
     State = any,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OutputApi = any,
-    PreviewState extends PreviewStateInterface = InputApi & PreviewStateInterface,
+    PreviewState extends BlockPreviewStateInterface = InputApi & BlockPreviewStateInterface,
 > extends Omit<BlockInterface<InputApi, State, OutputApi, PreviewState>, "AdminComponent" | "Preview"> {
     adminComponentParts: (p: BlockAdminComponentProps<State>) => AdminComponentPart[];
 }

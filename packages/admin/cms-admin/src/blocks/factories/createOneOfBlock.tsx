@@ -11,7 +11,7 @@ import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
-import { BlockCategory, BlockInterface, BlockState, CustomBlockCategory, DispatchSetStateAction, PreviewStateInterface } from "../types";
+import { BlockCategory, BlockInterface, BlockPreviewStateInterface, BlockState, CustomBlockCategory, DispatchSetStateAction } from "../types";
 import { resolveNewState } from "../utils";
 import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 
@@ -39,7 +39,7 @@ export interface OneOfBlockFragment {
     };
 }
 
-export interface OneOfBlockPreviewState extends PreviewStateInterface {
+export interface OneOfBlockPreviewState extends BlockPreviewStateInterface {
     block?: {
         type: string;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
