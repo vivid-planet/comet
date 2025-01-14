@@ -54,7 +54,7 @@
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
         "use-debounce": "^6.0.1",
-        "uuid": "^11.0.3"
+        "uuid": "^11.0.5"
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",

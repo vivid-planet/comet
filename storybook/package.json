@@ -44,7 +44,7 @@
         "react-final-form": "^6.5.9",
         "react-intl": "^6.0.0",
         "use-debounce": "^6.0.1",
-        "uuid": "^11.0.3"
+        "uuid": "^11.0.5"
     },
     "devDependencies": {
         "@babel/cli": "^7.17.6",
