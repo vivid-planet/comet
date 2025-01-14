@@ -6,7 +6,8 @@ type DamImageProps = Omit<NextImageProps, "src" | "width" | "height" | "alt"> & 
     aspectRatio: string | "inherit";
 };
 
-const InternalDamImageBlock = ({ data: { block }, aspectRatio, ...imageProps }: PropsWithData<DamImageBlockData> & DamImageProps) => {
+type DamImageBlockProps = PropsWithData<DamImageBlockData> & DamImageProps;
+const InternalDamImageBlock = ({ data: { block }, aspectRatio, ...imageProps }: DamImageBlockProps) => {
     if (!block) {
         return <PreviewSkeleton type="media" hasContent={false} />;
     }
@@ -23,7 +24,7 @@ const InternalDamImageBlock = ({ data: { block }, aspectRatio, ...imageProps }: 
         );
     }
 };
-export const DamImageBlock = (props: PropsWithData<DamImageProps>) => {
+export const DamImageBlock = (props: DamImageBlockProps) => {
     return (
         <WithPreviewComponent data={props.data} label="Image">
             <InternalDamImageBlock {...props} />
