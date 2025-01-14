@@ -361,8 +361,8 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       slugify:
-        specifier: ^1.0.0
-        version: 1.6.5
+        specifier: ^1.6.6
+        version: 1.6.6
       uuid:
         specifier: ^11.0.3
         version: 11.0.3
@@ -1605,8 +1605,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       slugify:
-        specifier: ^1.0.0
-        version: 1.6.5
+        specifier: ^1.6.6
+        version: 1.6.6
       use-debounce:
         specifier: ^6.0.1
         version: 6.0.1(react@17.0.2)
@@ -1909,8 +1909,8 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       slugify:
-        specifier: ^1.6.4
-        version: 1.6.5
+        specifier: ^1.6.6
+        version: 1.6.6
       ts-morph:
         specifier: ^16.0.0
         version: 16.0.0
@@ -14302,8 +14302,8 @@ packages:
     resolution: {integrity: sha512-FC+lgizVPfie0kkhqUScwRu1O/lF6NOgJmlCgK+/LYxDCTk8sGelYaHDhFcDN+Sn3Cv+3VSa4Byeo+IMCzpMgQ==}
     engines: {node: '>=12'}
 
-  slugify@1.6.5:
-    resolution: {integrity: sha512-8mo9bslnBO3tr5PEVFzMPIWwWnipGS0xVbYf65zxDqfNwmzYn1LpiKNrR6DlClusuvo+hDHd1zKpmfAe83NQSQ==}
+  slugify@1.6.6:
+    resolution: {integrity: sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==}
     engines: {node: '>=8.0.0'}
 
   smartwrap@2.0.2:
@@ -31614,7 +31614,7 @@ snapshots:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 4.0.0
 
-  slugify@1.6.5: {}
+  slugify@1.6.6: {}
 
   smartwrap@2.0.2:
     dependencies:
