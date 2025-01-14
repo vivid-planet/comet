@@ -18,6 +18,7 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
     return (
         <Link
             href={createSiteUrl({
+                baseUrl: "/",
                 scope:
                     targetPage.scope != null
                         ? {

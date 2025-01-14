@@ -20,6 +20,7 @@ const Breadcrumbs = ({ scope, name, path, parentNodes }: BreadcrumbsProps) => {
                         <Fragment key={parentNode.path}>
                             <sc.Link
                                 href={createSiteUrl({
+                                    baseUrl: "/",
                                     path: parentNode.path,
                                     scope: {
                                         language: scope.language,
@@ -35,6 +36,7 @@ const Breadcrumbs = ({ scope, name, path, parentNodes }: BreadcrumbsProps) => {
 
                     <sc.Link
                         href={createSiteUrl({
+                            baseUrl: "/",
                             path: path,
                             scope: {
                                 language: scope.language,
