@@ -1,4 +1,5 @@
 import {
+    FillSpace,
     MainContent,
     SaveBoundary,
     SaveBoundarySaveButton,
@@ -9,7 +10,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { ContentScopeIndicator } from "@comet/cms-admin";
 import { useContentScope } from "@src/common/ContentScopeProvider";
@@ -22,7 +22,7 @@ const FormToolbar = () => (
     <StackToolbar scopeIndicator={<ContentScopeIndicator />}>
         <ToolbarBackButton />
         <ToolbarAutomaticTitleItem />
-        <ToolbarFillSpace />
+        <FillSpace />
         <ToolbarActions>
             <SaveBoundarySaveButton />
         </ToolbarActions>

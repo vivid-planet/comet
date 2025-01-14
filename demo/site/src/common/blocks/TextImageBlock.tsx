@@ -9,7 +9,7 @@ import { RichTextBlock } from "./RichTextBlock";
 export const TextImageBlock = withPreview(
     ({ data: { text, image, imageAspectRatio, imagePosition } }: PropsWithData<TextImageBlockData>) => {
         return (
-            <Root imagePosition={imagePosition}>
+            <Root $imagePosition={imagePosition}>
                 <ImageContainer>
                     <DamImageBlock data={image} aspectRatio={imageAspectRatio} sizes="50vw" />
                 </ImageContainer>
@@ -22,13 +22,13 @@ export const TextImageBlock = withPreview(
     { label: "Text/Image" },
 );
 
-const Root = styled.div<{ imagePosition: TextImageBlockData["imagePosition"] }>`
+const Root = styled.div<{ $imagePosition: TextImageBlockData["imagePosition"] }>`
     display: flex;
     flex-direction: row;
     gap: 20px;
 
-    ${({ imagePosition }) =>
-        imagePosition === "left" &&
+    ${({ $imagePosition }) =>
+        $imagePosition === "left" &&
         css`
             flex-direction: row-reverse;
         `}
