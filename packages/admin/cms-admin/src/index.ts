@@ -55,7 +55,7 @@ export { createCompositeSettings } from "./blocks/helpers/composeBlocks/createCo
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
 export { createCompositeBlockSelectField } from "./blocks/helpers/createCompositeBlockSelectField";
 export { createCompositeBlockTextField } from "./blocks/helpers/createCompositeBlockTextField";
-export { default as decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
+export { decomposeUpdateStateAction } from "./blocks/helpers/decomposeUpdateStateAction";
 export { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
 export { HoverPreviewComponent } from "./blocks/iframebridge/HoverPreviewComponent";
 export { IFrameBridgeContext, IFrameBridgeProvider } from "./blocks/iframebridge/IFrameBridge";

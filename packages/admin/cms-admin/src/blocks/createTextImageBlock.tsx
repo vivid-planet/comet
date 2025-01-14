@@ -8,7 +8,7 @@ import { AdminComponentSection } from "./common/AdminComponentSection";
 import { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
 import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
-import decomposeUpdateStateAction from "./helpers/decomposeUpdateStateAction";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
 import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
 import { BlockCategory, BlockInterface } from "./types";

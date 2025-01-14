@@ -18,7 +18,7 @@ import { createOptionalBlock } from "./factories/createOptionalBlock";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
-import decomposeUpdateStateAction from "./helpers/decomposeUpdateStateAction";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
 import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { PixelImageBlock } from "./PixelImageBlock";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";

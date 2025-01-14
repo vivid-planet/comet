@@ -8,7 +8,7 @@ import { AdminComponentPaper } from "./common/AdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
-import decomposeUpdateStateAction from "./helpers/decomposeUpdateStateAction";
+import { decomposeUpdateStateAction } from "./helpers/decomposeUpdateStateAction";
 import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { BlockCategory, BlockInterface, BlockState } from "./types";
 

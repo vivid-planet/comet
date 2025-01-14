@@ -11,7 +11,7 @@ type InferedState<T> = T extends DispatchSetStateAction<infer S> ? S : never;
  * @param action  f.i. pass a DispatchSetStateAction which updates the state {foo: number, bar: string}
  * @param whiteKeys f.i. define ["bar"] as whitelist
  */
-export default function decomposeUpdateStateAction<
+export function decomposeUpdateStateAction<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     D extends DispatchSetStateAction<any>,
     S extends InferedState<D>,
