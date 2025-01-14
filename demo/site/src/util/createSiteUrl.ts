@@ -31,7 +31,7 @@ type ResolveUrlOptions = {
  *
  * @return {string} The resolved URL: /{scope.language}/test/to/my/page#my-anchor
  */
-export const resolveUrl = ({ baseUrl = "/", path, scope, anchor }: ResolveUrlOptions) => {
+export const createSiteUrl = ({ baseUrl = "/", path, scope, anchor }: ResolveUrlOptions) => {
     let safeScope = "";
     if (scope != null) {
         safeScope = scope.language;
