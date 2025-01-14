@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Loading, MainContent, RouterPrompt, Toolbar, ToolbarActions, ToolbarFillSpace, ToolbarItem, useStackApi } from "@comet/admin";
+import { FillSpace, Loading, MainContent, RouterPrompt, Toolbar, ToolbarActions, ToolbarItem, useStackApi } from "@comet/admin";
 import { ArrowLeft, Preview } from "@comet/admin-icons";
 import { AdminComponentRoot, AdminTabLabel } from "@comet/blocks-admin";
 import {
@@ -139,7 +139,7 @@ export const EditPage = ({ id }: Props) => {
                     </IconButton>
                 </ToolbarItem>
                 <PageName pageId={id} />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <Stack direction="row" spacing={1}>
                         <Button
