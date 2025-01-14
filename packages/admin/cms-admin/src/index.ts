@@ -1,5 +1,4 @@
 export { AnchorBlock } from "./blocks/AnchorBlock";
-export { CannotPasteBlockDialog } from "./blocks/clipboard/CannotPasteBlockDialog";
 export { readClipboard } from "./blocks/clipboard/readClipboard";
 export type { ClipboardContent } from "./blocks/clipboard/useBlockClipboard";
 export { useBlockClipboard } from "./blocks/clipboard/useBlockClipboard";
