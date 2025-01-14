@@ -43,7 +43,6 @@
         "@opentelemetry/api": "^1.9.0",
         "@types/get-image-colors": "^4.0.5",
         "base64url": "^3.0.1",
-        "class-transformer": "^0.5.1",
         "commander": "^9.5.0",
         "cron-parser": "^3.5.0",
         "dataloader": "^2.1.0",
@@ -72,7 +71,6 @@
         "passport-jwt": "^4.0.0",
         "pluralize": "^8.0.0",
         "probe-image-size": "^7.0.0",
-        "reflect-metadata": "^0.1.0",
         "request-ip": "^3.3.0",
         "rimraf": "^6.0.1",
         "slugify": "^1.6.4",
@@ -112,6 +110,7 @@
         "@types/probe-image-size": "^7.0.0",
         "@types/request-ip": "^0.0.41",
         "chokidar-cli": "^3.0.0",
+        "class-transformer": "^0.5.1",
         "class-validator": "^0.14.1",
         "eslint": "^8.0.0",
         "express": "^4.21.2",
@@ -121,7 +120,8 @@
         "nestjs-console": "^9.0.0",
         "npm-run-all": "^4.0.0",
         "prettier": "^2.0.0",
-        "rxjs": "^7.8.0",
+        "reflect-metadata": "^0.2.2",
+        "rxjs": "^7.8.1",
         "ts-jest": "^29.0.5",
         "ts-node": "^10.0.0",
         "typescript": "^4.0.0"
@@ -138,11 +138,13 @@
         "@nestjs/graphql": "^12.0.0",
         "@nestjs/platform-express": "^10.0.0",
         "@sentry/node": "^7.0.0",
+        "class-transformer": "^0.5.0",
         "class-validator": "^0.14.0",
         "express": "^4.21.2",
         "graphql": "^16.6.0",
         "nestjs-console": "^9.0.0",
-        "rxjs": "^7.0.0"
+        "reflect-metadata": "^0.2.0",
+        "rxjs": "^7.1.0"
     },
     "peerDependenciesMeta": {
         "@sentry/node": {

@@ -204,6 +204,31 @@ npx @comet/upgrade v8/update-class-validator.ts
 
 :::
 
+### NestJS peer dependencies
+
+Peer dependencies defined by NestJS have been added as peer dependencies to `@comet/cms-api`.
+To upgrade, install the dependencies in your project:
+
+```diff title=api/package.json
+{
+    "dependencies": {
++       "class-transformer": "^0.5.1",
+-       "reflect-metadata": "^0.1.13",
++       "reflect-metadata": "^0.2.2",
+-       "rxjs": "^7.0.0",
++       "rxjs": "^7.8.1",
+    }
+}
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/nest-peer-dependencies.ts
+```
+
+:::
+
 ## Admin
 
 ### Stay on same page after changing scope
