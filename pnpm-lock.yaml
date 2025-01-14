@@ -1179,8 +1179,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/cli-progress':
-        specifier: ^3.8.0
-        version: 3.11.0
+        specifier: ^3.11.6
+        version: 3.11.6
       '@types/node':
         specifier: ^22.0.0
         version: 22.9.0
@@ -1194,8 +1194,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2
       cli-progress:
-        specifier: ^3.8.2
-        version: 3.11.2
+        specifier: ^3.12.0
+        version: 3.12.0
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
@@ -6751,8 +6751,8 @@ packages:
   '@types/chroma-js@2.1.4':
     resolution: {integrity: sha512-l9hWzP7cp7yleJUI7P2acmpllTJNYf5uU6wh50JzSIZt3fFHe+w2FM6w9oZGBTYzjjm2qHdnQvI+fF/JF/E5jQ==}
 
-  '@types/cli-progress@3.11.0':
-    resolution: {integrity: sha512-XhXhBv1R/q2ahF3BM7qT5HLzJNlIL0wbcGyZVjqOTqAybAnsLisd7gy1UCyIqpL+5Iv6XhlSyzjLCnI2sIdbCg==}
+  '@types/cli-progress@3.11.6':
+    resolution: {integrity: sha512-cE3+jb9WRlu+uOSAugewNpITJDt1VF8dHOopPO4IABFc3SXYL5WE/+PTz/FCdZRRfIujiWW3n3aMbv1eIGVRWA==}
 
   '@types/compression@1.7.5':
     resolution: {integrity: sha512-AAQvK5pxMpaT+nDvhHrsBhLSYG5yQdtkaJE1WYieSNY2mVFKAgmU4ks65rkZD5oqnGCFLyQpUr1CqI4DmUMyDg==}
@@ -8131,8 +8131,8 @@ packages:
     resolution: {integrity: sha512-I/zHAwsKf9FqGoXM4WWRACob9+SNukZTd94DWF57E4toouRulbCxcUh6RKUEOQlYTHJnzkPMySvPNaaSLNfLZw==}
     engines: {node: '>=8'}
 
-  cli-progress@3.11.2:
-    resolution: {integrity: sha512-lCPoS6ncgX4+rJu5bS3F/iCz17kZ9MPZ6dpuTtI0KXKABkhyXIdYB3Inby1OpaGti3YlI3EeEkM9AuWpelJrVA==}
+  cli-progress@3.12.0:
+    resolution: {integrity: sha512-tRkV3HJ1ASwm19THiiLIXLO7Im7wlTuKnvkYaTkyoAPefqjNg7W7DHKUlGRxy9vxDvbyCYQkQozvptuMkGCg8A==}
     engines: {node: '>=4'}
 
   cli-spinners@2.7.0:
@@ -22515,7 +22515,7 @@ snapshots:
 
   '@types/chroma-js@2.1.4': {}
 
-  '@types/cli-progress@3.11.0':
+  '@types/cli-progress@3.11.6':
     dependencies:
       '@types/node': 22.9.0
 
@@ -24250,7 +24250,7 @@ snapshots:
     dependencies:
       restore-cursor: 3.1.0
 
-  cli-progress@3.11.2:
+  cli-progress@3.12.0:
     dependencies:
       string-width: 4.2.3
 
