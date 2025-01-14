@@ -5,7 +5,7 @@ import { ChangeEvent, MouseEventHandler, ReactNode, useRef, useState } from "rea
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
 import { FormattedMessage } from "react-intl";
 
-import { usePromise } from "../../../common/usePromise";
+import { usePromise } from "../usePromise";
 import * as sc from "./BlockRow.sc";
 import InsertInBetweenAction from "./InsertInBetweenAction";
 import InsertInBetweenActionButton from "./InsertInBetweenActionButton";

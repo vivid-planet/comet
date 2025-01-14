@@ -1,4 +1,4 @@
-import { BlockDependency, BlockInterface } from "../blocks/blocks/types";
+import { BlockDependency, BlockInterface } from "../blocks/types";
 import { DocumentInterface } from "./types";
 
 export function createDocumentRootBlocksMethods<

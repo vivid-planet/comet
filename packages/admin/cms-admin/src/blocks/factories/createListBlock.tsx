@@ -6,9 +6,6 @@ import { FunctionComponent, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
-import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
-import { parallelAsyncEvery } from "../../utils/parallelAsyncEvery";
 import { AdminComponentButton } from "../common/AdminComponentButton";
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
 import { AdminComponentStickyFooter } from "../common/AdminComponentStickyFooter";
@@ -17,7 +14,10 @@ import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
+import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
+import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
 import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
+import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
 // Using {} instead of Record<string, never> because never and unknown are incompatible.

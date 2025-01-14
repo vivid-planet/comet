@@ -5,15 +5,15 @@ import isEqual from "lodash.isequal";
 import { ReactNode, useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { BlocksFinalForm } from "../../form/BlocksFinalForm";
-import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
-import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
-import { parallelAsyncEvery } from "../../utils/parallelAsyncEvery";
 import { useAdminComponentPaper } from "../common/AdminComponentPaper";
 import { HiddenInSubroute } from "../common/HiddenInSubroute";
+import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
+import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
+import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
 import { BlockCategory, BlockInterface, BlockState, CustomBlockCategory, DispatchSetStateAction, PreviewStateInterface } from "../types";
 import { resolveNewState } from "../utils";
+import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 
 interface OneOfBlockItem<T extends BlockInterface = BlockInterface> {
     type: string;

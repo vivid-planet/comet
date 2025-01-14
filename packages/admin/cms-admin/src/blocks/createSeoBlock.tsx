@@ -9,21 +9,21 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { SeoBlockData, SeoBlockInput } from "../blocks.generated";
 import { validateUrl } from "../validation/validateUrl";
-import { AdminComponentButton } from "./blocks/common/AdminComponentButton";
-import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
-import { AdminComponentSectionGroup } from "./blocks/common/AdminComponentSectionGroup";
-import { createOptionalBlock } from "./blocks/factories/createOptionalBlock";
-import { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import decomposeUpdateStateAction from "./blocks/helpers/decomposeUpdateStateAction";
-import { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
-import { BlockInterface, BlockState } from "./blocks/types";
+import { AdminComponentButton } from "./common/AdminComponentButton";
+import { AdminComponentPaper } from "./common/AdminComponentPaper";
+import { AdminComponentSectionGroup } from "./common/AdminComponentSectionGroup";
 import { Collapsible } from "./common/Collapsible";
 import { CollapsibleSwitchButtonHeader } from "./common/CollapsibleSwitchButtonHeader";
+import { createOptionalBlock } from "./factories/createOptionalBlock";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import decomposeUpdateStateAction from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { PixelImageBlock } from "./PixelImageBlock";
 import useSitemapChangeFrequencyFormOptions from "./seo/useSitemapChangeFrequencyFormOptions";
 import useSitemapPagePriorityFormOptions from "./seo/useSitemapPagePriorityFormOptions";
+import { BlockInterface, BlockState } from "./types";
 
 interface CreateSeoBlockOptions {
     image?: BlockInterface;

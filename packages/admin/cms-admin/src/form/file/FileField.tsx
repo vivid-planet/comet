@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FieldRenderProps } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentButton } from "../../blocks/blocks/common/AdminComponentButton";
+import { AdminComponentButton } from "../../blocks/common/AdminComponentButton";
 import { ChooseFileDialog } from "./chooseFile/ChooseFileDialog";
 import { damFileFieldFileQuery } from "./FileField.gql";
 import { GQLDamFileFieldFileFragment, GQLDamFileFieldFileQuery, GQLDamFileFieldFileQueryVariables } from "./FileField.gql.generated";

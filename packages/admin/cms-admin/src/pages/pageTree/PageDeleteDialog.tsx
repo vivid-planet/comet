@@ -4,7 +4,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typogra
 import { useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentPaper } from "../../blocks/blocks/common/AdminComponentPaper";
+import { AdminComponentPaper } from "../../blocks/common/AdminComponentPaper";
 import { GQLPageTreePageFragment } from "../pageTree/usePageTree";
 import { DeleteContentInformation, PageCount, PageVisibility, WarningIcon, WarningIconWrapper } from "./PageDeleteDialog.sc";
 import { PageVisibilityIcon } from "./PageVisibilityIcon";

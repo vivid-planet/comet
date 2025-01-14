@@ -2,10 +2,10 @@ import { Stack, StackPage, StackSwitch, StackToolbar } from "@comet/admin";
 import { ComponentType } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { createOneOfBlock } from "../blocks/blocks/factories/createOneOfBlock";
-import { BlockInterface } from "../blocks/blocks/types";
 import { ExternalLinkBlock } from "../blocks/ExternalLinkBlock";
+import { createOneOfBlock } from "../blocks/factories/createOneOfBlock";
 import { InternalLinkBlock } from "../blocks/InternalLinkBlock";
+import { BlockInterface } from "../blocks/types";
 import { ContentScopeIndicator } from "../contentScope/ContentScopeIndicator";
 import { useContentScope } from "../contentScope/Provider";
 import { RedirectForm } from "./RedirectForm";

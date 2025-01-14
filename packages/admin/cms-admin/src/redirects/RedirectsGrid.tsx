@@ -23,8 +23,8 @@ import { styled } from "@mui/material/styles";
 import { DataGrid, getGridSingleSelectOperators, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { BlockPreviewContent } from "../blocks/blocks/common/blockRow/BlockPreviewContent";
-import { BlockInterface } from "../blocks/blocks/types";
+import { BlockPreviewContent } from "../blocks/common/blockRow/BlockPreviewContent";
+import { BlockInterface } from "../blocks/types";
 import RedirectActiveness from "./RedirectActiveness";
 import { deleteRedirectMutation, paginatedRedirectsQuery } from "./RedirectsGrid.gql";
 import { GQLPaginatedRedirectsQuery, GQLPaginatedRedirectsQueryVariables, namedOperations } from "./RedirectsGrid.gql.generated";

@@ -2,7 +2,7 @@ import { FocusPointCenter, FocusPointNortheast, FocusPointNorthwest, FocusPointS
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentSection } from "../../blocks/blocks/common/AdminComponentSection";
+import { AdminComponentSection } from "../../blocks/common/AdminComponentSection";
 import { GQLFocalPoint } from "../../graphql.generated";
 
 interface ChooseFocalPointProps {

@@ -12,14 +12,14 @@ import { useDamAcceptedMimeTypes } from "../dam/config/useDamAcceptedMimeTypes";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { AdminComponentButton } from "./blocks/common/AdminComponentButton";
-import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import { BlockCategory, BlockDependency, BlockInterface, IPreviewContext } from "./blocks/types";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { AdminComponentButton } from "./common/AdminComponentButton";
+import { AdminComponentPaper } from "./common/AdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { GQLSvgImageBlockDamFileQuery, GQLSvgImageBlockDamFileQueryVariables } from "./SvgImageBlock.generated";
+import { BlockCategory, BlockDependency, BlockInterface, IPreviewContext } from "./types";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 type SvgImageBlockState = Omit<SvgImageBlockData, "urlTemplate">;

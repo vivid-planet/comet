@@ -5,8 +5,8 @@ import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { BlockDependency, ReplaceDependencyObject } from "../../../blocks/blocks/types";
 import { CmsBlockContext } from "../../../blocks/CmsBlockContextProvider";
+import { BlockDependency, ReplaceDependencyObject } from "../../../blocks/types";
 import { ContentScopeInterface } from "../../../contentScope/Provider";
 import { DocumentInterface, GQLDocument, GQLUpdatePageMutationVariables } from "../../../documents/types";
 import { GQLDamFile } from "../../../graphql.generated";

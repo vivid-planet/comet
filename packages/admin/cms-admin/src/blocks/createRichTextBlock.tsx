@@ -13,11 +13,11 @@ import isEqual from "lodash.isequal";
 import { FormattedMessage } from "react-intl";
 
 import { RichTextBlockData, RichTextBlockInput } from "../blocks.generated";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import { BlockCategory, BlockInterface, LinkBlockInterface } from "./blocks/types";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { createCmsLinkToolbarButton } from "./rte/extension/CmsLink/createCmsLinkToolbarButton";
 import { Decorator as CmsLinkDecorator } from "./rte/extension/CmsLink/Decorator";
+import { BlockCategory, BlockInterface, LinkBlockInterface } from "./types";
 
 export interface RichTextBlockState {
     editorState: EditorState;

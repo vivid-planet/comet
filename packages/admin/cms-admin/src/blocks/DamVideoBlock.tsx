@@ -11,17 +11,17 @@ import { useContentScope } from "../contentScope/Provider";
 import { useDependenciesConfig } from "../dependencies/DependenciesConfig";
 import { DamPathLazy } from "../form/file/DamPathLazy";
 import { FileField } from "../form/file/FileField";
-import { AdminComponentButton } from "./blocks/common/AdminComponentButton";
-import { AdminComponentPaper, useAdminComponentPaper } from "./blocks/common/AdminComponentPaper";
-import { AdminComponentSection } from "./blocks/common/AdminComponentSection";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import { BlockCategory, BlockDependency, BlockInterface, BlockState } from "./blocks/types";
-import { resolveNewState } from "./blocks/utils";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { AdminComponentButton } from "./common/AdminComponentButton";
+import { AdminComponentPaper, useAdminComponentPaper } from "./common/AdminComponentPaper";
+import { AdminComponentSection } from "./common/AdminComponentSection";
 import { GQLVideoBlockDamFileQuery, GQLVideoBlockDamFileQueryVariables } from "./DamVideoBlock.generated";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { VideoOptionsFields } from "./helpers/VideoOptionsFields";
 import { PixelImageBlock } from "./PixelImageBlock";
+import { BlockCategory, BlockDependency, BlockInterface, BlockState } from "./types";
+import { resolveNewState } from "./utils";
 
 type State = Omit<DamVideoBlockData, "previewImage"> & { previewImage: BlockState<typeof PixelImageBlock> };
 

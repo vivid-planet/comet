@@ -1,10 +1,10 @@
 import { Field, FinalFormInput } from "@comet/admin";
 import { FormattedMessage, useIntl } from "react-intl";
 
-import { SpaceBlockData, SpaceBlockInput } from "../../blocks.generated";
-import { BlocksFinalForm } from "../form/BlocksFinalForm";
-import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
+import { SpaceBlockData, SpaceBlockInput } from "../blocks.generated";
+import { BlocksFinalForm } from "./form/BlocksFinalForm";
 import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { BlockCategory, BlockInterface } from "./types";
 
 type State = SpaceBlockData;

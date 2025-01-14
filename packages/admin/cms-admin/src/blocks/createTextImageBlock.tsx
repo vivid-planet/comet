@@ -3,15 +3,15 @@ import { FormControlLabel, MenuItem, Radio, RadioGroup, Select } from "@mui/mate
 import { FormattedMessage } from "react-intl";
 
 import { TextImageBlockData, TextImageBlockInput } from "../blocks.generated";
-import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
-import { AdminComponentSection } from "./blocks/common/AdminComponentSection";
-import { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import decomposeUpdateStateAction from "./blocks/helpers/decomposeUpdateStateAction";
-import { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
-import { BlockCategory, BlockInterface } from "./blocks/types";
+import { AdminComponentPaper } from "./common/AdminComponentPaper";
+import { AdminComponentSection } from "./common/AdminComponentSection";
 import { RichTextBlock, RichTextBlockState } from "./createRichTextBlock";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import decomposeUpdateStateAction from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
 import { ImageBlockState, PixelImageBlock } from "./PixelImageBlock";
+import { BlockCategory, BlockInterface } from "./types";
 import { useCmsBlockContext } from "./useCmsBlockContext";
 
 interface State {

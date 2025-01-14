@@ -1,6 +1,6 @@
-import { AdminTabs } from "../../blocks/blocks/common/AdminTabs";
-import { AdminComponentPart } from "../../blocks/blocks/types";
+import { AdminTabs } from "../../blocks/common/AdminTabs";
 import { IFrameBridgeProvider } from "../../blocks/iframebridge/IFrameBridge";
+import { AdminComponentPart } from "../../blocks/types";
 import { SplitPreview } from "./SplitPreview";
 import { BlockPreviewApi } from "./useBlockPreview";
 

@@ -3,8 +3,8 @@ import { ChangeEvent, ReactNode, useCallback, useEffect, useMemo, useState } fro
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { CannotPasteBlockDialog } from "../../../clipboard/CannotPasteBlockDialog";
-import { ClipboardContent, useBlockClipboard } from "../../../clipboard/useBlockClipboard";
+import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
+import { ClipboardContent, useBlockClipboard } from "../../clipboard/useBlockClipboard";
 import { BlockAdminComponentProps, BlockInterface, BlockState, DispatchSetStateAction } from "../../types";
 import { resolveNewState } from "../../utils";
 import { ListBlockAdditionalItemField, ListBlockState } from "../createListBlock";

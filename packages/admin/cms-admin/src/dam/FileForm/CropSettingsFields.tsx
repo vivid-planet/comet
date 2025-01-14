@@ -6,7 +6,7 @@ import { ChangeEvent } from "react";
 import { useForm, useFormState } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentSection } from "../../blocks/blocks/common/AdminComponentSection";
+import { AdminComponentSection } from "../../blocks/common/AdminComponentSection";
 import { ChooseFocalPoint } from "../../common/image/ChooseFocalPoint";
 import { EditImageFormValues } from "./EditFile";
 

@@ -5,10 +5,10 @@ import { FormattedMessage } from "react-intl";
 import { ExternalLinkBlockData, ExternalLinkBlockInput } from "../blocks.generated";
 import { isLinkTarget } from "../validation/isLinkTarget";
 import { validateLinkTarget } from "../validation/validateLinkTarget";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import { BlockCategory, BlockInterface, LinkBlockInterface } from "./blocks/types";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { BlockCategory, BlockInterface, LinkBlockInterface } from "./types";
 
 type State = ExternalLinkBlockData;
 

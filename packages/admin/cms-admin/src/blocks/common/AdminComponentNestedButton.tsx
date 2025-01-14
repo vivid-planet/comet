@@ -3,8 +3,8 @@ import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { MouseEventHandler, ReactNode } from "react";
 
-import { usePromise } from "../../common/usePromise";
 import { AdminComponentPaper } from "./AdminComponentPaper";
+import { usePromise } from "./usePromise";
 
 interface Props {
     displayName: ReactNode;

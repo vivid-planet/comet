@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-import { BlockInputApi, BlockInterface } from "../blocks/blocks/types";
+import { BlockInputApi, BlockInterface } from "../blocks/types";
 import { GQLPageTreeNode, Maybe } from "../graphql.generated";
 import { DependencyInterface } from "./types";
 

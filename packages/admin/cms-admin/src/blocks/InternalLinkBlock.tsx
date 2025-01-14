@@ -7,13 +7,13 @@ import { FormattedMessage } from "react-intl";
 import { InternalLinkBlockData, InternalLinkBlockInput } from "../blocks.generated";
 import FinalFormPageTreeSelect from "../pages/pageTreeSelect/FinalFormPageTreeSelect";
 import { usePageTreeNodeDocumentAnchors } from "../pages/usePageTreeDocumentAnchors";
-import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import { BlockCategory, BlockDependency, BlockInterface, LinkBlockInterface } from "./blocks/types";
 import { CmsBlockContext } from "./CmsBlockContextProvider";
+import { AdminComponentPaper } from "./common/AdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
 import { GQLLinkBlockTargetPageQuery, GQLLinkBlockTargetPageQueryVariables } from "./InternalLinkBlock.generated";
+import { BlockCategory, BlockDependency, BlockInterface, LinkBlockInterface } from "./types";
 
 type State = InternalLinkBlockData;
 

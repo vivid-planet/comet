@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { ReactNode } from "react";
 
-import { useBlockContext } from "../../../context/useBlockContext";
+import { useBlockContext } from "../../context/useBlockContext";
 import { BlockInterface, isPreviewContentImageRule, isPreviewContentTextRule } from "../../types";
 import * as sc from "./BlockPreviewContent.sc";
 import { StackedImages } from "./image/StackedImages";

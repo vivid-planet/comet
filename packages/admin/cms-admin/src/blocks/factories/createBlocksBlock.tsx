@@ -16,11 +16,8 @@ import { ChangeEvent, FunctionComponent, ReactNode, useCallback, useEffect, useS
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { CannotPasteBlockDialog } from "../../clipboard/CannotPasteBlockDialog";
-import { useBlockClipboard } from "../../clipboard/useBlockClipboard";
-import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
-import { SelectPreviewComponent } from "../../iframebridge/SelectPreviewComponent";
-import { parallelAsyncEvery } from "../../utils/parallelAsyncEvery";
+import { CannotPasteBlockDialog } from "../clipboard/CannotPasteBlockDialog";
+import { useBlockClipboard } from "../clipboard/useBlockClipboard";
 import { AddBlockDrawer } from "../common/AddBlockDrawer";
 import { AdminComponentButton } from "../common/AdminComponentButton";
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
@@ -30,8 +27,11 @@ import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
+import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
+import { SelectPreviewComponent } from "../iframebridge/SelectPreviewComponent";
 import { BlockDependency, BlockInterface, BlockState, DispatchSetStateAction, PreviewContent } from "../types";
 import { resolveNewState } from "../utils";
+import { parallelAsyncEvery } from "../utils/parallelAsyncEvery";
 
 // Using {} instead of Record<string, never> because never and unknown are incompatible.
 // eslint-disable-next-line @typescript-eslint/ban-types

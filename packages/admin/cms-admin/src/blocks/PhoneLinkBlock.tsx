@@ -4,10 +4,10 @@ import { FormattedMessage } from "react-intl";
 import { PhoneLinkBlockData, PhoneLinkBlockInput } from "../blocks.generated";
 import { isPhoneNumber } from "../validation/isPhoneNumber";
 import { validatePhoneNumber } from "../validation/validatePhoneNumber";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import { BlockCategory, BlockInterface } from "./blocks/types";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { BlockCategory, BlockInterface } from "./types";
 
 export const PhoneLinkBlock: BlockInterface<PhoneLinkBlockData, PhoneLinkBlockData, PhoneLinkBlockInput> = {
     ...createBlockSkeleton(),

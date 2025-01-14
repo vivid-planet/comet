@@ -3,9 +3,9 @@ import isEqual from "lodash.isequal";
 import { ReactNode } from "react";
 import { Route, useRouteMatch } from "react-router";
 
-import { Collapsible } from "../../common/Collapsible";
-import { CollapsibleSwitchButtonHeader } from "../../common/CollapsibleSwitchButtonHeader";
 import { AdminComponentPaper } from "../common/AdminComponentPaper";
+import { Collapsible } from "../common/Collapsible";
+import { CollapsibleSwitchButtonHeader } from "../common/CollapsibleSwitchButtonHeader";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { BlockInputApi, BlockInterface, BlockOutputApi, BlockState, DispatchSetStateAction } from "../types";
 import { resolveNewState } from "../utils";

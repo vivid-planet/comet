@@ -10,7 +10,7 @@ import { EditorState, EntityInstance, RichUtils } from "draft-js";
 import { MouseEvent, ReactElement, useCallback, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { BlockInterface, BlockState } from "../../../blocks/types";
+import { BlockInterface, BlockState } from "../../../types";
 import { ENTITY_TYPE } from "./Decorator";
 
 interface IProps {

@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { PropsWithChildren } from "react";
 
-import { useScrollRestoration } from "../../common/useScrollRestoration";
+import { useScrollRestoration } from "./useScrollRestoration";
 
 interface TabContentProps {
     selectedTab?: string;

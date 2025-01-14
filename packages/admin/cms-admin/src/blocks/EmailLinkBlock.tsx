@@ -3,10 +3,10 @@ import { isEmail } from "class-validator";
 import { FormattedMessage } from "react-intl";
 
 import { EmailLinkBlockData, EmailLinkBlockInput } from "../blocks.generated";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import { BlockCategory, BlockInterface } from "./blocks/types";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
 import { SelectPreviewComponent } from "./iframebridge/SelectPreviewComponent";
+import { BlockCategory, BlockInterface } from "./types";
 
 export const EmailLinkBlock: BlockInterface<EmailLinkBlockData, EmailLinkBlockData, EmailLinkBlockInput> = {
     ...createBlockSkeleton(),

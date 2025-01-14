@@ -3,8 +3,8 @@ import { Link } from "@comet/admin-icons";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { AdminComponentButton } from "../../blocks/blocks/common/AdminComponentButton";
-import { AdminComponentNestedButton } from "../../blocks/blocks/common/AdminComponentNestedButton";
+import { AdminComponentButton } from "../../blocks/common/AdminComponentButton";
+import { AdminComponentNestedButton } from "../../blocks/common/AdminComponentNestedButton";
 import { GQLPageTreeSelectDetailQuery, GQLPageTreeSelectDetailQueryVariables } from "./PageTreeSelect.generated";
 import PageTreeSelectDialog, { GQLSelectedPageFragment } from "./PageTreeSelectDialog";
 

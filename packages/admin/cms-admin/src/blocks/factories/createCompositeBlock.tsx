@@ -3,7 +3,6 @@ import { Divider } from "@mui/material";
 import { Fragment, ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-import { HoverPreviewComponent } from "../../iframebridge/HoverPreviewComponent";
 import { AdminComponentNestedButton } from "../common/AdminComponentNestedButton";
 import { AdminComponentPaper, useAdminComponentPaper } from "../common/AdminComponentPaper";
 import { AdminComponentSection } from "../common/AdminComponentSection";
@@ -14,6 +13,7 @@ import { BlockInterfaceWithOptions } from "../helpers/composeBlocks/types";
 import { normalizedBlockConfig } from "../helpers/composeBlocks/utils";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { isBlockInterface } from "../helpers/isBlockInterface";
+import { HoverPreviewComponent } from "../iframebridge/HoverPreviewComponent";
 import { BlockCategory, BlockInputApi, BlockInterface, BlockOutputApi, BlockState, CustomBlockCategory } from "../types";
 
 interface BlockConfiguration {

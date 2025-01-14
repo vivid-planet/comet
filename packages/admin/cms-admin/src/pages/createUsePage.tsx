@@ -5,8 +5,8 @@ import { createElement, ReactNode, useCallback, useEffect, useMemo, useState } f
 import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
-import { BindBlockAdminComponent, BlockInterface, BlockState, DispatchSetStateAction } from "../blocks/blocks/types";
-import { resolveNewState } from "../blocks/blocks/utils";
+import { BindBlockAdminComponent, BlockInterface, BlockState, DispatchSetStateAction } from "../blocks/types";
+import { resolveNewState } from "../blocks/utils";
 import { parallelAsyncEvery } from "../blocks/utils/parallelAsyncEvery";
 import { GQLDocumentInterface } from "../graphql.generated";
 import { GQLCheckForChangesQuery, GQLCheckForChangesQueryVariables } from "./createUsePage.generated";

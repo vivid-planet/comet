@@ -4,13 +4,13 @@ import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
 import { TextLinkBlockData, TextLinkBlockInput } from "../blocks.generated";
-import { AdminComponentPaper } from "./blocks/common/AdminComponentPaper";
-import { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
-import { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
-import decomposeUpdateStateAction from "./blocks/helpers/decomposeUpdateStateAction";
-import { withAdditionalBlockAttributes } from "./blocks/helpers/withAdditionalBlockAttributes";
-import { BlockCategory, BlockInterface, BlockState } from "./blocks/types";
+import { AdminComponentPaper } from "./common/AdminComponentPaper";
 import { BlocksFinalForm } from "./form/BlocksFinalForm";
+import { composeBlocks } from "./helpers/composeBlocks/composeBlocks";
+import { createBlockSkeleton } from "./helpers/createBlockSkeleton";
+import decomposeUpdateStateAction from "./helpers/decomposeUpdateStateAction";
+import { withAdditionalBlockAttributes } from "./helpers/withAdditionalBlockAttributes";
+import { BlockCategory, BlockInterface, BlockState } from "./types";
 
 interface CreateTextLinkBlockOptions {
     name?: string;

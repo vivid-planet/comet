@@ -2,7 +2,7 @@ import { SelectField, SelectFieldProps } from "@comet/admin";
 import { MenuItem } from "@mui/material";
 import { ReactNode } from "react";
 
-import { BlocksFinalForm } from "../../form/BlocksFinalForm";
+import { BlocksFinalForm } from "../form/BlocksFinalForm";
 import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
 
 interface Options<T extends string | number> {

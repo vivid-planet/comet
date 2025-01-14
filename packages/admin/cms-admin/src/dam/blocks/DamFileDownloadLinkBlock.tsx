@@ -6,12 +6,12 @@ import { deepClone } from "@mui/x-data-grid/utils/utils";
 import { FormattedMessage } from "react-intl";
 
 import { DamFileDownloadLinkBlockData, DamFileDownloadLinkBlockInput } from "../../blocks.generated";
-import { AdminComponentButton } from "../../blocks/blocks/common/AdminComponentButton";
-import { AdminComponentPaper } from "../../blocks/blocks/common/AdminComponentPaper";
-import { createBlockSkeleton } from "../../blocks/blocks/helpers/createBlockSkeleton";
-import { BlockCategory, BlockDependency, BlockInterface } from "../../blocks/blocks/types";
 import { CmsBlockContext } from "../../blocks/CmsBlockContextProvider";
+import { AdminComponentButton } from "../../blocks/common/AdminComponentButton";
+import { AdminComponentPaper } from "../../blocks/common/AdminComponentPaper";
 import { BlocksFinalForm } from "../../blocks/form/BlocksFinalForm";
+import { createBlockSkeleton } from "../../blocks/helpers/createBlockSkeleton";
+import { BlockCategory, BlockDependency, BlockInterface } from "../../blocks/types";
 import { DamPathLazy } from "../../form/file/DamPathLazy";
 import { FileField } from "../../form/file/FileField";
 import { GQLDamFileDownloadLinkFileQuery, GQLDamFileDownloadLinkFileQueryVariables } from "./DamFileDownloadLinkBlock.generated";
