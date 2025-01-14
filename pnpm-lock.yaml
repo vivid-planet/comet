@@ -1017,7 +1017,7 @@ importers:
         specifier: workspace:^7.11.0
         version: link:../admin-icons
       react-colorful:
-        specifier: ^5.5.1
+        specifier: ^5.6.1
         version: 5.6.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       tinycolor2:
         specifier: ^1.4.1
