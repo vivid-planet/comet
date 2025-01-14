@@ -126,7 +126,7 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2
       react-app-polyfill:
-        specifier: ^1.0.0
+        specifier: ^1.0.6
         version: 1.0.6
       react-dnd:
         specifier: ^16.0.0
