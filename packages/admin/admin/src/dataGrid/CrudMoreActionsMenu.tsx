@@ -44,7 +44,7 @@ export interface CrudMoreActionsMenuProps
 }
 
 interface CrudMoreActionsGroupProps {
-    groupTitle: ReactNode;
+    groupTitle?: ReactNode;
     menuListProps?: MenuListProps;
     typographyProps?: ComponentProps<typeof Typography>;
 }
@@ -52,9 +52,11 @@ interface CrudMoreActionsGroupProps {
 function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
     return (
         <>
-            <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
-                {groupTitle}
-            </Typography>
+            {groupTitle && (
+                <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
+                    {groupTitle}
+                </Typography>
+            )}
             <MenuList {...menuListProps}>{children}</MenuList>
         </>
     );
@@ -116,11 +118,13 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
 
     const handleClose = () => setAnchorEl(null);
+    const hasOverallActions = !!overallActions?.length;
+    const hasSelectiveActions = !!selectiveActions?.length;
 
     return (
         <>
             <MoreActionsButton variant="text" color="inherit" endIcon={<MoreVertical />} {...buttonProps} onClick={handleClick}>
-                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More actions" />
+                <FormattedMessage id="comet.crudMoreActions.title" defaultMessage="More" />
                 {!!selectionSize && <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />}
             </MoreActionsButton>
             <Menu
@@ -134,9 +138,13 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     menuProps?.onClose?.(event, reason);
                 }}
             >
-                {!!overallActions?.length && (
+                {hasOverallActions && (
                     <CrudMoreActionsGroup
-                        groupTitle={<FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />}
+                        groupTitle={
+                            hasSelectiveActions ? (
+                                <FormattedMessage id="comet.crudMoreActions.overallActions" defaultMessage="Overall actions" />
+                            ) : undefined
+                        }
                         {...groupProps}
                     >
                         {overallActions.map((item, index) => {
@@ -165,11 +173,15 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                     </CrudMoreActionsGroup>
                 )}
 
-                {!!overallActions?.length && !!selectiveActions?.length && <CrudMoreActionsDivider {...dividerProps} />}
+                {hasOverallActions && hasSelectiveActions && <CrudMoreActionsDivider {...dividerProps} />}
 
-                {!!selectiveActions?.length && (
+                {hasSelectiveActions && (
                     <CrudMoreActionsGroup
-                        groupTitle={<FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />}
+                        groupTitle={
+                            hasOverallActions ? (
+                                <FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />
+                            ) : undefined
+                        }
                         {...groupProps}
                     >
                         {selectiveActions.map((item, index) => {
