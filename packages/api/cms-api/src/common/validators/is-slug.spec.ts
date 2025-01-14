@@ -10,7 +10,7 @@ describe("IsSlug", () => {
             const validator = new IsSlugConstraint();
             expect(await validator.validate("comet--2")).toBe(true);
         });
-        it("should accept a valid slug with special char at the beginning", async () => {
+        it("should accept a valid slug with special char at the end", async () => {
             const validator = new IsSlugConstraint();
             expect(await validator.validate("abc-")).toBe(true);
         });
