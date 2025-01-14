@@ -37,6 +37,7 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
         return (
             <Link
                 href={createSiteUrl({
+                    baseUrl: "/",
                     path: page.path,
                     scope: {
                         language: page.scope.language,
@@ -49,7 +50,14 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
         );
     } else if (page.documentType === "PredefinedPage") {
         return (
-            <Link href={createSiteUrl({ path: page.path, scope: page.scope })} className={className}>
+            <Link
+                href={createSiteUrl({
+                    baseUrl: "/",
+                    path: page.path,
+                    scope: page.scope,
+                })}
+                className={className}
+            >
                 {children}
             </Link>
         );

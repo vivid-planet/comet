@@ -2,8 +2,8 @@ type ResolveUrlOptions = {
     /**
      * the baseUrl will be prepended to the resulting path
      *
-     * Sample: "http://localhost:3000/"
-     * @default: "/"
+     * Sample: "http://localhost:3000/" or "/"
+     * @default: ""
      */
     baseUrl?: string;
 
@@ -31,7 +31,7 @@ type ResolveUrlOptions = {
  *
  * @return {string} The resolved URL: /{scope.language}/test/to/my/page#my-anchor
  */
-export const createSiteUrl = ({ baseUrl = "/", path, scope, anchor }: ResolveUrlOptions) => {
+export const createSiteUrl = ({ baseUrl = "", path, scope, anchor }: ResolveUrlOptions) => {
     let safeScope = "";
     if (scope != null) {
         safeScope = scope.language;
