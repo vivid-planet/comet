@@ -836,7 +836,7 @@ importers:
         specifier: ^14.0.0
         version: 14.3.5(react@17.0.2)
       use-constant:
-        specifier: ^1.0.0
+        specifier: ^1.1.1
         version: 1.1.1(react@17.0.2)
       uuid:
         specifier: ^11.0.3
@@ -1157,7 +1157,7 @@ importers:
   packages/admin/admin-icons:
     dependencies:
       use-constant:
-        specifier: ^1.0.0
+        specifier: ^1.1.1
         version: 1.1.1(react@17.0.2)
       uuid:
         specifier: ^11.0.3
