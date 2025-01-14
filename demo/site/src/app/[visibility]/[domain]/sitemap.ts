@@ -1,4 +1,4 @@
-import { resolveUrl } from "@src/util/resolveUrl";
+import { createSiteUrl } from "@src/util/createSiteUrl";
 
 export const dynamic = "force-dynamic"; // don't generate at build time
 
@@ -42,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                         const seoBlock = pageTreeNode.document.seo;
                         if (!seoBlock.noIndex) {
                             sitemap.push({
-                                url: resolveUrl({
+                                url: createSiteUrl({
                                     baseUrl: `${siteConfig.url}/`,
                                     scope: {
                                         language: language,

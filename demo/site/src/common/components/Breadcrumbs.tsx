@@ -1,5 +1,5 @@
 "use client";
-import { resolveUrl } from "@src/util/resolveUrl";
+import { createSiteUrl } from "@src/util/createSiteUrl";
 import { Fragment } from "react";
 
 import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
@@ -19,7 +19,7 @@ const Breadcrumbs = ({ scope, name, path, parentNodes }: BreadcrumbsProps) => {
                     {parentNodes.map((parentNode) => (
                         <Fragment key={parentNode.path}>
                             <sc.Link
-                                href={resolveUrl({
+                                href={createSiteUrl({
                                     path: parentNode.path,
                                     scope: {
                                         language: scope.language,
@@ -34,7 +34,7 @@ const Breadcrumbs = ({ scope, name, path, parentNodes }: BreadcrumbsProps) => {
                     ))}
 
                     <sc.Link
-                        href={resolveUrl({
+                        href={createSiteUrl({
                             path: path,
                             scope: {
                                 language: scope.language,
