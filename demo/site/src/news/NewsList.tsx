@@ -1,6 +1,6 @@
 "use client";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
-import { resolveUrl } from "@src/util/resolveUrl";
+import { createSiteUrl } from "@src/util/createSiteUrl";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -14,7 +14,7 @@ export function NewsList({ newsList }: { newsList: GQLNewsListFragment }) {
                 {newsList.nodes.map((news) => (
                     <Card
                         key={news.id}
-                        href={resolveUrl({
+                        href={createSiteUrl({
                             scope: {
                                 language: news.scope.language,
                             },

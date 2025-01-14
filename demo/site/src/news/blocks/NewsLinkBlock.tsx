@@ -1,6 +1,6 @@
 import { PropsWithData } from "@comet/cms-site";
 import { NewsLinkBlockData } from "@src/blocks.generated";
-import { resolveUrl } from "@src/util/resolveUrl";
+import { createSiteUrl } from "@src/util/createSiteUrl";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 
@@ -13,7 +13,7 @@ function NewsLinkBlock({ data: { news }, children, title, className }: PropsWith
 
     return (
         <Link
-            href={resolveUrl({
+            href={createSiteUrl({
                 scope: {
                     language: news.scope.language,
                 },
