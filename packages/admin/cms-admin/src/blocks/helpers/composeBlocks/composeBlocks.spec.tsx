@@ -3,7 +3,7 @@ import { BlockInputApi, BlockState } from "../../types";
 import { resolveNewState } from "../../utils";
 import { composeBlocks, ComposeBlocksApi } from "./composeBlocks";
 import { createCompositeBlockField } from "./createCompositeBlockField";
-import { createCompositeSettings } from "./createCompositeSettings";
+import { createCompositeBlockFields } from "./createCompositeBlockFields";
 import { AdminComponentPropsMap, CompositeBlocksConfig, DataMapState } from "./types";
 
 jest.mock("react-dnd", () => {
@@ -82,7 +82,7 @@ describe("composeBlocks", () => {
         }
         const composedBlock = composeBlocks({
             space1: SpaceBlock,
-            $settings: createCompositeSettings<Settings>({
+            $settings: createCompositeBlockFields<Settings>({
                 defaultValues: {
                     foo: "bar",
                     baz: undefined,

@@ -8,7 +8,7 @@ interface Options<State extends Record<string, any>> {
     definesOwnPadding?: boolean;
 }
 
-export function createCompositeSettings<State extends Record<string, any>>({
+export function createCompositeBlockFields<State extends Record<string, any>>({
     defaultValues,
     AdminComponent,
     definesOwnPadding,

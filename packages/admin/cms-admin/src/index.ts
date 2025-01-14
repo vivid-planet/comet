@@ -51,7 +51,7 @@ export { BlocksFinalForm } from "./blocks/form/BlocksFinalForm";
 export { createFinalFormBlock } from "./blocks/form/createFinalFormBlock";
 export { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
 export { createCompositeBlockField } from "./blocks/helpers/composeBlocks/createCompositeBlockField";
-export { createCompositeSettings } from "./blocks/helpers/composeBlocks/createCompositeSettings";
+export { createCompositeBlockFields } from "./blocks/helpers/composeBlocks/createCompositeBlockFields";
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
 export { createCompositeBlockSelectField } from "./blocks/helpers/createCompositeBlockSelectField";
 export { createCompositeBlockTextField } from "./blocks/helpers/createCompositeBlockTextField";
