@@ -1,6 +1,6 @@
 "use client";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
-import { resolveUrl } from "@src/util/resolveUrl";
+import { createSiteUrl } from "@src/util/createSiteUrl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
@@ -36,7 +36,7 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
     } else if (page.documentType === "Page") {
         return (
             <Link
-                href={resolveUrl({
+                href={createSiteUrl({
                     path: page.path,
                     scope: {
                         language: page.scope.language,
@@ -49,7 +49,7 @@ function PageLink({ page, children, className: passedClassName, activeClassName 
         );
     } else if (page.documentType === "PredefinedPage") {
         return (
-            <Link href={resolveUrl({ path: page.path, scope: page.scope })} className={className}>
+            <Link href={createSiteUrl({ path: page.path, scope: page.scope })} className={className}>
                 {children}
             </Link>
         );

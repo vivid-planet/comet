@@ -1,7 +1,7 @@
 "use client";
 import { PropsWithData } from "@comet/cms-site";
 import { InternalLinkBlockData } from "@src/blocks.generated";
-import { resolveUrl } from "@src/util/resolveUrl";
+import { createSiteUrl } from "@src/util/createSiteUrl";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 
@@ -17,7 +17,7 @@ export function InternalLinkBlock({ data: { targetPage, targetPageAnchor }, chil
 
     return (
         <Link
-            href={resolveUrl({
+            href={createSiteUrl({
                 scope:
                     targetPage.scope != null
                         ? {
