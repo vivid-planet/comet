@@ -1882,7 +1882,7 @@ importers:
         specifier: ^1.4.4
         version: 1.4.4
       node-fetch:
-        specifier: ^2.0.0
+        specifier: ^2.7.0
         version: 2.7.0
       openai:
         specifier: ^4.77.3
@@ -2000,8 +2000,8 @@ importers:
         specifier: ^22.0.0
         version: 22.9.0
       '@types/node-fetch':
-        specifier: ^2.6.2
-        version: 2.6.2
+        specifier: ^2.6.12
+        version: 2.6.12
       '@types/passport-http':
         specifier: ^0.3.11
         version: 0.3.11
