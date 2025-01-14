@@ -13,7 +13,6 @@ export type { AdminTabsProps } from "./blocks/common/AdminTabs";
 export { AdminTabs } from "./blocks/common/AdminTabs";
 export { BlockPreviewContent } from "./blocks/common/blockRow/BlockPreviewContent";
 export { BlockRow } from "./blocks/common/blockRow/BlockRow";
-export { Collapsible } from "./blocks/common/Collapsible";
 export { CollapsibleSwitchButtonHeader } from "./blocks/common/CollapsibleSwitchButtonHeader";
 export { HiddenInSubroute } from "./blocks/common/HiddenInSubroute";
 export { usePromise } from "./blocks/common/usePromise";
