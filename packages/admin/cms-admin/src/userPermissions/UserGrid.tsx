@@ -39,7 +39,7 @@ function UserPermissionsUserGridToolbar({ toolbarAction }: UserPermissionsUserGr
             <ToolbarItem>
                 <GridFilterButton />
             </ToolbarItem>
-            <ToolbarFillSpace />
+            <FillSpace />
             {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
         </DataGridToolbar>
     );
@@ -243,24 +243,8 @@ export const UserPermissionsUserGrid = ({ toolbarAction, rowAction, actionsColum
             columns={columns}
             rowCount={data?.users.totalCount ?? 0}
             loading={loading}
-<<<<<<< HEAD
             slots={{
                 toolbar: UserPermissionsUserGridToolbar as GridSlotsComponent["toolbar"],
-=======
-            components={{
-                Toolbar: () => (
-                    <DataGridToolbar>
-                        <ToolbarItem>
-                            <GridToolbarQuickFilter />
-                        </ToolbarItem>
-                        <ToolbarItem>
-                            <GridFilterButton />
-                        </ToolbarItem>
-                        <FillSpace />
-                        {toolbarAction && <ToolbarActions>{toolbarAction}</ToolbarActions>}
-                    </DataGridToolbar>
-                ),
->>>>>>> main
             }}
             slotProps={{
                 toolbar: {
