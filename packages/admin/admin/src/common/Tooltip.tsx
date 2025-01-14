@@ -9,7 +9,7 @@ import {
     TooltipProps as MuiTooltipProps,
 } from "@mui/material";
 import { css, useTheme, useThemeProps } from "@mui/material/styles";
-import { ComponentProps, useState } from "react";
+import { ComponentProps } from "react";
 
 import { createComponentSlot } from "../helpers/createComponentSlot";
 
@@ -25,7 +25,6 @@ type OwnerState = {
     variant: Variant;
     disableInteractive: boolean | undefined;
     arrow: boolean | undefined;
-    open: boolean | undefined;
     isRtl: boolean;
 };
 
@@ -43,7 +42,6 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
             // Copied the following from MUIs default TooltipPopper: https://github.com/mui/material-ui/blob/a13c0c026692aafc303756998a78f1d6c2dd707d/packages/mui-material/src/Tooltip/Tooltip.js#L48
             !ownerState.disableInteractive && "popperInteractive",
             ownerState.arrow && "popperArrow",
-            !ownerState.open && "popperClose",
         ];
     },
 })(
@@ -123,10 +121,6 @@ const TooltipPopper = createComponentSlot(MuiPopper)<TooltipClassKey, OwnerState
         css`
             pointer-events: auto;
         `};
-        ${!ownerState.open &&
-        css`
-            pointer-events: none;
-        `};
         ${ownerState.arrow &&
         css`
             &[data-popper-placement*="bottom"] .${tooltipClasses.arrow} {
@@ -183,13 +177,10 @@ export const Tooltip = (inProps: TooltipProps) => {
     const { variant = "dark", disableInteractive, arrow, children, ...props } = useThemeProps({ props: inProps, name: "CometAdminTooltip" });
     const theme = useTheme();
 
-    const [open] = useState(false);
-
     const ownerState: OwnerState = {
         variant,
         disableInteractive,
         arrow,
-        open,
         isRtl: theme.direction === "rtl",
     };
 
