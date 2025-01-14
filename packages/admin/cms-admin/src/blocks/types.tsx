@@ -4,7 +4,7 @@ import { FormattedMessage, MessageDescriptor } from "react-intl";
 export type SetStateFn<S> = (prevState: S) => S;
 export type SetStateAction<S> = S | SetStateFn<S>;
 export type DispatchSetStateAction<S> = (setStateAction: SetStateAction<S>) => void;
-export interface IPreviewContext {
+export interface BlockPreviewContext {
     showVisibleOnly?: boolean;
     parentUrl: string;
     parentUrlSubRoute?: string;
@@ -76,7 +76,7 @@ export interface BlockMethods<
     input2State: (v: InputApi) => State;
     state2Output: (v: State) => OutputApi;
     output2State: (output: OutputApi, context?: BlockContext) => Promise<State>;
-    createPreviewState: (v: State, previewCtx: IPreviewContext & BlockContext) => PreviewState;
+    createPreviewState: (v: State, previewCtx: BlockPreviewContext & BlockContext) => PreviewState;
     isValid: (state: State) => Promise<boolean> | boolean;
     childBlockCount?: (state: State) => number;
     previewContent: (state: State, context?: BlockContext) => PreviewContent[];
