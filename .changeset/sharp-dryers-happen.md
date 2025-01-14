@@ -1,5 +1,5 @@
 ---
-"@comet/admin": minor
+"@comet/admin": patch
 ---
 
-Fix: Remove `display: flex` from `children`-slot of `FieldSet` to allow non-full-width fields
+Allow non-full-width fields in `FieldSet`
