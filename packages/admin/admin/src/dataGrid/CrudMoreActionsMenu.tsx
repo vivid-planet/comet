@@ -50,18 +50,16 @@ interface CrudMoreActionsGroupProps {
 }
 
 function CrudMoreActionsGroup({ groupTitle, children, menuListProps, typographyProps }: PropsWithChildren<CrudMoreActionsGroupProps>) {
-    if (groupTitle) {
-        return (
-            <>
+    return (
+        <>
+            {groupTitle && (
                 <Typography variant="overline" color={(theme) => theme.palette.grey[500]} sx={{ padding: "20px 15px 0 15px" }} {...typographyProps}>
                     {groupTitle}
                 </Typography>
-                <MenuList {...menuListProps}>{children}</MenuList>
-            </>
-        );
-    } else {
-        return <MenuList {...menuListProps}>{children}</MenuList>;
-    }
+            )}
+            <MenuList {...menuListProps}>{children}</MenuList>
+        </>
+    );
 }
 
 const CrudMoreActionsDivider = createComponentSlot(Divider)<CrudMoreActionsMenuClassKey>({
