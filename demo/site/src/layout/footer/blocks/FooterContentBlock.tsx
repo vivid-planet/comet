@@ -1,15 +1,16 @@
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, WithPreviewComponent } from "@comet/cms-site";
+import { styled } from "@pigment-css/react";
 import { FooterContentBlockData } from "@src/blocks.generated";
 import { DamImageBlock } from "@src/common/blocks/DamImageBlock";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 import { Typography } from "@src/common/components/Typography";
 import { PageLayout } from "@src/layout/PageLayout";
-import styled from "styled-components";
 
-export const FooterContentBlock = withPreview(
-    ({ data: { text, image, linkList, copyrightNotice } }: PropsWithData<FooterContentBlockData>) => {
-        return (
+export const FooterContentBlock = ({ data }: PropsWithData<FooterContentBlockData>) => {
+    const { text, image, linkList, copyrightNotice } = data;
+    return (
+        <WithPreviewComponent data={data} label="Footer">
             <Root>
                 <PageLayout grid>
                     <PageLayoutContent>
@@ -37,10 +38,9 @@ export const FooterContentBlock = withPreview(
                     </PageLayoutContent>
                 </PageLayout>
             </Root>
-        );
-    },
-    { label: "Footer" },
-);
+        </WithPreviewComponent>
+    );
+};
 
 const Root = styled.footer`
     margin-top: auto;

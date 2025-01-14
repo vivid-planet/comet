@@ -1,6 +1,4 @@
-"use client";
-
-import styled from "styled-components";
+import { styled } from "@pigment-css/react";
 
 import { GQLHeaderFragment } from "./Header.fragment.generated";
 import { PageLink } from "./PageLink";

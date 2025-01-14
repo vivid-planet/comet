@@ -1,24 +1,23 @@
-"use client";
-import { PropsWithData, withPreview } from "@comet/cms-site";
+import { PropsWithData, WithPreviewComponent } from "@comet/cms-site";
+import { styled } from "@pigment-css/react";
 import { StandaloneHeadingBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import { CSSProperties } from "react";
-import styled from "styled-components";
 
 import { HeadingBlock } from "./HeadingBlock";
 
 type StandaloneHeadingBlockProps = PropsWithData<StandaloneHeadingBlockData>;
 
-export const StandaloneHeadingBlock = withPreview(
-    ({ data: { heading, textAlignment } }: StandaloneHeadingBlockProps) => {
-        return (
+export const StandaloneHeadingBlock = ({ data }: StandaloneHeadingBlockProps) => {
+    const { heading, textAlignment } = data;
+    return (
+        <WithPreviewComponent data={data} label="Heading">
             <Root $textAlign={textAlignment}>
                 <HeadingBlock data={heading} />
             </Root>
-        );
-    },
-    { label: "Heading" },
-);
+        </WithPreviewComponent>
+    );
+};
 
 export const PageContentStandaloneHeadingBlock = (props: StandaloneHeadingBlockProps) => (
     <PageLayout grid>
@@ -28,9 +27,9 @@ export const PageContentStandaloneHeadingBlock = (props: StandaloneHeadingBlockP
     </PageLayout>
 );
 
-const Root = styled.div<{ $textAlign: CSSProperties["textAlign"] }>`
-    text-align: ${({ $textAlign }) => $textAlign};
-`;
+const Root = styled.div<{ textAlign: CSSProperties["textAlign"] }>({
+    textAlign: ({ textAlign }) => textAlign,
+});
 
 const PageLayoutContent = styled.div`
     grid-column: 3 / -3;

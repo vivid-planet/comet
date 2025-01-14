@@ -52,6 +52,7 @@ export { Preview } from "./iframebridge/Preview";
 export { useBlockPreviewFetch } from "./iframebridge/useBlockPreviewFetch";
 export { useIFrameBridge } from "./iframebridge/useIFrameBridge";
 export { isWithPreviewPropsData, withPreview, WithPreviewProps } from "./iframebridge/withPreview";
+export { WithPreviewComponent } from "./iframebridge/WithPreviewComponent";
 export type { ImageDimensions } from "./image/Image";
 export { calculateInheritAspectRatio, generateImageUrl, getMaxDimensionsFromArea, Image, parseAspectRatio } from "./image/Image";
 export { BlockPreviewProvider } from "./preview/BlockPreviewProvider";

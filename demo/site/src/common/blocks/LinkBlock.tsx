@@ -1,4 +1,3 @@
-"use client";
 import {
     DamFileDownloadLinkBlock,
     EmailLinkBlock,
@@ -7,7 +6,7 @@ import {
     PhoneLinkBlock,
     PropsWithData,
     SupportedBlocks,
-    withPreview,
+    WithPreviewComponent,
 } from "@comet/cms-site";
 import { LinkBlockData } from "@src/blocks.generated";
 import { PropsWithChildren } from "react";
@@ -46,13 +45,12 @@ interface LinkBlockProps extends PropsWithChildren<PropsWithData<LinkBlockData>>
     className?: string;
 }
 
-export const LinkBlock = withPreview(
-    ({ data, children, className }: LinkBlockProps) => {
-        return (
+export const LinkBlock = ({ data, children, className }: LinkBlockProps) => {
+    return (
+        <WithPreviewComponent data={data} label="Link">
             <OneOfBlock data={data} supportedBlocks={supportedBlocks} className={className}>
                 {children}
             </OneOfBlock>
-        );
-    },
-    { label: "Link" },
-);
+        </WithPreviewComponent>
+    );
+};

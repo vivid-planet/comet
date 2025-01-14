@@ -1,7 +1,7 @@
 "use client";
 
+import { styled } from "@pigment-css/react";
 import { createContext, PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import { useDebounceCallback } from "usehooks-ts";
 
 import { AdminMessage, AdminMessageType, IFrameMessage, IFrameMessageType } from "./IFrameMessage";
