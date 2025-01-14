@@ -11,7 +11,7 @@ export const injectSiteConfigsCommand = new Command("inject-site-configs")
     .requiredOption("-i, --in-file <file>", "The filename of a template file to inject.")
     .requiredOption("-o, --out-file <file>", "Write the injected template to a file.")
     .option("-d --dotenv", "dotenv compatibility") // https://github.com/motdotla/dotenv/issues/521#issuecomment-999016064
-    .option("-b --base64", "use base64 encoding")
+    .option("--base64", "use base64 encoding")
     .option("-f, --site-config-file <file>", "Path to ts-file which provides a default export with (env: string) => SiteConfig[]")
     .action(async (options) => {
         const configFile = `${process.cwd()}/${options.siteConfigFile || "site-configs.ts"}`;
