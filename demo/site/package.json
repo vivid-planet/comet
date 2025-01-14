@@ -42,7 +42,6 @@
     },
     "devDependencies": {
         "@babel/core": "^7.0.0",
-        "@pigment-css/nextjs-plugin": "^0.0.29",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@graphql-codegen/add": "^3.2.3",
@@ -51,6 +50,7 @@
         "@graphql-codegen/near-operation-file-preset": "^2.5.0",
         "@graphql-codegen/typescript": "^2.8.8",
         "@graphql-codegen/typescript-operations": "^2.5.13",
+        "@pigment-css/nextjs-plugin": "^0.0.29",
         "@types/node": "^22.0.0",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
