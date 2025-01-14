@@ -8,7 +8,7 @@ interface Options<State> {
     definesOwnPadding?: boolean;
 }
 
-export function createCompositeSetting<State>({
+export function createCompositeBlockField<State>({
     defaultValue,
     AdminComponent,
     definesOwnPadding,

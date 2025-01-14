@@ -4,8 +4,8 @@ import {
     BlocksFinalForm,
     createBlocksBlock,
     createCompositeBlock,
+    createCompositeBlockField,
     createCompositeBlockTextField,
-    createCompositeSetting,
 } from "@comet/cms-admin";
 import { AccordionItemBlockData } from "@src/blocks.generated";
 import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
@@ -40,7 +40,7 @@ export const AccordionItemBlock = createCompositeBlock(
                 title: <FormattedMessage id="accordionBlock.accordionItem.content" defaultMessage="Content" />,
             },
             openByDefault: {
-                block: createCompositeSetting<AccordionItemBlockData["openByDefault"]>({
+                block: createCompositeBlockField<AccordionItemBlockData["openByDefault"]>({
                     defaultValue: false,
                     AdminComponent: ({ state, updateState }) => {
                         return (

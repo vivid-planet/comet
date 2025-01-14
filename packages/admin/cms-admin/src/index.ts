@@ -50,7 +50,7 @@ export { AutosaveFinalForm } from "./blocks/form/AutosaveFinalForm";
 export { BlocksFinalForm } from "./blocks/form/BlocksFinalForm";
 export { createFinalFormBlock } from "./blocks/form/createFinalFormBlock";
 export { composeBlocks } from "./blocks/helpers/composeBlocks/composeBlocks";
-export { createCompositeSetting } from "./blocks/helpers/composeBlocks/createCompositeSetting";
+export { createCompositeBlockField } from "./blocks/helpers/composeBlocks/createCompositeBlockField";
 export { createCompositeSettings } from "./blocks/helpers/composeBlocks/createCompositeSettings";
 export { createBlockSkeleton } from "./blocks/helpers/createBlockSkeleton";
 export { createCompositeBlockSelectField } from "./blocks/helpers/createCompositeBlockSelectField";

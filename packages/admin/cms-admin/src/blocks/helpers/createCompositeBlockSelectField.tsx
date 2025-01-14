@@ -3,7 +3,7 @@ import { MenuItem } from "@mui/material";
 import { ReactNode } from "react";
 
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
-import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
+import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
 
 interface Options<T extends string | number> {
     defaultValue: T;
@@ -12,7 +12,7 @@ interface Options<T extends string | number> {
 }
 
 export function createCompositeBlockSelectField<T extends string | number>({ defaultValue, fieldProps, options }: Options<T>) {
-    return createCompositeSetting<T>({
+    return createCompositeBlockField<T>({
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<{ value: typeof state }> onSubmit={({ value }) => updateState(value)} initialValues={{ value: state }}>

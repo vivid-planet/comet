@@ -1,8 +1,8 @@
-import { createCompositeSetting } from "./createCompositeSetting";
+import { createCompositeBlockField } from "./createCompositeBlockField";
 
-describe("createCompositeSetting", () => {
+describe("createCompositeBlockField", () => {
     it("should work with an array value", () => {
-        const [block] = createCompositeSetting<string[]>({
+        const [block] = createCompositeBlockField<string[]>({
             defaultValue: [],
             AdminComponent: () => {
                 return null;

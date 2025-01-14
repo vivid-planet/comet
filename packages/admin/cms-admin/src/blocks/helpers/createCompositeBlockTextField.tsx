@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from "@comet/admin";
 
 import { BlocksFinalForm } from "../form/BlocksFinalForm";
-import { createCompositeSetting } from "./composeBlocks/createCompositeSetting";
+import { createCompositeBlockField } from "./composeBlocks/createCompositeBlockField";
 
 interface Options {
     defaultValue?: string;
@@ -9,7 +9,7 @@ interface Options {
 }
 
 export function createCompositeBlockTextField({ defaultValue = "", fieldProps }: Options) {
-    return createCompositeSetting<string>({
+    return createCompositeBlockField<string>({
         defaultValue,
         AdminComponent: ({ state, updateState }) => (
             <BlocksFinalForm<{ value: typeof state }>

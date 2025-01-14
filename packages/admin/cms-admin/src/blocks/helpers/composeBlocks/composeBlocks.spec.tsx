@@ -2,7 +2,7 @@ import { SpaceBlock } from "../../SpaceBlock";
 import { BlockInputApi, BlockState } from "../../types";
 import { resolveNewState } from "../../utils";
 import { composeBlocks, ComposeBlocksApi } from "./composeBlocks";
-import { createCompositeSetting } from "./createCompositeSetting";
+import { createCompositeBlockField } from "./createCompositeBlockField";
 import { createCompositeSettings } from "./createCompositeSettings";
 import { AdminComponentPropsMap, CompositeBlocksConfig, DataMapState } from "./types";
 
@@ -141,7 +141,7 @@ describe("composeBlocks", () => {
     //     const composedBlock = composeBlocks({
     //         space: SpaceBlock,
     //         video: YouTubeVideoBlock,
-    //         foo: createCompositeSetting<Setting>({
+    //         foo: createCompositeBlockField<Setting>({
     //             defaultValue: "bar",
     //             AdminComponent: () => <>not testing</>,
     //         }),
@@ -221,7 +221,7 @@ describe("composeBlocks", () => {
 
         const composedBlock = composeBlocks({
             space1: SpaceBlock,
-            foo: createCompositeSetting<Setting>({
+            foo: createCompositeBlockField<Setting>({
                 defaultValue: undefined,
                 AdminComponent: () => <>not testing</>,
             }),

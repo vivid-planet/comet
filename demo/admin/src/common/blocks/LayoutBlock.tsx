@@ -8,7 +8,7 @@ import {
     ColumnsLayoutPreviewContent,
     ColumnsLayoutPreviewSpacing,
     createCompositeBlock,
-    createCompositeSetting,
+    createCompositeBlockField,
     FinalFormLayoutSelect,
 } from "@comet/cms-admin";
 import { LayoutBlockData } from "@src/blocks.generated";
@@ -124,7 +124,7 @@ export const LayoutBlock = createCompositeBlock(
         visibleOrderedBlocksForState: (state: LayoutBlockData) => layoutOptions.find((option) => option.name === state.layout)?.visibleBlocks,
         blocks: {
             layout: {
-                block: createCompositeSetting<LayoutBlockData["layout"]>({
+                block: createCompositeBlockField<LayoutBlockData["layout"]>({
                     defaultValue: "layout1",
                     AdminComponent: ({ state, updateState }) => (
                         <BlocksFinalForm<{ layout: ColumnsBlockLayout }>
