@@ -63,7 +63,7 @@
         "react-cool-dimensions": "^2.0.0",
         "react-dropzone": "^14.3.5",
         "react-final-form-arrays": "^3.1.4",
-        "react-hotkeys-hook": "^3.0.0",
+        "react-hotkeys-hook": "^3.4.7",
         "react-image-crop": "^8.0.0",
         "react-split": "^2.0.0",
         "react-virtualized-auto-sizer": "^1.0.0",
