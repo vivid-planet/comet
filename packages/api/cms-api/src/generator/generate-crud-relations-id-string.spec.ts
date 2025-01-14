@@ -1,5 +1,4 @@
-import { BaseEntity, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Ref } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Ref } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -7,7 +6,7 @@ import { generateCrud } from "./generate-crud";
 import { lintGeneratedFiles, parseSource } from "./utils/test-helper";
 
 @Entity()
-class TestEntityCategoryWithStringId extends BaseEntity<TestEntityCategoryWithStringId, "id"> {
+class TestEntityCategoryWithStringId extends BaseEntity {
     @PrimaryKey({ columnType: "text", type: "string" })
     id: string;
 
@@ -16,7 +15,7 @@ class TestEntityCategoryWithStringId extends BaseEntity<TestEntityCategoryWithSt
 }
 
 @Entity()
-class TestEntityProduct extends BaseEntity<TestEntityProduct, "id"> {
+class TestEntityProduct extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -31,6 +30,7 @@ describe("GenerateCrudRelationsIdString", () => {
             const orm = await MikroORM.init(
                 defineConfig({
                     dbName: "test-db",
+                    connect: false,
                     entities: [TestEntityProduct, TestEntityCategoryWithStringId],
                 }),
             );

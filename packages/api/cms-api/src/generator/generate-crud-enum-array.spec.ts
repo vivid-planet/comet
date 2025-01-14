@@ -1,5 +1,4 @@
-import { BaseEntity, Entity, Enum, PrimaryKey } from "@mikro-orm/core";
-import { defineConfig, MikroORM } from "@mikro-orm/postgresql";
+import { BaseEntity, defineConfig, Entity, Enum, MikroORM, PrimaryKey } from "@mikro-orm/postgresql";
 import { Field, registerEnumType } from "@nestjs/graphql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
@@ -16,7 +15,7 @@ registerEnumType(TestEnum, {
 });
 
 @Entity()
-class TestEntity extends BaseEntity<TestEntity, "id"> {
+class TestEntity extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -31,6 +30,7 @@ describe("GenerateCrudEnumArray", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity],
             }),
         );
@@ -63,6 +63,7 @@ describe("GenerateCrudEnumArray", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [TestEntity],
             }),
         );

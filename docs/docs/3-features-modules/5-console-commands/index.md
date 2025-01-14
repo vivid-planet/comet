@@ -7,7 +7,7 @@ We use [NestJS Console](https://github.com/Pop-Code/nestjs-console) to create co
 ## Defining Commands
 
 ```ts title="Demo console command"
-import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable, Logger } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 

@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { BaseEntity, Entity, PrimaryKey, Property } from "@mikro-orm/postgresql";
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-scalars";
 import { v4 as uuid } from "uuid";
@@ -15,7 +15,7 @@ registerEnumType(UserPermissionSource, {
 
 @ObjectType()
 @Entity({ tableName: "CometUserPermission" })
-export class UserPermission extends BaseEntity<UserPermission, "id"> {
+export class UserPermission extends BaseEntity {
     @Field(() => ID)
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();

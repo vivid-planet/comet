@@ -1,6 +1,5 @@
-import { FilterQuery, FindOptions, wrap } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityManager, EntityRepository } from "@mikro-orm/postgresql";
+import { EntityManager, EntityRepository, FilterQuery, FindOptions, wrap } from "@mikro-orm/postgresql";
 import { Type } from "@nestjs/common";
 import { Args, ArgsType, ID, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 

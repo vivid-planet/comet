@@ -1,5 +1,4 @@
-import { Connection } from "@mikro-orm/core";
-import { EntityManager } from "@mikro-orm/postgresql";
+import { Connection, EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import isEqual from "lodash.isequal";
 

@@ -1,4 +1,4 @@
-import { ChangeSetType, EntityManager, EntityName, EventSubscriber, FlushEventArgs } from "@mikro-orm/core";
+import { ChangeSetType, EntityManager, EntityName, EventSubscriber, FlushEventArgs } from "@mikro-orm/postgresql";
 import { Injectable, Type } from "@nestjs/common";
 
 import { DocumentInterface } from "../document/dto/document-interface";
