@@ -39,7 +39,7 @@
         "redraft": "^0.10.2",
         "styled-components": "^6.1.14",
         "swiper": "^11.2.1",
-        "ts-node": "^10.0.0"
+        "ts-node": "^10.9.2"
     },
     "devDependencies": {
         "@babel/core": "^7.0.0",
