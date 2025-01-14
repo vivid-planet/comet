@@ -181,7 +181,7 @@ Perform the following changes:
 
 ### Remove `trigger` prop from `Tooltip`
 
-The `trigger` prop is deprecated and must be removed. The combined `hover`/`focus` trigger is now the only supported behavior.
+The `trigger` prop has been removed. The combined `hover`/`focus` trigger is now the only supported behavior.
 
 Example:
 
