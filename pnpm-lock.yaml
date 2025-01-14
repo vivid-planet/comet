@@ -1566,7 +1566,7 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
       mime-db:
-        specifier: ^1.0.0
+        specifier: ^1.53.0
         version: 1.53.0
       object-path:
         specifier: ^0.11.8
@@ -1684,8 +1684,8 @@ importers:
         specifier: ^4.5.8
         version: 4.5.8
       '@types/mime-db':
-        specifier: ^1.43.1
-        version: 1.43.1
+        specifier: ^1.43.5
+        version: 1.43.5
       '@types/node':
         specifier: ^22.0.0
         version: 22.9.0
@@ -1876,7 +1876,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       mime-db:
-        specifier: ^1.0.0
+        specifier: ^1.53.0
         version: 1.53.0
       multer:
         specifier: ^1.4.4
@@ -1991,8 +1991,8 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3
       '@types/mime-db':
-        specifier: ^1.0.0
-        version: 1.43.1
+        specifier: ^1.43.5
+        version: 1.43.5
       '@types/multer':
         specifier: ^1.4.12
         version: 1.4.12
@@ -6938,8 +6938,8 @@ packages:
   '@types/memcached@2.2.7':
     resolution: {integrity: sha512-ImJbz1i8pl+OnyhYdIDnHe8jAuM8TOwM/7VsciqhYX3IL0jPPUToAtVxklfcWFGYckahEYZxhd9FS0z3MM1dpA==}
 
-  '@types/mime-db@1.43.1':
-    resolution: {integrity: sha512-kGZJY+R+WnR5Rk+RPHUMERtb2qBRViIHCBdtUrY+NmwuGb8pQdfTqQiCKPrxpdoycl8KWm2DLdkpoSdt479XoQ==}
+  '@types/mime-db@1.43.5':
+    resolution: {integrity: sha512-/bfTiIUTNPUBnwnYvUxXAre5MhD88jgagLEQiQtIASjU+bwxd8kS/ASDA4a8ufd8m0Lheu6eeMJHEUpLHoJ28A==}
 
   '@types/mime@2.0.3':
     resolution: {integrity: sha512-Jus9s4CDbqwocc5pOAnh8ShfrnMcPHuJYzVcSUU7lrh8Ni5HuIqX3oilL86p3dlTrk0LzHRCgA/GQ7uNCw6l2Q==}
@@ -22716,7 +22716,7 @@ snapshots:
     dependencies:
       '@types/node': 22.9.0
 
-  '@types/mime-db@1.43.1': {}
+  '@types/mime-db@1.43.5': {}
 
   '@types/mime@2.0.3': {}
 
