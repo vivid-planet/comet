@@ -570,7 +570,7 @@ importers:
         specifier: ^6.0.0
         version: 6.6.6(@types/react@18.3.18)(react@18.3.1)(typescript@4.9.4)
       redraft:
-        specifier: ^0.10.0
+        specifier: ^0.10.2
         version: 0.10.2
       sitemap:
         specifier: ^8.0.0
