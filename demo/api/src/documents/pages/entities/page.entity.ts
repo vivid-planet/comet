@@ -10,7 +10,7 @@ import {
 } from "@comet/cms-api";
 import { BaseEntity, Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { v4 as uuid } from "uuid";
+import { v4 } from "uuid";
 
 import { PageContentBlock } from "../blocks/page-content.block";
 import { SeoBlock } from "../blocks/seo.block";
@@ -26,9 +26,9 @@ import { StageBlock } from "../blocks/stage.block";
 export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
     [OptionalProps]?: "createdAt" | "updatedAt";
 
-    @PrimaryKey({ columnType: "uuid" })
+    @PrimaryKey({ type: "uuid" })
     @Field(() => ID)
-    id: string = uuid();
+    id: string = v4();
 
     @RootBlock(PageContentBlock)
     @Property({ customType: new RootBlockType(PageContentBlock) })
@@ -46,13 +46,13 @@ export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
     stage: BlockDataInterface;
 
     @Property({
-        columnType: "timestamp with time zone",
+        type: "timestamp with time zone",
     })
     @Field()
     createdAt: Date = new Date();
 
     @Property({
-        columnType: "timestamp with time zone",
+        type: "timestamp with time zone",
         onUpdate: () => new Date(),
     })
     @Field()

@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { Fragment } from "react";
 
 import { GQLBreadcrumbsFragment } from "./Breadcrumbs.fragment.generated";
@@ -13,15 +12,13 @@ const Breadcrumbs = ({ name, path, parentNodes }: GQLBreadcrumbsFragment) => {
                 <sc.Container>
                     {parentNodes.map((parentNode) => (
                         <Fragment key={parentNode.path}>
-                            <Link href={parentNode.path} passHref>
-                                <sc.Link> {parentNode.name}</sc.Link>
-                            </Link>
+                            <sc.Link href={parentNode.path}> {parentNode.name}</sc.Link>
+
                             <sc.Divider />
                         </Fragment>
                     ))}
-                    <Link href={path} passHref>
-                        <sc.Link> {name}</sc.Link>
-                    </Link>
+
+                    <sc.Link href={path}> {name}</sc.Link>
                 </sc.Container>
             )}
         </GridRoot>

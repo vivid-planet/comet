@@ -116,7 +116,7 @@ const ColumnsContentBlock = createBlocksBlock({
     supportedBlocks: {
         accordion: AccordionBlock,
         anchor: AnchorBlock,
-        richText: RichTextBlock,
+        richtext: RichTextBlock,
         space: SpaceBlock,
         heading: StandaloneHeadingBlock,
         callToActionList: StandaloneCallToActionListBlock,

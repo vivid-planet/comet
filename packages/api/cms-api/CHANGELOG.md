@@ -1,5 +1,14 @@
 # @comet/cms-api
 
+## 7.11.0
+
+### Patch Changes
+
+-   fb2297b2d: Fix `notEqual` operation for enum filter
+-   6778c4e97: Prevent the creation of a second home page
+-   Updated dependencies [58a99bbdd]
+    -   @comet/blocks-api@7.11.0
+
 ## 7.10.0
 
 ### Patch Changes
@@ -464,7 +473,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 
@@ -980,7 +989,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 

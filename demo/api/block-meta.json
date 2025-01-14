@@ -83,7 +83,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "richText": "RichText",
+                                "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
                                 "callToActionList": "StandaloneCallToActionList"
@@ -120,7 +120,7 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
-                                "richText": "RichText",
+                                "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "space": "Space",
                                 "callToActionList": "StandaloneCallToActionList"
@@ -655,7 +655,7 @@
                                 "anchor": "Anchor",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "richText": "RichText",
+                                "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -699,7 +699,7 @@
                                 "anchor": "Anchor",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "richText": "RichText",
+                                "richtext": "RichText",
                                 "heading": "StandaloneHeading",
                                 "columns": "Columns",
                                 "callToActionList": "StandaloneCallToActionList",
@@ -1141,37 +1141,6 @@
         ]
     },
     {
-        "name": "ImageLink",
-        "fields": [
-            {
-                "name": "link",
-                "kind": "Block",
-                "block": "Link",
-                "nullable": false
-            },
-            {
-                "name": "image",
-                "kind": "Block",
-                "block": "DamImage",
-                "nullable": false
-            }
-        ],
-        "inputFields": [
-            {
-                "name": "link",
-                "kind": "Block",
-                "block": "Link",
-                "nullable": false
-            },
-            {
-                "name": "image",
-                "kind": "Block",
-                "block": "DamImage",
-                "nullable": false
-            }
-        ]
-    },
-    {
         "name": "InternalLink",
         "fields": [
             {
@@ -1440,12 +1409,12 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
+                                "internal": "InternalLink",
+                                "external": "ExternalLink",
                                 "damFileDownload": "DamFileDownloadLink",
                                 "email": "EmailLink",
-                                "external": "ExternalLink",
-                                "internal": "InternalLink",
-                                "news": "NewsLink",
-                                "phone": "PhoneLink"
+                                "phone": "PhoneLink",
+                                "news": "NewsLink"
                             },
                             "nullable": false
                         }
@@ -1472,12 +1441,12 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
+                                "internal": "InternalLink",
+                                "external": "ExternalLink",
                                 "damFileDownload": "DamFileDownloadLink",
                                 "email": "EmailLink",
-                                "external": "ExternalLink",
-                                "internal": "InternalLink",
-                                "news": "NewsLink",
-                                "phone": "PhoneLink"
+                                "phone": "PhoneLink",
+                                "news": "NewsLink"
                             },
                             "nullable": false
                         }
@@ -2037,23 +2006,25 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
+                                "accordion": "Accordion",
                                 "anchor": "Anchor",
                                 "billboardTeaser": "BillboardTeaser",
-                                "columns": "Columns",
-                                "contentGroup": "ContentGroup",
-                                "fullWidthImage": "FullWidthImage",
-                                "heading": "Heading",
-                                "image": "DamImage",
-                                "imageLink": "ImageLink",
-                                "layout": "Layout",
-                                "linkList": "LinkList",
-                                "media": "Media",
-                                "newsDetail": "NewsDetail",
-                                "newsList": "NewsList",
-                                "richText": "RichText",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "textImage": "TextImage"
+                                "richtext": "RichText",
+                                "heading": "StandaloneHeading",
+                                "columns": "Columns",
+                                "callToActionList": "StandaloneCallToActionList",
+                                "keyFacts": "KeyFacts",
+                                "media": "StandaloneMedia",
+                                "contentGroup": "ContentGroup",
+                                "mediaGallery": "MediaGallery",
+                                "image": "DamImage",
+                                "newsDetail": "NewsDetail",
+                                "newsList": "NewsList",
+                                "layout": "Layout",
+                                "textImage": "TextImage",
+                                "fullWidthImage": "FullWidthImage"
                             },
                             "nullable": false
                         },
@@ -2097,23 +2068,25 @@
                             "name": "props",
                             "kind": "OneOfBlocks",
                             "blocks": {
+                                "accordion": "Accordion",
                                 "anchor": "Anchor",
                                 "billboardTeaser": "BillboardTeaser",
-                                "columns": "Columns",
-                                "contentGroup": "ContentGroup",
-                                "fullWidthImage": "FullWidthImage",
-                                "heading": "Heading",
-                                "image": "DamImage",
-                                "imageLink": "ImageLink",
-                                "layout": "Layout",
-                                "linkList": "LinkList",
-                                "media": "Media",
-                                "newsDetail": "NewsDetail",
-                                "newsList": "NewsList",
-                                "richText": "RichText",
                                 "space": "Space",
                                 "teaser": "Teaser",
-                                "textImage": "TextImage"
+                                "richtext": "RichText",
+                                "heading": "StandaloneHeading",
+                                "columns": "Columns",
+                                "callToActionList": "StandaloneCallToActionList",
+                                "keyFacts": "KeyFacts",
+                                "media": "StandaloneMedia",
+                                "contentGroup": "ContentGroup",
+                                "mediaGallery": "MediaGallery",
+                                "image": "DamImage",
+                                "newsDetail": "NewsDetail",
+                                "newsList": "NewsList",
+                                "layout": "Layout",
+                                "textImage": "TextImage",
+                                "fullWidthImage": "FullWidthImage"
                             },
                             "nullable": false
                         },

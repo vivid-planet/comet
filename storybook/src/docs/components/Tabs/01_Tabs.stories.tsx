@@ -1,5 +1,6 @@
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSaveButton,
@@ -8,7 +9,6 @@ import {
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Card, CardContent } from "@mui/material";
 
@@ -50,7 +50,7 @@ export const TabsInFormWithForceRender = {
                                 Dirty: {String(dirty)}
                                 <Toolbar>
                                     <ToolbarBackButton />
-                                    <ToolbarFillSpace />
+                                    <FillSpace />
                                     <ToolbarActions>
                                         <FinalFormSaveButton />
                                     </ToolbarActions>
@@ -104,7 +104,7 @@ export const TabsInFormWithoutForceRender = {
                                 Dirty: {String(dirty)}
                                 <Toolbar>
                                     <ToolbarBackButton />
-                                    <ToolbarFillSpace />
+                                    <FillSpace />
                                     <ToolbarActions>
                                         <FinalFormSaveButton />
                                     </ToolbarActions>

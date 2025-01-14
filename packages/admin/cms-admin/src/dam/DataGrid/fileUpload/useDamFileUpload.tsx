@@ -16,6 +16,7 @@ import { NewlyUploadedItem, useFileUploadContext } from "./FileUploadContext";
 import { FileUploadErrorDialog } from "./FileUploadErrorDialog";
 import {
     FileExtensionTypeMismatchError,
+    FilenameTooLongError,
     FileSizeError,
     MaxResolutionError,
     MissingFileExtensionError,
@@ -444,6 +445,8 @@ export const useDamFileUpload = (options: UploadDamFileOptions): FileUploadApi =
                             addValidationError(file, <MissingFileExtensionError />);
                         } else if (message.includes("File type and extension mismatch")) {
                             addValidationError(file, <FileExtensionTypeMismatchError extension={extension} mimetype={file.type} />);
+                        } else if (message.includes("Filename is too long")) {
+                            addValidationError(file, <FilenameTooLongError />);
                         } else {
                             addValidationError(file, <UnknownError />);
                         }
