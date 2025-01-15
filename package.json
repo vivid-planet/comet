@@ -37,7 +37,7 @@
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",
-        "@comet/dev-process-manager": "^2.7.0",
+        "@comet/dev-process-manager": "^2.5.1",
         "@formatjs/cli": "^6.0.0",
         "@types/node": "^22.0.0",
         "knip": "^5.38.1",
