@@ -87,8 +87,8 @@ importers:
         specifier: ^11.9.3
         version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
       '@fontsource-variable/roboto-flex':
-        specifier: ^5.0.14
-        version: 5.0.15
+        specifier: ^5.1.1
+        version: 5.1.1
       '@mui/material':
         specifier: ^6.3.0
         version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -691,7 +691,7 @@ importers:
         specifier: ^11.3.0
         version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
       '@fontsource/roboto':
-        specifier: ^4.2.3
+        specifier: ^4.5.8
         version: 4.5.8
       '@mdx-js/react':
         specifier: ^1.6.22
@@ -2306,8 +2306,8 @@ importers:
         specifier: ^11.3.0
         version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
       '@fontsource-variable/roboto-flex':
-        specifier: ^5.0.14
-        version: 5.0.15
+        specifier: ^5.1.1
+        version: 5.1.1
       '@mui/material':
         specifier: ^6.3.0
         version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -4375,8 +4375,8 @@ packages:
   '@floating-ui/utils@0.2.5':
     resolution: {integrity: sha512-sTcG+QZ6fdEUObICavU+aB3Mp8HY4n14wYHdxK4fXjPmv3PXZZeY5RaguJmGyeH/CJQhX3fqKUtS4qc1LoHwhQ==}
 
-  '@fontsource-variable/roboto-flex@5.0.15':
-    resolution: {integrity: sha512-CTBG6EceGcuj49sYZVPx533laiGxKboq0H4GLTJ+/2FkqTsSYIYoF8RzeyySTiCSmY7+EfWckfwYW7L9Wlh3bw==}
+  '@fontsource-variable/roboto-flex@5.1.1':
+    resolution: {integrity: sha512-cMtqtR+EhqTcox5+Sz+/+N7C8hHheQm1EtxJ9qrr356N2lwbpEU0y5OA4as+V7cdiaEFxXw6jzO9KoqLMZ6tNg==}
 
   '@fontsource/roboto@4.5.8':
     resolution: {integrity: sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA==}
@@ -19114,7 +19114,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.5': {}
 
-  '@fontsource-variable/roboto-flex@5.0.15': {}
+  '@fontsource-variable/roboto-flex@5.1.1': {}
 
   '@fontsource/roboto@4.5.8': {}
 
