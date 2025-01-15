@@ -65,7 +65,7 @@ export function createRedirectsResolver({
             const where = this.redirectService.getFindCondition({ query, type, active });
             if (hasNonEmptyScope) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (where as any).scope = scope;
+                (where as any).scope = nonEmptyScopeOrNothing(scope);
             }
 
             const options: FindOptions<RedirectInterface> = {};
@@ -83,7 +83,7 @@ export function createRedirectsResolver({
             const where = this.redirectService.getFindConditionPaginatedRedirects({ search, filter });
             if (hasNonEmptyScope) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (where as any).scope = scope;
+                (where as any).scope = nonEmptyScopeOrNothing(scope);
             }
 
             const options: FindOptions<RedirectInterface> = { offset, limit };
@@ -117,7 +117,7 @@ export function createRedirectsResolver({
         ): Promise<RedirectInterface | null> {
             const where: FilterQuery<RedirectInterface> = { source, sourceType };
             if (hasNonEmptyScope) {
-                where.scope = scope;
+                where.scope = nonEmptyScopeOrNothing(scope);
             }
             const redirect = await this.repository.findOne(where);
             return redirect ?? null;
