@@ -31,7 +31,7 @@ export const AccordionBlock = withPreview(
 
                         const url = block.adminMeta?.route;
 
-                        return url && (isSelected(url) || isHovered(url));
+                        return url && (isSelected(url, { exactMatch: false }) || isHovered(url, { exactMatch: false }));
                     });
 
                     return focusedBlock?.key;
