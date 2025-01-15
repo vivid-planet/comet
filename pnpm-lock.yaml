@@ -410,7 +410,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.8(@swc/helpers@0.5.5))(@types/node@22.9.0)(typescript@4.9.4)
       tsconfig-paths:
-        specifier: ^3.0.0
+        specifier: ^3.15.0
         version: 3.15.0
       typescript:
         specifier: ^4.0.0
@@ -32437,7 +32437,7 @@ snapshots:
     dependencies:
       '@types/json5': 0.0.29
       json5: 1.0.2
-      minimist: 1.2.7
+      minimist: 1.2.8
       strip-bom: 3.0.0
 
   tsconfig-paths@4.2.0:
