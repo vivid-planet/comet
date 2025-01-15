@@ -2,8 +2,7 @@
     "extends": "@comet/eslint-config/react",
     "ignorePatterns": [".docusaurus", "build"],
     "rules": {
-        "@calm/react-intl/missing-formatted-message": "off",
-        "no-restricted-imports": "off"
+        "@calm/react-intl/missing-formatted-message": "off"
     },
     "env": {
         "node": true

@@ -2,7 +2,7 @@ import { createCometTheme } from "@comet/admin-theme";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import CodeBlock from "@theme/CodeBlock";
 import type { Props as PlaygroundProps } from "@theme/Playground";
-import React from "react";
+import { useEffect, useState } from "react";
 import { IntlProvider } from "react-intl";
 import { transform } from "sucrase";
 
@@ -17,9 +17,9 @@ const importStory = async (name: string) => {
 
 export const Story = ({ path, ...props }: StoryProps) => {
     const theme = createCometTheme();
-    const [code, setCode] = React.useState("");
+    const [code, setCode] = useState("");
 
-    React.useEffect(() => {
+    useEffect(() => {
         importStory(path).then(setCode);
     }, [path]);
 

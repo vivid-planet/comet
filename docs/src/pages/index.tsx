@@ -1,7 +1,6 @@
 import { Redirect } from "@docusaurus/router";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
-import * as React from "react";
 
 export default function Home(): JSX.Element {
+    /* @ts-expect-error type mismatch between React 17 and 18, will be fixed by updating the admin packages */
     return <Redirect to="/docs" />;
 }

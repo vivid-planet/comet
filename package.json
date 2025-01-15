@@ -61,11 +61,6 @@
     },
     "pnpm": {
         "packageExtensions": {
-            "@docusaurus/theme-live-codeblock": {
-                "peerDependencies": {
-                    "react-live": "^2.4.1"
-                }
-            },
             "next@14": {
                 "peerDependencies": {
                     "@types/react": "^18.0.0"
@@ -82,6 +77,16 @@
                 }
             },
             "swiper": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
+                }
+            },
+            "react-live": {
+                "peerDependencies": {
+                    "@types/react": "^18.0.0"
+                }
+            },
+            "@docusaurus/theme-common": {
                 "peerDependencies": {
                     "@types/react": "^18.0.0"
                 }
