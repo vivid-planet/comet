@@ -1,5 +1,6 @@
 "use client";
 
+import isEqual from "lodash.isequal";
 import { createContext, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useDebounceCallback } from "usehooks-ts";
@@ -117,7 +118,7 @@ export const IFrameBridgeProvider = ({ children }: PropsWithChildren) => {
             });
 
         setPreviewElementsData((previousElementsData) => {
-            const dataDidNotChange = JSON.stringify(previousElementsData) === JSON.stringify(newPreviewElementsData);
+            const dataDidNotChange = isEqual(previousElementsData, newPreviewElementsData);
 
             if (dataDidNotChange) {
                 // Returning the previous object (same reference) prevents the state-update from triggering a re-render
