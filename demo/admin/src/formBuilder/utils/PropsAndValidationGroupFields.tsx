@@ -2,7 +2,7 @@ import { OnChangeField, SwitchField, TextField } from "@comet/admin";
 import { useContentScope, useLocale } from "@comet/cms-admin";
 import { useFieldNames } from "@src/formBuilder/utils/FieldNamesContext";
 import { EditorState } from "draft-js";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, FocusEvent, useEffect, useState } from "react";
 import { useField } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 import slugify from "slugify";
@@ -32,7 +32,6 @@ type FieldNameFieldProps = {
     name: string;
 };
 
-// TODO: Handle slugify on blur
 export const FieldNameField = ({ nameOfSlugSource, name }: FieldNameFieldProps) => {
     const { duplicateFieldNames } = useFieldNames();
     const fieldNameField = useField(name);
@@ -72,6 +71,10 @@ export const FieldNameField = ({ nameOfSlugSource, name }: FieldNameFieldProps) 
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setFieldNameWasEditedManually(true);
                     fieldNameField.input.onChange(event.target.value);
+                }}
+                onBlur={(event: FocusEvent<HTMLInputElement>) => {
+                    const slug = transformToSlug(event.target.value, locale);
+                    fieldNameField.input.onChange(slug);
                 }}
                 // TODO: Change this to `validateWarning` once fixed: https://vivid-planet.atlassian.net/browse/COM-1542
                 validate={(fieldName) => {
