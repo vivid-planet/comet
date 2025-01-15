@@ -1,8 +1,8 @@
 import { BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
 import { RichTextBlockField } from "@src/formBuilder/blocks/common/RichTextBlock";
-import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
 import { FieldNamesContext } from "@src/formBuilder/utils/FieldNamesContext";
-import { PropsAndValidationGroup } from "@src/formBuilder/utils/PropsAndValidationGroup";
+import { DisplayFieldGroup } from "@src/formBuilder/utils/FieldSection";
+import { PropsAndValidationGroupFields } from "@src/formBuilder/utils/PropsAndValidationGroupFields";
 import { FormattedMessage } from "react-intl";
 
 import { HelperTextBlockField, RichTextBlock } from "../common/RichTextBlock";
@@ -10,7 +10,7 @@ import { HelperTextBlockField, RichTextBlock } from "../common/RichTextBlock";
 const CheckboxItemBlock: BlockInterface = {
     ...createBlockSkeleton(),
     name: "CheckboxItem",
-    displayName: <FormattedMessage id="blocks.checkboxItems.itemName" defaultMessage="Checkbox Item" />,
+    displayName: <FormattedMessage id="formBuilder.checkboxItemBlock.displayName" defaultMessage="Checkbox Item" />,
     previewContent: (state) => [{ type: "text", content: state.label.editorState.getCurrentContent().getPlainText() }],
     isValid: (state) => Boolean(state.fieldName),
     input2State: (input) => ({
@@ -42,11 +42,11 @@ const CheckboxItemBlock: BlockInterface = {
     AdminComponent: ({ state, updateState }) => {
         return (
             <BlocksFinalForm onSubmit={updateState} initialValues={state}>
-                <DisplaySection>
-                    <RichTextBlockField name="label" label={<FormattedMessage id="blocks.checkboxItems.label" defaultMessage="Label" />} />
+                <DisplayFieldGroup>
+                    <RichTextBlockField name="label" label={<FormattedMessage id="formBuilder.checkboxItemBlock.label" defaultMessage="Label" />} />
                     <HelperTextBlockField />
-                </DisplaySection>
-                <PropsAndValidationGroup />
+                </DisplayFieldGroup>
+                <PropsAndValidationGroupFields />
             </BlocksFinalForm>
         );
     },
@@ -54,10 +54,10 @@ const CheckboxItemBlock: BlockInterface = {
 
 export const CheckboxItemsBlock: BlockInterface = createListBlock({
     name: "CheckboxItems",
-    displayName: <FormattedMessage id="blocks.checkboxItems" defaultMessage="Checkbox Items" />,
+    displayName: <FormattedMessage id="formBuilder.checkboxItemsBlock.displayName" defaultMessage="Checkbox Items" />,
     block: CheckboxItemBlock,
-    itemName: <FormattedMessage id="blocks.checkboxItems.itemName" defaultMessage="item" />,
-    itemsName: <FormattedMessage id="blocks.checkboxItems.itemsName" defaultMessage="items" />,
+    itemName: <FormattedMessage id="formBuilder.checkboxItemsBlock.itemName" defaultMessage="item" />,
+    itemsName: <FormattedMessage id="formBuilder.checkboxItemsBlock.itemsName" defaultMessage="items" />,
 });
 
 const OriginalAdminComponent = CheckboxItemsBlock.AdminComponent;

@@ -1,13 +1,13 @@
 import { OnChangeField, SwitchField, TextField } from "@comet/admin";
-import { BlocksFinalForm, createCompositeSetting } from "@comet/blocks-admin";
 import { useContentScope, useLocale } from "@comet/cms-admin";
-import { FieldSection } from "@src/formBuilder/utils/DisplaySection";
 import { useFieldNames } from "@src/formBuilder/utils/FieldNamesContext";
 import { EditorState } from "draft-js";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useField } from "react-final-form";
 import { FormattedMessage } from "react-intl";
 import slugify from "slugify";
+
+import { PropsAndValidationFieldGroup } from "./FieldSection";
 
 // Copied from packages/admin/cms-admin/src/pages/createEditPageNode.tsx
 const transformToSlug = (name: string, locale: string) => {
@@ -18,12 +18,12 @@ const transformToSlug = (name: string, locale: string) => {
     return slug;
 };
 
-export const PropsAndValidationGroup = () => {
+export const PropsAndValidationGroupFields = () => {
     return (
-        <FieldSection title={<FormattedMessage id="formBuilder.fieldSection.propsAndValidation" defaultMessage="Props and Validation" />}>
+        <PropsAndValidationFieldGroup>
             <FieldNameField nameOfSlugSource="label" name="fieldName" />
-            <SwitchField name="mandatory" label={<FormattedMessage id="blocks.commonFormField.mandatory" defaultMessage="Mandatory" />} fullWidth />
-        </FieldSection>
+            <SwitchField name="mandatory" label={<FormattedMessage id="formBuilder.common.mandatory" defaultMessage="Mandatory" />} fullWidth />
+        </PropsAndValidationFieldGroup>
     );
 };
 
@@ -67,7 +67,7 @@ export const FieldNameField = ({ nameOfSlugSource, name }: FieldNameFieldProps) 
             </OnChangeField>
             <TextField
                 name={name}
-                label={<FormattedMessage id="blocks.commonFormField.fieldName" defaultMessage="Field Name" />}
+                label={<FormattedMessage id="formBuilder.common.fieldName" defaultMessage="Field Name" />}
                 fullWidth
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setFieldNameWasEditedManually(true);
@@ -76,58 +76,10 @@ export const FieldNameField = ({ nameOfSlugSource, name }: FieldNameFieldProps) 
                 // TODO: Change this to `validateWarning` once fixed: https://vivid-planet.atlassian.net/browse/COM-1542
                 validate={(fieldName) => {
                     if (duplicateFieldNames.includes(fieldName)) {
-                        return (
-                            <FormattedMessage id="blocks.commonFormField.fieldNameAlreadyExists" defaultMessage="This field name already exists" />
-                        );
+                        return <FormattedMessage id="formBuilder.common.fieldNameAlreadyExists" defaultMessage="This field name already exists" />;
                     }
                 }}
             />
         </>
     );
-};
-
-/**
- * @deprecated Use <PropsAndValidationGroup /> instead
- */
-export const propsAndValidationGroup = {
-    title: <FormattedMessage id="blocks.commonFormField.propsAndValidation" defaultMessage="Props and Validation" />,
-    paper: true,
-    blocks: {
-        fieldName: {
-            block: createCompositeSetting<string>({
-                defaultValue: "",
-                AdminComponent: ({ state, updateState }) => {
-                    return (
-                        <BlocksFinalForm<{ value: typeof state }>
-                            onSubmit={({ value }) => updateState(value ? value.toLowerCase().replace(/[^a-z0-9]/g, "-") : "")}
-                            initialValues={{ value: state || undefined }}
-                        >
-                            <TextField
-                                name="value"
-                                label={<FormattedMessage id="blocks.commonFormField.fieldName" defaultMessage="Field Name" />}
-                                fullWidth
-                            />
-                        </BlocksFinalForm>
-                    );
-                },
-            }),
-            hiddenInSubroute: true,
-        },
-        mandatory: {
-            // TODO: Use helper function once merged: https://github.com/vivid-planet/comet/pull/3052
-            block: createCompositeSetting<boolean>({
-                defaultValue: false,
-                AdminComponent: ({ state, updateState }) => (
-                    <BlocksFinalForm<{ value: typeof state }> onSubmit={({ value }) => updateState(value)} initialValues={{ value: state }}>
-                        <SwitchField
-                            name="value"
-                            label={<FormattedMessage id="blocks.commonFormField.mandatory" defaultMessage="Mandatory" />}
-                            fullWidth
-                        />
-                    </BlocksFinalForm>
-                ),
-            }),
-            hiddenInSubroute: true,
-        },
-    },
 };

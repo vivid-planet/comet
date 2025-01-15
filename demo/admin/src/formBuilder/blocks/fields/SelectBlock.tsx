@@ -3,23 +3,23 @@ import { BlockInterface, BlocksFinalForm, createFinalFormBlock, HiddenInSubroute
 import { Paper, Typography } from "@mui/material";
 import { SelectBlockData } from "@src/blocks.generated";
 import { createFieldBlock } from "@src/formBuilder/utils/createFieldBlock";
-import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
-import { PropsAndValidationGroup } from "@src/formBuilder/utils/PropsAndValidationGroup";
+import { DisplayFieldGroup } from "@src/formBuilder/utils/FieldSection";
+import { PropsAndValidationGroupFields } from "@src/formBuilder/utils/PropsAndValidationGroupFields";
 import { FormattedMessage } from "react-intl";
 
 import { HelperTextBlockField, RichTextBlock } from "../common/RichTextBlock";
 import { SelectOptionsBlock } from "./SelectOptionsBlock";
 
 const selectTypeOptions: Array<SelectFieldOption<SelectBlockData["selectType"]>> = [
-    { value: "singleSelect", label: <FormattedMessage id="blocks.select.type.singleSelect" defaultMessage="Single Select" /> },
-    { value: "multiSelect", label: <FormattedMessage id="blocks.select.type.multiSelect" defaultMessage="Multi Select" /> },
+    { value: "singleSelect", label: <FormattedMessage id="formBuilder.selectBlock.type.singleSelect" defaultMessage="Single Select" /> },
+    { value: "multiSelect", label: <FormattedMessage id="formBuilder.selectBlock.type.multiSelect" defaultMessage="Multi Select" /> },
 ];
 
 const FinalFormSelectOptionsBlock = createFinalFormBlock(SelectOptionsBlock);
 
 export const SelectBlock: BlockInterface = createFieldBlock({
     name: "Select",
-    displayName: <FormattedMessage id="formBuilder.selectBlock" defaultMessage="Select" />,
+    displayName: <FormattedMessage id="formBuilder.selectBlock.displayName" defaultMessage="Select" />,
     input2State: (input) => ({
         ...input,
         options: SelectOptionsBlock.input2State(input.options),
@@ -49,7 +49,7 @@ export const SelectBlock: BlockInterface = createFieldBlock({
         return (
             <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                 <HiddenInSubroute>
-                    <DisplaySection>
+                    <DisplayFieldGroup>
                         <SelectField
                             name="selectType"
                             label={<FormattedMessage id="formBuilder.selectBlock.type" defaultMessage="Type" />}
@@ -64,8 +64,8 @@ export const SelectBlock: BlockInterface = createFieldBlock({
                             fullWidth
                         />
                         <HelperTextBlockField />
-                    </DisplaySection>
-                    <PropsAndValidationGroup />
+                    </DisplayFieldGroup>
+                    <PropsAndValidationGroupFields />
                     <Paper variant="outlined" sx={{ p: 4 }}>
                         <Typography variant="h5">
                             <FormattedMessage id="formBuilder.fieldSection.selectOptions" defaultMessage="Select Options" />

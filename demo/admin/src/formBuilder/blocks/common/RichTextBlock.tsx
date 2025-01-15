@@ -24,7 +24,7 @@ type HelperTextFieldProps = {
 
 export const HelperTextBlockField = ({
     name = "helperText",
-    label = <FormattedMessage id="formBuilder.helperText" defaultMessage="Helper Text" />,
+    label = <FormattedMessage id="formBuilder.common.helperText" defaultMessage="Helper Text" />,
 }: HelperTextFieldProps) => <RichTextBlockField label={label} name={name} />;
 
 export const RichTextBlockField = (p: FieldProps) => <Field component={FinalFormRichTextBlock} fullWidth {...p} />;

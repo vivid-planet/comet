@@ -1,14 +1,14 @@
 import { TextField } from "@comet/admin";
 import { BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
-import { DisplaySection, FieldSection } from "@src/formBuilder/utils/DisplaySection";
 import { FieldNamesContext } from "@src/formBuilder/utils/FieldNamesContext";
-import { FieldNameField } from "@src/formBuilder/utils/PropsAndValidationGroup";
+import { DisplayFieldGroup, PropsAndValidationFieldGroup } from "@src/formBuilder/utils/FieldSection";
+import { FieldNameField } from "@src/formBuilder/utils/PropsAndValidationGroupFields";
 import { FormattedMessage } from "react-intl";
 
 const SelectOptionBlock: BlockInterface = {
     ...createBlockSkeleton(),
     name: "SelectItem",
-    displayName: <FormattedMessage id="blocks.selectOptions.itemName" defaultMessage="Select Item" />,
+    displayName: <FormattedMessage id="formBuilder.selectOptionBlock.displayName" defaultMessage="Select Option" />,
     previewContent: (state) => [{ type: "text", content: `${state.text}${state.fieldName ? ` (${state.fieldName})` : ""}` }],
     isValid: (state) => Boolean(state.fieldName),
     defaultValues: () => ({
@@ -18,12 +18,12 @@ const SelectOptionBlock: BlockInterface = {
     AdminComponent: ({ state, updateState }) => {
         return (
             <BlocksFinalForm onSubmit={updateState} initialValues={state}>
-                <DisplaySection>
-                    <TextField name="text" label={<FormattedMessage id="blocks.selectOption.text" defaultMessage="Text" />} fullWidth />
-                </DisplaySection>
-                <FieldSection title={<FormattedMessage id="blocks.selectOptions.propsAndValidation" defaultMessage="Props and Validation" />}>
+                <DisplayFieldGroup>
+                    <TextField name="text" label={<FormattedMessage id="formBuilder.selectOptionBlock.text" defaultMessage="Text" />} fullWidth />
+                </DisplayFieldGroup>
+                <PropsAndValidationFieldGroup>
                     <FieldNameField nameOfSlugSource="text" name="fieldName" />
-                </FieldSection>
+                </PropsAndValidationFieldGroup>
             </BlocksFinalForm>
         );
     },
@@ -31,10 +31,10 @@ const SelectOptionBlock: BlockInterface = {
 
 export const SelectOptionsBlock: BlockInterface = createListBlock({
     name: "SelectOptions",
-    displayName: <FormattedMessage id="blocks.selectOptions" defaultMessage="Select Options" />,
+    displayName: <FormattedMessage id="formBuilder.selectOptionsBlock.displayName" defaultMessage="Select Options" />,
     block: SelectOptionBlock,
-    itemName: <FormattedMessage id="blocks.selectOptions.itemName" defaultMessage="item" />,
-    itemsName: <FormattedMessage id="blocks.selectOptions.itemsName" defaultMessage="items" />,
+    itemName: <FormattedMessage id="formBuilder.selectOptionsBlock.item" defaultMessage="item" />,
+    itemsName: <FormattedMessage id="formBuilder.selectOptionsBlock.items" defaultMessage="items" />,
 });
 
 const OriginalAdminComponent = SelectOptionsBlock.AdminComponent;
