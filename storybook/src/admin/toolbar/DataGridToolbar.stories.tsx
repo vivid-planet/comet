@@ -1,7 +1,16 @@
-import { DataGridToolbar, FillSpace, GridColumnsButton, GridFilterButton, StackLink, ToolbarActions, ToolbarItem } from "@comet/admin";
+import {
+    DataGridToolbar,
+    FillSpace,
+    GridColumnsButton,
+    GridFilterButton,
+    GridTextSearch,
+    StackLink,
+    ToolbarActions,
+    ToolbarItem,
+} from "@comet/admin";
 import { Add as AddIcon } from "@comet/admin-icons";
 import { Button } from "@mui/material";
-import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 
 import { storyRouterDecorator } from "../../story-router.decorator";
 
@@ -32,7 +41,7 @@ export const _DataGridToolbar = {
                     Toolbar: () => (
                         <DataGridToolbar>
                             <ToolbarItem>
-                                <GridToolbarQuickFilter />
+                                <GridTextSearch />
                             </ToolbarItem>
                             <ToolbarItem>
                                 <GridFilterButton />

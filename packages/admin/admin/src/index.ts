@@ -54,6 +54,7 @@ export { GridColDef } from "./dataGrid/GridColDef";
 export { GridColumnsButton } from "./dataGrid/GridColumnsButton";
 export { dataGridDateColumn, dataGridDateTimeColumn } from "./dataGrid/gridColumnTypes";
 export { GridFilterButton } from "./dataGrid/GridFilterButton";
+export { GridTextSearch, GridTextSearchClassKey, GridTextSearchProps } from "./dataGrid/GridTextSearch";
 export { muiGridFilterToGql } from "./dataGrid/muiGridFilterToGql";
 export { muiGridPagingToGql } from "./dataGrid/muiGridPagingToGql";
 export { muiGridSortToGql } from "./dataGrid/muiGridSortToGql";

@@ -42,6 +42,7 @@
         "query-string": "^6.8.1",
         "react-dropzone": "^14.0.0",
         "use-constant": "^1.0.0",
+        "usehooks-ts": "^3.1.0",
         "uuid": "^9.0.0"
     },
     "devDependencies": {
