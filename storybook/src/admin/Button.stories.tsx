@@ -9,6 +9,7 @@ export default {
 
 type DefaultStoryArgs = {
     variant: ButtonProps["variant"];
+    responsive: boolean;
     disabled: boolean;
     startIcon: boolean;
     endIcon: boolean;
@@ -20,6 +21,7 @@ export const Default = {
     },
     args: {
         variant: "primary",
+        responsive: false,
         disabled: false,
         startIcon: true,
         endIcon: false,
@@ -29,6 +31,10 @@ export const Default = {
             name: "Variant",
             control: "select",
             options: ["primary", "secondary", "outlined", "descructive", "success", "textLight", "textDark"],
+        },
+        responsive: {
+            name: "Responsive",
+            control: "boolean",
         },
         disabled: {
             name: "Disabled",
@@ -44,7 +50,7 @@ export const Default = {
         },
     },
 
-    render: ({ startIcon, endIcon, disabled, variant }: DefaultStoryArgs) => {
+    render: ({ startIcon, endIcon, disabled, variant, responsive }: DefaultStoryArgs) => {
         const showDarkBackground = variant === "textLight";
 
         return (
@@ -57,6 +63,7 @@ export const Default = {
                     endIcon={endIcon ? <Favorite /> : undefined}
                     disabled={disabled}
                     variant={variant}
+                    responsive={responsive}
                 >
                     This is a button
                 </Button>
