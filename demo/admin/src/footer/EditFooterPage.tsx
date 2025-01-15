@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarFillSpace, ToolbarTitleItem } from "@comet/admin";
+import { FillSpace, MainContent, messages, SaveButton, Stack, StackToolbar, ToolbarActions, ToolbarTitleItem } from "@comet/admin";
 import { Save } from "@comet/admin-icons";
 import { AdminComponentRoot, BlockState } from "@comet/blocks-admin";
 import {
@@ -133,7 +133,7 @@ export function EditFooterPage(): JSX.Element | null {
                 <ToolbarTitleItem>
                     <FormattedMessage id="footers.edit.toolbarTitle" defaultMessage="Edit footer" />
                 </ToolbarTitleItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveButton
                         disabled={!hasChanges}

@@ -473,7 +473,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 
@@ -989,7 +989,7 @@
     -   Pass `moduleRef` to `BlocksTransformerMiddlewareFactory` instead of `dependencies`
     -   Remove `dependencies` from `BlockData#transformToPlain`
 
-    See the [migration guide](https://docs.comet-dxp.com/docs/migration/migration-from-v6-to-v7) on how to migrate.
+    See the [migration guide](https://docs.comet-dxp.com/docs/migration-guide/migration-from-v6-to-v7) on how to migrate.
 
 -   9bed75638: API Generator: Add new `dedicatedResolverArg` option to `@CrudField` to generate better API for Many-to-one-relations
 

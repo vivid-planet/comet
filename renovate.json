@@ -69,6 +69,10 @@
         {
             "matchUpdateTypes": ["major"],
             "labels": ["major", "dependencies"]
+        },
+        {
+            "matchDepTypes": ["peerDependencies"],
+            "rangeStrategy": "widen"
         }
     ],
     "rangeStrategy": "bump",
