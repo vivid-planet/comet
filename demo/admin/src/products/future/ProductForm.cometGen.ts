@@ -16,6 +16,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                 {
                     type: "text",
                     name: "title",
+                    initialValueProp: true,
                     label: "Titel", // default is generated from name (camelCaseToHumanReadable)
                     required: true, // default is inferred from gql schema
                     validate: { name: "validateTitle", import: "./validateTitle" },
@@ -29,6 +30,7 @@ export const ProductForm: FormConfig<GQLProduct> = {
                     label: "Type",
                     required: true,
                     inputType: "radio",
+                    initialValueProp: true,
                     values: [{ value: "Cap", label: "great Cap" }, "Shirt", "Tie"],
                 },
                 { type: "asyncSelect", name: "category", rootQuery: "productCategories" },
@@ -58,15 +60,26 @@ export const ProductForm: FormConfig<GQLProduct> = {
             fields: [
                 {
                     type: "asyncSelect",
+                    virtual: true,
+                    name: "manufacturerCountry",
+                    gqlFieldName: "manufacturer",
+                    initQueryIdPath: "addressAsEmbeddable.country",
+                    initQueryLabelPath: "addressAsEmbeddable.country",
+                    rootQuery: "manufacturerCountries",
+                    labelField: "label",
+                },
+                {
+                    type: "asyncSelect",
                     name: "manufacturer",
                     rootQuery: "manufacturers",
-                    filterField: {
-                        name: "type",
+                    filter: {
+                        type: "field",
+                        name: "manufacturerCountry",
                         gqlName: "addressAsEmbeddable_country",
                     },
                 },
                 { type: "boolean", name: "inStock" },
-                { type: "date", name: "availableSince", startAdornment: { icon: "CalendarToday" } },
+                { type: "date", name: "availableSince", initialValueProp: true, optionalRenderProp: true, startAdornment: { icon: "CalendarToday" } },
                 { type: "block", name: "image", label: "Image", block: { name: "DamImageBlock", import: "@comet/cms-admin" } },
                 { type: "fileUpload", name: "priceList", label: "Price List", maxFileSize: 1024 * 1024 * 4, download: true },
                 { type: "fileUpload", name: "datasheets", label: "Datasheets", multiple: true, maxFileSize: 1024 * 1024 * 4, download: false },

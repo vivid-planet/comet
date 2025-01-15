@@ -1,9 +1,17 @@
 import { gql, useQuery } from "@apollo/client";
-import { InputBase } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import { GridFilterInputValueProps, GridFilterOperator } from "@mui/x-data-grid-pro";
 import * as React from "react";
 import { useIntl } from "react-intl";
+
+const manufacturerFilterFragment = gql`
+    fragment ManufacturersFilter on Manufacturer {
+        id
+        name
+    }
+`;
+
+import { InputBase } from "@mui/material";
 import { useDebounce } from "use-debounce";
 
 import { GQLManufacturersFilterQuery, GQLManufacturersFilterQueryVariables } from "./ManufacturerFilter.generated";
@@ -12,12 +20,12 @@ const manufacturersQuery = gql`
     query ManufacturersFilter($offset: Int!, $limit: Int!, $search: String) {
         manufacturers(offset: $offset, limit: $limit, search: $search) {
             nodes {
-                id
-                name
+                ...ManufacturersFilter
             }
             totalCount
         }
     }
+    ${manufacturerFilterFragment}
 `;
 
 // Source: https://mui.com/x/react-data-grid/filtering/customization/#multiple-values-operator
@@ -37,6 +45,7 @@ function ManufacturerFilter({ item, applyValue }: GridFilterInputValueProps) {
     // source https://mui.com/material-ui/react-autocomplete/
     return (
         <Autocomplete
+            id="manufacturer-select"
             size="small"
             options={data?.manufacturers.nodes ?? []}
             autoHighlight
@@ -77,5 +86,6 @@ export const ManufacturerFilterOperators: GridFilterOperator[] = [
             throw new Error("not implemented, we filter server side");
         },
         InputComponent: ManufacturerFilter,
+        InputComponentProps: { column: "string" },
     },
 ];
