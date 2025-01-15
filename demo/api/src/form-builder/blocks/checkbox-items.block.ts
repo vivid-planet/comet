@@ -44,14 +44,6 @@ class CheckboxItemBlockInput extends BlockInput {
     helperText?: ExtractBlockInput<typeof RichTextBlock>;
 
     transformToBlockData(): CheckboxItemBlockData {
-        // TODO: Combine this with `BaseFieldBlockInput` -> `getBlockDataWithUpdatedFieldName` and make sure `fieldName` is always unique
-        if (!this.fieldName) {
-            const firstLineOfText = this.label.draftContent.blocks.length ? this.label.draftContent.blocks[0].text : "";
-            const slugifiedText = firstLineOfText ? firstLineOfText.toLowerCase().replace(/[^a-z0-9]/g, "-") : "";
-            const cleanSlugifiedText = slugifiedText.replace(/^-+|-+$/g, "");
-            this.fieldName = cleanSlugifiedText;
-        }
-
         return inputToData(CheckboxItemBlockData, this);
     }
 }
