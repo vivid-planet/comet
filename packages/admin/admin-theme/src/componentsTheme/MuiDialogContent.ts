@@ -3,22 +3,22 @@ import { dialogTitleClasses } from "@mui/material";
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
 
-export const getMuiDialogContent: GetMuiComponentTheme<"MuiDialogContent"> = (component, { palette, breakpoints }) => ({
+export const getMuiDialogContent: GetMuiComponentTheme<"MuiDialogContent"> = (component, { palette, breakpoints, spacing }) => ({
     ...component,
     styleOverrides: mergeOverrideStyles<"MuiDialogContent">(component?.styleOverrides, {
         root: {
             backgroundColor: palette.grey[50],
-            padding: 10,
+            padding: spacing(2),
 
             [`.${dialogTitleClasses.root} + &`]: {
-                paddingTop: 10,
+                paddingTop: spacing(2),
             },
 
             [breakpoints.up("sm")]: {
-                padding: 40,
+                padding: spacing(8),
 
                 [`.${dialogTitleClasses.root} + &`]: {
-                    paddingTop: 40,
+                    paddingTop: spacing(8),
                 },
             },
         },
