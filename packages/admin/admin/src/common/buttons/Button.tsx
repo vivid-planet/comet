@@ -15,7 +15,7 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../helpers/useWindowSize";
 
-type Variant = "primary" | "secondary" | "outlined" | "descructive" | "success" | "textLight" | "textDark";
+type Variant = "primary" | "secondary" | "outlined" | "destructive" | "success" | "textLight" | "textDark";
 type Slot = "root" | "mobileTooltip";
 type ComponentState = Variant | "usingResponsiveBehavior";
 export type ButtonClassKey = Slot | ComponentState;
@@ -40,7 +40,7 @@ const variantToMuiProps: Record<Variant, Partial<MuiButtonProps>> = {
     primary: { variant: "contained", color: "primary" },
     secondary: { variant: "contained", color: "secondary" },
     outlined: { variant: "outlined" },
-    descructive: { variant: "outlined", color: "error" },
+    destructive: { variant: "outlined", color: "error" },
     success: { variant: "contained", color: "success" },
     textLight: { variant: "text", sx: { color: "white" } },
     textDark: { variant: "text", sx: { color: "black" } },

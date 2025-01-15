@@ -30,7 +30,7 @@ export const Default = {
         variant: {
             name: "Variant",
             control: "select",
-            options: ["primary", "secondary", "outlined", "descructive", "success", "textLight", "textDark"],
+            options: ["primary", "secondary", "outlined", "destructive", "success", "textLight", "textDark"],
         },
         responsive: {
             name: "Responsive",
@@ -79,7 +79,7 @@ export const AllVariants = {
                 <Button variant="primary">Primary</Button>
                 <Button variant="secondary">Secondary</Button>
                 <Button variant="outlined">Outlined</Button>
-                <Button variant="descructive">Descructive</Button>
+                <Button variant="destructive">Destructive</Button>
                 <Button variant="success">Success</Button>
                 <Button variant="textLight">Text Light</Button>
                 <Button variant="textDark">Text Dark</Button>
