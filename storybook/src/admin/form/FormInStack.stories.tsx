@@ -1,5 +1,6 @@
 import {
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSaveCancelButtonsLegacy,
@@ -9,7 +10,6 @@ import {
     StackSwitchApiContext,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
 } from "@comet/admin";
 import { Box, Button, Card, CardContent } from "@mui/material";
 import { SubmissionErrors } from "final-form";
@@ -49,7 +49,7 @@ function Page1() {
         <>
             <Box marginBottom={4}>
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button
                             color="primary"
