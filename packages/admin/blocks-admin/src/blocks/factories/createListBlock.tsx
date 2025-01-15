@@ -17,7 +17,7 @@ import { BlockPreviewContent } from "../common/blockRow/BlockPreviewContent";
 import { BlockRow } from "../common/blockRow/BlockRow";
 import { createBlockSkeleton } from "../helpers/createBlockSkeleton";
 import { deduplicateBlockDependencies } from "../helpers/deduplicateBlockDependencies";
-import { BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
+import { BlockCategory, BlockDependency, BlockInterface, BlockState, PreviewContent } from "../types";
 import { createUseAdminComponent } from "./listBlock/createUseAdminComponent";
 
 // Using {} instead of Record<string, never> because never and unknown are incompatible.
@@ -83,6 +83,7 @@ interface CreateListBlockOptions<T extends BlockInterface, AdditionalItemFields 
         onMenuClose: () => void;
     }>;
     AdditionalItemContent?: FunctionComponent<{ item: ListBlockItem<T, AdditionalItemFields> }>;
+    overrideCategory?: BlockCategory;
 }
 
 export function createListBlock<T extends BlockInterface, AdditionalItemFields extends Record<string, unknown> = DefaultAdditionalItemFields>({
@@ -97,6 +98,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
     additionalItemFields,
     AdditionalItemContextMenuItems,
     AdditionalItemContent,
+    overrideCategory,
 }: CreateListBlockOptions<T, AdditionalItemFields>): BlockInterface<
     ListBlockFragment<AdditionalItemFields>,
     ListBlockState<T, AdditionalItemFields>,
@@ -141,7 +143,7 @@ export function createListBlock<T extends BlockInterface, AdditionalItemFields e
                     : [],
         }),
 
-        category: block.category,
+        category: overrideCategory ?? block.category,
 
         input2State: (input) => {
             return {
