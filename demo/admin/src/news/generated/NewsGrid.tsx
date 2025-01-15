@@ -88,7 +88,7 @@ function NewsGridToolbar() {
             <ToolbarFillSpace />
             <ToolbarActions>
                 <Button startIcon={<AddIcon />} component={StackLink} pageName="add" payload="add" variant="contained" color="primary">
-                    <FormattedMessage id="news.newNewsGridEntry" defaultMessage="New News" />
+                    <FormattedMessage id="news.newsGrid.newEntry" defaultMessage="New News" />
                 </Button>
             </ToolbarActions>
         </DataGridToolbar>
