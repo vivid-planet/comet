@@ -1251,7 +1251,8 @@
                                 "textInput": "TextInput",
                                 "textArea": "TextArea",
                                 "select": "Select",
-                                "checkboxList": "CheckboxList"
+                                "checkboxList": "CheckboxList",
+                                "radio": "Radio"
                             },
                             "nullable": false
                         }
@@ -1288,7 +1289,8 @@
                                 "textInput": "TextInput",
                                 "textArea": "TextArea",
                                 "select": "Select",
-                                "checkboxList": "CheckboxList"
+                                "checkboxList": "CheckboxList",
+                                "radio": "Radio"
                             },
                             "nullable": false
                         }
@@ -2592,6 +2594,165 @@
                     ]
                 },
                 "nullable": true
+            }
+        ]
+    },
+    {
+        "name": "Radio",
+        "fields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "helperText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "items",
+                "kind": "Block",
+                "block": "RadioItems",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "label",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "mandatory",
+                "kind": "Boolean",
+                "nullable": false
+            },
+            {
+                "name": "helperText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "items",
+                "kind": "Block",
+                "block": "RadioItems",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "RadioItem",
+        "fields": [
+            {
+                "name": "label",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": false
+            },
+            {
+                "name": "helperText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "label",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            },
+            {
+                "name": "fieldName",
+                "kind": "String",
+                "nullable": true
+            },
+            {
+                "name": "helperText",
+                "kind": "Block",
+                "block": "RichText",
+                "nullable": false
+            }
+        ]
+    },
+    {
+        "name": "RadioItems",
+        "fields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "RadioItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
+            }
+        ],
+        "inputFields": [
+            {
+                "name": "blocks",
+                "kind": "NestedObjectList",
+                "object": {
+                    "fields": [
+                        {
+                            "name": "key",
+                            "kind": "String",
+                            "nullable": false
+                        },
+                        {
+                            "name": "visible",
+                            "kind": "Boolean",
+                            "nullable": false
+                        },
+                        {
+                            "name": "props",
+                            "kind": "Block",
+                            "block": "RadioItem",
+                            "nullable": false
+                        }
+                    ]
+                },
+                "nullable": false
             }
         ]
     },

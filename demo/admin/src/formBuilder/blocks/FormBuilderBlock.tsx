@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 
 import { FieldNamesContext } from "../utils/FieldNamesContext";
 import { CheckboxListBlock } from "./fields/CheckboxListBlock";
+import { RadioBlock } from "./fields/RadioBlock";
 import { SelectBlock } from "./fields/SelectBlock";
 import { TextAreaBlock } from "./fields/TextAreaBlock";
 import { TextInputBlock } from "./fields/TextInputBlock";
@@ -16,6 +17,7 @@ export const FormBuilderBlock = createBlocksBlock({
         textArea: TextAreaBlock,
         select: SelectBlock,
         checkboxList: CheckboxListBlock,
+        radio: RadioBlock,
     },
 });
 
