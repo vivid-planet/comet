@@ -75,14 +75,17 @@ const defaultRichTextRenderers: Renderers = {
      */
     entities: {
         // key is the entity key value from raw
-        LINK: (children, data: LinkBlockData, { key }) =>
-            isValidLink(data) ? (
-                <InlineLink key={key} data={data}>
+        LINK: (children, data: LinkBlockData, { key }) => {
+            const mergedKey = key + children?.toString();
+
+            return isValidLink(data) ? (
+                <InlineLink key={mergedKey} data={data}>
                     {children}
                 </InlineLink>
             ) : (
                 <span>{children}</span>
-            ),
+            );
+        },
     },
 };
 
