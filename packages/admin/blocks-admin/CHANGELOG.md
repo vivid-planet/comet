@@ -43,7 +43,8 @@
             variant: {
                 block: createCompositeBlockSelectField<string>({
                     defaultValue: "text-image",
-                    fieldProps: { label: "Variant", fullWidth: true },
+                    label: "Variant",
+                    fullWidth: true,
                     options: [
                         { value: "text-image", label: "Text Image" },
                         { value: "text-only", label: "Text Only" },
