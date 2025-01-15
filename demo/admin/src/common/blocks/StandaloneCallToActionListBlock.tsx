@@ -13,14 +13,13 @@ export const StandaloneCallToActionListBlock = createCompositeBlock(
             },
             alignment: {
                 block: createCompositeBlockSelectField<StandaloneCallToActionListBlockData["alignment"]>({
+                    label: <FormattedMessage id="standaloneCallToActionList.alignment" defaultMessage="Alignment" />,
                     defaultValue: "left",
                     options: [
                         { value: "left", label: <FormattedMessage id="standaloneCallToActionList.alignment.left" defaultMessage="left" /> },
                         { value: "center", label: <FormattedMessage id="standaloneCallToActionList.alignment.center" defaultMessage="center" /> },
                         { value: "right", label: <FormattedMessage id="standaloneCallToActionList.alignment.right" defaultMessage="right" /> },
                     ],
-                    label: <FormattedMessage id="standaloneCallToActionList.alignment" defaultMessage="Alignment" />,
-                    fullWidth: true,
                 }),
                 hiddenInSubroute: true,
             },
