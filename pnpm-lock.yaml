@@ -425,8 +425,8 @@ importers:
         specifier: ^6.0.0
         version: 6.2.8
       '@next/bundle-analyzer':
-        specifier: ^14.2.12
-        version: 14.2.12
+        specifier: ^14.2.23
+        version: 14.2.23
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.0
@@ -458,7 +458,7 @@ importers:
         specifier: ^11.0.1
         version: 11.0.2
       next:
-        specifier: ^14.2.22
+        specifier: ^14.2.23
         version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
@@ -558,7 +558,7 @@ importers:
         specifier: ^2.12.6
         version: 2.12.6(graphql@15.8.0)
       next:
-        specifier: ^14.2.22
+        specifier: ^14.2.23
         version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
@@ -2097,8 +2097,8 @@ importers:
         specifier: workspace:^7.11.0
         version: link:../eslint-plugin
       '@next/eslint-plugin-next':
-        specifier: ^14.0.0
-        version: 14.2.5
+        specifier: ^14.2.23
+        version: 14.2.23
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.48.2
         version: 5.49.0(@typescript-eslint/parser@5.49.0(eslint@8.57.1)(typescript@4.9.4))(eslint@8.57.1)(typescript@4.9.4)
@@ -2249,7 +2249,7 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0
       next:
-        specifier: ^14.2.22
+        specifier: ^14.2.23
         version: 14.2.23(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@types/react@18.3.18)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       npm-run-all:
         specifier: ^4.1.5
@@ -5276,11 +5276,14 @@ packages:
       '@nestjs/platform-express':
         optional: true
 
-  '@next/bundle-analyzer@14.2.12':
-    resolution: {integrity: sha512-X0ipzQcl3LoNErGnQKOI1dC1hu+FzltaogDuZAhkchuFi/1G+WnFJUVK5VBqXmXzRJPhpTxMfI4ZdTJjAl9Tmw==}
+  '@next/bundle-analyzer@14.2.23':
+    resolution: {integrity: sha512-BZJTrSZY1kemDMl8hOEu5Vj7Oy5rCa5ZPJ/bSAFPoaOQS21YVwX4xbZCEteCKu6FiXnTwnprxbGgEOmyhH0aoA==}
 
   '@next/env@14.2.23':
     resolution: {integrity: sha512-CysUC9IO+2Bh0omJ3qrb47S8DtsTKbFidGm6ow4gXIG6reZybqxbkH2nhdEm1tC8SmgzDdpq3BIML0PWsmyUYA==}
+
+  '@next/eslint-plugin-next@14.2.23':
+    resolution: {integrity: sha512-efRC7m39GoiU1fXZRgGySqYbQi6ZyLkuGlvGst7IwkTTczehQTJA/7PoMg4MMjUZvZEGpiSEu+oJBAjPawiC3Q==}
 
   '@next/eslint-plugin-next@14.2.5':
     resolution: {integrity: sha512-LY3btOpPh+OTIpviNojDpUdIbHW9j0JBYBjsIp8IxtDFfYFyORvw3yNq6N231FVqQA7n7lwaf7xHbVJlA1ED7g==}
@@ -20632,7 +20635,7 @@ snapshots:
     optionalDependencies:
       '@nestjs/platform-express': 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)
 
-  '@next/bundle-analyzer@14.2.12':
+  '@next/bundle-analyzer@14.2.23':
     dependencies:
       webpack-bundle-analyzer: 4.10.1
     transitivePeerDependencies:
@@ -20640,6 +20643,10 @@ snapshots:
       - utf-8-validate
 
   '@next/env@14.2.23': {}
+
+  '@next/eslint-plugin-next@14.2.23':
+    dependencies:
+      glob: 10.3.10
 
   '@next/eslint-plugin-next@14.2.5':
     dependencies:
