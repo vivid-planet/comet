@@ -2879,7 +2879,7 @@
             {
                 "name": "options",
                 "kind": "Block",
-                "block": "SelectOptionList",
+                "block": "SelectOptions",
                 "nullable": false
             }
         ],
@@ -2922,7 +2922,7 @@
             {
                 "name": "options",
                 "kind": "Block",
-                "block": "SelectOptionList",
+                "block": "SelectOptions",
                 "nullable": false
             }
         ]
@@ -2955,7 +2955,7 @@
         ]
     },
     {
-        "name": "SelectOptionList",
+        "name": "SelectOptions",
         "fields": [
             {
                 "name": "blocks",

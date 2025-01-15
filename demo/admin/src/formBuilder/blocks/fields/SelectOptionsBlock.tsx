@@ -1,5 +1,6 @@
 import { TextField } from "@comet/admin";
-import { BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
+import { BlockAdminComponent, BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
+import { SelectOptionsBlockData } from "@src/blocks.generated";
 import { FieldNamesContext } from "@src/formBuilder/utils/FieldNamesContext";
 import { DisplayFieldGroup, PropsAndValidationFieldGroup } from "@src/formBuilder/utils/FieldSection";
 import { FieldNameField } from "@src/formBuilder/utils/PropsAndValidationGroupFields";
@@ -37,14 +38,17 @@ export const SelectOptionsBlock: BlockInterface = createListBlock({
     itemsName: <FormattedMessage id="formBuilder.selectOptionsBlock.items" defaultMessage="items" />,
 });
 
-const OriginalAdminComponent = SelectOptionsBlock.AdminComponent;
-SelectOptionsBlock.AdminComponent = ({ ...props }) => {
-    // @ts-expect-error TODO: Fix this
-    const fieldNames = props.state.blocks.filter(({ visible, props }) => visible && props.fieldName).map(({ props }) => props.fieldName);
+const NewAdminComponent: BlockAdminComponent<SelectOptionsBlockData> = (props) => {
+    const fieldNames = props.state.blocks
+        .filter(({ visible, props }) => visible && props.fieldName)
+        .map(({ props }) => props.fieldName)
+        .filter((fieldName) => fieldName !== undefined);
 
     return (
         <FieldNamesContext.Provider value={fieldNames}>
-            <OriginalAdminComponent {...props} />
+            <SelectOptionsBlock.AdminComponent {...props} />
         </FieldNamesContext.Provider>
     );
 };
+
+SelectOptionsBlock.AdminComponent = NewAdminComponent;

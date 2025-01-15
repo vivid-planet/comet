@@ -1,4 +1,5 @@
-import { BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
+import { BlockAdminComponent, BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
+import { RadioItemsBlockData } from "@src/blocks.generated";
 import { RichTextBlockField } from "@src/formBuilder/blocks/common/RichTextBlock";
 import { FieldNamesContext } from "@src/formBuilder/utils/FieldNamesContext";
 import { DisplayFieldGroup, PropsAndValidationFieldGroup } from "@src/formBuilder/utils/FieldSection";
@@ -61,14 +62,17 @@ export const RadioItemsBlock: BlockInterface = createListBlock({
     itemsName: <FormattedMessage id="formBuilder.radioItemsBlock.itemsName" defaultMessage="items" />,
 });
 
-const OriginalAdminComponent = RadioItemsBlock.AdminComponent;
-RadioItemsBlock.AdminComponent = ({ ...props }) => {
-    // @ts-expect-error TODO: Fix this
-    const fieldNames = props.state.blocks.filter(({ visible, props }) => visible && props.fieldName).map(({ props }) => props.fieldName);
+const NewAdminComponent: BlockAdminComponent<RadioItemsBlockData> = (props) => {
+    const fieldNames = props.state.blocks
+        .filter(({ visible, props }) => visible && props.fieldName)
+        .map(({ props }) => props.fieldName)
+        .filter((fieldName) => fieldName !== undefined);
 
     return (
         <FieldNamesContext.Provider value={fieldNames}>
-            <OriginalAdminComponent {...props} />
+            <RadioItemsBlock.AdminComponent {...props} />
         </FieldNamesContext.Provider>
     );
 };
+
+RadioItemsBlock.AdminComponent = NewAdminComponent;

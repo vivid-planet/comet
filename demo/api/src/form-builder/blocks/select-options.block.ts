@@ -27,4 +27,4 @@ class SelectOptionBlockInput extends BlockInput {
 
 const SelectOptionBlock = createBlock(SelectOptionBlockData, SelectOptionBlockInput, "SelectOption");
 
-export const SelectOptionsBlock = createListBlock({ block: SelectOptionBlock }, "SelectOptionList");
+export const SelectOptionsBlock = createListBlock({ block: SelectOptionBlock }, "SelectOptions");

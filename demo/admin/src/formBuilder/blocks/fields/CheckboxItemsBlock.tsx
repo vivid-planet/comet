@@ -1,4 +1,5 @@
-import { BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
+import { BlockAdminComponent, BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
+import { CheckboxItemsBlockData } from "@src/blocks.generated";
 import { RichTextBlockField } from "@src/formBuilder/blocks/common/RichTextBlock";
 import { FieldNamesContext } from "@src/formBuilder/utils/FieldNamesContext";
 import { DisplayFieldGroup } from "@src/formBuilder/utils/FieldSection";
@@ -60,14 +61,17 @@ export const CheckboxItemsBlock: BlockInterface = createListBlock({
     itemsName: <FormattedMessage id="formBuilder.checkboxItemsBlock.itemsName" defaultMessage="items" />,
 });
 
-const OriginalAdminComponent = CheckboxItemsBlock.AdminComponent;
-CheckboxItemsBlock.AdminComponent = ({ ...props }) => {
-    // @ts-expect-error TODO: Fix this
-    const fieldNames = props.state.blocks.filter(({ visible, props }) => visible && props.fieldName).map(({ props }) => props.fieldName);
+const NewAdminComponent: BlockAdminComponent<CheckboxItemsBlockData> = (props) => {
+    const fieldNames = props.state.blocks
+        .filter(({ visible, props }) => visible && props.fieldName)
+        .map(({ props }) => props.fieldName)
+        .filter((fieldName) => fieldName !== undefined);
 
     return (
         <FieldNamesContext.Provider value={fieldNames}>
-            <OriginalAdminComponent {...props} />
+            <CheckboxItemsBlock.AdminComponent {...props} />
         </FieldNamesContext.Provider>
     );
 };
+
+CheckboxItemsBlock.AdminComponent = NewAdminComponent;
