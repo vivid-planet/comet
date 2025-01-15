@@ -32,7 +32,7 @@
         "@comet/cms-admin": "workspace:*",
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
-        "@fontsource-variable/roboto-flex": "^5.0.14",
+        "@fontsource-variable/roboto-flex": "^5.1.1",
         "@mui/material": "^6.3.0",
         "@mui/system": "^6.3.0",
         "@mui/x-data-grid": "^7.23.5",
