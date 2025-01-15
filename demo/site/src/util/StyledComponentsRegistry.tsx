@@ -1,5 +1,5 @@
 "use client";
-import theme from "@src/theme";
+import { theme } from "@src/theme";
 import { useServerInsertedHTML } from "next/navigation";
 import { PropsWithChildren, useState } from "react";
 import { ServerStyleSheet, StyleSheetManager, ThemeProvider } from "styled-components";

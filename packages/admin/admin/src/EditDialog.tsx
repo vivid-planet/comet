@@ -142,16 +142,14 @@ const EditDialogInner = ({
     return (
         <SaveBoundary onAfterSave={handleAfterSave}>
             <Dialog open={isOpen} onClose={handleCloseClick} {...componentsProps?.dialog}>
-                <div>
-                    <DialogTitle {...componentsProps?.dialogTitle}>
-                        {typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}
-                    </DialogTitle>
-                    <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
-                    <DialogActions {...componentsProps?.dialogActions}>
-                        <CancelButton onClick={handleCancelClick} />
-                        <SaveBoundarySaveButton disabled={false} />
-                    </DialogActions>
-                </div>
+                <DialogTitle {...componentsProps?.dialogTitle}>
+                    {typeof title === "string" ? title : selection.mode === "edit" ? title.edit : title.add}
+                </DialogTitle>
+                <DialogContent {...componentsProps?.dialogContent}>{children}</DialogContent>
+                <DialogActions {...componentsProps?.dialogActions}>
+                    <CancelButton onClick={handleCancelClick} />
+                    <SaveBoundarySaveButton disabled={false} />
+                </DialogActions>
             </Dialog>
         </SaveBoundary>
     );

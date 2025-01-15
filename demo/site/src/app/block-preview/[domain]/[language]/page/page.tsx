@@ -2,7 +2,7 @@
 
 import { useBlockPreviewFetch, useIFrameBridge } from "@comet/cms-site";
 import { PageContentBlockData } from "@src/blocks.generated";
-import { PageContentBlock } from "@src/blocks/PageContentBlock";
+import { PageContentBlock } from "@src/documents/pages/blocks/PageContentBlock";
 import { recursivelyLoadBlockData } from "@src/recursivelyLoadBlockData";
 import { withBlockPreview } from "@src/util/blockPreview";
 import { useEffect, useState } from "react";

@@ -3,7 +3,7 @@ import { IconName } from "@comet/admin-icons";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { IconProps } from "@mui/material";
-import { GridSortDirection } from "@mui/x-data-grid";
+import { GridFilterItem, GridSortDirection } from "@mui/x-data-grid";
 import { promises as fs } from "fs";
 import { glob } from "glob";
 import { introspectionFromSchema } from "graphql";
@@ -51,7 +51,7 @@ export type FormFieldConfig<T> = (
       }
     | { type: "boolean"; name: keyof T }
     | { type: "date"; name: keyof T }
-    // TODO | { type: "dateTime" }
+    | { type: "dateTime" } // TODO add InputBaseFieldConfig once merged (!2645)
     | { type: "staticSelect"; name: keyof T; values?: Array<{ value: string; label: string } | string>; inputType?: "select" | "radio" }
     | {
           type: "asyncSelect";
@@ -146,6 +146,11 @@ export type GridColumnConfig<T> = (
 
 export type ActionsGridColumnConfig = { type: "actions"; component?: ImportReference } & BaseColumnConfig;
 
+type InitialFilterConfig = {
+    items: GridFilterItem[];
+    linkOperator?: "and" | "or";
+};
+
 export type GridConfig<T extends { __typename?: string }> = {
     type: "grid";
     gqlType: T["__typename"];
@@ -161,6 +166,7 @@ export type GridConfig<T extends { __typename?: string }> = {
     copyPaste?: boolean;
     readOnly?: boolean;
     initialSort?: Array<{ field: string; sort: GridSortDirection }>;
+    initialFilter?: InitialFilterConfig;
     filterProp?: boolean;
     toolbar?: boolean;
     toolbarActionProp?: boolean;
