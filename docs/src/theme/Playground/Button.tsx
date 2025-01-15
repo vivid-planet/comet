@@ -1,5 +1,3 @@
-import React from "react";
-
 import styles from "./button.module.css";
 
 interface ButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {

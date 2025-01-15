@@ -58,14 +58,5 @@
     },
     "dependencies": {
         "@changesets/cli": "^2.27.11"
-    },
-    "pnpm": {
-        "packageExtensions": {
-            "@docusaurus/theme-live-codeblock": {
-                "peerDependencies": {
-                    "react-live": "^2.4.1"
-                }
-            }
-        }
     }
 }
