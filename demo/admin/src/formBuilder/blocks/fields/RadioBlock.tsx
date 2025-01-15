@@ -1,41 +1,119 @@
 import { Field, TextField } from "@comet/admin";
-import { BlockInterface, BlocksFinalForm, createFinalFormBlock, HiddenInSubroute } from "@comet/blocks-admin";
+import {
+    BlockAdminComponent,
+    BlockInterface,
+    BlocksFinalForm,
+    createBlockSkeleton,
+    createFinalFormBlock,
+    createListBlock,
+    HiddenInSubroute,
+} from "@comet/blocks-admin";
 import { Paper, Typography } from "@mui/material";
+import { RadioItemsBlockData } from "@src/blocks.generated";
+import { RichTextBlockField } from "@src/formBuilder/blocks/common/RichTextBlock";
 import { createFieldBlock } from "@src/formBuilder/utils/createFieldBlock";
-import { DisplayFieldGroup } from "@src/formBuilder/utils/FieldSection";
-import { PropsAndValidationGroupFields } from "@src/formBuilder/utils/PropsAndValidationGroupFields";
+import { FieldNamesContext } from "@src/formBuilder/utils/FieldNamesContext";
+import { DisplayFieldGroup, PropsAndValidationFieldGroup } from "@src/formBuilder/utils/FieldSection";
+import { FieldNameField, PropsAndValidationGroupFields } from "@src/formBuilder/utils/PropsAndValidationGroupFields";
 import { FormattedMessage } from "react-intl";
 
 import { HelperTextBlockField, RichTextBlock } from "../common/RichTextBlock";
-import { RadioItemsBlock } from "./RadioItemsBlock";
 
-const FinalFormRadioItemsBlock = createFinalFormBlock(RadioItemsBlock);
+const ItemBlock: BlockInterface = {
+    ...createBlockSkeleton(),
+    name: "RadioItem",
+    displayName: <FormattedMessage id="formBuilder.radioItemBlock.displayName" defaultMessage="Radio Item" />,
+    previewContent: (state) => [{ type: "text", content: state.label.editorState.getCurrentContent().getPlainText() }],
+    isValid: (state) => Boolean(state.fieldName),
+    input2State: (input) => ({
+        ...input,
+        label: RichTextBlock.input2State(input.label),
+        helperText: RichTextBlock.input2State(input.helperText),
+    }),
+    state2Output: (state) => ({
+        ...state,
+        label: RichTextBlock.state2Output(state.label),
+        helperText: RichTextBlock.state2Output(state.helperText),
+    }),
+    output2State: async (output, context) => ({
+        ...output,
+        label: await RichTextBlock.output2State(output.label, context),
+        helperText: await RichTextBlock.output2State(output.helperText, context),
+    }),
+    createPreviewState: (state, previewCtx) => ({
+        ...state,
+        label: RichTextBlock.createPreviewState(state.label, previewCtx),
+        helperText: RichTextBlock.createPreviewState(state.helperText, previewCtx),
+    }),
+    defaultValues: () => ({
+        label: RichTextBlock.defaultValues(),
+        helperText: RichTextBlock.defaultValues(),
+        fieldName: "",
+    }),
+    AdminComponent: ({ state, updateState }) => {
+        return (
+            <BlocksFinalForm onSubmit={updateState} initialValues={state}>
+                <DisplayFieldGroup>
+                    <RichTextBlockField name="label" label={<FormattedMessage id="formBuilder.radioItemBlock.label" defaultMessage="Label" />} />
+                    <HelperTextBlockField />
+                </DisplayFieldGroup>
+                <PropsAndValidationFieldGroup>
+                    <FieldNameField nameOfSlugSource="label" name="fieldName" />
+                </PropsAndValidationFieldGroup>
+            </BlocksFinalForm>
+        );
+    },
+};
+
+const ItemsBlock: BlockInterface = createListBlock({
+    name: "RadioItems",
+    displayName: <FormattedMessage id="formBuilder.radioItemsBlock.displayName" defaultMessage="Radio Items" />,
+    block: ItemBlock,
+    itemName: <FormattedMessage id="formBuilder.radioItemsBlock.itemName" defaultMessage="item" />,
+    itemsName: <FormattedMessage id="formBuilder.radioItemsBlock.itemsName" defaultMessage="items" />,
+});
+
+const OriginalAdminComponent = ItemsBlock.AdminComponent;
+const ItemsBlockAdminComponent: BlockAdminComponent<RadioItemsBlockData> = (props) => {
+    const fieldNames = props.state.blocks
+        .filter(({ visible, props }) => visible && props.fieldName)
+        .map(({ props }) => props.fieldName)
+        .filter((fieldName) => fieldName !== undefined);
+
+    return (
+        <FieldNamesContext.Provider value={fieldNames}>
+            <OriginalAdminComponent {...props} />
+        </FieldNamesContext.Provider>
+    );
+};
+ItemsBlock.AdminComponent = ItemsBlockAdminComponent;
+const FinalFormItemsBlock = createFinalFormBlock(ItemsBlock);
 
 export const RadioBlock: BlockInterface = createFieldBlock({
     name: "Radio",
     displayName: <FormattedMessage id="formBuilder.radioBlock.displayName" defaultMessage="Radio Button List" />,
     input2State: (input) => ({
         ...input,
-        items: RadioItemsBlock.input2State(input.items),
+        items: ItemsBlock.input2State(input.items),
     }),
     state2Output: (state) => ({
         ...state,
-        items: RadioItemsBlock.state2Output(state.items),
+        items: ItemsBlock.state2Output(state.items),
     }),
     output2State: async (output, context) => ({
         ...output,
-        items: await RadioItemsBlock.output2State(output.items, context),
+        items: await ItemsBlock.output2State(output.items, context),
     }),
     createPreviewState: (state, previewCtx) => ({
         ...state,
-        items: RadioItemsBlock.createPreviewState(state.items, previewCtx),
+        items: ItemsBlock.createPreviewState(state.items, previewCtx),
     }),
     defaultValues: () => ({
         label: "",
         helperText: RichTextBlock.defaultValues(),
         mandatory: false,
         fieldName: "",
-        items: RadioItemsBlock.defaultValues(),
+        items: ItemsBlock.defaultValues(),
     }),
     AdminComponent: ({ state, updateState }) => {
         return (
@@ -52,7 +130,7 @@ export const RadioBlock: BlockInterface = createFieldBlock({
                         </Typography>
                     </Paper>
                 </HiddenInSubroute>
-                <Field name="items" component={FinalFormRadioItemsBlock} fullWidth />
+                <Field name="items" component={FinalFormItemsBlock} fullWidth />
             </BlocksFinalForm>
         );
     },

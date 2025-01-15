@@ -1,11 +1,47 @@
-import { BlockDataInterface, BlockField, ChildBlock, ChildBlockInput, createBlock, ExtractBlockInput, inputToData } from "@comet/blocks-api";
+import {
+    BlockData,
+    BlockDataInterface,
+    BlockField,
+    BlockInput,
+    ChildBlock,
+    ChildBlockInput,
+    createBlock,
+    createListBlock,
+    ExtractBlockInput,
+    inputToData,
+} from "@comet/blocks-api";
 import { IsEnum, IsOptional, IsString } from "class-validator";
 
 import { BaseFieldBlockData, BaseFieldBlockInput } from "./base-field.block";
-import { SelectOptionsBlock } from "./select-options.block";
+
+class OptionBlockData extends BlockData {
+    @BlockField()
+    text: string;
+
+    @BlockField()
+    fieldName: string;
+}
+
+class OptionBlockInput extends BlockInput {
+    @IsString()
+    @IsOptional()
+    @BlockField({ nullable: true })
+    text?: string;
+
+    @IsString()
+    @IsOptional()
+    @BlockField({ nullable: true })
+    fieldName?: string;
+
+    transformToBlockData(): OptionBlockData {
+        return inputToData(OptionBlockData, this);
+    }
+}
+
+const OptionBlock = createBlock(OptionBlockData, OptionBlockInput, "SelectOption");
+const OptionsBlock = createListBlock({ block: OptionBlock }, "SelectOptions");
 
 const selectTypes = ["singleSelect", "multiSelect"];
-
 type SelectType = (typeof selectTypes)[number];
 
 class SelectBlockData extends BaseFieldBlockData {
@@ -15,7 +51,7 @@ class SelectBlockData extends BaseFieldBlockData {
     @BlockField({ nullable: true })
     placeholder?: string;
 
-    @ChildBlock(SelectOptionsBlock)
+    @ChildBlock(OptionsBlock)
     options: BlockDataInterface;
 }
 
@@ -29,14 +65,12 @@ class SelectBlockInput extends BaseFieldBlockInput {
     @BlockField({ nullable: true })
     placeholder?: string;
 
-    @ChildBlockInput(SelectOptionsBlock)
-    options: ExtractBlockInput<typeof SelectOptionsBlock>;
+    @ChildBlockInput(OptionsBlock)
+    options: ExtractBlockInput<typeof OptionsBlock>;
 
     transformToBlockData(): SelectBlockData {
         return inputToData(SelectBlockData, this);
     }
 }
 
-export const SelectBlock = createBlock(SelectBlockData, SelectBlockInput, {
-    name: "Select",
-});
+export const SelectBlock = createBlock(SelectBlockData, SelectBlockInput, "Select");
