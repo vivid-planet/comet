@@ -2,13 +2,13 @@
 
 import { hasRichTextBlockContent, PropsWithData, withPreview } from "@comet/cms-site";
 import { TextInputBlockData } from "@src/blocks.generated";
-import { InfoTextBlock } from "@src/form-builder/blocks/common/InfoTextBlock";
 import { HTMLInputTypeAttribute } from "react";
 import { Field, FieldRenderProps } from "react-final-form";
 import { styled } from "styled-components";
 
 import { textInputStyles } from "../../common/formStyles";
 import { Label } from "../../common/Label";
+import { HelperTextBlock } from "../common/HelperTextBlock";
 
 type Props = PropsWithData<TextInputBlockData> & {
     formId: string;
@@ -22,7 +22,7 @@ const typeAttributeMap: Record<TextInputBlockData["inputType"], HTMLInputTypeAtt
 };
 
 export const TextInputBlock = withPreview(
-    ({ data: { label, fieldName, mandatory, infoText, inputType, placeholder, unit }, formId }: Props) => {
+    ({ data: { label, fieldName, mandatory, helperText, inputType, placeholder, unit }, formId }: Props) => {
         if (!fieldName) return null;
 
         const uniqueId = `${formId}-${fieldName}`;
@@ -51,8 +51,7 @@ export const TextInputBlock = withPreview(
                 ) : (
                     fieldNode
                 )}
-
-                {hasRichTextBlockContent(infoText) && <InfoTextBlock data={infoText} />}
+                {hasRichTextBlockContent(helperText) && <HelperTextBlock data={helperText} />}
             </div>
         );
     },

@@ -1,15 +1,15 @@
 import { hasRichTextBlockContent, PropsWithData } from "@comet/cms-site";
 import { SelectBlockData } from "@src/blocks.generated";
-import { InfoTextBlock } from "@src/form-builder/blocks/common/InfoTextBlock";
 import { Field } from "react-final-form";
 
 import { Label } from "../../common/Label";
+import { HelperTextBlock } from "../common/HelperTextBlock";
 
 interface Props extends PropsWithData<SelectBlockData> {
     formId: string;
 }
 
-export function SelectBlock({ data: { selectType, placeholder, label, fieldName, infoText, mandatory, options }, formId }: Props) {
+export function SelectBlock({ data: { selectType, placeholder, label, fieldName, helperText, mandatory, options }, formId }: Props) {
     if (!fieldName) return null;
 
     const uniqueId = `${formId}-${fieldName}`;
@@ -35,7 +35,7 @@ export function SelectBlock({ data: { selectType, placeholder, label, fieldName,
                     </select>
                 )}
             </Field>
-            {hasRichTextBlockContent(infoText) && <InfoTextBlock data={infoText} />}
+            {hasRichTextBlockContent(helperText) && <HelperTextBlock data={helperText} />}
         </div>
     );
 }

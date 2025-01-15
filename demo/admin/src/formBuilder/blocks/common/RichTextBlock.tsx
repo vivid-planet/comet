@@ -1,11 +1,11 @@
-import { Field } from "@comet/admin";
+import { Field, FieldProps } from "@comet/admin";
 import { createFinalFormBlock } from "@comet/blocks-admin";
 import { createRichTextBlock } from "@comet/cms-admin";
 import { LinkBlock } from "@src/common/blocks/LinkBlock";
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 
-export const FieldInfoTextBlock = createRichTextBlock({
+export const RichTextBlock = createRichTextBlock({
     link: LinkBlock,
     rte: {
         maxBlocks: 1,
@@ -15,14 +15,16 @@ export const FieldInfoTextBlock = createRichTextBlock({
     minHeight: "40px",
 });
 
-const FinalFormFieldInfoTextBlock = createFinalFormBlock(FieldInfoTextBlock);
+const FinalFormRichTextBlock = createFinalFormBlock(RichTextBlock);
 
-type FieldInfoTextBlockFieldProps = {
+type HelperTextFieldProps = {
     name?: string;
     label?: ReactNode;
 };
 
-export const FieldInfoTextBlockField = ({
-    name = "infoText",
-    label = <FormattedMessage id="formBuilder.infoText" defaultMessage="Info Text" />,
-}: FieldInfoTextBlockFieldProps) => <Field label={label} name={name} component={FinalFormFieldInfoTextBlock} fullWidth />;
+export const HelperTextBlockField = ({
+    name = "helperText",
+    label = <FormattedMessage id="formBuilder.helperText" defaultMessage="Helper Text" />,
+}: HelperTextFieldProps) => <RichTextBlockField label={label} name={name} />;
+
+export const RichTextBlockField = (p: FieldProps) => <Field component={FinalFormRichTextBlock} fullWidth {...p} />;

@@ -23,7 +23,7 @@ export class BaseFieldBlockData extends BlockData {
     mandatory: boolean;
 
     @ChildBlock(RichTextBlock)
-    infoText?: BlockDataInterface;
+    helperText?: BlockDataInterface;
 }
 
 export class BaseFieldBlockInput extends BlockInput {
@@ -42,7 +42,7 @@ export class BaseFieldBlockInput extends BlockInput {
     mandatory: boolean;
 
     @ChildBlockInput(RichTextBlock)
-    infoText?: ExtractBlockInput<typeof RichTextBlock>;
+    helperText?: ExtractBlockInput<typeof RichTextBlock>;
 
     transformToBlockData(): BaseFieldBlockData {
         return inputToData(BaseFieldBlockData, this);

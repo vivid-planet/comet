@@ -24,7 +24,7 @@ class CheckboxItemBlockData extends BlockData {
     mandatory: boolean;
 
     @ChildBlock(RichTextBlock)
-    infoText: BlockDataInterface;
+    helperText: BlockDataInterface;
 }
 
 class CheckboxItemBlockInput extends BlockInput {
@@ -41,7 +41,7 @@ class CheckboxItemBlockInput extends BlockInput {
     mandatory: boolean;
 
     @ChildBlockInput(RichTextBlock)
-    infoText?: ExtractBlockInput<typeof RichTextBlock>;
+    helperText?: ExtractBlockInput<typeof RichTextBlock>;
 
     transformToBlockData(): CheckboxItemBlockData {
         // TODO: Combine this with `BaseFieldBlockInput` -> `getBlockDataWithUpdatedFieldName` and make sure `fieldName` is always unique

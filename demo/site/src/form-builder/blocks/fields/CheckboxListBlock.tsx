@@ -2,15 +2,29 @@
 
 import { hasRichTextBlockContent, PropsWithData } from "@comet/cms-site";
 import { CheckboxListBlockData } from "@src/blocks.generated";
-import { InfoTextBlock } from "@src/form-builder/blocks/common/InfoTextBlock";
+import { createTextBlockRenderFn, defaultRichTextRenderers, RichTextBlock, RichTextBlockProps } from "@src/common/blocks/RichTextBlock";
 import { Field } from "react-final-form";
 import styled from "styled-components";
+
+import { HelperTextBlock } from "../common/HelperTextBlock";
+
+const LabelBlock = (props: RichTextBlockProps) => (
+    <RichTextBlock
+        renderers={{
+            ...defaultRichTextRenderers,
+            blocks: {
+                unstyled: createTextBlockRenderFn({ variant: "p200" }),
+            },
+        }}
+        {...props}
+    />
+);
 
 interface Props extends PropsWithData<CheckboxListBlockData> {
     formId: string;
 }
 
-export const CheckboxListBlock = ({ data: { label, fieldName, infoText, items, mandatory }, formId }: Props) => {
+export const CheckboxListBlock = ({ data: { label, fieldName, helperText, items, mandatory }, formId }: Props) => {
     if (!fieldName) return null;
 
     return (
@@ -19,6 +33,7 @@ export const CheckboxListBlock = ({ data: { label, fieldName, infoText, items, m
                 {label}
                 {mandatory && <span>*</span>}
             </div>
+            {hasRichTextBlockContent(helperText) && <HelperTextBlock data={helperText} />}
             <CheckboxList>
                 {items.blocks.map(({ props }) => {
                     const uniqueId = `${formId}-${fieldName}-${props.fieldName}`;
@@ -31,16 +46,15 @@ export const CheckboxListBlock = ({ data: { label, fieldName, infoText, items, m
                                 <CheckboxItem>
                                     <input {...input} type="checkbox" />
                                     <span>
-                                        <InfoTextBlock data={props.label} />
+                                        <LabelBlock data={props.label} />
                                         {props.mandatory && <span>*</span>}
                                     </span>
-                                    {hasRichTextBlockContent(props.infoText) && <InfoTextBlock data={props.infoText} />}
+                                    {hasRichTextBlockContent(props.helperText) && <HelperTextBlock data={props.helperText} />}
                                 </CheckboxItem>
                             )}
                         />
                     );
                 })}
-                {hasRichTextBlockContent(infoText) && <InfoTextBlock data={infoText} />}
             </CheckboxList>
         </>
     );

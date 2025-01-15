@@ -7,4 +7,4 @@ const renderers = {
     },
 };
 
-export const InfoTextBlock = (props: RichTextBlockProps) => <RichTextBlock renderers={renderers} {...props} />;
+export const HelperTextBlock = (props: RichTextBlockProps) => <RichTextBlock renderers={renderers} {...props} />;

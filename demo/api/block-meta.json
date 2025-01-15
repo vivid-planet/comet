@@ -453,7 +453,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -477,7 +477,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -560,7 +560,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -589,7 +589,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -2696,7 +2696,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -2739,7 +2739,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -3487,7 +3487,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -3515,7 +3515,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -3605,7 +3605,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false
@@ -3649,7 +3649,7 @@
                 "nullable": false
             },
             {
-                "name": "infoText",
+                "name": "helperText",
                 "kind": "Block",
                 "block": "RichText",
                 "nullable": false

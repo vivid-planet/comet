@@ -1,10 +1,11 @@
 import { BlockInterface, BlocksFinalForm, createBlockSkeleton, createListBlock } from "@comet/blocks-admin";
+import { RichTextBlockField } from "@src/formBuilder/blocks/common/RichTextBlock";
 import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
 import { FieldNamesContext } from "@src/formBuilder/utils/FieldNamesContext";
 import { PropsAndValidationGroup } from "@src/formBuilder/utils/PropsAndValidationGroup";
 import { FormattedMessage } from "react-intl";
 
-import { FieldInfoTextBlock, FieldInfoTextBlockField } from "../common/FieldInfoTextBlock";
+import { HelperTextBlockField, RichTextBlock } from "../common/RichTextBlock";
 
 const CheckboxItemBlock: BlockInterface = {
     ...createBlockSkeleton(),
@@ -14,30 +15,27 @@ const CheckboxItemBlock: BlockInterface = {
     isValid: (state) => Boolean(state.fieldName),
     input2State: (input) => ({
         ...input,
-        label: FieldInfoTextBlock.input2State(input.label),
-        infoText: FieldInfoTextBlock.input2State(input.infoText),
+        label: RichTextBlock.input2State(input.label),
+        helperText: RichTextBlock.input2State(input.helperText),
     }),
-    state2Output: (state) => {
-        const output = {
-            ...state,
-            label: FieldInfoTextBlock.state2Output(state.label),
-            infoText: FieldInfoTextBlock.state2Output(state.infoText),
-        };
-        return output;
-    },
+    state2Output: (state) => ({
+        ...state,
+        label: RichTextBlock.state2Output(state.label),
+        helperText: RichTextBlock.state2Output(state.helperText),
+    }),
     output2State: async (output, context) => ({
         ...output,
-        label: await FieldInfoTextBlock.output2State(output.label, context),
-        infoText: await FieldInfoTextBlock.output2State(output.infoText, context),
+        label: await RichTextBlock.output2State(output.label, context),
+        helperText: await RichTextBlock.output2State(output.helperText, context),
     }),
     createPreviewState: (state, previewCtx) => ({
         ...state,
-        label: FieldInfoTextBlock.createPreviewState(state.label, previewCtx),
-        infoText: FieldInfoTextBlock.createPreviewState(state.infoText, previewCtx),
+        label: RichTextBlock.createPreviewState(state.label, previewCtx),
+        helperText: RichTextBlock.createPreviewState(state.helperText, previewCtx),
     }),
     defaultValues: () => ({
-        label: FieldInfoTextBlock.defaultValues(),
-        infoText: FieldInfoTextBlock.defaultValues(),
+        label: RichTextBlock.defaultValues(),
+        helperText: RichTextBlock.defaultValues(),
         fieldName: "",
         mandatory: false,
     }),
@@ -45,11 +43,8 @@ const CheckboxItemBlock: BlockInterface = {
         return (
             <BlocksFinalForm onSubmit={updateState} initialValues={state}>
                 <DisplaySection>
-                    <FieldInfoTextBlockField name="label" label={<FormattedMessage id="blocks.checkboxItems.label" defaultMessage="Label" />} />
-                    <FieldInfoTextBlockField
-                        name="infoText"
-                        label={<FormattedMessage id="blocks.checkboxItems.infoText" defaultMessage="Info Text" />}
-                    />
+                    <RichTextBlockField name="label" label={<FormattedMessage id="blocks.checkboxItems.label" defaultMessage="Label" />} />
+                    <HelperTextBlockField />
                 </DisplaySection>
                 <PropsAndValidationGroup />
             </BlocksFinalForm>

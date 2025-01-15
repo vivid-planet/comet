@@ -6,7 +6,7 @@ import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
 import { FormattedMessage } from "react-intl";
 
 import { PropsAndValidationGroup } from "../../utils/PropsAndValidationGroup";
-import { FieldInfoTextBlock, FieldInfoTextBlockField } from "../common/FieldInfoTextBlock";
+import { HelperTextBlockField, RichTextBlock } from "../common/RichTextBlock";
 
 const inputTypeOptions: Array<SelectFieldOption<TextInputBlockData["inputType"]>> = [
     { value: "text", label: <FormattedMessage id="blocks.textInput.type.text" defaultMessage="Text" /> },
@@ -23,7 +23,7 @@ export const TextInputBlock = createFieldBlock({
         label: "",
         placeholder: "",
         unit: "",
-        infoText: FieldInfoTextBlock.defaultValues(),
+        helperText: RichTextBlock.defaultValues(),
         mandatory: false,
         fieldName: "",
     }),
@@ -47,7 +47,7 @@ export const TextInputBlock = createFieldBlock({
                     {state?.inputType === "number" && (
                         <TextField name="unit" label={<FormattedMessage id="blocks.textInput.unit" defaultMessage="Unit" />} fullWidth />
                     )}
-                    <FieldInfoTextBlockField />
+                    <HelperTextBlockField />
                 </DisplaySection>
                 <PropsAndValidationGroup />
             </BlocksFinalForm>

@@ -1,13 +1,12 @@
 import { Field, TextField } from "@comet/admin";
 import { BlockInterface, BlocksFinalForm, createFinalFormBlock, HiddenInSubroute } from "@comet/blocks-admin";
 import { Paper, Typography } from "@mui/material";
-import { FieldInfoTextBlockField } from "@src/formBuilder/blocks/common/FieldInfoTextBlock";
 import { createFieldBlock } from "@src/formBuilder/utils/createFieldBlock";
 import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
 import { PropsAndValidationGroup } from "@src/formBuilder/utils/PropsAndValidationGroup";
 import { FormattedMessage } from "react-intl";
 
-import { FieldInfoTextBlock } from "../common/FieldInfoTextBlock";
+import { HelperTextBlockField, RichTextBlock } from "../common/RichTextBlock";
 import { CheckboxItemsBlock } from "./CheckboxItemsBlock";
 
 const FinalFormCheckboxItemsBlock = createFinalFormBlock(CheckboxItemsBlock);
@@ -33,7 +32,7 @@ export const CheckboxListBlock: BlockInterface = createFieldBlock({
     }),
     defaultValues: () => ({
         label: "",
-        infoText: FieldInfoTextBlock.defaultValues(),
+        helperText: RichTextBlock.defaultValues(),
         mandatory: false,
         fieldName: "",
         items: CheckboxItemsBlock.defaultValues(),
@@ -44,7 +43,7 @@ export const CheckboxListBlock: BlockInterface = createFieldBlock({
                 <HiddenInSubroute>
                     <DisplaySection>
                         <TextField name="label" label={<FormattedMessage id="formBuilder.checkboxList.label" defaultMessage="Label" />} fullWidth />
-                        <FieldInfoTextBlockField />
+                        <HelperTextBlockField />
                     </DisplaySection>
                     <PropsAndValidationGroup />
                     <Paper variant="outlined" sx={{ p: 4 }}>

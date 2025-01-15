@@ -1,5 +1,6 @@
 import { BlockCategory, BlockInterface, createBlockSkeleton } from "@comet/blocks-admin";
-import { FieldInfoTextBlock } from "@src/formBuilder/blocks/common/FieldInfoTextBlock";
+
+import { RichTextBlock } from "../blocks/common/RichTextBlock";
 
 type RequiredSettings = "name" | "displayName" | "defaultValues" | "AdminComponent";
 
@@ -19,28 +20,28 @@ export const createFieldBlock = (settings: Settings): BlockInterface => {
         input2State: (input) => {
             const newState = {
                 ...input,
-                infoText: input.infoText ? FieldInfoTextBlock.input2State(input.infoText) : FieldInfoTextBlock.defaultValues(),
+                helperText: input.helperText ? RichTextBlock.input2State(input.helperText) : RichTextBlock.defaultValues(),
             };
             return settings.input2State ? settings.input2State(newState) : newState;
         },
         state2Output: (state) => {
             const newState = {
                 ...state,
-                infoText: FieldInfoTextBlock.state2Output(state.infoText),
+                helperText: RichTextBlock.state2Output(state.helperText),
             };
             return settings.state2Output ? settings.state2Output(newState) : newState;
         },
         output2State: async (output, context) => {
             const newState = {
                 ...output,
-                infoText: await FieldInfoTextBlock.output2State(output.infoText, context),
+                helperText: await RichTextBlock.output2State(output.helperText, context),
             };
             return settings.output2State ? settings.output2State(newState, context) : newState;
         },
         createPreviewState: (state, previewCtx) => {
             const newState = {
                 ...state,
-                infoText: FieldInfoTextBlock.createPreviewState(state.infoText, previewCtx),
+                helperText: RichTextBlock.createPreviewState(state.helperText, previewCtx),
             };
             return settings.createPreviewState ? settings.createPreviewState(newState, previewCtx) : newState;
         },

@@ -5,7 +5,7 @@ import { DisplaySection } from "@src/formBuilder/utils/DisplaySection";
 import { PropsAndValidationGroup } from "@src/formBuilder/utils/PropsAndValidationGroup";
 import { FormattedMessage } from "react-intl";
 
-import { FieldInfoTextBlock, FieldInfoTextBlockField } from "../common/FieldInfoTextBlock";
+import { HelperTextBlockField, RichTextBlock } from "../common/RichTextBlock";
 
 export const TextAreaBlock = createFieldBlock({
     name: "TextArea",
@@ -13,7 +13,7 @@ export const TextAreaBlock = createFieldBlock({
     defaultValues: () => ({
         label: "",
         placeholder: "",
-        infoText: FieldInfoTextBlock.defaultValues(),
+        helperText: RichTextBlock.defaultValues(),
         mandatory: false,
         fieldName: "",
     }),
@@ -27,7 +27,7 @@ export const TextAreaBlock = createFieldBlock({
                         label={<FormattedMessage id="blocks.textArea.placeholderText" defaultMessage="Placeholder Text" />}
                         fullWidth
                     />
-                    <FieldInfoTextBlockField />
+                    <HelperTextBlockField />
                 </DisplaySection>
                 <PropsAndValidationGroup />
             </BlocksFinalForm>
