@@ -455,7 +455,7 @@ importers:
         specifier: ^5.4.2
         version: 5.4.2
       lru-cache:
-        specifier: ^11.0.1
+        specifier: ^11.0.2
         version: 11.0.2
       next:
         specifier: ^14.2.23
