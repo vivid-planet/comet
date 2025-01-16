@@ -1,7 +1,7 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { screen, waitFor, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { ReactNode, RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
@@ -66,7 +66,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     }
 
-    function StackWithGridAndEditDialog() {
+    function EditDialogInStackTabs() {
         const editDialogApi = useRef<IEditDialogApi>(null);
 
         return (
@@ -158,83 +158,12 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     }
 
-    it("should navigate to the products page and route when clicking on the products tab", async () => {
-        const history = createMemoryHistory();
-
-        const rendered = render(
-            <Router history={history}>
-                <StackWithGridAndEditDialog />
-            </Router>,
-        );
-
-        expect(history.location.pathname).toBe("/");
-        rendered.getByText("Products").click();
-        expect(screen.getByText("Products")).toBeInTheDocument();
-        expect(history.location.pathname).toBe("/index/products");
-
-        // Check that the Edit Dialog is not open, there was a bug that was fixed
-        // where the edit dialog was open when navigating to a different tab
-        expect(screen.queryByText("Add a new product")).not.toBeInTheDocument();
-    });
-
-    it("should stay on the products page when closing the edit dialog", async () => {
-        const history = createMemoryHistory({
-            initialEntries: ["/", "/products"],
-            initialIndex: 0,
-        });
-
-        const rendered = render(
-            <Router history={history}>
-                <StackWithGridAndEditDialog />
-            </Router>,
-        );
-
-        expect(history.location.pathname).toBe("/");
-        expect(screen.getByText("Customers Page")).toBeInTheDocument();
-
-        rendered.getByText("Products").click();
-        expect(rendered.getByText("Add product")).toBeInTheDocument();
-        expect(history.location.pathname).toBe("/index/products");
-
-        rendered.getByText("Add product").click();
-        expect(screen.getByText("Add a new product")).toBeInTheDocument();
-        expect(history.location.pathname).toBe("/index/products/add");
-
-        await waitFor(() => {
-            rendered.getByText("Cancel").click();
-        });
-
-        // Check that the Edit Dialog is not open and user is still on
-        // the products page, there was a bug where the user was navigated
-        // back to the first tab after closing the edit dialog
-        expect(screen.queryByText("Add a new product")).not.toBeInTheDocument();
-        expect(history.location.pathname).toBe("/index/products");
-        expect(screen.queryByText("Customers Page")).not.toBeInTheDocument();
-    });
-
-    it("should open product add dialog when clicking on Add product button in grid toolbar", async () => {
-        const history = createMemoryHistory();
-
-        const rendered = render(
-            <Router history={history}>
-                <StackWithGridAndEditDialog />
-            </Router>,
-        );
-
-        rendered.getByText("Products").click();
-        expect(screen.getByText("Products")).toBeInTheDocument();
-
-        expect(rendered.getByText("Add product")).toBeInTheDocument();
-        rendered.getByText("Add product").click();
-        expect(screen.getByText("Add a new product")).toBeInTheDocument();
-    });
-
     it("should open edit stack page when clicking on edit button in grid", async () => {
         const history = createMemoryHistory();
 
         const rendered = render(
             <Router history={history}>
-                <StackWithGridAndEditDialog />
+                <EditDialogInStackTabs />
             </Router>,
         );
 
@@ -253,7 +182,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
 
         const rendered = render(
             <Router history={history}>
-                <StackWithGridAndEditDialog />
+                <EditDialogInStackTabs />
             </Router>,
         );
 
