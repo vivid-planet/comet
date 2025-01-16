@@ -57,8 +57,8 @@ importers:
   demo/admin:
     dependencies:
       '@apollo/client':
-        specifier: ^3.7.0
-        version: 3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.6
+        version: 3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@babel/core':
         specifier: ^7.0.0
         version: 7.26.0
@@ -114,7 +114,7 @@ importers:
         specifier: ^15.10.1
         version: 15.10.1
       graphql-tag:
-        specifier: ^2.0.0
+        specifier: ^2.12.6
         version: 2.12.6(graphql@15.10.1)
       lodash.isequal:
         specifier: ^4.5.0
@@ -262,8 +262,8 @@ importers:
   demo/api:
     dependencies:
       '@apollo/server':
-        specifier: ^4.11.2
-        version: 4.11.2(graphql@16.9.0)
+        specifier: ^4.11.3
+        version: 4.11.3(graphql@16.9.0)
       '@comet/cms-api':
         specifier: workspace:*
         version: link:../../packages/api/cms-api
@@ -287,7 +287,7 @@ importers:
         version: 6.4.3(@mikro-orm/core@6.4.3)
       '@nestjs/apollo':
         specifier: ^12.2.2
-        version: 12.2.2(@apollo/server@4.11.2(graphql@16.9.0))(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(@nestjs/graphql@12.2.2(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.9.0)(reflect-metadata@0.2.2)(ts-morph@16.0.0))(graphql@16.9.0)
+        version: 12.2.2(@apollo/server@4.11.3(graphql@16.9.0))(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(@nestjs/graphql@12.2.2(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.9.0)(reflect-metadata@0.2.2)(ts-morph@16.0.0))(graphql@16.9.0)
       '@nestjs/common':
         specifier: ^10.4.15
         version: 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -649,8 +649,8 @@ importers:
         specifier: ^4.18.0
         version: 4.18.0
       '@apollo/client':
-        specifier: ^3.7.0
-        version: 3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.6
+        version: 3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@comet/admin':
         specifier: workspace:*
         version: link:../packages/admin/admin
@@ -843,8 +843,8 @@ importers:
         version: 11.0.5
     devDependencies:
       '@apollo/client':
-        specifier: ^3.7.0
-        version: 3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.6
+        version: 3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@babel/cli':
         specifier: ^7.17.6
         version: 7.20.7(@babel/core@7.26.0)
@@ -1554,7 +1554,7 @@ importers:
         specifier: ^10.4.5
         version: 10.4.5
       graphql-tag:
-        specifier: ^2.0.0
+        specifier: ^2.12.6
         version: 2.12.6(graphql@15.10.1)
       js-cookie:
         specifier: ^3.0.5
@@ -1615,8 +1615,8 @@ importers:
         version: 11.0.5
     devDependencies:
       '@apollo/client':
-        specifier: ^3.7.0
-        version: 3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.6
+        version: 3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@babel/cli':
         specifier: ^7.17.6
         version: 7.20.7(@babel/core@7.26.0)
@@ -2276,8 +2276,8 @@ importers:
   storybook:
     dependencies:
       '@apollo/client':
-        specifier: ^3.7.0
-        version: 3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+        specifier: ^3.12.6
+        version: 3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       '@comet/admin':
         specifier: workspace:*
         version: link:../packages/admin/admin
@@ -2324,8 +2324,8 @@ importers:
         specifier: ^22.0.0
         version: 22.9.0
       apollo-link-rest:
-        specifier: ^0.8.0-beta.0
-        version: 0.8.0(@apollo/client@3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql-anywhere@4.2.8(graphql@15.10.1))(graphql@15.10.1)(qs@6.13.0)
+        specifier: ^0.9.0
+        version: 0.9.0(@apollo/client@3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql@15.10.1)(qs@6.13.0)
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -2339,7 +2339,7 @@ importers:
         specifier: ^15.10.1
         version: 15.10.1
       graphql-anywhere:
-        specifier: ^4.2.7
+        specifier: ^4.2.8
         version: 4.2.8(graphql@15.10.1)
       history:
         specifier: ^4.10.1
@@ -2587,13 +2587,13 @@ packages:
     peerDependencies:
       graphql: 14.x || 15.x || 16.x
 
-  '@apollo/client@3.7.4':
-    resolution: {integrity: sha512-bgiCKRmLSBImX4JRrw8NjqGo0AQE/mowCdHX1PJp2r5zIXrJx0UeaAYmx1qJY69Oz/KR7SKlLt4xK+bOP1jx7A==}
+  '@apollo/client@3.12.6':
+    resolution: {integrity: sha512-MOEtkojZagMKB7nxlwQ426eaBYwEs/Xfn+JeLOd81wv6j7toKo57eEGAbJdZwyXGRgtiqDkX5gx3EzE7qtarXA==}
     peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+      graphql: ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
       subscriptions-transport-ws: ^0.9.0 || ^0.11.0
     peerDependenciesMeta:
       graphql-ws:
@@ -2621,8 +2621,8 @@ packages:
     peerDependencies:
       '@apollo/server': ^4.0.0
 
-  '@apollo/server@4.11.2':
-    resolution: {integrity: sha512-WUTHY7DDek8xAMn4Woa9Bl8duQUDzRYQkosX/d1DtCsBWESZyApR7ndnI5d6+W4KSTtqBHhJFkusEI7CWuIJXg==}
+  '@apollo/server@4.11.3':
+    resolution: {integrity: sha512-mW8idE2q0/BN14mimfJU5DAnoPHZRrAWgwsVLBEdACds+mxapIYxIbI6AH4AsOpxfrpvHts3PCYDbopy1XPW1g==}
     engines: {node: '>=14.16.0'}
     peerDependencies:
       graphql: ^16.6.0
@@ -2630,8 +2630,8 @@ packages:
   '@apollo/usage-reporting-protobuf@4.1.1':
     resolution: {integrity: sha512-u40dIUePHaSKVshcedO7Wp+mPiZsaU6xjv9J+VyxpoU/zL6Jle+9zWeG98tr/+SZ0nZ4OXhrbb8SNr0rAPpIDA==}
 
-  '@apollo/utils.createhash@2.0.1':
-    resolution: {integrity: sha512-fQO4/ZOP8LcXWvMNhKiee+2KuKyqIcfHrICA+M4lj/h/Lh1H10ICcUtk6N/chnEo5HXu0yejg64wshdaiFitJg==}
+  '@apollo/utils.createhash@2.0.2':
+    resolution: {integrity: sha512-UkS3xqnVFLZ3JFpEmU/2cM2iKJotQXMoSTgxXsfQgXLC5gR1WaepoXagmYnPSA7Q/2cmnyTYK5OgAgoC4RULPg==}
     engines: {node: '>=14'}
 
   '@apollo/utils.dropunuseddefinitions@2.0.1':
@@ -7123,9 +7123,6 @@ packages:
   '@types/node-fetch@2.6.12':
     resolution: {integrity: sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==}
 
-  '@types/node-fetch@2.6.2':
-    resolution: {integrity: sha512-DHqhlq5jeESLy19TYhLakJ07kNumXWjcDdxXsLUMJZ6ue8VZJj4kLPQVE/2mdHh3xZziNF1xppu5lwmS53HR+A==}
-
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
@@ -7473,6 +7470,10 @@ packages:
   '@whatwg-node/fetch@0.6.2':
     resolution: {integrity: sha512-fCUycF1W+bI6XzwJFnbdDuxIldfKM3w8+AzVCLGlucm0D+AQ8ZMm2j84hdcIhfV6ZdE4Y1HFVrHosAxdDZ+nPw==}
 
+  '@wry/caches@1.0.1':
+    resolution: {integrity: sha512-bXuaUNLVVkD20wcGBWRyo7j9N3TxePEWFZj2Y+r9OoUzfqmavM84+mFykRicNsBqatba5JLay1t48wxaXaWnlA==}
+    engines: {node: '>=8'}
+
   '@wry/context@0.7.0':
     resolution: {integrity: sha512-LcDAiYWRtwAoSOArfk7cuYvFXytxfVrdX7yxoUmK7pPITLk5jYh2F8knCwS7LjgYL8u1eidPlKKV6Ikqq0ODqQ==}
     engines: {node: '>=8'}
@@ -7480,12 +7481,12 @@ packages:
   '@wry/equality@0.1.11':
     resolution: {integrity: sha512-mwEVBDUVODlsQQ5dfuLUS5/Tf7jqUKyhKYHmVi4fPB6bDMOfWvUPJmKgS1Z7Za/sOI3vzWt4+O7yCiL/70MogA==}
 
-  '@wry/equality@0.5.3':
-    resolution: {integrity: sha512-avR+UXdSrsF2v8vIqIgmeTY0UR91UT+IyablCyKe/uk22uOJ8fusKZnH9JH9e1/EtLeNJBtagNmL3eJdnOV53g==}
+  '@wry/equality@0.5.7':
+    resolution: {integrity: sha512-BRFORjsTuQv5gxcXsuDXx6oGRhuVsEGwZy6LOzRRfgu+eSfxbhUQ9L9YtSEIuIjY/o7g3iWFjrc5eSY1GXP2Dw==}
     engines: {node: '>=8'}
 
-  '@wry/trie@0.3.2':
-    resolution: {integrity: sha512-yRTyhWSls2OY/pYLfwff867r8ekooZ4UI+/gxot5Wj8EFwSf2rG+n+Mo/6LoLQm1TKA4GRj2+LCpbfS937dClQ==}
+  '@wry/trie@0.5.0':
+    resolution: {integrity: sha512-FNoYzHawTMk/6KMQoEG5O4PuioX19UbwdQKF44yw0nLfOypfQdjtfZzo/UIJWAJ23sNIFbD1Ug9lbaDGMwbqQA==}
     engines: {node: '>=8'}
 
   '@xmldom/xmldom@0.7.10':
@@ -7655,12 +7656,11 @@ packages:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
 
-  apollo-link-rest@0.8.0:
-    resolution: {integrity: sha512-jSpcp2KsWaCqkCw+B0vzfgghsbfKBhftgDuvxkdDAQYVW4Vcst8tm9qNgUXiyRdQcfcd19kEFCEk7w2AcB6dUg==}
+  apollo-link-rest@0.9.0:
+    resolution: {integrity: sha512-kuXjR56Y12w0TZcqwVaONKlipB6g3Ya1dAy4NMCaylPpNXq6tO+qzQFPUyDJC7B0JoJPIFjxPV2rAet4uGM4UQ==}
     peerDependencies:
       '@apollo/client': '>=3'
       graphql: '>=0.11'
-      graphql-anywhere: '>=4'
       qs: '>=6'
 
   apollo-utilities@1.3.4:
@@ -12768,8 +12768,8 @@ packages:
   openid-client@5.7.0:
     resolution: {integrity: sha512-4GCCGZt1i2kTHpwvaC/sCpTpQqDnBzDzuJcJMbH+y1Q5qI8U8RBvoSh28svarXszZHR5BAMXbJPX1PGPRE3VOA==}
 
-  optimism@0.16.2:
-    resolution: {integrity: sha512-zWNbgWj+3vLEjZNIh/okkY2EUfX+vB9TJopzIZwT1xxaMqC5hRLLraePod4c5n4He08xuXNH+zhKFFCu390wiQ==}
+  optimism@0.18.1:
+    resolution: {integrity: sha512-mLXNwWPa9dgFyDqkNi54sjDyNJ9/fTI6WGBLgnXku1vdKY/jovHfZT5r+aiVeFFLOz+foPNOm5YJ4mqgld2GBQ==}
 
   optionator@0.8.3:
     resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}
@@ -14056,6 +14056,17 @@ packages:
   regjsparser@0.9.1:
     resolution: {integrity: sha512-dQUtn90WanSNl+7mQKcXAgZxvUe7Z0SqXlgzv0za4LwiUhyzBC58yQO3liFoUgu8GiJVInAhJjkj1N0EtQ5nkQ==}
     hasBin: true
+
+  rehackt@0.1.0:
+    resolution: {integrity: sha512-7kRDOuLHB87D/JESKxQoRwv4DzbIdwkAGQ7p6QKGdVlY1IZheUnVhlk/4UZlNUVxdAXpyxikE3URsG067ybVzw==}
+    peerDependencies:
+      '@types/react': '*'
+      react: '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   relateurl@0.2.7:
     resolution: {integrity: sha512-G08Dxvm4iDN3MLM0EsP62EDV9IuhXPR6blNz6Utcp7zyV3tr4HVNINt6MpaRWbxoOHT3Q7YN2P+jaHX8vUbgog==}
@@ -16222,17 +16233,18 @@ snapshots:
     dependencies:
       graphql: 16.9.0
 
-  '@apollo/client@3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))':
+  '@apollo/client@3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))':
     dependencies:
       '@graphql-typed-document-node/core': 3.1.1(graphql@15.10.1)
-      '@wry/context': 0.7.0
-      '@wry/equality': 0.5.3
-      '@wry/trie': 0.3.2
+      '@wry/caches': 1.0.1
+      '@wry/equality': 0.5.7
+      '@wry/trie': 0.5.0
       graphql: 15.10.1
       graphql-tag: 2.12.6(graphql@15.10.1)
       hoist-non-react-statics: 3.3.2
-      optimism: 0.16.2
+      optimism: 0.18.1
       prop-types: 15.8.1
+      rehackt: 0.1.0(@types/react@17.0.53)(react@17.0.2)
       response-iterator: 0.2.6
       symbol-observable: 4.0.0
       ts-invariant: 0.10.3
@@ -16243,6 +16255,8 @@ snapshots:
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       subscriptions-transport-ws: 0.11.0(graphql@15.10.1)
+    transitivePeerDependencies:
+      - '@types/react'
 
   '@apollo/protobufjs@1.2.7':
     dependencies:
@@ -16267,17 +16281,17 @@ snapshots:
       '@apollo/utils.logger': 2.0.1
       graphql: 16.9.0
 
-  '@apollo/server-plugin-landing-page-graphql-playground@4.0.0(@apollo/server@4.11.2(graphql@16.9.0))':
+  '@apollo/server-plugin-landing-page-graphql-playground@4.0.0(@apollo/server@4.11.3(graphql@16.9.0))':
     dependencies:
-      '@apollo/server': 4.11.2(graphql@16.9.0)
+      '@apollo/server': 4.11.3(graphql@16.9.0)
       '@apollographql/graphql-playground-html': 1.6.29
 
-  '@apollo/server@4.11.2(graphql@16.9.0)':
+  '@apollo/server@4.11.3(graphql@16.9.0)':
     dependencies:
       '@apollo/cache-control-types': 1.0.3(graphql@16.9.0)
       '@apollo/server-gateway-interface': 1.1.1(graphql@16.9.0)
       '@apollo/usage-reporting-protobuf': 4.1.1
-      '@apollo/utils.createhash': 2.0.1
+      '@apollo/utils.createhash': 2.0.2
       '@apollo/utils.fetcher': 2.0.1
       '@apollo/utils.isnodelike': 2.0.1
       '@apollo/utils.keyvaluecache': 2.1.1
@@ -16287,14 +16301,14 @@ snapshots:
       '@graphql-tools/schema': 9.0.19(graphql@16.9.0)
       '@types/express': 4.17.21
       '@types/express-serve-static-core': 4.17.33
-      '@types/node-fetch': 2.6.2
+      '@types/node-fetch': 2.6.12
       async-retry: 1.3.3
       cors: 2.8.5
       express: 4.21.2
       graphql: 16.9.0
       loglevel: 1.8.1
       lru-cache: 7.18.3
-      negotiator: 0.6.3
+      negotiator: 0.6.4
       node-abort-controller: 3.1.1
       node-fetch: 2.7.0
       uuid: 9.0.1
@@ -16307,7 +16321,7 @@ snapshots:
     dependencies:
       '@apollo/protobufjs': 1.2.7
 
-  '@apollo/utils.createhash@2.0.1':
+  '@apollo/utils.createhash@2.0.2':
     dependencies:
       '@apollo/utils.isnodelike': 2.0.1
       sha.js: 2.4.11
@@ -20713,10 +20727,10 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@nestjs/apollo@12.2.2(@apollo/server@4.11.2(graphql@16.9.0))(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(@nestjs/graphql@12.2.2(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.9.0)(reflect-metadata@0.2.2)(ts-morph@16.0.0))(graphql@16.9.0)':
+  '@nestjs/apollo@12.2.2(@apollo/server@4.11.3(graphql@16.9.0))(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(@nestjs/graphql@12.2.2(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.9.0)(reflect-metadata@0.2.2)(ts-morph@16.0.0))(graphql@16.9.0)':
     dependencies:
-      '@apollo/server': 4.11.2(graphql@16.9.0)
-      '@apollo/server-plugin-landing-page-graphql-playground': 4.0.0(@apollo/server@4.11.2(graphql@16.9.0))
+      '@apollo/server': 4.11.3(graphql@16.9.0)
+      '@apollo/server-plugin-landing-page-graphql-playground': 4.0.0(@apollo/server@4.11.3(graphql@16.9.0))
       '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.15)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/graphql': 12.2.2(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(class-transformer@0.5.1)(class-validator@0.14.1)(graphql@16.9.0)(reflect-metadata@0.2.2)(ts-morph@16.0.0)
@@ -23042,11 +23056,6 @@ snapshots:
       '@types/node': 22.9.0
       form-data: 4.0.0
 
-  '@types/node-fetch@2.6.2':
-    dependencies:
-      '@types/node': 22.9.0
-      form-data: 3.0.1
-
   '@types/node@12.20.55': {}
 
   '@types/node@14.18.63': {}
@@ -23497,6 +23506,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@wry/caches@1.0.1':
+    dependencies:
+      tslib: 2.8.1
+
   '@wry/context@0.7.0':
     dependencies:
       tslib: 2.8.1
@@ -23505,11 +23518,11 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@wry/equality@0.5.3':
+  '@wry/equality@0.5.7':
     dependencies:
       tslib: 2.8.1
 
-  '@wry/trie@0.3.2':
+  '@wry/trie@0.5.0':
     dependencies:
       tslib: 2.8.1
 
@@ -23679,11 +23692,10 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  apollo-link-rest@0.8.0(@apollo/client@3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql-anywhere@4.2.8(graphql@15.10.1))(graphql@15.10.1)(qs@6.13.0):
+  apollo-link-rest@0.9.0(@apollo/client@3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1)))(graphql@15.10.1)(qs@6.13.0):
     dependencies:
-      '@apollo/client': 3.7.4(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
+      '@apollo/client': 3.12.6(@types/react@17.0.53)(graphql-ws@5.16.0(graphql@15.10.1))(graphql@15.10.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(subscriptions-transport-ws@0.11.0(graphql@15.10.1))
       graphql: 15.10.1
-      graphql-anywhere: 4.2.8(graphql@15.10.1)
       qs: 6.13.0
 
   apollo-utilities@1.3.4(graphql@15.10.1):
@@ -30054,10 +30066,12 @@ snapshots:
       oidc-token-hash: 5.0.3
     optional: true
 
-  optimism@0.16.2:
+  optimism@0.18.1:
     dependencies:
+      '@wry/caches': 1.0.1
       '@wry/context': 0.7.0
-      '@wry/trie': 0.3.2
+      '@wry/trie': 0.5.0
+      tslib: 2.8.1
 
   optionator@0.8.3:
     dependencies:
@@ -31433,6 +31447,11 @@ snapshots:
   regjsparser@0.9.1:
     dependencies:
       jsesc: 0.5.0
+
+  rehackt@0.1.0(@types/react@17.0.53)(react@17.0.2):
+    optionalDependencies:
+      '@types/react': 17.0.53
+      react: 17.0.2
 
   relateurl@0.2.7: {}
 
