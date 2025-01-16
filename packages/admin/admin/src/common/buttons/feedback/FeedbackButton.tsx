@@ -1,6 +1,5 @@
 import { ThreeDotSaving } from "@comet/admin-icons";
-import { LoadingButton } from "@mui/lab";
-import { ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
+import { Button, ButtonClassKey, ButtonProps, ComponentsOverrides } from "@mui/material";
 import { Theme, useThemeProps } from "@mui/material/styles";
 import { ReactNode, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
@@ -13,7 +12,7 @@ export type FeedbackButtonClassKey = "idle" | "loading" | "success" | "error" | 
 
 type OwnerState = { displayState: FeedbackButtonDisplayState };
 
-const Root = createComponentSlot(LoadingButton)<FeedbackButtonClassKey, OwnerState>({
+const Root = createComponentSlot(Button)<FeedbackButtonClassKey, OwnerState>({
     componentName: "FeedbackButton",
     slotName: "root",
     classesResolver(ownerState) {
@@ -33,7 +32,7 @@ const Tooltip = createComponentSlot(CometTooltip)<FeedbackButtonClassKey>({
 
 export interface FeedbackButtonProps
     extends ThemedComponentBaseProps<{
-            root: typeof LoadingButton;
+            root: typeof Button;
             tooltip: typeof CometTooltip;
         }>,
         Omit<ButtonProps, "loading"> {
