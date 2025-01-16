@@ -73,92 +73,91 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         const editDialogApi = useRef<IEditDialogApi>(null);
 
         return (
-            <>
-                <Stack topLevelTitle="Nested Stack">
-                    <StackSwitch>
-                        <StackPage name="products" title="Products">
-                            <RouterTabs>
-                                <RouterTab label="Customers" path="" forceRender={true}>
-                                    Customers Page
-                                </RouterTab>
-                                <RouterTab label="Products" path="/products" forceRender={true}>
-                                    <DataGrid
-                                        columns={[
-                                            { field: "id", headerName: "ID", width: 90 },
-                                            {
-                                                field: "actions",
-                                                headerName: "",
-                                                sortable: false,
-                                                filterable: false,
-                                                align: "right",
-                                                width: 86,
-                                                renderCell: (params) => {
-                                                    return (
-                                                        <IconButton
-                                                            data-testid="edit.row"
-                                                            color="primary"
-                                                            component={StackLink}
-                                                            pageName="productEdit"
-                                                            payload={params.row.id}
-                                                            onClick={() => editDialogApi.current?.openEditDialog(params.row.id)}
-                                                        >
-                                                            <Edit />
-                                                        </IconButton>
-                                                    );
-                                                },
-                                            },
-                                        ]}
-                                        rows={[
-                                            { id: "0", productId: "0" },
-                                            { id: "1", productId: "0" },
-                                            { id: "2", productId: "0" },
-                                            { id: "3", productId: "1" },
-                                            { id: "4", productId: "1" },
-                                            { id: "5", productId: "1" },
-                                        ]}
-                                        components={{
-                                            Toolbar: Toolbar,
-                                        }}
-                                        componentsProps={{
-                                            toolbar: {
-                                                toolbarAction: (
-                                                    <Button
-                                                        startIcon={<Add />}
-                                                        onClick={() => editDialogApi.current?.openAddDialog()}
-                                                        variant="contained"
+            <Stack topLevelTitle="Nested Stack">
+                <StackSwitch>
+                    <StackPage name="products" title="Products">
+                        <RouterTabs>
+                            <RouterTab label="Customers" path="">
+                                Customers Page
+                            </RouterTab>
+                            <RouterTab label="Products" path="/products">
+                                <AddProductDialog dialogApiRef={editDialogApi} />
+
+                                <DataGrid
+                                    columns={[
+                                        { field: "id", headerName: "ID", width: 90 },
+                                        {
+                                            field: "actions",
+                                            headerName: "",
+                                            sortable: false,
+                                            filterable: false,
+                                            align: "right",
+                                            width: 86,
+                                            renderCell: (params) => {
+                                                return (
+                                                    <IconButton
+                                                        data-testid="edit.row"
                                                         color="primary"
+                                                        component={StackLink}
+                                                        pageName="productEdit"
+                                                        payload={params.row.id}
+                                                        onClick={() => editDialogApi.current?.openEditDialog(params.row.id)}
                                                     >
-                                                        Add product
-                                                    </Button>
-                                                ),
+                                                        <Edit />
+                                                    </IconButton>
+                                                );
                                             },
-                                        }}
-                                        disableVirtualization
-                                    />
-                                </RouterTab>
-                            </RouterTabs>
-                        </StackPage>
-                        <StackPage name="productEdit" title="Product">
-                            {() => (
-                                <MainContent fullHeight disablePadding>
-                                    <SaveBoundary>
-                                        <StackToolbar>
-                                            <ToolbarBackButton />
-                                            <ToolbarAutomaticTitleItem />
-                                            <ToolbarFillSpace />
-                                            <ToolbarActions>
-                                                <SaveBoundarySaveButton />
-                                            </ToolbarActions>
-                                        </StackToolbar>
-                                        <div>Product Edit Page</div>
-                                    </SaveBoundary>
-                                </MainContent>
-                            )}
-                        </StackPage>
-                    </StackSwitch>
-                </Stack>
-                <AddProductDialog dialogApiRef={editDialogApi} />
-            </>
+                                        },
+                                    ]}
+                                    rows={[
+                                        { id: "0", productId: "0" },
+                                        { id: "1", productId: "0" },
+                                        { id: "2", productId: "0" },
+                                        { id: "3", productId: "1" },
+                                        { id: "4", productId: "1" },
+                                        { id: "5", productId: "1" },
+                                    ]}
+                                    components={{
+                                        Toolbar: Toolbar,
+                                    }}
+                                    componentsProps={{
+                                        toolbar: {
+                                            toolbarAction: (
+                                                <Button
+                                                    startIcon={<Add />}
+                                                    onClick={() => editDialogApi.current?.openAddDialog()}
+                                                    variant="contained"
+                                                    color="primary"
+                                                >
+                                                    Add product
+                                                </Button>
+                                            ),
+                                        },
+                                    }}
+                                    disableVirtualization
+                                />
+                            </RouterTab>
+                        </RouterTabs>
+                    </StackPage>
+                    <StackPage name="productEdit" title="Product">
+                        {() => (
+                            <MainContent fullHeight disablePadding>
+                                <SaveBoundary>
+                                    <StackToolbar>
+                                        <ToolbarBackButton />
+                                        <ToolbarAutomaticTitleItem />
+                                        <ToolbarFillSpace />
+                                        <ToolbarActions>
+                                            <SaveBoundarySaveButton />
+                                        </ToolbarActions>
+                                    </StackToolbar>
+                                    <div>Product Edit Page</div>
+                                </SaveBoundary>
+                            </MainContent>
+                        )}
+                    </StackPage>
+                </StackSwitch>
+            </Stack>
         );
     }
 
@@ -182,7 +181,10 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
     });
 
     it("should stay on the products page when closing the edit dialog", async () => {
-        const history = createMemoryHistory();
+        const history = createMemoryHistory({
+            initialEntries: ["/", "/products"],
+            initialIndex: 0,
+        });
 
         const rendered = render(
             <Router history={history}>
@@ -199,18 +201,17 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
 
         rendered.getByText("Add product").click();
         expect(screen.getByText("Add a new product")).toBeInTheDocument();
-        expect(history.location.pathname).toBe("//add");
+        expect(history.location.pathname).toBe("/index/products/add");
 
         await waitFor(() => {
             rendered.getByText("Cancel").click();
         });
 
+        // Check that the Edit Dialog is not open and user is still on
+        // the products page, there was a bug where the user was navigated
+        // back to the first tab after closing the edit dialog
         expect(screen.queryByText("Add a new product")).not.toBeInTheDocument();
-
-        // TODO: this is currently failing. The location path is "/" after clicking cancel. We expect it to still be on the products page route.
-        // expect(history.location.pathname).toBe("/index/products");
-
-        // TODO: this is currently failing. The customer page is visible after clicking cancel. We expect it to still be on the products page.
+        expect(history.location.pathname).toBe("/index/products");
         expect(screen.queryByText("Customers Page")).not.toBeInTheDocument();
     });
 
@@ -222,6 +223,9 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                 <StackWithGridAndEditDialog />
             </Router>,
         );
+
+        rendered.getByText("Products").click();
+        expect(screen.getByText("Products")).toBeInTheDocument();
 
         expect(rendered.getByText("Add product")).toBeInTheDocument();
         rendered.getByText("Add product").click();
@@ -236,6 +240,9 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                 <StackWithGridAndEditDialog />
             </Router>,
         );
+
+        rendered.getByText("Products").click();
+        expect(screen.getByText("Products")).toBeInTheDocument();
 
         expect(rendered.getByText("Add product")).toBeInTheDocument();
         expect(rendered.queryAllByTestId("edit.row")).toHaveLength(6);
