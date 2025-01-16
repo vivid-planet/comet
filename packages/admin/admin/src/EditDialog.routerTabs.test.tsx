@@ -86,7 +86,6 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                                             component={StackLink}
                                             pageName="productEdit"
                                             payload={params.row.id}
-                                            onClick={() => editDialogApi.current?.openEditDialog(params.row.id)}
                                         >
                                             <Edit />
                                         </IconButton>
