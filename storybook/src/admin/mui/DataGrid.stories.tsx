@@ -25,7 +25,7 @@ export const Default = {
         },
     },
     render: ({ density }: DefaultArgs) => {
-        const ToolBarForGrid = () => {
+        const ToolbarForGrid = () => {
             return (
                 // TODO: Use "density" directly once "compact" is supported: https://vivid-planet.atlassian.net/browse/COM-1504
                 <DataGridToolbar density={density === "compact" ? "standard" : density}>
@@ -47,7 +47,7 @@ export const Default = {
                     rows={exampleRows}
                     columns={exampleColumns}
                     components={{
-                        Toolbar: ToolBarForGrid,
+                        Toolbar: ToolbarForGrid,
                     }}
                 />
             </Box>
