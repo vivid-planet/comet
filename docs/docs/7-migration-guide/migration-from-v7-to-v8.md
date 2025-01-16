@@ -280,6 +280,18 @@ Perform the following changes:
 + import { Tooltip } from "@comet/admin";
 ```
 
+### Remove `trigger` prop from `Tooltip`
+
+The `trigger` prop has been removed. The combined `hover`/`focus` trigger is now the only supported behavior.
+
+Example:
+
+```diff
+<Tooltip
+- trigger="hover"
+></Tooltip>
+```
+
 ### Update MUI - X Packages
 
 In `package.json` update the version of the MUI X packages to `^7.22.3`.

@@ -230,7 +230,7 @@ export function ProductsGrid({ filter, toolbarAction, rowAction, actionsColumnWi
             renderHeader: () => (
                 <>
                     <GridColumnHeaderTitle label={intl.formatMessage({ id: "product.price", defaultMessage: "Price" })} columnWidth={150} />
-                    <Tooltip trigger="hover" title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
+                    <Tooltip title={<FormattedMessage id="product.price.tooltip" defaultMessage="Price in EUR" />}>
                         <Info sx={{ marginLeft: 1 }} />
                     </Tooltip>
                 </>

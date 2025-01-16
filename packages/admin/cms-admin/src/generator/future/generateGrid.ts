@@ -711,7 +711,6 @@ export function generateGrid(
                               }"})} columnWidth= {${tooltipColumnWidth}}
                               />
                                         <Tooltip
-                                            trigger="hover"
                                             title={<FormattedMessage id="${instanceGqlType}.${column.name}.tooltip" defaultMessage="${
                                   column.headerInfoTooltip
                               }" />}
