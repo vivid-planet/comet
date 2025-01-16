@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "build": "run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && next build",
+        "build": "run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && NODE_ENV=production next build",
         "dev": "run-s intl:compile && run-p gql:types generate-block-types && tsc --project tsconfig.server.json && NODE_OPTIONS='--inspect=localhost:9230 --max-old-space-size=512' dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs -- node dist/server.js",
         "export": "next export",
         "generate-block-types": "comet generate-block-types",
@@ -16,7 +16,7 @@
         "lint:eslint": "eslint --max-warnings 0 --config ./.eslintrc.cli.js --ext .ts,.tsx,.js,.jsx,.json,.md .",
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project .",
-        "serve": "NODE_ENV=production node dist/server.js"
+        "serve": "NODE_OPTIONS='--max_old_space_size=1000' NODE_ENV=production dotenv -e .env -e .env.local -e .env.secrets -e .env.site-configs -- node --inspect=localhost:9231 dist/server.js"
     },
     "dependencies": {
         "@comet/cms-site": "workspace:*",
