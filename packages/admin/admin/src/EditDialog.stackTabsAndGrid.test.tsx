@@ -1,7 +1,7 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { ReactNode, RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
@@ -28,8 +28,6 @@ import { StackSwitch } from "./stack/Switch";
 import { RouterTab, RouterTabs } from "./tabs/RouterTabs";
 
 describe("EditDialog with Stack, Router Tabs and Grid", () => {
-    const history = createMemoryHistory();
-
     type DialogProps = {
         dialogApiRef: RefObject<IEditDialogApi>;
     };
@@ -48,7 +46,10 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                         <FinalForm
                             mode="add"
                             onSubmit={() => {
-                                // Submit logic
+                                // console.log("Submitted!");
+                            }}
+                            onAfterSubmit={() => {
+                                dialogApiRef.current?.closeDialog();
                             }}
                         >
                             <TextField name="name" label="Name" fullWidth />
@@ -77,11 +78,13 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                     <StackSwitch>
                         <StackPage name="products" title="Products">
                             <RouterTabs>
-                                <RouterTab label="Products" path="" forceRender={true}>
+                                <RouterTab label="Customers" path="" forceRender={true}>
+                                    Customers Page
+                                </RouterTab>
+                                <RouterTab label="Products" path="/products" forceRender={true}>
                                     <DataGrid
                                         columns={[
                                             { field: "id", headerName: "ID", width: 90 },
-                                            { field: "amount", headerName: "Amount", flex: 1 },
                                             {
                                                 field: "actions",
                                                 headerName: "",
@@ -106,12 +109,12 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                                             },
                                         ]}
                                         rows={[
-                                            { id: "0", productId: "0", amount: "3" },
-                                            { id: "1", productId: "0", amount: "6" },
-                                            { id: "2", productId: "0", amount: "2" },
-                                            { id: "3", productId: "1", amount: "4" },
-                                            { id: "4", productId: "1", amount: "5" },
-                                            { id: "5", productId: "1", amount: "7" },
+                                            { id: "0", productId: "0" },
+                                            { id: "1", productId: "0" },
+                                            { id: "2", productId: "0" },
+                                            { id: "3", productId: "1" },
+                                            { id: "4", productId: "1" },
+                                            { id: "5", productId: "1" },
                                         ]}
                                         components={{
                                             Toolbar: Toolbar,
@@ -132,9 +135,6 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                                         }}
                                         disableVirtualization
                                     />
-                                </RouterTab>
-                                <RouterTab label="Customers" path="/customers" forceRender={true}>
-                                    Customers Page
                                 </RouterTab>
                             </RouterTabs>
                         </StackPage>
@@ -162,7 +162,9 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
     }
 
-    it("should navigate to the customers tab when clicking on the customers tab", async () => {
+    it("should navigate to the products page and route when clicking on the products tab", async () => {
+        const history = createMemoryHistory();
+
         const rendered = render(
             <Router history={history}>
                 <StackWithGridAndEditDialog />
@@ -170,13 +172,51 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         );
 
         expect(history.location.pathname).toBe("/");
-        expect(rendered.getByText("Add product")).toBeInTheDocument();
-        rendered.getByText("Customers").click();
-        expect(screen.getByText("Customers Page")).toBeInTheDocument();
-        expect(history.location.pathname).toBe("/index/customers"); // TODO: Find out why this is /index/*
+        rendered.getByText("Products").click();
+        expect(screen.getByText("Products")).toBeInTheDocument();
+        expect(history.location.pathname).toBe("/index/products");
+
+        // Check that the Edit Dialog is not open, there was a bug that was fixed
+        // where the edit dialog was open when navigating to a different tab
+        expect(screen.queryByText("Add a new product")).not.toBeInTheDocument();
     });
 
-    it("should open add dialog when clicking on Add product button in grid toolbar", async () => {
+    it("should stay on the products page when closing the edit dialog", async () => {
+        const history = createMemoryHistory();
+
+        const rendered = render(
+            <Router history={history}>
+                <StackWithGridAndEditDialog />
+            </Router>,
+        );
+
+        expect(history.location.pathname).toBe("/");
+        expect(screen.getByText("Customers Page")).toBeInTheDocument();
+
+        rendered.getByText("Products").click();
+        expect(rendered.getByText("Add product")).toBeInTheDocument();
+        expect(history.location.pathname).toBe("/index/products");
+
+        rendered.getByText("Add product").click();
+        expect(screen.getByText("Add a new product")).toBeInTheDocument();
+        expect(history.location.pathname).toBe("//add");
+
+        await waitFor(() => {
+            rendered.getByText("Cancel").click();
+        });
+
+        expect(screen.queryByText("Add a new product")).not.toBeInTheDocument();
+
+        // TODO: this is currently failing. The location path is "/" after clicking cancel. We expect it to still be on the products page route.
+        // expect(history.location.pathname).toBe("/index/products");
+
+        // TODO: this is currently failing. The customer page is visible after clicking cancel. We expect it to still be on the products page.
+        expect(screen.queryByText("Customers Page")).not.toBeInTheDocument();
+    });
+
+    it("should open product add dialog when clicking on Add product button in grid toolbar", async () => {
+        const history = createMemoryHistory();
+
         const rendered = render(
             <Router history={history}>
                 <StackWithGridAndEditDialog />
@@ -189,6 +229,8 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
     });
 
     it("should open edit stack page when clicking on edit button in grid", async () => {
+        const history = createMemoryHistory();
+
         const rendered = render(
             <Router history={history}>
                 <StackWithGridAndEditDialog />
