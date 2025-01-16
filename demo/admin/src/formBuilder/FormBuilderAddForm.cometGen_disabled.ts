@@ -1,5 +1,5 @@
 /**
- * TODO: Re-enable this file when the missing `block` value in `output` can be handled by the generator
+ * TODO: Re-enable this file when fixed: https://vivid-planet.atlassian.net/browse/COM-1560
  *
  * const output = {
  *     blocks: { blocks: [] }, // This line is missing from the generated file
