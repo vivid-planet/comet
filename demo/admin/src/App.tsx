@@ -68,7 +68,7 @@ export function App() {
                                         siteConfig.scope.domain === "secondary"
                                             ? `${siteConfig.url}/block-preview`
                                             : `${siteConfig.url}/block-preview/${scope.domain}/${scope.language}`,
-                                    sitePreviewApiUrl: `${siteConfig.url}/api/site-preview`,
+                                    sitePreviewApiUrl: `${siteConfig.url}/site-preview`,
                                 };
                             },
                         }}
