@@ -35,7 +35,7 @@
         "date-fns": "^4.1.0",
         "faker": "^5.5.3",
         "final-form": "^4.20.10",
-        "graphql": "^15.0.0",
+        "graphql": "^15.10.1",
         "graphql-anywhere": "^4.2.7",
         "history": "^4.10.1",
         "qs": "^6.9.1",
