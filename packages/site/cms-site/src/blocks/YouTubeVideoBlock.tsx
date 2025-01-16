@@ -45,13 +45,13 @@ export const YouTubeVideoBlock = withPreview(
 
         const pauseYouTubeVideo = () => {
             if (iframeRef.current?.contentWindow) {
-                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "*");
+                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube-nocookie.com");
             }
         };
 
         const playYouTubeVideo = () => {
             if (iframeRef.current?.contentWindow) {
-                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"playVideo","args":""}`, "*");
+                iframeRef.current.contentWindow.postMessage(`{"event":"command","func":"playVideo","args":""}`, "https://www.youtube-nocookie.com");
             }
         };
 
