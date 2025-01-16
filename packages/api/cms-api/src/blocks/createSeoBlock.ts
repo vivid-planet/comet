@@ -4,6 +4,7 @@ import {
     BlockData,
     BlockDataInterface,
     BlockField,
+    BlockIndexData,
     BlockInput,
     BlockInputInterface,
     BlockMetaField,
@@ -145,6 +146,16 @@ export function createSeoBlock<ImageBlock extends Block = typeof PixelImageBlock
                 return [{ severity, message: "Missing HTML title" }];
             }
             return [];
+        }
+
+        indexData(): BlockIndexData {
+            const warnings: BlockIndexData["warnings"] = [];
+            if (!this.htmlTitle) {
+                const severity: WarningSeverity = "low";
+                warnings.push({ severity, message: "Missing HTML title" });
+            }
+            console.log("indexData", warnings);
+            return { warnings };
         }
     }
 

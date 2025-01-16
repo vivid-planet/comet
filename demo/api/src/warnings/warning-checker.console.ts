@@ -1,4 +1,3 @@
-import { Block, BlockInput, FlatBlocks } from "@comet/blocks-api";
 import { DiscoverService } from "@comet/cms-api/lib/dependencies/discover.service";
 import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
@@ -9,12 +8,6 @@ import { v5 } from "uuid";
 
 import { Warning } from "./entities/warning.entity";
 import { WarningSeverity } from "./entities/warning-severity.enum";
-
-interface RootBlockEntityData {
-    tableName: string;
-    className: string;
-    rootBlockData: Array<{ block: Block; column: string }>;
-}
 
 @Injectable()
 @Console()
@@ -33,93 +26,59 @@ export class WarningCheckerConsole {
     @CreateRequestContext()
     async execute(): Promise<void> {
         // TODO: (in the next PRs) Check if data itself is valid in the database. (Maybe some data was put into database and is not correct or a migration was done wrong)
-        for (const data of this.groupRootBlockDataByEntity()) {
-            const { tableName, className, rootBlockData } = data;
+        const indexSelects: string[] = [];
+        for (const rootBlockEntity of this.discoverService.discoverRootBlocks()) {
+            const { metadata, column, graphqlObjectType } = rootBlockEntity;
+            const primary = metadata.primaryKeys[0];
 
-            const queryBuilderLimit = 100;
-            const baseQueryBuilder = this.entityManager.createQueryBuilder(className);
-            baseQueryBuilder
-                .select(["id", ...rootBlockData.map(({ column }) => column)])
-                .from(tableName)
-                .limit(queryBuilderLimit);
-            let rootBlocks: Array<{ [key: string]: BlockInput }> = [];
-            let offset = 0;
+            const select = `SELECT
+                            "${metadata.tableName}"."${primary}"  "rootId",
+                            '${metadata.name}'                    "rootEntityName",
+                            '${graphqlObjectType}'                "rootGraphqlObjectType",
+                            '${metadata.tableName}'               "rootTableName",
+                            '${column}'                           "rootColumnName",
+                            '${primary}'                          "rootPrimaryKey",
+                            indexObj->>'blockname'                "blockname",
+                            indexObj->>'jsonPath'                 "jsonPath",
+                            (indexObj->>'visible')::boolean       "visible",
+                            warningObj->>'severity'               "warningSeverity",
+                            warningObj->>'message'                "warningMessage"
+                        FROM "${metadata.tableName}",
+                            json_array_elements("${metadata.tableName}"."${column}"->'index') indexObj,
+                            json_array_elements(indexObj->'warnings') warningObj`;
 
-            do {
-                const queryBuilder = baseQueryBuilder.clone();
-                queryBuilder.offset(offset);
-                rootBlocks = (await queryBuilder.getResult()) as Array<{ [key: string]: BlockInput }>;
-
-                for (const { column, block } of rootBlockData) {
-                    for (const rootBlock of rootBlocks) {
-                        const blockData = block.blockDataFactory(block.blockInputFactory(rootBlock[column]));
-
-                        const flatBlocks = new FlatBlocks(blockData, {
-                            name: block.name,
-                            visible: true,
-                            rootPath: "root",
-                        });
-                        for (const node of flatBlocks.depthFirst()) {
-                            const warnings = node.block.warnings();
-
-                            if (warnings.length > 0) {
-                                // TODO: (in the next PRs) auto resolve warnings
-                                for (const warning of warnings) {
-                                    const type = "Block";
-                                    const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
-                                    const id = v5(`${tableName}${rootBlock["id"]};${warning.message}`, staticNamespace);
-                                    // TODO: (in the next PRs) add blockInfos/metadata
-
-                                    await this.entityManager.upsert(
-                                        Warning,
-                                        {
-                                            createdAt: new Date(),
-                                            updatedAt: new Date(),
-                                            id,
-                                            type,
-                                            message: warning.message,
-                                            severity: WarningSeverity[warning.severity],
-                                        },
-                                        { onConflictExcludeFields: ["createdAt"] },
-                                    );
-                                }
-                            }
-                        }
-                    }
-                }
-
-                offset += queryBuilderLimit;
-            } while (rootBlocks.length > 0);
+            indexSelects.push(select);
         }
+
+        const sql = indexSelects.join("\n UNION ALL \n");
+        //console.log(sql);
+        console.time("query all blocks for warnings");
+        const warnings = await this.entityManager.execute(sql); //TODO paging
+        console.timeEnd("query all blocks for warnings");
+
+        // TODO: (in the next PRs) auto resolve warnings
+        console.time("write warnings in database");
+        for (const warning of warnings) {
+            const type = "Block";
+            const staticNamespace = "4e099212-0341-4bc8-8f4a-1f31c7a639ae";
+            const id = v5(`${warning.rootTableName}${warning.rootId};${warning.warningMessage}`, staticNamespace);
+            // TODO: (in the next PRs) add blockInfos/metadata
+
+            await this.entityManager.upsert(
+                Warning,
+                {
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    id,
+                    type,
+                    message: warning.warningMessage,
+                    severity: WarningSeverity[warning.warningSeverity as WarningSeverity],
+                },
+                { onConflictExcludeFields: ["createdAt"] },
+            );
+        }
+        console.timeEnd("write warnings in database");
+
         await this.entityManager.flush();
-    }
-
-    // Group root block data by tableName and className to reduce database calls.
-    // This allows the query builder to efficiently load all root blocks of an entity in one database call
-    private groupRootBlockDataByEntity() {
-        const rootBlockEntityData = new Map<string, RootBlockEntityData>();
-
-        for (const {
-            metadata: { tableName, className },
-            block,
-            column,
-        } of this.discoverService.discoverRootBlocks()) {
-            const key = `${tableName}:${className}`;
-
-            if (!rootBlockEntityData.has(key)) {
-                rootBlockEntityData.set(key, {
-                    tableName,
-                    className,
-                    rootBlockData: [],
-                });
-            }
-
-            const discoveredData = rootBlockEntityData.get(key);
-            if (discoveredData) {
-                discoveredData.rootBlockData.push({ block, column });
-            }
-        }
-
-        return rootBlockEntityData.values();
     }
 }
