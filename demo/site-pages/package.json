@@ -43,7 +43,7 @@
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
-        "@babel/core": "^7.0.0",
+        "@babel/core": "^7.26.0",
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
         "@graphql-codegen/add": "^3.2.3",
