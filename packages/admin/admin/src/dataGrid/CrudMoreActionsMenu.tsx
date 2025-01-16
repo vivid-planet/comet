@@ -98,6 +98,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
         menu: menuProps,
         button: buttonProps,
         group: groupProps,
+        divider: dividerProps,
         chip: chipProps,
     } = slotProps ?? { menu: {}, button: {}, group: {}, divider: {}, chip: {} };
 
@@ -147,15 +148,14 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                         {!!icon && <ListItemIcon>{icon}</ListItemIcon>}
                                         <ListItemText primary={label} />
                                     </MoreActionsMenuItem>
-                                    {!!divider && <CrudMoreActionsDivider />}
+                                    {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
                                 </div>
                             );
                         })}
                     </CrudMoreActionsGroup>
                 )}
 
-                {!!overallActions?.length && !!selectiveActions?.length && <Divider />}
-
+                {!!overallActions?.length && !!selectiveActions?.length && <CrudMoreActionsDivider {...dividerProps} />}
                 {!!selectiveActions?.length && (
                     <CrudMoreActionsGroup
                         groupTitle={<FormattedMessage id="comet.crudMoreActions.selectiveActions" defaultMessage="Selective actions" />}
@@ -183,7 +183,7 @@ export function CrudMoreActionsMenu({ slotProps, overallActions, selectiveAction
                                             <MoreActionsSelectedItemsChip size="small" color="primary" {...chipProps} label={selectionSize} />
                                         )}
                                     </MoreActionsMenuItem>
-                                    {!!divider && <CrudMoreActionsDivider />}
+                                    {!!divider && <CrudMoreActionsDivider {...dividerProps} />}
                                 </div>
                             );
                         })}
