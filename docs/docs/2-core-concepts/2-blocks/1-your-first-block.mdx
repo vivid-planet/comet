@@ -61,7 +61,7 @@ Once we have defined the block data, we also need to define the block input. The
 import { inputToData } from "@comet/blocks-api";
 
 class HeadlineBlockInput extends BlockInput {
-    @IsOptional()
+    @IsUndefinable()
     @IsString()
     @BlockField({ nullable: true })
     eyebrow?: string;
@@ -145,7 +145,7 @@ export class HeadlineBlockData extends BlockData {
     level: HeadlineLevel;
 }\n
 export class HeadlineBlockInput extends BlockInput {
-    @IsOptional()
+    @IsUndefinable()
     @IsString()
     @BlockField()
     eyebrow?: string;\n
