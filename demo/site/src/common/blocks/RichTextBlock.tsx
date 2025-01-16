@@ -4,6 +4,7 @@ import { LinkBlockData, RichTextBlockData } from "@src/blocks.generated";
 import { PageLayout } from "@src/layout/PageLayout";
 import redraft, { Renderers, TextBlockRenderFn } from "redraft";
 import styled, { css } from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 import { Typography, TypographyProps } from "../components/Typography";
 import { isValidLink } from "../helpers/HiddenIfInvalidLink";
@@ -91,9 +92,15 @@ interface RichTextBlockProps extends PropsWithData<RichTextBlockData> {
     disableLastBottomSpacing?: boolean;
 }
 
+const registry: Record<string, string> = {};
+
 export const RichTextBlock = withPreview(
     ({ data, renderers = defaultRichTextRenderers, disableLastBottomSpacing }: RichTextBlockProps) => {
         const rendered = redraft(data.draftContent, renderers);
+        // produce memory leak with global variable
+        for (let i = 0; i < 1000; i++) {
+            registry[uuidv4()] = "Vivid Planet".repeat(1000);
+        }
 
         return (
             <PreviewSkeleton title="RichText" type="rows" hasContent={hasRichTextBlockContent(data)}>
