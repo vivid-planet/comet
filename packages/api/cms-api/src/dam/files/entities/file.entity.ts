@@ -67,7 +67,7 @@ export function createFileEntity({ Scope, Folder }: { Scope?: Type<DamScopeInter
         name: string;
 
         @Field(() => Int)
-        @Property({ type: BigIntType })
+        @Property({ type: new BigIntType("number") })
         size: number;
 
         @Field()
