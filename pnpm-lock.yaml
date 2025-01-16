@@ -1020,8 +1020,8 @@ importers:
         specifier: ^5.6.1
         version: 5.6.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       tinycolor2:
-        specifier: ^1.4.1
-        version: 1.5.2
+        specifier: ^1.6.0
+        version: 1.6.0
       use-debounce:
         specifier: ^6.0.1
         version: 6.0.1(react@17.0.2)
@@ -1048,8 +1048,8 @@ importers:
         specifier: ^17.0.0
         version: 17.0.18
       '@types/tinycolor2':
-        specifier: ^1.4.2
-        version: 1.4.3
+        specifier: ^1.4.6
+        version: 1.4.6
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
@@ -7145,8 +7145,8 @@ packages:
   '@types/through@0.0.30':
     resolution: {integrity: sha512-FvnCJljyxhPM3gkRgWmxmDZyAQSiBQQWLI0A0VFL0K7W1oRUrPJSqNO0NvTnLkBcotdlp3lKvaT0JrnyRDkzOg==}
 
-  '@types/tinycolor2@1.4.3':
-    resolution: {integrity: sha512-Kf1w9NE5HEgGxCRyIcRXR/ZYtDv0V8FVPtYHwLxl0O+maGX0erE77pQlD0gpP+/KByMZ87mOA79SjifhSB3PjQ==}
+  '@types/tinycolor2@1.4.6':
+    resolution: {integrity: sha512-iEN8J0BoMnsWBqjVbWH/c0G0Hh7O21lpR2/+PrvAVgWdzL7eexIFm4JN/Wn10PTcmNdtS6U67r499mlWMXOxNw==}
 
   '@types/tough-cookie@4.0.2':
     resolution: {integrity: sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==}
@@ -14839,8 +14839,8 @@ packages:
   tiny-warning@1.0.3:
     resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
 
-  tinycolor2@1.5.2:
-    resolution: {integrity: sha512-h80m9GPFGbcLzZByXlNSEhp1gf8Dy+VX/2JCGUZsWLo7lV1mnE/XlxGYgRBoMLJh1lIDXP0EMC4RPTjlRaV+Bg==}
+  tinycolor2@1.6.0:
+    resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
 
   tinyglobby@0.2.10:
     resolution: {integrity: sha512-Zc+8eJlFMvgatPZTl6A9L/yht8QqdmUNtURHaKZLmKBE12hNPSrqNkUp2cs3M/UKmNVVAMFQYSjYIVHDjW5zew==}
@@ -23010,7 +23010,7 @@ snapshots:
     dependencies:
       '@types/node': 22.9.0
 
-  '@types/tinycolor2@1.4.3': {}
+  '@types/tinycolor2@1.4.6': {}
 
   '@types/tough-cookie@4.0.2': {}
 
@@ -32280,7 +32280,7 @@ snapshots:
 
   tiny-warning@1.0.3: {}
 
-  tinycolor2@1.5.2: {}
+  tinycolor2@1.6.0: {}
 
   tinyglobby@0.2.10:
     dependencies:
