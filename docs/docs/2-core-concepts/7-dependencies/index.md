@@ -35,16 +35,16 @@ For example:
 
 ```diff
 +   @RootBlockEntity()
-    export class News extends BaseEntity<News, "id"> {
+    export class News extends BaseEntity {
         // ...
 
 +       @RootBlock(DamImageBlock)
-        @Property({ customType: new RootBlockType(DamImageBlock) })
+        @Property({ type: new RootBlockType(DamImageBlock) })
         @Field(() => RootBlockDataScalar(DamImageBlock))
         image: BlockDataInterface;
 
 +       @RootBlock(NewsContentBlock)
-        @Property({ customType: new RootBlockType(NewsContentBlock) })
+        @Property({ type: new RootBlockType(NewsContentBlock) })
         @Field(() => RootBlockDataScalar(NewsContentBlock))
         content: BlockDataInterface;
 
@@ -120,7 +120,7 @@ It will return the `PageTreeNode` name and slug (as secondary information).
 ```ts
 // page.entity.ts
 @EntityInfo(PageTreeNodeDocumentEntityInfoService)
-export class Page extends BaseEntity<Page, "id"> implements DocumentInterface {
+export class Page extends BaseEntity implements DocumentInterface {
     // ...
 }
 ```

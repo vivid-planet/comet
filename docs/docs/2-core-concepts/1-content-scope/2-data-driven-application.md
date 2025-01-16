@@ -18,7 +18,7 @@ In the database, this is represented by a relation to the `Dealer`. **Do not sto
 
 ```ts title="api/src/product/entities/product.entity.ts"
 @Entity()
-export class Product extends BaseEntity<Product, "id"> {
+export class Product extends BaseEntity {
     @ManyToOne(() => Dealer, { ref: true })
     dealer: Ref<Dealer> = undefined;
 }

@@ -107,6 +107,82 @@ The NestJS peer dependency has been bumped to v10.
 
     :::
 
+#### MikroORM
+
+The MikroORM peer dependency has been bumped to v6.
+
+1.  Upgrade all your dependencies:
+
+    ```diff title=api/package.json
+    {
+        "dependencies": {
+    -   "@mikro-orm/cli": "^5.9.8",
+    -   "@mikro-orm/core": "^5.9.8",
+    -   "@mikro-orm/migrations": "^5.9.8",
+    -   "@mikro-orm/nestjs": "^5.2.3",
+    -   "@mikro-orm/postgresql": "^5.9.8",
+    +   "@mikro-orm/cli": "^6.4.0",
+    +   "@mikro-orm/core": "^6.4.0",
+    +   "@mikro-orm/migrations": "^6.4.0",
+    +   "@mikro-orm/nestjs": "^6.0.2",
+    +   "@mikro-orm/postgresql": "^6.4.0",
+        },
+    }
+    ```
+
+    :::note Codemod available
+
+    ```sh
+    npx @comet/upgrade v8/update-mikro-orm-dependencies.ts
+    ```
+
+    :::
+
+2.  Follow the official [migration guide](https://mikro-orm.io/docs/upgrading-v5-to-v6) to upgrade.
+
+    :::note Codemods available
+
+    We provide upgrade scripts for basic migrations.
+    Please note that these scripts might not cover all necessary migrations.
+
+    Remove generic from `BaseEntity`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-base-entity-generic.ts
+    ```
+
+    Rename `customType` to `type`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-custom-type.ts
+    ```
+
+    Rename `onDelete` to `deleteRule`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-delete-rule.ts
+    ```
+
+    Add a `mikro-orm` script with a dotenv call to `package.json`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-dotenv.ts
+    ```
+
+    Change all imports from `@mikro-orm/core` to `@mikro-orm/postgresql`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-imports.ts
+    ```
+
+    Wrap config in `defineConfig`:
+
+    ```sh
+    npx @comet/upgrade v8/mikro-orm-ormconfig.ts
+    ```
+
+    :::
+
 #### class-validator
 
 The class-validator peer dependency has been bumped to v0.14.0:
@@ -124,6 +200,31 @@ The class-validator peer dependency has been bumped to v0.14.0:
 
 ```sh
 npx @comet/upgrade v8/update-class-validator.ts
+```
+
+:::
+
+### NestJS peer dependencies
+
+Peer dependencies defined by NestJS have been added as peer dependencies to `@comet/cms-api`.
+To upgrade, install the dependencies in your project:
+
+```diff title=api/package.json
+{
+    "dependencies": {
++       "class-transformer": "^0.5.1",
+-       "reflect-metadata": "^0.1.13",
++       "reflect-metadata": "^0.2.2",
+-       "rxjs": "^7.0.0",
++       "rxjs": "^7.8.1",
+    }
+}
+```
+
+:::note Codemod available
+
+```sh
+npx @comet/upgrade v8/nest-peer-dependencies.ts
 ```
 
 :::

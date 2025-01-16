@@ -19,7 +19,7 @@
         "lint:prettier": "npx prettier --check './**/*.{js,json,md,yml,yaml}'",
         "lint:tsc": "tsc --project .",
         "lint:generated-files-not-modified": "$npm_execpath admin-generator && git diff --exit-code HEAD -- src/**/generated",
-        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.site-configs -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
+        "start": "run-s intl:compile && run-p gql:types generate-block-types && dotenv -e .env.secrets -e .env.local -e .env -e .env.site-configs  -- chokidar --initial -s \"../../packages/admin/*/src/**\" -c \"kill-port $ADMIN_PORT && vite --force\""
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",
@@ -32,29 +32,29 @@
         "@comet/cms-admin": "workspace:*",
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
-        "@fontsource-variable/roboto-flex": "^5.0.14",
+        "@fontsource-variable/roboto-flex": "^5.1.1",
         "@mui/material": "^6.3.0",
         "@mui/system": "^6.3.0",
         "@mui/x-data-grid": "^7.23.5",
         "@mui/x-data-grid-pro": "^7.23.5",
         "change-case": "^5.2.0",
-        "dnd-core": "^16.0.0",
+        "dnd-core": "^16.0.1",
         "final-form": "^4.20.10",
         "graphql": "^15.0.0",
         "graphql-tag": "^2.0.0",
         "lodash.isequal": "^4.5.0",
         "rdndmb-html5-to-touch": "^8.0.3",
         "react": "^17.0.2",
-        "react-app-polyfill": "^1.0.0",
-        "react-dnd": "^16.0.0",
+        "react-app-polyfill": "^1.0.6",
+        "react-dnd": "^16.0.1",
         "react-dnd-multi-backend": "^8.0.3",
         "react-dom": "^17.0.2",
         "react-final-form": "^6.5.9",
         "react-intl": "^6.0.0",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
-        "use-debounce": "^6.0.0",
-        "uuid": "^11.0.3"
+        "use-debounce": "^6.0.1",
+        "uuid": "^11.0.5"
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",
@@ -83,9 +83,9 @@
         "kill-port": "^2.0.1",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.0.0",
-        "ts-node": "^10.0.0",
+        "ts-node": "^10.9.2",
         "typescript": "^4.0.0",
-        "vite": "^5.1.6",
+        "vite": "^5.4.11",
         "vite-plugin-html": "^3.2.2"
     }
 }

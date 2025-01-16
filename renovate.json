@@ -75,7 +75,6 @@
             "rangeStrategy": "widen"
         }
     ],
-    "rangeStrategy": "bump",
     "labels": ["dependencies"],
     "baseBranches": ["next"]
 }

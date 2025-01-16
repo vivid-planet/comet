@@ -1,4 +1,4 @@
-import { CreateRequestContext, MikroORM } from "@mikro-orm/core";
+import { CreateRequestContext, MikroORM } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
 import { Command, Console } from "nestjs-console";
 

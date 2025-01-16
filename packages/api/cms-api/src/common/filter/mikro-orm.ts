@@ -1,4 +1,4 @@
-import { EntityMetadata, EntityRepository, FilterQuery, ObjectQuery } from "@mikro-orm/core";
+import { EntityMetadata, EntityRepository, FilterQuery, ObjectQuery } from "@mikro-orm/postgresql";
 
 import { getCrudSearchFieldsFromMetadata } from "../../generator/utils/search-fields-from-metadata";
 import { BooleanFilter } from "./boolean.filter";
@@ -121,7 +121,7 @@ export function filterToMikroOrmQuery(
             if (!prop) {
                 throw new Error("Property not found");
             }
-            if (prop.reference != "1:m") {
+            if (prop.kind != "1:m") {
                 throw new Error("Property is not a 1:m relation");
             }
             if (!prop.targetMeta) {
@@ -142,7 +142,7 @@ export function filterToMikroOrmQuery(
             if (!prop) {
                 throw new Error("Property not found");
             }
-            if (prop.reference != "m:n") {
+            if (prop.kind != "m:n") {
                 throw new Error("Property is not a m:n relation");
             }
             if (!prop.targetMeta) {

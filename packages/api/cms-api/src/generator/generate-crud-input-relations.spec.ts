@@ -1,5 +1,4 @@
-import { BaseEntity, Collection, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Ref } from "@mikro-orm/core";
-import { defineConfig } from "@mikro-orm/postgresql";
+import { BaseEntity, Collection, defineConfig, Entity, ManyToOne, MikroORM, OneToMany, PrimaryKey, Ref } from "@mikro-orm/postgresql";
 import { LazyMetadataStorage } from "@nestjs/graphql/dist/schema-builder/storages/lazy-metadata.storage";
 import { v4 as uuid } from "uuid";
 
@@ -7,7 +6,7 @@ import { generateCrudInput } from "./generate-crud-input";
 import { lintSource, parseSource } from "./utils/test-helper";
 
 @Entity()
-export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
+export class ProductCategory extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -16,7 +15,7 @@ export class ProductCategory extends BaseEntity<ProductCategory, "id"> {
 }
 
 @Entity()
-export class Product extends BaseEntity<Product, "id"> {
+export class Product extends BaseEntity {
     @PrimaryKey({ type: "uuid" })
     id: string = uuid();
 
@@ -30,6 +29,7 @@ describe("GenerateCrudInputRelations", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [Product, ProductCategory],
             }),
         );
@@ -63,6 +63,7 @@ describe("GenerateCrudInputRelations", () => {
         const orm = await MikroORM.init(
             defineConfig({
                 dbName: "test-db",
+                connect: false,
                 entities: [Product, ProductCategory],
             }),
         );

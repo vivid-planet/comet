@@ -37,11 +37,11 @@
     },
     "devDependencies": {
         "@comet/cli": "workspace:*",
-        "@comet/dev-process-manager": "^2.5.1",
+        "@comet/dev-process-manager": "^2.7.0",
         "@formatjs/cli": "^6.0.0",
         "@types/node": "^22.0.0",
         "knip": "^5.38.1",
-        "cspell": "^8.15.4",
+        "cspell": "^8.17.2",
         "dotenv-cli": "^7.4.4",
         "husky": "^7.0.4",
         "lint-staged": "^12.5.0",
@@ -50,10 +50,10 @@
         "typescript": "^5.7.2",
         "wait-on": "^5.3.0"
     },
-    "packageManager": "pnpm@9.15.1",
+    "packageManager": "pnpm@9.15.4",
     "engines": {
         "node": "22",
-        "pnpm": "9.15.1"
+        "pnpm": "9.15.4"
     },
     "dependencies": {
         "@changesets/cli": "^2.26.0"
