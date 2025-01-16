@@ -1,7 +1,7 @@
 import { Add, Edit } from "@comet/admin-icons";
 import { Button, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import { createMemoryHistory } from "history";
 import { ReactNode, RefObject, useRef } from "react";
 import { useIntl } from "react-intl";
@@ -141,7 +141,7 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             <MainContent fullHeight disablePadding>
                                 <SaveBoundary>
                                     <StackToolbar>
-                                        <ToolbarBackButton />
+                                        <ToolbarBackButton data-testid="editPage.backButton" />
                                         <ToolbarAutomaticTitleItem />
                                         <ToolbarFillSpace />
                                         <ToolbarActions>
@@ -245,5 +245,27 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
         expect(rendered.queryAllByTestId("edit.row")).toHaveLength(6);
         rendered.queryAllByTestId("edit.row")[5].click();
         expect(screen.getByText("Product Edit Page")).toBeInTheDocument();
+        expect(history.location.pathname).toBe("/5/productEdit");
+    });
+
+    it("should navigate back to products page when clicking on back button in edit stack page", async () => {
+        const history = createMemoryHistory();
+
+        const rendered = render(
+            <Router history={history}>
+                <StackWithGridAndEditDialog />
+            </Router>,
+        );
+
+        rendered.getByText("Products").click();
+        expect(screen.getByText("Products")).toBeInTheDocument();
+
+        expect(rendered.queryAllByTestId("edit.row")).toHaveLength(6);
+        rendered.queryAllByTestId("edit.row")[5].click();
+
+        expect(history.location.pathname).toBe("/5/productEdit");
+        within(rendered.getByTestId("editPage.backButton")).getByRole("button").click();
+        expect(screen.getByText("Products")).toBeInTheDocument();
+        expect(history.location.pathname).toBe("/index/products");
     });
 });
