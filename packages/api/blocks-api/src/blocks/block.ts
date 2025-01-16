@@ -44,6 +44,7 @@ export interface BlockIndexData {
         targetEntityName: string;
         id: string;
     }>;
+    warnings?: Array<BlockWarning>;
 }
 export declare type BlockIndexItem = {
     [key: string]: any; // For compatibility with TraversableTransformResponse
