@@ -50,7 +50,7 @@
         "react-dnd-multi-backend": "^8.0.3",
         "react-dom": "^17.0.2",
         "react-final-form": "^6.5.9",
-        "react-intl": "^6.0.0",
+        "react-intl": "^6.8.9",
         "react-router": "^5.3.4",
         "react-router-dom": "^5.3.4",
         "use-debounce": "^10.0.4",
@@ -59,7 +59,7 @@
     "devDependencies": {
         "@comet/cli": "workspace:*",
         "@comet/eslint-config": "workspace:*",
-        "@formatjs/cli": "^6.0.0",
+        "@formatjs/cli": "^6.3.15",
         "@graphql-codegen/add": "^3.2.3",
         "@graphql-codegen/cli": "^2.16.5",
         "@graphql-codegen/fragment-matcher": "^2.0.1",
