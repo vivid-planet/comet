@@ -2359,6 +2359,9 @@ importers:
       react-intl:
         specifier: ^6.0.0
         version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+      ts-dedent:
+        specifier: ^2.2.0
+        version: 2.2.0
       use-debounce:
         specifier: ^6.0.1
         version: 6.0.1(react@17.0.2)
