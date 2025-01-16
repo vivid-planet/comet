@@ -13,11 +13,35 @@ import {
     TextField,
     TextFieldProps,
 } from "@mui/material";
+import { Spacing } from "@mui/system";
 import { getDataGridUtilityClass, GRID_DEFAULT_LOCALE_TEXT, gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 
 import { mergeOverrideStyles } from "../utils/mergeOverrideStyles";
 import { GetMuiComponentTheme } from "./getComponentsTheme";
+
+const getDensityStyles = (density: string | unknown, spacing: Spacing) => {
+    switch (density) {
+        case "compact":
+            return {
+                minHeight: `${spacing(8)} !important`,
+                maxHeight: `${spacing(8)} !important`,
+                height: `${spacing(8)} !important`,
+            };
+        case "comfortable":
+            return {
+                minHeight: `${spacing(16)} !important`,
+                maxHeight: `${spacing(16)} !important`,
+                height: `${spacing(16)} !important`,
+            };
+        default:
+            return {
+                minHeight: `${spacing(12)} !important`,
+                maxHeight: `${spacing(12)} !important`,
+                height: `${spacing(12)} !important`,
+            };
+    }
+};
 
 export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, { palette, shadows, spacing }) => ({
     ...component,
@@ -46,21 +70,24 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
         root: {
             backgroundColor: "white",
         },
-        columnHeader: {
+        columnHeader: ({ ownerState }) => ({
             "&:focus": {
                 outline: "none",
             },
             "&:focus-within": {
                 outline: "none",
             },
-        },
+            ...getDensityStyles(ownerState?.density, spacing),
+        }),
         pinnedColumns: {
             backgroundColor: "white",
             boxShadow: shadows[2],
         },
+        row: ({ ownerState }) => ({
+            ...getDensityStyles(ownerState?.density, spacing),
+        }),
         cell: {
             borderTop: `1px solid ${palette.grey[100]}`,
-
             "&:focus": {
                 outline: "none",
             },
@@ -71,9 +98,18 @@ export const getMuiDataGrid: GetMuiComponentTheme<"MuiDataGrid"> = (component, {
                 color: palette.grey[900],
             },
         },
-        footerContainer: {
+        footerContainer: ({ ownerState }) => ({
             borderTop: `1px solid ${palette.grey[100]}`,
-        },
+            ...getDensityStyles(ownerState?.density, spacing),
+
+            ...(ownerState.density === "compact" && {
+                "& .MuiTablePagination-root > .MuiToolbar-root": {
+                    height: spacing(8),
+                    minHeight: spacing(8),
+                },
+            }),
+        }),
+
         iconSeparator: {
             backgroundColor: palette.grey[100],
             width: "2px",
