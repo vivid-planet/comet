@@ -15,22 +15,35 @@ import { createComponentSlot } from "../../helpers/createComponentSlot";
 import { ThemedComponentBaseProps } from "../../helpers/ThemedComponentBaseProps";
 import { useWindowSize } from "../../helpers/useWindowSize";
 
+type Variant = "primary" | "secondary" | "outlined" | "destructive" | "success" | "textLight" | "textDark";
 type Slot = "root" | "mobileTooltip";
-type ComponentState = "usingResponsiveBehavior";
+type ComponentState = Variant | "usingResponsiveBehavior";
 export type ButtonClassKey = Slot | ComponentState;
 
-export type ButtonProps = MuiButtonProps &
+export type ButtonProps = Omit<MuiButtonProps, "variant" | "color"> &
     ThemedComponentBaseProps<{
         root: typeof MuiButton;
         mobileTooltip: typeof Tooltip;
     }> & {
+        variant?: Variant;
         responsive?: boolean;
         mobileIcon?: "auto" | "startIcon" | "endIcon" | ReactNode;
         mobileBreakpoint?: Breakpoint;
     };
 
 type OwnerState = {
+    variant: Variant;
     usingResponsiveBehavior: boolean;
+};
+
+const variantToMuiProps: Record<Variant, Partial<MuiButtonProps>> = {
+    primary: { variant: "contained", color: "primary" },
+    secondary: { variant: "contained", color: "secondary" },
+    outlined: { variant: "outlined" },
+    destructive: { variant: "outlined", color: "error" },
+    success: { variant: "contained", color: "success" },
+    textLight: { variant: "text", sx: { color: "white" } },
+    textDark: { variant: "text", sx: { color: "black" } },
 };
 
 const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps, "mobileIcon" | "startIcon" | "endIcon">) => {
@@ -52,6 +65,7 @@ const getMobileIconNode = ({ mobileIcon, startIcon, endIcon }: Pick<ButtonProps,
 export const Button = (inProps: ButtonProps) => {
     const {
         slotProps,
+        variant = "primary",
         responsive,
         mobileIcon = "auto",
         mobileBreakpoint = "sm",
@@ -71,10 +85,12 @@ export const Button = (inProps: ButtonProps) => {
     }
 
     const ownerState: OwnerState = {
+        variant,
         usingResponsiveBehavior: Boolean(responsive) && windowSize.width < theme.breakpoints.values[mobileBreakpoint],
     };
 
     const commonButtonProps = {
+        ...variantToMuiProps[variant],
         ...restProps,
         ownerState,
         ...slotProps?.root,
@@ -101,7 +117,7 @@ const Root = createComponentSlot(MuiButton)<ButtonClassKey, OwnerState>({
     componentName: "Button",
     slotName: "root",
     classesResolver(ownerState) {
-        return [ownerState.usingResponsiveBehavior && "usingResponsiveBehavior"];
+        return [ownerState.usingResponsiveBehavior && "usingResponsiveBehavior", ownerState.variant];
     },
 })(
     ({ ownerState }) => css`

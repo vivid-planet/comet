@@ -45,10 +45,10 @@ function Story() {
             </ToolbarItem>
             <FillSpace />
             <ToolbarActions>
-                <Button responsive startIcon={<ArrowRight />}>
+                <Button responsive startIcon={<ArrowRight />} variant="outlined">
                     Secondary button
                 </Button>
-                <Button responsive startIcon={<Save />} variant="contained">
+                <Button responsive startIcon={<Save />}>
                     Primary button
                 </Button>
             </ToolbarActions>
