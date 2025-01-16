@@ -30,6 +30,7 @@ import { useContentScope } from "../../contentScope/Provider";
 import { useDependenciesConfig } from "../../dependencies/DependenciesConfig";
 import { DependencyList } from "../../dependencies/DependencyList";
 import { GQLFocalPoint, GQLImageCropAreaInput, GQLLicenseInput } from "../../graphql.generated";
+import { useUserPermissionCheck } from "../../userPermissions/hooks/currentUser";
 import { useDamConfig } from "../config/useDamConfig";
 import { LicenseValidityTags } from "../DataGrid/tags/LicenseValidityTags";
 import Duplicates from "./Duplicates";
@@ -122,6 +123,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
     const intl = useIntl();
     const stackApi = useStackApi();
     const damConfig = useDamConfig();
+    const isAllowed = useUserPermissionCheck();
 
     const [updateDamFile, { loading: saving, error: hasSaveErrors }] = useMutation<GQLUpdateFileMutation, GQLUpdateFileMutationVariables>(
         updateDamFileMutation,
@@ -282,7 +284,7 @@ const EditFileInner = ({ file, id }: EditFileInnerProps) => {
                                 >
                                     <Duplicates fileId={file.id} />
                                 </RouterTab>
-                                {Object.keys(dependencyMap).length > 0 && (
+                                {isAllowed("dependencies") && Object.keys(dependencyMap).length > 0 && (
                                     <RouterTab
                                         key="dependents"
                                         label={intl.formatMessage({ id: "comet.dam.file.dependents", defaultMessage: "Dependents" })}
