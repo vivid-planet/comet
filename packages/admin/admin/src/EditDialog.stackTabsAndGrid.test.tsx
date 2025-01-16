@@ -48,9 +48,6 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
                             onSubmit={() => {
                                 // console.log("Submitted!");
                             }}
-                            onAfterSubmit={() => {
-                                dialogApiRef.current?.closeDialog();
-                            }}
                         >
                             <TextField name="name" label="Name" fullWidth />
                         </FinalForm>
