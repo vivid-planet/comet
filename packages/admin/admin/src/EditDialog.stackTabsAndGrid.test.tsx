@@ -1,5 +1,5 @@
 import { Add, Edit } from "@comet/admin-icons";
-import { Button, createTheme, IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { screen } from "@testing-library/react";
 import { createMemoryHistory } from "history";
@@ -19,7 +19,6 @@ import { EditDialog } from "./EditDialog";
 import { IEditDialogApi } from "./EditDialogApiContext";
 import { FinalForm } from "./FinalForm";
 import { TextField } from "./form/fields/TextField";
-import { MuiThemeProvider } from "./mui/ThemeProvider";
 import { SaveBoundary } from "./saveBoundary/SaveBoundary";
 import { SaveBoundarySaveButton } from "./saveBoundary/SaveBoundarySaveButton";
 import { StackPage } from "./stack/Page";
@@ -167,11 +166,9 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
 
     it("should open add dialog when clicking on Add product button in grid toolbar", async () => {
         const rendered = render(
-            <MuiThemeProvider theme={createTheme()}>
-                <Router history={history}>
-                    <StackWithGridAndEditDialog />
-                </Router>
-            </MuiThemeProvider>,
+            <Router history={history}>
+                <StackWithGridAndEditDialog />
+            </Router>,
         );
 
         expect(rendered.getByText("Add product")).toBeInTheDocument();
@@ -181,11 +178,9 @@ describe("EditDialog with Stack, Router Tabs and Grid", () => {
 
     it("should open edit stack page when clicking on edit button in grid", async () => {
         const rendered = render(
-            <MuiThemeProvider theme={createTheme()}>
-                <Router history={history}>
-                    <StackWithGridAndEditDialog />
-                </Router>
-            </MuiThemeProvider>,
+            <Router history={history}>
+                <StackWithGridAndEditDialog />
+            </Router>,
         );
 
         expect(rendered.getByText("Add product")).toBeInTheDocument();
