@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import {
     EditDialogApiContext,
+    FillSpace,
     IFilterApi,
     ISortInformation,
     SortDirection,
@@ -9,7 +10,6 @@ import {
     StackSwitch,
     Toolbar,
     ToolbarActions,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
     useStackApi,
@@ -78,7 +78,7 @@ const Folder = ({ id, filterApi, ...props }: FolderProps) => {
                             <ToolbarItem>
                                 <DamTableFilter hideArchiveFilter={props.hideArchiveFilter} filterApi={filterApi} />
                             </ToolbarItem>
-                            <ToolbarFillSpace />
+                            <FillSpace />
                             <ToolbarActions>
                                 {props.additionalToolbarItems}
                                 <DamMoreActions

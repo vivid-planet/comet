@@ -2,6 +2,7 @@ import {
     EditDialog,
     EditDialogApiContext,
     Field,
+    FillSpace,
     FinalForm,
     FinalFormInput,
     FinalFormSelect,
@@ -9,7 +10,6 @@ import {
     ISelectionApi,
     Table,
     Toolbar,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
     useEditDialogApi,
@@ -233,7 +233,7 @@ export const WithTable = {
         return (
             <>
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
                             Add User
@@ -293,7 +293,7 @@ export const SelectionWithHook = {
             <>
                 <h2>Click on a button to see the current selection values:</h2>
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <Button onClick={() => editDialogApi.openAddDialog()} variant="contained" color="primary">
                             Add User
@@ -363,7 +363,7 @@ export const SelectionWithComponent = {
             <>
                 <h2>Click on a button to see the current selection values:</h2>
                 <Toolbar>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarItem>
                         <Button onClick={() => editDialogApi.current?.openAddDialog()} variant="contained" color="primary">
                             Add User

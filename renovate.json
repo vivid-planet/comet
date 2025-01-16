@@ -63,12 +63,16 @@
             "matchPackageNames": ["/^open-telemetry/*/"]
         },
         {
-            "groupName": "testing-library",
-            "matchPackageNames": ["/^@testing-library/*/"]
+            "groupName": "lodash",
+            "matchPackageNames": ["/^lodash.*/", "/^@types/lodash.*/"]
         },
         {
             "matchUpdateTypes": ["major"],
             "labels": ["major", "dependencies"]
+        },
+        {
+            "matchDepTypes": ["peerDependencies"],
+            "rangeStrategy": "widen"
         }
     ],
     "rangeStrategy": "bump",

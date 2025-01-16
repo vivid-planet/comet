@@ -2,6 +2,7 @@ import {
     CrudMoreActionsMenu,
     DataGridToolbar,
     FieldSet,
+    FillSpace,
     FinalForm,
     FormSection,
     FullHeightContent,
@@ -23,7 +24,6 @@ import {
     ToolbarActions,
     ToolbarAutomaticTitleItem,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarItem,
     useEditDialog,
 } from "@comet/admin";
@@ -124,7 +124,7 @@ export const SimpleFormOnAPage = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
@@ -181,7 +181,7 @@ export const LargeFormOnAPage = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <SaveBoundarySaveButton />
                     </ToolbarActions>
@@ -224,7 +224,7 @@ export const SimpleFormInADialog = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" onClick={() => editDialogApi.openAddDialog(selectedId)}>
                             Open dialog
@@ -284,7 +284,7 @@ export const LargeFormInADialog = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" onClick={() => editDialogApi.openAddDialog(selectedId)}>
                             Open dialog
@@ -417,7 +417,7 @@ export const GridWithFormInADialog = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
@@ -494,7 +494,7 @@ export const GridWithFormOnAPage = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<Add />} component={StackLink} pageName="add" payload="add">
                             Add new item
@@ -523,7 +523,7 @@ export const GridWithFormOnAPage = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -606,7 +606,7 @@ export const NestedGridsAndFormsWithTabs = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
@@ -640,7 +640,7 @@ export const NestedGridsAndFormsWithTabs = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -727,7 +727,7 @@ export const NestedFormInGridInTabsInGrid = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<Add />} onClick={() => editDialogApi.openAddDialog()}>
                             Add new item
@@ -756,7 +756,7 @@ export const NestedFormInGridInTabsInGrid = {
             <StackToolbar>
                 <ToolbarBackButton />
                 <ToolbarAutomaticTitleItem />
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <SaveBoundarySaveButton />
                 </ToolbarActions>
@@ -841,7 +841,7 @@ export const GridWithSelectionAndMoreActionsMenu = {
                     <ToolbarItem>
                         <GridFilterButton />
                     </ToolbarItem>
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <CrudMoreActionsMenu
                             selectionSize={selectionModel.length}
@@ -930,7 +930,7 @@ export const GridWithSelectionInDialog = {
                 <StackToolbar>
                     <ToolbarBackButton />
                     <ToolbarAutomaticTitleItem />
-                    <ToolbarFillSpace />
+                    <FillSpace />
                     <ToolbarActions>
                         <Button color="primary" variant="contained" startIcon={<SelectIcon />} onClick={() => editDialogApi.openAddDialog()}>
                             Select items

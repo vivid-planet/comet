@@ -1,5 +1,5 @@
 import { BlockPreviewProvider, IFrameBridgeProvider, useIFrameBridge } from "@comet/cms-site";
-import RichTextBlock from "@src/blocks/RichTextBlock";
+import { RichTextBlock } from "@src/common/blocks/RichTextBlock";
 
 const PreviewMainMenu = () => {
     const iFrameBridge = useIFrameBridge();
