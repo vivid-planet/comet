@@ -1,11 +1,10 @@
 "use client";
 import { hasRichTextBlockContent, PreviewSkeleton, PropsWithData, withPreview } from "@comet/cms-site";
 import { HeadingBlockData } from "@src/blocks.generated";
-import { PageLayout } from "@src/layout/PageLayout";
+import { Typography } from "@src/common/components/Typography";
 import { Renderers } from "redraft";
 import styled from "styled-components";
 
-import { Typography } from "../components/Typography";
 import { createTextBlockRenderFn, defaultRichTextInlineStyleMap, RichTextBlock } from "./RichTextBlock";
 
 const eyebrowRenderers: Renderers = {
@@ -61,18 +60,6 @@ export const HeadingBlock = withPreview(
     },
     { label: "Heading" },
 );
-
-export const PageContentHeadingBlock = (props: HeadingBlockProps) => (
-    <PageLayout grid>
-        <PageLayoutContent>
-            <HeadingBlock {...props} />
-        </PageLayoutContent>
-    </PageLayout>
-);
-
-const PageLayoutContent = styled.div`
-    grid-column: 3 / -3;
-`;
 
 const HeadlineSkeleton = styled(Typography)`
     color: inherit;

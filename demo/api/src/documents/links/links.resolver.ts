@@ -16,7 +16,7 @@ import { LinkInput } from "./dto/link.input";
 import { Link } from "./entities/link.entity";
 
 @Resolver(() => Link)
-@RequiredPermission("pageTree")
+@RequiredPermission(["pageTree"])
 export class LinksResolver {
     constructor(
         @InjectRepository(Link) readonly repository: EntityRepository<Link>,
@@ -25,27 +25,33 @@ export class LinksResolver {
     ) {}
 
     @Query(() => Link, { nullable: true })
-    @AffectedEntity(Link, { idArg: "linkId" })
-    async link(@Args("linkId", { type: () => ID }) linkId: string): Promise<Link | null> {
-        return this.repository.findOne(linkId);
+    @AffectedEntity(Link)
+    async link(@Args("id", { type: () => ID }) id: string): Promise<Link | null> {
+        return this.repository.findOne(id);
+    }
+
+    @ResolveField(() => PageTreeNode, { nullable: true })
+    async pageTreeNode(@Parent() link: Link): Promise<PageTreeNodeInterface | null> {
+        return this.pageTreeService.createReadApi({ visibility: "all" }).getFirstNodeByAttachedPageId(link.id);
     }
 
     @Mutation(() => Link)
     @AffectedEntity(Link, { pageTreeNodeIdArg: "attachedPageTreeNodeId" })
     async saveLink(
-        @Args("linkId", { type: () => ID }) linkId: string,
+        @Args("id", { type: () => ID }) id: string,
         @Args("input", { type: () => LinkInput }) input: LinkInput,
-        @Args("attachedPageTreeNodeId", { type: () => ID }) attachedPageTreeNodeId: string,
         @Args("lastUpdatedAt", { type: () => Date, nullable: true }) lastUpdatedAt?: Date,
+        @Args("attachedPageTreeNodeId", { nullable: true, type: () => ID }) attachedPageTreeNodeId?: string,
     ): Promise<Link | null> {
         // all pageTypes need this is-archived-page-check
-        // TODO: maybe implemented in a base-(document|page)-service which lives in @comet/cms-api
-        const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
-        if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
-            throw new UnauthorizedException("Archived Links cannot be updated");
+        if (attachedPageTreeNodeId) {
+            const pageTreeNode = await this.pageTreeService.createReadApi({ visibility: "all" }).getNodeOrFail(attachedPageTreeNodeId);
+            if (pageTreeNode.visibility === PageTreeNodeVisibility.Archived) {
+                throw new UnauthorizedException("Archived Links cannot be updated");
+            }
         }
 
-        let link = await this.repository.findOne(linkId);
+        let link = await this.repository.findOne(id);
 
         if (link) {
             if (lastUpdatedAt) {
@@ -55,22 +61,19 @@ export class LinksResolver {
             link.assign({ content: input.content.transformToBlockData() });
         } else {
             link = this.repository.create({
-                id: linkId,
+                id,
                 content: input.content.transformToBlockData(),
             });
 
             this.entityManager.persist(link);
         }
 
-        await this.pageTreeService.attachDocument({ id: linkId, type: "Link" }, attachedPageTreeNodeId);
+        if (attachedPageTreeNodeId) {
+            await this.pageTreeService.attachDocument({ id, type: "Link" }, attachedPageTreeNodeId);
+        }
 
         await this.entityManager.flush();
 
         return link;
-    }
-
-    @ResolveField(() => PageTreeNode, { nullable: true })
-    async pageTreeNode(@Parent() link: Link): Promise<PageTreeNodeInterface | null> {
-        return this.pageTreeService.createReadApi().getFirstNodeByAttachedPageId(link.id);
     }
 }

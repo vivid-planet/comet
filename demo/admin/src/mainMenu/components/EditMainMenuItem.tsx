@@ -1,5 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import {
+    FillSpace,
     MainContent,
     messages,
     RouterPrompt,
@@ -7,7 +8,6 @@ import {
     Toolbar,
     ToolbarActions,
     ToolbarBackButton,
-    ToolbarFillSpace,
     ToolbarTitleItem,
 } from "@comet/admin";
 import { Add, Delete, Preview, Save } from "@comet/admin-icons";
@@ -122,7 +122,7 @@ const EditMainMenuItem = ({ item }: EditMainMenuItemProps) => {
             <Toolbar scopeIndicator={<ContentScopeIndicator />}>
                 <ToolbarBackButton />
                 <ToolbarTitleItem>{item?.node?.name}</ToolbarTitleItem>
-                <ToolbarFillSpace />
+                <FillSpace />
                 <ToolbarActions>
                     <Button
                         color="info"
