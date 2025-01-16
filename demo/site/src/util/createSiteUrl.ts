@@ -16,7 +16,7 @@ type ResolveUrlOptions = {
 
     scope: {
         language: string;
-    } | null;
+    };
 
     /**
      * If provided, the anchor will be appended to the resulting URL
@@ -32,13 +32,9 @@ type ResolveUrlOptions = {
  * @return {string} The resolved URL: /{scope.language}/test/to/my/page#my-anchor
  */
 export const createSiteUrl = ({ baseUrl = "", path, scope, anchor }: ResolveUrlOptions) => {
-    let safeScope = "";
-    if (scope != null) {
-        safeScope = scope.language;
-    }
     let anchorPostfix = "";
     if (anchor) {
         anchorPostfix = `#${anchor}`;
     }
-    return `${baseUrl}${safeScope}${path}${anchorPostfix}`;
+    return `${baseUrl}${scope.language}${path}${anchorPostfix}`;
 };
