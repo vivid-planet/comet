@@ -1,5 +1,5 @@
 import { BlockField, createBlock, inputToData } from "@comet/blocks-api";
-import { IsOptional, IsString } from "class-validator";
+import { IsString, IsUndefinable } from "class-validator";
 
 import { BaseFieldBlockData, BaseFieldBlockInput } from "./base-field.block";
 
@@ -10,7 +10,7 @@ class TextAreaBlockData extends BaseFieldBlockData {
 
 class TextAreaBlockInput extends BaseFieldBlockInput {
     @IsString()
-    @IsOptional()
+    @IsUndefinable()
     @BlockField({ nullable: true })
     placeholder?: string;
 

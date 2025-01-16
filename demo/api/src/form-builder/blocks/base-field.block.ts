@@ -1,5 +1,6 @@
 import { BlockData, BlockField, BlockInput, inputToData } from "@comet/blocks-api";
-import { IsBoolean, IsOptional, IsString } from "class-validator";
+import { IsUndefinable } from "@comet/cms-api";
+import { IsBoolean, IsString } from "class-validator";
 
 export class BaseFieldBlockData extends BlockData {
     @BlockField({ nullable: true })
@@ -14,7 +15,7 @@ export class BaseFieldBlockData extends BlockData {
 
 export class BaseFieldBlockInput extends BlockInput {
     @IsString()
-    @IsOptional()
+    @IsUndefinable()
     @BlockField({ nullable: true })
     label?: string;
 
