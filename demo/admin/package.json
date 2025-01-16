@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@apollo/client": "^3.7.0",
-        "@babel/core": "^7.0.0",
+        "@babel/core": "^7.26.0",
         "@comet/admin": "workspace:*",
         "@comet/admin-date-time": "workspace:*",
         "@comet/admin-icons": "workspace:*",
