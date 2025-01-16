@@ -1,11 +1,12 @@
-/* eslint-disable */
-
 // @ts-check
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
+
+import nextBundleAnalyzer from "@next/bundle-analyzer";
+
+import cometConfig from "./src/comet-config.json" with { type: "json" };
+
+const withBundleAnalyzer = nextBundleAnalyzer({
     enabled: process.env.ANALYZE === "true",
 });
-
-const cometConfig = require("./src/comet-config.json");
 
 /**
  * @type {import('next').NextConfig}
@@ -26,8 +27,8 @@ const nextConfig = {
     experimental: {
         optimizePackageImports: ["@comet/cms-site"],
     },
-    cacheHandler: process.env.REDIS_ENABLED === "true" ? require.resolve("./dist/cache-handler.js") : undefined,
+    cacheHandler: process.env.REDIS_ENABLED === "true" ? import.meta.resolve("./dist/cache-handler.js").replace("file://", "") : undefined,
     cacheMaxMemorySize: process.env.REDIS_ENABLED === "true" ? 0 : undefined, // disable default in-memory caching
 };
 
-module.exports = withBundleAnalyzer(nextConfig);
+export default withBundleAnalyzer(nextConfig);
