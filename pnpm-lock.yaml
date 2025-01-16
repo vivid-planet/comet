@@ -82,25 +82,25 @@ importers:
         version: link:../../packages/admin/cms-admin
       '@emotion/react':
         specifier: ^11.9.3
-        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
       '@emotion/styled':
         specifier: ^11.9.3
-        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@fontsource-variable/roboto-flex':
         specifier: ^5.1.1
         version: 5.1.1
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/system':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@mui/x-data-grid':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/x-data-grid-pro':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       change-case:
         specifier: ^5.2.0
         version: 5.2.0
@@ -130,10 +130,10 @@ importers:
         version: 1.0.6
       react-dnd:
         specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2)
       react-dnd-multi-backend:
         specifier: ^8.0.3
-        version: 8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-dom:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
@@ -142,7 +142,7 @@ importers:
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       react-router:
         specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
@@ -199,11 +199,11 @@ importers:
         specifier: ^22.0.0
         version: 22.9.0
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       '@types/react-router':
         specifier: ^5.1.20
         version: 5.1.20
@@ -674,7 +674,7 @@ importers:
         version: 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/preset-classic':
         specifier: 2.4.3
-        version: 2.4.3(@algolia/client-search@4.18.0)(@types/react@17.0.53)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)(typescript@4.9.4)
+        version: 2.4.3(@algolia/client-search@4.18.0)(@types/react@17.0.83)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)(typescript@4.9.4)
       '@docusaurus/theme-common':
         specifier: 2.4.3
         version: 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
@@ -686,10 +686,10 @@ importers:
         version: 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@emotion/react':
         specifier: ^11.5.0
-        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
       '@emotion/styled':
         specifier: ^11.3.0
-        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@fontsource/roboto':
         specifier: ^4.5.8
         version: 4.5.8
@@ -698,13 +698,13 @@ importers:
         version: 1.6.22(react@17.0.2)
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/system':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@mui/x-data-grid':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       draft-js:
         specifier: ^0.11.7
         version: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -728,7 +728,7 @@ importers:
         version: 17.0.2
       react-dnd:
         specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2)
       react-dnd-html5-backend:
         specifier: ^16.0.1
         version: 16.0.1
@@ -740,7 +740,7 @@ importers:
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       react-live:
         specifier: ^2.4.1
         version: 2.4.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -773,11 +773,11 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7
       '@types/react':
-        specifier: ^17.0.48
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.17
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       cspell:
         specifier: ^8.17.2
         version: 8.17.2
@@ -807,7 +807,7 @@ importers:
         version: link:../admin-theme
       '@mui/lab':
         specifier: ^6.0.0-beta.21
-        version: 6.0.0-beta.21(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.0.0-beta.21(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       exceljs:
         specifier: ^4.4.0
         version: 4.4.0
@@ -859,22 +859,22 @@ importers:
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
-        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
       '@emotion/styled':
         specifier: ^11.3.0
-        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/system':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@mui/x-data-grid':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/x-data-grid-pro':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@testing-library/dom':
         specifier: ^9.3.4
         version: 9.3.4
@@ -883,10 +883,10 @@ importers:
         version: 5.17.0
       '@testing-library/react':
         specifier: ^12.1.5
-        version: 12.1.5(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 12.1.5(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@testing-library/react-hooks':
         specifier: ^8.0.1
-        version: 8.0.1(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 8.0.1(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@testing-library/user-event':
         specifier: ^14.6.0
         version: 14.6.0(@testing-library/dom@9.3.4)
@@ -912,11 +912,11 @@ importers:
         specifier: ^22.0.0
         version: 22.9.0
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.11
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       '@types/react-router':
         specifier: ^5.1.20
         version: 5.1.20
@@ -954,20 +954,20 @@ importers:
         specifier: ^2.0.0
         version: 2.8.3
       react:
-        specifier: ^17.0.0
+        specifier: ^17.0.2
         version: 17.0.2
       react-dnd:
         specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2)
       react-dom:
-        specifier: ^17.0.0
+        specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       react-final-form:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       react-router:
         specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
@@ -1040,13 +1040,13 @@ importers:
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       '@types/tinycolor2':
         specifier: ^1.4.6
         version: 1.4.6
@@ -1063,17 +1063,17 @@ importers:
         specifier: ^2.0.0
         version: 2.8.3
       react:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2
       react-dom:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       react-final-form:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1091,7 +1091,7 @@ importers:
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^6.3.0
-        version: 6.3.0(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@types/react@17.0.83)(react@17.0.2)
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1113,16 +1113,16 @@ importers:
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/react':
-        specifier: ^17.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-date-range':
         specifier: ^1.4.9
         version: 1.4.9
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
@@ -1136,17 +1136,17 @@ importers:
         specifier: ^2.0.0
         version: 2.8.3
       react:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2
       react-dom:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       react-final-form:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1177,7 +1177,7 @@ importers:
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/cli-progress':
         specifier: ^3.11.6
         version: 3.11.6
@@ -1185,11 +1185,11 @@ importers:
         specifier: ^22.0.0
         version: 22.9.0
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       change-case:
         specifier: ^4.1.2
         version: 4.1.2
@@ -1209,10 +1209,10 @@ importers:
         specifier: ^2.0.0
         version: 2.8.3
       react:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2
       react-dom:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       rimraf:
         specifier: ^6.0.1
@@ -1262,7 +1262,7 @@ importers:
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/draft-js':
         specifier: ^0.11.18
         version: 0.11.18
@@ -1273,11 +1273,11 @@ importers:
         specifier: ^29.5.14
         version: 29.5.14
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       draft-js:
         specifier: ^0.11.7
         version: 0.11.7(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -1300,17 +1300,17 @@ importers:
         specifier: ^2.0.0
         version: 2.8.3
       react:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2
       react-dom:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       react-final-form:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1328,7 +1328,7 @@ importers:
         version: link:../admin-icons
       '@mui/utils':
         specifier: ^6.3.0
-        version: 6.3.0(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@types/react@17.0.83)(react@17.0.2)
     devDependencies:
       '@babel/cli':
         specifier: ^7.17.6
@@ -1344,19 +1344,19 @@ importers:
         version: link:../../eslint-config
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/system':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@mui/x-data-grid':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       eslint:
         specifier: ^8.0.0
         version: 8.57.1
@@ -1367,10 +1367,10 @@ importers:
         specifier: ^2.0.0
         version: 2.8.3
       react:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2
       react-dom:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       rimraf:
         specifier: ^6.0.1
@@ -1417,16 +1417,16 @@ importers:
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
-        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
       '@emotion/styled':
         specifier: ^11.3.0
-        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/system':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -1437,11 +1437,11 @@ importers:
         specifier: ^22.0.0
         version: 22.9.0
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       '@types/react-router':
         specifier: ^5.1.20
         version: 5.1.20
@@ -1477,7 +1477,7 @@ importers:
         version: 17.0.2
       react-dnd:
         specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2)
       react-dom:
         specifier: ^16.8.0 || ^17.0.0
         version: 17.0.2(react@17.0.2)
@@ -1486,7 +1486,7 @@ importers:
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       react-router:
         specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
@@ -1634,10 +1634,10 @@ importers:
         version: link:../../eslint-config
       '@emotion/react':
         specifier: ^11.5.0
-        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
       '@emotion/styled':
         specifier: ^11.3.0
-        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@graphql-codegen/cli':
         specifier: ^2.16.5
         version: 2.16.5(@babel/core@7.26.0)(@swc/core@1.4.8(@swc/helpers@0.5.5))(@types/node@22.9.0)(cosmiconfig-toml-loader@1.0.0)(enquirer@2.3.6)(graphql@15.10.1)(typescript@4.9.4)
@@ -1655,13 +1655,13 @@ importers:
         version: 2.5.13(graphql@15.10.1)
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/system':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@mui/x-data-grid':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/draft-js':
         specifier: ^0.11.18
         version: 0.11.18
@@ -1696,11 +1696,11 @@ importers:
         specifier: ^0.0.33
         version: 0.0.33
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       '@types/react-image-crop':
         specifier: ^8.1.6
         version: 8.1.6
@@ -1747,23 +1747,23 @@ importers:
         specifier: ^2.0.0
         version: 2.8.3
       react:
-        specifier: ^17.0.0
+        specifier: ^17.0.2
         version: 17.0.2
       react-dnd:
         specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2)
       react-dnd-html5-backend:
         specifier: ^16.0.1
         version: 16.0.1
       react-dom:
-        specifier: ^17.0.0
+        specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       react-final-form:
         specifier: ^6.5.9
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       react-router:
         specifier: ^5.3.4
         version: 5.3.4(react@17.0.2)
@@ -2301,25 +2301,25 @@ importers:
         version: link:../packages/admin/cms-admin
       '@emotion/react':
         specifier: ^11.5.0
-        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
       '@emotion/styled':
         specifier: ^11.3.0
-        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@fontsource-variable/roboto-flex':
         specifier: ^5.1.1
         version: 5.1.1
       '@mui/material':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/system':
         specifier: ^6.3.0
-        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+        version: 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
       '@mui/x-data-grid':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@mui/x-data-grid-pro':
         specifier: ^7.23.6
-        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        version: 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/node':
         specifier: ^22.0.0
         version: 22.9.0
@@ -2348,7 +2348,7 @@ importers:
         specifier: ^6.9.1
         version: 6.13.0
       react:
-        specifier: ^17.0
+        specifier: ^17.0.2
         version: 17.0.2
       react-dom:
         specifier: ^17.0.2
@@ -2358,7 +2358,7 @@ importers:
         version: 6.5.9(final-form@4.20.10)(react@17.0.2)
       react-intl:
         specifier: ^6.0.0
-        version: 6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4)
+        version: 6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4)
       ts-dedent:
         specifier: ^2.2.0
         version: 2.2.0
@@ -2392,7 +2392,7 @@ importers:
         version: 8.5.0(storybook@8.5.0(prettier@2.8.3))
       '@storybook/addon-docs':
         specifier: ^8.5.0
-        version: 8.5.0(@types/react@17.0.53)(storybook@8.5.0(prettier@2.8.3))
+        version: 8.5.0(@types/react@17.0.83)(storybook@8.5.0(prettier@2.8.3))
       '@storybook/addon-storysource':
         specifier: ^8.5.0
         version: 8.5.0(storybook@8.5.0(prettier@2.8.3))
@@ -2424,11 +2424,11 @@ importers:
         specifier: ^6.9.0
         version: 6.9.7
       '@types/react':
-        specifier: ^17.0.0
-        version: 17.0.53
+        specifier: ^17.0.83
+        version: 17.0.83
       '@types/react-dom':
-        specifier: ^17.0.0
-        version: 17.0.18
+        specifier: ^17.0.26
+        version: 17.0.26(@types/react@17.0.83)
       '@types/react-router':
         specifier: ^5.1.20
         version: 5.1.20
@@ -2470,7 +2470,7 @@ importers:
         version: 2.8.3
       react-dnd:
         specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2)
+        version: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2)
       react-dnd-html5-backend:
         specifier: ^16.0.1
         version: 16.0.1
@@ -7048,9 +7048,6 @@ packages:
   '@types/probe-image-size@7.2.5':
     resolution: {integrity: sha512-9Bg6d/GNnjmhMMxadDstwrSlquuuLf0jQuPszbU6n3QUfybif3V/ryD3J2i9iaiC5JB/FU/8E41n88SM/UB+Tg==}
 
-  '@types/prop-types@15.7.13':
-    resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
-
   '@types/prop-types@15.7.14':
     resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
 
@@ -7063,8 +7060,10 @@ packages:
   '@types/react-date-range@1.4.9':
     resolution: {integrity: sha512-5oVEDW0ElYmY1+YVSzdMUR8stxSI5QrRJCgCFUvuEAV5197t412vimD9aVTW6g4JTaxCnMmB1BdEOT/odpaBxQ==}
 
-  '@types/react-dom@17.0.18':
-    resolution: {integrity: sha512-rLVtIfbwyur2iFKykP2w0pl/1unw26b5td16d5xMgp7/yjTHomkyxPYChFoCr/FtEX1lN9wY6lFj1qvKdS5kDw==}
+  '@types/react-dom@17.0.26':
+    resolution: {integrity: sha512-Z+2VcYXJwOqQ79HreLU/1fyQ88eXSSFh6I3JdrEHQIfYSI0kCQpTGvOrbE6jFGGYXKsHuwY9tBa/w5Uo6KzrEg==}
+    peerDependencies:
+      '@types/react': ^17.0.0
 
   '@types/react-dom@18.3.5':
     resolution: {integrity: sha512-P4t6saawp+b/dFrUr2cvkVsfvPguwsxtH6dNIYRllMsefqFzkZk5UIjzyDOv5g1dXIPdG4Sp1yCR4Z6RCUsG/Q==}
@@ -7094,8 +7093,8 @@ packages:
   '@types/react-window@1.8.8':
     resolution: {integrity: sha512-8Ls660bHR1AUA2kuRvVG9D/4XpRC6wjAaPT9dil7Ckc76eP9TKWZwwmgfq8Q1LANX3QNDnoU4Zp48A3w+zK69Q==}
 
-  '@types/react@17.0.53':
-    resolution: {integrity: sha512-1yIpQR2zdYu1Z/dc1OxC+MA6GR240u3gcnP4l6mvj/PJiVaqHsQPmWttsvHsfnhfPbU2FuGmo0wSITPygjBmsw==}
+  '@types/react@17.0.83':
+    resolution: {integrity: sha512-l0m4ArKJvmFtR4e8UmKrj1pB4tUgOhJITf+mADyF/p69Ts1YAR/E+G9XEM0mHXKVRa1dQNHseyyDNzeuAXfXQw==}
 
   '@types/react@18.3.18':
     resolution: {integrity: sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ==}
@@ -18134,14 +18133,14 @@ snapshots:
 
   '@docsearch/css@3.5.1': {}
 
-  '@docsearch/react@3.5.1(@algolia/client-search@4.18.0)(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)':
+  '@docsearch/react@3.5.1(@algolia/client-search@4.18.0)(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)':
     dependencies:
       '@algolia/autocomplete-core': 1.9.3(@algolia/client-search@4.18.0)(algoliasearch@4.18.0)(search-insights@2.7.0)
       '@algolia/autocomplete-preset-algolia': 1.9.3(@algolia/client-search@4.18.0)(algoliasearch@4.18.0)
       '@docsearch/css': 3.5.1
       algoliasearch: 4.18.0
     optionalDependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
     transitivePeerDependencies:
@@ -18287,7 +18286,7 @@ snapshots:
       '@docusaurus/react-loadable': 5.5.2(react@17.0.2)
       '@docusaurus/types': 2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@types/history': 4.7.11
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       '@types/react-router-config': 5.0.7
       '@types/react-router-dom': 5.3.3
       react: 17.0.2
@@ -18403,7 +18402,7 @@ snapshots:
       - vue-template-compiler
       - webpack-cli
 
-  '@docusaurus/plugin-debug@2.4.3(@types/react@17.0.53)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)':
+  '@docusaurus/plugin-debug@2.4.3(@types/react@17.0.83)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)':
     dependencies:
       '@docusaurus/core': 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/types': 2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -18411,7 +18410,7 @@ snapshots:
       fs-extra: 10.1.0
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
-      react-json-view: 1.21.3(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      react-json-view: 1.21.3(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@parcel/css'
@@ -18537,20 +18536,20 @@ snapshots:
       - vue-template-compiler
       - webpack-cli
 
-  '@docusaurus/preset-classic@2.4.3(@algolia/client-search@4.18.0)(@types/react@17.0.53)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)(typescript@4.9.4)':
+  '@docusaurus/preset-classic@2.4.3(@algolia/client-search@4.18.0)(@types/react@17.0.83)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)(typescript@4.9.4)':
     dependencies:
       '@docusaurus/core': 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/plugin-content-blog': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/plugin-content-docs': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/plugin-content-pages': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
-      '@docusaurus/plugin-debug': 2.4.3(@types/react@17.0.53)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
+      '@docusaurus/plugin-debug': 2.4.3(@types/react@17.0.83)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/plugin-google-analytics': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/plugin-google-gtag': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/plugin-google-tag-manager': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/plugin-sitemap': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/theme-classic': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/theme-common': 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
-      '@docusaurus/theme-search-algolia': 2.4.3(@algolia/client-search@4.18.0)(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.53)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)(typescript@4.9.4)
+      '@docusaurus/theme-search-algolia': 2.4.3(@algolia/client-search@4.18.0)(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.83)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)(typescript@4.9.4)
       '@docusaurus/types': 2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
@@ -18577,7 +18576,7 @@ snapshots:
 
   '@docusaurus/react-loadable@5.5.2(react@17.0.2)':
     dependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       prop-types: 15.8.1
       react: 17.0.2
 
@@ -18637,7 +18636,7 @@ snapshots:
       '@docusaurus/utils': 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))
       '@docusaurus/utils-common': 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))
       '@types/history': 4.7.11
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       '@types/react-router-config': 5.0.7
       clsx: 1.2.1
       parse-numeric-range: 1.3.0
@@ -18725,9 +18724,9 @@ snapshots:
       - vue-template-compiler
       - webpack-cli
 
-  '@docusaurus/theme-search-algolia@2.4.3(@algolia/client-search@4.18.0)(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.53)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)(typescript@4.9.4)':
+  '@docusaurus/theme-search-algolia@2.4.3(@algolia/client-search@4.18.0)(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.83)(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)(typescript@4.9.4)':
     dependencies:
-      '@docsearch/react': 3.5.1(@algolia/client-search@4.18.0)(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)
+      '@docsearch/react': 3.5.1(@algolia/client-search@4.18.0)(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.7.0)
       '@docusaurus/core': 2.4.3(@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
       '@docusaurus/logger': 2.4.3
       '@docusaurus/plugin-content-docs': 2.4.3(eslint@8.57.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@4.9.4)
@@ -18774,7 +18773,7 @@ snapshots:
   '@docusaurus/types@2.4.3(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       commander: 5.1.0
       joi: 17.7.0
       react: 17.0.2
@@ -18914,7 +18913,7 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)':
+  '@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.25.7
       '@emotion/babel-plugin': 11.10.5(@babel/core@7.26.0)
@@ -18926,7 +18925,7 @@ snapshots:
       react: 17.0.2
     optionalDependencies:
       '@babel/core': 7.26.0
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
     transitivePeerDependencies:
       - supports-color
 
@@ -18958,19 +18957,19 @@ snapshots:
 
   '@emotion/sheet@1.4.0': {}
 
-  '@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)':
+  '@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.25.7
       '@emotion/babel-plugin': 11.10.5(@babel/core@7.26.0)
       '@emotion/is-prop-valid': 1.2.2
-      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
+      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
       '@emotion/serialize': 1.1.1
       '@emotion/use-insertion-effect-with-fallbacks': 1.0.0(react@17.0.2)
       '@emotion/utils': 1.4.1
       react: 17.0.2
     optionalDependencies:
       '@babel/core': 7.26.0
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
     transitivePeerDependencies:
       - supports-color
 
@@ -20227,10 +20226,10 @@ snapshots:
     dependencies:
       react: 17.0.2
 
-  '@mdx-js/react@3.1.0(@types/react@17.0.53)(react@17.0.2)':
+  '@mdx-js/react@3.1.0(@types/react@17.0.83)(react@17.0.2)':
     dependencies:
       '@types/mdx': 2.0.13
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       react: 17.0.2
 
   '@mdx-js/util@1.6.22': {}
@@ -20341,48 +20340,48 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/base@5.0.0-beta.68(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@mui/base@5.0.0-beta.68(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@floating-ui/react-dom': 2.1.2(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@mui/types': 7.2.20(@types/react@17.0.53)
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
+      '@mui/types': 7.2.20(@types/react@17.0.83)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
       '@popperjs/core': 2.11.8
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
     optionalDependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
   '@mui/core-downloads-tracker@6.3.0': {}
 
-  '@mui/lab@6.0.0-beta.21(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@mui/lab@6.0.0-beta.21(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/base': 5.0.0-beta.68(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@mui/material': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@mui/system': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
-      '@mui/types': 7.2.20(@types/react@17.0.53)
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
+      '@mui/base': 5.0.0-beta.68(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@mui/material': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@mui/system': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
+      '@mui/types': 7.2.20(@types/react@17.0.83)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
     optionalDependencies:
-      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
-      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
-      '@types/react': 17.0.53
+      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
+      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
+      '@types/react': 17.0.83
 
-  '@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@mui/core-downloads-tracker': 6.3.0
-      '@mui/system': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
-      '@mui/types': 7.2.20(@types/react@17.0.53)
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
+      '@mui/system': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
+      '@mui/types': 7.2.20(@types/react@17.0.83)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
       '@popperjs/core': 2.11.8
-      '@types/react-transition-group': 4.4.12(@types/react@17.0.53)
+      '@types/react-transition-group': 4.4.12(@types/react@17.0.83)
       clsx: 2.1.1
       csstype: 3.1.3
       prop-types: 15.8.1
@@ -20391,20 +20390,20 @@ snapshots:
       react-is: 19.0.0
       react-transition-group: 4.4.5(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
     optionalDependencies:
-      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
-      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
-      '@types/react': 17.0.53
+      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
+      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
+      '@types/react': 17.0.83
 
-  '@mui/private-theming@6.3.0(@types/react@17.0.53)(react@17.0.2)':
+  '@mui/private-theming@6.3.0(@types/react@17.0.83)(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
       prop-types: 15.8.1
       react: 17.0.2
     optionalDependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
-  '@mui/styled-engine@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(react@17.0.2)':
+  '@mui/styled-engine@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/cache': 11.14.0
@@ -20414,50 +20413,50 @@ snapshots:
       prop-types: 15.8.1
       react: 17.0.2
     optionalDependencies:
-      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
-      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
+      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
 
-  '@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)':
+  '@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/private-theming': 6.3.0(@types/react@17.0.53)(react@17.0.2)
-      '@mui/styled-engine': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(react@17.0.2)
-      '@mui/types': 7.2.20(@types/react@17.0.53)
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
+      '@mui/private-theming': 6.3.0(@types/react@17.0.83)(react@17.0.2)
+      '@mui/styled-engine': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(react@17.0.2)
+      '@mui/types': 7.2.20(@types/react@17.0.83)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
       clsx: 2.1.1
       csstype: 3.1.3
       prop-types: 15.8.1
       react: 17.0.2
     optionalDependencies:
-      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
-      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
-      '@types/react': 17.0.53
+      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
+      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
+      '@types/react': 17.0.83
 
-  '@mui/types@7.2.20(@types/react@17.0.53)':
+  '@mui/types@7.2.20(@types/react@17.0.83)':
     optionalDependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
-  '@mui/utils@6.3.0(@types/react@17.0.53)(react@17.0.2)':
+  '@mui/utils@6.3.0(@types/react@17.0.83)(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/types': 7.2.20(@types/react@17.0.53)
+      '@mui/types': 7.2.20(@types/react@17.0.83)
       '@types/prop-types': 15.7.14
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 17.0.2
       react-is: 19.0.0
     optionalDependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
-  '@mui/x-data-grid-pro@7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@mui/x-data-grid-pro@7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/material': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@mui/system': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
-      '@mui/x-data-grid': 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@mui/x-internals': 7.23.6(@types/react@17.0.53)(react@17.0.2)
-      '@mui/x-license': 7.23.6(@types/react@17.0.53)(react@17.0.2)
+      '@mui/material': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@mui/system': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
+      '@mui/x-data-grid': 7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@mui/x-internals': 7.23.6(@types/react@17.0.83)(react@17.0.2)
+      '@mui/x-license': 7.23.6(@types/react@17.0.83)(react@17.0.2)
       '@types/format-util': 1.0.4
       clsx: 2.1.1
       prop-types: 15.8.1
@@ -20465,41 +20464,41 @@ snapshots:
       react-dom: 17.0.2(react@17.0.2)
       reselect: 5.1.1
     optionalDependencies:
-      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
-      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
+      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-data-grid@7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@mui/x-data-grid@7.23.6(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@mui/material@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@mui/system@6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/material': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@mui/system': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
-      '@mui/x-internals': 7.23.6(@types/react@17.0.53)(react@17.0.2)
+      '@mui/material': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@mui/system': 6.3.0(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@emotion/styled@11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
+      '@mui/x-internals': 7.23.6(@types/react@17.0.83)(react@17.0.2)
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       reselect: 5.1.1
     optionalDependencies:
-      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2)
-      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.53)(react@17.0.2))(@types/react@17.0.53)(react@17.0.2)
+      '@emotion/react': 11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2)
+      '@emotion/styled': 11.10.5(@babel/core@7.26.0)(@emotion/react@11.9.3(@babel/core@7.26.0)(@types/react@17.0.83)(react@17.0.2))(@types/react@17.0.83)(react@17.0.2)
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-internals@7.23.6(@types/react@17.0.53)(react@17.0.2)':
+  '@mui/x-internals@7.23.6(@types/react@17.0.83)(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
       react: 17.0.2
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-license@7.23.6(@types/react@17.0.53)(react@17.0.2)':
+  '@mui/x-license@7.23.6(@types/react@17.0.83)(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/utils': 6.3.0(@types/react@17.0.53)(react@17.0.2)
+      '@mui/utils': 6.3.0(@types/react@17.0.83)(react@17.0.2)
       react: 17.0.2
     transitivePeerDependencies:
       - '@types/react'
@@ -22070,9 +22069,9 @@ snapshots:
       storybook: 8.5.0(prettier@2.8.3)
       ts-dedent: 2.2.0
 
-  '@storybook/addon-docs@8.5.0(@types/react@17.0.53)(storybook@8.5.0(prettier@2.8.3))':
+  '@storybook/addon-docs@8.5.0(@types/react@17.0.83)(storybook@8.5.0(prettier@2.8.3))':
     dependencies:
-      '@mdx-js/react': 3.1.0(@types/react@17.0.53)(react@17.0.2)
+      '@mdx-js/react': 3.1.0(@types/react@17.0.83)(react@17.0.2)
       '@storybook/blocks': 8.5.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(storybook@8.5.0(prettier@2.8.3))
       '@storybook/csf-plugin': 8.5.0(storybook@8.5.0(prettier@2.8.3))
       '@storybook/react-dom-shim': 8.5.0(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(storybook@8.5.0(prettier@2.8.3))
@@ -22481,22 +22480,24 @@ snapshots:
       lodash: 4.17.21
       redent: 3.0.0
 
-  '@testing-library/react-hooks@8.0.1(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@testing-library/react-hooks@8.0.1(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.26.0
       react: 17.0.2
       react-error-boundary: 3.1.4(react@17.0.2)
     optionalDependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       react-dom: 17.0.2(react@17.0.2)
 
-  '@testing-library/react@12.1.5(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@testing-library/react@12.1.5(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.25.7
       '@testing-library/dom': 8.20.0
-      '@types/react-dom': 17.0.18
+      '@types/react-dom': 17.0.26(@types/react@17.0.83)
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
+    transitivePeerDependencies:
+      - '@types/react'
 
   '@testing-library/user-event@14.6.0(@testing-library/dom@9.3.4)':
     dependencies:
@@ -22619,7 +22620,7 @@ snapshots:
 
   '@types/draft-js@0.11.18':
     dependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       immutable: 3.7.6
 
   '@types/eslint-scope@3.7.7':
@@ -22696,7 +22697,7 @@ snapshots:
 
   '@types/hoist-non-react-statics@3.3.1':
     dependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       hoist-non-react-statics: 3.3.2
 
   '@types/html-minifier-terser@6.1.0': {}
@@ -22903,8 +22904,6 @@ snapshots:
       '@types/needle': 3.2.0
       '@types/node': 22.9.0
 
-  '@types/prop-types@15.7.13': {}
-
   '@types/prop-types@15.7.14': {}
 
   '@types/qs@6.9.7': {}
@@ -22913,12 +22912,12 @@ snapshots:
 
   '@types/react-date-range@1.4.9':
     dependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       date-fns: 2.29.3
 
-  '@types/react-dom@17.0.18':
+  '@types/react-dom@17.0.26(@types/react@17.0.83)':
     dependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
   '@types/react-dom@18.3.5(@types/react@18.3.18)':
     dependencies:
@@ -22926,42 +22925,42 @@ snapshots:
 
   '@types/react-image-crop@8.1.6':
     dependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
   '@types/react-router-config@5.0.7':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       '@types/react-router': 5.1.20
 
   '@types/react-router-dom@4.3.5':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       '@types/react-router': 5.1.20
 
   '@types/react-router-dom@5.3.3':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       '@types/react-router': 5.1.20
 
   '@types/react-router@5.1.20':
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
-  '@types/react-transition-group@4.4.12(@types/react@17.0.53)':
+  '@types/react-transition-group@4.4.12(@types/react@17.0.83)':
     dependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
   '@types/react-window@1.8.8':
     dependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
-  '@types/react@17.0.53':
+  '@types/react@17.0.83':
     dependencies:
-      '@types/prop-types': 15.7.13
+      '@types/prop-types': 15.7.14
       '@types/scheduler': 0.16.2
       csstype: 3.1.3
 
@@ -30719,26 +30718,26 @@ snapshots:
     dependencies:
       dnd-core: 16.0.1
 
-  react-dnd-multi-backend@8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
+  react-dnd-multi-backend@8.0.3(dnd-core@16.0.1)(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2))(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
       dnd-core: 16.0.1
       dnd-multi-backend: 8.0.3(dnd-core@16.0.1)
       react: 17.0.2
-      react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2)
-      react-dnd-preview: 8.0.3(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2))(react@17.0.2)
+      react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2)
+      react-dnd-preview: 8.0.3(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2))(react@17.0.2)
       react-dom: 17.0.2(react@17.0.2)
 
-  react-dnd-preview@8.0.3(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2))(react@17.0.2):
+  react-dnd-preview@8.0.3(react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2))(react@17.0.2):
     dependencies:
       react: 17.0.2
-      react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2)
+      react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2)
 
   react-dnd-touch-backend@16.0.1:
     dependencies:
       '@react-dnd/invariant': 4.0.2
       dnd-core: 16.0.1
 
-  react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.53)(react@17.0.2):
+  react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.1)(@types/node@22.9.0)(@types/react@17.0.83)(react@17.0.2):
     dependencies:
       '@react-dnd/invariant': 4.0.2
       '@react-dnd/shallowequal': 4.0.2
@@ -30749,7 +30748,7 @@ snapshots:
     optionalDependencies:
       '@types/hoist-non-react-statics': 3.3.1
       '@types/node': 22.9.0
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
   react-docgen-typescript@2.2.2(typescript@4.9.4):
     dependencies:
@@ -30840,7 +30839,7 @@ snapshots:
       prop-types: 15.8.1
       react: 17.0.2
 
-  react-intl@6.6.6(@types/react@17.0.53)(react@17.0.2)(typescript@4.9.4):
+  react-intl@6.6.6(@types/react@17.0.83)(react@17.0.2)(typescript@4.9.4):
     dependencies:
       '@formatjs/ecma402-abstract': 1.18.2
       '@formatjs/icu-messageformat-parser': 2.7.6
@@ -30848,7 +30847,7 @@ snapshots:
       '@formatjs/intl-displaynames': 6.6.6
       '@formatjs/intl-listformat': 7.5.5
       '@types/hoist-non-react-statics': 3.3.1
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
       hoist-non-react-statics: 3.3.2
       intl-messageformat: 10.5.12
       react: 17.0.2
@@ -30880,14 +30879,14 @@ snapshots:
 
   react-is@19.0.0: {}
 
-  react-json-view@1.21.3(@types/react@17.0.53)(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
+  react-json-view@1.21.3(@types/react@17.0.83)(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
       flux: 4.0.4(react@17.0.2)
       react: 17.0.2
       react-base16-styling: 0.6.0
       react-dom: 17.0.2(react@17.0.2)
       react-lifecycles-compat: 3.0.4
-      react-textarea-autosize: 8.5.2(@types/react@17.0.53)(react@17.0.2)
+      react-textarea-autosize: 8.5.2(@types/react@17.0.83)(react@17.0.2)
     transitivePeerDependencies:
       - '@types/react'
       - encoding
@@ -30974,12 +30973,12 @@ snapshots:
       react: 17.0.2
       split.js: 1.6.5
 
-  react-textarea-autosize@8.5.2(@types/react@17.0.53)(react@17.0.2):
+  react-textarea-autosize@8.5.2(@types/react@17.0.83)(react@17.0.2):
     dependencies:
       '@babel/runtime': 7.26.0
       react: 17.0.2
       use-composed-ref: 1.3.0(react@17.0.2)
-      use-latest: 1.2.1(@types/react@17.0.53)(react@17.0.2)
+      use-latest: 1.2.1(@types/react@17.0.83)(react@17.0.2)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -32871,18 +32870,18 @@ snapshots:
     dependencies:
       react: 17.0.2
 
-  use-isomorphic-layout-effect@1.1.2(@types/react@17.0.53)(react@17.0.2):
+  use-isomorphic-layout-effect@1.1.2(@types/react@17.0.83)(react@17.0.2):
     dependencies:
       react: 17.0.2
     optionalDependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
-  use-latest@1.2.1(@types/react@17.0.53)(react@17.0.2):
+  use-latest@1.2.1(@types/react@17.0.83)(react@17.0.2):
     dependencies:
       react: 17.0.2
-      use-isomorphic-layout-effect: 1.1.2(@types/react@17.0.53)(react@17.0.2)
+      use-isomorphic-layout-effect: 1.1.2(@types/react@17.0.83)(react@17.0.2)
     optionalDependencies:
-      '@types/react': 17.0.53
+      '@types/react': 17.0.83
 
   use-sync-external-store@1.2.0(react@17.0.2):
     dependencies:
