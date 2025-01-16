@@ -199,7 +199,7 @@ export const SimpleFormInADialog = {
         const Form = ({ id, mode }: { id?: string; mode?: "edit" | "add" }) => {
             const { rows, loading } = useData();
 
-            if (loading) {
+            if (mode === "edit" && loading) {
                 return <Loading />;
             }
 
