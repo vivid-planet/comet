@@ -25,7 +25,7 @@
         "start:prod": "node dist/main"
     },
     "dependencies": {
-        "@apollo/server": "^4.11.2",
+        "@apollo/server": "^4.11.3",
         "@comet/cms-api": "workspace:*",
         "@kubernetes/client-node": "^0.18.0",
         "@mikro-orm/cli": "^6.4.3",
