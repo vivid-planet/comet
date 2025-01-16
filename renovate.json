@@ -51,6 +51,14 @@
             "groupName": "GraphQL Codegen"
         },
         {
+            "matchPackageNames": ["@apollo/server"],
+            "groupName": "@apollo/server"
+        },
+        {
+            "matchPackageNames": ["@apollo/client", "apollo-link-rest", "graphql-anywhere", "graphql-tag"],
+            "groupName": "@apollo/client and related dependencies"
+        },
+        {
             "groupName": "Mikro-ORM",
             "matchPackageNames": ["/^@mikro-orm/*/"]
         },
